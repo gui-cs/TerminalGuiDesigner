@@ -24,9 +24,14 @@ public partial class Program
         try
         {
             var programDir = Assembly.GetEntryAssembly()?.Location ?? throw new Exception("Could not determine the current executables present directory");
-            var file = new FileInfo(Path.Combine(programDir,"../../../../MyWindow.Designer.cs"));
 
-            var decompiler = new DeCompiler(file);
+            var classFile = new FileInfo(Path.Combine(programDir, "../../../../MyWindow.cs"));
+            var designerFile = new FileInfo(Path.Combine(programDir,"../../../../MyWindow.Designer.cs"));
+
+            var viewToCode = new ViewToCode();
+            w = viewToCode.GenerateNewWindow(classFile, "TerminalGuiDesigner");
+
+            var decompiler = new CodeToView(designerFile);
             w = decompiler.CreateInstance();
 
         }catch(Exception ex)

@@ -3,7 +3,7 @@ using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
 
-public class DeCompiler
+public class CodeToView
 {
     private readonly Assembly _assembly;
 
@@ -11,7 +11,7 @@ public class DeCompiler
 
     public const string ExpectedExtension = ".Designer.cs";
 
-    public DeCompiler(FileInfo sourceFile)
+    public CodeToView(FileInfo sourceFile)
     {
         SourceFile = sourceFile;
 
@@ -55,7 +55,7 @@ public class DeCompiler
         }
     }
 
-    public DeCompiler(FileInfo sourceFile,Assembly assembly)
+    public CodeToView(FileInfo sourceFile,Assembly assembly)
     {
         _assembly = assembly;
         SourceFile = sourceFile;
