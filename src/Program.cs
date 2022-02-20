@@ -110,7 +110,13 @@ public partial class Program
 
     private static Point ScreenToClient(View view,int x, int y)
     {
-        return new Point(x - view.Bounds.X,y - view.Bounds.Y);
+        if(view is Window w)
+        {
+            // has invisible ContentView pane
+            return w.Subviews[0].ScreenToView(x, y);
+        }
+
+        return view.ScreenToView(x,y);
     }
 
     private static void Add(View w, View view)
