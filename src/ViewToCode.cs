@@ -73,17 +73,24 @@ namespace TerminalGuiDesigner
 
         private string GenerateDesignerCs(View forView, FileInfo designerFile, string namespaceName)
         {
-            var samples = new CodeNamespace(namespaceName);
-            samples.Imports.Add(new CodeNamespaceImport("System"));
-            samples.Imports.Add(new CodeNamespaceImport("Terminal.Gui"));
+            var ns = new CodeNamespace(namespaceName);
+            ns.Imports.Add(new CodeNamespaceImport("System"));
+            ns.Imports.Add(new CodeNamespaceImport("Terminal.Gui"));
+
+            var className = Path.GetFileNameWithoutExtension(designerFile.Name.Replace(CodeToView.ExpectedExtension,""));
 
             CodeCompileUnit compileUnit = new CodeCompileUnit();
-            compileUnit.Namespaces.Add(samples);
+            compileUnit.Namespaces.Add(ns);
 
-            CodeTypeDeclaration class1 = new CodeTypeDeclaration("Class1");
+            CodeTypeDeclaration class1 = new CodeTypeDeclaration(className);
             class1.IsPartial = true;
 
-            samples.Types.Add(class1);
+            var method = new CodeMemberMethod();
+            method.Name = "InitializeComponent";
+
+            class1.Members.Add(method);
+
+            ns.Types.Add(class1);
 
             CSharpCodeProvider provider = new CSharpCodeProvider();
 
