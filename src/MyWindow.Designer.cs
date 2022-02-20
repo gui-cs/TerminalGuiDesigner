@@ -1,6 +1,6 @@
 using Terminal.Gui;
 
-namespace designer;
+namespace TerminalGuiDesigner;
 
 
 public partial class MyWindow 

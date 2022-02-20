@@ -1,11 +1,8 @@
-﻿using System.CodeDom;
-using System.CodeDom.Compiler;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text;
-using Microsoft.CSharp;
 using Terminal.Gui;
 
-namespace designer;
+namespace TerminalGuiDesigner;
 
 
 public partial class Program
@@ -16,8 +13,6 @@ public partial class Program
     public static void Main(string[] args)
     {
         ShowEditor();
-
-        GenerateDesignerCs();
     }
 
     private static void ShowEditor()
@@ -143,35 +138,6 @@ public partial class Program
         };
     }
 
-    private static void GenerateDesignerCs()
-    {
-        
-        var samples = new CodeNamespace("Samples");
-        samples.Imports.Add(new CodeNamespaceImport("System"));
-        samples.Imports.Add(new CodeNamespaceImport("Terminal.Gui"));
-
-        CodeCompileUnit compileUnit = new CodeCompileUnit();
-        compileUnit.Namespaces.Add(samples);
-
-        CodeTypeDeclaration class1 = new CodeTypeDeclaration("Class1");
-        class1.IsPartial = true;
-
-        samples.Types.Add(class1);
-
-        CSharpCodeProvider provider = new CSharpCodeProvider();
-
-        using (var sw = new StringWriter())
-        {
-            IndentedTextWriter tw = new IndentedTextWriter(sw, "    ");
-
-            // Generate source code using the code provider.
-            provider.GenerateCodeFromCompileUnit(compileUnit, tw,
-                new CodeGeneratorOptions());
-
-            tw.Close();
-
-            Console.Write(sw.ToString());
-        }
-    }
+    
 
 }
