@@ -11,9 +11,9 @@ namespace TerminalGuiDesigner {
     using Terminal.Gui;
     
     
-    public partial class MyWindow {
+    public partial class MyWindow : Window {
         
-        private MyWindow() {
+        public MyWindow() {
             InitializeComponent();
         }
     }

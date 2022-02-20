@@ -28,21 +28,23 @@ namespace TerminalGuiDesigner
             }
             string indent = "    ";
 
-            var samples = new CodeNamespace(namespaceName);
-            samples.Imports.Add(new CodeNamespaceImport("Terminal.Gui"));
+            var ns = new CodeNamespace(namespaceName);
+            ns.Imports.Add(new CodeNamespaceImport("Terminal.Gui"));
 
             CodeCompileUnit compileUnit = new CodeCompileUnit();
-            compileUnit.Namespaces.Add(samples);
+            compileUnit.Namespaces.Add(ns);
             
             var className = Path.GetFileNameWithoutExtension(csFilePath.Name);
             var designerFile = new FileInfo(Path.Combine(csFilePath.Directory.FullName,className + CodeToView.ExpectedExtension));
 
             CodeTypeDeclaration class1 = new CodeTypeDeclaration(className);
             class1.IsPartial = true;
+            class1.BaseTypes.Add(new CodeTypeReference("Window"));
 
-            samples.Types.Add(class1);
+            ns.Types.Add(class1);
 
             var constructor = new CodeConstructor();
+            constructor.Attributes = MemberAttributes.Public;
             constructor.Statements.Add(new CodeSnippetStatement($"{indent}{indent}{indent}InitializeComponent();"));
 
             class1.Members.Add(constructor);
@@ -63,13 +65,15 @@ namespace TerminalGuiDesigner
             }
 
             var w = new Window();
-            GenerateDesignerCs(w, designerFile);
+            w.Add(new Label("Hello World"));
+
+            GenerateDesignerCs(w, designerFile, namespaceName);
             return w;
         }
 
-        private string GenerateDesignerCs(View forView, FileInfo designerFile)
+        private string GenerateDesignerCs(View forView, FileInfo designerFile, string namespaceName)
         {
-            var samples = new CodeNamespace("Samples");
+            var samples = new CodeNamespace(namespaceName);
             samples.Imports.Add(new CodeNamespaceImport("System"));
             samples.Imports.Add(new CodeNamespaceImport("Terminal.Gui"));
 

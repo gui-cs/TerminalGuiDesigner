@@ -3,7 +3,7 @@ using Terminal.Gui;
 namespace TerminalGuiDesigner;
 
 
-public partial class MyWindow 
+public partial class MyWindow
 {
     private void InitializeComponent()
     {
