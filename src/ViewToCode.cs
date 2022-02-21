@@ -71,7 +71,7 @@ namespace TerminalGuiDesigner
             return w;
         }
 
-        private string GenerateDesignerCs(View forView, FileInfo designerFile, string namespaceName)
+        private void GenerateDesignerCs(View forView, FileInfo designerFile, string namespaceName)
         {
             var ns = new CodeNamespace(namespaceName);
             ns.Imports.Add(new CodeNamespaceImport("System"));
@@ -88,7 +88,41 @@ namespace TerminalGuiDesigner
             var method = new CodeMemberMethod();
             method.Name = "InitializeComponent";
 
+            // foreach subview
+            
+            // Create a private field for it
+            var field = new CodeMemberField();
+            field.Name = "myLabel";
+            field.Type = new CodeTypeReference(typeof(Label));
+
+            // Construct it
+            var constructLhs = new CodeFieldReferenceExpression();
+            constructLhs.FieldName = "this.myLabel";
+            var constructRhs = new CodeObjectCreateExpression(typeof(Label));
+            var constructAssign = new CodeAssignStatement();
+            constructAssign.Left = constructLhs;
+            constructAssign.Right = constructRhs;
+            method.Statements.Add(constructAssign);
+
+            // TODO: Hydrate it
+            var setTextLhs = new CodeFieldReferenceExpression();
+            setTextLhs.FieldName = "this.myLabel.Text";
+            var setTextRhs = new CodePrimitiveExpression();
+            setTextRhs.Value = "Hello World";            
+            var setTextAssign = new CodeAssignStatement();
+            setTextAssign.Left = setTextLhs;
+            setTextAssign.Right = setTextRhs;
+            method.Statements.Add(setTextAssign);
+
+            // Add it to the view 
+            var callAdd = new CodeMethodInvokeExpression();
+            callAdd.Method.TargetObject = new CodeThisReferenceExpression();
+            callAdd.Method.MethodName = "Add";
+            callAdd.Parameters.Add(new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),"myLabel"));
+            method.Statements.Add(callAdd);
+
             class1.Members.Add(method);
+            class1.Members.Add(field);
 
             ns.Types.Add(class1);
 
@@ -104,8 +138,7 @@ namespace TerminalGuiDesigner
 
                 tw.Close();
 
-
-                return sw.ToString();
+                File.WriteAllText(designerFile.FullName,sw.ToString());
             }
         }
     }
