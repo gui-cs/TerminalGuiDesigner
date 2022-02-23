@@ -89,6 +89,8 @@ namespace TerminalGuiDesigner
             method.Name = "InitializeComponent";
 
             // foreach subview
+            var designLabel = new DesignLabel("myLabel",new Label("Test String"));
+                        
             
             // Create a private field for it
             var field = new CodeMemberField();
