@@ -13,14 +13,11 @@ public  class DesignLabel : Design<Label>
     public void ToCode(CodeTypeDeclaration addTo, CodeMemberMethod initMethod)
     {
         AddFieldToClass(addTo);
-
         AddConstructorCall(initMethod);
 
-        AddPropertyAssignment(initMethod,nameof(Label.Text),View.Text.ToString());
+        AddPropertyAssignment(initMethod,nameof(Label.Text),View.Text);
 
         AddAddToViewStatement(initMethod);
-
-        addTo.Members.Add(initMethod);       
     }
 
     

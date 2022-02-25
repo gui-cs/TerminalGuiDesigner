@@ -1,9 +1,10 @@
 
 using System.CodeDom;
+using NStack;
 
 namespace TerminalGuiDesigner;
     
-public abstract class Design<T>
+public abstract class Design<T> : View
 {
     public string FieldName { get; }
     public T View {get;}
@@ -24,13 +25,20 @@ public abstract class Design<T>
         constructAssign.Right = constructRhs;
         initMethod.Statements.Add(constructAssign);        
     }
-    protected void AddPropertyAssignment(CodeMemberMethod initMethod, string propertyName, string value)
+    protected void AddPropertyAssignment(CodeMemberMethod initMethod, string propertyName, object? value)
     {
-        // TODO: Hydrate it
         var setTextLhs = new CodeFieldReferenceExpression();
         setTextLhs.FieldName = "this.myLabel.Text";
         var setTextRhs = new CodePrimitiveExpression();
-        setTextRhs.Value = "Hello World";           
+
+        if(value is ustring u)
+        {
+            setTextRhs.Value = u.ToString();
+        }
+        else
+        {
+            setTextRhs.Value = value;
+        }
 
         var setTextAssign = new CodeAssignStatement();
         setTextAssign.Left = setTextLhs;
