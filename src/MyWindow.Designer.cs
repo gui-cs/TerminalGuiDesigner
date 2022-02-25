@@ -18,7 +18,7 @@ namespace TerminalGuiDesigner {
         
         private void InitializeComponent() {
             this.myLabel = new Terminal.Gui.Label();
-            this.myLabel.Text = "Hello World";
+            this.myLabel.Text = "Test String";
             this.Add(this.myLabel);
         }
     }

@@ -1,4 +1,5 @@
 using System.Reflection;
+using NLog;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
@@ -6,6 +7,7 @@ namespace TerminalGuiDesigner;
 public class CodeToView
 {
     private readonly Assembly _assembly;
+    ILogger logger = LogManager.GetCurrentClassLogger();
 
     public FileInfo SourceFile { get; }
 
@@ -14,6 +16,8 @@ public class CodeToView
     public CodeToView(FileInfo sourceFile)
     {
         SourceFile = sourceFile;
+
+        logger.Info($"Evaluating {sourceFile}...");
 
         ValidateSourceFile();
 
@@ -39,6 +43,7 @@ public class CodeToView
         }
 
         // Load that assembly
+        logger.Info($"Found Assembly {binary.FullName} for source file {sourceFile}...");
         _assembly = Assembly.LoadFile(binary.FullName);
     }
 
@@ -70,7 +75,7 @@ public class CodeToView
         ?? throw new Exception("Could not find csproj file in source files directory or any parent directory"));
     }
 
-    internal View CreateInstance()
+    internal View CreateInstance(DesignTimeEventsManager designTimeEventsManager)
     {
         var expectedClassName = SourceFile.Name.Replace(ExpectedExtension,"");
 
@@ -85,15 +90,25 @@ public class CodeToView
 
             throw new Exception($"Found {instances.Length} Types called {expectedClassName} in Assembly {_assembly.Location}");
         }
+        
+        View view;
 
         try
         {
-            return Activator.CreateInstance(instances[0]) as View 
-                ?? throw new Exception("Activator.CreateInstance returned null");
+            view = Activator.CreateInstance(instances[0]) as View 
+                ?? throw new Exception($"Activator.CreateInstance returned null or class in {SourceFile.Name} was not a View");
         }
         catch(Exception ex)
         {
             throw new Exception($"Could not create instance of {instances[0].FullName}",ex);
         }
+
+        foreach(var subView in view.GetActualSubviews())
+        {
+            logger.Info($"Found subView of Type '{subView.GetType()}'");
+            designTimeEventsManager.RegisterEvents(subView);
+        }
+
+        return view;
     }
 }

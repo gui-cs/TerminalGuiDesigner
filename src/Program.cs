@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Text;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
@@ -7,7 +6,7 @@ namespace TerminalGuiDesigner;
 
 public partial class Program
 {
-    private static List<View> views = new List<View>();
+    private static DesignTimeEventsManager designTimeEventsManager = new ();
     private static Label info;
 
     public static void Main(string[] args)
@@ -32,7 +31,7 @@ public partial class Program
             w = viewToCode.GenerateNewWindow(classFile, "TerminalGuiDesigner");
 
             var decompiler = new CodeToView(designerFile);
-            w = decompiler.CreateInstance();
+            w = decompiler.CreateInstance(designTimeEventsManager);
 
         }catch(Exception ex)
         {
@@ -43,10 +42,6 @@ public partial class Program
 
         View? dragging = null;
         
-        Add(w,new Label("Drag Me 1"){Y=0});
-        Add(w,new Label("Drag Me 2"){Y=2});
-        Add(w,new Label("Drag Me 3"){Y=4});
-
         info = new Label("Info"){Y = Pos.AnchorEnd(1)};
         w.Add(info);
 
@@ -88,7 +83,7 @@ public partial class Program
     private static View? HitTest(View w,MouseEvent m)
     {
         var point = ScreenToClient(w,m.X,m.Y);
-        return views.FirstOrDefault(v=>v.Frame.Contains(point));
+        return w.GetActualSubviews().FirstOrDefault(v=>v.Frame.Contains(point));
     }
 
     private static void UpdateInfoLabel(View w, MouseEvent m)
@@ -121,28 +116,7 @@ public partial class Program
 
     private static void Add(View w, View view)
     {
-        view.CanFocus = true;
-        w.Add(view);
-        views.Add(view);
-
-        view.KeyPress += (k)=>
-        {
-            
-            if(k.KeyEvent.Key == Key.F4)
-            {
-                StringBuilder sb = new StringBuilder();
-                
-                foreach(var prop in view.GetType().GetProperties())
-                {
-                    sb.AppendLine($"{prop.Name}:{prop.GetValue(view)}");
-                }
-
-                MessageBox.Query(10,10,"Properties",sb.ToString(),"Ok");
-                k.Handled = true;
-            }
-        };
+        
     }
-
-    
 
 }

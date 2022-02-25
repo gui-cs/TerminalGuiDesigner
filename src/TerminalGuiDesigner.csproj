@@ -6,8 +6,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
   <ItemGroup>
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="nlog" Version="4.7.14" />
     <PackageReference Include="System.CodeDom" Version="6.0.0" />
     <PackageReference Include="Terminal.gui" Version="1.4.0" />
   </ItemGroup>

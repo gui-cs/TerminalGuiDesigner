@@ -4,7 +4,7 @@ using NStack;
 
 namespace TerminalGuiDesigner;
     
-public abstract class Design<T> : View
+public abstract class Design<T>
 {
     public string FieldName { get; }
     public T View {get;}
