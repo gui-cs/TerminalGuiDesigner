@@ -6,11 +6,12 @@ namespace TerminalGuiDesigner;
 
 internal class Editor : Toplevel
 {
-    Design<View>? viewBeingEdited;
+    Design? viewBeingEdited;
 
     const string Help = @"F1 - Show this help
 F2 - Add Control
-F4 - Edit Selected Control Properties";
+F4 - Edit Selected Control Properties
+Del - Delete selected View";
 
     public Editor()
     {
@@ -90,11 +91,21 @@ F4 - Edit Selected Control Properties";
             case Key.F4:
                 ShowEditPropertiesWindow();
                 return true;
+            case Key.DeleteChar:
+                Delete();
+                return true;
         }
 
         return base.ProcessHotKey(keyEvent);
     }
+    private void Delete()
+    {
+        if (viewBeingEdited == null)
+            return;
 
+        var viewToDelete = GetMostFocused(viewBeingEdited.View);
+        viewBeingEdited.RemoveDesign(viewToDelete);
+    }
     private void ShowAddViewWindow()
     {
         if(viewBeingEdited == null)
@@ -103,7 +114,7 @@ F4 - Edit Selected Control Properties";
         }
         
         var lbl = new Label("yay!");
-        viewBeingEdited.Add("label1", lbl);
+        viewBeingEdited.AddDesign("label1", lbl);
     }
 
     private void ShowEditPropertiesWindow()

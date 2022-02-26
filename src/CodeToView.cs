@@ -75,7 +75,7 @@ public class CodeToView
         ?? throw new Exception("Could not find csproj file in source files directory or any parent directory"));
     }
 
-    internal Design<View> CreateInstance()
+    internal Design CreateInstance()
     {
         var expectedClassName = SourceFile.Name.Replace(ExpectedExtension,"");
 
@@ -103,7 +103,7 @@ public class CodeToView
             throw new Exception($"Could not create instance of {instances[0].FullName}",ex);
         }
 
-        var toReturn = new Design<View>("root", view);
+        var toReturn = new Design("root", view);
         toReturn.CreateSubControlDesigns();
 
         return toReturn;

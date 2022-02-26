@@ -7,40 +7,71 @@ using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
     
-public class Design<T> where T : View
+public class Design
 {
     public string FieldName { get; }
 
     /// <summary>
     /// The view being designed.  Do not use <see cref="View.Add(Terminal.Gui.View)"/> on
-    /// this instance.  Instead use <see cref="Add(string, Terminal.Gui.View)"/> so that
+    /// this instance.  Instead use <see cref="AddDesign(string, Terminal.Gui.View)"/> so that
     /// new child controls are preserved for design time changes
     /// </summary>
-    public T View {get;}
+    public View View {get;}
 
     /// <summary>
     /// All immediate children of <see cref="View"/> as design time objects.
-    /// Use <see cref="Add(string, Terminal.Gui.View)"/> to add new objects
+    /// Use <see cref="AddDesign(string, Terminal.Gui.View)"/> to add new objects
     /// to the <see cref="View"/>
     /// </summary>
-    public IReadOnlyCollection<Design<View>> SubControlDesigns => subControlDesigns.AsReadOnly();
+    public IReadOnlyCollection<Design> SubControlDesigns => subControlDesigns.AsReadOnly();
 
-    private List<Design<View>> subControlDesigns = new List<Design<View>>();
+    private List<Design> subControlDesigns = new List<Design>();
 
     private Logger logger = LogManager.GetCurrentClassLogger();
 
-    public Design(string fieldName, T view)
+    public Design(string fieldName, View view)
     {
         FieldName = fieldName;
         View = view;
     }
 
-    public void Add(string name, View subView)
+    public void AddDesign(string name, View subView)
     {
         View.Add(subView);
         CreateSubControlDesign(name, subView);
     }
 
+    public void RemoveDesign(View view)
+    {
+        var design = FindDesign(view, out Design? owner);
+
+        // TODO : make this an Activity that is undoable/tracked in a 
+        // central activity stack.
+
+        if(design != null && owner != null)
+        {
+            owner.View.Remove(view);
+            owner.subControlDesigns.Remove(design);
+        }
+    }
+
+    private Design? FindDesign(View view, out Design? owner)
+    {
+        var found = subControlDesigns.FirstOrDefault(d => d.View == view);
+        if(found != null)
+        {
+            owner = this;
+            return found;
+        }
+
+        foreach (var subDesign in subControlDesigns)
+        {
+            return subDesign.FindDesign(view, out owner);
+        }
+
+        owner = null;
+        return null;
+    }
 
     public void CreateSubControlDesigns()
     {
@@ -55,7 +86,7 @@ public class Design<T> where T : View
     }
     private void CreateSubControlDesign(string name, View subView)
     {
-        subControlDesigns.Add(new Design<View>(name, subView));
+        subControlDesigns.Add(new Design(name, subView));
 
         // HACK: if you don't pull the label out first it complains that you cant set Focusable to true
         // on the Label because its super is not focusable :(
@@ -102,18 +133,19 @@ public class Design<T> where T : View
 
         AddAddToViewStatement(initMethod);
     }
-    
+
     protected void AddConstructorCall(CodeMemberMethod initMethod, params CodeExpression[] parameters)
     {
         // Construct it
         var constructLhs = new CodeFieldReferenceExpression();
         constructLhs.FieldName = $"this.{FieldName}";
-        var constructRhs = new CodeObjectCreateExpression(typeof(T),parameters);
+        var constructRhs = new CodeObjectCreateExpression(View.GetType(),parameters);
         var constructAssign = new CodeAssignStatement();
         constructAssign.Left = constructLhs;
         constructAssign.Right = constructRhs;
         initMethod.Statements.Add(constructAssign);        
     }
+
     protected void AddPropertyAssignment(CodeMemberMethod initMethod, string propertyName, object? value)
     {
         var setTextLhs = new CodeFieldReferenceExpression();
@@ -150,7 +182,7 @@ public class Design<T> where T : View
         // Create a private field for it
         var field = new CodeMemberField();
         field.Name = FieldName;
-        field.Type = new CodeTypeReference(typeof(T));
+        field.Type = new CodeTypeReference(View.GetType());
 
         addTo.Members.Add(field);
     }

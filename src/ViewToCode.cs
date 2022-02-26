@@ -20,7 +20,7 @@ namespace TerminalGuiDesigner
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="NotImplementedException"></exception>
-        public Design<View> GenerateNewWindow(FileInfo csFilePath, string namespaceName)
+        public Design GenerateNewWindow(FileInfo csFilePath, string namespaceName)
         {
             if(csFilePath.Name.EndsWith(CodeToView.ExpectedExtension))
             {
@@ -69,7 +69,7 @@ namespace TerminalGuiDesigner
 
             GenerateDesignerCs(w, designerFile, namespaceName);
             
-            return new Design<View>("root",w);
+            return new Design("root",w);
         }
 
         private void GenerateDesignerCs(View forView, FileInfo designerFile, string namespaceName)
@@ -90,7 +90,7 @@ namespace TerminalGuiDesigner
             method.Name = "InitializeComponent";
 
             // foreach subview
-            var designLabel = new Design<Label>("myLabel",new Label("Test String"));
+            var designLabel = new Design("myLabel",new Label("Test String"));
             designLabel.ToCode(class1,method);
                         
             class1.Members.Add(method);
