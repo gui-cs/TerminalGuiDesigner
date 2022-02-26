@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Terminal.Gui;
 using System.Text;
+using TerminalGuiDesigner.Windows;
 
 namespace TerminalGuiDesigner;
 
@@ -112,9 +113,15 @@ Del - Delete selected View";
         {
             return;
         }
-        
-        var lbl = new Label("yay!");
-        viewBeingEdited.AddDesign("label1", lbl);
+        var selectable = typeof(View).Assembly.DefinedTypes.Where(t => typeof(View).IsAssignableFrom(t)).ToArray();
+
+        var pick = new BigListBox<Type>("Type of Control","Add",true,selectable,t=>t.Name,false);
+        if(pick.ShowDialog())
+        {
+            var toAdd = (View)Activator.CreateInstance(pick.Selected);
+            toAdd.Text = "Heya";
+            viewBeingEdited.AddDesign($"{pick.Selected.Name}1", toAdd);
+        }
     }
 
     private void ShowEditPropertiesWindow()
