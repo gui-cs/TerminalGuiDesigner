@@ -118,9 +118,9 @@ Del - Delete selected View";
         var pick = new BigListBox<Type>("Type of Control","Add",true,selectable,t=>t.Name,false);
         if(pick.ShowDialog())
         {
-            var toAdd = (View)Activator.CreateInstance(pick.Selected);
-            toAdd.Text = "Heya";
-            viewBeingEdited.AddDesign($"{pick.Selected.Name}1", toAdd);
+            var factory = new ViewFactory();
+            var instance = factory.Create(pick.Selected);
+            viewBeingEdited.AddDesign($"{pick.Selected.Name}1", instance);
         }
     }
 
