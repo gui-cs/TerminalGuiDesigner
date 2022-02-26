@@ -75,7 +75,7 @@ public class CodeToView
         ?? throw new Exception("Could not find csproj file in source files directory or any parent directory"));
     }
 
-    internal Design<View> CreateInstance(DesignTimeEventsManager designTimeEventsManager)
+    internal Design<View> CreateInstance()
     {
         var expectedClassName = SourceFile.Name.Replace(ExpectedExtension,"");
 
@@ -103,12 +103,9 @@ public class CodeToView
             throw new Exception($"Could not create instance of {instances[0].FullName}",ex);
         }
 
-        foreach(var subView in view.GetActualSubviews())
-        {
-            logger.Info($"Found subView of Type '{subView.GetType()}'");
-            designTimeEventsManager.RegisterEvents(subView);
-        }
+        var toReturn = new Design<View>("root", view);
+        toReturn.CreateSubControlDesigns();
 
-        return new Design<View>("root",view);
+        return toReturn;
     }
 }

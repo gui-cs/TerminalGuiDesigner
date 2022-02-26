@@ -20,7 +20,7 @@ namespace TerminalGuiDesigner
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="NotImplementedException"></exception>
-        public View GenerateNewWindow(FileInfo csFilePath, string namespaceName)
+        public Design<View> GenerateNewWindow(FileInfo csFilePath, string namespaceName)
         {
             if(csFilePath.Name.EndsWith(CodeToView.ExpectedExtension))
             {
@@ -68,7 +68,8 @@ namespace TerminalGuiDesigner
             w.Add(new Label("Hello World"));
 
             GenerateDesignerCs(w, designerFile, namespaceName);
-            return w;
+            
+            return new Design<View>("root",w);
         }
 
         private void GenerateDesignerCs(View forView, FileInfo designerFile, string namespaceName)
