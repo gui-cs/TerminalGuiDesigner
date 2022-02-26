@@ -89,7 +89,7 @@ namespace TerminalGuiDesigner
             method.Name = "InitializeComponent";
 
             // foreach subview
-            var designLabel = new DesignLabel("myLabel",new Label("Test String"));
+            var designLabel = new Design<Label>("myLabel",new Label("Test String"));
             designLabel.ToCode(class1,method);
                         
             class1.Members.Add(method);

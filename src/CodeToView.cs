@@ -75,7 +75,7 @@ public class CodeToView
         ?? throw new Exception("Could not find csproj file in source files directory or any parent directory"));
     }
 
-    internal View CreateInstance(DesignTimeEventsManager designTimeEventsManager)
+    internal Design<View> CreateInstance(DesignTimeEventsManager designTimeEventsManager)
     {
         var expectedClassName = SourceFile.Name.Replace(ExpectedExtension,"");
 
@@ -109,6 +109,6 @@ public class CodeToView
             designTimeEventsManager.RegisterEvents(subView);
         }
 
-        return view;
+        return new Design<View>("root",view);
     }
 }

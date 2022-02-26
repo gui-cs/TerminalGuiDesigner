@@ -31,7 +31,7 @@ public partial class Program
             w = viewToCode.GenerateNewWindow(classFile, "TerminalGuiDesigner");
 
             var decompiler = new CodeToView(designerFile);
-            w = decompiler.CreateInstance(designTimeEventsManager);
+            w = decompiler.CreateInstance(designTimeEventsManager).View;
 
         }catch(Exception ex)
         {

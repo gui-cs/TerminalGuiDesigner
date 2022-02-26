@@ -1,10 +1,12 @@
 
 using System.CodeDom;
+using System.Reflection;
 using NStack;
+using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
     
-public abstract class Design<T>
+public class Design<T> where T : View
 {
     public string FieldName { get; }
     public T View {get;}
@@ -14,6 +16,36 @@ public abstract class Design<T>
         FieldName = fieldName;
         View = view;
     }
+
+    /// <summary>
+    /// Gets the designable properties of the hosted View
+    /// </summary>
+    public virtual IEnumerable<PropertyInfo> GetProperties()
+    {
+        yield return View.GetType().GetProperty(nameof(View.Text));
+    }
+
+
+    /// <summary>
+    /// Adds declaration and initialization statements to the .Designer.cs
+    /// CodeDom class.
+    /// </summary>
+    public void ToCode(CodeTypeDeclaration addTo, CodeMemberMethod initMethod)
+    {
+        AddFieldToClass(addTo);
+        AddConstructorCall(initMethod);
+
+        foreach(var prop in GetProperties())
+        {
+            var val = prop.GetValue(View);
+
+            AddPropertyAssignment(initMethod,prop.Name,val);
+        }
+        
+
+        AddAddToViewStatement(initMethod);
+    }
+    
     protected void AddConstructorCall(CodeMemberMethod initMethod, params CodeExpression[] parameters)
     {
         // Construct it
