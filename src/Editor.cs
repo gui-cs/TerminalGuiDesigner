@@ -7,12 +7,15 @@ namespace TerminalGuiDesigner;
 
 internal class Editor : Toplevel
 {
-    Design? viewBeingEdited;
+    Design? _viewBeingEdited;
+    private FileInfo _currentDesignerFile;
 
     const string Help = @"F1 - Show this help
 F2 - Add Control
 F4 - Edit Selected Control Properties
-Del - Delete selected View";
+Del - Delete selected View
+Ctrl+O - Open a .Designer.cs file
+Ctrl+S - Save an opened .Designer.cs file";
 
     public Editor()
     {
@@ -31,12 +34,7 @@ Del - Delete selected View";
             var classFile = new FileInfo(Path.Combine(programDir, "../../../../MyWindow.cs"));
             var designerFile = new FileInfo(Path.Combine(programDir, "../../../../MyWindow.Designer.cs"));
 
-            var viewToCode = new ViewToCode();
-            viewBeingEdited = viewToCode.GenerateNewWindow(classFile, "TerminalGuiDesigner");
-
-            var decompiler = new CodeToView(designerFile);
-            viewBeingEdited = decompiler.CreateInstance();
-
+            Open(designerFile);
         }
         catch (Exception ex)
         {
@@ -52,17 +50,17 @@ Del - Delete selected View";
             // start dragging
             if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && dragging == null)
             {
-                dragging = HitTest(viewBeingEdited.View, m);
+                dragging = HitTest(_viewBeingEdited.View, m);
             }
 
             // continue dragging
             if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && dragging != null)
             {
-                var dest = ScreenToClient(viewBeingEdited.View, m.X, m.Y);
+                var dest = ScreenToClient(_viewBeingEdited.View, m.X, m.Y);
                 dragging.X = dest.X;
                 dragging.Y = dest.Y;
 
-                viewBeingEdited.View.SetNeedsDisplay();
+                _viewBeingEdited.View.SetNeedsDisplay();
                 Application.DoEvents();
             }
 
@@ -72,8 +70,6 @@ Del - Delete selected View";
                 dragging = null;
             }
         };
-
-        this.Add(viewBeingEdited.View);
 
         Application.Run(this);
         Application.Shutdown();
@@ -95,21 +91,66 @@ Del - Delete selected View";
             case Key.DeleteChar:
                 Delete();
                 return true;
+            case Key.CtrlMask | Key.O:
+                Open();
+                return true;
+            case Key.CtrlMask | Key.S:
+                Save();
+                return true;
         }
 
         return base.ProcessHotKey(keyEvent);
     }
     private void Delete()
     {
-        if (viewBeingEdited == null)
+        if (_viewBeingEdited == null)
             return;
 
-        var viewToDelete = GetMostFocused(viewBeingEdited.View);
-        viewBeingEdited.RemoveDesign(viewToDelete);
+        var viewToDelete = GetMostFocused(_viewBeingEdited.View);
+        _viewBeingEdited.RemoveDesign(viewToDelete);
+    }
+    private void Open()
+    {
+        var ofd = new OpenDialog("Open",$"Select {CodeToView.ExpectedExtension} file",
+            new List<string>(new []{CodeToView.ExpectedExtension}));
+        Application.Run(ofd);
+        
+        if(ofd.FilePath != null)
+        {
+            Open(new FileInfo(ofd.FilePath.ToString()));
+        }
+    }
+
+    private void Open(FileInfo toOpen)
+    {
+        var decompiler = new CodeToView(toOpen);
+
+        _currentDesignerFile = toOpen;
+
+        // remove the old view
+        if(_viewBeingEdited != null)
+        {
+            // and dispose it
+            Remove(_viewBeingEdited.View);
+            _viewBeingEdited.View.Dispose();
+        }
+
+        // Load new instance
+        _viewBeingEdited = decompiler.CreateInstance();
+
+        // And add it to the editing window
+        this.Add(_viewBeingEdited.View);
+    }
+
+    private void Save()
+    {
+        var viewToCode = new ViewToCode();
+        viewToCode.GenerateDesignerCs(
+            _viewBeingEdited.View, _currentDesignerFile, _viewBeingEdited.GetType().Namespace);
     }
     private void ShowAddViewWindow()
     {
-        if(viewBeingEdited == null)
+        if(_viewBeingEdited == null)
         {
             return;
         }
@@ -120,7 +161,7 @@ Del - Delete selected View";
         {
             var factory = new ViewFactory();
             var instance = factory.Create(pick.Selected);
-            viewBeingEdited.AddDesign($"{pick.Selected.Name}1", instance);
+            _viewBeingEdited.AddDesign($"{pick.Selected.Name}1", instance);
         }
     }
 

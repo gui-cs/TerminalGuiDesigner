@@ -72,7 +72,7 @@ namespace TerminalGuiDesigner
             return new Design("root",w);
         }
 
-        private void GenerateDesignerCs(View forView, FileInfo designerFile, string namespaceName)
+        public void GenerateDesignerCs(View forView, FileInfo designerFile, string namespaceName)
         {
             var ns = new CodeNamespace(namespaceName);
             ns.Imports.Add(new CodeNamespaceImport("System"));
