@@ -78,12 +78,26 @@ public class Design
         return new Design(name, subView);
     }
 
+
+    /// <summary>
+    /// Returns all designs in subviews of this control
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public IEnumerable<Design> GetAllDesigns()
+    {
+        return GetAllDesigns(View);
+    }
+
+
     /// <summary>
     /// Gets the designable properties of the hosted View
     /// </summary>
-    public virtual IEnumerable<PropertyInfo> GetProperties()
+    public virtual IEnumerable<PropertyInfo> GetDesignableProperties()
     {
         yield return View.GetType().GetProperty(nameof(View.Text));
+        yield return View.GetType().GetProperty(nameof(View.X));
+        yield return View.GetType().GetProperty(nameof(View.Y));
     }
 
 
@@ -96,7 +110,7 @@ public class Design
         AddFieldToClass(addTo);
         AddConstructorCall(initMethod);
 
-        foreach(var prop in GetProperties())
+        foreach(var prop in GetDesignableProperties())
         {
             var val = prop.GetValue(View);
             AddPropertyAssignment(initMethod,prop.Name,val);
@@ -131,23 +145,49 @@ public class Design
     /// <param name="value">The value to assign to the property e.g. "hello"</param>
     protected void AddPropertyAssignment(CodeMemberMethod initMethod, string propertyName, object? value)
     {
-        var setTextLhs = new CodeFieldReferenceExpression();
-        setTextLhs.FieldName = $"this.{FieldName}.{propertyName}";
-        var setTextRhs = new CodePrimitiveExpression();
+        var setLhs = new CodeFieldReferenceExpression();
+        setLhs.FieldName = $"this.{FieldName}.{propertyName}";
+        CodeExpression setRhs = GetRhsForValue(value);
 
-        if(value is ustring u)
+        var setTextAssign = new CodeAssignStatement();
+        setTextAssign.Left = setLhs;
+        setTextAssign.Right = setRhs;
+        initMethod.Statements.Add(setTextAssign);
+    }
+
+    private CodeExpression GetRhsForValue(object? value)
+    {
+        if (value is ustring u)
         {
-            setTextRhs.Value = u.ToString();
+            return new CodePrimitiveExpression()
+            {
+                Value = u.ToString()
+            };
+        }
+        if (value is Pos p)
+        {
+            // Value is a position e.g. X=2
+            // Pos can be many different subclasses all of which are internal
+            // lets deal with only PosAbsolute for now
+            if (p.GetType().Name == "PosAbsolute")
+            {
+                var n = p.GetType().GetField("n", BindingFlags.NonPublic | BindingFlags.Instance);
+
+                return new CodePrimitiveExpression()
+                {
+                    Value = n.GetValue(p)
+                };            
+            }
+            else
+                throw new NotImplementedException("Only absolute positions are supported at the moment");
         }
         else
         {
-            setTextRhs.Value = value;
+            return new CodePrimitiveExpression()
+            {
+                Value = value
+            };
         }
-
-        var setTextAssign = new CodeAssignStatement();
-        setTextAssign.Left = setTextLhs;
-        setTextAssign.Right = setTextRhs;
-        initMethod.Statements.Add(setTextAssign);
     }
 
     protected void AddAddToViewStatement(CodeMemberMethod initMethod)
@@ -169,17 +209,6 @@ public class Design
 
         addTo.Members.Add(field);
     }
-
-    /// <summary>
-    /// Returns all designs in subviews of this control
-    /// </summary>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    public IEnumerable<Design> GetAllDesigns()
-    {
-        return GetAllDesigns(View);
-    }
-
     private IEnumerable<Design> GetAllDesigns(View view)
     {
         List<Design> toReturn = new List<Design>();

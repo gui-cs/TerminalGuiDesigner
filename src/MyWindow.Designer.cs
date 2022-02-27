@@ -19,6 +19,8 @@ namespace TerminalGuiDesigner {
         private void InitializeComponent() {
             this.label2 = new Terminal.Gui.Label();
             this.label2.Text = "Heya";
+            this.label2.X = 40;
+            this.label2.Y = 2;
             this.label2.Data = "label2";
             this.Add(this.label2);
         }
