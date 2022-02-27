@@ -14,12 +14,13 @@ namespace TerminalGuiDesigner {
     
     public partial class MyWindow {
         
-        private Terminal.Gui.Label myLabel;
+        private Terminal.Gui.Label label2;
         
         private void InitializeComponent() {
-            this.myLabel = new Terminal.Gui.Label();
-            this.myLabel.Text = "Test String";
-            this.Add(this.myLabel);
+            this.label2 = new Terminal.Gui.Label();
+            this.label2.Text = "Heya";
+            this.label2.Data = "label2";
+            this.Add(this.label2);
         }
     }
 }

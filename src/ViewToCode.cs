@@ -65,7 +65,9 @@ namespace TerminalGuiDesigner
             }
 
             var w = new Window();
-            w.Add(new Label("Hello World"));
+            var lbl = new Label("Hello World");
+            lbl.Data = "label1"; // field name in the class
+            w.Add(lbl);
 
             GenerateDesignerCs(w, designerFile, namespaceName);
             
@@ -86,14 +88,12 @@ namespace TerminalGuiDesigner
             CodeTypeDeclaration class1 = new CodeTypeDeclaration(className);
             class1.IsPartial = true;
 
-            var method = new CodeMemberMethod();
-            method.Name = "InitializeComponent";
+            var initMethod = new CodeMemberMethod();
+            initMethod.Name = "InitializeComponent";
 
-            // foreach subview
-            var designLabel = new Design("myLabel",new Label("Test String"));
-            designLabel.ToCode(class1,method);
-                        
-            class1.Members.Add(method);
+            AddSubViewsToDesignerCs(forView,class1, initMethod);
+                                    
+            class1.Members.Add(initMethod);
             ns.Types.Add(class1);
 
             CSharpCodeProvider provider = new CSharpCodeProvider();
@@ -109,6 +109,23 @@ namespace TerminalGuiDesigner
                 tw.Close();
 
                 File.WriteAllText(designerFile.FullName,sw.ToString());
+            }
+        }
+
+        private void AddSubViewsToDesignerCs(View forView, CodeTypeDeclaration class1, CodeMemberMethod initMethod)
+        {
+            foreach (var sub in forView.Subviews)
+            {
+                // If the sub child has a Design (and is not an internal part of another control,
+                // For example Contentview subview of Window
+                if(sub.Data is Design d)
+                {
+                    // The user is designing this view so it needs to be persisted
+                    d.ToCode(class1, initMethod);
+                }
+
+                // now recurse down the view hierarchy
+                AddSubViewsToDesignerCs(sub, class1, initMethod);
             }
         }
     }

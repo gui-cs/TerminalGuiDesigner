@@ -161,8 +161,33 @@ Ctrl+S - Save an opened .Designer.cs file";
         {
             var factory = new ViewFactory();
             var instance = factory.Create(pick.Selected);
-            _viewBeingEdited.AddDesign($"{pick.Selected.Name}1", instance);
+
+            
+            _viewBeingEdited.AddDesign(GetUniqueFieldName(pick.Selected), instance);
         }
+    }
+
+    /// <summary>
+    /// Returns a new unique name for a view of type <paramref name="viewType"/>
+    /// </summary>
+    /// <param name="instance"></param>
+    /// <param name="viewType"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    private string GetUniqueFieldName(Type viewType)
+    {
+        var allDesigns = _viewBeingEdited.GetAllDesigns();
+
+        // consider label1
+        int number = 1;
+        while(allDesigns.Any(d=>d.FieldName.Equals($"{viewType.Name.ToLower()}{number}")))
+        {
+            // label1 is taken, try label2 etc
+            number++;
+        }
+
+        // found a unique one
+        return $"{viewType.Name.ToLower()}{number}";
     }
 
     private void ShowEditPropertiesWindow()

@@ -18,14 +18,6 @@ public class Design
     /// </summary>
     public View View {get;}
 
-    /// <summary>
-    /// All immediate children of <see cref="View"/> as design time objects.
-    /// Use <see cref="AddDesign(string, Terminal.Gui.View)"/> to add new objects
-    /// to the <see cref="View"/>
-    /// </summary>
-    public IReadOnlyCollection<Design> SubControlDesigns => subControlDesigns.AsReadOnly();
-
-    private List<Design> subControlDesigns = new List<Design>();
 
     private Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -38,39 +30,18 @@ public class Design
     public void AddDesign(string name, View subView)
     {
         View.Add(subView);
-        CreateSubControlDesign(name, subView);
+        subView.Data = CreateSubControlDesign(name, subView);
     }
 
     public void RemoveDesign(View view)
     {
-        var design = FindDesign(view, out Design? owner);
-
         // TODO : make this an Activity that is undoable/tracked in a 
         // central activity stack.
 
-        if(design != null && owner != null)
+        if(view.SuperView != null)
         {
-            owner.View.Remove(view);
-            owner.subControlDesigns.Remove(design);
+            view.SuperView.Remove(view);
         }
-    }
-
-    private Design? FindDesign(View view, out Design? owner)
-    {
-        var found = subControlDesigns.FirstOrDefault(d => d.View == view);
-        if(found != null)
-        {
-            owner = this;
-            return found;
-        }
-
-        foreach (var subDesign in subControlDesigns)
-        {
-            return subDesign.FindDesign(view, out owner);
-        }
-
-        owner = null;
-        return null;
     }
 
     public void CreateSubControlDesigns()
@@ -78,16 +49,15 @@ public class Design
         foreach (var subView in View.GetActualSubviews().ToArray())
         {
             logger.Info($"Found subView of Type '{subView.GetType()}'");
-            
-            // TODO how do we pick up the names of these fields from the source (GetType())?
-            CreateSubControlDesign("unknown", subView);
+
+            if(subView.Data is string name)
+            {
+                subView.Data = CreateSubControlDesign(name, subView);
+            }
         }
-
     }
-    private void CreateSubControlDesign(string name, View subView)
+    private Design CreateSubControlDesign(string name, View subView)
     {
-        subControlDesigns.Add(new Design(name, subView));
-
         // HACK: if you don't pull the label out first it complains that you cant set Focusable to true
         // on the Label because its super is not focusable :(
         var super = subView.SuperView;
@@ -105,6 +75,7 @@ public class Design
             super.Add(subView);
         }
 
+        return new Design(name, subView);
     }
 
     /// <summary>
@@ -131,6 +102,11 @@ public class Design
             AddPropertyAssignment(initMethod,prop.Name,val);
         }
 
+        // Set View.Data to the name of the field so that we can 
+        // determine later on which View instances come from which
+        // Fields in the class
+        AddPropertyAssignment(initMethod, nameof(View.Data), FieldName);
+
         AddAddToViewStatement(initMethod);
     }
 
@@ -146,10 +122,17 @@ public class Design
         initMethod.Statements.Add(constructAssign);        
     }
 
+    /// <summary>
+    /// Adds a statement to the InitializeComponent method like:
+    /// <code>this.mylabel.Text = "hello"</code>
+    /// </summary>
+    /// <param name="initMethod">The InitializeComponent method</param>
+    /// <param name="propertyName">The property to set e.g. Text</param>
+    /// <param name="value">The value to assign to the property e.g. "hello"</param>
     protected void AddPropertyAssignment(CodeMemberMethod initMethod, string propertyName, object? value)
     {
         var setTextLhs = new CodeFieldReferenceExpression();
-        setTextLhs.FieldName = "this.myLabel.Text";
+        setTextLhs.FieldName = $"this.{FieldName}.{propertyName}";
         var setTextRhs = new CodePrimitiveExpression();
 
         if(value is ustring u)
@@ -185,5 +168,34 @@ public class Design
         field.Type = new CodeTypeReference(View.GetType());
 
         addTo.Members.Add(field);
+    }
+
+    /// <summary>
+    /// Returns all designs in subviews of this control
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public IEnumerable<Design> GetAllDesigns()
+    {
+        return GetAllDesigns(View);
+    }
+
+    private IEnumerable<Design> GetAllDesigns(View view)
+    {
+        List<Design> toReturn = new List<Design>();
+
+        foreach (var subView in view.GetActualSubviews().ToArray())
+        {
+            if (subView.Data is Design d)
+            {
+                toReturn.Add(d);
+            }
+
+            // even if this subview isn't designable there might be designable ones further down
+            // e.g. a ContentView of a Window
+            toReturn.AddRange(GetAllDesigns(subView));
+        }
+
+        return toReturn;
     }
 }
