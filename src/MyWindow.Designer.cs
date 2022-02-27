@@ -7,11 +7,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TerminalGuiDesigner {
-    using System;
-    using Terminal.Gui;
-    
-    
+namespace TerminalGuiDesigner
+{
+
+
     public partial class MyWindow {
         
         private Terminal.Gui.Label label2;

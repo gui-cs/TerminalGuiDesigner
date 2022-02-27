@@ -15,7 +15,8 @@ F2 - Add Control
 F4 - Edit Selected Control Properties
 Del - Delete selected View
 Ctrl+O - Open a .Designer.cs file
-Ctrl+S - Save an opened .Designer.cs file";
+Ctrl+S - Save an opened .Designer.cs file
+Ctrl+N - New View";
 
     public Editor()
     {
@@ -97,10 +98,15 @@ Ctrl+S - Save an opened .Designer.cs file";
             case Key.CtrlMask | Key.S:
                 Save();
                 return true;
+            case Key.CtrlMask | Key.N:
+                New();
+                return true;
         }
 
         return base.ProcessHotKey(keyEvent);
     }
+
+
     private void Delete()
     {
         if (_viewBeingEdited == null)
@@ -120,7 +126,6 @@ Ctrl+S - Save an opened .Designer.cs file";
             Open(new FileInfo(ofd.FilePath.ToString()));
         }
     }
-
     private void Open(FileInfo toOpen)
     {
         var decompiler = new CodeToView(toOpen);
@@ -137,6 +142,40 @@ Ctrl+S - Save an opened .Designer.cs file";
 
         // Load new instance
         _viewBeingEdited = decompiler.CreateInstance();
+
+        // And add it to the editing window
+        this.Add(_viewBeingEdited.View);
+    }
+
+    private void New()
+    {
+        var ofd = new SaveDialog("New", $"Class file",
+            new List<string>(new[] { ".cs" }));
+        Application.Run(ofd);
+
+        if (ofd.FilePath != null)
+        {
+            New(new FileInfo(ofd.FilePath.ToString()));
+        }
+    }
+
+    private void New(FileInfo toOpen)
+    {
+        var viewToCode = new ViewToCode();
+        var design = viewToCode.GenerateNewWindow(toOpen, "Your Namespace");
+
+        _currentDesignerFile = new FileInfo(Path.GetFileNameWithoutExtension(toOpen.Name) + CodeToView.ExpectedExtension);
+
+        // remove the old view
+        if (_viewBeingEdited != null)
+        {
+            // and dispose it
+            Remove(_viewBeingEdited.View);
+            _viewBeingEdited.View.Dispose();
+        }
+
+        // Load new instance
+        _viewBeingEdited = design;
 
         // And add it to the editing window
         this.Add(_viewBeingEdited.View);

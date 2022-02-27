@@ -29,7 +29,6 @@ namespace TerminalGuiDesigner
             string indent = "    ";
 
             var ns = new CodeNamespace(namespaceName);
-            ns.Imports.Add(new CodeNamespaceImport("Terminal.Gui"));
 
             CodeCompileUnit compileUnit = new CodeCompileUnit();
             compileUnit.Namespaces.Add(ns);
