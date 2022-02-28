@@ -9,14 +9,19 @@ internal class Editor : Toplevel
 {
     Design? _viewBeingEdited;
     private FileInfo _currentDesignerFile;
+    private bool enableDrag = true;
 
     const string Help = @"F1 - Show this help
 F2 - Add Control
+F3 - Toggle mouse dragging on/off
 F4 - Edit Selected Control Properties
 Del - Delete selected View
+Shift+Cursor - Move focused View
+Ctrl+Cursor - Move focused View quickly
 Ctrl+O - Open a .Designer.cs file
 Ctrl+S - Save an opened .Designer.cs file
-Ctrl+N - New View";
+Ctrl+N - New View
+Ctrl+Q - Quit";
 
     public Editor()
     {
@@ -36,6 +41,8 @@ Ctrl+N - New View";
             var designerFile = new FileInfo(Path.Combine(programDir, "../../../../MyWindow.Designer.cs"));
 
             Open(designerFile);
+
+            
         }
         catch (Exception ex)
         {
@@ -47,6 +54,11 @@ Ctrl+N - New View";
         View? dragging = null;
         
         Application.RootMouseEvent += (m) => {
+
+            if(!enableDrag)
+            {
+                return;
+            }
 
             // start dragging
             if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && dragging == null)
@@ -71,6 +83,7 @@ Ctrl+N - New View";
                 dragging = null;
             }
         };
+        ShowHelp();
 
         Application.Run(this);
         Application.Shutdown();
@@ -85,10 +98,40 @@ Ctrl+N - New View";
 
         switch(keyEvent.Key)
         {
-            case Key.F1: MessageBox.Query("Help", Help, "Ok");
+            case Key.F1:
+                ShowHelp();
                 return true;
             case Key.F2:
                 ShowAddViewWindow();
+                return true;
+
+            // Cursor keys
+            case Key.CursorUp | Key.ShiftMask:
+                MoveControl(0,-1);
+                return true;
+            case Key.CursorUp | Key.CtrlMask:
+                MoveControl(0, -3);
+                return true;
+            case Key.CursorDown | Key.ShiftMask:
+                MoveControl(0, 1);
+                return true;
+            case Key.CursorDown | Key.CtrlMask:
+                MoveControl(0, 3);
+                return true;
+            case Key.CursorLeft | Key.ShiftMask:
+                MoveControl(-1, 0);
+                return true;
+            case Key.CursorLeft | Key.CtrlMask:
+                MoveControl(-5, 0);
+                return true;
+            case Key.CursorRight | Key.ShiftMask:
+                MoveControl(1,0);
+                return true;
+            case Key.CursorRight | Key.CtrlMask:
+                MoveControl(5, 0);
+                return true;
+            case Key.F3:
+                enableDrag = !enableDrag;
                 return true;
             case Key.F4:
                 ShowEditPropertiesWindow();
@@ -110,6 +153,23 @@ Ctrl+N - New View";
         return base.ProcessHotKey(keyEvent);
     }
 
+    private void ShowHelp()
+    {
+        MessageBox.Query("Help", Help, "Ok");
+    }
+
+    private void MoveControl(int deltaX, int deltaY)
+    {
+        var view = GetMostFocused(this);
+
+        // TODO: only if using absolute positioning
+
+        if (view.Data is Design d)
+        {
+            d.View.X = Math.Min(Math.Max(d.View.Frame.Left + deltaX, 0),view.SuperView.Bounds.Width-1);
+            d.View.Y = Math.Min(Math.Max(d.View.Frame.Top + deltaY, 0), view.SuperView.Bounds.Height - 1);
+        }
+    }
 
     private void Delete()
     {

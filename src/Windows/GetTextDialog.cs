@@ -22,10 +22,6 @@ class GetTextDialog
         {
             X = 0,
             Y = 0,
-
-            // By using Dim.Fill(), it will automatically resize without manual intervention
-            Width = Dim.Fill(1),
-            Height = Dim.Fill(1),
             Modal = true,
         };
 

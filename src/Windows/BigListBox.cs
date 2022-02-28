@@ -3,7 +3,11 @@ using Terminal.Gui;
 
 namespace TerminalGuiDesigner.Windows;
 
-
+/// <summary>
+/// Modal list box with search.  Displays a collection of objects of Type
+/// <typeparamref name="T"/> and gets the user to pick one.
+/// </summary>
+/// <typeparam name="T"></typeparam>
 internal class BigListBox<T>
 {
     private readonly string _okText;
@@ -199,7 +203,7 @@ internal class BigListBox<T>
 
         AddMoreButtonsAfter(win, btnCancel);
 
-        var callback = Application.MainLoop.AddTimeout(TimeSpan.FromMilliseconds(500), Timer);
+        var callback = Application.MainLoop.AddTimeout(TimeSpan.FromMilliseconds(100), Timer);
 
         Application.Run(win);
 
@@ -220,7 +224,7 @@ internal class BigListBox<T>
 
     bool Timer(MainLoop caller)
     {
-        if (_changes && DateTime.Now.Subtract(_lastKeypress) > TimeSpan.FromSeconds(1))
+        if (_changes && DateTime.Now.Subtract(_lastKeypress) > TimeSpan.FromMilliseconds(100))
         {
             lock (_taskCancellationLock)
             {
