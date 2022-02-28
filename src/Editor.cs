@@ -79,6 +79,10 @@ Ctrl+N - New View";
 
     public override bool ProcessHotKey(KeyEvent keyEvent)
     {
+        // if another window is showing don't respond to hotkeys
+        if (!IsCurrentTop)
+            return false;
+
         switch(keyEvent.Key)
         {
             case Key.F1: MessageBox.Query("Help", Help, "Ok");
@@ -233,12 +237,11 @@ Ctrl+N - New View";
     {
         StringBuilder sb = new StringBuilder();
         var view = GetMostFocused(this);
-        foreach (var prop in view.GetType().GetProperties())
+        if(view.Data is Design d)
         {
-            sb.AppendLine($"{prop.Name}:{prop.GetValue(view)}");
+            var edit = new EditDialog(d);
+            Application.Run(edit);
         }
-
-        MessageBox.Query(10, 10, "Properties", sb.ToString(), "Ok");
     }
 
     private View? HitTest(View w, MouseEvent m)

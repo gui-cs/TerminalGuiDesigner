@@ -100,6 +100,27 @@ public class Design
         yield return View.GetType().GetProperty(nameof(View.Y));
     }
 
+    internal void SetDesignablePropertyValue(PropertyInfo property, object? value)
+    {
+        if (value == null)
+        {
+            property.SetValue(View, null);
+            return;
+        }
+
+        if (property.PropertyType == typeof(ustring))
+        {
+            if(value is string s)
+            {
+                property.SetValue(View, ustring.Make(s));
+                return;
+            }
+        }
+
+        // todo do this properly with undo history and stuff
+        property.SetValue(View, value);
+    }
+
 
     /// <summary>
     /// Adds declaration and initialization statements to the .Designer.cs
@@ -134,6 +155,22 @@ public class Design
         constructAssign.Left = constructLhs;
         constructAssign.Right = constructRhs;
         initMethod.Statements.Add(constructAssign);        
+    }
+
+    /// <summary>
+    /// Returns the user readable value of the <see cref="View"/> 
+    /// property <paramref name="propertyInfo"/> as designed by
+    /// the user.  Note that this could be different from from how
+    /// it appears in the editor e.g. the CanFocus property may be 
+    /// reported as true/false but in the Editor it is always focusable
+    /// so the user can select and delete/drag it around etc.
+    /// </summary>
+    /// <param name="propertyInfo"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    internal string? GetDesignablePropertyValue(PropertyInfo propertyInfo)
+    {
+        return propertyInfo.GetValue(View)?.ToString();
     }
 
     /// <summary>
