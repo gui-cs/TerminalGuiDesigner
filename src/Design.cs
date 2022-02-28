@@ -95,7 +95,17 @@ public class Design
     /// </summary>
     public virtual IEnumerable<PropertyInfo> GetDesignableProperties()
     {
-        yield return View.GetType().GetProperty(nameof(View.Text));
+        if(View is Button)
+        {
+            // See https://github.com/migueldeicaza/gui.cs/issues/1619
+            // Button.Text is not the same property as View.Text
+            yield return typeof(Button).GetProperty(nameof(Button.Text));
+        }
+        else
+        {
+            yield return View.GetType().GetProperty(nameof(View.Text));
+        }
+
         yield return View.GetType().GetProperty(nameof(View.X));
         yield return View.GetType().GetProperty(nameof(View.Y));
     }
