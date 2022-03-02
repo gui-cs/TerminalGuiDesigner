@@ -2,6 +2,7 @@
 using Terminal.Gui;
 using System.Text;
 using TerminalGuiDesigner.Windows;
+using TerminalGuiDesigner.Operations;
 
 namespace TerminalGuiDesigner;
 
@@ -265,8 +266,9 @@ Ctrl+Q - Quit";
             var factory = new ViewFactory();
             var instance = factory.Create(pick.Selected);
 
-            
-            _viewBeingEdited.AddDesign(GetUniqueFieldName(pick.Selected), instance);
+            OperationManager.Instance.Do(
+                new AddViewOperation(instance,_viewBeingEdited,GetUniqueFieldName(pick.Selected))
+            );
         }
     }
 

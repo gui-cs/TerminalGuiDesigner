@@ -6,7 +6,7 @@ using NStack;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
-    
+
 public class Design
 {
     public string FieldName { get; }
@@ -25,12 +25,6 @@ public class Design
     {
         FieldName = fieldName;
         View = view;
-    }
-
-    public void AddDesign(string name, View subView)
-    {
-        View.Add(subView);
-        subView.Data = CreateSubControlDesign(name, subView);
     }
 
     public void RemoveDesign(View view)
@@ -56,7 +50,7 @@ public class Design
             }
         }
     }
-    private Design CreateSubControlDesign(string name, View subView)
+    public Design CreateSubControlDesign(string name, View subView)
     {
         // HACK: if you don't pull the label out first it complains that you cant set Focusable to true
         // on the Label because its super is not focusable :(
