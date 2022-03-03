@@ -27,17 +27,6 @@ public class Design
         View = view;
     }
 
-    public void RemoveDesign(View view)
-    {
-        // TODO : make this an Activity that is undoable/tracked in a 
-        // central activity stack.
-
-        if(view.SuperView != null)
-        {
-            view.SuperView.Remove(view);
-        }
-    }
-
     public void CreateSubControlDesigns()
     {
         foreach (var subView in View.GetActualSubviews().ToArray())

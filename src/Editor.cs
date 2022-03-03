@@ -22,7 +22,9 @@ Ctrl+Cursor - Move focused View quickly
 Ctrl+O - Open a .Designer.cs file
 Ctrl+S - Save an opened .Designer.cs file
 Ctrl+N - New View
-Ctrl+Q - Quit";
+Ctrl+Q - Quit
+Ctrl+Z - Undo
+Ctrl+Y - Redo";
 
     public Editor()
     {
@@ -149,6 +151,12 @@ Ctrl+Q - Quit";
             case Key.CtrlMask | Key.N:
                 New();
                 return true;
+            case Key.CtrlMask | Key.Z:
+                OperationManager.Instance.Undo();
+                return true;
+            case Key.CtrlMask | Key.Y:
+                OperationManager.Instance.Redo();
+                return true;
         }
 
         return base.ProcessHotKey(keyEvent);
@@ -178,7 +186,10 @@ Ctrl+Q - Quit";
             return;
 
         var viewToDelete = GetMostFocused(_viewBeingEdited.View);
-        _viewBeingEdited.RemoveDesign(viewToDelete);
+
+        OperationManager.Instance.Do(
+            new DeleteViewOperation(viewToDelete)
+        );
     }
     private void Open()
     {
@@ -193,6 +204,10 @@ Ctrl+Q - Quit";
     }
     private void Open(FileInfo toOpen)
     {
+        // since we are opening a new view we should
+        // clear the history
+        OperationManager.Instance.ClearUndoRedo();
+
         var decompiler = new CodeToView(toOpen);
 
         _currentDesignerFile = toOpen;

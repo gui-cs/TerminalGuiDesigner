@@ -40,4 +40,10 @@ public class OperationManager
             undoStack.Push(op);
         }
     }
+
+    public void ClearUndoRedo()
+    {
+        undoStack.Clear();
+        redoStack.Clear();
+    }
 }
