@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Reflection;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner.Windows;
@@ -140,7 +141,7 @@ internal class BigListBox<T>
         var btnOk = new Button(_okText, true)
         {
             Y = Pos.Bottom(_listView),
-            Width = 8,
+            Width = 10,
             Height = 1
         };
         btnOk.Clicked += () =>
@@ -205,10 +206,12 @@ internal class BigListBox<T>
 
         var callback = Application.MainLoop.AddTimeout(TimeSpan.FromMilliseconds(100), Timer);
 
+        _listView.FocusFirst();
+
         Application.Run(win);
 
         Application.MainLoop.RemoveTimeout(callback);
-
+        
         return okClicked;
     }
 
@@ -272,6 +275,14 @@ internal class BigListBox<T>
             }
 
         });
+    }
+
+    internal static bool Show(string prompt, string okText, bool addSearch, T[] collection, Func<T, string> displayMember, bool addNull, out T selected)
+    {        
+        var pick = new BigListBox<T>(prompt,okText,addSearch,collection,displayMember,addNull);
+        bool toReturn = pick.ShowDialog();
+        selected = pick.Selected;
+        return toReturn;
     }
 
     private IList<ListViewObject<T>> BuildList(IList<T> listOfT)

@@ -15,7 +15,7 @@ internal class Editor : Toplevel
     const string Help = @"F1 - Show this help
 F2 - Add Control
 F3 - Toggle mouse dragging on/off
-F4 - Edit Selected Control Properties
+Enter - Edit Selected Control Properties
 Del - Delete selected View
 Shift+Cursor - Move focused View
 Ctrl+Cursor - Move focused View quickly
@@ -136,7 +136,7 @@ Ctrl+Y - Redo";
             case Key.F3:
                 enableDrag = !enableDrag;
                 return true;
-            case Key.F4:
+            case Key.Enter:
                 ShowEditPropertiesWindow();
                 return true;
             case Key.DeleteChar:
@@ -274,15 +274,14 @@ Ctrl+Y - Redo";
             return;
         }
         var selectable = typeof(View).Assembly.DefinedTypes.Where(t => typeof(View).IsAssignableFrom(t)).ToArray();
-
-        var pick = new BigListBox<Type>("Type of Control","Add",true,selectable,t=>t.Name,false);
-        if(pick.ShowDialog())
+        
+        if(BigListBox<Type>.Show("Type of Control","Add",true,selectable,t=>t.Name,false, out Type selected))
         {
             var factory = new ViewFactory();
-            var instance = factory.Create(pick.Selected);
+            var instance = factory.Create(selected);
 
             OperationManager.Instance.Do(
-                new AddViewOperation(instance,_viewBeingEdited,GetUniqueFieldName(pick.Selected))
+                new AddViewOperation(instance,_viewBeingEdited,GetUniqueFieldName(selected))
             );
         }
     }

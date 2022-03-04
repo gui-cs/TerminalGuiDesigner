@@ -95,9 +95,22 @@ internal class EditDialog : Window
 
     private bool GetNewValue(PropertyInListView propertyInListView, out object? newValue)
     {
+        var property = propertyInListView.PropertyInfo;
+
+        // user is editing a Pos
+        if(property.PropertyType == typeof(Pos))
+        {        
+            // pick what type of Pos they want
+            if(BigListBox<PosType>.Show("Position Type","Pick",true,Enum.GetValues<PosType>(),t=>t.ToString(),false, out PosType selected))
+            {
+                // TODO
+
+            }
+        }
+
         var dlg = new GetTextDialog(new DialogArgs()
         {
-            WindowTitle = propertyInListView.PropertyInfo.Name,
+            WindowTitle = property.Name,
             EntryLabel = "New Value",
         }, Design.GetDesignablePropertyValue(propertyInListView.PropertyInfo) ?? string.Empty);
 
