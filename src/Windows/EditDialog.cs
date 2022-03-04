@@ -103,24 +103,65 @@ internal class EditDialog : Window
             // pick what type of Pos they want
             if(BigListBox<PosType>.Show("Position Type","Pick",true,Enum.GetValues<PosType>(),t=>t.ToString(),false, out PosType selected))
             {
-                // TODO
+                switch(selected)
+                {
+                    case PosType.Absolute: 
+                            if(GetInt(property.Name,"Absolute Position",0,out int newPos))
+                            {
+                                newValue = (Pos)newPos;
+                                return true;
+                            }
+                            break;
 
+                    // TODO
+                    default : throw new NotImplementedException();
+
+                }
             }
         }
+        
+        var oldValue = Design.GetDesignablePropertyValue(propertyInListView.PropertyInfo) ?? string.Empty;
 
-        var dlg = new GetTextDialog(new DialogArgs()
+        if(GetString(property.Name,"New Value",oldValue, out string result))
         {
-            WindowTitle = property.Name,
-            EntryLabel = "New Value",
-        }, Design.GetDesignablePropertyValue(propertyInListView.PropertyInfo) ?? string.Empty);
-
-        if(dlg.ShowDialog())
-        {
-            newValue = dlg.ResultText;
+            newValue = result;
             return true;
         }
 
         newValue = null;
+        return false;
+    }
+
+    private bool GetString(string windowTitle, string entryLabel, string initialValue, out string? result)
+    {
+        var dlg = new GetTextDialog(new DialogArgs()
+        {
+            WindowTitle = windowTitle,
+            EntryLabel = entryLabel,
+        },initialValue);
+
+        if(dlg.ShowDialog())
+        {
+            result = dlg.ResultText;
+            return true;
+        }
+
+        result = null;
+        return false;
+    }
+
+
+    private bool GetInt(string windowTitle, string entryLabel, int initialValue, out int result)
+    {
+        if(GetString(windowTitle,entryLabel,initialValue.ToString(),out string newValue))
+        {
+            if(int.TryParse(newValue,out result))
+            {
+                return true;
+            }
+        }
+
+        result = 0;
         return false;
     }
 
