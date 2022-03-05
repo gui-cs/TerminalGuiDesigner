@@ -18,6 +18,8 @@ public class Design
     /// </summary>
     public View View {get;}
 
+    public Dictionary<PropertyInfo,PropertyDesign> DesignedProperties = new ();
+
 
     private Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -98,6 +100,21 @@ public class Design
         if (value == null)
         {
             property.SetValue(View, null);
+            return;
+        }
+
+        if(value is PropertyDesign d)
+        {
+            property.SetValue(View,d.Value);
+
+            // TODO : Make this a helper method and undoable
+            if(DesignedProperties.ContainsKey(property))
+            {
+                DesignedProperties[property] = d;
+            }
+            else
+                DesignedProperties.Add(property,d);
+            
             return;
         }
 

@@ -100,49 +100,12 @@ internal class EditDialog : Window
         // user is editing a Pos
         if(property.PropertyType == typeof(Pos))
         {        
-            // pick what type of Pos they want
-            if(Modals.Get("Position Type","Pick",Enum.GetValues<PosType>(), out PosType selected))
+            var designer = new PosDesigner();
+
+            if(designer.GetPosDesign(Design,property,out PropertyDesign posDesign))
             {
-                switch(selected)
-                {
-                    case PosType.Absolute: 
-                            if(Modals.GetInt(property.Name,"Absolute Position",0,out int newPos))
-                            {
-                                newValue = (Pos)newPos;
-                                return true;
-                            }
-                            break;
-                    case PosType.Relative:
-                        if (Modals.Get(property.Name, "Relative To",Design.GetSiblings().ToArray(), out Design relativeTo))
-                        {
-                            if (Modals.Get("Side", "Pick", Enum.GetValues<Side>(), out Side side))
-                            {
-                                switch(side)
-                                {
-                                    case Side.Above:
-                                        newValue = Pos.Top(relativeTo.View);
-                                        break;
-                                    case Side.Below:
-                                        newValue = Pos.Bottom(relativeTo.View);
-                                        break;
-                                    case Side.Left:
-                                        newValue = Pos.Left(relativeTo.View);
-                                        break;
-                                    case Side.Right:
-                                        newValue = Pos.Right(relativeTo.View);
-                                        break;
-                                    default: throw new ArgumentOutOfRangeException(nameof(side));
-                                }
-                                return true;
-                            }
-                        }
-                        break;
-                    case PosType.Percent: throw new NotImplementedException();
-                    case PosType.Anchor: throw new NotImplementedException();
-
-                    default : throw new ArgumentOutOfRangeException(nameof(selected));
-
-                }
+                newValue = posDesign;
+                return true;
             }
         }
         
