@@ -28,7 +28,7 @@ namespace TerminalGuiDesigner {
             this.label1 = new Terminal.Gui.Label();
             this.label1.Text = "Heya";
             this.label1.X = 0;
-            this.label1.Y = Pos.Bottom(label2) + 1;
+            this.label1.Y = Pos.Percent(50);
             this.label1.Data = "label1";
             this.Add(this.label1);
         }

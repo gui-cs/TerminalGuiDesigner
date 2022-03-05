@@ -22,6 +22,21 @@ internal class Modals
         result = 0;
         return false;
     }
+
+    // TODO : Can this be generic
+    public static bool GetFloat(string windowTitle, string entryLabel, float initialValue, out float result)
+    {
+        if (GetString(windowTitle, entryLabel, initialValue.ToString(), out string newValue))
+        {
+            if (float.TryParse(newValue, out result))
+            {
+                return true;
+            }
+        }
+
+        result = 0;
+        return false;
+    }
     public static bool GetString(string windowTitle, string entryLabel, string initialValue, out string? result)
     {
         var dlg = new GetTextDialog(new DialogArgs()
