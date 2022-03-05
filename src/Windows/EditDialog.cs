@@ -105,9 +105,10 @@ internal class EditDialog : Window
     private bool GetNewValue(PropertyInListView propertyInListView, out object? newValue)
     {
         var property = propertyInListView.PropertyInfo;
+        var oldValue = Design.GetDesignablePropertyValue(propertyInListView.PropertyInfo);
 
         // user is editing a Pos
-        if(property.PropertyType == typeof(Pos))
+        if (property.PropertyType == typeof(Pos))
         {        
             var designer = new PosDesigner();
 
@@ -117,10 +118,8 @@ internal class EditDialog : Window
                 return true;
             }
         }
-        
-        var oldValue = Design.GetDesignablePropertyValue(propertyInListView.PropertyInfo) ?? string.Empty;
 
-        if(Modals.GetString(property.Name,"New Value",oldValue, out string result))
+        if(Modals.GetString(property.Name,"New Value",oldValue?.ToString() ?? string.Empty, out string result))
         {
             newValue = result;
             return true;

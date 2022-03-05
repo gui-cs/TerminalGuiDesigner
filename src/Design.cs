@@ -95,6 +95,22 @@ public class Design
         yield return View.GetType().GetProperty(nameof(View.Y));
     }
 
+    /// <summary>
+    /// Returns a <see cref="PropertyDesign"/> or the actual value of 
+    /// <paramref name="p"/> on the <see cref="View"/>
+    /// </summary>
+    /// <param name="p"></param>
+    /// <returns></returns>
+    public virtual object GetDesignablePropertyValue(PropertyInfo p)
+    {
+        if(DesignedProperties.ContainsKey(p))
+        {
+            return DesignedProperties[p];
+        }
+
+        return p.GetValue(View);
+    }
+
     internal void SetDesignablePropertyValue(PropertyInfo property, object? value)
     {
         
@@ -180,22 +196,6 @@ public class Design
         constructAssign.Left = constructLhs;
         constructAssign.Right = constructRhs;
         initMethod.Statements.Add(constructAssign);        
-    }
-
-    /// <summary>
-    /// Returns the user readable value of the <see cref="View"/> 
-    /// property <paramref name="propertyInfo"/> as designed by
-    /// the user.  Note that this could be different from from how
-    /// it appears in the editor e.g. the CanFocus property may be 
-    /// reported as true/false but in the Editor it is always focusable
-    /// so the user can select and delete/drag it around etc.
-    /// </summary>
-    /// <param name="propertyInfo"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    internal string? GetDesignablePropertyValue(PropertyInfo propertyInfo)
-    {
-        return propertyInfo.GetValue(View)?.ToString();
     }
 
     /// <summary>
