@@ -277,13 +277,6 @@ internal class BigListBox<T>
         });
     }
 
-    internal static bool Show(string prompt, string okText, bool addSearch, T[] collection, Func<T, string> displayMember, bool addNull, out T selected)
-    {        
-        var pick = new BigListBox<T>(prompt,okText,addSearch,collection,displayMember,addNull);
-        bool toReturn = pick.ShowDialog();
-        selected = pick.Selected;
-        return toReturn;
-    }
 
     private IList<ListViewObject<T>> BuildList(IList<T> listOfT)
     {

@@ -275,7 +275,7 @@ Ctrl+Y - Redo";
         }
         var selectable = typeof(View).Assembly.DefinedTypes.Where(t => typeof(View).IsAssignableFrom(t)).ToArray();
         
-        if(BigListBox<Type>.Show("Type of Control","Add",true,selectable,t=>t.Name,false, out Type selected))
+        if(Modals.Get("Type of Control","Add",true,selectable,t=>t.Name,false, out Type selected))
         {
             var factory = new ViewFactory();
             var instance = factory.Create(selected);
@@ -311,7 +311,6 @@ Ctrl+Y - Redo";
 
     private void ShowEditPropertiesWindow()
     {
-        StringBuilder sb = new StringBuilder();
         var view = GetMostFocused(this);
         if(view.Data is Design d)
         {

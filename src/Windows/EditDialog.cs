@@ -101,20 +101,46 @@ internal class EditDialog : Window
         if(property.PropertyType == typeof(Pos))
         {        
             // pick what type of Pos they want
-            if(BigListBox<PosType>.Show("Position Type","Pick",true,Enum.GetValues<PosType>(),t=>t.ToString(),false, out PosType selected))
+            if(Modals.Get("Position Type","Pick",Enum.GetValues<PosType>(), out PosType selected))
             {
                 switch(selected)
                 {
                     case PosType.Absolute: 
-                            if(GetInt(property.Name,"Absolute Position",0,out int newPos))
+                            if(Modals.GetInt(property.Name,"Absolute Position",0,out int newPos))
                             {
                                 newValue = (Pos)newPos;
                                 return true;
                             }
                             break;
+                    case PosType.Relative:
+                        if (Modals.Get(property.Name, "Relative To",Design.GetSiblings().ToArray(), out Design relativeTo))
+                        {
+                            if (Modals.Get("Side", "Pick", Enum.GetValues<Side>(), out Side side))
+                            {
+                                switch(side)
+                                {
+                                    case Side.Above:
+                                        newValue = Pos.Top(relativeTo.View);
+                                        break;
+                                    case Side.Below:
+                                        newValue = Pos.Bottom(relativeTo.View);
+                                        break;
+                                    case Side.Left:
+                                        newValue = Pos.Left(relativeTo.View);
+                                        break;
+                                    case Side.Right:
+                                        newValue = Pos.Right(relativeTo.View);
+                                        break;
+                                    default: throw new ArgumentOutOfRangeException(nameof(side));
+                                }
+                                return true;
+                            }
+                        }
+                        break;
+                    case PosType.Percent: throw new NotImplementedException();
+                    case PosType.Anchor: throw new NotImplementedException();
 
-                    // TODO
-                    default : throw new NotImplementedException();
+                    default : throw new ArgumentOutOfRangeException(nameof(selected));
 
                 }
             }
@@ -122,7 +148,7 @@ internal class EditDialog : Window
         
         var oldValue = Design.GetDesignablePropertyValue(propertyInListView.PropertyInfo) ?? string.Empty;
 
-        if(GetString(property.Name,"New Value",oldValue, out string result))
+        if(Modals.GetString(property.Name,"New Value",oldValue, out string result))
         {
             newValue = result;
             return true;
@@ -132,38 +158,7 @@ internal class EditDialog : Window
         return false;
     }
 
-    private bool GetString(string windowTitle, string entryLabel, string initialValue, out string? result)
-    {
-        var dlg = new GetTextDialog(new DialogArgs()
-        {
-            WindowTitle = windowTitle,
-            EntryLabel = entryLabel,
-        },initialValue);
 
-        if(dlg.ShowDialog())
-        {
-            result = dlg.ResultText;
-            return true;
-        }
-
-        result = null;
-        return false;
-    }
-
-
-    private bool GetInt(string windowTitle, string entryLabel, int initialValue, out int result)
-    {
-        if(GetString(windowTitle,entryLabel,initialValue.ToString(),out string newValue))
-        {
-            if(int.TryParse(newValue,out result))
-            {
-                return true;
-            }
-        }
-
-        result = 0;
-        return false;
-    }
 
     private void List_KeyPress(KeyEventEventArgs obj)
     {

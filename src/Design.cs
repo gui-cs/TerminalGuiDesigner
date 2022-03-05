@@ -138,6 +138,27 @@ public class Design
         AddAddToViewStatement(initMethod);
     }
 
+    /// <summary>
+    /// Returns all designable controls that are in the same container as this
+    /// Does not include subcontainer controls etc.
+    /// </summary>
+    /// <returns></returns>
+    internal IEnumerable<Design> GetSiblings()
+    {
+        foreach(var v in View.SuperView.Subviews)
+        {
+            if(v == View)
+            {
+                continue;
+            }
+
+            if(v.Data is Design d)
+            {
+                yield return d;
+            }
+        }
+    }
+
     protected void AddConstructorCall(CodeMemberMethod initMethod, params CodeExpression[] parameters)
     {
         // Construct it
@@ -256,5 +277,10 @@ public class Design
         }
 
         return toReturn;
+    }
+
+    public override string ToString()
+    {
+        return FieldName;
     }
 }
