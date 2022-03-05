@@ -7,21 +7,30 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TerminalGuiDesigner
-{
-
-
+namespace TerminalGuiDesigner {
+    using System;
+    using Terminal.Gui;
+    
+    
     public partial class MyWindow {
         
         private Terminal.Gui.Label label2;
         
+        private Terminal.Gui.Label label1;
+        
         private void InitializeComponent() {
             this.label2 = new Terminal.Gui.Label();
             this.label2.Text = "Heya";
-            this.label2.X = 40;
-            this.label2.Y = 2;
+            this.label2.X = 15;
+            this.label2.Y = 3;
             this.label2.Data = "label2";
             this.Add(this.label2);
+            this.label1 = new Terminal.Gui.Label();
+            this.label1.Text = "Heya";
+            this.label1.X = 0;
+            this.label1.Y = Pos.Bottom(label2) + 1;
+            this.label1.Data = "label1";
+            this.Add(this.label1);
         }
     }
 }

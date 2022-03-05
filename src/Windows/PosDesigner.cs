@@ -24,23 +24,27 @@ internal class PosDesigner
                     {
                         if (Modals.Get("Side", "Pick", Enum.GetValues<Side>(), out Side side))
                         {
-                            switch(side)
+                            if(Modals.GetInt("Offset","Offset",0,out int offset))
                             {
-                                case Side.Above:
-                                    result = new PropertyDesign("Pos.Top({0})",Pos.Top(relativeTo.View),()=>relativeTo.FieldName);
-                                    break;
-                                case Side.Below:
-                                    result = new PropertyDesign("Pos.Bottom({0})",Pos.Bottom(relativeTo.View),()=>relativeTo.FieldName);
-                                    break;
-                                case Side.Left:
-                                    result = new PropertyDesign("Pos.Left({0})",Pos.Left(relativeTo.View),()=>relativeTo.FieldName);
-                                    break;
-                                case Side.Right:
-                                    result = new PropertyDesign("Pos.Right({0})",Pos.Right(relativeTo.View),()=>relativeTo.FieldName);
-                                    break;
-                                default: throw new ArgumentOutOfRangeException(nameof(side));
+                                switch(side)
+                                {
+                                    case Side.Above:
+                                        result = BuildOffsetPos("Pos.Top({0})",Pos.Top(relativeTo.View),offset,()=>relativeTo.FieldName);
+                                        break;
+                                    case Side.Below:
+                                        result = BuildOffsetPos("Pos.Bottom({0})",Pos.Bottom(relativeTo.View),offset,()=>relativeTo.FieldName);
+                                        break;
+                                    case Side.Left:
+                                        result = BuildOffsetPos("Pos.Left({0})",Pos.Left(relativeTo.View),offset,()=>relativeTo.FieldName);
+                                        break;
+                                    case Side.Right:
+                                        result = BuildOffsetPos("Pos.Right({0})",Pos.Right(relativeTo.View),offset, ()=>relativeTo.FieldName);
+                                        break;
+                                    default: throw new ArgumentOutOfRangeException(nameof(side));
+                                }
+
+                                return true;
                             }
-                            return true;
                         }
                     }
                     break;
@@ -54,5 +58,22 @@ internal class PosDesigner
 
         result = null;
         return false;
+    }
+
+    private PropertyDesign BuildOffsetPos(string code, Pos pos, int offset, Func<string> codeParameters)
+    {
+        if(offset == 0)
+        {
+            return new PropertyDesign(code,pos,codeParameters);
+        }
+        else
+        if(offset > 0)
+        {
+            return new PropertyDesign($"{code} + {offset}",pos + offset,codeParameters);
+        }
+        else
+        {
+            return new PropertyDesign($"{code} - {-offset}",pos - offset,codeParameters);
+        }        
     }
 }

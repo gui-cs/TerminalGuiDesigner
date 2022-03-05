@@ -153,7 +153,7 @@ public class Design
 
         foreach(var prop in GetDesignableProperties())
         {
-            var val = prop.GetValue(View);
+            var val = GetDesignablePropertyValue(prop);
             AddPropertyAssignment(initMethod,prop.Name,val);
         }
 
@@ -225,6 +225,10 @@ public class Design
             {
                 Value = u.ToString()
             };
+        }
+        if(value is PropertyDesign pd){
+
+            return new CodeSnippetExpression(pd.GetCodeWithParameters());
         }
         if (value is Pos p)
         {

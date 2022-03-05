@@ -2,7 +2,6 @@ namespace TerminalGuiDesigner
 {
     public class PropertyDesign
     {
-
         public string Code {get;}
         public object Value {get;}
 
@@ -18,7 +17,7 @@ namespace TerminalGuiDesigner
             CodeParameters = codeParameters;
         }
 
-        string GetCodeWithParameters()
+        public string GetCodeWithParameters()
         {
             return string.Format(Code,CodeParameters.Select(f=>f()).ToArray());
         }
