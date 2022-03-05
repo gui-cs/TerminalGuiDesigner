@@ -97,6 +97,7 @@ public class Design
 
     internal void SetDesignablePropertyValue(PropertyInfo property, object? value)
     {
+        
         if (value == null)
         {
             property.SetValue(View, null);
@@ -107,14 +108,7 @@ public class Design
         {
             property.SetValue(View,d.Value);
 
-            // TODO : Make this a helper method and undoable
-            if(DesignedProperties.ContainsKey(property))
-            {
-                DesignedProperties[property] = d;
-            }
-            else
-                DesignedProperties.Add(property,d);
-            
+            DesignedProperties.AddOrUpdate(property,d);
             return;
         }
 

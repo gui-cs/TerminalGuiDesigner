@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Terminal.Gui;
+using TerminalGuiDesigner.Operations;
 
 namespace TerminalGuiDesigner.Windows;
 
@@ -56,19 +57,27 @@ internal class EditDialog : Window
             try
             {
                 var p = collection[list.SelectedItem];
+                
+                // TODO make this work with PropertyDesign correctly
+                // i.e. return the PropertyDesign not the value
+                var oldValue = p.PropertyInfo.GetValue(Design.View);
 
                     
                 if(setNull)
                 {
                     // user wants to set this property to null/default
-                    Design.SetDesignablePropertyValue(p.PropertyInfo,null);
+                    OperationManager.Instance.Do(
+                        new SetPropertyOperation(Design,p.PropertyInfo,oldValue,null)
+                    );
                 }
                 else
                 {
                     // user wants to give us a new value for this property
                     if(GetNewValue(p, out object? newValue))
                     {
-                        Design.SetDesignablePropertyValue(p.PropertyInfo, newValue);
+                        OperationManager.Instance.Do(
+                            new SetPropertyOperation(Design,p.PropertyInfo,oldValue,newValue)
+                        );
                     }
                     else
                     {
