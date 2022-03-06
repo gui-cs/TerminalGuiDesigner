@@ -85,6 +85,9 @@ public class Design
     {
         yield return View.GetActualTextProperty();
 
+        yield return View.GetType().GetProperty(nameof(View.Width));
+        yield return View.GetType().GetProperty(nameof(View.Height));
+
         yield return View.GetType().GetProperty(nameof(View.X));
         yield return View.GetType().GetProperty(nameof(View.Y));
     }
@@ -226,8 +229,6 @@ public class Design
         }
         if (value is Pos p)
         {
-            
-
             // Value is a position e.g. X=2
             // Pos can be many different subclasses all of which are internal
             // lets deal with only PosAbsolute for now
@@ -240,6 +241,21 @@ public class Design
             }
             else
                 throw new NotImplementedException("Only absolute positions are supported at the moment");
+        }
+        else if (value is Dim d)
+        {
+            // Value is a position e.g. X=2
+            // Pos can be many different subclasses all of which are internal
+            // lets deal with only PosAbsolute for now
+            if (d.IsAbsolute(out int n))
+            {
+                return new CodePrimitiveExpression()
+                {
+                    Value = n
+                };
+            }
+            else
+                throw new NotImplementedException("Only absolute dimensions are supported at the moment");
         }
         else
         {

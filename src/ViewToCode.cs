@@ -1,6 +1,7 @@
 ﻿using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.CSharp;
 using Terminal.Gui;
 
@@ -17,10 +18,11 @@ namespace TerminalGuiDesigner
         /// </summary>
         /// <param name="csFilePath"></param>
         /// <param name="namespaceName"></param>
+        /// <param name="designerFile">Designer.cs file that will be created along side the <paramref name="csFilePath"/></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="NotImplementedException"></exception>
-        public Design GenerateNewWindow(FileInfo csFilePath, string namespaceName)
+        public Design GenerateNewWindow(FileInfo csFilePath, string namespaceName, out FileInfo designerFile)
         {
             if(csFilePath.Name.EndsWith(CodeToView.ExpectedExtension))
             {
@@ -29,12 +31,12 @@ namespace TerminalGuiDesigner
             string indent = "    ";
 
             var ns = new CodeNamespace(namespaceName);
+            ns.Imports.Add(new CodeNamespaceImport("Terminal.Gui"));
 
             CodeCompileUnit compileUnit = new CodeCompileUnit();
             compileUnit.Namespaces.Add(ns);
             
-            var className = Path.GetFileNameWithoutExtension(csFilePath.Name);
-            var designerFile = new FileInfo(Path.Combine(csFilePath.Directory.FullName,className + CodeToView.ExpectedExtension));
+            designerFile = GetDesignerFile(csFilePath, out string className);
 
             CodeTypeDeclaration class1 = new CodeTypeDeclaration(className);
             class1.IsPartial = true;
@@ -68,14 +70,46 @@ namespace TerminalGuiDesigner
             lbl.Data = "label1"; // field name in the class
             w.Add(lbl);
 
-            GenerateDesignerCs(w, designerFile, namespaceName);
-            
-            return new Design("root",w);
+            var design = new Design("root", w);
+            design.CreateSubControlDesigns();
+
+            GenerateDesignerCs(w, designerFile);
+
+            return design;
+        }
+        /// <summary>
+        /// Returns the .Designer.cs file for the given class file.
+        /// Returns a reference even if that file does not exist
+        /// </summary>
+        /// <param name="csFile"></param>
+        /// <returns></returns>
+        public FileInfo GetDesignerFile(FileInfo csFile, out string className)
+        {
+            className = Path.GetFileNameWithoutExtension(csFile.Name);
+            return new FileInfo(Path.Combine(csFile.Directory.FullName, className + CodeToView.ExpectedExtension));
         }
 
-        public void GenerateDesignerCs(View forView, FileInfo designerFile, string namespaceName)
+        /// <summary>
+        /// Returns the class file for a given .Designer.cs file
+        /// </summary>
+        /// <param name="designerFile"></param>
+        /// <returns></returns>
+        public FileInfo GetCsFile(FileInfo designerFile)
         {
-            var ns = new CodeNamespace(namespaceName);
+            if (!designerFile.Name.EndsWith(CodeToView.ExpectedExtension))
+                throw new ArgumentException($"Expected {designerFile} to end with {CodeToView.ExpectedExtension}");
+
+            // chop off the .Designer.cs bit
+            var filename = designerFile.FullName;
+            filename = filename.Substring(0, filename.Length - CodeToView.ExpectedExtension.Length);
+            filename += ".cs";
+
+            return new FileInfo(filename);
+            
+        }
+        public void GenerateDesignerCs(View forView, FileInfo designerFile)
+        {
+            var ns = new CodeNamespace(GetNamespace(GetCsFile(designerFile)));
             ns.Imports.Add(new CodeNamespaceImport("System"));
             ns.Imports.Add(new CodeNamespaceImport("Terminal.Gui"));
 
@@ -109,6 +143,20 @@ namespace TerminalGuiDesigner
 
                 File.WriteAllText(designerFile.FullName,sw.ToString());
             }
+        }
+
+        private string GetNamespace(FileInfo csFile)
+        {
+            var csFileCode = File.ReadAllText(csFile.FullName);
+            var regexFindNamespace = new Regex(@"namespace ([\w\.]+)");
+
+            var match = regexFindNamespace.Matches(csFileCode).FirstOrDefault();
+            if(match == null)
+            {
+                throw new Exception($"Could not find namespace directive in {csFile}");
+            }
+
+            return match.Groups[1].Value;
         }
 
         private void AddSubViewsToDesignerCs(View forView, CodeTypeDeclaration class1, CodeMemberMethod initMethod)

@@ -79,7 +79,7 @@ internal class PosDesigner
 
     private bool DesignPosPercent(PropertyInfo property, out PropertyDesign result)
     {       
-        if(Modals.GetFloat(property.Name,"Absolute Position",0.5f,out float newPercent))
+        if(Modals.GetFloat(property.Name, "Percent(0 - 100)", 0.5f,out float newPercent))
         {
             if(Modals.GetInt("Offset","Offset",0,out int offset))
             {
@@ -108,4 +108,5 @@ internal class PosDesigner
             return new PropertyDesign($"{code} - {-offset}",pos - offset,codeParameters);
         }        
     }
+
 }

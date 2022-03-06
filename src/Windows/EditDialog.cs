@@ -145,7 +145,19 @@ internal class EditDialog : Window
             }
         }
 
-        if(Modals.GetString(property.Name,"New Value",oldValue?.ToString() ?? string.Empty, out string result))
+        // user is editing a Dim
+        if (property.PropertyType == typeof(Dim))
+        {
+            var designer = new DimDesigner();
+
+            if (designer.GetDimDesign(property, out PropertyDesign dimDesign))
+            {
+                newValue = dimDesign;
+                return true;
+            }
+        }
+
+        if (Modals.GetString(property.Name,"New Value",oldValue?.ToString() ?? string.Empty, out string result))
         {
             newValue = result;
             return true;

@@ -237,9 +237,7 @@ Ctrl+Y - Redo";
     private void New(FileInfo toOpen)
     {
         var viewToCode = new ViewToCode();
-        var design = viewToCode.GenerateNewWindow(toOpen, "Your Namespace");
-
-        _currentDesignerFile = new FileInfo(Path.GetFileNameWithoutExtension(toOpen.Name) + CodeToView.ExpectedExtension);
+        var design = viewToCode.GenerateNewWindow(toOpen, "YourNamespace", out _currentDesignerFile);
 
         ReplaceViewBeingEdited(design);
     }
@@ -264,7 +262,7 @@ Ctrl+Y - Redo";
     {
         var viewToCode = new ViewToCode();
         viewToCode.GenerateDesignerCs(
-            _viewBeingEdited.View, _currentDesignerFile, _viewBeingEdited.GetType().Namespace);
+            _viewBeingEdited.View, _currentDesignerFile);
     }
     private void ShowAddViewWindow()
     {

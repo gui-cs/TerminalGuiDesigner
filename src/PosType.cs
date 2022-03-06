@@ -7,5 +7,3 @@ public enum PosType
     Percent,
     Relative
 }
-
- 
