@@ -14,23 +14,23 @@ namespace TerminalGuiDesigner {
     
     public partial class MyWindow {
         
-        private Terminal.Gui.Label label2;
+        private Terminal.Gui.Label lblUsername;
         
-        private Terminal.Gui.Label label1;
+        private Terminal.Gui.Label lblPassword;
         
         private void InitializeComponent() {
-            this.label2 = new Terminal.Gui.Label();
-            this.label2.Text = "Heya";
-            this.label2.X = 15;
-            this.label2.Y = 3;
-            this.label2.Data = "label2";
-            this.Add(this.label2);
-            this.label1 = new Terminal.Gui.Label();
-            this.label1.Text = "Heya";
-            this.label1.X = 0;
-            this.label1.Y = Pos.Percent(50);
-            this.label1.Data = "label1";
-            this.Add(this.label1);
+            this.lblUsername = new Terminal.Gui.Label();
+            this.lblUsername.Text = "Username";
+            this.lblUsername.X = 44;
+            this.lblUsername.Y = 9;
+            this.lblUsername.Data = "lblUsername";
+            this.Add(this.lblUsername);
+            this.lblPassword = new Terminal.Gui.Label();
+            this.lblPassword.Text = "Password";
+            this.lblPassword.X = Pos.Left(lblUsername);
+            this.lblPassword.Y = Pos.Bottom(lblUsername) + 1;
+            this.lblPassword.Data = "lblPassword";
+            this.Add(this.lblPassword);
         }
     }
 }

@@ -1,9 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="For complex properties like Pos and Dim">
+    <Position X="7.5" Y="2.75" Height="0.5" Width="1.512" />
+  </Comment>
+  <Comment CommentText="Instance of your View that is being edited.  With design time changes (like allowing any sub View to be Focused)">
+    <Position X="7.167" Y="4.219" Height="0.844" Width="1.992" />
+  </Comment>
+  <Comment CommentText="All changes go through the Operation system so that they support undo/redo">
+    <Position X="9.562" Y="3.187" Height="0.677" Width="1.96" />
+  </Comment>
+  <Comment CommentText="Load any Designer.cs file and its corresponding dll/exe.  Then instantiate a View instance for design time editing">
+    <Position X="17.562" Y="2.354" Height="1.052" Width="1.69" />
+  </Comment>
+  <Comment CommentText="Save the current designer state to .Designer.cs file.">
+    <Position X="17.542" Y="0.552" Height="0.75" Width="1.731" />
+  </Comment>
   <Class Name="TerminalGuiDesigner.Editor">
-    <Position X="0.5" Y="2" Width="1.5" />
+    <Position X="0.5" Y="0.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>EAAAAIAAAQBIIAAAQABCAAAAAAEAAAAAAAAAAAAAIAI=</HashCode>
+      <HashCode>EAQAAIAAAQBKIDAAQABCAAAAAAEAAAAAAAAAAAAAIAI=</HashCode>
       <FileName>Editor.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -11,25 +26,92 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="TerminalGuiDesigner.Design">
-    <Position X="3.5" Y="1.75" Width="2.25" />
+    <Position X="3.75" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAABGAAAAAAAAAADAAAUAAAAAACBBAgAAAAAAAAAAAo=</HashCode>
+      <HashCode>AAADEAAAAAIAAAAGEAAUAEAAAACBBAggAAAACAAAAAg=</HashCode>
       <FileName>Design.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="View" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="DesignedProperties" />
+    </ShowAsCollectionAssociation>
   </Class>
   <Class Name="TerminalGuiDesigner.CodeToView">
-    <Position X="8.25" Y="2.5" Width="2.25" />
+    <Position X="15.25" Y="2.25" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAABQAAEAAAAAACAAAAAgAAAAIAAAAAAAEAAAAAAAA=</HashCode>
       <FileName>CodeToView.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TerminalGuiDesigner.ViewToCode">
-    <Position X="8.25" Y="0.75" Width="2.25" />
+    <Position X="15.25" Y="0.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAACAAAAAAAAAAAAAAAAQAAAAAAAAABAAAAAAA=</HashCode>
       <FileName>ViewToCode.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="TerminalGuiDesigner.PropertyDesign">
+    <Position X="7.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAAAAAAAAEAAAgAAAAAAAAAAAAAAAkAAAAAAA=</HashCode>
+      <FileName>Windows\PropertyDesign.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Terminal.Gui.View" Collapsed="true">
+    <Position X="7.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="TerminalGuiDesigner.Operations.AddViewOperation" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="12.75" Y="2.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAIgBCAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>Operations\AddViewOperation.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TerminalGuiDesigner.Operations.DeleteViewOperation" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="12.75" Y="2.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAABAAAAAAAAQABCAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Operations\DeleteViewOperation.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TerminalGuiDesigner.Operations.RenameViewOperation" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="12.75" Y="3.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAADAAAAAAAAAABCAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>Operations\RenameViewOperation.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TerminalGuiDesigner.Operations.SetPropertyOperation" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="12.75" Y="3.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAADAAAAAAAEAABCAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Operations\SetPropertyOperation.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TerminalGuiDesigner.Operations.OperationManager">
+    <Position X="9.5" Y="0.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAADCAAgAEAAQAAAAAAAAAA=</HashCode>
+      <FileName>Operations\UndoRedoManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="redoStack" />
+      <Field Name="undoStack" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Interface Name="TerminalGuiDesigner.Operations.IOperation">
+    <Position X="12.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAABCAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Operations\IOperation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

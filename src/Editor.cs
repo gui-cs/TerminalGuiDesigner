@@ -3,6 +3,7 @@ using Terminal.Gui;
 using System.Text;
 using TerminalGuiDesigner.Windows;
 using TerminalGuiDesigner.Operations;
+using Attribute = Terminal.Gui.Attribute;
 
 namespace TerminalGuiDesigner;
 
@@ -218,19 +219,7 @@ Ctrl+Y - Redo";
 
         _currentDesignerFile = toOpen;
 
-        // remove the old view
-        if(_viewBeingEdited != null)
-        {
-            // and dispose it
-            Remove(_viewBeingEdited.View);
-            _viewBeingEdited.View.Dispose();
-        }
-
-        // Load new instance
-        _viewBeingEdited = decompiler.CreateInstance();
-
-        // And add it to the editing window
-        this.Add(_viewBeingEdited.View);
+        ReplaceViewBeingEdited(decompiler.CreateInstance());
     }
 
     private void New()
@@ -252,6 +241,11 @@ Ctrl+Y - Redo";
 
         _currentDesignerFile = new FileInfo(Path.GetFileNameWithoutExtension(toOpen.Name) + CodeToView.ExpectedExtension);
 
+        ReplaceViewBeingEdited(design);
+    }
+
+    private void ReplaceViewBeingEdited(Design design)
+    {
         // remove the old view
         if (_viewBeingEdited != null)
         {
@@ -266,7 +260,6 @@ Ctrl+Y - Redo";
         // And add it to the editing window
         this.Add(_viewBeingEdited.View);
     }
-
     private void Save()
     {
         var viewToCode = new ViewToCode();
