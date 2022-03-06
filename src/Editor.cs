@@ -55,8 +55,8 @@ Ctrl+Y - Redo";
             return;
         }
 
-        View? dragging = null;
-        
+        DragOperation dragOperation = null;
+
         Application.RootMouseEvent += (m) => {
 
             if(!enableDrag)
@@ -65,32 +65,34 @@ Ctrl+Y - Redo";
             }
 
             // start dragging
-            if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && dragging == null)
+            if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && dragOperation == null)
             {
-                dragging = HitTest(_viewBeingEdited.View, m);
+                var drag = HitTest(_viewBeingEdited.View, m);
+
+                if(drag != null)
+                {
+                    var dest = ScreenToClient(_viewBeingEdited.View, m.X, m.Y);
+                    dragOperation = new DragOperation(drag, drag.X, drag.Y, dest.X, dest.Y);
+                }
             }
 
             // continue dragging
-            if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && dragging != null)
+            if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && dragOperation != null)
             {
                 var dest = ScreenToClient(_viewBeingEdited.View, m.X, m.Y);
-                
-                // Only support dragging for properties that are exact absolute
-                // positions (i.e. not relative positioning - Bottom of other control etc).
-                if (dragging.X.IsAbsolute())
-                    dragging.X = dest.X;
 
-                if(dragging.Y.IsAbsolute())
-                    dragging.Y = dest.Y;
+                dragOperation.ContinueDrag(dest);
 
                 _viewBeingEdited.View.SetNeedsDisplay();
                 Application.DoEvents();
             }
 
             // end dragging
-            if (!m.Flags.HasFlag(MouseFlags.Button1Pressed) && dragging != null)
+            if (!m.Flags.HasFlag(MouseFlags.Button1Pressed) && dragOperation != null)
             {
-                dragging = null;
+                // push it onto the undo stack
+                OperationManager.Instance.Do(dragOperation);
+                dragOperation = null;
             }
         };
         ShowHelp();
