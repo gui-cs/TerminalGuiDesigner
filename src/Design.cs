@@ -19,6 +19,8 @@ public class Design
     /// </summary>
     public string FieldName { get; set; }
 
+
+
     /// <summary>
     /// The view being designed.  Do not use <see cref="View.Add(Terminal.Gui.View)"/> on
     /// this instance.  Instead use <see cref="AddDesign(string, Terminal.Gui.View)"/> so that
@@ -48,6 +50,22 @@ public class Design
             if(subView.Data is string nameOrSerializedDesign)
             {
                 subView.Data = CreateSubControlDesign(SourceCode,nameOrSerializedDesign, subView);
+            }
+        }
+    }
+    /// <summary>
+    /// Removes all <see cref="DesignedProperties"/> that match the provided <paramref name="propertyName"/>.
+    /// This will leave the Design drawing the value directly from the underlying <see cref="View"/> at
+    /// code generation time.
+    /// </summary>
+    /// <param name="propertyName"></param>
+    public void RemoveDesignedProperty(string propertyName)
+    {
+        foreach (var k in DesignedProperties.Keys.ToArray())
+        {
+            if (k.Name == propertyName)
+            {
+                DesignedProperties.Remove(k);
             }
         }
     }
@@ -124,6 +142,7 @@ public class Design
             return;
         }
 
+        // if we are changing a value to a complex designed value type (e.g. Pos or Dim)
         if(value is PropertyDesign d)
         {
             property.SetValue(View,d.Value);
@@ -142,7 +161,7 @@ public class Design
         }
 
         // todo do this properly with undo history and stuff
-        property.SetValue(View, value);
+        property.SetValue(View, GetPrimitiveFor(value));
     }
 
 
@@ -256,6 +275,12 @@ public class Design
 
             return new CodeSnippetExpression(pd.GetCodeWithParameters());
         }
+
+        return new CodePrimitiveExpression(GetPrimitiveFor(value));
+    }
+
+    private object GetPrimitiveFor(object? value)
+    {
         if (value is Pos p)
         {
             // Value is a position e.g. X=2
@@ -263,10 +288,7 @@ public class Design
             // lets deal with only PosAbsolute for now
             if (p.IsAbsolute(out int n))
             {
-                return new CodePrimitiveExpression()
-                {
-                    Value = n
-                };            
+                return n;
             }
             else
                 throw new NotImplementedException("Only absolute positions are supported at the moment");
@@ -278,20 +300,15 @@ public class Design
             // lets deal with only PosAbsolute for now
             if (d.IsAbsolute(out int n))
             {
-                return new CodePrimitiveExpression()
-                {
-                    Value = n
-                };
+                return n;
             }
             else
                 throw new NotImplementedException("Only absolute dimensions are supported at the moment");
         }
         else
         {
-            return new CodePrimitiveExpression()
-            {
-                Value = value
-            };
+            // assume it is already a primitive
+            return value;
         }
     }
 

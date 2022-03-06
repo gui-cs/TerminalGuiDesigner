@@ -69,10 +69,10 @@ Ctrl+Y - Redo";
             {
                 var drag = HitTest(_viewBeingEdited.View, m);
 
-                if(drag != null)
+                if(drag.Data is Design design)
                 {
                     var dest = ScreenToClient(_viewBeingEdited.View, m.X, m.Y);
-                    dragOperation = new DragOperation(drag, drag.X, drag.Y, dest.X, dest.Y);
+                    dragOperation = new DragOperation(design, drag.X, drag.Y, dest.X, dest.Y);
                 }
             }
 
