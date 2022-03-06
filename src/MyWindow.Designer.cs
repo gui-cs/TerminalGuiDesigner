@@ -23,11 +23,9 @@ namespace YourNamespace {
             this.label1.Text = "Hello World";
             this.label1.Width = Dim.Fill(0);
             this.label1.Height = 1;
-            this.label1.X = 14;
-            this.label1.Y = 5;
-            this.label1.Data = "<?xml version=\"1.0\" encoding=\"utf-16\"?><Design><FieldName>label1</FieldName><Desi" +
-                "gnedProperties><Width><Code>Dim.Fill(0)</Code></Width></DesignedProperties></Des" +
-                "ign>";
+            this.label1.X = 29;
+            this.label1.Y = 10;
+            this.label1.Data = "label1";
             this.Add(this.label1);
             this.lbl2 = new Terminal.Gui.Label();
             this.lbl2.Text = "Its a small world after all";
@@ -35,9 +33,7 @@ namespace YourNamespace {
             this.lbl2.Height = 1;
             this.lbl2.X = 42;
             this.lbl2.Y = Pos.Bottom(label1) + 1;
-            this.lbl2.Data = "<?xml version=\"1.0\" encoding=\"utf-16\"?><Design><FieldName>lbl2</FieldName><Design" +
-                "edProperties><Y><Code>Pos.Bottom(label1) + 1</Code></Y></DesignedProperties></De" +
-                "sign>";
+            this.lbl2.Data = "lbl2";
             this.Add(this.lbl2);
         }
     }

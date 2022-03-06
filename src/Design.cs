@@ -11,6 +11,8 @@ namespace TerminalGuiDesigner;
 
 public class Design
 {
+    public SourceCodeFile SourceCode { get; }
+
     /// <summary>
     /// Name of the instance member field when the <see cref="View"/>
     /// is turned to code in a .Designer.cs file.  For example "label1"
@@ -28,10 +30,13 @@ public class Design
 
     private Logger logger = LogManager.GetCurrentClassLogger();
 
-    public Design(string nameOrSerializedDesign, View view)
+    public Design(SourceCodeFile sourceCode, string fieldName, View view)
     {
         View = view;
-        DeSerializeExtraProperties(nameOrSerializedDesign);
+        SourceCode = sourceCode;
+        FieldName = fieldName;
+
+        DeSerializeExtraProperties(fieldName);
     }
 
     public void CreateSubControlDesigns()
@@ -42,11 +47,11 @@ public class Design
 
             if(subView.Data is string nameOrSerializedDesign)
             {
-                subView.Data = CreateSubControlDesign(nameOrSerializedDesign, subView);
+                subView.Data = CreateSubControlDesign(SourceCode,nameOrSerializedDesign, subView);
             }
         }
     }
-    public Design CreateSubControlDesign(string nameOrSerializedDesign, View subView)
+    public Design CreateSubControlDesign(SourceCodeFile sourceCode, string nameOrSerializedDesign, View subView)
     {
         // HACK: if you don't pull the label out first it complains that you cant set Focusable to true
         // on the Label because its super is not focusable :(
@@ -65,7 +70,7 @@ public class Design
             super.Add(subView);
         }
 
-        return new Design(nameOrSerializedDesign, subView);
+        return new Design(sourceCode,nameOrSerializedDesign, subView);
     }
 
 
@@ -159,114 +164,31 @@ public class Design
         // Set View.Data to the name of the field so that we can 
         // determine later on which View instances come from which
         // Fields in the class
-        AddPropertyAssignment(initMethod, nameof(View.Data), SerializeExtraProperties());
+        AddPropertyAssignment(initMethod, nameof(View.Data), FieldName);
 
         AddAddToViewStatement(initMethod);
     }
-
-    public string SerializeExtraProperties()
+    public void DeSerializeExtraProperties(string fieldName)
     {
-        // If there are no special properties just return the name
-        if(!DesignedProperties.Any())
-        {
-            return FieldName;
-        }
-        StringBuilder sb = new StringBuilder();
-
-        var xmlWriter = XmlWriter.Create(new StringWriter(sb));
-        xmlWriter.WriteStartElement(nameof(Design));
+        var rosyln = new RoslynCodeToView(SourceCode);
         
-        xmlWriter.WriteStartElement(nameof(FieldName));
-        xmlWriter.WriteValue(FieldName);
-        xmlWriter.WriteEndElement();
 
-        xmlWriter.WriteStartElement(nameof(DesignedProperties));
-        
-        foreach(var kvp in DesignedProperties)
+        foreach(var prop in GetDesignableProperties())
         {
-            xmlWriter.WriteStartElement(kvp.Key.Name);
-            xmlWriter.WriteStartElement(nameof(PropertyDesign.Code));
-            xmlWriter.WriteValue(kvp.Value.GetCodeWithParameters());
-            xmlWriter.WriteEndElement();
-            xmlWriter.WriteEndElement();
-        }
-
-        // end DesignedProperties
-        xmlWriter.WriteEndElement();
-
-        // end Design
-        xmlWriter.WriteEndElement();
-
-        xmlWriter.Flush();
-        xmlWriter.Dispose();
-
-        return sb.ToString();
-    }
-    public void DeSerializeExtraProperties(string nameOrSerializedDesign)
-    {
-        // if its not xml its just the field name itself
-        if(!nameOrSerializedDesign.Contains("<"))
-        {
-            // its just a name
-            FieldName = nameOrSerializedDesign;
-            return;
-        }
-
-        // its a serialized design
-        var reader = XmlReader.Create(new StringReader(nameOrSerializedDesign));
-        reader.MoveToContent();
-
-        while (reader.Read())
-        {
-            if(reader.NodeType == XmlNodeType.Element)
+            if(prop.PropertyType == typeof(Pos) || prop.PropertyType == typeof(Dim))
             {
-                // Read FieldName from Xml
-                if(reader.Name == nameof(FieldName))
-                {
-                    reader.Read();
-                    FieldName = reader.Value;
-                }
+                var rhsCode = rosyln.GetRhsCodeFor(this, fieldName, prop);
 
-                // Read DesignedProperties
-                if (reader.Name == nameof(DesignedProperties))
-                {
-                    var designables = GetDesignableProperties().ToArray();
+                // if there is no explicit setting of this property in the Designer.cs then who cares
+                if (rhsCode == null)
+                    continue;
 
-                    while(!(reader.NodeType == XmlNodeType.EndElement && reader.Name == nameof(DesignedProperties)))
-                    {
-                        reader.Read();
-
-                        if (reader.NodeType == XmlNodeType.Element)
-                        {
-                            // read the key name
-                            var lookForProperty = reader.Name;
-                            string code = null;
-                            reader.Read();
-
-                            if(reader.Name == "Code")
-                            {
-                                reader.Read();
-                                code = reader.Value;
-                            }
-
-                            var prop = designables.SingleOrDefault(p => p.Name == lookForProperty);
-                            if(prop == null)
-                            {
-                                throw new Exception($"Design xml for {FieldName} had unexpected property {lookForProperty} that was not a member of GetDesignableProperties");
-                            }
-
-                            if(string.IsNullOrWhiteSpace(code))
-                            {
-                                throw new Exception("Designed xml did not contain the <Code> tag");
-                            }
-                            var val = GetDesignablePropertyValue(prop);
-                            DesignedProperties.Add(prop, new PropertyDesign(code, val));
-                        }                            
-                    }
-                }
+                // theres some text in the .Designer.cs for this field so lets store that
+                // that way we show "Dim.Bottom(myview)" instead of "Dim.Combine(Dim.Absolute(mylabel()), Dim.Absolute....) etc
+                var value = GetDesignablePropertyValue(prop);
+                DesignedProperties.Add(prop, new PropertyDesign(rhsCode, value));
             }
         }
-
     }
 
     /// <summary>

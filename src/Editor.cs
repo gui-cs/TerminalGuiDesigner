@@ -280,7 +280,7 @@ Ctrl+Y - Redo";
             var instance = factory.Create(selected);
 
             OperationManager.Instance.Do(
-                new AddViewOperation(instance,_viewBeingEdited,GetUniqueFieldName(selected))
+                new AddViewOperation(_currentDesignerFile, instance,_viewBeingEdited,GetUniqueFieldName(selected))
             );
         }
     }

@@ -49,7 +49,7 @@ namespace TerminalGuiDesigner
 
             var constructor = new CodeConstructor();
             constructor.Attributes = MemberAttributes.Public;
-            constructor.Statements.Add(new CodeSnippetStatement($"{indent}{indent}{indent}InitializeComponent();"));
+            constructor.Statements.Add(new CodeSnippetStatement($"{indent}{indent}{indent}{SourceCodeFile.InitializeComponentMethodName}();"));
 
             class1.Members.Add(constructor);
 
@@ -73,7 +73,7 @@ namespace TerminalGuiDesigner
             lbl.Data = "label1"; // field name in the class
             w.Add(lbl);
 
-            var design = new Design("root", w);
+            var design = new Design(sourceFile,"root", w);
             design.CreateSubControlDesigns();
 
             GenerateDesignerCs(w, sourceFile);
@@ -96,7 +96,7 @@ namespace TerminalGuiDesigner
             class1.IsPartial = true;
 
             var initMethod = new CodeMemberMethod();
-            initMethod.Name = "InitializeComponent";
+            initMethod.Name = SourceCodeFile.InitializeComponentMethodName;
 
             AddSubViewsToDesignerCs(forView,class1, initMethod);
                                     

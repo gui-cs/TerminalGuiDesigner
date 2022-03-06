@@ -91,7 +91,7 @@ public class CodeToView
             throw new Exception($"Could not create instance of {instances[0].FullName}",ex);
         }
 
-        var toReturn = new Design("root", view);
+        var toReturn = new Design(SourceFile,"root", view);
         toReturn.CreateSubControlDesigns();
 
         return toReturn;

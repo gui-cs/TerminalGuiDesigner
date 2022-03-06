@@ -11,6 +11,11 @@ namespace TerminalGuiDesigner
         public FileInfo CsFile { get; }
         public FileInfo DesignerFile { get; }
 
+        /// <summary>
+        /// The name of the InitializeComponent() method.  i.e. "InitializeComponent"
+        /// </summary>
+        public const string InitializeComponentMethodName = "InitializeComponent";
+
         public const string ExpectedExtension = ".Designer.cs";
 
         /// <summary>

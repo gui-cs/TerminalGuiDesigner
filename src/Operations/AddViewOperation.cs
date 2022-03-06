@@ -4,19 +4,21 @@ namespace TerminalGuiDesigner.Operations;
 
 public class AddViewOperation : IOperation
 {
+    private readonly SourceCodeFile sourceCode;
     private readonly View add;
     private readonly string fieldName;
     private readonly Design to;
 
-    public AddViewOperation(View add, Design to,string fieldName)
+    public AddViewOperation(SourceCodeFile sourceCode,View add, Design to,string fieldName)
     {
+        this.sourceCode = sourceCode;
         this.add = add;
         this.fieldName = fieldName;
         this.to = to;
     }
     public void Do()
     {
-        add.Data = to.CreateSubControlDesign(fieldName,add);
+        add.Data = to.CreateSubControlDesign(sourceCode,fieldName, add);
         to.View.Add(add);
     }
     public void Redo()
