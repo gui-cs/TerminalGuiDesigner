@@ -9,7 +9,11 @@ namespace TerminalGuiDesigner;
 
 public class Design
 {
-    public string FieldName { get; }
+    /// <summary>
+    /// Name of the instance member field when the <see cref="View"/>
+    /// is turned to code in a .Designer.cs file.  For example "label1"
+    /// </summary>
+    public string FieldName { get; set; }
 
     /// <summary>
     /// The view being designed.  Do not use <see cref="View.Add(Terminal.Gui.View)"/> on
@@ -232,16 +236,16 @@ public class Design
         }
         if (value is Pos p)
         {
+            
+
             // Value is a position e.g. X=2
             // Pos can be many different subclasses all of which are internal
             // lets deal with only PosAbsolute for now
-            if (p.GetType().Name == "PosAbsolute")
+            if (p.IsAbsolute(out int n))
             {
-                var n = p.GetType().GetField("n", BindingFlags.NonPublic | BindingFlags.Instance);
-
                 return new CodePrimitiveExpression()
                 {
-                    Value = n.GetValue(p)
+                    Value = n
                 };            
             }
             else

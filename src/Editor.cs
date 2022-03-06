@@ -73,8 +73,14 @@ Ctrl+Y - Redo";
             if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && dragging != null)
             {
                 var dest = ScreenToClient(_viewBeingEdited.View, m.X, m.Y);
-                dragging.X = dest.X;
-                dragging.Y = dest.Y;
+                
+                // Only support dragging for properties that are exact absolute
+                // positions (i.e. not relative positioning - Bottom of other control etc).
+                if (dragging.X.IsAbsolute())
+                    dragging.X = dest.X;
+
+                if(dragging.Y.IsAbsolute())
+                    dragging.Y = dest.Y;
 
                 _viewBeingEdited.View.SetNeedsDisplay();
                 Application.DoEvents();

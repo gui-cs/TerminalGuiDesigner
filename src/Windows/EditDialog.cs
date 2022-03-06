@@ -11,11 +11,14 @@ internal class EditDialog : Window
 
     public Design Design { get; }
 
+
     public EditDialog(Design design)
     {
         Design = design;
-        collection =
-            Design.GetDesignableProperties().Select(p => new PropertyInListView(p, design)).ToList();
+        collection = Design.GetDesignableProperties().Select(p => new PropertyInListView(p, design)).ToList();
+        
+        // Add the (Name) entry as editable too
+        collection.Insert(0, new NamePropertyInListView(design));
 
         list = new ListView(collection)
         {
@@ -58,6 +61,29 @@ internal class EditDialog : Window
             {
                 var p = collection[list.SelectedItem];
                 
+                if(p is NamePropertyInListView nameProperty)
+                {
+                    if (setNull)
+                    {
+                        MessageBox.ErrorQuery("Not Possible", "You cannot set a View (Name) property to null", "Ok");
+                        return;
+                    }
+                    else
+                    {
+                        if(Modals.GetString("Name","New Name",Design.FieldName,out string? newName))
+                        {
+                            if(!string.IsNullOrWhiteSpace(newName))
+                            {
+                                OperationManager.Instance.Do(new RenameViewOperation(Design, Design.FieldName, newName));
+                                p.UpdateValue();
+                            }
+                        }
+
+                        // value was updated or user cancelled typing a new name
+                        return;
+                    }
+                }
+
                 // TODO make this work with PropertyDesign correctly
                 // i.e. return the PropertyDesign not the value
                 var oldValue = p.PropertyInfo.GetValue(Design.View);
@@ -145,6 +171,24 @@ internal class EditDialog : Window
     }
 
     /// <summary>
+    /// The <see cref="Design.FieldName"/> which will be refered to as "(Name)".  This
+    /// is what the currently edited View will be called as a member in its parent class
+    /// when written out to .Designer.cs.  For example "label1"
+    /// </summary>
+    private class NamePropertyInListView : PropertyInListView
+    {
+        public NamePropertyInListView(Design d):base(null,d)
+        {
+            DisplayMember = "(Name):" + Design.FieldName;
+        }
+
+        public override void UpdateValue()
+        {
+            DisplayMember = "(Name):" + Design.FieldName;
+        }
+    }
+
+    /// <summary>
     /// A list view entry with the value of the field and 
     /// </summary>
     private class PropertyInListView
@@ -159,7 +203,6 @@ internal class EditDialog : Window
             PropertyInfo = p;
             Design = design;
             UpdateValue();
-
         }
 
         public override string ToString()
@@ -171,7 +214,7 @@ internal class EditDialog : Window
         /// Updates the <see cref="DisplayMember"/> to indicate the new value
         /// </summary>
         /// <param name="newValue"></param>
-        public void UpdateValue()
+        public virtual void UpdateValue()
         {
             var val = Design.GetDesignablePropertyValue(PropertyInfo) ?? string.Empty;
 

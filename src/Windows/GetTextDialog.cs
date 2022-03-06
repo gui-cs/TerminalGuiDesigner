@@ -8,6 +8,8 @@ class GetTextDialog
     private readonly string _initialValue;
 
     public string ResultText;
+    private TextView textField;
+    private bool okClicked = false;
 
     public GetTextDialog(DialogArgs args, string initialValue)
     {
@@ -16,7 +18,6 @@ class GetTextDialog
     }
     public bool ShowDialog()
     {
-        bool okClicked = false;
 
         var win = new Window(_args.WindowTitle)
         {
@@ -41,15 +42,20 @@ class GetTextDialog
 
         win.Add(entryLabel);
 
-        var textField = new TextView()
+        textField = new TextView()
         {
             X = 1,
             Y = Pos.Bottom(entryLabel),
             Height = Dim.Fill(2),
             Width = Dim.Fill(2),
             Text = _initialValue ?? "",
-            AllowsTab = false
+            AllowsTab = false,
         };
+        textField.KeyPress += TextField_KeyPress;
+        
+        // make it easier for user to replace this text with something else
+        // by directly selecting it all so next keypress replaces text
+        textField.SelectAll();
 
         win.Add(textField);
 
@@ -63,9 +69,7 @@ class GetTextDialog
         };
         btnOk.Clicked += () =>
         {
-            okClicked = true;
-            ResultText = textField.Text.ToString();
-            Application.RequestStop();
+            Accept();
         };
 
         var btnCancel = new Button("Cancel", true)
@@ -100,5 +104,21 @@ class GetTextDialog
         Application.Run(win);
 
         return okClicked;
+    }
+
+    private void Accept()
+    {
+        okClicked = true;
+        ResultText = textField.Text.ToString();
+        Application.RequestStop();
+    }
+
+    private void TextField_KeyPress(View.KeyEventEventArgs obj)
+    {
+        if(obj.KeyEvent.Key == Key.Enter)
+        {
+            Accept();
+            obj.Handled = true;
+        }
     }
 }
