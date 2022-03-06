@@ -18,6 +18,7 @@ Outstanding Features
 Features to add are:
 
 - [ ] Design classes other than `Window` (e.g. View etc)
+- [ ] Configure root properties of the class being designed (e.g. Window.Width)
 - [ ] Configure and persist properties
     - [x] (Name)
     - [x] X/Y
@@ -28,6 +29,7 @@ Features to add are:
     - [ ] Data Tables
     - [ ] TreeView
     - [ ] Tab View
+- [ ] Create Events e.g. MyButton_OnClick
 - [ ] Add views to subviews
 - [ ] Comprehensive Tests
 - [ ] CI
