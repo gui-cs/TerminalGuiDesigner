@@ -189,7 +189,7 @@ public class Design
     }
     public void DeSerializeExtraProperties(string fieldName)
     {
-        var rosyln = new RoslynCodeToView(SourceCode);
+        var rosyln = new CodeToView(SourceCode);
         
 
         foreach(var prop in GetDesignableProperties())

@@ -2,19 +2,22 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Emit;
+using NLog;
 using NStack;
 using System.Reflection;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
 
-internal class RoslynCodeToView
+internal class CodeToView
 {
     public string Namespace { get;}
     public string ClassName { get;}
     public SourceCodeFile SourceFile { get; }
 
-    public RoslynCodeToView(SourceCodeFile sourceFile)
+    ILogger logger = LogManager.GetCurrentClassLogger();
+
+    public CodeToView(SourceCodeFile sourceFile)
     {
         SourceFile = sourceFile;
 
@@ -41,6 +44,45 @@ internal class RoslynCodeToView
         
         var designedClass = classes.Single();
         ClassName = designedClass.Identifier.ToString();
+    }
+
+    internal Design CreateInstance()
+    {
+        logger.Info($"About to compile {SourceFile.DesignerFile}");
+
+        var assembly = CompileAssembly();
+
+        var expectedClassName = ClassName;
+
+        var instances = assembly.GetTypes().Where(t => t.Name.Equals(expectedClassName)).ToArray();
+
+        if (instances.Length == 0)
+        {
+            throw new Exception($"Could not find a Type called {expectedClassName} in compiled assembly");
+        }
+
+        if (instances.Length > 1)
+        {
+
+            throw new Exception($"Found {instances.Length} Types called {expectedClassName} in compiled assembly");
+        }
+
+        View view;
+
+        try
+        {
+            view = Activator.CreateInstance(instances[0]) as View
+                ?? throw new Exception($"Activator.CreateInstance returned null or class in {SourceFile.DesignerFile} was not a View");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Could not create instance of {instances[0].FullName}", ex);
+        }
+
+        var toReturn = new Design(SourceFile, "root", view);
+        toReturn.CreateSubControlDesigns();
+
+        return toReturn;
     }
 
     public Assembly CompileAssembly()

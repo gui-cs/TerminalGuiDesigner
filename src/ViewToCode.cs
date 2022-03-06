@@ -95,7 +95,7 @@ namespace TerminalGuiDesigner
 
         public void GenerateDesignerCs(View forView, SourceCodeFile file)
         {
-            var rosylyn = new RoslynCodeToView(file);
+            var rosylyn = new CodeToView(file);
 
             var ns = new CodeNamespace(rosylyn.Namespace);
             ns.Imports.Add(new CodeNamespaceImport("System"));

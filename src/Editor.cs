@@ -217,7 +217,7 @@ Ctrl+Y - Redo";
         // clear the history
         OperationManager.Instance.ClearUndoRedo();
 
-        var decompiler = new CodeToView(toOpen);
+        var decompiler = new CodeToView(new SourceCodeFile(toOpen));
 
         _currentDesignerFile = decompiler.SourceFile;
 
