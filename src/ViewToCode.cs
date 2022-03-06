@@ -22,12 +22,17 @@ namespace TerminalGuiDesigner
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="NotImplementedException"></exception>
-        public Design GenerateNewWindow(FileInfo csFilePath, string namespaceName, out FileInfo designerFile)
+        public Design GenerateNewWindow(FileInfo csFilePath, string namespaceName, out SourceCodeFile sourceFile)
         {
-            if(csFilePath.Name.EndsWith(CodeToView.ExpectedExtension))
+            if(csFilePath.Name.EndsWith(SourceCodeFile.ExpectedExtension))
             {
                 throw new ArgumentException($@"{nameof(csFilePath)} should be a class file not the designer file e.g. c:\MyProj\MyWindow1.cs");
             }
+
+
+            var className = Path.GetFileNameWithoutExtension(csFilePath.Name);
+            sourceFile = new SourceCodeFile(csFilePath);
+
             string indent = "    ";
 
             var ns = new CodeNamespace(namespaceName);
@@ -35,8 +40,6 @@ namespace TerminalGuiDesigner
 
             CodeCompileUnit compileUnit = new CodeCompileUnit();
             compileUnit.Namespaces.Add(ns);
-            
-            designerFile = GetDesignerFile(csFilePath, out string className);
 
             CodeTypeDeclaration class1 = new CodeTypeDeclaration(className);
             class1.IsPartial = true;
@@ -62,7 +65,7 @@ namespace TerminalGuiDesigner
 
                 tw.Close();
 
-                File.WriteAllText(csFilePath.FullName, sw.ToString());
+                File.WriteAllText(sourceFile.CsFile.FullName, sw.ToString());
             }
 
             var w = new Window();
@@ -73,52 +76,23 @@ namespace TerminalGuiDesigner
             var design = new Design("root", w);
             design.CreateSubControlDesigns();
 
-            GenerateDesignerCs(w, designerFile);
+            GenerateDesignerCs(w, sourceFile);
 
             return design;
         }
-        /// <summary>
-        /// Returns the .Designer.cs file for the given class file.
-        /// Returns a reference even if that file does not exist
-        /// </summary>
-        /// <param name="csFile"></param>
-        /// <returns></returns>
-        public FileInfo GetDesignerFile(FileInfo csFile, out string className)
+        public void GenerateDesignerCs(View forView, SourceCodeFile file)
         {
-            className = Path.GetFileNameWithoutExtension(csFile.Name);
-            return new FileInfo(Path.Combine(csFile.Directory.FullName, className + CodeToView.ExpectedExtension));
-        }
+            var rosylyn = new RoslynCodeToView(file);
 
-        /// <summary>
-        /// Returns the class file for a given .Designer.cs file
-        /// </summary>
-        /// <param name="designerFile"></param>
-        /// <returns></returns>
-        public FileInfo GetCsFile(FileInfo designerFile)
-        {
-            if (!designerFile.Name.EndsWith(CodeToView.ExpectedExtension))
-                throw new ArgumentException($"Expected {designerFile} to end with {CodeToView.ExpectedExtension}");
-
-            // chop off the .Designer.cs bit
-            var filename = designerFile.FullName;
-            filename = filename.Substring(0, filename.Length - CodeToView.ExpectedExtension.Length);
-            filename += ".cs";
-
-            return new FileInfo(filename);
-            
-        }
-        public void GenerateDesignerCs(View forView, FileInfo designerFile)
-        {
-            var ns = new CodeNamespace(GetNamespace(GetCsFile(designerFile)));
+            var ns = new CodeNamespace(rosylyn.Namespace);
             ns.Imports.Add(new CodeNamespaceImport("System"));
             ns.Imports.Add(new CodeNamespaceImport("Terminal.Gui"));
 
-            var className = Path.GetFileNameWithoutExtension(designerFile.Name.Replace(CodeToView.ExpectedExtension,""));
 
             CodeCompileUnit compileUnit = new CodeCompileUnit();
             compileUnit.Namespaces.Add(ns);
 
-            CodeTypeDeclaration class1 = new CodeTypeDeclaration(className);
+            CodeTypeDeclaration class1 = new CodeTypeDeclaration(rosylyn.ClassName);
             class1.IsPartial = true;
 
             var initMethod = new CodeMemberMethod();
@@ -141,22 +115,8 @@ namespace TerminalGuiDesigner
 
                 tw.Close();
 
-                File.WriteAllText(designerFile.FullName,sw.ToString());
+                File.WriteAllText(file.DesignerFile.FullName,sw.ToString());
             }
-        }
-
-        private string GetNamespace(FileInfo csFile)
-        {
-            var csFileCode = File.ReadAllText(csFile.FullName);
-            var regexFindNamespace = new Regex(@"namespace ([\w\.]+)");
-
-            var match = regexFindNamespace.Matches(csFileCode).FirstOrDefault();
-            if(match == null)
-            {
-                throw new Exception($"Could not find namespace directive in {csFile}");
-            }
-
-            return match.Groups[1].Value;
         }
 
         private void AddSubViewsToDesignerCs(View forView, CodeTypeDeclaration class1, CodeMemberMethod initMethod)

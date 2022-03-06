@@ -9,17 +9,17 @@ public class CodeToView
     private readonly Assembly _assembly;
     ILogger logger = LogManager.GetCurrentClassLogger();
 
-    public FileInfo SourceFile { get; }
-
-    public const string ExpectedExtension = ".Designer.cs";
+    public SourceCodeFile SourceFile { get; }
 
     public CodeToView(FileInfo sourceFile)
     {
-        SourceFile = sourceFile;
+        SourceFile = new SourceCodeFile(sourceFile);
 
         logger.Info($"Evaluating {sourceFile}...");
 
-        ValidateSourceFile();
+
+        var codeToView2 = new RoslynCodeToView(SourceFile);
+
 
         // Find the csproj that the file belongs to
         var csproj = GetCsProjFile(sourceFile.Directory ?? throw new ArgumentNullException("File had no known Directory"));
@@ -47,25 +47,11 @@ public class CodeToView
         _assembly = Assembly.LoadFile(binary.FullName);
     }
 
-    private void ValidateSourceFile()
-    {
-        if(!SourceFile.Exists)
-        {
-            throw new Exception($"File {SourceFile.FullName} did not exist");
-        }
-
-        if(!SourceFile.Name.EndsWith(ExpectedExtension))
-        {
-            throw new Exception($"Expected file to have suffix {ExpectedExtension} but it was {SourceFile.Name}");
-        }
-    }
 
     public CodeToView(FileInfo sourceFile,Assembly assembly)
     {
         _assembly = assembly;
-        SourceFile = sourceFile;
-            
-        ValidateSourceFile();
+        SourceFile = new SourceCodeFile(sourceFile);
     }
 
     private FileInfo GetCsProjFile(DirectoryInfo dir)
@@ -77,7 +63,9 @@ public class CodeToView
 
     internal Design CreateInstance()
     {
-        var expectedClassName = SourceFile.Name.Replace(ExpectedExtension,"");
+        var rosyln = new RoslynCodeToView(SourceFile);
+
+        var expectedClassName = rosyln.ClassName;
 
         var instances = _assembly.GetTypes().Where(t=>t.Name.Equals(expectedClassName)).ToArray();
 
@@ -96,7 +84,7 @@ public class CodeToView
         try
         {
             view = Activator.CreateInstance(instances[0]) as View 
-                ?? throw new Exception($"Activator.CreateInstance returned null or class in {SourceFile.Name} was not a View");
+                ?? throw new Exception($"Activator.CreateInstance returned null or class in {SourceFile.DesignerFile} was not a View");
         }
         catch(Exception ex)
         {

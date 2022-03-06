@@ -10,7 +10,7 @@ namespace TerminalGuiDesigner;
 internal class Editor : Toplevel
 {
     Design? _viewBeingEdited;
-    private FileInfo _currentDesignerFile;
+    private SourceCodeFile _currentDesignerFile;
     private bool enableDrag = true;
 
     const string Help = @"F1 - Show this help
@@ -202,8 +202,8 @@ Ctrl+Y - Redo";
     }
     private void Open()
     {
-        var ofd = new OpenDialog("Open",$"Select {CodeToView.ExpectedExtension} file",
-            new List<string>(new []{CodeToView.ExpectedExtension}));
+        var ofd = new OpenDialog("Open",$"Select {SourceCodeFile.ExpectedExtension} file",
+            new List<string>(new []{SourceCodeFile.ExpectedExtension}));
         Application.Run(ofd);
         
         if(ofd.FilePath != null)
@@ -219,7 +219,7 @@ Ctrl+Y - Redo";
 
         var decompiler = new CodeToView(toOpen);
 
-        _currentDesignerFile = toOpen;
+        _currentDesignerFile = decompiler.SourceFile;
 
         ReplaceViewBeingEdited(decompiler.CreateInstance());
     }
