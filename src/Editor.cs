@@ -69,6 +69,11 @@ Ctrl+Y - Redo";
             {
                 var drag = HitTest(_viewBeingEdited.View, m);
 
+                if(drag == null)
+                {
+                    return;
+                }    
+
                 if(drag.Data is Design design)
                 {
                     var dest = ScreenToClient(_viewBeingEdited.View, m.X, m.Y);
@@ -204,11 +209,19 @@ Ctrl+Y - Redo";
     {
         var ofd = new OpenDialog("Open",$"Select {SourceCodeFile.ExpectedExtension} file",
             new List<string>(new []{SourceCodeFile.ExpectedExtension}));
+        
         Application.Run(ofd);
         
-        if(ofd.FilePath != null)
+        if(!ofd.Canceled)
         {
-            Open(new FileInfo(ofd.FilePath.ToString()));
+            try
+            {
+                Open(new FileInfo(ofd.FilePath.ToString()));
+            }
+            catch (Exception ex)
+            {
+                ExceptionViewer.ShowException($"Failed to open '{ofd.FilePath}'",ex);
+            }
         }
     }
     private void Open(FileInfo toOpen)
@@ -227,12 +240,24 @@ Ctrl+Y - Redo";
     private void New()
     {
         var ofd = new SaveDialog("New", $"Class file",
-            new List<string>(new[] { ".cs" }));
+            new List<string>(new[] { ".cs" }))
+        {
+            AllowsOtherFileTypes = false,
+        };
+
         Application.Run(ofd);
 
-        if (ofd.FilePath != null)
+        if (!ofd.Canceled)
         {
-            New(new FileInfo(ofd.FilePath.ToString()));
+            try
+            {
+                New(new FileInfo(ofd.FilePath.ToString()));
+            }
+            catch (Exception ex)
+            {
+                ExceptionViewer.ShowException($"Failed to create '{ofd.FilePath}'", ex);
+                throw;
+            }
         }
     }
 

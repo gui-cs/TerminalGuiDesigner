@@ -191,6 +191,12 @@ public class Design
     {
         var rosyln = new CodeToView(SourceCode);
         
+        // no extra properties because we dont have a .Designer.cs! 
+        // maybe we are half way through creating a new file pair or something
+        if(!SourceCode.DesignerFile.Exists)
+        {
+            return;
+        }
 
         foreach(var prop in GetDesignableProperties())
         {

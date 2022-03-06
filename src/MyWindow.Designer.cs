@@ -16,8 +16,6 @@ namespace YourNamespace {
         
         private Terminal.Gui.Label label1;
         
-        private Terminal.Gui.Label lbl2;
-        
         private void InitializeComponent() {
             this.label1 = new Terminal.Gui.Label();
             this.label1.Text = "Hello World";
@@ -27,14 +25,6 @@ namespace YourNamespace {
             this.label1.Y = 10;
             this.label1.Data = "label1";
             this.Add(this.label1);
-            this.lbl2 = new Terminal.Gui.Label();
-            this.lbl2.Text = "Its a small world after all";
-            this.lbl2.Width = 27;
-            this.lbl2.Height = 1;
-            this.lbl2.X = 42;
-            this.lbl2.Y = Pos.Bottom(label1) + 1;
-            this.lbl2.Data = "lbl2";
-            this.Add(this.lbl2);
         }
     }
 }
