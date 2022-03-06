@@ -12,15 +12,9 @@ namespace TerminalGuiDesigner
         {
             var instance = (View)Activator.CreateInstance(t);
 
-            if(instance is Button b)
-            {
-                // See https://github.com/migueldeicaza/gui.cs/issues/1619
-                b.Text = "Heya";
-            }
-            else
-            {
-                instance.Text = "Heya";
-            }
+            instance.SetActualText("Heya");
+
+            instance.Width = Math.Max(instance.Bounds.Width, 4);
             
             return instance;
         }
