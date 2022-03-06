@@ -1,6 +1,8 @@
 
 using System.CodeDom;
 using System.Reflection;
+using System.Text;
+using System.Xml;
 using NLog;
 using NStack;
 using Terminal.Gui;
@@ -26,10 +28,10 @@ public class Design
 
     private Logger logger = LogManager.GetCurrentClassLogger();
 
-    public Design(string fieldName, View view)
+    public Design(string nameOrSerializedDesign, View view)
     {
-        FieldName = fieldName;
         View = view;
+        DeSerializeExtraProperties(nameOrSerializedDesign);
     }
 
     public void CreateSubControlDesigns()
@@ -38,13 +40,13 @@ public class Design
         {
             logger.Info($"Found subView of Type '{subView.GetType()}'");
 
-            if(subView.Data is string name)
+            if(subView.Data is string nameOrSerializedDesign)
             {
-                subView.Data = CreateSubControlDesign(name, subView);
+                subView.Data = CreateSubControlDesign(nameOrSerializedDesign, subView);
             }
         }
     }
-    public Design CreateSubControlDesign(string name, View subView)
+    public Design CreateSubControlDesign(string nameOrSerializedDesign, View subView)
     {
         // HACK: if you don't pull the label out first it complains that you cant set Focusable to true
         // on the Label because its super is not focusable :(
@@ -63,7 +65,7 @@ public class Design
             super.Add(subView);
         }
 
-        return new Design(name, subView);
+        return new Design(nameOrSerializedDesign, subView);
     }
 
 
@@ -157,9 +159,114 @@ public class Design
         // Set View.Data to the name of the field so that we can 
         // determine later on which View instances come from which
         // Fields in the class
-        AddPropertyAssignment(initMethod, nameof(View.Data), FieldName);
+        AddPropertyAssignment(initMethod, nameof(View.Data), SerializeExtraProperties());
 
         AddAddToViewStatement(initMethod);
+    }
+
+    public string SerializeExtraProperties()
+    {
+        // If there are no special properties just return the name
+        if(!DesignedProperties.Any())
+        {
+            return FieldName;
+        }
+        StringBuilder sb = new StringBuilder();
+
+        var xmlWriter = XmlWriter.Create(new StringWriter(sb));
+        xmlWriter.WriteStartElement(nameof(Design));
+        
+        xmlWriter.WriteStartElement(nameof(FieldName));
+        xmlWriter.WriteValue(FieldName);
+        xmlWriter.WriteEndElement();
+
+        xmlWriter.WriteStartElement(nameof(DesignedProperties));
+        
+        foreach(var kvp in DesignedProperties)
+        {
+            xmlWriter.WriteStartElement(kvp.Key.Name);
+            xmlWriter.WriteStartElement(nameof(PropertyDesign.Code));
+            xmlWriter.WriteValue(kvp.Value.GetCodeWithParameters());
+            xmlWriter.WriteEndElement();
+            xmlWriter.WriteEndElement();
+        }
+
+        // end DesignedProperties
+        xmlWriter.WriteEndElement();
+
+        // end Design
+        xmlWriter.WriteEndElement();
+
+        xmlWriter.Flush();
+        xmlWriter.Dispose();
+
+        return sb.ToString();
+    }
+    public void DeSerializeExtraProperties(string nameOrSerializedDesign)
+    {
+        // if its not xml its just the field name itself
+        if(!nameOrSerializedDesign.Contains("<"))
+        {
+            // its just a name
+            FieldName = nameOrSerializedDesign;
+            return;
+        }
+
+        // its a serialized design
+        var reader = XmlReader.Create(new StringReader(nameOrSerializedDesign));
+        reader.MoveToContent();
+
+        while (reader.Read())
+        {
+            if(reader.NodeType == XmlNodeType.Element)
+            {
+                // Read FieldName from Xml
+                if(reader.Name == nameof(FieldName))
+                {
+                    reader.Read();
+                    FieldName = reader.Value;
+                }
+
+                // Read DesignedProperties
+                if (reader.Name == nameof(DesignedProperties))
+                {
+                    var designables = GetDesignableProperties().ToArray();
+
+                    while(!(reader.NodeType == XmlNodeType.EndElement && reader.Name == nameof(DesignedProperties)))
+                    {
+                        reader.Read();
+
+                        if (reader.NodeType == XmlNodeType.Element)
+                        {
+                            // read the key name
+                            var lookForProperty = reader.Name;
+                            string code = null;
+                            reader.Read();
+
+                            if(reader.Name == "Code")
+                            {
+                                reader.Read();
+                                code = reader.Value;
+                            }
+
+                            var prop = designables.SingleOrDefault(p => p.Name == lookForProperty);
+                            if(prop == null)
+                            {
+                                throw new Exception($"Design xml for {FieldName} had unexpected property {lookForProperty} that was not a member of GetDesignableProperties");
+                            }
+
+                            if(string.IsNullOrWhiteSpace(code))
+                            {
+                                throw new Exception("Designed xml did not contain the <Code> tag");
+                            }
+                            var val = GetDesignablePropertyValue(prop);
+                            DesignedProperties.Add(prop, new PropertyDesign(code, val));
+                        }                            
+                    }
+                }
+            }
+        }
+
     }
 
     /// <summary>

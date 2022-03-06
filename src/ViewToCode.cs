@@ -40,7 +40,7 @@ namespace TerminalGuiDesigner
 
             CodeTypeDeclaration class1 = new CodeTypeDeclaration(className);
             class1.IsPartial = true;
-            class1.BaseTypes.Add(new CodeTypeReference("Window"));
+            class1.BaseTypes.Add(new CodeTypeReference("Window")); //TODO: let user create things that aren't windows
 
             ns.Types.Add(class1);
 
