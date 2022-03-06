@@ -1,7 +1,5 @@
 ﻿using System.CodeDom;
 using System.CodeDom.Compiler;
-using System.Text;
-using System.Text.RegularExpressions;
 using Microsoft.CSharp;
 using Terminal.Gui;
 
@@ -33,6 +31,32 @@ namespace TerminalGuiDesigner
             var className = Path.GetFileNameWithoutExtension(csFilePath.Name);
             sourceFile = new SourceCodeFile(csFilePath);
 
+            var csharpCode = GetGenerateNewWindowCode(className,namespaceName);
+            File.WriteAllText(sourceFile.CsFile.FullName, csharpCode);
+
+            var w = new Window();
+            var lbl = new Label("Hello World");
+            lbl.Data = "label1"; // field name in the class
+            w.Add(lbl);
+
+            var design = new Design(sourceFile,"root", w);
+            design.CreateSubControlDesigns();
+
+            GenerateDesignerCs(w, sourceFile);
+
+            return design;
+        }
+
+        /// <summary>
+        /// Returns the code that would be added to the MyWindow.cs file of a new window
+        /// so that it is ready for use with the MyWindow.Designer.cs file (in which
+        /// we will put all our design time gubbins).
+        /// </summary>
+        /// <param name="className"></param>
+        /// <param name="namespaceName"></param>
+        /// <returns></returns>
+        public static string GetGenerateNewWindowCode(string className, string namespaceName)
+        {
             string indent = "    ";
 
             var ns = new CodeNamespace(namespaceName);
@@ -65,21 +89,10 @@ namespace TerminalGuiDesigner
 
                 tw.Close();
 
-                File.WriteAllText(sourceFile.CsFile.FullName, sw.ToString());
+                return sw.ToString();
             }
-
-            var w = new Window();
-            var lbl = new Label("Hello World");
-            lbl.Data = "label1"; // field name in the class
-            w.Add(lbl);
-
-            var design = new Design(sourceFile,"root", w);
-            design.CreateSubControlDesigns();
-
-            GenerateDesignerCs(w, sourceFile);
-
-            return design;
         }
+
         public void GenerateDesignerCs(View forView, SourceCodeFile file)
         {
             var rosylyn = new RoslynCodeToView(file);

@@ -45,7 +45,11 @@ internal class RoslynCodeToView
 
     public Assembly CompileAssembly()
     {
-        var csTree = (CSharpSyntaxTree)CSharpSyntaxTree.ParseText(File.ReadAllText(SourceFile.CsFile.FullName));
+        // the user could have put all kinds of stuff into their MyWindow.cs including references to other Types and
+        // other things so lets just get what it would be if we had outputted it fresh out of the oven.
+        var csTree = (CSharpSyntaxTree)CSharpSyntaxTree.ParseText(ViewToCode.GetGenerateNewWindowCode(ClassName, Namespace));
+
+        // All the changes we really care about that are on disk in the users csproj file
         var designerTree = (CSharpSyntaxTree)CSharpSyntaxTree.ParseText(File.ReadAllText(SourceFile.DesignerFile.FullName));
 
         var dd = typeof(Enumerable).GetTypeInfo().Assembly.Location;
