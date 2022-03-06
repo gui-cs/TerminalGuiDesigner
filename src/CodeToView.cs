@@ -6,7 +6,6 @@ namespace TerminalGuiDesigner;
 
 public class CodeToView
 {
-    private readonly Assembly _assembly;
     ILogger logger = LogManager.GetCurrentClassLogger();
 
     public SourceCodeFile SourceFile { get; }
@@ -15,68 +14,28 @@ public class CodeToView
     {
         SourceFile = new SourceCodeFile(sourceFile);
 
-        logger.Info($"Evaluating {sourceFile}...");
-
-
-        var codeToView2 = new RoslynCodeToView(SourceFile);
-
-
-        // Find the csproj that the file belongs to
-        var csproj = GetCsProjFile(sourceFile.Directory ?? throw new ArgumentNullException("File had no known Directory"));
-        var name = Path.GetFileNameWithoutExtension(csproj.Name);
-            
-        if(csproj.Directory == null)
-        {
-            throw new Exception($"csproj file {csproj.FullName} had no known Directory");
-        }
-
-        // find the bin dll that the project builds
-        var binary = 
-            csproj.Directory.GetFiles(name+".dll",SearchOption.AllDirectories).FirstOrDefault()
-            ?? csproj.Directory.GetFiles(name+".exe",SearchOption.AllDirectories).FirstOrDefault()
-            ?? csproj.Directory.GetFiles(name,SearchOption.AllDirectories).FirstOrDefault();
-
-                
-        if(binary == null)
-        {
-            throw new Exception($"Found csproj file {csproj.FullName} but no binary in any subdirectories, perhaps the project has not been built yet?");
-        }
-
-        // Load that assembly
-        logger.Info($"Found Assembly {binary.FullName} for source file {sourceFile}...");
-        _assembly = Assembly.LoadFile(binary.FullName);
     }
 
-
-    public CodeToView(FileInfo sourceFile,Assembly assembly)
-    {
-        _assembly = assembly;
-        SourceFile = new SourceCodeFile(sourceFile);
-    }
-
-    private FileInfo GetCsProjFile(DirectoryInfo dir)
-    {
-        return  dir.GetFiles("*.csproj").FirstOrDefault()
-        ?? GetCsProjFile(dir.Parent 
-        ?? throw new Exception("Could not find csproj file in source files directory or any parent directory"));
-    }
 
     internal Design CreateInstance()
     {
+        logger.Info($"About to compile {SourceFile.DesignerFile}");
+
         var rosyln = new RoslynCodeToView(SourceFile);
+        var assembly = rosyln.CompileAssembly();
 
         var expectedClassName = rosyln.ClassName;
 
-        var instances = _assembly.GetTypes().Where(t=>t.Name.Equals(expectedClassName)).ToArray();
+        var instances = assembly.GetTypes().Where(t=>t.Name.Equals(expectedClassName)).ToArray();
 
         if(instances.Length == 0)
         {
-            throw new Exception($"Could not find a Type called {expectedClassName} in Assembly {_assembly.Location}");
+            throw new Exception($"Could not find a Type called {expectedClassName} in compiled assembly");
         }
 
         if(instances.Length > 1){
 
-            throw new Exception($"Found {instances.Length} Types called {expectedClassName} in Assembly {_assembly.Location}");
+            throw new Exception($"Found {instances.Length} Types called {expectedClassName} in compiled assembly");
         }
         
         View view;

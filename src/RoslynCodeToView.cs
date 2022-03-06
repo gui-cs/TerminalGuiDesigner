@@ -1,6 +1,10 @@
-﻿using Microsoft.CodeAnalysis.CSharp;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Emit;
+using NStack;
 using System.Reflection;
+using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
 
@@ -39,6 +43,44 @@ internal class RoslynCodeToView
         ClassName = designedClass.Identifier.ToString();
     }
 
+    public Assembly CompileAssembly()
+    {
+        var csTree = (CSharpSyntaxTree)CSharpSyntaxTree.ParseText(File.ReadAllText(SourceFile.CsFile.FullName));
+        var designerTree = (CSharpSyntaxTree)CSharpSyntaxTree.ParseText(File.ReadAllText(SourceFile.DesignerFile.FullName));
+
+        var dd = typeof(Enumerable).GetTypeInfo().Assembly.Location;
+        var coreDir = Directory.GetParent(dd);
+
+        var netCoreLib = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
+        var terminalGuilib = MetadataReference.CreateFromFile(typeof(View).Assembly.Location);
+        var nstackLib = MetadataReference.CreateFromFile(typeof(ustring).Assembly.Location);
+        var mscorLib = MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "mscorlib.dll");
+        var runtimeLib = MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "System.Runtime.dll");
+
+        var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary);
+        
+        var compilation
+            = CSharpCompilation.Create(Guid.NewGuid().ToString() + ".dll",
+            new CSharpSyntaxTree[] { csTree, designerTree }, references: new[] 
+            {
+                netCoreLib,
+                terminalGuilib,
+                nstackLib,
+                mscorLib,
+                runtimeLib}, options: options);
+
+        using (var stream = new MemoryStream())
+        {
+            EmitResult result = compilation.Emit(stream);
+            if (result.Success)
+            {
+                var assembly = Assembly.Load(stream.GetBuffer());
+                return assembly;
+            }
+
+            throw new Exception($"Could not compile {SourceFile.DesignerFile}:" + Environment.NewLine + string.Join(Environment.NewLine,result.Diagnostics));
+        }
+    }
     public string GetRhsCodeFor(Design design,string fieldName, PropertyInfo p)
     {
         // read the .Designer.cs file
