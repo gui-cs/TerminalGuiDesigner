@@ -40,6 +40,7 @@ namespace tests
             Assert.IsNotNull(tableIn.Table);
 
             Assert.AreEqual(tableOut.Table.Columns.Count, tableIn.Table.Columns.Count);
+            Assert.AreEqual(tableOut.Table.Rows.Count, tableIn.Table.Rows.Count);
         }
     }
 }

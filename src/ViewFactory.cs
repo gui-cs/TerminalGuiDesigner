@@ -38,11 +38,6 @@ namespace TerminalGuiDesigner
             dt.Columns.Add("Column 2");
             dt.Columns.Add("Column 3");
 
-            for (int i = 0; i < 100; i++)
-            {
-                dt.Rows.Add($"R{i}C0", $"R{i}C1", $"R{i}C2", $"R{i}C3");
-            }
-
             return new TableView
             {
                 Width = 50,

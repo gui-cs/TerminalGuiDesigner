@@ -10,6 +10,7 @@ using Terminal.Gui;
 using TerminalGuiDesigner.FromCode;
 using TerminalGuiDesigner.ToCode;
 using TerminalGuiDesigner.UI.Windows;
+using static Terminal.Gui.TableView;
 
 namespace TerminalGuiDesigner;
 
@@ -87,6 +88,21 @@ public class Design
         // or deleted etc
         subView.CanFocus = true;
 
+        
+        if (subView is TableView tv && tv.Table != null && tv.Table.Rows.Count == 0)
+        {
+            // add example rows so that it is easier to design the view
+            for (int i = 0; i < 100; i++)
+            {
+                var row = tv.Table.NewRow();
+                for (int c = 0; c < tv.Table.Columns.Count; c++)
+                {
+                    row[c] = $"{i},{c}";
+                }
+                tv.Table.Rows.Add(row);
+            }
+        }
+
         if (super != null)
         {
             super.Add(subView);
@@ -119,6 +135,11 @@ public class Design
 
         yield return View.GetType().GetProperty(nameof(View.X));
         yield return View.GetType().GetProperty(nameof(View.Y));
+
+        if(View is TableView)
+        {
+            yield return typeof(TableStyle).GetProperty(nameof(TableStyle.AlwaysShowHeaders));
+        }
     }
 
     /// <summary>
@@ -134,6 +155,11 @@ public class Design
             return DesignedProperties[p];
         }
 
+        if(p.DeclaringType == typeof(TableStyle))
+        {
+            return p.GetValue(((TableView)View).Style);
+        }
+
         return p.GetValue(View);
     }
 
@@ -146,8 +172,14 @@ public class Design
             return;
         }
 
+        if (property.DeclaringType == typeof(TableStyle))
+        {
+            property.SetValue(((TableView)View).Style,value);
+            return;
+        }
+
         // if we are changing a value to a complex designed value type (e.g. Pos or Dim)
-        if(value is PropertyDesign d)
+        if (value is PropertyDesign d)
         {
             property.SetValue(View,d.Value);
 

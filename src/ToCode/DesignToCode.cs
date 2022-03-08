@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terminal.Gui;
+using static Terminal.Gui.TableView;
 
 namespace TerminalGuiDesigner.ToCode
 {
@@ -27,7 +28,18 @@ namespace TerminalGuiDesigner.ToCode
             foreach (var prop in Design.GetDesignableProperties())
             {
                 var val = Design.GetDesignablePropertyValue(prop);
-                AddPropertyAssignment(args,Design, prop.Name, val);
+
+                // if the property being designed exists on the 
+                // View directly and is not a subproperty e.g. MyView.Border.X
+                if(prop.DeclaringType.IsAssignableFrom(Design.View.GetType()))
+                {
+                    AddPropertyAssignment(args,Design, prop.Name, val);
+                }
+
+                if(prop.DeclaringType == typeof(TableStyle))
+                {
+                    AddPropertyAssignment(args, Design, $"{nameof(TableView.Style)}.{prop.Name}", val);
+                }
             }
 
             

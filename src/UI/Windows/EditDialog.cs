@@ -86,7 +86,7 @@ public class EditDialog : Window
 
                 // TODO make this work with PropertyDesign correctly
                 // i.e. return the PropertyDesign not the value
-                var oldValue = p.PropertyInfo.GetValue(Design.View);
+                var oldValue = Design.GetDesignablePropertyValue(p.PropertyInfo);
 
 
                 if (setNull)
@@ -155,6 +155,14 @@ public class EditDialog : Window
                 newValue = dimDesign;
                 return true;
             }
+        }
+
+        if (property.PropertyType == typeof(bool))
+        {
+            int answer = MessageBox.Query(property.Name, $"New value for {property.PropertyType}", "Yes", "No");
+
+            newValue = answer ==0 ? true : false;
+            return answer != -1;
         }
 
         if (Modals.GetString(property.Name, "New Value", oldValue?.ToString() ?? string.Empty, out string result))
