@@ -2,9 +2,9 @@
 using Terminal.Gui;
 using TerminalGuiDesigner.Operations;
 
-namespace TerminalGuiDesigner.Windows;
+namespace TerminalGuiDesigner.UI.Windows;
 
-internal class EditDialog : Window
+public class EditDialog : Window
 {
     private List<PropertyInListView> collection;
     private ListView list;
@@ -16,7 +16,7 @@ internal class EditDialog : Window
     {
         Design = design;
         collection = Design.GetDesignableProperties().Select(p => new PropertyInListView(p, design)).ToList();
-        
+
         // Add the (Name) entry as editable too
         collection.Insert(0, new NamePropertyInListView(design));
 
@@ -48,9 +48,9 @@ internal class EditDialog : Window
         };
         btnClose.Clicked += () => Application.RequestStop();
 
-        this.Add(list);
-        this.Add(btnSet);
-        this.Add(btnClose);
+        Add(list);
+        Add(btnSet);
+        Add(btnClose);
     }
 
     private void SetProperty(bool setNull)
@@ -60,8 +60,8 @@ internal class EditDialog : Window
             try
             {
                 var p = collection[list.SelectedItem];
-                
-                if(p is NamePropertyInListView nameProperty)
+
+                if (p is NamePropertyInListView nameProperty)
                 {
                     if (setNull)
                     {
@@ -70,9 +70,9 @@ internal class EditDialog : Window
                     }
                     else
                     {
-                        if(Modals.GetString("Name","New Name",Design.FieldName,out string? newName))
+                        if (Modals.GetString("Name", "New Name", Design.FieldName, out string? newName))
                         {
-                            if(!string.IsNullOrWhiteSpace(newName))
+                            if (!string.IsNullOrWhiteSpace(newName))
                             {
                                 OperationManager.Instance.Do(new RenameViewOperation(Design, Design.FieldName, newName));
                                 p.UpdateValue();
@@ -88,21 +88,21 @@ internal class EditDialog : Window
                 // i.e. return the PropertyDesign not the value
                 var oldValue = p.PropertyInfo.GetValue(Design.View);
 
-                    
-                if(setNull)
+
+                if (setNull)
                 {
                     // user wants to set this property to null/default
                     OperationManager.Instance.Do(
-                        new SetPropertyOperation(Design,p.PropertyInfo,oldValue,null)
+                        new SetPropertyOperation(Design, p.PropertyInfo, oldValue, null)
                     );
                 }
                 else
                 {
                     // user wants to give us a new value for this property
-                    if(GetNewValue(p, out object? newValue))
+                    if (GetNewValue(p, out object? newValue))
                     {
                         OperationManager.Instance.Do(
-                            new SetPropertyOperation(Design,p.PropertyInfo,oldValue,newValue)
+                            new SetPropertyOperation(Design, p.PropertyInfo, oldValue, newValue)
                         );
                     }
                     else
@@ -111,7 +111,7 @@ internal class EditDialog : Window
                         return;
                     }
                 }
-                    
+
 
                 p.UpdateValue();
 
@@ -135,10 +135,10 @@ internal class EditDialog : Window
 
         // user is editing a Pos
         if (property.PropertyType == typeof(Pos))
-        {        
+        {
             var designer = new PosDesigner();
 
-            if(designer.GetPosDesign(Design,property,out PropertyDesign posDesign))
+            if (designer.GetPosDesign(Design, property, out PropertyDesign posDesign))
             {
                 newValue = posDesign;
                 return true;
@@ -157,7 +157,7 @@ internal class EditDialog : Window
             }
         }
 
-        if (Modals.GetString(property.Name,"New Value",oldValue?.ToString() ?? string.Empty, out string result))
+        if (Modals.GetString(property.Name, "New Value", oldValue?.ToString() ?? string.Empty, out string result))
         {
             newValue = result;
             return true;
@@ -189,7 +189,7 @@ internal class EditDialog : Window
     /// </summary>
     private class NamePropertyInListView : PropertyInListView
     {
-        public NamePropertyInListView(Design d):base(null,d)
+        public NamePropertyInListView(Design d) : base(null, d)
         {
             DisplayMember = "(Name):" + Design.FieldName;
         }

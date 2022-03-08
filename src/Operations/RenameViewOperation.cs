@@ -2,7 +2,7 @@
 
 namespace TerminalGuiDesigner.Operations
 {
-    internal class RenameViewOperation : IOperation
+    public class RenameViewOperation : IOperation
     {
         public Design Design { get; }
         public string OldName { get; }

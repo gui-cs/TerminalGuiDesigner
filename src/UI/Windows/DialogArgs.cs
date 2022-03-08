@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace TerminalGuiDesigner;
+namespace TerminalGuiDesigner.UI.Windows;
 
 /// <summary>
 /// Cross UI platform (winforms, console, terminal gui) arguments for describing the theming and text

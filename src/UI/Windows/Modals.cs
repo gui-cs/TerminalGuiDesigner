@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TerminalGuiDesigner.Windows;
+namespace TerminalGuiDesigner.UI.Windows;
 
-internal class Modals
+public class Modals
 {
-    
+
     public static bool GetInt(string windowTitle, string entryLabel, int initialValue, out int result)
     {
         if (GetString(windowTitle, entryLabel, initialValue.ToString(), out string newValue))
@@ -57,7 +57,7 @@ internal class Modals
 
     public static bool Get<T>(string prompt, string okText, T[] collection, out T selected)
     {
-        return Get<T>(prompt, okText, true, collection, o => o?.ToString() ?? "Null", false, out selected);
+        return Get(prompt, okText, true, collection, o => o?.ToString() ?? "Null", false, out selected);
     }
 
 

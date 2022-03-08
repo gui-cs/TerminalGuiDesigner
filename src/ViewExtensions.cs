@@ -7,7 +7,7 @@ public static class ViewExtensions
 {
     /// <summary>
     /// Returns the subviews of <paramref name="v"/> skipping out any
-    /// internal views used by the Terminal.Gui API e.g. the 'ContentView'
+    /// public views used by the Terminal.Gui API e.g. the 'ContentView'
     /// invisible sub view of the 'Window' class
     /// </summary>
     /// <param name="v"></param>

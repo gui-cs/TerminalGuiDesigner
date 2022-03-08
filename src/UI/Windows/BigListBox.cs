@@ -2,14 +2,14 @@ using System.Collections.Concurrent;
 using System.Reflection;
 using Terminal.Gui;
 
-namespace TerminalGuiDesigner.Windows;
+namespace TerminalGuiDesigner.UI.Windows;
 
 /// <summary>
 /// Modal list box with search.  Displays a collection of objects of Type
 /// <typeparamref name="T"/> and gets the user to pick one.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-internal class BigListBox<T>
+public class BigListBox<T>
 {
     private readonly string _okText;
     private readonly bool _addSearch;
@@ -39,7 +39,7 @@ internal class BigListBox<T>
 
     private ListView _listView;
     private bool _changes;
-    private TextField mainInput;
+    private TextField _mainInput;
     private DateTime _lastKeypress = DateTime.Now;
 
     /// <summary>
@@ -134,7 +134,7 @@ internal class BigListBox<T>
             Height = Dim.Fill(2),
             Width = Dim.Fill(2)
         };
-
+        _listView.KeyPress += _listView_KeyPress;
         _listView.SetSource((_collection = BuildList(GetInitialSource())).ToList());
         win.Add(_listView);
 
@@ -172,7 +172,7 @@ internal class BigListBox<T>
 
             win.Add(searchLabel);
 
-            mainInput = new TextField("")
+            _mainInput = new TextField("")
             {
                 X = Pos.Right(searchLabel),
                 Y = Pos.Bottom(_listView),
@@ -182,10 +182,10 @@ internal class BigListBox<T>
             btnOk.X = 38;
             btnCancel.X = 48;
 
-            win.Add(mainInput);
-            mainInput.SetFocus();
+            win.Add(_mainInput);
+            _mainInput.SetFocus();
 
-            mainInput.TextChanged += (s) =>
+            _mainInput.TextChanged += (s) =>
             {
                 // Don't update the UI while user is hammering away on the keyboard
                 _lastKeypress = DateTime.Now;
@@ -211,8 +211,17 @@ internal class BigListBox<T>
         Application.Run(win);
 
         Application.MainLoop.RemoveTimeout(callback);
-        
+
         return okClicked;
+    }
+
+    private void _listView_KeyPress(View.KeyEventEventArgs obj)
+    {
+        // if user types in some text change the focus to the text box to enable searching
+        if (char.IsLetterOrDigit((char)obj.KeyEvent.KeyValue))
+        {
+            _mainInput.FocusFirst();
+        }
     }
 
 
@@ -246,7 +255,7 @@ internal class BigListBox<T>
     }
     protected void RestartFiltering()
     {
-        RestartFiltering(mainInput.Text.ToString());
+        RestartFiltering(_mainInput.Text.ToString());
     }
 
     protected void RestartFiltering(string searchTerm)

@@ -55,7 +55,7 @@ public class DragOperation : IOperation
         Do();
     }
 
-    internal void ContinueDrag(Point dest)
+    public void ContinueDrag(Point dest)
     {
         // Only support dragging for properties that are exact absolute
         // positions (i.e. not relative positioning - Bottom of other control etc).

@@ -1,12 +1,12 @@
-namespace TerminalGuiDesigner
+namespace TerminalGuiDesigner.UI.Windows
 {
     public class PropertyDesign
     {
-        public string Code {get;}
-        public object Value {get;}
+        public string Code { get; }
+        public object Value { get; }
 
         public Func<string>[] CodeParameters { get; }
-        
+
         public PropertyDesign(string code, object value, params Func<string>[] codeParameters)
         {
             Code = code;
@@ -19,7 +19,7 @@ namespace TerminalGuiDesigner
 
         public string GetCodeWithParameters()
         {
-            return string.Format(Code,CodeParameters.Select(f=>f()).ToArray());
+            return string.Format(Code, CodeParameters.Select(f => f()).ToArray());
         }
         public override string ToString()
         {

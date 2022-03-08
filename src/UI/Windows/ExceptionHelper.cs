@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace TerminalGuiDesigner.Windows;
+namespace TerminalGuiDesigner.UI.Windows;
 
 /// <summary>
 /// Helper for unwrapping Exception.InnerExceptions and ReflectionTypeLoadExceptions.LoaderExceptions into a single flat message string of all errors.

@@ -1,13 +1,13 @@
 ﻿using System.Reflection;
 using Terminal.Gui;
 
-namespace TerminalGuiDesigner.Windows;
+namespace TerminalGuiDesigner.UI.Windows;
 
-internal class DimDesigner
+public class DimDesigner
 {
-    internal bool GetDimDesign(PropertyInfo property, out PropertyDesign result)
+    public bool GetDimDesign(PropertyInfo property, out PropertyDesign result)
     {
-        
+
         // pick what type of Pos they want
         if (Modals.Get("Dim Type", "Pick", Enum.GetValues<DimType>(), out DimType selected))
         {

@@ -1,11 +1,14 @@
 
 using System.CodeDom;
+using System.Data;
 using System.Reflection;
 using System.Text;
 using System.Xml;
 using NLog;
 using NStack;
 using Terminal.Gui;
+using TerminalGuiDesigner.FromCode;
+using TerminalGuiDesigner.UI.Windows;
 
 namespace TerminalGuiDesigner;
 
@@ -133,7 +136,7 @@ public class Design
         return p.GetValue(View);
     }
 
-    internal void SetDesignablePropertyValue(PropertyInfo property, object? value)
+    public void SetDesignablePropertyValue(PropertyInfo property, object? value)
     {
         
         if (value == null)
@@ -180,6 +183,11 @@ public class Design
             AddPropertyAssignment(initMethod,prop.Name,val);
         }
 
+        if(View is TableView tv)
+        {
+            AddFieldToClass(addTo, $"{FieldName}Table", typeof(DataTable));
+        }
+
         // Set View.Data to the name of the field so that we can 
         // determine later on which View instances come from which
         // Fields in the class
@@ -221,7 +229,7 @@ public class Design
     /// Does not include subcontainer controls etc.
     /// </summary>
     /// <returns></returns>
-    internal IEnumerable<Design> GetSiblings()
+    public IEnumerable<Design> GetSiblings()
     {
         foreach(var v in View.SuperView.Subviews)
         {
@@ -290,7 +298,7 @@ public class Design
         if (value is Pos p)
         {
             // Value is a position e.g. X=2
-            // Pos can be many different subclasses all of which are internal
+            // Pos can be many different subclasses all of which are public
             // lets deal with only PosAbsolute for now
             if (p.IsAbsolute(out int n))
             {
@@ -302,7 +310,7 @@ public class Design
         else if (value is Dim d)
         {
             // Value is a position e.g. X=2
-            // Pos can be many different subclasses all of which are internal
+            // Pos can be many different subclasses all of which are public
             // lets deal with only PosAbsolute for now
             if (d.IsAbsolute(out int n))
             {
@@ -328,14 +336,20 @@ public class Design
         initMethod.Statements.Add(callAdd);
     }
 
-    protected void AddFieldToClass(CodeTypeDeclaration addTo)
+    protected CodeMemberField AddFieldToClass(CodeTypeDeclaration addTo)
+    {
+        return AddFieldToClass(addTo, FieldName, View.GetType());
+    }
+    protected CodeMemberField AddFieldToClass(CodeTypeDeclaration addTo, string fieldName, Type type)
     {
         // Create a private field for it
         var field = new CodeMemberField();
-        field.Name = FieldName;
-        field.Type = new CodeTypeReference(View.GetType());
+        field.Name = fieldName;
+        field.Type = new CodeTypeReference(type);
 
         addTo.Members.Add(field);
+
+        return field;
     }
     private IEnumerable<Design> GetAllDesigns(View view)
     {

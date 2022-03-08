@@ -2,8 +2,9 @@
 using System.CodeDom.Compiler;
 using Microsoft.CSharp;
 using Terminal.Gui;
+using TerminalGuiDesigner.FromCode;
 
-namespace TerminalGuiDesigner
+namespace TerminalGuiDesigner.ToCode
 {
     /// <summary>
     /// Converts a <see cref="View"/> in memory into code in a '.Designer.cs' class file
@@ -22,7 +23,7 @@ namespace TerminalGuiDesigner
         /// <exception cref="NotImplementedException"></exception>
         public Design GenerateNewWindow(FileInfo csFilePath, string namespaceName, out SourceCodeFile sourceFile)
         {
-            if(csFilePath.Name.EndsWith(SourceCodeFile.ExpectedExtension))
+            if (csFilePath.Name.EndsWith(SourceCodeFile.ExpectedExtension))
             {
                 throw new ArgumentException($@"{nameof(csFilePath)} should be a class file not the designer file e.g. c:\MyProj\MyWindow1.cs");
             }
@@ -31,7 +32,7 @@ namespace TerminalGuiDesigner
             var className = Path.GetFileNameWithoutExtension(csFilePath.Name);
             sourceFile = new SourceCodeFile(csFilePath);
 
-            var csharpCode = GetGenerateNewWindowCode(className,namespaceName);
+            var csharpCode = GetGenerateNewWindowCode(className, namespaceName);
             File.WriteAllText(sourceFile.CsFile.FullName, csharpCode);
 
             var w = new Window();
@@ -39,7 +40,7 @@ namespace TerminalGuiDesigner
             lbl.Data = "label1"; // field name in the class
             w.Add(lbl);
 
-            var design = new Design(sourceFile,"root", w);
+            var design = new Design(sourceFile, "root", w);
             design.CreateSubControlDesigns();
 
             GenerateDesignerCs(w, sourceFile);
@@ -111,8 +112,8 @@ namespace TerminalGuiDesigner
             var initMethod = new CodeMemberMethod();
             initMethod.Name = SourceCodeFile.InitializeComponentMethodName;
 
-            AddSubViewsToDesignerCs(forView,class1, initMethod);
-                                    
+            AddSubViewsToDesignerCs(forView, class1, initMethod);
+
             class1.Members.Add(initMethod);
             ns.Types.Add(class1);
 
@@ -128,7 +129,7 @@ namespace TerminalGuiDesigner
 
                 tw.Close();
 
-                File.WriteAllText(file.DesignerFile.FullName,sw.ToString());
+                File.WriteAllText(file.DesignerFile.FullName, sw.ToString());
             }
         }
 
@@ -136,9 +137,9 @@ namespace TerminalGuiDesigner
         {
             foreach (var sub in forView.Subviews)
             {
-                // If the sub child has a Design (and is not an internal part of another control,
+                // If the sub child has a Design (and is not an public part of another control,
                 // For example Contentview subview of Window
-                if(sub.Data is Design d)
+                if (sub.Data is Design d)
                 {
                     // The user is designing this view so it needs to be persisted
                     d.ToCode(class1, initMethod);

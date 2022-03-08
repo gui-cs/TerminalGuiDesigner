@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Terminal.Gui;
+using TerminalGuiDesigner.UI;
 
 namespace TerminalGuiDesigner;
 

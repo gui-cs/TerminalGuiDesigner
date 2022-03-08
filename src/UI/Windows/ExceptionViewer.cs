@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using Terminal.Gui;
 
-namespace TerminalGuiDesigner.Windows;
+namespace TerminalGuiDesigner.UI.Windows;
 
 public class ExceptionViewer
 {
@@ -34,7 +34,7 @@ public class ExceptionViewer
             toggleStack = !toggleStack;
         };
 
-        var dlg = new Dialog("Error", 10,10, btnOk, btnStack)
+        var dlg = new Dialog("Error", 10, 10, btnOk, btnStack)
         {
             X = Pos.Percent(10),
             Y = Pos.Percent(10),

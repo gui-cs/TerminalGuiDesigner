@@ -6,13 +6,14 @@ using NLog;
 using NStack;
 using System.Reflection;
 using Terminal.Gui;
+using TerminalGuiDesigner.ToCode;
 
-namespace TerminalGuiDesigner;
+namespace TerminalGuiDesigner.FromCode;
 
-internal class CodeToView
+public class CodeToView
 {
-    public string Namespace { get;}
-    public string ClassName { get;}
+    public string Namespace { get; }
+    public string ClassName { get; }
     public SourceCodeFile SourceFile { get; }
 
     ILogger logger = LogManager.GetCurrentClassLogger();
@@ -31,22 +32,28 @@ internal class CodeToView
         {
             throw new Exception($"Expected {sourceFile.CsFile.FullName} to contain only a single namespace declaration but it had {namespaces.Length}");
         }
-        
+
         Namespace = namespaces.Single().Name.ToString();
 
         // classes
         var classes = root.DescendantNodes().OfType<ClassDeclarationSyntax>().ToArray();
 
-        if(classes.Length != 1)
+        if (classes.Length != 1)
         {
             throw new Exception($"Expected {sourceFile.CsFile.FullName} to contain only a single class declaration but it had {classes.Length}");
         }
-        
+
         var designedClass = classes.Single();
         ClassName = designedClass.Identifier.ToString();
     }
 
-    internal Design CreateInstance()
+    /// <summary>
+    /// Compiles the source code in <see cref="SourceFile"/> and 
+    /// creates an instance of the View in it wrapped in a <see cref="Design"/>
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public Design CreateInstance()
     {
         logger.Info($"About to compile {SourceFile.DesignerFile}");
 
@@ -100,18 +107,20 @@ internal class CodeToView
         var netCoreLib = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
         var terminalGuilib = MetadataReference.CreateFromFile(typeof(View).Assembly.Location);
         var nstackLib = MetadataReference.CreateFromFile(typeof(ustring).Assembly.Location);
+        var systemData = MetadataReference.CreateFromFile(typeof(System.Data.DataTable).Assembly.Location);
         var mscorLib = MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "mscorlib.dll");
         var runtimeLib = MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "System.Runtime.dll");
 
         var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary);
-        
+
         var compilation
             = CSharpCompilation.Create(Guid.NewGuid().ToString() + ".dll",
-            new CSharpSyntaxTree[] { csTree, designerTree }, references: new[] 
+            new CSharpSyntaxTree[] { csTree, designerTree }, references: new[]
             {
                 netCoreLib,
                 terminalGuilib,
                 nstackLib,
+                systemData,
                 mscorLib,
                 runtimeLib}, options: options);
 
@@ -124,10 +133,10 @@ internal class CodeToView
                 return assembly;
             }
 
-            throw new Exception($"Could not compile {SourceFile.DesignerFile}:" + Environment.NewLine + string.Join(Environment.NewLine,result.Diagnostics));
+            throw new Exception($"Could not compile {SourceFile.DesignerFile}:" + Environment.NewLine + string.Join(Environment.NewLine, result.Diagnostics));
         }
     }
-    public string GetRhsCodeFor(Design design,string fieldName, PropertyInfo p)
+    public string GetRhsCodeFor(Design design, string fieldName, PropertyInfo p)
     {
         // read the .Designer.cs file
         var syntaxTree = CSharpSyntaxTree.ParseText(File.ReadAllText(SourceFile.DesignerFile.FullName));
@@ -138,7 +147,7 @@ internal class CodeToView
         // get the InitializeComponent method
         var root = syntaxTree.GetRoot();
         var initMethods = root.DescendantNodes().OfType<MethodDeclarationSyntax>()
-            .Where(m=>m.Identifier.ToString().Equals(SourceCodeFile.InitializeComponentMethodName)).ToArray();
+            .Where(m => m.Identifier.ToString().Equals(SourceCodeFile.InitializeComponentMethodName)).ToArray();
 
         if (initMethods.Length != 1)
         {
@@ -151,7 +160,7 @@ internal class CodeToView
 
         // find assignments where the lhs ends with the fieldName
         var assignments = initMethod.DescendantNodes().OfType<AssignmentExpressionSyntax>()
-            .Where(a=>a.Left.ToString().EndsWith(lookingFor)).ToArray();
+            .Where(a => a.Left.ToString().EndsWith(lookingFor)).ToArray();
 
         if (assignments.Length > 1)
         {
@@ -159,7 +168,7 @@ internal class CodeToView
         }
 
         // there are no assignments to this property
-        if(assignments.Length == 0)
+        if (assignments.Length == 0)
             return null;
 
         // return the Rhs code in the Designer.cs for this field

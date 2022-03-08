@@ -1,13 +1,15 @@
 ﻿using System.Reflection;
 using Terminal.Gui;
 using System.Text;
-using TerminalGuiDesigner.Windows;
 using TerminalGuiDesigner.Operations;
 using Attribute = Terminal.Gui.Attribute;
+using TerminalGuiDesigner.UI.Windows;
+using TerminalGuiDesigner.FromCode;
+using TerminalGuiDesigner.ToCode;
 
-namespace TerminalGuiDesigner;
+namespace TerminalGuiDesigner.UI;
 
-internal class Editor : Toplevel
+public class Editor : Toplevel
 {
     Design? _viewBeingEdited;
     private SourceCodeFile _currentDesignerFile;
@@ -46,7 +48,7 @@ Ctrl+Y - Redo";
 
             Open(designerFile);
 
-            
+
         }
         catch (Exception ex)
         {
@@ -57,9 +59,10 @@ Ctrl+Y - Redo";
 
         DragOperation dragOperation = null;
 
-        Application.RootMouseEvent += (m) => {
+        Application.RootMouseEvent += (m) =>
+        {
 
-            if(!enableDrag)
+            if (!enableDrag)
             {
                 return;
             }
@@ -69,12 +72,12 @@ Ctrl+Y - Redo";
             {
                 var drag = HitTest(_viewBeingEdited.View, m);
 
-                if(drag == null)
+                if (drag == null)
                 {
                     return;
-                }    
+                }
 
-                if(drag.Data is Design design)
+                if (drag.Data is Design design)
                 {
                     var dest = ScreenToClient(_viewBeingEdited.View, m.X, m.Y);
                     dragOperation = new DragOperation(design, drag.X, drag.Y, dest.X, dest.Y);
@@ -113,7 +116,7 @@ Ctrl+Y - Redo";
         if (!IsCurrentTop)
             return false;
 
-        switch(keyEvent.Key)
+        switch (keyEvent.Key)
         {
             case Key.F1:
                 ShowHelp();
@@ -124,7 +127,7 @@ Ctrl+Y - Redo";
 
             // Cursor keys
             case Key.CursorUp | Key.ShiftMask:
-                MoveControl(0,-1);
+                MoveControl(0, -1);
                 return true;
             case Key.CursorUp | Key.CtrlMask:
                 MoveControl(0, -3);
@@ -142,7 +145,7 @@ Ctrl+Y - Redo";
                 MoveControl(-5, 0);
                 return true;
             case Key.CursorRight | Key.ShiftMask:
-                MoveControl(1,0);
+                MoveControl(1, 0);
                 return true;
             case Key.CursorRight | Key.CtrlMask:
                 MoveControl(5, 0);
@@ -189,7 +192,7 @@ Ctrl+Y - Redo";
 
         if (view.Data is Design d)
         {
-            d.View.X = Math.Min(Math.Max(d.View.Frame.Left + deltaX, 0),view.SuperView.Bounds.Width-1);
+            d.View.X = Math.Min(Math.Max(d.View.Frame.Left + deltaX, 0), view.SuperView.Bounds.Width - 1);
             d.View.Y = Math.Min(Math.Max(d.View.Frame.Top + deltaY, 0), view.SuperView.Bounds.Height - 1);
         }
     }
@@ -207,12 +210,12 @@ Ctrl+Y - Redo";
     }
     private void Open()
     {
-        var ofd = new OpenDialog("Open",$"Select {SourceCodeFile.ExpectedExtension} file",
-            new List<string>(new []{SourceCodeFile.ExpectedExtension}));
-        
+        var ofd = new OpenDialog("Open", $"Select {SourceCodeFile.ExpectedExtension} file",
+            new List<string>(new[] { SourceCodeFile.ExpectedExtension }));
+
         Application.Run(ofd);
-        
-        if(!ofd.Canceled)
+
+        if (!ofd.Canceled)
         {
             try
             {
@@ -220,7 +223,7 @@ Ctrl+Y - Redo";
             }
             catch (Exception ex)
             {
-                ExceptionViewer.ShowException($"Failed to open '{ofd.FilePath}'",ex);
+                ExceptionViewer.ShowException($"Failed to open '{ofd.FilePath}'", ex);
             }
         }
     }
@@ -283,7 +286,7 @@ Ctrl+Y - Redo";
         _viewBeingEdited = design;
 
         // And add it to the editing window
-        this.Add(_viewBeingEdited.View);
+        Add(_viewBeingEdited.View);
     }
     private void Save()
     {
@@ -293,19 +296,19 @@ Ctrl+Y - Redo";
     }
     private void ShowAddViewWindow()
     {
-        if(_viewBeingEdited == null)
+        if (_viewBeingEdited == null)
         {
             return;
         }
         var selectable = typeof(View).Assembly.DefinedTypes.Where(t => typeof(View).IsAssignableFrom(t)).ToArray();
-        
-        if(Modals.Get("Type of Control","Add",true,selectable,t=>t.Name,false, out Type selected))
+
+        if (Modals.Get("Type of Control", "Add", true, selectable, t => t.Name, false, out Type selected))
         {
             var factory = new ViewFactory();
             var instance = factory.Create(selected);
 
             OperationManager.Instance.Do(
-                new AddViewOperation(_currentDesignerFile, instance,_viewBeingEdited,GetUniqueFieldName(selected))
+                new AddViewOperation(_currentDesignerFile, instance, _viewBeingEdited, GetUniqueFieldName(selected))
             );
         }
     }
@@ -323,7 +326,7 @@ Ctrl+Y - Redo";
 
         // consider label1
         int number = 1;
-        while(allDesigns.Any(d=>d.FieldName.Equals($"{viewType.Name.ToLower()}{number}")))
+        while (allDesigns.Any(d => d.FieldName.Equals($"{viewType.Name.ToLower()}{number}")))
         {
             // label1 is taken, try label2 etc
             number++;
@@ -336,7 +339,7 @@ Ctrl+Y - Redo";
     private void ShowEditPropertiesWindow()
     {
         var view = GetMostFocused(this);
-        if(view.Data is Design d)
+        if (view.Data is Design d)
         {
             var edit = new EditDialog(d);
             Application.Run(edit);
