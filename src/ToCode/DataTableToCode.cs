@@ -24,7 +24,7 @@ namespace TerminalGuiDesigner.ToCode
             var dataTableFieldName = $"{Design.FieldName}Table";
 
             // add a field to the class for the Table that is in the view
-            AddFieldToClass(args, dataTableFieldName, typeof(DataTable));
+            AddLocalFieldToMethod(args, typeof(DataTable), dataTableFieldName);
 
             AddConstructorCall(dataTableFieldName, typeof(DataTable), args);
 
@@ -32,7 +32,7 @@ namespace TerminalGuiDesigner.ToCode
             {
                 var colFieldName = dataTableFieldName +"Col"+ col.Ordinal;
 
-                AddFieldToClass(args, colFieldName, typeof(DataColumn));
+                AddLocalFieldToMethod(args, typeof(DataColumn), colFieldName);
                 AddConstructorCall(colFieldName, typeof(DataColumn), args);
 
                 AddPropertyAssignment(args,$"{colFieldName}", nameof(DataColumn.ColumnName), col.ColumnName);
@@ -48,7 +48,7 @@ namespace TerminalGuiDesigner.ToCode
             // Construct it
             var addColumnToTableStatement  = new CodeMethodInvokeExpression(
                 new CodeMethodReferenceExpression(
-                    new CodeSnippetExpression($"this.{tableFieldName}.Columns"), "Add"),
+                    new CodeSnippetExpression($"{tableFieldName}.Columns"), "Add"),
                     new CodeSnippetExpression(columnFieldName));
 
             args.InitMethod.Statements.Add(addColumnToTableStatement);
@@ -61,7 +61,7 @@ namespace TerminalGuiDesigner.ToCode
             setLhs.FieldName = $"this.{Design.FieldName}.Table";
 
             var setRhs = new CodeFieldReferenceExpression();
-            setRhs.FieldName = $"this.{tableFieldName}";
+            setRhs.FieldName = $"{tableFieldName}";
 
             var assignStatement = new CodeAssignStatement();
             assignStatement.Left = setLhs;

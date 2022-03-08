@@ -18,20 +18,22 @@ public abstract class ToCodeBase
 
     protected CodeMemberField AddFieldToClass(CodeDomArgs args, Design d)
     {
-        return AddFieldToClass(args, d.FieldName, d.View.GetType());
+        return AddFieldToClass(args, d.View.GetType(), d.FieldName);
     }
-    protected CodeMemberField AddFieldToClass(CodeDomArgs args, string fieldName, Type type)
+    protected CodeMemberField AddFieldToClass(CodeDomArgs args, Type type, string fieldName)
     {
         // Create a private field for it
-        var field = new CodeMemberField();
-        field.Name = fieldName;
-        field.Type = new CodeTypeReference(type);
-
+        var field = new CodeMemberField(type,fieldName);
         args.Class.Members.Add(field);
 
         return field;
     }
 
+    protected void AddLocalFieldToMethod(CodeDomArgs args, Type type, string name)
+    {
+        var declare = new CodeVariableDeclarationStatement(type, name);
+        args.InitMethod.Statements.Add(declare);
+    }
 
     protected void AddConstructorCall(CodeDomArgs args, Design d, params CodeExpression[] parameters)
     {
@@ -59,19 +61,27 @@ public abstract class ToCodeBase
     /// <param name="value">The value to assign to the property e.g. "hello"</param>
     protected void AddPropertyAssignment(CodeDomArgs args,Design d, string propertyName, object? value)
     {
-        AddPropertyAssignment(args, d.FieldName, propertyName, value);
+        AddPropertyAssignment(args, $"this.{d.FieldName}", propertyName, value);
     }
 
-    protected void AddPropertyAssignment(CodeDomArgs args,string field, string propertyName, object? value)
+
+    /// <summary>
+    /// Adds a line "this.someField.Text = "Heya"
+    /// </summary>
+    /// <param name="args"></param>
+    /// <param name="fullySpecifiedFieldName">The field or local variable upon which you want to set the <paramref name="propertyName"/></param>
+    /// <param name="propertyName">Field or property to change</param>
+    /// <param name="value">The new value that should be assigned.  Must be a primitive.</param>
+    protected void AddPropertyAssignment(CodeDomArgs args,string fullySpecifiedFieldName, string propertyName, object? value)
     {
         var setLhs = new CodeFieldReferenceExpression();
-        setLhs.FieldName = $"this.{field}.{propertyName}";
+        setLhs.FieldName = $"{fullySpecifiedFieldName}.{propertyName}";
         CodeExpression setRhs = GetRhsForValue(value);
 
-        var setTextAssign = new CodeAssignStatement();
-        setTextAssign.Left = setLhs;
-        setTextAssign.Right = setRhs;
-        args.InitMethod.Statements.Add(setTextAssign);
+        var assignStatement = new CodeAssignStatement();
+        assignStatement.Left = setLhs;
+        assignStatement.Right = setRhs;
+        args.InitMethod.Statements.Add(assignStatement);
     }
 
     private CodeExpression GetRhsForValue(object? value)
