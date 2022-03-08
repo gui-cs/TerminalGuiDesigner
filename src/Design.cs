@@ -8,6 +8,7 @@ using NLog;
 using NStack;
 using Terminal.Gui;
 using TerminalGuiDesigner.FromCode;
+using TerminalGuiDesigner.ToCode;
 using TerminalGuiDesigner.UI.Windows;
 
 namespace TerminalGuiDesigner;
@@ -164,7 +165,7 @@ public class Design
         }
 
         // todo do this properly with undo history and stuff
-        property.SetValue(View, GetPrimitiveFor(value));
+        property.SetValue(View, value.ToPrimitive());
     }
 
 
@@ -174,26 +175,9 @@ public class Design
     /// </summary>
     public void ToCode(CodeTypeDeclaration addTo, CodeMemberMethod initMethod)
     {
-        AddFieldToClass(addTo);
-        AddConstructorCall(initMethod);
+        var toCode = new DesignToCode(this);
+        toCode.ToCode(addTo, initMethod);
 
-        foreach(var prop in GetDesignableProperties())
-        {
-            var val = GetDesignablePropertyValue(prop);
-            AddPropertyAssignment(initMethod,prop.Name,val);
-        }
-
-        if(View is TableView tv)
-        {
-            AddFieldToClass(addTo, $"{FieldName}Table", typeof(DataTable));
-        }
-
-        // Set View.Data to the name of the field so that we can 
-        // determine later on which View instances come from which
-        // Fields in the class
-        AddPropertyAssignment(initMethod, nameof(View.Data), FieldName);
-
-        AddAddToViewStatement(initMethod);
     }
     public void DeSerializeExtraProperties(string fieldName)
     {
@@ -245,112 +229,8 @@ public class Design
         }
     }
 
-    protected void AddConstructorCall(CodeMemberMethod initMethod, params CodeExpression[] parameters)
-    {
-        // Construct it
-        var constructLhs = new CodeFieldReferenceExpression();
-        constructLhs.FieldName = $"this.{FieldName}";
-        var constructRhs = new CodeObjectCreateExpression(View.GetType(),parameters);
-        var constructAssign = new CodeAssignStatement();
-        constructAssign.Left = constructLhs;
-        constructAssign.Right = constructRhs;
-        initMethod.Statements.Add(constructAssign);        
-    }
 
-    /// <summary>
-    /// Adds a statement to the InitializeComponent method like:
-    /// <code>this.mylabel.Text = "hello"</code>
-    /// </summary>
-    /// <param name="initMethod">The InitializeComponent method</param>
-    /// <param name="propertyName">The property to set e.g. Text</param>
-    /// <param name="value">The value to assign to the property e.g. "hello"</param>
-    protected void AddPropertyAssignment(CodeMemberMethod initMethod, string propertyName, object? value)
-    {
-        var setLhs = new CodeFieldReferenceExpression();
-        setLhs.FieldName = $"this.{FieldName}.{propertyName}";
-        CodeExpression setRhs = GetRhsForValue(value);
 
-        var setTextAssign = new CodeAssignStatement();
-        setTextAssign.Left = setLhs;
-        setTextAssign.Right = setRhs;
-        initMethod.Statements.Add(setTextAssign);
-    }
-
-    private CodeExpression GetRhsForValue(object? value)
-    {
-        if (value is ustring u)
-        {
-            return new CodePrimitiveExpression()
-            {
-                Value = u.ToString()
-            };
-        }
-        if(value is PropertyDesign pd){
-
-            return new CodeSnippetExpression(pd.GetCodeWithParameters());
-        }
-
-        return new CodePrimitiveExpression(GetPrimitiveFor(value));
-    }
-
-    private object GetPrimitiveFor(object? value)
-    {
-        if (value is Pos p)
-        {
-            // Value is a position e.g. X=2
-            // Pos can be many different subclasses all of which are public
-            // lets deal with only PosAbsolute for now
-            if (p.IsAbsolute(out int n))
-            {
-                return n;
-            }
-            else
-                throw new NotImplementedException("Only absolute positions are supported at the moment");
-        }
-        else if (value is Dim d)
-        {
-            // Value is a position e.g. X=2
-            // Pos can be many different subclasses all of which are public
-            // lets deal with only PosAbsolute for now
-            if (d.IsAbsolute(out int n))
-            {
-                return n;
-            }
-            else
-                throw new NotImplementedException("Only absolute dimensions are supported at the moment");
-        }
-        else
-        {
-            // assume it is already a primitive
-            return value;
-        }
-    }
-
-    protected void AddAddToViewStatement(CodeMemberMethod initMethod)
-    {
-        // Add it to the view 
-        var callAdd = new CodeMethodInvokeExpression();
-        callAdd.Method.TargetObject = new CodeThisReferenceExpression();
-        callAdd.Method.MethodName = "Add";
-        callAdd.Parameters.Add(new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),FieldName));
-        initMethod.Statements.Add(callAdd);
-    }
-
-    protected CodeMemberField AddFieldToClass(CodeTypeDeclaration addTo)
-    {
-        return AddFieldToClass(addTo, FieldName, View.GetType());
-    }
-    protected CodeMemberField AddFieldToClass(CodeTypeDeclaration addTo, string fieldName, Type type)
-    {
-        // Create a private field for it
-        var field = new CodeMemberField();
-        field.Name = fieldName;
-        field.Type = new CodeTypeReference(type);
-
-        addTo.Members.Add(field);
-
-        return field;
-    }
     private IEnumerable<Design> GetAllDesigns(View view)
     {
         List<Design> toReturn = new List<Design>();

@@ -22,11 +22,11 @@ namespace YourNamespace {
         
         private void InitializeComponent() {
             this.label1 = new Terminal.Gui.Label();
-            this.label1.Text = "Hello World";
+            this.label1.Text = "Hello!!!!";
             this.label1.Width = Dim.Fill(0);
             this.label1.Height = 1;
-            this.label1.X = 29;
-            this.label1.Y = 10;
+            this.label1.X = 37;
+            this.label1.Y = 6;
             this.label1.Data = "label1";
             this.Add(this.label1);
             this.tableview1 = new Terminal.Gui.TableView();
