@@ -21,8 +21,52 @@ namespace TerminalGuiDesigner.ToCode
 
         internal void ToCode(CodeDomArgs args)
         {
+            var dataTableFieldName = $"{Design.FieldName}Table";
+
             // add a field to the class for the Table that is in the view
-            AddFieldToClass(args, $"{Design.FieldName}Table", typeof(DataTable));
+            AddFieldToClass(args, dataTableFieldName, typeof(DataTable));
+
+            AddConstructorCall(dataTableFieldName, typeof(DataTable), args);
+
+            foreach (DataColumn col in Table.Columns)
+            {
+                var colFieldName = dataTableFieldName +"Col"+ col.Ordinal;
+
+                AddFieldToClass(args, colFieldName, typeof(DataColumn));
+                AddConstructorCall(colFieldName, typeof(DataColumn), args);
+
+                AddPropertyAssignment(args,$"{colFieldName}", nameof(DataColumn.ColumnName), col.ColumnName);
+
+                AddTableColumnsAddCall(dataTableFieldName,colFieldName,args);
+            }
+
+            AddSetTableViewTableProperty(args, dataTableFieldName);
+        }
+
+        private void AddTableColumnsAddCall(string tableFieldName, string columnFieldName,CodeDomArgs args)
+        {
+            // Construct it
+            var addColumnToTableStatement  = new CodeMethodInvokeExpression(
+                new CodeMethodReferenceExpression(
+                    new CodeSnippetExpression($"this.{tableFieldName}.Columns"), "Add"),
+                    new CodeSnippetExpression(columnFieldName));
+
+            args.InitMethod.Statements.Add(addColumnToTableStatement);
+        }
+
+        private void AddSetTableViewTableProperty(CodeDomArgs args, string tableFieldName)
+        {
+
+            var setLhs = new CodeFieldReferenceExpression();
+            setLhs.FieldName = $"this.{Design.FieldName}.Table";
+
+            var setRhs = new CodeFieldReferenceExpression();
+            setRhs.FieldName = $"this.{tableFieldName}";
+
+            var assignStatement = new CodeAssignStatement();
+            assignStatement.Left = setLhs;
+            assignStatement.Right = setRhs;
+            args.InitMethod.Statements.Add(assignStatement);
         }
     }
 }

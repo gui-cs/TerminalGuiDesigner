@@ -16,7 +16,7 @@ namespace tests
     public class DesignTableViewTests
     {
         [Test]
-        public void TestRoundTrip()
+        public void TestRoundTrip_PreserveColumns()
         {
             var viewToCode = new ViewToCode();
 
@@ -39,7 +39,7 @@ namespace tests
 
             Assert.IsNotNull(tableIn.Table);
 
-            Assert.AreEqual(tableOut.Table.Rows.Count, tableIn.Table.Rows.Count);
+            Assert.AreEqual(tableOut.Table.Columns.Count, tableIn.Table.Columns.Count);
         }
     }
 }

@@ -21,13 +21,13 @@ namespace TerminalGuiDesigner.ToCode
         internal void ToCode(CodeDomArgs args)
         {
 
-            AddFieldToClass(Design,args);
-            AddConstructorCall(Design, args);
+            AddFieldToClass(args, Design);
+            AddConstructorCall(args, Design);
 
             foreach (var prop in Design.GetDesignableProperties())
             {
                 var val = Design.GetDesignablePropertyValue(prop);
-                AddPropertyAssignment(Design, args, prop.Name, val);
+                AddPropertyAssignment(args,Design, prop.Name, val);
             }
 
             
@@ -41,9 +41,9 @@ namespace TerminalGuiDesigner.ToCode
             // Set View.Data to the name of the field so that we can 
             // determine later on which View instances come from which
             // Fields in the class
-            AddPropertyAssignment(Design,args, nameof(View.Data), Design.FieldName);
+            AddPropertyAssignment(args, Design, nameof(View.Data), Design.FieldName);
 
-            AddAddToViewStatement(Design, args);
+            AddAddToViewStatement(args, Design);
         }
     }
 }

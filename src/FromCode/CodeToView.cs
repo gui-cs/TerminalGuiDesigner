@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Emit;
 using NLog;
 using NStack;
+using System.ComponentModel;
 using System.Reflection;
 using Terminal.Gui;
 using TerminalGuiDesigner.ToCode;
@@ -107,6 +108,7 @@ public class CodeToView
         var netCoreLib = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
         var terminalGuilib = MetadataReference.CreateFromFile(typeof(View).Assembly.Location);
         var nstackLib = MetadataReference.CreateFromFile(typeof(ustring).Assembly.Location);
+        var marshalLib = MetadataReference.CreateFromFile(typeof(MarshalByValueComponent).Assembly.Location);
         var systemData = MetadataReference.CreateFromFile(typeof(System.Data.DataTable).Assembly.Location);
         var mscorLib = MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "mscorlib.dll");
         var runtimeLib = MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "System.Runtime.dll");
@@ -121,6 +123,7 @@ public class CodeToView
                 terminalGuilib,
                 nstackLib,
                 systemData,
+                marshalLib,
                 mscorLib,
                 runtimeLib}, options: options);
 

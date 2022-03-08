@@ -16,27 +16,15 @@ namespace YourNamespace {
         
         private Terminal.Gui.Label label1;
         
-        private Terminal.Gui.TableView tableview1;
-        
-        private System.Data.DataTable tableview1Table;
-        
         private void InitializeComponent() {
             this.label1 = new Terminal.Gui.Label();
             this.label1.Text = "Hello!!!!";
             this.label1.Width = Dim.Fill(0);
             this.label1.Height = 1;
-            this.label1.X = 37;
-            this.label1.Y = 6;
+            this.label1.X = 26;
+            this.label1.Y = 10;
             this.label1.Data = "label1";
             this.Add(this.label1);
-            this.tableview1 = new Terminal.Gui.TableView();
-            this.tableview1.Text = "";
-            this.tableview1.Width = 23;
-            this.tableview1.Height = 5;
-            this.tableview1.X = 40;
-            this.tableview1.Y = 14;
-            this.tableview1.Data = "tableview1";
-            this.Add(this.tableview1);
         }
     }
 }

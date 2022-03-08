@@ -6,7 +6,7 @@ namespace TerminalGuiDesigner.ToCode;
 
 public abstract class ToCodeBase
 {
-    protected void AddAddToViewStatement(Design d, CodeDomArgs args)
+    protected void AddAddToViewStatement(CodeDomArgs args, Design d)
     {
         // Add it to the view 
         var callAdd = new CodeMethodInvokeExpression();
@@ -16,7 +16,7 @@ public abstract class ToCodeBase
         args.InitMethod.Statements.Add(callAdd);
     }
 
-    protected CodeMemberField AddFieldToClass(Design d, CodeDomArgs args)
+    protected CodeMemberField AddFieldToClass(CodeDomArgs args, Design d)
     {
         return AddFieldToClass(args, d.FieldName, d.View.GetType());
     }
@@ -32,12 +32,17 @@ public abstract class ToCodeBase
         return field;
     }
 
-    protected void AddConstructorCall(Design d, CodeDomArgs args, params CodeExpression[] parameters)
+
+    protected void AddConstructorCall(CodeDomArgs args, Design d, params CodeExpression[] parameters)
+    {
+        AddConstructorCall($"this.{d.FieldName}", d.View.GetType(), args, parameters);
+    }
+    protected void AddConstructorCall(string fullySpecifiedFieldName,Type typeToConstruct, CodeDomArgs args, params CodeExpression[] parameters)
     {
         // Construct it
         var constructLhs = new CodeFieldReferenceExpression();
-        constructLhs.FieldName = $"this.{d.FieldName}";
-        var constructRhs = new CodeObjectCreateExpression(d.View.GetType(), parameters);
+        constructLhs.FieldName = fullySpecifiedFieldName;
+        var constructRhs = new CodeObjectCreateExpression(typeToConstruct, parameters);
         var constructAssign = new CodeAssignStatement();
         constructAssign.Left = constructLhs;
         constructAssign.Right = constructRhs;
@@ -52,10 +57,15 @@ public abstract class ToCodeBase
     /// <param name="initMethod">The InitializeComponent method</param>
     /// <param name="propertyName">The property to set e.g. Text</param>
     /// <param name="value">The value to assign to the property e.g. "hello"</param>
-    protected void AddPropertyAssignment(Design d, CodeDomArgs args, string propertyName, object? value)
+    protected void AddPropertyAssignment(CodeDomArgs args,Design d, string propertyName, object? value)
+    {
+        AddPropertyAssignment(args, d.FieldName, propertyName, value);
+    }
+
+    protected void AddPropertyAssignment(CodeDomArgs args,string field, string propertyName, object? value)
     {
         var setLhs = new CodeFieldReferenceExpression();
-        setLhs.FieldName = $"this.{d.FieldName}.{propertyName}";
+        setLhs.FieldName = $"this.{field}.{propertyName}";
         CodeExpression setRhs = GetRhsForValue(value);
 
         var setTextAssign = new CodeAssignStatement();
