@@ -112,7 +112,7 @@ namespace TerminalGuiDesigner.ToCode
             var initMethod = new CodeMemberMethod();
             initMethod.Name = SourceCodeFile.InitializeComponentMethodName;
 
-            AddSubViewsToDesignerCs(forView, class1, initMethod);
+            AddSubViewsToDesignerCs(forView, new CodeDomArgs(class1, initMethod));
 
             class1.Members.Add(initMethod);
             ns.Types.Add(class1);
@@ -133,7 +133,7 @@ namespace TerminalGuiDesigner.ToCode
             }
         }
 
-        private void AddSubViewsToDesignerCs(View forView, CodeTypeDeclaration class1, CodeMemberMethod initMethod)
+        private void AddSubViewsToDesignerCs(View forView, CodeDomArgs args)
         {
             foreach (var sub in forView.Subviews)
             {
@@ -142,11 +142,11 @@ namespace TerminalGuiDesigner.ToCode
                 if (sub.Data is Design d)
                 {
                     // The user is designing this view so it needs to be persisted
-                    d.ToCode(class1, initMethod);
+                    d.ToCode(args);
                 }
 
                 // now recurse down the view hierarchy
-                AddSubViewsToDesignerCs(sub, class1, initMethod);
+                AddSubViewsToDesignerCs(sub, args);
             }
         }
     }

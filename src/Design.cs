@@ -173,10 +173,10 @@ public class Design
     /// Adds declaration and initialization statements to the .Designer.cs
     /// CodeDom class.
     /// </summary>
-    public void ToCode(CodeTypeDeclaration addTo, CodeMemberMethod initMethod)
+    public void ToCode(CodeDomArgs args)
     {
         var toCode = new DesignToCode(this);
-        toCode.ToCode(addTo, initMethod);
+        toCode.ToCode(args);
 
     }
     public void DeSerializeExtraProperties(string fieldName)

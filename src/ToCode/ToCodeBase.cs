@@ -4,35 +4,35 @@ using TerminalGuiDesigner.UI.Windows;
 
 namespace TerminalGuiDesigner.ToCode;
 
-internal abstract class ToCodeBase
+public abstract class ToCodeBase
 {
-    protected void AddAddToViewStatement(Design d, CodeMemberMethod initMethod)
+    protected void AddAddToViewStatement(Design d, CodeDomArgs args)
     {
         // Add it to the view 
         var callAdd = new CodeMethodInvokeExpression();
         callAdd.Method.TargetObject = new CodeThisReferenceExpression();
         callAdd.Method.MethodName = "Add";
         callAdd.Parameters.Add(new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), d.FieldName));
-        initMethod.Statements.Add(callAdd);
+        args.InitMethod.Statements.Add(callAdd);
     }
 
-    protected CodeMemberField AddFieldToClass(Design d, CodeTypeDeclaration addTo)
+    protected CodeMemberField AddFieldToClass(Design d, CodeDomArgs args)
     {
-        return AddFieldToClass(addTo, d.FieldName, d.View.GetType());
+        return AddFieldToClass(args, d.FieldName, d.View.GetType());
     }
-    protected CodeMemberField AddFieldToClass(CodeTypeDeclaration addTo, string fieldName, Type type)
+    protected CodeMemberField AddFieldToClass(CodeDomArgs args, string fieldName, Type type)
     {
         // Create a private field for it
         var field = new CodeMemberField();
         field.Name = fieldName;
         field.Type = new CodeTypeReference(type);
 
-        addTo.Members.Add(field);
+        args.Class.Members.Add(field);
 
         return field;
     }
 
-    protected void AddConstructorCall(Design d, CodeMemberMethod initMethod, params CodeExpression[] parameters)
+    protected void AddConstructorCall(Design d, CodeDomArgs args, params CodeExpression[] parameters)
     {
         // Construct it
         var constructLhs = new CodeFieldReferenceExpression();
@@ -41,7 +41,7 @@ internal abstract class ToCodeBase
         var constructAssign = new CodeAssignStatement();
         constructAssign.Left = constructLhs;
         constructAssign.Right = constructRhs;
-        initMethod.Statements.Add(constructAssign);
+        args.InitMethod.Statements.Add(constructAssign);
     }
 
     /// <summary>
@@ -52,7 +52,7 @@ internal abstract class ToCodeBase
     /// <param name="initMethod">The InitializeComponent method</param>
     /// <param name="propertyName">The property to set e.g. Text</param>
     /// <param name="value">The value to assign to the property e.g. "hello"</param>
-    protected void AddPropertyAssignment(Design d, CodeMemberMethod initMethod, string propertyName, object? value)
+    protected void AddPropertyAssignment(Design d, CodeDomArgs args, string propertyName, object? value)
     {
         var setLhs = new CodeFieldReferenceExpression();
         setLhs.FieldName = $"this.{d.FieldName}.{propertyName}";
@@ -61,7 +61,7 @@ internal abstract class ToCodeBase
         var setTextAssign = new CodeAssignStatement();
         setTextAssign.Left = setLhs;
         setTextAssign.Right = setRhs;
-        initMethod.Statements.Add(setTextAssign);
+        args.InitMethod.Statements.Add(setTextAssign);
     }
 
     private CodeExpression GetRhsForValue(object? value)
