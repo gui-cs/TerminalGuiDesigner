@@ -51,6 +51,17 @@ public class EditDialog : Window
         Add(btnClose);
     }
 
+    public override bool ProcessHotKey(KeyEvent keyEvent)
+    {
+        if(keyEvent.Key == Key.Enter && list.HasFocus)
+        {
+            SetProperty(false);
+            return true;
+        }    
+
+        return base.ProcessHotKey(keyEvent);
+    }
+
     private void SetProperty(bool setNull)
     {
         if (list.SelectedItem != -1)

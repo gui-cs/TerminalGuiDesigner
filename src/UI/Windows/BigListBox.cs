@@ -154,8 +154,6 @@ public class BigListBox<T>
         var btnCancel = new Button("Cancel")
         {
             Y = Pos.Bottom(_listView),
-            Width = 10,
-            Height = 1
         };
         btnCancel.Clicked += () => Application.RequestStop();
 

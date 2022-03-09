@@ -63,8 +63,6 @@ class GetTextDialog
         {
             X = 0,
             Y = Pos.Bottom(textField),
-            Width = 10,
-            Height = 1,
             IsDefault = true
         };
         btnOk.Clicked += () =>
@@ -72,12 +70,11 @@ class GetTextDialog
             Accept();
         };
 
-        var btnCancel = new Button("Cancel", true)
+        var btnCancel = new Button("Cancel")
         {
             X = Pos.Right(btnOk),
             Y = Pos.Bottom(textField),
-            Width = 13,
-            Height = 1
+            IsDefault = false
         };
         btnCancel.Clicked += () =>
         {
@@ -85,12 +82,10 @@ class GetTextDialog
             Application.RequestStop();
         };
 
-        var btnClear = new Button("Clear", true)
+        var btnClear = new Button("Clear")
         {
             X = Pos.Right(btnCancel),
-            Y = Pos.Bottom(textField),
-            Width = 13,
-            Height = 1,
+            Y = Pos.Bottom(textField)
         };
         btnClear.Clicked += () =>
         {
