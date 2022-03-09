@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "TerminalGuiDesigner": {
+      "commandName": "Project",
+      "commandLineArgs": "MyWindow.cs"
+    }
+  }
+}

@@ -32,21 +32,23 @@ Ctrl+Y - Redo";
         CanFocus = true;
     }
 
-    public void Run()
+    public void Run(string? fileToLoad)
     {
         Application.Init();
 
-
         try
         {
-            var programDir = Assembly.GetEntryAssembly()?.Location ?? throw new Exception("Could not determine the current executables present directory");
+            // TODO: This default is really just for dev purposes, once released most people wont have MyWindow.cs
+            var toLoadOrCreate = new FileInfo(fileToLoad ?? "MyWindow.cs");
 
-            var classFile = new FileInfo(Path.Combine(programDir, "../../../../MyWindow.cs"));
-            var designerFile = new FileInfo(Path.Combine(programDir, "../../../../MyWindow.Designer.cs"));
-
-            Open(designerFile);
-
-
+            if(toLoadOrCreate.Exists)
+            {
+                Open(toLoadOrCreate);
+            }
+            else
+            {
+                New(toLoadOrCreate);
+            }
         }
         catch (Exception ex)
         {
