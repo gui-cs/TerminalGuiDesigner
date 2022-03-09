@@ -114,6 +114,12 @@ public class EditDialog : Window
                 newValue = posDesign;
                 return true;
             }
+            else
+            {
+                // user cancelled designing the Pos
+                newValue = null;
+                return false;
+            }
         }
 
         // user is editing a Dim
@@ -126,6 +132,13 @@ public class EditDialog : Window
                 newValue = dimDesign;
                 return true;
             }
+            else
+            {
+                // user cancelled designing the Dim
+                newValue = null;
+                return false;
+            }
+                
         }
 
         if (property.PropertyInfo.PropertyType == typeof(bool))

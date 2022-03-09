@@ -47,7 +47,17 @@ public class Property : ToCodeBase
             }
         }
 
+        if(value is SnippetProperty snip)
+        {
+            Design.SetSnippetProperty(snip, value);
+            return;
+        }
+
+        // TODO: This hack gets around an ArgumentException that gets thrown when
+        // switching from Computed to Absolute values of Dim/Pos
+        Design.View.IsInitialized = false;
         PropertyInfo.SetValue(DeclaringObject, value);
+        Design.View.IsInitialized = true;
     }
 
     public virtual void ToCode(CodeDomArgs args)

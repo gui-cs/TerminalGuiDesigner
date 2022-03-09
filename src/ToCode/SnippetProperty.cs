@@ -33,4 +33,17 @@ public class SnippetProperty : Property
     {
         return new CodeSnippetExpression(GetCodeWithParameters());
     }
+
+    public override void SetValue(object value)
+    {
+        // if we are changing a value to a complex designed value type (e.g. Pos or Dim)
+        if (value is SnippetProperty snipNew)
+        {
+            // changing to a snip
+            Design.SetSnippetProperty(snipNew, value);
+            return;
+        }
+
+        base.SetValue(value);
+    }
 }

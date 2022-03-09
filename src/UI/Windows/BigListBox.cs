@@ -141,8 +141,6 @@ public class BigListBox<T>
         var btnOk = new Button(_okText, true)
         {
             Y = Pos.Bottom(_listView),
-            Width = 10,
-            Height = 1
         };
         btnOk.Clicked += () =>
         {
@@ -180,7 +178,7 @@ public class BigListBox<T>
             };
 
             btnOk.X = 38;
-            btnCancel.X = 48;
+            btnCancel.X = Pos.Right(btnOk) + 2;
 
             win.Add(_mainInput);
             _mainInput.SetFocus();
