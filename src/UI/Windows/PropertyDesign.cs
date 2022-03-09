@@ -6,55 +6,6 @@ using TerminalGuiDesigner.ToCode;
 
 namespace TerminalGuiDesigner.UI.Windows;
 
-
-
-/*
-/// <summary>
-/// Returns a <see cref="SnippetProperty"/> or the actual value of 
-/// <paramref name="p"/> on the <see cref="View"/>
-/// </summary>
-/// <param name="p"></param>
-/// <returns></returns>
-public virtual object GetDesignablePropertyValue(Property p)
-{
-    if (SnippetProperties.ContainsKey(p.PropertyInfo))
-    {
-        return SnippetProperties[p.PropertyInfo];
-    }
-
-    return p.GetValue();
-}
-
-public void SetDesignablePropertyValue(PropertyInfo property, object? value)
-{
-
-    if (value == null)
-    {
-        property.SetValue(View, null);
-        return;
-    }
-
-    if (property.DeclaringType == typeof(TableStyle))
-    {
-        property.SetValue(((TableView)View).Style, value);
-        return;
-    }
-
-    // if we are changing a value to a complex designed value type (e.g. Pos or Dim)
-    if (value is SnippetProperty d)
-    {
-        property.SetValue(View, d.Value);
-
-        SnippetProperties.AddOrUpdate(property, d);
-        return;
-    }
-
-
-    // todo do this properly with undo history and stuff
-    property.SetValue(View, value.ToPrimitive());
-}
-*/
-
 public class Property : ToCodeBase
 {
     public Design Design { get; }
@@ -165,7 +116,7 @@ public class NameProperty : Property
 public class SnippetProperty : Property
 {
     public string Code { get; }
-    public object Value { get; }
+    public object Value { get; private set; }
     public Func<string>[] CodeParameters { get; }
 
     public SnippetProperty(Property toWrap, string code, object value, params Func<string>[] codeParameters) 
@@ -185,7 +136,7 @@ public class SnippetProperty : Property
     }
     public override string ToString()
     {
-        return GetCodeWithParameters();
+        return $"{PropertyInfo.Name}:{GetCodeWithParameters()}";
     }
 
     protected override CodeExpression GetRhs()

@@ -58,6 +58,25 @@ public class Design
             }
         }
     }
+
+    internal void SetSnippetProperty(SnippetProperty oldSnip, object newValue)
+    {
+        if(newValue is SnippetProperty newSnip)
+        {
+            // going to snip
+            newSnip.SetValue(newSnip.Value);
+            SnippetProperties.AddOrUpdate(newSnip.PropertyInfo, newSnip);
+        }
+        else
+        {
+            // going from snip to primitive
+            oldSnip.SetValue(newValue);
+            SnippetProperties.Remove(oldSnip.PropertyInfo);
+        }
+        
+        return;
+    }
+
     /// <summary>
     /// Removes all <see cref="SnippetProperties"/> that match the provided <paramref name="propertyName"/>.
     /// This will leave the Design drawing the value directly from the underlying <see cref="View"/> at
@@ -132,16 +151,31 @@ public class Design
 
         yield return new Property(this,View.GetActualTextProperty());
 
-        yield return new Property(this, View.GetType().GetProperty(nameof(View.Width)));
-        yield return new Property(this, View.GetType().GetProperty(nameof(View.Height)));
+        yield return ToSnip(new Property(this, View.GetType().GetProperty(nameof(View.Width))));
+        yield return ToSnip(new Property(this, View.GetType().GetProperty(nameof(View.Height))));
 
-        yield return new Property(this, View.GetType().GetProperty(nameof(View.X)));
-        yield return new Property(this, View.GetType().GetProperty(nameof(View.Y)));
+        yield return ToSnip(new Property(this, View.GetType().GetProperty(nameof(View.X))));
+        yield return ToSnip(new Property(this, View.GetType().GetProperty(nameof(View.Y))));
 
         if(View is TableView tv)
         {
             yield return new Property(this, typeof(TableStyle).GetProperty(nameof(TableStyle.AlwaysShowHeaders)),nameof(TableView.Style),tv.Style);
         }
+    }
+
+    /// <summary>
+    /// Returns the <see cref="SnippetProperties"/> if any for <paramref name="property"/>
+    /// </summary>
+    /// <param name="property"></param>
+    /// <returns></returns>
+    private Property ToSnip(Property property)
+    {
+        if(SnippetProperties.ContainsKey(property.PropertyInfo))
+        {
+            return SnippetProperties[property.PropertyInfo];
+        }
+
+        return property;
     }
 
     /// <summary>
