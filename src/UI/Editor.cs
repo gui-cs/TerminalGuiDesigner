@@ -1,8 +1,6 @@
 ﻿using System.Reflection;
 using Terminal.Gui;
-using System.Text;
 using TerminalGuiDesigner.Operations;
-using Attribute = Terminal.Gui.Attribute;
 using TerminalGuiDesigner.UI.Windows;
 using TerminalGuiDesigner.FromCode;
 using TerminalGuiDesigner.ToCode;

@@ -1,5 +1,3 @@
-using System.Collections;
-
 namespace TerminalGuiDesigner.Operations;
 
 public class OperationManager

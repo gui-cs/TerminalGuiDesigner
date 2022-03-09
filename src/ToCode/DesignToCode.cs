@@ -1,52 +1,43 @@
-﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terminal.Gui;
-using static Terminal.Gui.TableView;
+﻿using Terminal.Gui;
 
-namespace TerminalGuiDesigner.ToCode
+namespace TerminalGuiDesigner.ToCode;
+
+internal class DesignToCode : ToCodeBase
 {
-    internal class DesignToCode : ToCodeBase
+    public DesignToCode(Design design)
     {
-        public DesignToCode(Design design)
+        Design = design;
+    }
+
+    public Design Design { get; }
+
+    internal void ToCode(CodeDomArgs args)
+    {
+
+        AddFieldToClass(args, Design);
+        AddConstructorCall(args, Design);
+
+        foreach (var prop in Design.GetDesignableProperties())
         {
-            Design = design;
+            // if we have a snippet use that code instead
+            if (Design.SnippetProperties.ContainsKey(prop.PropertyInfo))
+            {
+                Design.SnippetProperties[prop.PropertyInfo].ToCode(args);
+            }
+            else
+            {
+                prop.ToCode(args);
+            }
         }
 
-        public Design Design { get; }
 
-        internal void ToCode(CodeDomArgs args)
+        // if the current component is a TableView we should persist the table too
+        if (Design.View is TableView tv && tv.Table != null)
         {
-
-            AddFieldToClass(args, Design);
-            AddConstructorCall(args, Design);
-
-            foreach (var prop in Design.GetDesignableProperties())
-            {
-                // if we have a snippet use that code instead
-                if(Design.SnippetProperties.ContainsKey(prop.PropertyInfo))
-                {
-                    Design.SnippetProperties[prop.PropertyInfo].ToCode(args);
-                }
-                else
-                {
-                    prop.ToCode(args);
-                }
-            }
-
-            
-            // if the current component is a TableView we should persist the table too
-            if (Design.View is TableView tv && tv.Table != null)
-            {
-                var designTable = new DataTableToCode(Design,tv.Table);
-                designTable.ToCode(args);
-            }
-
-            AddAddToViewStatement(args, Design);
+            var designTable = new DataTableToCode(Design, tv.Table);
+            designTable.ToCode(args);
         }
+
+        AddAddToViewStatement(args, Design);
     }
 }
