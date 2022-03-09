@@ -35,7 +35,7 @@ namespace TerminalGuiDesigner.ToCode
                 AddLocalFieldToMethod(args, typeof(DataColumn), colFieldName);
                 AddConstructorCall(colFieldName, typeof(DataColumn), args);
 
-                AddPropertyAssignment(args,$"{colFieldName}", nameof(DataColumn.ColumnName), col.ColumnName);
+                AddPropertyAssignment(args,$"{colFieldName}.{nameof(DataColumn.ColumnName)}" , col.ColumnName);
 
                 AddTableColumnsAddCall(dataTableFieldName,colFieldName,args);
             }

@@ -1,5 +1,6 @@
 
 using System.Reflection;
+using TerminalGuiDesigner.UI.Windows;
 
 namespace TerminalGuiDesigner.Operations;
 
@@ -7,11 +8,11 @@ public class SetPropertyOperation : IOperation
 {
 
     public Design Design { get; }
-    public PropertyInfo Property { get; }
+    public Property Property { get; }
     public object OldValue { get; }
     public object NewValue { get; }
 
-    public SetPropertyOperation(Design design,PropertyInfo property, object oldValue, object NewValue)
+    public SetPropertyOperation(Design design,Property property, object oldValue, object NewValue)
     {
         Design = design;
         Property = property;
@@ -21,12 +22,12 @@ public class SetPropertyOperation : IOperation
 
     public void Do()
     {
-        Design.SetDesignablePropertyValue(Property,NewValue);
+        Property.SetValue(NewValue);
     }
 
     public void Undo()
     {
-        Design.SetDesignablePropertyValue(Property,OldValue);
+        Property.SetValue(OldValue);
     }
 
     public void Redo()

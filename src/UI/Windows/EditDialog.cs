@@ -6,7 +6,7 @@ namespace TerminalGuiDesigner.UI.Windows;
 
 public class EditDialog : Window
 {
-    private List<PropertyInListView> collection;
+    private List<Property> collection;
     private ListView list;
 
     public Design Design { get; }
@@ -15,10 +15,7 @@ public class EditDialog : Window
     public EditDialog(Design design)
     {
         Design = design;
-        collection = Design.GetDesignableProperties().Select(p => new PropertyInListView(p, design)).ToList();
-
-        // Add the (Name) entry as editable too
-        collection.Insert(0, new NamePropertyInListView(design));
+        collection = Design.GetDesignableProperties().ToList();
 
         list = new ListView(collection)
         {
@@ -61,39 +58,16 @@ public class EditDialog : Window
             {
                 var p = collection[list.SelectedItem];
 
-                if (p is NamePropertyInListView nameProperty)
-                {
-                    if (setNull)
-                    {
-                        MessageBox.ErrorQuery("Not Possible", "You cannot set a View (Name) property to null", "Ok");
-                        return;
-                    }
-                    else
-                    {
-                        if (Modals.GetString("Name", "New Name", Design.FieldName, out string? newName))
-                        {
-                            if (!string.IsNullOrWhiteSpace(newName))
-                            {
-                                OperationManager.Instance.Do(new RenameViewOperation(Design, Design.FieldName, newName));
-                                p.UpdateValue();
-                            }
-                        }
-
-                        // value was updated or user cancelled typing a new name
-                        return;
-                    }
-                }
-
                 // TODO make this work with PropertyDesign correctly
                 // i.e. return the PropertyDesign not the value
-                var oldValue = Design.GetDesignablePropertyValue(p.PropertyInfo);
+                var oldValue = p.GetValue();
 
 
                 if (setNull)
                 {
                     // user wants to set this property to null/default
                     OperationManager.Instance.Do(
-                        new SetPropertyOperation(Design, p.PropertyInfo, oldValue, null)
+                        new SetPropertyOperation(Design, p, oldValue, null)
                     );
                 }
                 else
@@ -102,7 +76,7 @@ public class EditDialog : Window
                     if (GetNewValue(p, out object? newValue))
                     {
                         OperationManager.Instance.Do(
-                            new SetPropertyOperation(Design, p.PropertyInfo, oldValue, newValue)
+                            new SetPropertyOperation(Design, p, oldValue, newValue)
                         );
                     }
                     else
@@ -111,9 +85,6 @@ public class EditDialog : Window
                         return;
                     }
                 }
-
-
-                p.UpdateValue();
 
                 var oldSelected = list.SelectedItem;
                 list.SetSource(collection = collection.ToList());
@@ -128,17 +99,16 @@ public class EditDialog : Window
         }
     }
 
-    private bool GetNewValue(PropertyInListView propertyInListView, out object? newValue)
+    private bool GetNewValue(Property property, out object? newValue)
     {
-        var property = propertyInListView.PropertyInfo;
-        var oldValue = Design.GetDesignablePropertyValue(propertyInListView.PropertyInfo);
+        var oldValue = property.GetValue();
 
         // user is editing a Pos
-        if (property.PropertyType == typeof(Pos))
+        if (property.PropertyInfo.PropertyType == typeof(Pos))
         {
             var designer = new PosDesigner();
 
-            if (designer.GetPosDesign(Design, property, out PropertyDesign posDesign))
+            if (designer.GetPosDesign(Design, property, out SnippetProperty posDesign))
             {
                 newValue = posDesign;
                 return true;
@@ -146,26 +116,26 @@ public class EditDialog : Window
         }
 
         // user is editing a Dim
-        if (property.PropertyType == typeof(Dim))
+        if (property.PropertyInfo.PropertyType == typeof(Dim))
         {
             var designer = new DimDesigner();
 
-            if (designer.GetDimDesign(property, out PropertyDesign dimDesign))
+            if (designer.GetDimDesign(property, out SnippetProperty dimDesign))
             {
                 newValue = dimDesign;
                 return true;
             }
         }
 
-        if (property.PropertyType == typeof(bool))
+        if (property.PropertyInfo.PropertyType == typeof(bool))
         {
-            int answer = MessageBox.Query(property.Name, $"New value for {property.PropertyType}", "Yes", "No");
+            int answer = MessageBox.Query(property.PropertyInfo.Name, $"New value for {property.PropertyInfo.PropertyType}", "Yes", "No");
 
             newValue = answer ==0 ? true : false;
             return answer != -1;
         }
 
-        if (Modals.GetString(property.Name, "New Value", oldValue?.ToString() ?? string.Empty, out string result))
+        if (Modals.GetString((string)property.PropertyInfo.Name, "New Value", oldValue?.ToString() ?? string.Empty, out string result))
         {
             newValue = result;
             return true;
@@ -187,68 +157,6 @@ public class EditDialog : Window
                 obj.Handled = true;
                 SetProperty(true);
             }
-        }
-    }
-
-    /// <summary>
-    /// The <see cref="Design.FieldName"/> which will be refered to as "(Name)".  This
-    /// is what the currently edited View will be called as a member in its parent class
-    /// when written out to .Designer.cs.  For example "label1"
-    /// </summary>
-    private class NamePropertyInListView : PropertyInListView
-    {
-        public NamePropertyInListView(Design d) : base(null, d)
-        {
-            DisplayMember = "(Name):" + Design.FieldName;
-        }
-
-        public override void UpdateValue()
-        {
-            DisplayMember = "(Name):" + Design.FieldName;
-        }
-    }
-
-    /// <summary>
-    /// A list view entry with the value of the field and 
-    /// </summary>
-    private class PropertyInListView
-    {
-        public PropertyInfo PropertyInfo;
-        public string DisplayMember;
-
-        public Design Design;
-
-        public PropertyInListView(PropertyInfo p, Design design)
-        {
-            PropertyInfo = p;
-            Design = design;
-            UpdateValue();
-        }
-
-        public override string ToString()
-        {
-            return DisplayMember;
-        }
-
-        /// <summary>
-        /// Updates the <see cref="DisplayMember"/> to indicate the new value
-        /// </summary>
-        /// <param name="newValue"></param>
-        public virtual void UpdateValue()
-        {
-            var val = Design.GetDesignablePropertyValue(PropertyInfo) ?? string.Empty;
-
-            // If it is a password property
-            if (PropertyInfo.Name.Contains("Password", StringComparison.InvariantCultureIgnoreCase))
-            {
-                // With a non null value
-                if (!string.IsNullOrWhiteSpace(val.ToString()))
-                {
-                    val = "****";
-                }
-            }
-
-            DisplayMember = PropertyInfo.Name + ":" + val;
         }
     }
 }

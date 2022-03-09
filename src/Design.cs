@@ -33,7 +33,7 @@ public class Design
     /// </summary>
     public View View {get;}
 
-    public Dictionary<PropertyInfo,PropertyDesign> DesignedProperties = new ();
+    public Dictionary<PropertyInfo,SnippetProperty> SnippetProperties = new ();
 
     private Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -59,18 +59,18 @@ public class Design
         }
     }
     /// <summary>
-    /// Removes all <see cref="DesignedProperties"/> that match the provided <paramref name="propertyName"/>.
+    /// Removes all <see cref="SnippetProperties"/> that match the provided <paramref name="propertyName"/>.
     /// This will leave the Design drawing the value directly from the underlying <see cref="View"/> at
     /// code generation time.
     /// </summary>
     /// <param name="propertyName"></param>
     public void RemoveDesignedProperty(string propertyName)
     {
-        foreach (var k in DesignedProperties.Keys.ToArray())
+        foreach (var k in SnippetProperties.Keys.ToArray())
         {
             if (k.Name == propertyName)
             {
-                DesignedProperties.Remove(k);
+                SnippetProperties.Remove(k);
             }
         }
     }
@@ -126,80 +126,23 @@ public class Design
     /// <summary>
     /// Gets the designable properties of the hosted View
     /// </summary>
-    public virtual IEnumerable<PropertyInfo> GetDesignableProperties()
+    public virtual IEnumerable<Property> GetDesignableProperties()
     {
-        yield return View.GetActualTextProperty();
+        yield return new NameProperty(this);
 
-        yield return View.GetType().GetProperty(nameof(View.Width));
-        yield return View.GetType().GetProperty(nameof(View.Height));
+        yield return new Property(this,View.GetActualTextProperty());
 
-        yield return View.GetType().GetProperty(nameof(View.X));
-        yield return View.GetType().GetProperty(nameof(View.Y));
+        yield return new Property(this, View.GetType().GetProperty(nameof(View.Width)));
+        yield return new Property(this, View.GetType().GetProperty(nameof(View.Height)));
 
-        if(View is TableView)
+        yield return new Property(this, View.GetType().GetProperty(nameof(View.X)));
+        yield return new Property(this, View.GetType().GetProperty(nameof(View.Y)));
+
+        if(View is TableView tv)
         {
-            yield return typeof(TableStyle).GetProperty(nameof(TableStyle.AlwaysShowHeaders));
+            yield return new Property(this, typeof(TableStyle).GetProperty(nameof(TableStyle.AlwaysShowHeaders)),nameof(TableView.Style),tv.Style);
         }
     }
-
-    /// <summary>
-    /// Returns a <see cref="PropertyDesign"/> or the actual value of 
-    /// <paramref name="p"/> on the <see cref="View"/>
-    /// </summary>
-    /// <param name="p"></param>
-    /// <returns></returns>
-    public virtual object GetDesignablePropertyValue(PropertyInfo p)
-    {
-        if(DesignedProperties.ContainsKey(p))
-        {
-            return DesignedProperties[p];
-        }
-
-        if(p.DeclaringType == typeof(TableStyle))
-        {
-            return p.GetValue(((TableView)View).Style);
-        }
-
-        return p.GetValue(View);
-    }
-
-    public void SetDesignablePropertyValue(PropertyInfo property, object? value)
-    {
-        
-        if (value == null)
-        {
-            property.SetValue(View, null);
-            return;
-        }
-
-        if (property.DeclaringType == typeof(TableStyle))
-        {
-            property.SetValue(((TableView)View).Style,value);
-            return;
-        }
-
-        // if we are changing a value to a complex designed value type (e.g. Pos or Dim)
-        if (value is PropertyDesign d)
-        {
-            property.SetValue(View,d.Value);
-
-            DesignedProperties.AddOrUpdate(property,d);
-            return;
-        }
-
-        if (property.PropertyType == typeof(ustring))
-        {
-            if(value is string s)
-            {
-                property.SetValue(View, ustring.Make(s));
-                return;
-            }
-        }
-
-        // todo do this properly with undo history and stuff
-        property.SetValue(View, value.ToPrimitive());
-    }
-
 
     /// <summary>
     /// Adds declaration and initialization statements to the .Designer.cs
@@ -224,9 +167,9 @@ public class Design
 
         foreach(var prop in GetDesignableProperties())
         {
-            if(prop.PropertyType == typeof(Pos) || prop.PropertyType == typeof(Dim))
+            if(prop.PropertyInfo.PropertyType == typeof(Pos) || prop.PropertyInfo.PropertyType == typeof(Dim))
             {
-                var rhsCode = rosyln.GetRhsCodeFor(this, fieldName, prop);
+                var rhsCode = rosyln.GetRhsCodeFor(this, fieldName, prop.PropertyInfo);
 
                 // if there is no explicit setting of this property in the Designer.cs then who cares
                 if (rhsCode == null)
@@ -234,8 +177,8 @@ public class Design
 
                 // theres some text in the .Designer.cs for this field so lets store that
                 // that way we show "Dim.Bottom(myview)" instead of "Dim.Combine(Dim.Absolute(mylabel()), Dim.Absolute....) etc
-                var value = GetDesignablePropertyValue(prop);
-                DesignedProperties.Add(prop, new PropertyDesign(rhsCode, value));
+                var value = prop.GetValue();
+                SnippetProperties.Add(prop.PropertyInfo, new SnippetProperty(prop,rhsCode, value));
             }
         }
     }

@@ -5,7 +5,7 @@ namespace TerminalGuiDesigner.UI.Windows;
 
 public class PosDesigner
 {
-    public bool GetPosDesign(Design owner, PropertyInfo property, out PropertyDesign result)
+    public bool GetPosDesign(Design owner, Property property, out SnippetProperty result)
     {
         // pick what type of Pos they want
         if (Modals.Get("Position Type", "Pick", Enum.GetValues<PosType>(), out PosType selected))
@@ -30,9 +30,9 @@ public class PosDesigner
         return false;
     }
 
-    private bool DesignPosRelative(Design owner, PropertyInfo property, out PropertyDesign result)
+    private bool DesignPosRelative(Design owner, Property property, out SnippetProperty result)
     {
-        if (Modals.Get(property.Name, "Relative To", owner.GetSiblings().ToArray(), out Design relativeTo))
+        if (Modals.Get(property.PropertyInfo.Name, "Relative To", owner.GetSiblings().ToArray(), out Design relativeTo))
         {
             if (Modals.Get("Side", "Pick", Enum.GetValues<Side>(), out Side side))
             {
@@ -41,16 +41,16 @@ public class PosDesigner
                     switch (side)
                     {
                         case Side.Above:
-                            result = BuildOffsetPos("Pos.Top({0})", Pos.Top(relativeTo.View), offset, () => relativeTo.FieldName);
+                            result = BuildOffsetPos(property,"Pos.Top({0})", Pos.Top(relativeTo.View), offset, () => relativeTo.FieldName);
                             break;
                         case Side.Below:
-                            result = BuildOffsetPos("Pos.Bottom({0})", Pos.Bottom(relativeTo.View), offset, () => relativeTo.FieldName);
+                            result = BuildOffsetPos(property, "Pos.Bottom({0})", Pos.Bottom(relativeTo.View), offset, () => relativeTo.FieldName);
                             break;
                         case Side.Left:
-                            result = BuildOffsetPos("Pos.Left({0})", Pos.Left(relativeTo.View), offset, () => relativeTo.FieldName);
+                            result = BuildOffsetPos(property, "Pos.Left({0})", Pos.Left(relativeTo.View), offset, () => relativeTo.FieldName);
                             break;
                         case Side.Right:
-                            result = BuildOffsetPos("Pos.Right({0})", Pos.Right(relativeTo.View), offset, () => relativeTo.FieldName);
+                            result = BuildOffsetPos(property, "Pos.Right({0})", Pos.Right(relativeTo.View), offset, () => relativeTo.FieldName);
                             break;
                         default: throw new ArgumentOutOfRangeException(nameof(side));
                     }
@@ -64,12 +64,12 @@ public class PosDesigner
         return false;
     }
 
-    private bool DesignPosAbsolute(PropertyInfo property, out PropertyDesign result)
+    private bool DesignPosAbsolute(Property property, out SnippetProperty result)
     {
 
-        if (Modals.GetInt(property.Name, "Absolute Position", 0, out int newPos))
+        if (Modals.GetInt(property.PropertyInfo.Name, "Absolute Position", 0, out int newPos))
         {
-            result = new PropertyDesign(newPos.ToString(), (Pos)newPos);
+            result = new SnippetProperty(property, newPos.ToString(), (Pos)newPos);
             return true;
         }
 
@@ -77,13 +77,13 @@ public class PosDesigner
         return false;
     }
 
-    private bool DesignPosPercent(PropertyInfo property, out PropertyDesign result)
+    private bool DesignPosPercent(Property property, out SnippetProperty result)
     {
-        if (Modals.GetFloat(property.Name, "Percent(0 - 100)", 0.5f, out float newPercent))
+        if (Modals.GetFloat(property.PropertyInfo.Name, "Percent(0 - 100)", 0.5f, out float newPercent))
         {
             if (Modals.GetInt("Offset", "Offset", 0, out int offset))
             {
-                result = BuildOffsetPos($"Pos.Percent({newPercent})", Pos.Percent(newPercent), offset);
+                result = BuildOffsetPos(property,$"Pos.Percent({newPercent})", Pos.Percent(newPercent), offset);
                 return true;
             }
         }
@@ -92,20 +92,20 @@ public class PosDesigner
         return false;
     }
 
-    private PropertyDesign BuildOffsetPos(string code, Pos pos, int offset, params Func<string>[] codeParameters)
+    private SnippetProperty BuildOffsetPos(Property property, string code, Pos pos, int offset, params Func<string>[] codeParameters)
     {
         if (offset == 0)
         {
-            return new PropertyDesign(code, pos, codeParameters);
+            return new SnippetProperty(property, code, pos, codeParameters);
         }
         else
         if (offset > 0)
         {
-            return new PropertyDesign($"{code} + {offset}", pos + offset, codeParameters);
+            return new SnippetProperty(property, $"{code} + {offset}", pos + offset, codeParameters);
         }
         else
         {
-            return new PropertyDesign($"{code} - {-offset}", pos - offset, codeParameters);
+            return new SnippetProperty(property, $"{code} - {-offset}", pos - offset, codeParameters);
         }
     }
 

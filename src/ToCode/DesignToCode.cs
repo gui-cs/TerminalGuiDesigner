@@ -27,18 +27,14 @@ namespace TerminalGuiDesigner.ToCode
 
             foreach (var prop in Design.GetDesignableProperties())
             {
-                var val = Design.GetDesignablePropertyValue(prop);
-
-                // if the property being designed exists on the 
-                // View directly and is not a subproperty e.g. MyView.Border.X
-                if(prop.DeclaringType.IsAssignableFrom(Design.View.GetType()))
+                // if we have a snippet use that code instead
+                if(Design.SnippetProperties.ContainsKey(prop.PropertyInfo))
                 {
-                    AddPropertyAssignment(args,Design, prop.Name, val);
+                    Design.SnippetProperties[prop.PropertyInfo].ToCode(args);
                 }
-
-                if(prop.DeclaringType == typeof(TableStyle))
+                else
                 {
-                    AddPropertyAssignment(args, Design, $"{nameof(TableView.Style)}.{prop.Name}", val);
+                    prop.ToCode(args);
                 }
             }
 
@@ -49,11 +45,6 @@ namespace TerminalGuiDesigner.ToCode
                 var designTable = new DataTableToCode(Design,tv.Table);
                 designTable.ToCode(args);
             }
-
-            // Set View.Data to the name of the field so that we can 
-            // determine later on which View instances come from which
-            // Fields in the class
-            AddPropertyAssignment(args, Design, nameof(View.Data), Design.FieldName);
 
             AddAddToViewStatement(args, Design);
         }

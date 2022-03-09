@@ -51,47 +51,33 @@ public abstract class ToCodeBase
         args.InitMethod.Statements.Add(constructAssign);
     }
 
+
     /// <summary>
-    /// Adds a statement to the InitializeComponent method like:
-    /// <code>this.mylabel.Text = "hello"</code>
+    /// Adds a line "this.someField.Text = "Heya"
     /// </summary>
-    /// <param name="d">The designed view to add</param>
-    /// <param name="initMethod">The InitializeComponent method</param>
-    /// <param name="propertyName">The property to set e.g. Text</param>
-    /// <param name="value">The value to assign to the property e.g. "hello"</param>
-    protected void AddPropertyAssignment(CodeDomArgs args,Design d, string propertyName, object? value)
+    /// <param name="args"></param>
+    /// <param name="fullySpecifiedFieldName">The code that should go on the left of the equals</param>
+    /// <param name="primativeValue">The new value that should be assigned.  Must be a primitive.</param>
+    protected void AddPropertyAssignment(CodeDomArgs args, string lhs, object primativeValue)
     {
-        AddPropertyAssignment(args, $"this.{d.FieldName}", propertyName, value);
+        AddPropertyAssignment(args, lhs, new CodePrimitiveExpression(primativeValue.ToPrimitive()));
     }
-
-
     /// <summary>
     /// Adds a line "this.someField.Text = "Heya"
     /// </summary>
     /// <param name="args"></param>
     /// <param name="fullySpecifiedFieldName">The field or local variable upon which you want to set the <paramref name="propertyName"/></param>
     /// <param name="propertyName">Field or property to change</param>
-    /// <param name="value">The new value that should be assigned.  Must be a primitive.</param>
-    protected void AddPropertyAssignment(CodeDomArgs args,string fullySpecifiedFieldName, string propertyName, object? value)
+    protected void AddPropertyAssignment(CodeDomArgs args,string lhs, CodeExpression rhs)
     {
         var setLhs = new CodeFieldReferenceExpression();
-        setLhs.FieldName = $"{fullySpecifiedFieldName}.{propertyName}";
-        CodeExpression setRhs = GetRhsForValue(value);
+        setLhs.FieldName = lhs;
 
         var assignStatement = new CodeAssignStatement();
         assignStatement.Left = setLhs;
-        assignStatement.Right = setRhs;
+        assignStatement.Right = rhs;
         args.InitMethod.Statements.Add(assignStatement);
     }
 
-    private CodeExpression GetRhsForValue(object? value)
-    {
-        if (value is PropertyDesign pd)
-        {
-            return new CodeSnippetExpression(pd.GetCodeWithParameters());
-        }
-
-        return new CodePrimitiveExpression(value.ToPrimitive());
-    }
 
 }
