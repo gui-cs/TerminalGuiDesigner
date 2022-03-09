@@ -9,7 +9,7 @@
   <Comment CommentText="All changes go through the Operation system so that they support undo/redo">
     <Position X="10.302" Y="3.593" Height="0.677" Width="1.96" />
   </Comment>
-  <Comment CommentText="Load any Designer.cs file and its corresponding dll/exe.  Then instantiate a View instance for design time editing">
+  <Comment CommentText="Load any Designer.cs file.  Then instantiate a View instance for design time editing">
     <Position X="17.562" Y="2.354" Height="1.052" Width="1.69" />
   </Comment>
   <Comment CommentText="Save the current designer state to .Designer.cs file.">
