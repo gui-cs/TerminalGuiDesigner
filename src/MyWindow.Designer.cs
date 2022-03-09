@@ -18,12 +18,12 @@ namespace YourNamespace {
         
         private void InitializeComponent() {
             this.label1 = new Terminal.Gui.Label();
-            this.label1.Text = "Hello!!!!";
-            this.label1.Width = Dim.Fill(0);
-            this.label1.Height = 1;
-            this.label1.X = 26;
-            this.label1.Y = 10;
             this.label1.Data = "label1";
+            this.label1.Text = "there";
+            this.label1.Width = Dim.Fill(4);
+            this.label1.Height = 1;
+            this.label1.X = 28;
+            this.label1.Y = 12;
             this.Add(this.label1);
         }
     }

@@ -9,7 +9,6 @@ using NStack;
 using Terminal.Gui;
 using TerminalGuiDesigner.FromCode;
 using TerminalGuiDesigner.ToCode;
-using TerminalGuiDesigner.UI.Windows;
 using static Terminal.Gui.TableView;
 
 namespace TerminalGuiDesigner;
