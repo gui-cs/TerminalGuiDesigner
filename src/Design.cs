@@ -153,6 +153,12 @@ public class Design
         if(View is TableView tv)
         {
             yield return new Property(this, typeof(TableStyle).GetProperty(nameof(TableStyle.AlwaysShowHeaders)),nameof(TableView.Style),tv.Style);
+            yield return new Property(this, typeof(TableStyle).GetProperty(nameof(TableStyle.ExpandLastColumn)), nameof(TableView.Style), tv.Style);
+            yield return new Property(this, typeof(TableStyle).GetProperty(nameof(TableStyle.InvertSelectedCellFirstCharacter)), nameof(TableView.Style), tv.Style);
+            yield return new Property(this, typeof(TableStyle).GetProperty(nameof(TableStyle.ShowHorizontalHeaderOverline)), nameof(TableView.Style), tv.Style);
+            yield return new Property(this, typeof(TableStyle).GetProperty(nameof(TableStyle.ShowHorizontalHeaderUnderline)), nameof(TableView.Style), tv.Style);
+            yield return new Property(this, typeof(TableStyle).GetProperty(nameof(TableStyle.ShowVerticalCellLines)), nameof(TableView.Style), tv.Style);
+            yield return new Property(this, typeof(TableStyle).GetProperty(nameof(TableStyle.ShowVerticalHeaderLines)), nameof(TableView.Style), tv.Style);
         }
     }
 

@@ -15,7 +15,8 @@ public class EditDialog : Window
     public EditDialog(Design design)
     {
         Design = design;
-        collection = Design.GetDesignableProperties().ToList();
+        collection = Design.GetDesignableProperties()
+            .OrderByDescending(p=>p is NameProperty).ThenBy(p=>p.PropertyInfo.Name).ToList();
 
         list = new ListView(collection)
         {
