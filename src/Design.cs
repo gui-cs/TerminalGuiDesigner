@@ -17,6 +17,10 @@ public class Design
     /// </summary>
     public string FieldName { get; set; }
 
+    public Property GetDesignableProperty(string propertyName)
+    {
+        return GetDesignableProperties().Single(p=>p.PropertyInfo.Name.Equals(propertyName));
+    }
 
 
     /// <summary>

@@ -12,6 +12,7 @@ public class Editor : Toplevel
     Design? _viewBeingEdited;
     private SourceCodeFile _currentDesignerFile;
     private bool enableDrag = true;
+    DragOperation dragOperation = null;
 
     const string Help = @"F1 - Show this help
 F2 - Add Control
@@ -57,57 +58,66 @@ Ctrl+Y - Redo";
             return;
         }
 
-        DragOperation dragOperation = null;
-
         Application.RootMouseEvent += (m) =>
         {
-
-            if (!enableDrag)
+            try
             {
-                return;
+                HandleMouse(m);
             }
-
-            // start dragging
-            if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && dragOperation == null)
+            catch (System.Exception ex)
             {
-                var drag = HitTest(_viewBeingEdited.View, m);
-
-                if (drag == null)
-                {
-                    return;
-                }
-
-                if (drag.Data is Design design)
-                {
-                    var dest = ScreenToClient(_viewBeingEdited.View, m.X, m.Y);
-                    dragOperation = new DragOperation(design, drag.X, drag.Y, dest.X, dest.Y);
-                }
-            }
-
-            // continue dragging
-            if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && dragOperation != null)
-            {
-                var dest = ScreenToClient(_viewBeingEdited.View, m.X, m.Y);
-
-                dragOperation.ContinueDrag(dest);
-
-                _viewBeingEdited.View.SetNeedsDisplay();
-                Application.DoEvents();
-            }
-
-            // end dragging
-            if (!m.Flags.HasFlag(MouseFlags.Button1Pressed) && dragOperation != null)
-            {
-                // push it onto the undo stack
-                OperationManager.Instance.Do(dragOperation);
-                dragOperation = null;
-            }
+                ExceptionViewer.ShowException("Error processing mouse",ex);
+            }            
         };
         ShowHelp();
 
         Application.Run(this);
         Application.Shutdown();
 
+    }
+
+    private void HandleMouse(MouseEvent m)
+    {
+        if (!enableDrag)
+        {
+            return;
+        }
+
+        // start dragging
+        if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && dragOperation == null)
+        {
+            var drag = HitTest(_viewBeingEdited.View, m);
+
+            if (drag == null)
+            {
+                return;
+            }
+
+            if (drag.Data is Design design)
+            {
+                var dest = ScreenToClient(_viewBeingEdited.View, m.X, m.Y);
+                dragOperation = new DragOperation(design, drag.X, drag.Y, dest.X, dest.Y);
+            }
+        }
+
+        // continue dragging
+        if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && dragOperation != null)
+        {
+            var dest = ScreenToClient(_viewBeingEdited.View, m.X, m.Y);
+
+            dragOperation.ContinueDrag(dest);
+
+            _viewBeingEdited.View.SetNeedsDisplay();
+            Application.DoEvents();
+        }
+
+        // end dragging
+        if (!m.Flags.HasFlag(MouseFlags.Button1Pressed) && dragOperation != null)
+        {
+            // push it onto the undo stack
+            OperationManager.Instance.Do(dragOperation);
+            dragOperation = null;
+        }
     }
 
     public override bool ProcessHotKey(KeyEvent keyEvent)
