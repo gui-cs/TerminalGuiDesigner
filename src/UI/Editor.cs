@@ -116,65 +116,74 @@ Ctrl+Y - Redo";
         if (!IsCurrentTop)
             return false;
 
-        switch (keyEvent.Key)
+        try
         {
-            case Key.F1:
-                ShowHelp();
-                return true;
-            case Key.F2:
-                ShowAddViewWindow();
-                return true;
+            switch (keyEvent.Key)
+            {
+                case Key.F1:
+                    ShowHelp();
+                    return true;
+                case Key.F2:
+                    ShowAddViewWindow();
+                    return true;
 
-            // Cursor keys
-            case Key.CursorUp | Key.ShiftMask:
-                MoveControl(0, -1);
-                return true;
-            case Key.CursorUp | Key.CtrlMask:
-                MoveControl(0, -3);
-                return true;
-            case Key.CursorDown | Key.ShiftMask:
-                MoveControl(0, 1);
-                return true;
-            case Key.CursorDown | Key.CtrlMask:
-                MoveControl(0, 3);
-                return true;
-            case Key.CursorLeft | Key.ShiftMask:
-                MoveControl(-1, 0);
-                return true;
-            case Key.CursorLeft | Key.CtrlMask:
-                MoveControl(-5, 0);
-                return true;
-            case Key.CursorRight | Key.ShiftMask:
-                MoveControl(1, 0);
-                return true;
-            case Key.CursorRight | Key.CtrlMask:
-                MoveControl(5, 0);
-                return true;
-            case Key.F3:
-                enableDrag = !enableDrag;
-                return true;
-            case Key.Enter:
-                ShowEditPropertiesWindow();
-                return true;
-            case Key.DeleteChar:
-                Delete();
-                return true;
-            case Key.CtrlMask | Key.O:
-                Open();
-                return true;
-            case Key.CtrlMask | Key.S:
-                Save();
-                return true;
-            case Key.CtrlMask | Key.N:
-                New();
-                return true;
-            case Key.CtrlMask | Key.Z:
-                OperationManager.Instance.Undo();
-                return true;
-            case Key.CtrlMask | Key.Y:
-                OperationManager.Instance.Redo();
-                return true;
+                // Cursor keys
+                case Key.CursorUp | Key.ShiftMask:
+                    MoveControl(0, -1);
+                    return true;
+                case Key.CursorUp | Key.CtrlMask:
+                    MoveControl(0, -3);
+                    return true;
+                case Key.CursorDown | Key.ShiftMask:
+                    MoveControl(0, 1);
+                    return true;
+                case Key.CursorDown | Key.CtrlMask:
+                    MoveControl(0, 3);
+                    return true;
+                case Key.CursorLeft | Key.ShiftMask:
+                    MoveControl(-1, 0);
+                    return true;
+                case Key.CursorLeft | Key.CtrlMask:
+                    MoveControl(-5, 0);
+                    return true;
+                case Key.CursorRight | Key.ShiftMask:
+                    MoveControl(1, 0);
+                    return true;
+                case Key.CursorRight | Key.CtrlMask:
+                    MoveControl(5, 0);
+                    return true;
+                case Key.F3:
+                    enableDrag = !enableDrag;
+                    return true;
+                case Key.Enter:
+                    ShowEditPropertiesWindow();
+                    return true;
+                case Key.DeleteChar:
+                    Delete();
+                    return true;
+                case Key.CtrlMask | Key.O:
+                    Open();
+                    return true;
+                case Key.CtrlMask | Key.S:
+                    Save();
+                    return true;
+                case Key.CtrlMask | Key.N:
+                    New();
+                    return true;
+                case Key.CtrlMask | Key.Z:
+                    OperationManager.Instance.Undo();
+                    return true;
+                case Key.CtrlMask | Key.Y:
+                    OperationManager.Instance.Redo();
+                    return true;
+            }
         }
+        catch (System.Exception ex)
+        {
+            ExceptionViewer.ShowException("Error",ex);
+        }
+
+        
 
         return base.ProcessHotKey(keyEvent);
     }

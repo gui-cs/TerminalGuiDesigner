@@ -5,7 +5,7 @@ namespace TerminalGuiDesigner.ToCode;
 
 public class SnippetProperty : Property
 {
-    public string Code { get; private set;}
+    public string? Code { get; private set;}
     public object Value { get; private set; }
     public Func<string>[] CodeParameters { get; private set;}
 
@@ -26,7 +26,12 @@ public class SnippetProperty : Property
     }
     public override string ToString()
     {
-        return $"{PropertyInfo.Name}:{GetCodeWithParameters()}";
+        if(Code != null)
+        {
+            return $"{PropertyInfo.Name}:{GetCodeWithParameters()}";
+        }
+
+        return base.ToString();
     }
 
     protected override CodeExpression GetRhs()
