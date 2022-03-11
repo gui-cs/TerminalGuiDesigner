@@ -139,8 +139,11 @@ public class CodeToView
             throw new Exception($"Could not compile {SourceFile.DesignerFile}:" + Environment.NewLine + string.Join(Environment.NewLine, result.Diagnostics));
         }
     }
-    public string GetRhsCodeFor(Design design, string fieldName, PropertyInfo p)
+    public string GetRhsCodeFor(Design design, Property property)
     {
+        if(!SourceFile.DesignerFile.Exists)
+            return null;
+
         // read the .Designer.cs file
         var syntaxTree = CSharpSyntaxTree.ParseText(File.ReadAllText(SourceFile.DesignerFile.FullName));
 
@@ -159,7 +162,7 @@ public class CodeToView
 
         var initMethod = initMethods.Single();
 
-        var lookingFor = $"{fieldName}.{p.Name}";
+        var lookingFor = property.GetLhs();
 
         // find assignments where the lhs ends with the fieldName
         var assignments = initMethod.DescendantNodes().OfType<AssignmentExpressionSyntax>()

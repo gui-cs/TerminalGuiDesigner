@@ -24,13 +24,11 @@ public class DragOperation : IOperation
     {
         if (BeingDragged.View.X.IsAbsolute())
         {
-            BeingDragged.RemoveDesignedProperty("X");
             BeingDragged.View.X = DestinationX;
         }
 
         if (BeingDragged.View.Y.IsAbsolute())
         {
-            BeingDragged.RemoveDesignedProperty("Y");
             BeingDragged.View.Y = DestinationY;
         }
     }
@@ -39,13 +37,13 @@ public class DragOperation : IOperation
     {
         if (BeingDragged.View.X.IsAbsolute())
         {
-            BeingDragged.RemoveDesignedProperty("X");
+            // TODO : find and update the property properly
+            // not on the view directly
             BeingDragged.View.X = OriginX;
         }
 
         if (BeingDragged.View.Y.IsAbsolute())
         {
-            BeingDragged.RemoveDesignedProperty("Y");
             BeingDragged.View.Y = OriginY;
         }
     }

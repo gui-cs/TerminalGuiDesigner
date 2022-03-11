@@ -47,12 +47,6 @@ public class Property : ToCodeBase
             }
         }
 
-        if(value is SnippetProperty snip)
-        {
-            Design.SetSnippetProperty(snip, value);
-            return;
-        }
-
         // TODO: This hack gets around an ArgumentException that gets thrown when
         // switching from Computed to Absolute values of Dim/Pos
         Design.View.IsInitialized = false;
@@ -70,7 +64,7 @@ public class Property : ToCodeBase
         return new CodePrimitiveExpression(GetValue().ToPrimitive());
     }
 
-    protected virtual string GetLhs()
+    public virtual string GetLhs()
     {
         // if the property being designed exists on the View directly e.g. MyView.X
         return string.IsNullOrWhiteSpace(SubProperty) ?

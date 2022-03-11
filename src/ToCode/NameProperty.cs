@@ -29,7 +29,7 @@ public class NameProperty : Property
     {
         return Design.FieldName;
     }
-    protected override string GetLhs()
+    public override string GetLhs()
     {
         // Set View.Data to the name of the field so that we can 
         // determine later on which View instances come from which

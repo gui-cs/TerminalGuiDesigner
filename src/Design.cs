@@ -26,7 +26,7 @@ public class Design
     /// </summary>
     public View View {get;}
 
-    public Dictionary<PropertyInfo,SnippetProperty> SnippetProperties = new ();
+    private List<Property> _designableProperties;
 
     private Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -52,40 +52,6 @@ public class Design
         }
     }
 
-    internal void SetSnippetProperty(SnippetProperty oldSnip, object newValue)
-    {
-        if(newValue is SnippetProperty newSnip)
-        {
-            // going to snip
-            newSnip.SetValue(newSnip.Value);
-            SnippetProperties.AddOrUpdate(newSnip.PropertyInfo, newSnip);
-        }
-        else
-        {
-            // going from snip to primitive
-            oldSnip.SetValue(newValue);
-            SnippetProperties.Remove(oldSnip.PropertyInfo);
-        }
-        
-        return;
-    }
-
-    /// <summary>
-    /// Removes all <see cref="SnippetProperties"/> that match the provided <paramref name="propertyName"/>.
-    /// This will leave the Design drawing the value directly from the underlying <see cref="View"/> at
-    /// code generation time.
-    /// </summary>
-    /// <param name="propertyName"></param>
-    public void RemoveDesignedProperty(string propertyName)
-    {
-        foreach (var k in SnippetProperties.Keys.ToArray())
-        {
-            if (k.Name == propertyName)
-            {
-                SnippetProperties.Remove(k);
-            }
-        }
-    }
     public Design CreateSubControlDesign(SourceCodeFile sourceCode, string nameOrSerializedDesign, View subView)
     {
         // HACK: if you don't pull the label out first it complains that you cant set Focusable to true
@@ -138,17 +104,29 @@ public class Design
     /// <summary>
     /// Gets the designable properties of the hosted View
     /// </summary>
-    public virtual IEnumerable<Property> GetDesignableProperties()
+    public IEnumerable<Property> GetDesignableProperties()
+    {
+        if(_designableProperties == null)
+        {
+            _designableProperties = new List<Property>(LoadDesignableProperties());
+        }
+
+        return _designableProperties;
+    }
+
+    protected virtual IEnumerable<Property> LoadDesignableProperties()
     {
         yield return new NameProperty(this);
-
         yield return new Property(this,View.GetActualTextProperty());
 
-        yield return ToSnip(new Property(this, View.GetType().GetProperty(nameof(View.Width))));
-        yield return ToSnip(new Property(this, View.GetType().GetProperty(nameof(View.Height))));
+        var codeToView = new CodeToView(SourceCode);
+        
 
-        yield return ToSnip(new Property(this, View.GetType().GetProperty(nameof(View.X))));
-        yield return ToSnip(new Property(this, View.GetType().GetProperty(nameof(View.Y))));
+        yield return ToSnip(new Property(this, View.GetType().GetProperty(nameof(View.Width))),codeToView);
+        yield return ToSnip(new Property(this, View.GetType().GetProperty(nameof(View.Height))),codeToView);
+
+        yield return ToSnip(new Property(this, View.GetType().GetProperty(nameof(View.X))),codeToView);
+        yield return ToSnip(new Property(this, View.GetType().GetProperty(nameof(View.Y))),codeToView);
 
         if(View is TableView tv)
         {
@@ -167,14 +145,14 @@ public class Design
     /// </summary>
     /// <param name="property"></param>
     /// <returns></returns>
-    private Property ToSnip(Property property)
+    private Property ToSnip(Property prop, CodeToView rosyln)
     {
-        if(SnippetProperties.ContainsKey(property.PropertyInfo))
-        {
-            return SnippetProperties[property.PropertyInfo];
-        }
+        var rhsCode = rosyln.GetRhsCodeFor(this, prop);
 
-        return property;
+        // there may be some text in the .Designer.cs for this field so lets store that
+        // that way we show "Dim.Bottom(myview)" instead of "Dim.Combine(Dim.Absolute(mylabel()), Dim.Absolute....) etc
+        
+        return  new SnippetProperty(prop,rhsCode,prop.GetValue());
     }
 
     /// <summary>
@@ -189,8 +167,6 @@ public class Design
     }
     public void DeSerializeExtraProperties(string fieldName)
     {
-        var rosyln = new CodeToView(SourceCode);
-        
         // no extra properties because we dont have a .Designer.cs! 
         // maybe we are half way through creating a new file pair or something
         if(!SourceCode.DesignerFile.Exists)
@@ -198,22 +174,6 @@ public class Design
             return;
         }
 
-        foreach(var prop in GetDesignableProperties())
-        {
-            if(prop.PropertyInfo.PropertyType == typeof(Pos) || prop.PropertyInfo.PropertyType == typeof(Dim))
-            {
-                var rhsCode = rosyln.GetRhsCodeFor(this, fieldName, prop.PropertyInfo);
-
-                // if there is no explicit setting of this property in the Designer.cs then who cares
-                if (rhsCode == null)
-                    continue;
-
-                // theres some text in the .Designer.cs for this field so lets store that
-                // that way we show "Dim.Bottom(myview)" instead of "Dim.Combine(Dim.Absolute(mylabel()), Dim.Absolute....) etc
-                var value = prop.GetValue();
-                SnippetProperties.Add(prop.PropertyInfo, new SnippetProperty(prop,rhsCode, value));
-            }
-        }
     }
 
     /// <summary>

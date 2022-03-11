@@ -5,9 +5,9 @@ namespace TerminalGuiDesigner.ToCode;
 
 public class SnippetProperty : Property
 {
-    public string Code { get; }
+    public string Code { get; private set;}
     public object Value { get; private set; }
-    public Func<string>[] CodeParameters { get; }
+    public Func<string>[] CodeParameters { get; private set;}
 
     public SnippetProperty(Property toWrap, string code, object value, params Func<string>[] codeParameters)
         : base(toWrap.Design, toWrap.PropertyInfo, toWrap.SubProperty, toWrap.DeclaringObject)
@@ -31,19 +31,30 @@ public class SnippetProperty : Property
 
     protected override CodeExpression GetRhs()
     {
-        return new CodeSnippetExpression(GetCodeWithParameters());
+        if(Code != null)
+        {
+            return new CodeSnippetExpression(GetCodeWithParameters());
+        }
+
+        return base.GetRhs();
     }
 
     public override void SetValue(object value)
     {
-        // if we are changing a value to a complex designed value type (e.g. Pos or Dim)
-        if (value is SnippetProperty snipNew)
+        if(value is SnippetProperty newSnip)
         {
-            // changing to a snip
-            Design.SetSnippetProperty(snipNew, value);
-            return;
-        }
+            Code = newSnip.Code;
+            Value = newSnip.Value;
+            CodeParameters = newSnip.CodeParameters;
+            
+            base.SetValue(Value);
 
-        base.SetValue(value);
+        }
+        else
+        {
+            Code = null;
+            Value = value;
+            base.SetValue(value);
+        }
     }
 }

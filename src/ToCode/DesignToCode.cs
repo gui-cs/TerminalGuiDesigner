@@ -19,15 +19,7 @@ internal class DesignToCode : ToCodeBase
 
         foreach (var prop in Design.GetDesignableProperties())
         {
-            // if we have a snippet use that code instead
-            if (Design.SnippetProperties.ContainsKey(prop.PropertyInfo))
-            {
-                Design.SnippetProperties[prop.PropertyInfo].ToCode(args);
-            }
-            else
-            {
-                prop.ToCode(args);
-            }
+            prop.ToCode(args);
         }
 
 

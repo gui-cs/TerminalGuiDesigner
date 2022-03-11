@@ -20,13 +20,11 @@ public class SetPropertyOperation : IOperation
 
     public void Do()
     {
-        Design.RemoveDesignedProperty(Property.PropertyInfo.Name);
         Property.SetValue(NewValue);
     }
 
     public void Undo()
     {
-        Design.RemoveDesignedProperty(Property.PropertyInfo.Name);
         Property.SetValue(OldValue);
     }
 
