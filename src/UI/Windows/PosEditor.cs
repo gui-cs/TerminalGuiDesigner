@@ -42,7 +42,32 @@ namespace TerminalGuiDesigner.UI.Windows
             Modal = true;
 
             ddType.SetSource(Enum.GetValues(typeof(PosType)).Cast<Enum>().ToList());
+
+            ddType.SelectedItemChanged += DdType_SelectedItemChanged;
             ddRelativeTo.SetSource(Design.GetSiblings().ToList());
+
+        }
+
+        private void DdType_SelectedItemChanged(ListViewItemEventArgs obj)
+        {
+            switch(GetPosType())
+            {
+                case PosType.Anchor:
+                case PosType.Percent:
+                case PosType.Absolute:
+                    ddRelativeTo.Visible = false;
+                    lblRelativeTo.Visible = false;
+                    SetNeedsDisplay();
+                    break;
+                case PosType.Relative:
+                    ddRelativeTo.Visible = true;
+                    lblRelativeTo.Visible = true;
+                    SetNeedsDisplay();
+                    break;
+
+                default: throw new ArgumentOutOfRangeException();
+            }
+            
         }
 
         private void BtnCancel_Clicked()

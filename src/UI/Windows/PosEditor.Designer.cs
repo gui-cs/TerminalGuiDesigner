@@ -22,7 +22,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         
         private Terminal.Gui.TextField tbValue;
         
-        private Terminal.Gui.Label label1;
+        private Terminal.Gui.Label lblRelativeTo;
         
         private Terminal.Gui.ComboBox ddRelativeTo;
         
@@ -67,20 +67,20 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.tbValue.X = Pos.Right(lblValue) + 1;
             this.tbValue.Y = Pos.Top(lblValue);
             this.Add(this.tbValue);
-            this.label1 = new Terminal.Gui.Label();
-            this.label1.Data = "label1";
-            this.label1.Text = "Relative To:";
-            this.label1.Width = 12;
-            this.label1.Height = 1;
-            this.label1.X = 2;
-            this.label1.Y = 5;
-            this.Add(this.label1);
+            this.lblRelativeTo = new Terminal.Gui.Label();
+            this.lblRelativeTo.Data = "label1";
+            this.lblRelativeTo.Text = "Relative To:";
+            this.lblRelativeTo.Width = 12;
+            this.lblRelativeTo.Height = 1;
+            this.lblRelativeTo.X = 2;
+            this.lblRelativeTo.Y = 5;
+            this.Add(this.lblRelativeTo);
             this.ddRelativeTo = new Terminal.Gui.ComboBox();
             this.ddRelativeTo.Data = "ddRelativeTo";
             this.ddRelativeTo.Text = "";
             this.ddRelativeTo.Width = 15;
             this.ddRelativeTo.Height = 2;
-            this.ddRelativeTo.X = Pos.Right(label1);
+            this.ddRelativeTo.X = Pos.Right(lblRelativeTo);
             this.ddRelativeTo.Y = 5;
             this.Add(this.ddRelativeTo);
             this.lblOffset = new Terminal.Gui.Label();
