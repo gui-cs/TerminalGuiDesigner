@@ -16,8 +16,6 @@ namespace YourNamespace {
         
         private Terminal.Gui.Label lblType;
         
-        private Terminal.Gui.ComboBox combobox1;
-        
         private Terminal.Gui.Label lblValue;
         
         private Terminal.Gui.TextField tbValue;
@@ -26,23 +24,21 @@ namespace YourNamespace {
         
         private Terminal.Gui.TextField tbOffset;
         
+        private Terminal.Gui.Button btnOk;
+        
+        private Terminal.Gui.Button btnCancel;
+        
+        private Terminal.Gui.ComboBox ddType;
+        
         private void InitializeComponent() {
             this.lblType = new Terminal.Gui.Label();
             this.lblType.Data = "lblType";
             this.lblType.Text = "Type:";
             this.lblType.Width = 6;
             this.lblType.Height = 1;
-            this.lblType.X = 1;
-            this.lblType.Y = 0;
+            this.lblType.X = 3;
+            this.lblType.Y = 1;
             this.Add(this.lblType);
-            this.combobox1 = new Terminal.Gui.ComboBox();
-            this.combobox1.Data = "combobox1";
-            this.combobox1.Text = "";
-            this.combobox1.Width = 8;
-            this.combobox1.Height = 2;
-            this.combobox1.X = Pos.Right(lblType) + 1;
-            this.combobox1.Y = Pos.Top(lblType);
-            this.Add(this.combobox1);
             this.lblValue = new Terminal.Gui.Label();
             this.lblValue.Data = "lblValue";
             this.lblValue.Text = "Value:";
@@ -54,7 +50,7 @@ namespace YourNamespace {
             this.tbValue = new Terminal.Gui.TextField();
             this.tbValue.Data = "tbValue";
             this.tbValue.Text = "";
-            this.tbValue.Width = 8;
+            this.tbValue.Width = 15;
             this.tbValue.Height = 1;
             this.tbValue.X = Pos.Right(lblValue) + 1;
             this.tbValue.Y = Pos.Top(lblValue);
@@ -64,17 +60,43 @@ namespace YourNamespace {
             this.lblOffset.Text = "Offset:";
             this.lblOffset.Width = 7;
             this.lblOffset.Height = 1;
-            this.lblOffset.X = 3;
+            this.lblOffset.X = 2;
             this.lblOffset.Y = 5;
             this.Add(this.lblOffset);
             this.tbOffset = new Terminal.Gui.TextField();
             this.tbOffset.Data = "tbOffset";
             this.tbOffset.Text = "";
-            this.tbOffset.Width = 4;
+            this.tbOffset.Width = 15;
             this.tbOffset.Height = 1;
             this.tbOffset.X = Pos.Right(lblOffset) + 1;
             this.tbOffset.Y = Pos.Top(lblOffset);
             this.Add(this.tbOffset);
+            this.btnOk = new Terminal.Gui.Button();
+            this.btnOk.Data = "btnOk";
+            this.btnOk.Text = "Ok";
+            this.btnOk.Width = 6;
+            this.btnOk.Height = 1;
+            this.btnOk.X = 3;
+            this.btnOk.Y = 7;
+            this.btnOk.IsDefault = true;
+            this.Add(this.btnOk);
+            this.btnCancel = new Terminal.Gui.Button();
+            this.btnCancel.Data = "btnCancel";
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.Width = 10;
+            this.btnCancel.Height = 1;
+            this.btnCancel.X = 13;
+            this.btnCancel.Y = 7;
+            this.btnCancel.IsDefault = false;
+            this.Add(this.btnCancel);
+            this.ddType = new Terminal.Gui.ComboBox();
+            this.ddType.Data = "ddType";
+            this.ddType.Text = "";
+            this.ddType.Width = 15;
+            this.ddType.Height = 2;
+            this.ddType.X = Pos.Right(lblType) + 1;
+            this.ddType.Y = Pos.Top(lblType);
+            this.Add(this.ddType);
         }
     }
 }

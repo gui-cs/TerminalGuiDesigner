@@ -132,7 +132,12 @@ public class Design
         yield return ToSnip(new Property(this, View.GetType().GetProperty(nameof(View.X))),codeToView);
         yield return ToSnip(new Property(this, View.GetType().GetProperty(nameof(View.Y))),codeToView);
 
-        if(View is TableView tv)
+        if (View is Button)
+        {
+            yield return new Property(this, typeof(Button).GetProperty(nameof(Button.IsDefault)));
+        }
+        
+        if (View is TableView tv)
         {
             yield return new Property(this, typeof(TableStyle).GetProperty(nameof(TableStyle.AlwaysShowHeaders)),nameof(TableView.Style),tv.Style);
             yield return new Property(this, typeof(TableStyle).GetProperty(nameof(TableStyle.ExpandLastColumn)), nameof(TableView.Style), tv.Style);
