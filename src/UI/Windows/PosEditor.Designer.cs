@@ -84,7 +84,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.ddRelativeTo.Text = "";
             this.ddRelativeTo.Width = 15;
             this.ddRelativeTo.Height = 2;
-            this.ddRelativeTo.X = Pos.Right(lblRelativeTo);
+            this.ddRelativeTo.X = Pos.Right(lblRelativeTo) + 1;
             this.ddRelativeTo.Y = 5;
             this.Add(this.ddRelativeTo);
             this.lblSide = new Terminal.Gui.Label();
@@ -100,7 +100,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.ddSide.Text = "";
             this.ddSide.Width = 15;
             this.ddSide.Height = 2;
-            this.ddSide.X = 14;
+            this.ddSide.X = Pos.Right(lblSide) + 1;
             this.ddSide.Y = 7;
             this.Add(this.ddSide);
             this.lblOffset = new Terminal.Gui.Label();
@@ -108,7 +108,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lblOffset.Text = "Offset:";
             this.lblOffset.Width = 7;
             this.lblOffset.Height = 1;
-            this.lblOffset.X = 6;
+            this.lblOffset.X = 7;
             this.lblOffset.Y = 9;
             this.Add(this.lblOffset);
             this.tbOffset = new Terminal.Gui.TextField();
