@@ -139,11 +139,12 @@ public class EditDialog : Window
         // user is editing a Dim
         if (property.PropertyInfo.PropertyType == typeof(Dim))
         {
-            var designer = new DimDesigner();
+            var designer = new DimEditor(Design,property);
+            Application.Run(designer);
 
-            if (designer.GetDimDesign(property, out SnippetProperty dimDesign))
+            if (!designer.Cancelled)
             {
-                newValue = dimDesign;
+                newValue = designer.Result;
                 return true;
             }
             else

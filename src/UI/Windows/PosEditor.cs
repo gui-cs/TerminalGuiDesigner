@@ -32,7 +32,7 @@ namespace TerminalGuiDesigner.UI.Windows
             X = Pos.Percent(25);
             Y = Pos.Percent(25);
             Width = Dim.Percent(50);
-            Height = Dim.Percent(50);
+            Height = 14;
 
             Title = "Pos Designer";
 
@@ -46,6 +46,7 @@ namespace TerminalGuiDesigner.UI.Windows
             ddType.SelectedItemChanged += DdType_SelectedItemChanged;
             ddRelativeTo.SetSource(Design.GetSiblings().ToList());
 
+            ddSide.SetSource(Enum.GetValues(typeof(Side)).Cast<Enum>().ToList());
         }
 
         private void DdType_SelectedItemChanged(ListViewItemEventArgs obj)
@@ -57,11 +58,19 @@ namespace TerminalGuiDesigner.UI.Windows
                 case PosType.Absolute:
                     ddRelativeTo.Visible = false;
                     lblRelativeTo.Visible = false;
+                    ddSide.Visible = false;
+                    lblSide.Visible = false;
+                    lblValue.Visible = true;
+                    tbValue.Visible = true;
                     SetNeedsDisplay();
                     break;
                 case PosType.Relative:
                     ddRelativeTo.Visible = true;
                     lblRelativeTo.Visible = true;
+                    ddSide.Visible = true;
+                    lblSide.Visible = true;
+                    lblValue.Visible = false;
+                    tbValue.Visible = false;
                     SetNeedsDisplay();
                     break;
 
@@ -87,8 +96,15 @@ namespace TerminalGuiDesigner.UI.Windows
         public bool GetPosDesign(Design owner, Property property, out SnippetProperty result)
         {
             // pick what type of Pos they want
-            
-            switch (GetPosType())
+            var type = GetPosType();
+
+            if(type == null)
+            {
+                result = null;
+                return false;
+            }
+
+            switch (type.Value)
             {
                 case PosType.Absolute:
                     return DesignPosAbsolute(property, out result);
@@ -104,9 +120,21 @@ namespace TerminalGuiDesigner.UI.Windows
             }
         }
 
-        private PosType GetPosType()
+        private PosType? GetPosType()
         {
-            return (PosType)ddType.SelectedItem;
+            
+            return ddType.SelectedItem == -1 ? null : (PosType)ddType.Source.ToList()[ddType.SelectedItem];
+        }
+
+
+        private Side? GetSide()
+        {
+            return ddSide.SelectedItem == -1 ? null : (Side)ddSide.Source.ToList()[ddType.SelectedItem];
+        }
+
+        private bool GetOffset(out int offset)
+        {
+            return int.TryParse(tbOffset.Text.ToString(),out offset);
         }
 
         private bool DesignPosRelative(Design owner, Property property, out SnippetProperty result)
@@ -115,9 +143,11 @@ namespace TerminalGuiDesigner.UI.Windows
 
             if (relativeTo != null)
             {
-                if (Modals.Get("Side", "Pick", Enum.GetValues<Side>(), out Side side))
+                var side = GetSide();
+
+                if (side != null)
                 {
-                    if (Modals.GetInt("Offset", "Offset", 0, out int offset))
+                    if (GetOffset(out int offset))
                     {
                         switch (side)
                         {
@@ -147,8 +177,7 @@ namespace TerminalGuiDesigner.UI.Windows
 
         private bool DesignPosAbsolute(Property property, out SnippetProperty result)
         {
-
-            if (Modals.GetInt(property.PropertyInfo.Name, "Absolute Position", 0, out int newPos))
+            if (GetValue(out int newPos))
             {
                 result = new SnippetProperty(property, newPos.ToString(), (Pos)newPos);
                 return true;
@@ -158,11 +187,16 @@ namespace TerminalGuiDesigner.UI.Windows
             return false;
         }
 
+        private bool GetValue(out int newPos)
+        {
+            return int.TryParse(tbValue.Text.ToString(),out newPos);
+        }
+
         private bool DesignPosPercent(Property property, out SnippetProperty result)
         {
-            if (Modals.GetFloat(property.PropertyInfo.Name, "Percent(0 - 100)", 0.5f, out float newPercent))
+            if (GetValue(out int newPercent))
             {
-                if (Modals.GetInt("Offset", "Offset", 0, out int offset))
+                if (GetOffset(out int offset))
                 {
                     result = BuildOffsetPos(property, $"Pos.Percent({newPercent})", Pos.Percent(newPercent), offset);
                     return true;
