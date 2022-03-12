@@ -118,11 +118,14 @@ public class EditDialog : Window
         // user is editing a Pos
         if (property.PropertyInfo.PropertyType == typeof(Pos))
         {
-            var designer = new PosDesigner();
+            var designer = new PosEditor(Design,property);
 
-            if (designer.GetPosDesign(Design, property, out SnippetProperty posDesign))
+            Application.Run(designer);
+
+
+            if (!designer.Cancelled)
             {
-                newValue = posDesign;
+                newValue = designer.Result;
                 return true;
             }
             else

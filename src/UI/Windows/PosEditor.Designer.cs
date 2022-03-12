@@ -7,7 +7,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace YourNamespace {
+namespace TerminalGuiDesigner.UI.Windows
+{
     using System;
     using Terminal.Gui;
     
