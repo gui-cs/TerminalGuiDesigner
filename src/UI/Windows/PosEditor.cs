@@ -25,6 +25,9 @@ namespace TerminalGuiDesigner.UI.Windows
 
         public PosEditor(Design design, Property property) {
             InitializeComponent();
+            
+            Design = design;
+            Property = property;
 
             X = Pos.Percent(25);
             Y = Pos.Percent(25);
@@ -39,9 +42,7 @@ namespace TerminalGuiDesigner.UI.Windows
             Modal = true;
 
             ddType.SetSource(Enum.GetValues(typeof(PosType)).Cast<Enum>().ToList());
-
-            Design = design;
-            Property = property;
+            ddRelativeTo.SetSource(Design.GetSiblings().ToList());
         }
 
         private void BtnCancel_Clicked()
@@ -85,7 +86,9 @@ namespace TerminalGuiDesigner.UI.Windows
 
         private bool DesignPosRelative(Design owner, Property property, out SnippetProperty result)
         {
-            if (Modals.Get(property.PropertyInfo.Name, "Relative To", owner.GetSiblings().ToArray(), out Design relativeTo))
+            var relativeTo = ddRelativeTo.SelectedItem == -1 ? null : ddRelativeTo.Source.ToList()[ddRelativeTo.SelectedItem] as Design;
+
+            if (relativeTo != null)
             {
                 if (Modals.Get("Side", "Pick", Enum.GetValues<Side>(), out Side side))
                 {

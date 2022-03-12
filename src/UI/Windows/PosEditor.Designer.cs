@@ -7,8 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TerminalGuiDesigner.UI.Windows
-{
+namespace TerminalGuiDesigner.UI.Windows {
     using System;
     using Terminal.Gui;
     
@@ -31,13 +30,17 @@ namespace TerminalGuiDesigner.UI.Windows
         
         private Terminal.Gui.ComboBox ddType;
         
+        private Terminal.Gui.Label label1;
+        
+        private Terminal.Gui.ComboBox ddRelativeTo;
+        
         private void InitializeComponent() {
             this.lblType = new Terminal.Gui.Label();
             this.lblType.Data = "lblType";
             this.lblType.Text = "Type:";
             this.lblType.Width = 6;
             this.lblType.Height = 1;
-            this.lblType.X = 3;
+            this.lblType.X = 8;
             this.lblType.Y = 1;
             this.Add(this.lblType);
             this.lblValue = new Terminal.Gui.Label();
@@ -45,7 +48,7 @@ namespace TerminalGuiDesigner.UI.Windows
             this.lblValue.Text = "Value:";
             this.lblValue.Width = 6;
             this.lblValue.Height = 1;
-            this.lblValue.X = 3;
+            this.lblValue.X = 8;
             this.lblValue.Y = 3;
             this.Add(this.lblValue);
             this.tbValue = new Terminal.Gui.TextField();
@@ -61,8 +64,8 @@ namespace TerminalGuiDesigner.UI.Windows
             this.lblOffset.Text = "Offset:";
             this.lblOffset.Width = 7;
             this.lblOffset.Height = 1;
-            this.lblOffset.X = 2;
-            this.lblOffset.Y = 5;
+            this.lblOffset.X = 7;
+            this.lblOffset.Y = 7;
             this.Add(this.lblOffset);
             this.tbOffset = new Terminal.Gui.TextField();
             this.tbOffset.Data = "tbOffset";
@@ -77,8 +80,8 @@ namespace TerminalGuiDesigner.UI.Windows
             this.btnOk.Text = "Ok";
             this.btnOk.Width = 6;
             this.btnOk.Height = 1;
-            this.btnOk.X = 3;
-            this.btnOk.Y = 7;
+            this.btnOk.X = 8;
+            this.btnOk.Y = 9;
             this.btnOk.IsDefault = true;
             this.Add(this.btnOk);
             this.btnCancel = new Terminal.Gui.Button();
@@ -86,8 +89,8 @@ namespace TerminalGuiDesigner.UI.Windows
             this.btnCancel.Text = "Cancel";
             this.btnCancel.Width = 10;
             this.btnCancel.Height = 1;
-            this.btnCancel.X = 13;
-            this.btnCancel.Y = 7;
+            this.btnCancel.X = 18;
+            this.btnCancel.Y = 9;
             this.btnCancel.IsDefault = false;
             this.Add(this.btnCancel);
             this.ddType = new Terminal.Gui.ComboBox();
@@ -98,6 +101,22 @@ namespace TerminalGuiDesigner.UI.Windows
             this.ddType.X = Pos.Right(lblType) + 1;
             this.ddType.Y = Pos.Top(lblType);
             this.Add(this.ddType);
+            this.label1 = new Terminal.Gui.Label();
+            this.label1.Data = "label1";
+            this.label1.Text = "Relative To:";
+            this.label1.Width = 12;
+            this.label1.Height = 1;
+            this.label1.X = 2;
+            this.label1.Y = 5;
+            this.Add(this.label1);
+            this.ddRelativeTo = new Terminal.Gui.ComboBox();
+            this.ddRelativeTo.Data = "ddRelativeTo";
+            this.ddRelativeTo.Text = "";
+            this.ddRelativeTo.Width = 15;
+            this.ddRelativeTo.Height = 2;
+            this.ddRelativeTo.X = Pos.Right(label1);
+            this.ddRelativeTo.Y = 5;
+            this.Add(this.ddRelativeTo);
         }
     }
 }
