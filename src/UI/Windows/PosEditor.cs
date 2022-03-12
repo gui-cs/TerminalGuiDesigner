@@ -35,6 +35,7 @@ namespace TerminalGuiDesigner.UI.Windows
             Height = 14;
 
             Title = "Pos Designer";
+            Border.BorderStyle = BorderStyle.Double;
 
             btnOk.Clicked += BtnOk_Clicked;
             btnCancel.Clicked += BtnCancel_Clicked;
@@ -55,6 +56,16 @@ namespace TerminalGuiDesigner.UI.Windows
             {
                 case PosType.Anchor:
                 case PosType.Percent:
+                    ddRelativeTo.Visible = false;
+                    lblRelativeTo.Visible = false;
+                    ddSide.Visible = false;
+                    lblSide.Visible = false;
+                    lblValue.Visible = true;
+                    tbValue.Visible = true;
+                    lblOffset.Visible = true;
+                    tbOffset.Visible = true;
+                    SetNeedsDisplay();
+                    break;
                 case PosType.Absolute:
                     ddRelativeTo.Visible = false;
                     lblRelativeTo.Visible = false;
@@ -62,6 +73,8 @@ namespace TerminalGuiDesigner.UI.Windows
                     lblSide.Visible = false;
                     lblValue.Visible = true;
                     tbValue.Visible = true;
+                    lblOffset.Visible = false;
+                    tbOffset.Visible = false;
                     SetNeedsDisplay();
                     break;
                 case PosType.Relative:
@@ -71,6 +84,8 @@ namespace TerminalGuiDesigner.UI.Windows
                     lblSide.Visible = true;
                     lblValue.Visible = false;
                     tbValue.Visible = false;
+                    lblOffset.Visible = true;
+                    tbOffset.Visible = true;
                     SetNeedsDisplay();
                     break;
 

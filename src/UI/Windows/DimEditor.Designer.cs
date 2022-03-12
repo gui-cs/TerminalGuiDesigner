@@ -22,10 +22,6 @@ namespace TerminalGuiDesigner.UI.Windows {
         
         private Terminal.Gui.TextField tbValue;
         
-        private Terminal.Gui.Label lblRelativeTo;
-        
-        private Terminal.Gui.ComboBox ddRelativeTo;
-        
         private Terminal.Gui.Label lblOffset;
         
         private Terminal.Gui.TextField tbOffset;
@@ -67,29 +63,13 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.tbValue.X = Pos.Right(lblValue) + 1;
             this.tbValue.Y = Pos.Top(lblValue);
             this.Add(this.tbValue);
-            this.lblRelativeTo = new Terminal.Gui.Label();
-            this.lblRelativeTo.Data = "label1";
-            this.lblRelativeTo.Text = "Relative To:";
-            this.lblRelativeTo.Width = 12;
-            this.lblRelativeTo.Height = 1;
-            this.lblRelativeTo.X = 2;
-            this.lblRelativeTo.Y = 5;
-            this.Add(this.lblRelativeTo);
-            this.ddRelativeTo = new Terminal.Gui.ComboBox();
-            this.ddRelativeTo.Data = "ddRelativeTo";
-            this.ddRelativeTo.Text = "";
-            this.ddRelativeTo.Width = 15;
-            this.ddRelativeTo.Height = 2;
-            this.ddRelativeTo.X = Pos.Right(lblRelativeTo);
-            this.ddRelativeTo.Y = 5;
-            this.Add(this.ddRelativeTo);
             this.lblOffset = new Terminal.Gui.Label();
             this.lblOffset.Data = "lblOffset";
             this.lblOffset.Text = "Offset:";
             this.lblOffset.Width = 7;
             this.lblOffset.Height = 1;
             this.lblOffset.X = 7;
-            this.lblOffset.Y = 7;
+            this.lblOffset.Y = 5;
             this.Add(this.lblOffset);
             this.tbOffset = new Terminal.Gui.TextField();
             this.tbOffset.Data = "tbOffset";
@@ -105,7 +85,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnOk.Width = 6;
             this.btnOk.Height = 1;
             this.btnOk.X = 8;
-            this.btnOk.Y = 9;
+            this.btnOk.Y = 7;
             this.btnOk.IsDefault = true;
             this.Add(this.btnOk);
             this.btnCancel = new Terminal.Gui.Button();
@@ -114,7 +94,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnCancel.Width = 10;
             this.btnCancel.Height = 1;
             this.btnCancel.X = 18;
-            this.btnCancel.Y = 9;
+            this.btnCancel.Y = 7;
             this.btnCancel.IsDefault = false;
             this.Add(this.btnCancel);
         }

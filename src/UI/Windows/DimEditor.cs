@@ -32,9 +32,10 @@ namespace TerminalGuiDesigner.UI.Windows
             X = Pos.Percent(25);
             Y = Pos.Percent(25);
             Width = Dim.Percent(50);
-            Height = Dim.Percent(50);
+            Height = 10;
 
             Title = "Dim Designer";
+            Border.BorderStyle = BorderStyle.Double;
 
             btnOk.Clicked += BtnOk_Clicked;
             btnCancel.Clicked += BtnCancel_Clicked;
@@ -44,8 +45,6 @@ namespace TerminalGuiDesigner.UI.Windows
             ddType.SetSource(Enum.GetValues(typeof(DimType)).Cast<Enum>().ToList());
 
             ddType.SelectedItemChanged += DdType_SelectedItemChanged;
-            ddRelativeTo.SetSource(Design.GetSiblings().ToList());
-
         }
 
         private void DdType_SelectedItemChanged(ListViewItemEventArgs obj)
@@ -54,19 +53,23 @@ namespace TerminalGuiDesigner.UI.Windows
             {
                 case DimType.Absolute:
                 case DimType.Fill:
-                    ddRelativeTo.Visible = false;
-                    lblRelativeTo.Visible = false;
+                    lblOffset.Visible = false;
+                    tbOffset.Visible = false;
                     SetNeedsDisplay();
                     break;
                 case DimType.Percent:
-                    ddRelativeTo.Visible = true;
-                    lblRelativeTo.Visible = true;
+                    lblOffset.Visible = true;
+                    tbOffset.Visible = true;
                     SetNeedsDisplay();
                     break;
 
                 default: throw new ArgumentOutOfRangeException();
             }
-            
+        }
+
+        private bool GetValue(out int newPos)
+        {
+            return int.TryParse(tbValue.Text.ToString(),out newPos);
         }
 
         private void BtnCancel_Clicked()
@@ -116,7 +119,7 @@ namespace TerminalGuiDesigner.UI.Windows
         private bool DesignDimAbsolute(out SnippetProperty result)
         {
 
-            if (Modals.GetInt(Property.PropertyInfo.Name, "Absolute Size", 0, out int newDim))
+            if (GetValue(out int newDim))
             {
                 result = new SnippetProperty(Property, newDim.ToString(), (Dim)newDim);
                 return true;
@@ -133,7 +136,7 @@ namespace TerminalGuiDesigner.UI.Windows
 
         private bool DesignDimPercent(out SnippetProperty result)
         {
-            if (Modals.GetFloat(Property.PropertyInfo.Name, "Percent (0-100)", 50f, out float newPercent))
+            if (GetValue(out var newPercent))
             {
                 if (GetOffset(out var offset))
                 {
@@ -148,7 +151,7 @@ namespace TerminalGuiDesigner.UI.Windows
 
         private bool DesignDimFill(out SnippetProperty result)
         {
-            if (Modals.GetInt(Property.PropertyInfo.Name, "Margin", 0, out int margin))
+            if (GetValue(out int margin))
             {
                 result = new SnippetProperty(Property,$"Dim.Fill({margin})", Dim.Fill(margin));
                 return true;
