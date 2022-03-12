@@ -3,7 +3,7 @@ using Terminal.Gui;
 
 namespace TerminalGuiDesigner.Operations;
 
-public class DragOperation : IOperation
+public class DragOperation : Operation
 {
     public Design BeingDragged { get; }
     public Pos OriginX { get; }
@@ -20,7 +20,7 @@ public class DragOperation : IOperation
         DestinationX = destX;
         DestinationY = destY;
     }
-    public void Do()
+    public override void Do()
     {
         if (BeingDragged.View.X.IsAbsolute())
         {
@@ -33,7 +33,7 @@ public class DragOperation : IOperation
         }
     }
 
-    public void Undo()
+    public override void Undo()
     {
         if (BeingDragged.View.X.IsAbsolute())
         {
@@ -47,7 +47,7 @@ public class DragOperation : IOperation
         }
     }
 
-    public void Redo()
+    public override void Redo()
     {
         Do();
     }

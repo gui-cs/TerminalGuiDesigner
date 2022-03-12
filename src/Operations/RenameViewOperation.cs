@@ -1,6 +1,6 @@
 ﻿namespace TerminalGuiDesigner.Operations;
 
-public class RenameViewOperation : IOperation
+public class RenameViewOperation : Operation
 {
     public Design Design { get; }
     public string OldName { get; }
@@ -13,17 +13,17 @@ public class RenameViewOperation : IOperation
         NewName = newName;
     }
 
-    public void Do()
+    public override void Do()
     {
         Design.FieldName = NewName;
     }
 
-    public void Redo()
+    public override void Redo()
     {
         Do();
     }
 
-    public void Undo()
+    public override void Undo()
     {
         Design.FieldName = OldName;
     }

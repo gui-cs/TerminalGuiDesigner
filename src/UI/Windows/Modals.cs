@@ -1,4 +1,6 @@
-﻿namespace TerminalGuiDesigner.UI.Windows;
+﻿using TerminalGuiDesigner.Operations;
+
+namespace TerminalGuiDesigner.UI.Windows;
 
 public class Modals
 {
