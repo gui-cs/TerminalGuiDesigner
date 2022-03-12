@@ -135,7 +135,12 @@ public class ViewToCode
 
     private void AddSubViewsToDesignerCs(View forView, CodeDomArgs args)
     {
-        foreach (var sub in forView.Subviews)
+        // TODO: we should detect RelativeTo etc here meaning one view depends
+        // on anothers position and therefore the dependant view should be output
+        // after
+
+        // order the controls top left to lower right so that tab order is good
+        foreach (var sub in forView.Subviews.OrderBy(v=>v.Frame.Y).ThenBy(v=>v.Frame.X))
         {
             // If the sub child has a Design (and is not an public part of another control,
             // For example Contentview subview of Window

@@ -16,9 +16,15 @@ namespace TerminalGuiDesigner.UI.Windows {
         
         private Terminal.Gui.Label lblType;
         
+        private Terminal.Gui.ComboBox ddType;
+        
         private Terminal.Gui.Label lblValue;
         
         private Terminal.Gui.TextField tbValue;
+        
+        private Terminal.Gui.Label label1;
+        
+        private Terminal.Gui.ComboBox ddRelativeTo;
         
         private Terminal.Gui.Label lblOffset;
         
@@ -27,12 +33,6 @@ namespace TerminalGuiDesigner.UI.Windows {
         private Terminal.Gui.Button btnOk;
         
         private Terminal.Gui.Button btnCancel;
-        
-        private Terminal.Gui.ComboBox ddType;
-        
-        private Terminal.Gui.Label label1;
-        
-        private Terminal.Gui.ComboBox ddRelativeTo;
         
         private void InitializeComponent() {
             this.lblType = new Terminal.Gui.Label();
@@ -43,6 +43,14 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lblType.X = 8;
             this.lblType.Y = 1;
             this.Add(this.lblType);
+            this.ddType = new Terminal.Gui.ComboBox();
+            this.ddType.Data = "ddType";
+            this.ddType.Text = "";
+            this.ddType.Width = 15;
+            this.ddType.Height = 2;
+            this.ddType.X = Pos.Right(lblType) + 1;
+            this.ddType.Y = Pos.Top(lblType);
+            this.Add(this.ddType);
             this.lblValue = new Terminal.Gui.Label();
             this.lblValue.Data = "lblValue";
             this.lblValue.Text = "Value:";
@@ -59,6 +67,22 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.tbValue.X = Pos.Right(lblValue) + 1;
             this.tbValue.Y = Pos.Top(lblValue);
             this.Add(this.tbValue);
+            this.label1 = new Terminal.Gui.Label();
+            this.label1.Data = "label1";
+            this.label1.Text = "Relative To:";
+            this.label1.Width = 12;
+            this.label1.Height = 1;
+            this.label1.X = 2;
+            this.label1.Y = 5;
+            this.Add(this.label1);
+            this.ddRelativeTo = new Terminal.Gui.ComboBox();
+            this.ddRelativeTo.Data = "ddRelativeTo";
+            this.ddRelativeTo.Text = "";
+            this.ddRelativeTo.Width = 15;
+            this.ddRelativeTo.Height = 2;
+            this.ddRelativeTo.X = Pos.Right(label1);
+            this.ddRelativeTo.Y = 5;
+            this.Add(this.ddRelativeTo);
             this.lblOffset = new Terminal.Gui.Label();
             this.lblOffset.Data = "lblOffset";
             this.lblOffset.Text = "Offset:";
@@ -93,30 +117,6 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnCancel.Y = 9;
             this.btnCancel.IsDefault = false;
             this.Add(this.btnCancel);
-            this.ddType = new Terminal.Gui.ComboBox();
-            this.ddType.Data = "ddType";
-            this.ddType.Text = "";
-            this.ddType.Width = 15;
-            this.ddType.Height = 2;
-            this.ddType.X = Pos.Right(lblType) + 1;
-            this.ddType.Y = Pos.Top(lblType);
-            this.Add(this.ddType);
-            this.label1 = new Terminal.Gui.Label();
-            this.label1.Data = "label1";
-            this.label1.Text = "Relative To:";
-            this.label1.Width = 12;
-            this.label1.Height = 1;
-            this.label1.X = 2;
-            this.label1.Y = 5;
-            this.Add(this.label1);
-            this.ddRelativeTo = new Terminal.Gui.ComboBox();
-            this.ddRelativeTo.Data = "ddRelativeTo";
-            this.ddRelativeTo.Text = "";
-            this.ddRelativeTo.Width = 15;
-            this.ddRelativeTo.Height = 2;
-            this.ddRelativeTo.X = Pos.Right(label1);
-            this.ddRelativeTo.Y = 5;
-            this.Add(this.ddRelativeTo);
         }
     }
 }
