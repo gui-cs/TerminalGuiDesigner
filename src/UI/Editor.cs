@@ -4,6 +4,7 @@ using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.UI.Windows;
 using TerminalGuiDesigner.FromCode;
 using TerminalGuiDesigner.ToCode;
+using System.Text.RegularExpressions;
 
 namespace TerminalGuiDesigner.UI;
 
@@ -18,6 +19,7 @@ public class Editor : Toplevel
 F2 - Add Control
 F3 - Toggle mouse dragging on/off
 Enter - Edit Selected Control Properties
+Shift+Enter - View Specific Operations
 Del - Delete selected View
 Shift+Cursor - Move focused View
 Ctrl+Cursor - Move focused View quickly
@@ -168,6 +170,9 @@ Ctrl+Y - Redo";
                 case Key.Enter:
                     ShowEditPropertiesWindow();
                     return true;
+                case Key.Enter | Key.ShiftMask:
+                    ShowExtraOptions();
+                    return true;
                 case Key.DeleteChar:
                     Delete();
                     return true;
@@ -198,6 +203,21 @@ Ctrl+Y - Redo";
         return base.ProcessHotKey(keyEvent);
     }
 
+    private void ShowExtraOptions()
+    {
+        var view = GetMostFocused(this);
+
+        if (view.Data is Design d)
+        {
+            var options = d.GetExtraOperations().Where(o=>!o.IsImpossible).ToArray();
+
+            if(options.Any() && Modals.Get("Operations","Ok",options, out IOperation selected))
+            {
+                OperationManager.Instance.Do(selected);
+            }
+        }
+    }
+
     private void ShowHelp()
     {
         MessageBox.Query("Help", Help, "Ok");
@@ -206,8 +226,6 @@ Ctrl+Y - Redo";
     private void MoveControl(int deltaX, int deltaY)
     {
         var view = GetMostFocused(this);
-
-        // TODO: only if using absolute positioning
 
         if (view.Data is Design d)
         {

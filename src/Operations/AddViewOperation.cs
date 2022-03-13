@@ -2,7 +2,7 @@ using Terminal.Gui;
 
 namespace TerminalGuiDesigner.Operations;
 
-public class AddViewOperation : IOperation
+public class AddViewOperation : Operation
 {
     private readonly SourceCodeFile sourceCode;
     private readonly View add;
@@ -16,17 +16,17 @@ public class AddViewOperation : IOperation
         this.fieldName = fieldName;
         this.to = to;
     }
-    public void Do()
+    public override void Do()
     {
         add.Data = to.CreateSubControlDesign(sourceCode,fieldName, add);
         to.View.Add(add);
     }
-    public void Redo()
+    public override void Redo()
     {
         to.View.Add(add);
     }
 
-    public void Undo()
+    public override void Undo()
     {
         to.View.Remove(add);
     }

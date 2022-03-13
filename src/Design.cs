@@ -2,6 +2,7 @@ using System.Reflection;
 using NLog;
 using Terminal.Gui;
 using TerminalGuiDesigner.FromCode;
+using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 using static Terminal.Gui.TableView;
 
@@ -147,6 +148,23 @@ public class Design
             yield return new Property(this, typeof(TableStyle).GetProperty(nameof(TableStyle.ShowVerticalCellLines)), nameof(TableView.Style), tv.Style);
             yield return new Property(this, typeof(TableStyle).GetProperty(nameof(TableStyle.ShowVerticalHeaderLines)), nameof(TableView.Style), tv.Style);
         }
+    }
+
+
+    /// <summary>
+    /// Returns all operations not to do with setting properties.  Often these
+    /// are view specific e.g. add/remove column from a <see cref="TableView"/>
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerable<IOperation> GetExtraOperations()
+    {
+        if (View is TableView)
+        {
+            yield return new AddColumnOperation(this);
+            yield return new RemoveColumnOperation(this);
+            yield return new RenameColumnOperation(this);
+        }
+
     }
 
     /// <summary>

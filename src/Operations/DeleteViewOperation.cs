@@ -3,7 +3,7 @@ using Terminal.Gui;
 
 namespace TerminalGuiDesigner.Operations;
 
-public class DeleteViewOperation : IOperation
+public class DeleteViewOperation : Operation
 {
     private readonly View delete;
     private readonly View from;
@@ -14,7 +14,7 @@ public class DeleteViewOperation : IOperation
         this.from = delete.SuperView;
     }
 
-    public void Do()
+    public override void Do()
     {
         if(from != null)
         {
@@ -22,12 +22,12 @@ public class DeleteViewOperation : IOperation
         }
     }
 
-    public void Redo()
+    public override void Redo()
     {
         Do();
     }
 
-    public void Undo()
+    public override void Undo()
     {
         if(from != null)
         {

@@ -8,9 +8,8 @@ This project is in pre-pre-alpha.  It currently supports:
 - Loading .Designer.cs files with Roslyn
 - Undo/Redo
 - Adding/Moving views within the designed Window
-
-
-![designer](https://user-images.githubusercontent.com/31306100/156942451-966f5bb6-a53d-450f-92fc-dae3ee1355f4.gif)
+ 
+![designer](https://user-images.githubusercontent.com/31306100/158055700-b5ff1848-ee2e-4a0e-9870-c9fbe83ce52f.gif)
 
 Outstanding Features
 -------------------------------
@@ -30,6 +29,8 @@ Features to add are:
     - [ ] TreeView
     - [ ] Tab View
 - [ ] Create Events e.g. MyButton_OnClick
+- [ ] Mutli select (select many views and hit delete or drag move)
+- [ ] Copy/Paste selected view(s)
 - [ ] Add views to subviews
 - [ ] Comprehensive Tests
 - [ ] CI

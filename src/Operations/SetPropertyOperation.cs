@@ -2,9 +2,8 @@ using TerminalGuiDesigner.ToCode;
 
 namespace TerminalGuiDesigner.Operations;
 
-public class SetPropertyOperation : IOperation
+public class SetPropertyOperation : Operation
 {
-
     public Design Design { get; }
     public Property Property { get; }
     public object OldValue { get; }
@@ -18,17 +17,17 @@ public class SetPropertyOperation : IOperation
         this.NewValue = NewValue;
     }
 
-    public void Do()
+    public override void Do()
     {
         Property.SetValue(NewValue);
     }
 
-    public void Undo()
+    public override void Undo()
     {
         Property.SetValue(OldValue);
     }
 
-    public void Redo()
+    public override void Redo()
     {
         Do();
     }
