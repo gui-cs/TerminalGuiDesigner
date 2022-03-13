@@ -30,6 +30,15 @@ internal class DesignToCode : ToCodeBase
             designTable.ToCode(args);
         }
 
+        if(Design.View is TabView tabView)
+        {
+            foreach(var tab in tabView.Tabs)
+            {
+                var designTab = new TabToCode(Design,tab);
+                designTab.ToCode(args);
+            }
+        }
+
         AddAddToViewStatement(args, Design);
     }
 }

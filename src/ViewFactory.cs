@@ -21,6 +21,11 @@ public class ViewFactory
             return CreateTableView();
         }
 
+        if (typeof(TabView).IsAssignableFrom(t))
+        {
+            return CreateTabView();
+        }
+
         var instance = (View)Activator.CreateInstance(t);
 
         instance.SetActualText("Heya");
@@ -44,5 +49,19 @@ public class ViewFactory
             Height = 5,
             Table = dt
         };
+    }
+
+    private TabView CreateTabView()
+    {
+        var tabView =  new TabView
+        {
+            Width = 50,
+            Height = 5,
+        };
+
+        tabView.AddTab(new TabView.Tab(){Text = "Tab1"},false);
+        tabView.AddTab(new TabView.Tab(){Text = "Tab2"},false);
+
+        return tabView;
     }
 }
