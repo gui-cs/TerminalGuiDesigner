@@ -30,6 +30,8 @@ Features to add are:
     - [ ] TreeView
     - [ ] Tab View
 - [ ] Create Events e.g. MyButton_OnClick
+- [ ] Mutli select (select many views and hit delete or drag move)
+- [ ] Copy/Paste selected view(s)
 - [ ] Add views to subviews
 - [ ] Comprehensive Tests
 - [ ] CI
