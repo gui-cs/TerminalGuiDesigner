@@ -144,7 +144,7 @@ namespace TerminalGuiDesigner.UI.Windows
 
         private Side? GetSide()
         {
-            return ddSide.SelectedItem == -1 ? null : (Side)ddSide.Source.ToList()[ddType.SelectedItem];
+            return ddSide.SelectedItem == -1 ? null : (Side)ddSide.Source.ToList()[ddSide.SelectedItem];
         }
 
         private bool GetOffset(out int offset)
