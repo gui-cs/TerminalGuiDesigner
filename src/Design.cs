@@ -5,6 +5,7 @@ using TerminalGuiDesigner.FromCode;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 using static Terminal.Gui.TableView;
+using static Terminal.Gui.TabView;
 
 namespace TerminalGuiDesigner;
 
@@ -147,6 +148,15 @@ public class Design
             yield return new Property(this, typeof(TableStyle).GetProperty(nameof(TableStyle.ShowHorizontalHeaderUnderline)), nameof(TableView.Style), tv.Style);
             yield return new Property(this, typeof(TableStyle).GetProperty(nameof(TableStyle.ShowVerticalCellLines)), nameof(TableView.Style), tv.Style);
             yield return new Property(this, typeof(TableStyle).GetProperty(nameof(TableStyle.ShowVerticalHeaderLines)), nameof(TableView.Style), tv.Style);
+        }
+
+        
+        if (View is TabView tabView)
+        {
+            yield return new Property(this, typeof(TabView).GetProperty(nameof(TabView.MaxTabTextWidth)));
+            yield return new Property(this, typeof(TabStyle).GetProperty(nameof(TabStyle.ShowBorder)), nameof(TabView.Style), tabView.Style);
+            yield return new Property(this, typeof(TabStyle).GetProperty(nameof(TabStyle.ShowTopLine)), nameof(TabView.Style), tabView.Style);
+            yield return new Property(this, typeof(TabStyle).GetProperty(nameof(TabStyle.TabsOnBottom)), nameof(TabView.Style), tabView.Style);
         }
     }
 
