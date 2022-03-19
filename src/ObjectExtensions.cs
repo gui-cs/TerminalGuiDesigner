@@ -1,4 +1,5 @@
 using System.Reflection;
+using NStack;
 
 namespace TerminalGuiDesigner;
 
@@ -8,6 +9,9 @@ public static class ObjectExtensions
 
     public static dynamic CastToReflected(this object o, Type type)
     {
+        if(o is string s && type == typeof(ustring))
+            return ustring.Make(s);
+
         var methodInfo = typeof(ObjectExtensions).GetMethod(nameof(CastTo), BindingFlags.Static | BindingFlags.Public);
         var genericArguments = new[] { type };
         var genericMethodInfo = methodInfo?.MakeGenericMethod(genericArguments);

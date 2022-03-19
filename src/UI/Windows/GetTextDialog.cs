@@ -63,7 +63,7 @@ class GetTextDialog
         {
             X = 0,
             Y = Pos.Bottom(textField),
-            IsDefault = true
+            IsDefault = !_args.MultiLine
         };
         btnOk.Clicked += () =>
         {
@@ -110,7 +110,7 @@ class GetTextDialog
 
     private void TextField_KeyPress(View.KeyEventEventArgs obj)
     {
-        if (obj.KeyEvent.Key == Key.Enter)
+        if (obj.KeyEvent.Key == Key.Enter && !_args.MultiLine)
         {
             Accept();
             obj.Handled = true;
