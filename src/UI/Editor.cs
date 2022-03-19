@@ -15,11 +15,11 @@ public class Editor : Toplevel
     private bool enableDrag = true;
     DragOperation dragOperation = null;
 
-    const string Help = @"F1 - Show this help
+    const string Help = @"F1/Ctrl+H - Show this help
 F2 - Add Control
 F3 - Toggle mouse dragging on/off
-Enter - Edit Selected Control Properties
-Shift+Enter - View Specific Operations
+F4/Enter - Properties
+Shift+F4/Enter - View Specific Operations
 Del - Delete selected View
 Shift+Cursor - Move focused View
 Ctrl+Cursor - Move focused View quickly
@@ -133,6 +133,7 @@ Ctrl+Y - Redo";
             switch (keyEvent.Key)
             {
                 case Key.F1:
+                case Key.H | Key.CtrlMask:
                     ShowHelp();
                     return true;
                 case Key.F2:
@@ -168,9 +169,11 @@ Ctrl+Y - Redo";
                     enableDrag = !enableDrag;
                     return true;
                 case Key.Enter:
+                case Key.F4:
                     ShowEditPropertiesWindow();
                     return true;
                 case Key.Enter | Key.ShiftMask:
+                case Key.F4 | Key.ShiftMask:
                     ShowExtraOptions();
                     return true;
                 case Key.DeleteChar:
@@ -240,10 +243,16 @@ Ctrl+Y - Redo";
             return;
 
         var viewToDelete = GetMostFocused(_viewBeingEdited.View);
+        var viewDesign = GetNearestDesign(viewToDelete);
 
-        OperationManager.Instance.Do(
-            new DeleteViewOperation(viewToDelete)
-        );
+        // don't delete the root view
+        if(viewDesign != null && viewDesign != _viewBeingEdited)
+        {
+            OperationManager.Instance.Do(
+                new DeleteViewOperation(viewDesign.View)
+            );
+        }
+
     }
     private void Open()
     {
@@ -397,6 +406,24 @@ Ctrl+Y - Redo";
         }
 
         return GetMostFocused(view.Focused);
+    }
+
+    /// <summary>
+    /// Some Views have hidden subviews e.g. TabView, ComboBox etc
+    /// Sometimes the most focused view is a sub element.  This method
+    /// goes up the hierarchy and finds the first that is designable
+    /// </summary>
+    private Design? GetNearestDesign(View view)
+    {
+        if(view is null)
+            return null;
+
+        if(view.Data is Design d)
+        {
+            return d;
+        }
+
+        return GetNearestDesign(view.SuperView);
     }
 
     private Point ScreenToClient(View view, int x, int y)
