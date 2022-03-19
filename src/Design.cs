@@ -165,6 +165,14 @@ public class Design
             yield return new RenameColumnOperation(this);
         }
 
+
+        if (View is TabView)
+        {
+            yield return new AddTabOperation(this);
+            yield return new RemoveTabOperation(this);
+            yield return new RenameTabOperation(this);
+        }
+
     }
 
     /// <summary>

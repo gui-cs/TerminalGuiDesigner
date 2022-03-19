@@ -208,9 +208,9 @@ Ctrl+Y - Redo";
 
     private void ShowExtraOptions()
     {
-        var view = GetMostFocused(this);
+        var d = GetNearestDesign(GetMostFocused(this));
 
-        if (view.Data is Design d)
+        if (d != null)
         {
             var options = d.GetExtraOperations().Where(o=>!o.IsImpossible).ToArray();
 
@@ -384,8 +384,8 @@ Ctrl+Y - Redo";
 
     private void ShowEditPropertiesWindow()
     {
-        var view = GetMostFocused(this);
-        if (view.Data is Design d)
+        var d = GetNearestDesign(GetMostFocused(this));
+        if (d != null)
         {
             var edit = new EditDialog(d);
             Application.Run(edit);

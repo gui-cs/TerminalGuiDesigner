@@ -5,7 +5,6 @@ namespace TerminalGuiDesigner.Operations;
 
 internal class RemoveColumnOperation : Operation
 {
-    private DataColumn _col;
     private TableView _tableView;
     private DataColumn? _column;
 
