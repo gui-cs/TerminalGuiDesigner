@@ -1,4 +1,5 @@
-﻿using TerminalGuiDesigner.Operations;
+﻿using System.Linq;
+using TerminalGuiDesigner.Operations;
 
 namespace TerminalGuiDesigner.UI.Windows;
 
@@ -33,6 +34,31 @@ public class Modals
         result = 0;
         return false;
     }
+
+    public static bool GetArray(string windowTitle, string entryLabel, Type arrayElement, Array initialValue, out Array? result)
+    {
+        var dlg = new GetTextDialog(new DialogArgs()
+        {
+            WindowTitle = windowTitle,
+            EntryLabel = entryLabel,
+            MultiLine = true,
+        }, initialValue == null ? "" : string.Join('\n',initialValue.ToList().Select(v=>v.ToString())));
+
+        if (dlg.ShowDialog())
+        {
+             var newValues = dlg.ResultText.Split('\n');
+
+            result = Array.CreateInstance(arrayElement,newValues.Length);
+
+            for(int i=0;i<newValues.Length;i++)
+                result.SetValue(newValues[i].CastToReflected(arrayElement),i);
+
+            return true;
+        }
+
+        result = null;
+        return false;
+    }
     public static bool GetString(string windowTitle, string entryLabel, string initialValue, out string? result)
     {
         var dlg = new GetTextDialog(new DialogArgs()
@@ -55,7 +81,6 @@ public class Modals
     {
         return Get(prompt, okText, true, collection, o => o?.ToString() ?? "Null", false, out selected);
     }
-
 
     public static bool Get<T>(string prompt, string okText, bool addSearch, T[] collection, Func<T, string> displayMember, bool addNull, out T selected)
     {

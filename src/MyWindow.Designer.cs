@@ -18,6 +18,8 @@ namespace YourNamespace {
         
         private Terminal.Gui.Label label2;
         
+        private Terminal.Gui.RadioGroup radiogroup1;
+        
         private void InitializeComponent() {
             this.lblTitle = new Terminal.Gui.Label();
             this.lblTitle.Data = "lblTitle";
@@ -35,6 +37,17 @@ namespace YourNamespace {
             this.label2.X = 22;
             this.label2.Y = Pos.Bottom(lblTitle) + 1;
             this.Add(this.label2);
+            this.radiogroup1 = new Terminal.Gui.RadioGroup();
+            this.radiogroup1.Data = "radiogroup1";
+            this.radiogroup1.Text = "";
+            this.radiogroup1.Width = 11;
+            this.radiogroup1.Height = 2;
+            this.radiogroup1.X = 23;
+            this.radiogroup1.Y = 11;
+            this.radiogroup1.RadioLabels = new NStack.ustring[] {
+                    "Option 1",
+                    "Option 2"};
+            this.Add(this.radiogroup1);
         }
     }
 }

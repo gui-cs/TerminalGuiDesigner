@@ -164,6 +164,18 @@ public class EditDialog : Window
             return answer != -1;
         }
 
+        if(property.PropertyInfo.PropertyType.IsArray)
+        {
+            
+            if(Modals.GetArray(property.PropertyInfo.Name, "New Value",
+                property.PropertyInfo.PropertyType.GetElementType(),
+                 (Array)oldValue, out Array resultArray))
+            {
+                newValue = resultArray;
+                return true;
+            }
+        }
+
         if (Modals.GetString((string)property.PropertyInfo.Name, "New Value", oldValue?.ToString() ?? string.Empty, out string result))
         {
             newValue = result;

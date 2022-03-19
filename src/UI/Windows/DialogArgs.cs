@@ -47,6 +47,8 @@ public class DialogArgs
     /// </summary>
     public string InitialSearchText { get; set; }
 
+    public bool MultiLine {get;set;}
+
     public override string ToString()
     {
         StringBuilder sb = new StringBuilder();
