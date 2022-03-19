@@ -158,6 +158,11 @@ public class Design
             yield return new Property(this, typeof(TabStyle).GetProperty(nameof(TabStyle.ShowTopLine)), nameof(TabView.Style), tabView.Style);
             yield return new Property(this, typeof(TabStyle).GetProperty(nameof(TabStyle.TabsOnBottom)), nameof(TabView.Style), tabView.Style);
         }
+
+        if(View is RadioGroup radioGroup)
+        {
+            yield return new Property(this,typeof(RadioGroup).GetProperty(nameof(RadioGroup.RadioLabels)));
+        }
     }
 
 

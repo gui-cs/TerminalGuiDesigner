@@ -14,31 +14,11 @@ namespace YourNamespace {
     
     public partial class MyWindow {
         
-        private Terminal.Gui.TabView tabview1;
-        
         private Terminal.Gui.Label lblTitle;
         
         private Terminal.Gui.Label label2;
         
-        private Terminal.Gui.TableView tableview1;
-        
         private void InitializeComponent() {
-            this.tabview1 = new Terminal.Gui.TabView();
-            this.tabview1.Data = "tabview1";
-            this.tabview1.Text = "";
-            this.tabview1.Width = 50;
-            this.tabview1.Height = 5;
-            this.tabview1.X = 0;
-            this.tabview1.Y = 0;
-            Terminal.Gui.TabView.Tab tabview1Tab1;
-            tabview1Tab1 = new Terminal.Gui.TabView.Tab();
-            tabview1Tab1.Text = "Tab1";
-            tabview1.AddTab(tabview1Tab1, false);
-            Terminal.Gui.TabView.Tab tabview1Tab2;
-            tabview1Tab2 = new Terminal.Gui.TabView.Tab();
-            tabview1Tab2.Text = "Tab2";
-            tabview1.AddTab(tabview1Tab2, false);
-            this.Add(this.tabview1);
             this.lblTitle = new Terminal.Gui.Label();
             this.lblTitle.Data = "lblTitle";
             this.lblTitle.Text = "Welcome to Demo";
@@ -55,40 +35,6 @@ namespace YourNamespace {
             this.label2.X = 22;
             this.label2.Y = Pos.Bottom(lblTitle) + 1;
             this.Add(this.label2);
-            this.tableview1 = new Terminal.Gui.TableView();
-            this.tableview1.Data = "tableview1";
-            this.tableview1.Text = "";
-            this.tableview1.Width = Dim.Fill(0);
-            this.tableview1.Height = 5;
-            this.tableview1.X = 0;
-            this.tableview1.Y = 9;
-            this.tableview1.Style.AlwaysShowHeaders = false;
-            this.tableview1.Style.ExpandLastColumn = true;
-            this.tableview1.Style.InvertSelectedCellFirstCharacter = false;
-            this.tableview1.Style.ShowHorizontalHeaderOverline = true;
-            this.tableview1.Style.ShowHorizontalHeaderUnderline = false;
-            this.tableview1.Style.ShowVerticalCellLines = true;
-            this.tableview1.Style.ShowVerticalHeaderLines = true;
-            System.Data.DataTable tableview1Table;
-            tableview1Table = new System.Data.DataTable();
-            System.Data.DataColumn tableview1TableCol0;
-            tableview1TableCol0 = new System.Data.DataColumn();
-            tableview1TableCol0.ColumnName = "Column 0";
-            tableview1Table.Columns.Add(tableview1TableCol0);
-            System.Data.DataColumn tableview1TableCol1;
-            tableview1TableCol1 = new System.Data.DataColumn();
-            tableview1TableCol1.ColumnName = "Column 1";
-            tableview1Table.Columns.Add(tableview1TableCol1);
-            System.Data.DataColumn tableview1TableCol2;
-            tableview1TableCol2 = new System.Data.DataColumn();
-            tableview1TableCol2.ColumnName = "Column 2";
-            tableview1Table.Columns.Add(tableview1TableCol2);
-            System.Data.DataColumn tableview1TableCol3;
-            tableview1TableCol3 = new System.Data.DataColumn();
-            tableview1TableCol3.ColumnName = "Column 3";
-            tableview1Table.Columns.Add(tableview1TableCol3);
-            this.tableview1.Table = tableview1Table;
-            this.Add(this.tableview1);
         }
     }
 }

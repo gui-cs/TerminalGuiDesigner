@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using NStack;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
@@ -26,6 +27,11 @@ public class ViewFactory
             return CreateTabView();
         }
 
+        if (typeof(RadioGroup).IsAssignableFrom(t))
+        {
+            return CreateRadioGroup();
+        }
+
         var instance = (View)Activator.CreateInstance(t);
 
         instance.SetActualText("Heya");
@@ -33,6 +39,18 @@ public class ViewFactory
         instance.Width = Math.Max(instance.Bounds.Width, 4);
 
         return instance;
+    }
+
+    private View CreateRadioGroup()
+    {
+        var group = new RadioGroup
+        {
+            Width = 10,
+            Height = 5,
+        };
+        group.RadioLabels = new ustring[]{"Option 1","Option 2"};
+
+        return group;
     }
 
     private TableView CreateTableView()

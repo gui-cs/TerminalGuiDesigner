@@ -61,7 +61,28 @@ public class Property : ToCodeBase
 
     protected virtual CodeExpression GetRhs()
     {
-        return new CodePrimitiveExpression(GetValue().ToPrimitive());
+        var val = GetValue();
+        if(val == null)
+        {
+            return new CodeSnippetExpression("null");
+        }
+
+        var type = val.GetType();
+
+        if(type.IsArray)
+        {
+            var elementType = type.GetElementType();
+            var values = new List<object>();
+
+            var a = ((Array)val);
+            for(int i=0;i<a.Length;i++)
+            {
+                values.Add(a.GetValue(i).ToPrimitive());
+            }
+            return new CodeArrayCreateExpression(elementType,values.Select(v=>new CodePrimitiveExpression(v)).ToArray());
+        }
+
+        return new CodePrimitiveExpression(val.ToPrimitive());
     }
 
     public virtual string GetLhs()
