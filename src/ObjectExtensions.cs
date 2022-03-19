@@ -1,3 +1,5 @@
+using System.Reflection;
+
 namespace TerminalGuiDesigner;
 
 public static class ObjectExtensions
