@@ -93,6 +93,26 @@ public class Property : ToCodeBase
 
     public override string ToString()
     {
-        return PropertyInfo.Name + ":" + GetValue();
+        return PropertyInfo.Name + ":" + GetHumanReadableValue();
+    }
+
+    private string GetHumanReadableValue()
+    {
+        var val = GetValue();
+
+        if(val == null)
+        {
+            return "null";
+        }
+        if(val is bool b)
+        {
+            return b ? "Yes" : "No";
+        }
+        if(val is Array a)
+        {
+            return String.Join(",",a.ToList());
+        }
+
+        return val.ToString();
     }
 }

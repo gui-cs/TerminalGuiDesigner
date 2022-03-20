@@ -46,7 +46,16 @@ public class Modals
 
         if (dlg.ShowDialog())
         {
-             var newValues = dlg.ResultText.Split('\n');
+            var resultText = dlg.ResultText;
+
+            if(string.IsNullOrWhiteSpace(resultText))
+            {
+                result = result = Array.CreateInstance(arrayElement, 0);
+                return true;
+            }
+
+            resultText = resultText.Replace("\r\n", "\n");
+            var newValues = resultText.Split('\n');
 
             result = Array.CreateInstance(arrayElement,newValues.Length);
 
