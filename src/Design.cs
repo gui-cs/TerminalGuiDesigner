@@ -19,6 +19,12 @@ public class Design
     /// </summary>
     public string FieldName { get; set; }
 
+    public const string RootDesignName = "root";
+
+    private List<Property> _designableProperties;
+
+    private Logger logger = LogManager.GetCurrentClassLogger();
+
     public Property GetDesignableProperty(string propertyName)
     {
         return GetDesignableProperties().Single(p=>p.PropertyInfo.Name.Equals(propertyName));
@@ -37,10 +43,6 @@ public class Design
             return View is TabView;
         }
     }
-
-    private List<Property> _designableProperties;
-
-    private Logger logger = LogManager.GetCurrentClassLogger();
 
     public Design(SourceCodeFile sourceCode, string fieldName, View view)
     {
@@ -211,16 +213,6 @@ public class Design
         return  new SnippetProperty(prop,rhsCode,prop.GetValue());
     }
 
-    /// <summary>
-    /// Adds declaration and initialization statements to the .Designer.cs
-    /// CodeDom class.
-    /// </summary>
-    public void ToCode(CodeDomArgs args)
-    {
-        var toCode = new DesignToCode(this);
-        toCode.ToCode(args);
-
-    }
     public void DeSerializeExtraProperties(string fieldName)
     {
         // no extra properties because we dont have a .Designer.cs! 

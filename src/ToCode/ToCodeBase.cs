@@ -1,15 +1,17 @@
 ﻿using System.CodeDom;
+using Terminal.Gui;
 
 namespace TerminalGuiDesigner.ToCode;
 
 public abstract class ToCodeBase
 {
-    protected void AddAddToViewStatement(CodeDomArgs args, Design d)
+    protected void AddAddToViewStatement(CodeDomArgs args, Design d, CodeExpression parentView)
     {
         // Add it to the view 
         var callAdd = new CodeMethodInvokeExpression();
-        callAdd.Method.TargetObject = new CodeThisReferenceExpression();
-        callAdd.Method.MethodName = "Add";
+        callAdd.Method.TargetObject = parentView;
+
+        callAdd.Method.MethodName = nameof(View.Add);
         callAdd.Parameters.Add(new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), d.FieldName));
         args.InitMethod.Statements.Add(callAdd);
     }

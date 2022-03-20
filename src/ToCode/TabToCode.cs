@@ -18,19 +18,34 @@ public class TabToCode : ToCodeBase
     }
 
 
+    /// <summary>
+    /// Adds code that constructs and initializes a single Tab of a 
+    /// TabView and adds it to the TabView
+    /// </summary>
     internal void ToCode(CodeDomArgs args)
     {
         var tabName = $"{Design.FieldName}{GetTabFieldName()}";
 
-        // add a field to the class for the Table that is in the view
+        // add a field to the class for the Tab
         AddLocalFieldToMethod(args, typeof(Tab), tabName);
 
-        AddConstructorCall(tabName, typeof(Tab), args);
+        // initialize the field by calling its constructor in InitializeComponent
+        AddConstructorCall(tabName, typeof(Tab), args,
+            new CodePrimitiveExpression(Tab.Text.ToPrimitive()),
+            new CodeSnippetExpression("new View()"));
 
-        AddPropertyAssignment(args,$"{tabName}.Text",Tab.Text);
+        // for each thing that is shown in the tab
+        foreach(var v in Tab.View.Subviews)
+        {
+            // that is designable
+            if(v.Data is Design d)
+            {
+                var toCode = new DesignToCode(d);
+                toCode.ToCode(args,new CodeSnippetExpression($"{tabName}.View"));
+            }
+        }
 
-        // TODO : set the View that is hosted by the Tab
-
+        // add the constructed tab to the TabView
         AddAddTabCall(tabName,args);
     }
 

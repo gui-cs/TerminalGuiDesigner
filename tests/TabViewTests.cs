@@ -56,9 +56,16 @@ class TabViewTests
         var label = factory.Create(typeof(Label));
 
         OperationManager.Instance.Do(new AddViewOperation(sourceCode, label, (Design)tvOut.Data, "myLabel"));
-
-
         Assert.Contains(label, tvOut.SelectedTab.View.Subviews.ToArray(),"Expected currently selected tab to have the new label but it did not");
 
+        viewToCode.GenerateDesignerCs(designOut.View, sourceCode);
+
+        var codeToView = new CodeToView(sourceCode);
+        var designBackIn = codeToView.CreateInstance();
+
+        var tabIn = designBackIn.View.GetActualSubviews().OfType<TabView>().Single();
+        var tabInLabel = tabIn.SelectedTab.View.Subviews.Single();
+
+        Assert.AreEqual(label.Text,tabInLabel.Text);
     }
 }

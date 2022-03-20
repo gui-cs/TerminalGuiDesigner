@@ -208,7 +208,7 @@ Ctrl+Y - Redo";
 
     private void ShowExtraOptions()
     {
-        var d = GetNearestDesign(GetMostFocused(this));
+        var d = GetMostFocused(this)?.GetNearestDesign();
 
         if (d != null)
         {
@@ -243,7 +243,7 @@ Ctrl+Y - Redo";
             return;
 
         var viewToDelete = GetMostFocused(_viewBeingEdited.View);
-        var viewDesign = GetNearestDesign(viewToDelete);
+        var viewDesign = viewToDelete?.GetNearestDesign();
 
         // don't delete the root view
         if(viewDesign != null && viewDesign != _viewBeingEdited)
@@ -348,7 +348,7 @@ Ctrl+Y - Redo";
         }
 
         // what is the currently selected design
-        var toAddTo = GetNearestContainerDesign(GetMostFocused(_viewBeingEdited.View)) ?? _viewBeingEdited;
+        var toAddTo = GetMostFocused(_viewBeingEdited.View)?.GetNearestContainerDesign() ?? _viewBeingEdited;
         
         var selectable = typeof(View).Assembly.DefinedTypes.Where(t => typeof(View).IsAssignableFrom(t)).ToArray();
 
@@ -388,7 +388,7 @@ Ctrl+Y - Redo";
 
     private void ShowEditPropertiesWindow()
     {
-        var d = GetNearestDesign(GetMostFocused(this));
+        var d = GetMostFocused(this).GetNearestDesign();
         if (d != null)
         {
             var edit = new EditDialog(d);
@@ -412,42 +412,6 @@ Ctrl+Y - Redo";
         return GetMostFocused(view.Focused);
     }
 
-    /// <summary>
-    /// Some Views have hidden subviews e.g. TabView, ComboBox etc
-    /// Sometimes the most focused view is a sub element.  This method
-    /// goes up the hierarchy and finds the first that is designable
-    /// </summary>
-    private Design? GetNearestDesign(View view)
-    {
-        if(view is null)
-            return null;
-
-        if(view.Data is Design d)
-        {
-            return d;
-        }
-
-        return GetNearestDesign(view.SuperView);
-    }
-
-    /// <summary>
-    /// Travels up the nested views until it finds one that is
-    /// <see cref="Design.IsContainerView"/> or returns null if
-    /// none are
-    /// </summary>
-    /// <returns></returns>
-    private Design? GetNearestContainerDesign(View v)
-    {
-        var d = GetNearestDesign(v);
-
-        if (d == null)
-            return null;
-
-        if (d.IsContainerView)
-            return d;
-
-        return GetNearestContainerDesign(d.View.SuperView);
-    }
 
     private Point ScreenToClient(View view, int x, int y)
     {

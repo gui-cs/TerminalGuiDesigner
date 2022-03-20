@@ -1,4 +1,5 @@
-﻿using Terminal.Gui;
+﻿using System.CodeDom;
+using Terminal.Gui;
 
 namespace TerminalGuiDesigner.ToCode;
 
@@ -11,7 +12,7 @@ internal class DesignToCode : ToCodeBase
 
     public Design Design { get; }
 
-    internal void ToCode(CodeDomArgs args)
+    internal void ToCode(CodeDomArgs args, CodeExpression parentView)
     {
 
         AddFieldToClass(args, Design);
@@ -39,6 +40,7 @@ internal class DesignToCode : ToCodeBase
             }
         }
 
-        AddAddToViewStatement(args, Design);
+        // call this.Add(someView)
+        AddAddToViewStatement(args, Design, parentView);
     }
 }

@@ -40,7 +40,7 @@ public class ViewToCode
         lbl.Data = "label1"; // field name in the class
         w.Add(lbl);
 
-        var design = new Design(sourceFile, "root", w);
+        var design = new Design(sourceFile, Design.RootDesignName, w);
         design.CreateSubControlDesigns();
 
         GenerateDesignerCs(w, sourceFile);
@@ -147,7 +147,22 @@ public class ViewToCode
             if (sub.Data is Design d)
             {
                 // The user is designing this view so it needs to be persisted
-                d.ToCode(args);
+                var toCode = new DesignToCode(d);
+
+                var parent = sub.SuperView?.GetNearestDesign();
+            
+                // Build the design code 
+                toCode.ToCode(args,
+                    // if our parent is the root then the designed control should be assigned to 'this'
+                    parent == null || parent.FieldName == Design.RootDesignName ? new CodeThisReferenceExpression():
+                    // the view we are adding to is not root but some deeper nested view so reference it by name
+                    new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),parent.FieldName)
+                );
+
+                // TabToCode handles children so don't handle them
+                // here too otherwise we end up adding each view twice!
+                if(sub is TabView)
+                    continue;
             }
 
             // now recurse down the view hierarchy

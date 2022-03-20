@@ -61,6 +61,44 @@ public static class ViewExtensions
         {
             view.Text = text;
         }
+    }
 
+    /// <summary>
+    /// Some Views have hidden subviews e.g. TabView, ComboBox etc
+    /// Sometimes the most focused view is a sub element.  This method
+    /// goes up the hierarchy and finds the first that is designable
+    /// </summary>
+    public static Design? GetNearestDesign(this View view)
+    {
+        if(view is null)
+            return null;
+
+        if(view.Data is Design d)
+        {
+            return d;
+        }
+
+        return GetNearestDesign(view.SuperView);
+    }
+
+
+
+    /// <summary>
+    /// Travels up the nested views until it finds one that is
+    /// <see cref="Design.IsContainerView"/> or returns null if
+    /// none are
+    /// </summary>
+    /// <returns></returns>
+    public static Design? GetNearestContainerDesign(this View v)
+    {
+        var d = GetNearestDesign(v);
+
+        if (d == null)
+            return null;
+
+        if (d.IsContainerView)
+            return d;
+
+        return GetNearestContainerDesign(d.View.SuperView);
     }
 }
