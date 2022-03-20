@@ -19,15 +19,27 @@ public class AddViewOperation : Operation
     public override void Do()
     {
         add.Data = to.CreateSubControlDesign(sourceCode,fieldName, add);
-        to.View.Add(add);
+
+        GetViewToAddTo().Add(add);
     }
+
+    private View GetViewToAddTo()
+    {
+        if(to.View is TabView tabView)
+        {
+            return tabView.SelectedTab.View;
+        }
+
+        return to.View;
+    }
+
     public override void Redo()
     {
-        to.View.Add(add);
+        GetViewToAddTo().Add(add);
     }
 
     public override void Undo()
     {
-        to.View.Remove(add);
+        GetViewToAddTo().Remove(add);
     }
 }

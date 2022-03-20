@@ -31,6 +31,12 @@ public class Design
     /// new child controls are preserved for design time changes
     /// </summary>
     public View View {get;}
+    public bool IsContainerView { get
+        {
+            // TODO: View and probably others (group box)?
+            return View is TabView;
+        }
+    }
 
     private List<Property> _designableProperties;
 

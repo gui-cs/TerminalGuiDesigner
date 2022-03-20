@@ -346,6 +346,10 @@ Ctrl+Y - Redo";
         {
             return;
         }
+
+        // what is the currently selected design
+        var toAddTo = GetNearestContainerDesign(GetMostFocused(_viewBeingEdited.View)) ?? _viewBeingEdited;
+        
         var selectable = typeof(View).Assembly.DefinedTypes.Where(t => typeof(View).IsAssignableFrom(t)).ToArray();
 
         if (Modals.Get("Type of Control", "Add", true, selectable, t => t.Name, false, out Type selected))
@@ -354,7 +358,7 @@ Ctrl+Y - Redo";
             var instance = factory.Create(selected);
 
             OperationManager.Instance.Do(
-                new AddViewOperation(_currentDesignerFile, instance, _viewBeingEdited, GetUniqueFieldName(selected))
+                new AddViewOperation(_currentDesignerFile, instance, toAddTo, GetUniqueFieldName(selected))
             );
         }
     }
@@ -424,6 +428,25 @@ Ctrl+Y - Redo";
         }
 
         return GetNearestDesign(view.SuperView);
+    }
+
+    /// <summary>
+    /// Travels up the nested views until it finds one that is
+    /// <see cref="Design.IsContainerView"/> or returns null if
+    /// none are
+    /// </summary>
+    /// <returns></returns>
+    private Design? GetNearestContainerDesign(View v)
+    {
+        var d = GetNearestDesign(v);
+
+        if (d == null)
+            return null;
+
+        if (d.IsContainerView)
+            return d;
+
+        return GetNearestContainerDesign(d.View.SuperView);
     }
 
     private Point ScreenToClient(View view, int x, int y)
