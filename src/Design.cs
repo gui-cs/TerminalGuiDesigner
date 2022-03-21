@@ -55,7 +55,12 @@ public class Design
 
     public void CreateSubControlDesigns()
     {
-        foreach (var subView in View.GetActualSubviews().ToArray())
+        CreateSubControlDesigns(View);
+    }
+
+    private void CreateSubControlDesigns(View view)
+    {
+        foreach (var subView in view.GetActualSubviews().ToArray())
         {
             logger.Info($"Found subView of Type '{subView.GetType()}'");
 
@@ -63,6 +68,8 @@ public class Design
             {
                 subView.Data = CreateSubControlDesign(SourceCode,nameOrSerializedDesign, subView);
             }
+            
+            CreateSubControlDesigns(subView);
         }
     }
 

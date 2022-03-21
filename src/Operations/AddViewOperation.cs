@@ -20,7 +20,9 @@ public class AddViewOperation : Operation
     {
         add.Data = to.CreateSubControlDesign(sourceCode,fieldName, add);
 
-        GetViewToAddTo().Add(add);
+        var v = GetViewToAddTo();
+        v.Add(add);
+        v.SetNeedsDisplay();
     }
 
     private View GetViewToAddTo()
@@ -35,11 +37,15 @@ public class AddViewOperation : Operation
 
     public override void Redo()
     {
-        GetViewToAddTo().Add(add);
+        var v = GetViewToAddTo();
+        v.Add(add);
+        v.SetNeedsDisplay();
     }
 
     public override void Undo()
     {
-        GetViewToAddTo().Remove(add);
+        var v = GetViewToAddTo();
+        v.Add(add);
+        v.SetNeedsDisplay();
     }
 }

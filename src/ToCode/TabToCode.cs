@@ -34,6 +34,10 @@ public class TabToCode : ToCodeBase
             new CodePrimitiveExpression(Tab.Text.ToPrimitive()),
             new CodeSnippetExpression("new View()"));
 
+        // make the Tab.View Dim.Fill
+        AddPropertyAssignment(args,$"{tabName}.View.Width",new CodeSnippetExpression("Dim.Fill()"));
+        AddPropertyAssignment(args,$"{tabName}.View.Height",new CodeSnippetExpression("Dim.Fill()"));
+
         // for each thing that is shown in the tab
         foreach(var v in Tab.View.Subviews)
         {

@@ -77,8 +77,8 @@ public class ViewFactory
             Height = 5,
         };
 
-        tabView.AddTab(new TabView.Tab("Tab1", new View()),false);
-        tabView.AddTab(new TabView.Tab("Tab2", new View()),false);
+        tabView.AddTab(new TabView.Tab("Tab1", new View{Width = Dim.Fill(),Height=Dim.Fill()}),false);
+        tabView.AddTab(new TabView.Tab("Tab2", new View{Width = Dim.Fill(),Height=Dim.Fill()}),false);
 
         return tabView;
     }
