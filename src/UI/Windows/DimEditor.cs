@@ -42,12 +42,39 @@ namespace TerminalGuiDesigner.UI.Windows
             Cancelled = true;
             Modal = true;
 
-            ddType.SetSource(Enum.GetValues(typeof(DimType)).Cast<Enum>().ToList());
+            // TODO : Parse current value
+            //rgDimType.SelectedItem = "Absolute";
+            var val = (Dim)property.GetValue();
+            if(val.IsAbsolute(out var v))
+            {
+                rgDimType.SelectedItem = 0;
+                tbValue.Text = v.ToString();
+            }
 
-            ddType.SelectedItemChanged += DdType_SelectedItemChanged;
+            if(val.IsPercent(out var factor))
+            {
+                rgDimType.SelectedItem = 1;
+                tbValue.Text = factor.ToString();
+            }
+
+            if(val.IsFill(out var margin))
+            {
+                rgDimType.SelectedItem = 2;
+                tbValue.Text = margin.ToString();
+            }
+
+
+            SetupForCurrentDimType();
+
+            rgDimType.SelectedItemChanged += DdType_SelectedItemChanged;
         }
 
-        private void DdType_SelectedItemChanged(ListViewItemEventArgs obj)
+        private void DdType_SelectedItemChanged(RadioGroup.SelectedItemChangedArgs obj)
+        {
+            SetupForCurrentDimType();
+        }
+
+        private void SetupForCurrentDimType()
         {
             switch(GetDimType())
             {
@@ -113,7 +140,7 @@ namespace TerminalGuiDesigner.UI.Windows
 
         private DimType? GetDimType()
         {
-            return ddType.SelectedItem == -1 ? null : (DimType)ddType.Source.ToList()[ddType.SelectedItem];
+            return Enum.Parse<DimType>(rgDimType.RadioLabels[rgDimType.SelectedItem].ToString());
         }
 
         private bool DesignDimAbsolute(out SnippetProperty result)
