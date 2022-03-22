@@ -69,6 +69,11 @@ public class Property : ToCodeBase
             return new CodeSnippetExpression("null");
         }
 
+        if(val is Dim d)
+        {
+            return new CodeSnippetExpression(d.ToCode());
+        }
+
         var type = val.GetType();
 
         if(type.IsArray)
