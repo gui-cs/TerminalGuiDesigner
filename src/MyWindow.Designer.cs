@@ -32,7 +32,7 @@ namespace YourNamespace {
             this.label2 = new Terminal.Gui.Label();
             this.label2.Data = "label2";
             this.label2.Text = "Heya";
-            this.label2.Width = Dim.Percent(25) - 10;
+            this.label2.Width = Dim.Fill(10);
             this.label2.Height = 1;
             this.label2.X = 22;
             this.label2.Y = Pos.Bottom(lblTitle) + 1;
