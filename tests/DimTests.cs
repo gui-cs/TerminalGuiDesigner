@@ -112,31 +112,31 @@ public class DimTests
     public void TestGetCode_WithNoOffset()
     {
         var d = Dim.Percent(50);
-        Assert.AreEqual("Dim.Percent(50)",d.GetCode());
+        Assert.AreEqual("Dim.Percent(50)",d.ToCode());
 
         d = Dim.Percent(50);
-        Assert.AreEqual("Dim.Percent(50)",d.GetCode());
+        Assert.AreEqual("Dim.Percent(50)",d.ToCode());
 
         d = Dim.Fill(5);
-        Assert.AreEqual("Dim.Fill(5)",d.GetCode());
+        Assert.AreEqual("Dim.Fill(5)",d.ToCode());
 
         d = Dim.Fill(5);
-        Assert.AreEqual("Dim.Fill(5)",d.GetCode());
+        Assert.AreEqual("Dim.Fill(5)",d.ToCode());
     }
 
     [Test]
     public void TestGetCode_WithOffset()
     {
         var d = Dim.Percent(50) + 2;
-        Assert.AreEqual("Dim.Percent(50) + 2",d.GetCode());
+        Assert.AreEqual("Dim.Percent(50) + 2",d.ToCode());
 
         d = Dim.Percent(50) - 2;
-        Assert.AreEqual("Dim.Percent(50) - 2",d.GetCode());
+        Assert.AreEqual("Dim.Percent(50) - 2",d.ToCode());
 
         d = Dim.Fill(5) + 2;
-        Assert.AreEqual("Dim.Fill(5) + 2",d.GetCode());
+        Assert.AreEqual("Dim.Fill(5) + 2",d.ToCode());
 
         d = Dim.Fill(5) - 2;
-        Assert.AreEqual("Dim.Fill(5) - 2",d.GetCode());
+        Assert.AreEqual("Dim.Fill(5) - 2",d.ToCode());
     }
 }

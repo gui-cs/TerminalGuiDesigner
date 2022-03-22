@@ -133,7 +133,7 @@ public static class DimExtensions
         return false;
     }
 
-    public static string? GetCode(this Dim d)
+    public static string? ToCode(this Dim d)
     {
         if(!d.GetDimType(out var type, out var val, out var offset))
         {

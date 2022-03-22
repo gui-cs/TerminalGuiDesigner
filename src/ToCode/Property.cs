@@ -1,6 +1,8 @@
 ﻿using NStack;
 using System.CodeDom;
 using System.Reflection;
+using Terminal.Gui;
+using TerminalGuiDesigner;
 
 namespace TerminalGuiDesigner.ToCode;
 
@@ -108,11 +110,16 @@ public class Property : ToCodeBase
         {
             return b ? "Yes" : "No";
         }
+        if(val is Dim d)
+        {
+            return d.ToCode() ?? d.ToString() ?? "";
+        }
+
         if(val is Array a)
         {
             return String.Join(",",a.ToList());
         }
 
-        return val.ToString();
+        return val.ToString() ?? "";
     }
 }
