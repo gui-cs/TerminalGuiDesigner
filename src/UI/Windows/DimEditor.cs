@@ -42,27 +42,25 @@ namespace TerminalGuiDesigner.UI.Windows
             Cancelled = true;
             Modal = true;
 
-            // TODO : Parse current value
-            //rgDimType.SelectedItem = "Absolute";
             var val = (Dim)property.GetValue();
-            if(val.IsAbsolute(out var v))
+            if(val.GetDimType(out var type,out var value, out var offset))
             {
-                rgDimType.SelectedItem = 0;
-                tbValue.Text = v.ToString();
-            }
+                switch(type)
+                {
+                    case DimType.Absolute:
+                        rgDimType.SelectedItem = 0;
+                        break;
+                    case DimType.Percent:
+                        rgDimType.SelectedItem = 1;
+                        break;
+                    case DimType.Fill:
+                        rgDimType.SelectedItem = 2;
+                        break;
+                }
 
-            if(val.IsPercent(out var factor))
-            {
-                rgDimType.SelectedItem = 1;
-                tbValue.Text = factor.ToString();
+                tbValue.Text = value.ToString();
+                tbOffset.Text = offset.ToString();
             }
-
-            if(val.IsFill(out var margin))
-            {
-                rgDimType.SelectedItem = 2;
-                tbValue.Text = margin.ToString();
-            }
-
 
             SetupForCurrentDimType();
 
@@ -158,7 +156,16 @@ namespace TerminalGuiDesigner.UI.Windows
 
         private bool GetOffset(out int offset)
         {
-            return int.TryParse(tbOffset.Text.ToString(),out offset);
+            var offsetText = tbOffset.Text.ToString();
+
+            // Empty means 0
+            if(string.IsNullOrWhiteSpace(offsetText))
+            {
+                offset = 0;
+                return true;
+            }
+
+            return int.TryParse(offsetText,out offset);
         }
 
         private bool DesignDimPercent(out SnippetProperty result)
