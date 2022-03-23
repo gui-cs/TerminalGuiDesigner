@@ -113,4 +113,46 @@ public class PosTests
         Assert.AreEqual(Side.Above,side);
         Assert.AreEqual(-2,offset);
     }
+
+    [Test]
+    public void TestGetCode_WithNoOffset()
+    {
+
+        View v = new View();
+        var d = new Design(new SourceCodeFile(new FileInfo("yarg.cs")),"myView",v);
+
+        var p = Pos.Percent(50);
+        Assert.AreEqual("Pos.Percent(50)",p.ToCode(new List<Design>{d}));
+
+        p = Pos.Left(v);
+        Assert.AreEqual("Pos.Left(myView)",p.ToCode(new List<Design>{d}));
+        p = Pos.Right(v);
+        Assert.AreEqual("Pos.Right(myView)",p.ToCode(new List<Design>{d}));
+        p = Pos.Bottom(v);
+        Assert.AreEqual("Pos.Bottom(myView)",p.ToCode(new List<Design>{d}));
+        p = Pos.Top(v);
+        Assert.AreEqual("Pos.Top(myView)",p.ToCode(new List<Design>{d}));
+
+    }
+
+
+    [Test]
+    public void TestGetCode_WithOffset()
+    {
+
+        View v = new View();
+        var d = new Design(new SourceCodeFile(new FileInfo("yarg.cs")),"myView",v);
+
+        var p = Pos.Percent(50) + 2;
+        Assert.AreEqual("Pos.Percent(50) + 2",p.ToCode(new List<Design>{d}));
+
+        p = Pos.Percent(50) - 2;
+        Assert.AreEqual("Pos.Percent(50) - 2",p.ToCode(new List<Design>{d}));
+
+        p = Pos.Right(v) + 2;
+        Assert.AreEqual("Pos.Right(myView) + 2",p.ToCode(new List<Design>{d}));
+
+        p = Pos.Right(v) - 2;
+        Assert.AreEqual("Pos.Right(myView) - 2",p.ToCode(new List<Design>{d}));
+    }
 }

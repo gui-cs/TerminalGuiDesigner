@@ -17,7 +17,7 @@ namespace TerminalGuiDesigner.UI.Windows
 
     public partial class PosEditor : Window {
 
-        public SnippetProperty Result { get; private set; }
+        public Pos Result { get; private set; }
         public bool Cancelled { get; private set; }
 
         public Design Design { get; }
@@ -102,13 +102,12 @@ namespace TerminalGuiDesigner.UI.Windows
 
         private void BtnOk_Clicked()
         {
-            Cancelled = !GetPosDesign(Design,Property, out var result);
+            Cancelled = !BuildPos(out var result);
             Result = result;
             Application.RequestStop();
         }
 
-
-        public bool GetPosDesign(Design owner, Property property, out SnippetProperty result)
+        public bool BuildPos(out Pos result)
         {
             // pick what type of Pos they want
             var type = GetPosType();
@@ -122,12 +121,11 @@ namespace TerminalGuiDesigner.UI.Windows
             switch (type.Value)
             {
                 case PosType.Absolute:
-                    return DesignPosAbsolute(property, out result);
+                    return BuildPosAbsolute(out result);
                 case PosType.Relative:
-                    return DesignPosRelative(owner, property, out result);
-
+                    return BuildPosRelative(out result);
                 case PosType.Percent:
-                    return DesignPosPercent(property, out result);
+                    return BuildPosPercent(out result);
                 case PosType.Anchor: throw new NotImplementedException();
 
                 default: throw new ArgumentOutOfRangeException();
@@ -152,7 +150,7 @@ namespace TerminalGuiDesigner.UI.Windows
             return int.TryParse(tbOffset.Text.ToString(),out offset);
         }
 
-        private bool DesignPosRelative(Design owner, Property property, out SnippetProperty result)
+        private bool BuildPosRelative(out Pos result)
         {
             var relativeTo = ddRelativeTo.SelectedItem == -1 ? null : ddRelativeTo.Source.ToList()[ddRelativeTo.SelectedItem] as Design;
 
@@ -162,39 +160,48 @@ namespace TerminalGuiDesigner.UI.Windows
 
                 if (side != null)
                 {
+                    Pos pos;
+                    switch (side)
+                    {
+                        case Side.Above:
+                            pos = Pos.Top(relativeTo.View);
+                            break;
+                        case Side.Below:
+                            pos = Pos.Bottom(relativeTo.View);
+                            break;
+                        case Side.Left:
+                            pos = Pos.Left(relativeTo.View);
+                            break;
+                        case Side.Right:
+                            pos = Pos.Right(relativeTo.View);
+                            break;
+                        default: throw new ArgumentOutOfRangeException(nameof(side));
+                    }
+
                     if (GetOffset(out int offset))
                     {
-                        switch (side)
+                        if(offset != 0)
                         {
-                            case Side.Above:
-                                result = BuildOffsetPos(property, "Pos.Top({0})", Pos.Top(relativeTo.View), offset, () => relativeTo.FieldName);
-                                break;
-                            case Side.Below:
-                                result = BuildOffsetPos(property, "Pos.Bottom({0})", Pos.Bottom(relativeTo.View), offset, () => relativeTo.FieldName);
-                                break;
-                            case Side.Left:
-                                result = BuildOffsetPos(property, "Pos.Left({0})", Pos.Left(relativeTo.View), offset, () => relativeTo.FieldName);
-                                break;
-                            case Side.Right:
-                                result = BuildOffsetPos(property, "Pos.Right({0})", Pos.Right(relativeTo.View), offset, () => relativeTo.FieldName);
-                                break;
-                            default: throw new ArgumentOutOfRangeException(nameof(side));
+                            result = pos + offset;   
+                            return true;
                         }
-
-                        return true;
                     }
+
+                    result = pos;
+                    return true;
                 }
             }
 
+            // Its got no side or no relative to control
             result = null;
             return false;
         }
 
-        private bool DesignPosAbsolute(Property property, out SnippetProperty result)
+        private bool BuildPosAbsolute(out Pos result)
         {
             if (GetValue(out int newPos))
             {
-                result = new SnippetProperty(property, newPos.ToString(), (Pos)newPos);
+                result = Pos.At(newPos);
                 return true;
             }
 
@@ -207,36 +214,21 @@ namespace TerminalGuiDesigner.UI.Windows
             return int.TryParse(tbValue.Text.ToString(),out newPos);
         }
 
-        private bool DesignPosPercent(Property property, out SnippetProperty result)
+        private bool BuildPosPercent(out Pos result)
         {
             if (GetValue(out int newPercent))
             {
-                if (GetOffset(out int offset))
+                result = Pos.Percent(newPercent);
+
+                if (GetOffset(out int offset) && offset != 0)
                 {
-                    result = BuildOffsetPos(property, $"Pos.Percent({newPercent})", Pos.Percent(newPercent), offset);
+                    result = result + offset;
                     return true;
                 }
             }
 
             result = null;
             return false;
-        }
-
-        private SnippetProperty BuildOffsetPos(Property property, string code, Pos pos, int offset, params Func<string>[] codeParameters)
-        {
-            if (offset == 0)
-            {
-                return new SnippetProperty(property, code, pos, codeParameters);
-            }
-            else
-            if (offset > 0)
-            {
-                return new SnippetProperty(property, $"{code} + {offset}", pos + offset, codeParameters);
-            }
-            else
-            {
-                return new SnippetProperty(property, $"{code} - {-offset}", pos - offset, codeParameters);
-            }
         }
     }
 }

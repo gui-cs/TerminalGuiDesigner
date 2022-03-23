@@ -145,8 +145,8 @@ public class Design
         yield return new Property(this, View.GetType().GetProperty(nameof(View.Width)));
         yield return new Property(this, View.GetType().GetProperty(nameof(View.Height)));
 
-        yield return ToSnip(new Property(this, View.GetType().GetProperty(nameof(View.X))),codeToView);
-        yield return ToSnip(new Property(this, View.GetType().GetProperty(nameof(View.Y))),codeToView);
+        yield return new Property(this, View.GetType().GetProperty(nameof(View.X)));
+        yield return new Property(this, View.GetType().GetProperty(nameof(View.Y)));
 
         if (View is Button)
         {

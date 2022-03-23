@@ -74,6 +74,12 @@ public class Property : ToCodeBase
             return new CodeSnippetExpression(d.ToCode());
         }
 
+        if(val is Pos p)
+        {
+            // TODO: Get EVERYONE! not just siblings
+            return new CodeSnippetExpression(p.ToCode(Design.GetSiblings().ToList()));
+        }
+
         var type = val.GetType();
 
         if(type.IsArray)
@@ -118,6 +124,11 @@ public class Property : ToCodeBase
         if(val is Dim d)
         {
             return d.ToCode() ?? d.ToString() ?? "";
+        }
+        if(val is Pos p)
+        {
+            // TODO: Get EVERYONE not just siblings
+            return p.ToCode(Design.GetSiblings().ToList()) ?? p.ToString() ?? "";
         }
 
         if(val is Array a)

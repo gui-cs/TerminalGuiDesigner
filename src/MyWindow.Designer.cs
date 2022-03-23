@@ -34,7 +34,7 @@ namespace YourNamespace {
             this.label2.Text = "Heya";
             this.label2.Width = Dim.Fill(10);
             this.label2.Height = 1;
-            this.label2.X = 22;
+            this.label2.X = Pos.Bottom(lblTitle) + 3;
             this.label2.Y = Pos.Bottom(lblTitle) + 1;
             this.Add(this.label2);
             this.radiogroup1 = new Terminal.Gui.RadioGroup();

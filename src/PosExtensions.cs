@@ -228,4 +228,47 @@ public static class PosExtensions
             return value;
         }
     }
+
+    public static string? ToCode(this Pos d, List<Design> knownDesigns)
+    {
+        if(!d.GetPosType(knownDesigns,out var type, out var val,out var relativeTo, out var side, out var offset))
+        {
+            // could not determine the type
+            return null;
+        }
+
+        switch (type)
+        {
+            case PosType.Absolute : 
+                    return val.ToString();
+            case PosType.Relative:
+                if(offset > 0)
+                    return $"Pos.{GetMethodNameFor(side)}({relativeTo.FieldName}) + {offset}";
+                if(offset < 0)
+                    return $"Pos.{GetMethodNameFor(side)}({relativeTo.FieldName}) - {Math.Abs(offset)}";
+                return $"Pos.{GetMethodNameFor(side)}({relativeTo.FieldName})";
+
+            case PosType.Percent:
+                if(offset > 0)
+                    return $"Pos.Percent({val}) + {offset}";
+                if(offset < 0)
+                    return $"Pos.Percent({val}) - {Math.Abs(offset)}";
+                return $"Pos.Percent({val})";
+            
+            default: throw new ArgumentOutOfRangeException("Unknown PosType");
+        }
+}
+
+    private static string GetMethodNameFor(Side side)
+    {
+        switch (side)
+        {
+            case Side.Left : return "Left";
+            case Side.Right : return "Right";
+            case Side.Above : return "Top";
+            case Side.Below : return "Bottom";
+
+            default: throw new ArgumentOutOfRangeException("Unknown side");
+        }
+    }
 }
