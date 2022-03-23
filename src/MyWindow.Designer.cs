@@ -14,40 +14,51 @@ namespace YourNamespace {
     
     public partial class MyWindow {
         
-        private Terminal.Gui.Label lblTitle;
+        private Terminal.Gui.TabView tabview1;
+        
+        private Terminal.Gui.Label label1;
         
         private Terminal.Gui.Label label2;
         
-        private Terminal.Gui.RadioGroup radiogroup1;
-        
         private void InitializeComponent() {
-            this.lblTitle = new Terminal.Gui.Label();
-            this.lblTitle.Data = "lblTitle";
-            this.lblTitle.Text = "Welcome to Demo";
-            this.lblTitle.Width = 15;
-            this.lblTitle.Height = 1;
-            this.lblTitle.X = 22;
-            this.lblTitle.Y = 4;
-            this.Add(this.lblTitle);
+            this.tabview1 = new Terminal.Gui.TabView();
+            this.tabview1.Data = "tabview1";
+            this.tabview1.Text = "";
+            this.tabview1.Width = 50;
+            this.tabview1.Height = Dim.Fill(0);
+            this.tabview1.X = 0;
+            this.tabview1.Y = 0;
+            this.tabview1.MaxTabTextWidth = 30u;
+            this.tabview1.Style.ShowBorder = true;
+            this.tabview1.Style.ShowTopLine = true;
+            this.tabview1.Style.TabsOnBottom = false;
+            Terminal.Gui.TabView.Tab tabview1Tab1;
+            tabview1Tab1 = new Terminal.Gui.TabView.Tab("Tab1", new View());
+            tabview1Tab1.View.Width = Dim.Fill();
+            tabview1Tab1.View.Height = Dim.Fill();
+            this.label1 = new Terminal.Gui.Label();
+            this.label1.Data = "label1";
+            this.label1.Text = "Heya";
+            this.label1.Width = 4;
+            this.label1.Height = 1;
+            this.label1.X = 0;
+            this.label1.Y = 0;
+            tabview1Tab1.View.Add(this.label1);
+            tabview1.AddTab(tabview1Tab1, false);
+            Terminal.Gui.TabView.Tab tabview1Tab2;
+            tabview1Tab2 = new Terminal.Gui.TabView.Tab("Tab2", new View());
+            tabview1Tab2.View.Width = Dim.Fill();
+            tabview1Tab2.View.Height = Dim.Fill();
             this.label2 = new Terminal.Gui.Label();
             this.label2.Data = "label2";
             this.label2.Text = "Heya";
-            this.label2.Width = Dim.Fill(10);
+            this.label2.Width = 4;
             this.label2.Height = 1;
-            this.label2.X = Pos.Bottom(lblTitle) + 3;
-            this.label2.Y = Pos.Bottom(lblTitle) + 1;
-            this.Add(this.label2);
-            this.radiogroup1 = new Terminal.Gui.RadioGroup();
-            this.radiogroup1.Data = "radiogroup1";
-            this.radiogroup1.Text = "";
-            this.radiogroup1.Width = 11;
-            this.radiogroup1.Height = 2;
-            this.radiogroup1.X = 23;
-            this.radiogroup1.Y = 11;
-            this.radiogroup1.RadioLabels = new NStack.ustring[] {
-                    "Option 1",
-                    "Option 2"};
-            this.Add(this.radiogroup1);
+            this.label2.X = 0;
+            this.label2.Y = 0;
+            tabview1Tab2.View.Add(this.label2);
+            tabview1.AddTab(tabview1Tab2, false);
+            this.Add(this.tabview1);
         }
     }
 }

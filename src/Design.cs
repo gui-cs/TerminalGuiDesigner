@@ -64,16 +64,16 @@ public class Design
         {
             logger.Info($"Found subView of Type '{subView.GetType()}'");
 
-            if(subView.Data is string nameOrSerializedDesign)
+            if(subView.Data is string name)
             {
-                subView.Data = CreateSubControlDesign(SourceCode,nameOrSerializedDesign, subView);
+                subView.Data = CreateSubControlDesign(SourceCode,name, subView);
             }
             
             CreateSubControlDesigns(subView);
         }
     }
 
-    public Design CreateSubControlDesign(SourceCodeFile sourceCode, string nameOrSerializedDesign, View subView)
+    public Design CreateSubControlDesign(SourceCodeFile sourceCode, string name, View subView)
     {
         // HACK: if you don't pull the label out first it complains that you cant set Focusable to true
         // on the Label because its super is not focusable :(
@@ -107,19 +107,10 @@ public class Design
             super.Add(subView);
         }
 
-        return new Design(sourceCode,nameOrSerializedDesign, subView);
+        return new Design(sourceCode,name, subView);
     }
 
 
-    /// <summary>
-    /// Returns all designs in subviews of this control
-    /// </summary>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    public IEnumerable<Design> GetAllDesigns()
-    {
-        return GetAllDesigns(View);
-    }
 
 
     /// <summary>
@@ -251,9 +242,43 @@ public class Design
         }
     }
 
+    /// <summary>
+    /// Gets all Designs in the current scope.  Starting from the root
+    /// parent of this on down.  Gets everyone... Everyone? EVERYONE!!!
+    /// </summary>
+    public IEnumerable<Design> GetAllDesigns()
+    {
+        var root = GetRootDesign();
+        
+        // Return the root design
+        yield return root;
+        
+        // And all child designs
+        foreach(var d in GetAllChildDesigns(root.View))
+        {
+            yield return d;
+        }
+    }
 
+    /// <summary>
+    /// Returns the topmost view above this which has an associated
+    /// Design or this if there are no Design above this.
+    /// <summary/>
+    public Design GetRootDesign()
+    {
+        var toReturn = this;
+        var v = View;
 
-    private IEnumerable<Design> GetAllDesigns(View view)
+        while(v.SuperView != null)
+        {
+            v = v.SuperView;
+            toReturn = v.Data as Design ?? toReturn;
+        }
+
+        return toReturn;
+    }
+
+    private IEnumerable<Design> GetAllChildDesigns(View view)
     {
         List<Design> toReturn = new List<Design>();
 
@@ -266,7 +291,7 @@ public class Design
 
             // even if this subview isn't designable there might be designable ones further down
             // e.g. a ContentView of a Window
-            toReturn.AddRange(GetAllDesigns(subView));
+            toReturn.AddRange(GetAllChildDesigns(subView));
         }
 
         return toReturn;

@@ -48,13 +48,13 @@ public class LabelTests
 
         OperationManager.Instance.Do(new SetPropertyOperation(lblDesign, xProp, xProp.GetValue(), Pos.At(10)));
 
-        var snipPercent50 = new SnippetProperty(xProp, $"Pos.Percent(50)", Pos.Percent(50));
-        var snipPercent30 = new SnippetProperty(xProp, $"Pos.Percent(30)", Pos.Percent(30));
+        var percent50 = Pos.Percent(50);
+        var percent30 = Pos.Percent(30);
 
-        OperationManager.Instance.Do(new SetPropertyOperation(lblDesign, xProp, xProp.GetValue(), snipPercent50));
+        OperationManager.Instance.Do(new SetPropertyOperation(lblDesign, xProp, xProp.GetValue(), percent50));
         OperationManager.Instance.Do(new SetPropertyOperation(lblDesign, xProp, xProp.GetValue(), Pos.At(10)));
-        OperationManager.Instance.Do(new SetPropertyOperation(lblDesign, xProp, xProp.GetValue(), snipPercent30));
-        OperationManager.Instance.Do(new SetPropertyOperation(lblDesign, xProp, xProp.GetValue(), snipPercent50));
+        OperationManager.Instance.Do(new SetPropertyOperation(lblDesign, xProp, xProp.GetValue(), percent30));
+        OperationManager.Instance.Do(new SetPropertyOperation(lblDesign, xProp, xProp.GetValue(), percent50));
         OperationManager.Instance.Do(new SetPropertyOperation(lblDesign, xProp, xProp.GetValue(), Pos.At(10)));
 
         OperationManager.Instance.Undo();

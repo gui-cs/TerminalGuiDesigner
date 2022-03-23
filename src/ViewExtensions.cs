@@ -9,6 +9,9 @@ public static class ViewExtensions
     /// Returns the subviews of <paramref name="v"/> skipping out any
     /// public views used by the Terminal.Gui API e.g. the 'ContentView'
     /// invisible sub view of the 'Window' class
+    /// <para>
+    /// Also unpacks Tabs in a <see cref="TabView"/>> to return all of those too
+    /// </para>
     /// </summary>
     /// <param name="v"></param>
     /// <returns></returns>
@@ -18,6 +21,12 @@ public static class ViewExtensions
         {
             return w.Subviews[0].Subviews;
         }
+
+        if(v is TabView t)
+        {
+            return t.Tabs.Select(tab=>tab.View).ToList();
+        }
+
         return v.Subviews;
     }
 

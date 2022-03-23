@@ -68,4 +68,29 @@ class TabViewTests
 
         Assert.AreEqual(label.Text,tabInLabel.Text);
     }
+
+    [Test]
+    public void TestGetAllDesigns_TabView()
+    {
+        var tv = new TabView();
+
+        var source = new SourceCodeFile(new FileInfo("yarg.cs"));
+
+        var lbl1 = new Design(source,"lbl1",new Label("fff"));
+        lbl1.View.Data = lbl1;
+
+        var lbl2 = new Design(source,"lbl2",new Label("ddd"));
+        lbl2.View.Data = lbl2;
+
+        tv.AddTab(new TabView.Tab("Yay",lbl1.View),true);
+        tv.AddTab(new TabView.Tab("Yay",lbl2.View),false);
+    
+        var tvDesign = new Design(source,"tv",tv);
+
+        Assert.Contains(tvDesign,tvDesign.GetAllDesigns().ToArray());
+        Assert.Contains(lbl1,tvDesign.GetAllDesigns().ToArray());
+        Assert.Contains(lbl2,tvDesign.GetAllDesigns().ToArray());
+
+        Assert.AreEqual(3,tvDesign.GetAllDesigns().Count(),$"Expected only 3 Designs but they were {string.Join(",",tvDesign.GetAllDesigns())}");
+    }
 }
