@@ -31,7 +31,7 @@ namespace TerminalGuiDesigner.UI.Windows
 
             X = Pos.Percent(25);
             Y = Pos.Percent(25);
-            Width = Dim.Percent(50);
+            Width = Dim.Percent(75);
             Height = 14;
 
             Title = "Pos Designer";
@@ -42,26 +42,61 @@ namespace TerminalGuiDesigner.UI.Windows
             Cancelled = true;
             Modal = true;
 
-            ddType.SetSource(Enum.GetValues(typeof(PosType)).Cast<Enum>().ToList());
+            var siblings = Design.GetSiblings().ToList();
 
-            ddType.SelectedItemChanged += DdType_SelectedItemChanged;
-            ddRelativeTo.SetSource(Design.GetSiblings().ToList());
+            ddRelativeTo.SetSource(siblings);
+
+            var val = (Pos)property.GetValue();
+            if(val.GetPosType(siblings,out var type,out var value,out var relativeTo,out var side, out var offset))
+            {
+                switch(type)
+                {
+                    case PosType.Absolute:
+                        rgPosType.SelectedItem = 0;
+                        break;
+                    case PosType.Percent:
+                        rgPosType.SelectedItem = 1;
+                        break;
+                    case PosType.Relative:
+                        rgPosType.SelectedItem = 2;
+                        
+                        // TODO: once the current 'main' branch is published to nuget package we can do this
+                        //ddRelativeTo.SelectedItem = siblings.IndexOf(relativeTo);
+                        break;
+                }
+
+                tbValue.Text = value.ToString();
+                tbOffset.Text = offset.ToString();
+            }
+
+            SetupForCurrentPosType();
+
+            rgPosType.SelectedItemChanged += DdType_SelectedItemChanged;
 
             ddSide.SetSource(Enum.GetValues(typeof(Side)).Cast<Enum>().ToList());
         }
 
-        private void DdType_SelectedItemChanged(ListViewItemEventArgs obj)
+        private void DdType_SelectedItemChanged(RadioGroup.SelectedItemChangedArgs obj)
         {
+            SetupForCurrentPosType();            
+        }
+
+        private void SetupForCurrentPosType()
+        {
+            
             switch(GetPosType())
             {
                 case PosType.Anchor:
                 case PosType.Percent:
-                    ddRelativeTo.Visible = false;
                     lblRelativeTo.Visible = false;
-                    ddSide.Visible = false;
+                    ddRelativeTo.Visible = false;
                     lblSide.Visible = false;
+                    ddSide.Visible = false;
+                    
+                    lblValue.Y = 0;
                     lblValue.Visible = true;
                     tbValue.Visible = true;
+                    
                     lblOffset.Visible = true;
                     tbOffset.Visible = true;
                     SetNeedsDisplay();
@@ -69,21 +104,30 @@ namespace TerminalGuiDesigner.UI.Windows
                 case PosType.Absolute:
                     ddRelativeTo.Visible = false;
                     lblRelativeTo.Visible = false;
-                    ddSide.Visible = false;
                     lblSide.Visible = false;
+                    ddSide.Visible = false;
+
+                    lblValue.Y = 0;
                     lblValue.Visible = true;
                     tbValue.Visible = true;
+
                     lblOffset.Visible = false;
                     tbOffset.Visible = false;
                     SetNeedsDisplay();
                     break;
                 case PosType.Relative:
-                    ddRelativeTo.Visible = true;
+                    lblRelativeTo.Y = 0;
                     lblRelativeTo.Visible = true;
-                    ddSide.Visible = true;
+                    ddRelativeTo.Visible = true;
+
+                    lblSide.Y = 2;
                     lblSide.Visible = true;
+                    ddSide.Visible = true;
+
                     lblValue.Visible = false;
                     tbValue.Visible = false;
+
+                    lblOffset.Y = 4;
                     lblOffset.Visible = true;
                     tbOffset.Visible = true;
                     SetNeedsDisplay();
@@ -91,7 +135,6 @@ namespace TerminalGuiDesigner.UI.Windows
 
                 default: throw new ArgumentOutOfRangeException();
             }
-            
         }
 
         private void BtnCancel_Clicked()
@@ -112,13 +155,7 @@ namespace TerminalGuiDesigner.UI.Windows
             // pick what type of Pos they want
             var type = GetPosType();
 
-            if(type == null)
-            {
-                result = null;
-                return false;
-            }
-
-            switch (type.Value)
+            switch (type)
             {
                 case PosType.Absolute:
                     return BuildPosAbsolute(out result);
@@ -133,10 +170,9 @@ namespace TerminalGuiDesigner.UI.Windows
             }
         }
 
-        private PosType? GetPosType()
+        private PosType GetPosType()
         {
-            
-            return ddType.SelectedItem == -1 ? null : (PosType)ddType.Source.ToList()[ddType.SelectedItem];
+            return Enum.Parse<PosType>(rgPosType.RadioLabels[rgPosType.SelectedItem].ToString());
         }
 
 
