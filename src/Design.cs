@@ -50,7 +50,7 @@ public class Design
         SourceCode = sourceCode;
         FieldName = fieldName;
 
-        DeSerializeExtraProperties(fieldName);
+        _designableProperties = new List<Property>(LoadDesignableProperties());
     }
 
     public void CreateSubControlDesigns()
@@ -118,11 +118,6 @@ public class Design
     /// </summary>
     public IEnumerable<Property> GetDesignableProperties()
     {
-        if(_designableProperties == null)
-        {
-            _designableProperties = new List<Property>(LoadDesignableProperties());
-        }
-
         return _designableProperties;
     }
 
@@ -130,18 +125,16 @@ public class Design
     {
         yield return new NameProperty(this);
         yield return new Property(this,View.GetActualTextProperty());
-
-        var codeToView = new CodeToView(SourceCode);
         
-        yield return new Property(this, View.GetType().GetProperty(nameof(View.Width)));
-        yield return new Property(this, View.GetType().GetProperty(nameof(View.Height)));
+        yield return CreateProperty(nameof(View.Width));
+        yield return CreateProperty(nameof(View.Height));
 
-        yield return new Property(this, View.GetType().GetProperty(nameof(View.X)));
-        yield return new Property(this, View.GetType().GetProperty(nameof(View.Y)));
+        yield return CreateProperty(nameof(View.X));
+        yield return CreateProperty(nameof(View.Y));
 
         if (View is Button)
         {
-            yield return new Property(this, typeof(Button).GetProperty(nameof(Button.IsDefault)));
+            yield return CreateProperty(nameof(Button.IsDefault));
         }
         
         if (View is TableView tv)
@@ -158,7 +151,8 @@ public class Design
         
         if (View is TabView tabView)
         {
-            yield return new Property(this, typeof(TabView).GetProperty(nameof(TabView.MaxTabTextWidth)));
+            yield return CreateProperty(nameof(TabView.MaxTabTextWidth));
+
             yield return new Property(this, typeof(TabStyle).GetProperty(nameof(TabStyle.ShowBorder)), nameof(TabView.Style), tabView.Style);
             yield return new Property(this, typeof(TabStyle).GetProperty(nameof(TabStyle.ShowTopLine)), nameof(TabView.Style), tabView.Style);
             yield return new Property(this, typeof(TabStyle).GetProperty(nameof(TabStyle.TabsOnBottom)), nameof(TabView.Style), tabView.Style);
@@ -166,8 +160,14 @@ public class Design
 
         if(View is RadioGroup radioGroup)
         {
-            yield return new Property(this,typeof(RadioGroup).GetProperty(nameof(RadioGroup.RadioLabels)));
+            yield return CreateProperty(nameof(RadioGroup.RadioLabels));
         }
+    }
+
+    private Property CreateProperty(string name)
+    {
+        return new Property(this,View.GetType().GetProperty(name)
+            ?? throw new Exception($"Could not find expected Property '{name}' on View of Type '{View.GetType()}'"));
     }
 
 
@@ -191,32 +191,6 @@ public class Design
             yield return new AddTabOperation(this);
             yield return new RemoveTabOperation(this);
             yield return new RenameTabOperation(this);
-        }
-
-    }
-
-    /// <summary>
-    /// Returns the <see cref="SnippetProperties"/> if any for <paramref name="property"/>
-    /// </summary>
-    /// <param name="property"></param>
-    /// <returns></returns>
-    private Property ToSnip(Property prop, CodeToView rosyln)
-    {
-        var rhsCode = rosyln.GetRhsCodeFor(this, prop);
-
-        // there may be some text in the .Designer.cs for this field so lets store that
-        // that way we show "Dim.Bottom(myview)" instead of "Dim.Combine(Dim.Absolute(mylabel()), Dim.Absolute....) etc
-        
-        return  new SnippetProperty(prop,rhsCode,prop.GetValue());
-    }
-
-    public void DeSerializeExtraProperties(string fieldName)
-    {
-        // no extra properties because we dont have a .Designer.cs! 
-        // maybe we are half way through creating a new file pair or something
-        if(!SourceCode.DesignerFile.Exists)
-        {
-            return;
         }
 
     }
