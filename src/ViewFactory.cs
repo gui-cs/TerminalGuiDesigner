@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using NStack;
 using Terminal.Gui;
+using static Terminal.Gui.Border;
 
 namespace TerminalGuiDesigner;
 
@@ -81,5 +82,19 @@ public class ViewFactory
         tabView.AddTab(new TabView.Tab("Tab2", new View{Width = Dim.Fill(),Height=Dim.Fill()}),false);
 
         return tabView;
+    }
+
+    internal IEnumerable<Type> GetSupportedViews()
+    {
+        Type[] exclude = new Type[]{
+            typeof(Toplevel),
+             typeof(Window),
+             typeof(ToplevelContainer)};
+
+        return typeof(View).Assembly.DefinedTypes.Where(t => 
+                typeof(View).IsAssignableFrom(t) && 
+                !t.IsInterface && !t.IsAbstract && t.IsPublic
+            ).Except(exclude)
+            .OrderBy(t=>t.Name).ToArray();
     }
 }

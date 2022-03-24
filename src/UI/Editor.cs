@@ -349,12 +349,12 @@ Ctrl+Y - Redo";
 
         // what is the currently selected design
         var toAddTo = GetMostFocused(_viewBeingEdited.View)?.GetNearestContainerDesign() ?? _viewBeingEdited;
-        
-        var selectable = typeof(View).Assembly.DefinedTypes.Where(t => typeof(View).IsAssignableFrom(t)).ToArray();
 
+        var factory = new ViewFactory();
+        var selectable = factory.GetSupportedViews().ToArray();
+            
         if (Modals.Get("Type of Control", "Add", true, selectable, t => t.Name, false, out Type selected))
         {
-            var factory = new ViewFactory();
             var instance = factory.Create(selected);
 
             OperationManager.Instance.Do(

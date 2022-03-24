@@ -136,6 +136,10 @@ public class Design
         {
             yield return CreateProperty(nameof(Button.IsDefault));
         }
+        if (View is CheckBox)
+        {
+            yield return CreateProperty(nameof(CheckBox.Checked));
+        }
         
         if (View is TableView tv)
         {

@@ -22,6 +22,8 @@ public class AddViewOperation : Operation
 
         var v = GetViewToAddTo();
         v.Add(add);
+
+        add.SetFocus();
         v.SetNeedsDisplay();
     }
 
