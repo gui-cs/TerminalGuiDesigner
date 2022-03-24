@@ -1,0 +1,11 @@
+name: Build, test and package
+
+on: push
+
+jobs:
+  package:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Test
+        run: dotnet test --nologo
