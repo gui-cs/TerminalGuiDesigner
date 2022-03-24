@@ -1,5 +1,8 @@
 # Terminal Gui Designer
 
+![example workflow](https://github.com/tznind/TerminalGuiDesigner/actions/workflows/build.yml/badge.svg)
+
+
 Cross platform designer for [Terminal.Gui](https://github.com/migueldeicaza/gui.cs) applications.
 
 This project is in pre-pre-alpha.  It currently supports:
