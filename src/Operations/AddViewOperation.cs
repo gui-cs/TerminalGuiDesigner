@@ -23,7 +23,10 @@ public class AddViewOperation : Operation
         var v = GetViewToAddTo();
         v.Add(add);
 
-        add.SetFocus();
+        if(Application.Driver != null){
+            add.SetFocus();
+        }
+
         v.SetNeedsDisplay();
     }
 
