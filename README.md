@@ -28,6 +28,7 @@ Features to add are:
     - [ ] Data Tables
     - [ ] TreeView
     - [x] Tab View
+    - [ ] Build Top Bar Menus
 - [ ] Create Events e.g. MyButton_OnClick
 - [ ] Mutli select (select many views and hit delete or drag move)
 - [ ] Copy/Paste selected view(s)
