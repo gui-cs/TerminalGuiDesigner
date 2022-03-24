@@ -39,25 +39,27 @@ Ctrl+Y - Redo";
     {
         Application.Init();
 
-        try
+        if(fileToLoad != null)
         {
-            // TODO: This default is really just for dev purposes, once released most people wont have MyWindow.cs
-            var toLoadOrCreate = new FileInfo(fileToLoad ?? "MyWindow.cs");
+            try
+            {
+                var toLoadOrCreate = new FileInfo(fileToLoad);
 
-            if(toLoadOrCreate.Exists)
-            {
-                Open(toLoadOrCreate);
+                if(toLoadOrCreate.Exists)
+                {
+                    Open(toLoadOrCreate);
+                }
+                else
+                {
+                    New(toLoadOrCreate);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                New(toLoadOrCreate);
+                MessageBox.ErrorQuery("Error Loading Designer", ex.Message, "Ok");
+                Application.Shutdown();
+                return;
             }
-        }
-        catch (Exception ex)
-        {
-            MessageBox.ErrorQuery("Error Loading Designer", ex.Message, "Ok");
-            Application.Shutdown();
-            return;
         }
 
         Application.RootMouseEvent += (m) =>
@@ -75,7 +77,6 @@ Ctrl+Y - Redo";
 
         Application.Run(this);
         Application.Shutdown();
-
     }
 
     private void HandleMouse(MouseEvent m)
