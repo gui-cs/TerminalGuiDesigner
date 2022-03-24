@@ -24,7 +24,7 @@ public static class ViewExtensions
 
         if(v is TabView t)
         {
-            return t.Tabs.Select(tab=>tab.View).ToList();
+            return t.Tabs.Select(tab=>tab.View).Where(v=>v!=null).ToList();
         }
 
         return v.Subviews;
