@@ -27,13 +27,13 @@ Features to add are:
     - [ ] Color Schemes
     - [ ] Data Tables
     - [ ] TreeView
-    - [ ] Tab View
+    - [x] Tab View
 - [ ] Create Events e.g. MyButton_OnClick
 - [ ] Mutli select (select many views and hit delete or drag move)
 - [ ] Copy/Paste selected view(s)
 - [ ] Add views to subviews
 - [ ] Comprehensive Tests
-- [ ] CI
+- [x] CI
 
 Class Diagram
 -------------------------------
