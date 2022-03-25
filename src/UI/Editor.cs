@@ -49,10 +49,6 @@ Ctrl+Y - Redo";
                 {
                     Open(toLoadOrCreate);
                 }
-                else
-                {
-                    New(toLoadOrCreate);
-                }
             }
             catch (Exception ex)
             {
@@ -301,6 +297,12 @@ Ctrl+Y - Redo";
 
     private void New()
     {
+
+        if(!Modals.Get<Type>("Create New View","Ok",new Type[]{typeof(Window),typeof(View),typeof(Dialog)},out var selected))
+        {
+            return;
+        }
+
         var ofd = new SaveDialog("New", $"Class file",
             new List<string>(new[] { ".cs" }))
         {
@@ -313,7 +315,7 @@ Ctrl+Y - Redo";
         {
             try
             {
-                New(new FileInfo(ofd.FilePath.ToString()));
+                New(new FileInfo(ofd.FilePath.ToString()),selected);
             }
             catch (Exception ex)
             {
@@ -323,18 +325,12 @@ Ctrl+Y - Redo";
         }
     }
 
-    private void New(FileInfo toOpen)
+    private void New(FileInfo toOpen, Type typeToCreate)
     {
         var viewToCode = new ViewToCode();
 
-        if(Modals.Get<Type>("Create New View","Ok",new Type[]{typeof(Window),typeof(View),typeof(Dialog)},out var selected))
-        {
-
-            var design = viewToCode.GenerateNewView(toOpen, "YourNamespace",selected, out _currentDesignerFile);
-            ReplaceViewBeingEdited(design);
-
-        }
-
+        var design = viewToCode.GenerateNewView(toOpen, "YourNamespace",typeToCreate, out _currentDesignerFile);
+        ReplaceViewBeingEdited(design);
     }
 
     private void ReplaceViewBeingEdited(Design design)
