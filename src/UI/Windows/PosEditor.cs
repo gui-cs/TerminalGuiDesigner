@@ -29,10 +29,10 @@ namespace TerminalGuiDesigner.UI.Windows
             Design = design;
             Property = property;
 
-            X = Pos.Percent(25);
-            Y = Pos.Percent(25);
-            Width = Dim.Percent(75);
-            Height = 14;
+            X = Pos.Center()-21;
+            Y = Pos.Center()-7;
+            Width = 43;
+            Height = 12;
 
             Title = "Pos Designer";
             Border.BorderStyle = BorderStyle.Double;
@@ -93,12 +93,17 @@ namespace TerminalGuiDesigner.UI.Windows
                     lblSide.Visible = false;
                     ddSide.Visible = false;
                     
-                    lblValue.Y = 0;
+                    lblValue.Y = 1;
                     lblValue.Visible = true;
                     tbValue.Visible = true;
                     
+                    lblOffset.Y = 3;
                     lblOffset.Visible = true;
+                    Remove(tbOffset);
+                    tbOffset.Y = 3;
                     tbOffset.Visible = true;
+                    Add(tbOffset);
+
                     SetNeedsDisplay();
                     break;
                 case PosType.Absolute:
@@ -107,7 +112,7 @@ namespace TerminalGuiDesigner.UI.Windows
                     lblSide.Visible = false;
                     ddSide.Visible = false;
 
-                    lblValue.Y = 0;
+                    lblValue.Y = 1;
                     lblValue.Visible = true;
                     tbValue.Visible = true;
 
@@ -116,18 +121,19 @@ namespace TerminalGuiDesigner.UI.Windows
                     SetNeedsDisplay();
                     break;
                 case PosType.Relative:
-                    lblRelativeTo.Y = 0;
+                    lblRelativeTo.Y = 1;
                     lblRelativeTo.Visible = true;
+                    ddRelativeTo.Y = 1;
                     ddRelativeTo.Visible = true;
 
-                    lblSide.Y = 2;
+                    lblSide.Y = 3;
                     lblSide.Visible = true;
                     ddSide.Visible = true;
 
                     lblValue.Visible = false;
                     tbValue.Visible = false;
 
-                    lblOffset.Y = 4;
+                    lblOffset.Y = 5;
                     lblOffset.Visible = true;
                     tbOffset.Visible = true;
                     SetNeedsDisplay();

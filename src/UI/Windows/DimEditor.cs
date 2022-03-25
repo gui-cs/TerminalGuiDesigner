@@ -27,10 +27,10 @@ namespace TerminalGuiDesigner.UI.Windows
             Design = design;
             Property = property;
 
-            X = Pos.Percent(25);
-            Y = Pos.Percent(25);
-            Width = Dim.Percent(50);
-            Height = 10;
+            X = Pos.Center()-20;
+            Y = Pos.Center()-5;
+            Width = 40;
+            Height = 9;
 
             Title = "Dim Designer";
             Border.BorderStyle = BorderStyle.Double;

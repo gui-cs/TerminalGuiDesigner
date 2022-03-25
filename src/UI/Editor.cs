@@ -14,7 +14,7 @@ public class Editor : Toplevel
     private SourceCodeFile _currentDesignerFile;
     private bool enableDrag = true;
     DragOperation dragOperation = null;
-
+    bool _editting = false;
     const string Help = @"F1/Ctrl+H - Show this help
 F2 - Add Control
 F3 - Toggle mouse dragging on/off
@@ -64,6 +64,9 @@ Ctrl+Y - Redo";
 
         Application.RootMouseEvent += (m) =>
         {
+            if(_editting)
+                return;
+
             try
             {
                 HandleMouse(m);
@@ -129,8 +132,13 @@ Ctrl+Y - Redo";
         if (!IsCurrentTop)
             return false;
 
+        if(_editting)
+            return false;
+
         try
         {
+            _editting = true;
+
             switch (keyEvent.Key)
             {
                 case Key.F1:
@@ -200,6 +208,10 @@ Ctrl+Y - Redo";
         catch (System.Exception ex)
         {
             ExceptionViewer.ShowException("Error",ex);
+        }
+        finally
+        {
+            _editting = false;
         }
 
         
