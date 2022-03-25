@@ -17,14 +17,14 @@ class TabViewTests
         var viewToCode = new ViewToCode();
 
         var file = new FileInfo("TestRoundTrip_PreserveTabs.cs");
-        var designOut = viewToCode.GenerateNewWindow(file, "YourNamespace", out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace",typeof(Dialog), out var sourceCode);
 
         var factory = new ViewFactory();
         var tvOut = factory.Create(typeof(TabView));
 
         OperationManager.Instance.Do(new AddViewOperation(sourceCode, tvOut, designOut, "myTabview"));
 
-        viewToCode.GenerateDesignerCs(designOut.View, sourceCode);
+        viewToCode.GenerateDesignerCs(designOut.View, sourceCode,typeof(Dialog));
 
         var tabOut = designOut.View.GetActualSubviews().OfType<TabView>().Single();
 
@@ -46,7 +46,7 @@ class TabViewTests
         var viewToCode = new ViewToCode();
 
         var file = new FileInfo("TestAddingSubcontrolToTab.cs");
-        var designOut = viewToCode.GenerateNewWindow(file, "YourNamespace", out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace",typeof(Dialog), out var sourceCode);
 
         var factory = new ViewFactory();
         var tvOut = (TabView)factory.Create(typeof(TabView));
@@ -58,7 +58,7 @@ class TabViewTests
         OperationManager.Instance.Do(new AddViewOperation(sourceCode, label, (Design)tvOut.Data, "myLabel"));
         Assert.Contains(label, tvOut.SelectedTab.View.Subviews.ToArray(),"Expected currently selected tab to have the new label but it did not");
 
-        viewToCode.GenerateDesignerCs(designOut.View, sourceCode);
+        viewToCode.GenerateDesignerCs(designOut.View, sourceCode,typeof(Dialog));
 
         var codeToView = new CodeToView(sourceCode);
         var designBackIn = codeToView.CreateInstance();

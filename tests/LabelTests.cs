@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using Terminal.Gui;
+using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 
@@ -14,8 +15,11 @@ public class LabelTests
     {
         var file = new FileInfo("Test_ChangingLabelX.cs");
         var viewToCode = new ViewToCode();
-        var designOut = viewToCode.GenerateNewWindow(file, "YourNamespace", out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window),out var sourceCode);
 
+        var op = new AddViewOperation(new SourceCodeFile(file),new Label("Hello World"),designOut,"myLabel");
+        op.Do();
+        
         // the Hello world label
         var lblDesign = designOut.GetAllDesigns().Single(d => d.View is Label);
         var xProp = lblDesign.GetDesignableProperties().Single(p => p.PropertyInfo.Name.Equals("X"));
@@ -37,9 +41,11 @@ public class LabelTests
     {
         var file = new FileInfo("Test_ChangingLabelX.cs");
         var viewToCode = new ViewToCode();
-        var designOut = viewToCode.GenerateNewWindow(file, "YourNamespace", out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace",typeof(Window), out var sourceCode);
 
-        
+        var op = new AddViewOperation(new SourceCodeFile(file),new Label("Hello World"),designOut,"myLabel");
+        op.Do();
+
         // the Hello world label
         var lblDesign = designOut.GetAllDesigns().Single(d => d.View is Label);
         var xProp = lblDesign.GetDesignableProperties().Single(p => p.PropertyInfo.Name.Equals("X"));

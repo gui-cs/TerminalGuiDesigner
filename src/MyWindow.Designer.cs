@@ -12,7 +12,7 @@ namespace YourNamespace {
     using Terminal.Gui;
     
     
-    public partial class MyWindow {
+    public partial class MyWindow : Terminal.Gui.Window {
         
         private Terminal.Gui.TabView tabview1;
         

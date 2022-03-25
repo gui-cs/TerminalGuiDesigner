@@ -21,7 +21,7 @@ public class ViewToCode
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
     /// <exception cref="NotImplementedException"></exception>
-    public Design GenerateNewWindow(FileInfo csFilePath, string namespaceName, out SourceCodeFile sourceFile)
+    public Design GenerateNewView(FileInfo csFilePath, string namespaceName,Type viewType, out SourceCodeFile sourceFile)
     {
         if (csFilePath.Name.EndsWith(SourceCodeFile.ExpectedExtension))
         {
@@ -32,18 +32,15 @@ public class ViewToCode
         var className = Path.GetFileNameWithoutExtension(csFilePath.Name);
         sourceFile = new SourceCodeFile(csFilePath);
 
-        var csharpCode = GetGenerateNewWindowCode(className, namespaceName);
+        var csharpCode = GetGenerateNewViewCode(className, namespaceName);
         File.WriteAllText(sourceFile.CsFile.FullName, csharpCode);
 
-        var w = new Window();
-        var lbl = new Label("Hello World");
-        lbl.Data = "label1"; // field name in the class
-        w.Add(lbl);
+        var view = (View)(Activator.CreateInstance(viewType) ?? throw new Exception($"Could not create instance of Type '{viewType}' ('Activator.CreateInstance' returned null)"));
 
-        var design = new Design(sourceFile, Design.RootDesignName, w);
+        var design = new Design(sourceFile, Design.RootDesignName, view);
         design.CreateSubControlDesigns();
 
-        GenerateDesignerCs(w, sourceFile);
+        GenerateDesignerCs(view, sourceFile,viewType);
 
         return design;
     }
@@ -55,8 +52,9 @@ public class ViewToCode
     /// </summary>
     /// <param name="className"></param>
     /// <param name="namespaceName"></param>
+    /// <param name="viewType"></param>
     /// <returns></returns>
-    public static string GetGenerateNewWindowCode(string className, string namespaceName)
+    public static string GetGenerateNewViewCode(string className, string namespaceName)
     {
         string indent = "    ";
 
@@ -68,7 +66,6 @@ public class ViewToCode
 
         CodeTypeDeclaration class1 = new CodeTypeDeclaration(className);
         class1.IsPartial = true;
-        class1.BaseTypes.Add(new CodeTypeReference("Window")); //TODO: let user create things that aren't windows
 
         ns.Types.Add(class1);
 
@@ -94,7 +91,7 @@ public class ViewToCode
         }
     }
 
-    public void GenerateDesignerCs(View forView, SourceCodeFile file)
+    public void GenerateDesignerCs(View forView, SourceCodeFile file,Type viewType)
     {
         var rosylyn = new CodeToView(file);
 
@@ -108,6 +105,7 @@ public class ViewToCode
 
         CodeTypeDeclaration class1 = new CodeTypeDeclaration(rosylyn.ClassName);
         class1.IsPartial = true;
+        class1.BaseTypes.Add(new CodeTypeReference(viewType));
 
         var initMethod = new CodeMemberMethod();
         initMethod.Name = SourceCodeFile.InitializeComponentMethodName;

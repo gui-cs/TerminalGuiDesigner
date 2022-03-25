@@ -12,7 +12,7 @@ namespace TerminalGuiDesigner.UI.Windows {
     using Terminal.Gui;
     
     
-    public partial class PosEditor {
+    public partial class PosEditor : Window {
         
         private Terminal.Gui.RadioGroup rgPosType;
         

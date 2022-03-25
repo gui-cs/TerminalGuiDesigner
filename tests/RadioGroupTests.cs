@@ -17,14 +17,14 @@ class RadioGroupTests
         var viewToCode = new ViewToCode();
 
         var file = new FileInfo("TestRoundTrip_PreserveRadioGroups.cs");
-        var designOut = viewToCode.GenerateNewWindow(file, "YourNamespace", out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace",typeof(View), out var sourceCode);
 
         var factory = new ViewFactory();
         var rgOut = factory.Create(typeof(RadioGroup));
 
         OperationManager.Instance.Do(new AddViewOperation(sourceCode, rgOut, designOut, "myRadioGroup"));
 
-        viewToCode.GenerateDesignerCs(designOut.View, sourceCode);
+        viewToCode.GenerateDesignerCs(designOut.View, sourceCode,typeof(View));
 
         var tabOut = designOut.View.GetActualSubviews().OfType<RadioGroup>().Single();
 

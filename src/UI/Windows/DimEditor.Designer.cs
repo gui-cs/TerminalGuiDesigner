@@ -12,7 +12,7 @@ namespace TerminalGuiDesigner.UI.Windows {
     using Terminal.Gui;
     
     
-    public partial class DimEditor {
+    public partial class DimEditor : Window{
         
         private Terminal.Gui.RadioGroup rgDimType;
         

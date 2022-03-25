@@ -326,9 +326,15 @@ Ctrl+Y - Redo";
     private void New(FileInfo toOpen)
     {
         var viewToCode = new ViewToCode();
-        var design = viewToCode.GenerateNewWindow(toOpen, "YourNamespace", out _currentDesignerFile);
 
-        ReplaceViewBeingEdited(design);
+        if(Modals.Get<Type>("Create New View","Ok",new Type[]{typeof(Window),typeof(View),typeof(Dialog)},out var selected))
+        {
+
+            var design = viewToCode.GenerateNewView(toOpen, "YourNamespace",selected, out _currentDesignerFile);
+            ReplaceViewBeingEdited(design);
+
+        }
+
     }
 
     private void ReplaceViewBeingEdited(Design design)
@@ -350,8 +356,10 @@ Ctrl+Y - Redo";
     private void Save()
     {
         var viewToCode = new ViewToCode();
+
         viewToCode.GenerateDesignerCs(
-            _viewBeingEdited.View, _currentDesignerFile);
+            _viewBeingEdited.View, _currentDesignerFile,
+            _viewBeingEdited.View.GetType().BaseType ?? throw new Exception("View being edited had no base class"));
     }
     private void ShowAddViewWindow()
     {

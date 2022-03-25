@@ -95,12 +95,14 @@ public class CodeToView
 
     public Assembly CompileAssembly()
     {
-        // the user could have put all kinds of stuff into their MyWindow.cs including references to other Types and
-        // other things so lets just get what it would be if we had outputted it fresh out of the oven.
-        var csTree = (CSharpSyntaxTree)CSharpSyntaxTree.ParseText(ViewToCode.GetGenerateNewWindowCode(ClassName, Namespace));
-
         // All the changes we really care about that are on disk in the users csproj file
         var designerTree = (CSharpSyntaxTree)CSharpSyntaxTree.ParseText(File.ReadAllText(SourceFile.DesignerFile.FullName));
+
+        var viewType = GetViewType(designerTree);
+        
+        // the user could have put all kinds of stuff into their MyWindow.cs including references to other Types and
+        // other things so lets just get what it would be if we had outputted it fresh out of the oven.
+        var csTree = (CSharpSyntaxTree)CSharpSyntaxTree.ParseText(ViewToCode.GetGenerateNewViewCode(ClassName, Namespace));
 
         var dd = typeof(Enumerable).GetTypeInfo().Assembly.Location;
         var coreDir = Directory.GetParent(dd);
@@ -139,6 +141,31 @@ public class CodeToView
             throw new Exception($"Could not compile {SourceFile.DesignerFile}:" + Environment.NewLine + string.Join(Environment.NewLine, result.Diagnostics));
         }
     }
+
+    /// <summary>
+    /// Returns the Type for the 
+    /// </summary>
+    private Type GetViewType(CSharpSyntaxTree designerTree)
+    {
+        
+        // get the InitializeComponent method
+        var root = designerTree.GetRoot();
+        var classDeclarations = root.DescendantNodes().OfType<ClassDeclarationSyntax>()
+            .ToArray();
+
+        if(classDeclarations.Length != 1)
+        {
+            throw new Exception($"Found {classDeclarations.Length} class declarations");
+        }
+        
+        var baseClass = classDeclarations[0].BaseList?.Types.Single().Type ?? throw new Exception($"Expected .Designer.cs class to have a base class derived from View");
+        var baseTypeName = baseClass.ToString();
+
+        return typeof(View).Assembly.GetTypes().Single(t=>
+            !t.IsInterface && !t.IsAbstract && typeof(View).IsAssignableFrom(t)
+            & ( t.Name.Equals(baseTypeName) || baseTypeName.Equals(t.FullName))) ?? throw new Exception($"Could not find Type '{baseTypeName}'");
+    }
+
     public string GetRhsCodeFor(Design design, Property property)
     {
         if(!SourceFile.DesignerFile.Exists)

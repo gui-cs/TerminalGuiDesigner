@@ -17,14 +17,14 @@ public class TableViewTests
         var viewToCode = new ViewToCode();
 
         var file = new FileInfo("TestRoundTrip_PreserveColumns.cs");
-        var designOut = viewToCode.GenerateNewWindow(file, "YourNamespace", out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace",typeof(Window), out var sourceCode);
 
         var factory = new ViewFactory();
         var tvOut = factory.Create(typeof(TableView));
 
         OperationManager.Instance.Do(new AddViewOperation(sourceCode, tvOut, designOut, "myTable"));
 
-        viewToCode.GenerateDesignerCs(designOut.View, sourceCode);
+        viewToCode.GenerateDesignerCs(designOut.View, sourceCode,typeof(Window));
 
         var tableOut = designOut.View.GetActualSubviews().OfType<TableView>().Single();
 
