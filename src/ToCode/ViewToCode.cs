@@ -28,7 +28,6 @@ public class ViewToCode
             throw new ArgumentException($@"{nameof(csFilePath)} should be a class file not the designer file e.g. c:\MyProj\MyWindow1.cs");
         }
 
-
         var className = Path.GetFileNameWithoutExtension(csFilePath.Name);
         sourceFile = new SourceCodeFile(csFilePath);
 
@@ -42,7 +41,9 @@ public class ViewToCode
 
         GenerateDesignerCs(view, sourceFile,viewType);
 
-        return design;
+
+        var decompiler = new CodeToView(sourceFile);
+        return decompiler.CreateInstance();
     }
 
     /// <summary>

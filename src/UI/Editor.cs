@@ -298,7 +298,7 @@ Ctrl+Y - Redo";
     private void New()
     {
 
-        if(!Modals.Get<Type>("Create New View","Ok",new Type[]{typeof(Window),typeof(View),typeof(Dialog)},out var selected))
+        if(!Modals.Get("Create New View","Ok",new Type[]{typeof(Window),typeof(View),typeof(Dialog)},out var selected))
         {
             return;
         }
@@ -329,7 +329,7 @@ Ctrl+Y - Redo";
     {
         var viewToCode = new ViewToCode();
 
-        var design = viewToCode.GenerateNewView(toOpen, "YourNamespace",typeToCreate, out _currentDesignerFile);
+        var design = viewToCode.GenerateNewView(toOpen, "YourNamespace", typeToCreate, out _currentDesignerFile);
         ReplaceViewBeingEdited(design);
     }
 
