@@ -5,6 +5,7 @@ using TerminalGuiDesigner.UI.Windows;
 using TerminalGuiDesigner.FromCode;
 using TerminalGuiDesigner.ToCode;
 using System.Text.RegularExpressions;
+using Attribute = Terminal.Gui.Attribute;
 
 namespace TerminalGuiDesigner.UI;
 
@@ -15,7 +16,13 @@ public class Editor : Toplevel
     private bool enableDrag = true;
     DragOperation dragOperation = null;
     bool _editting = false;
-    const string Help = @"F1/Ctrl+H - Show this help
+
+    const string HelpWithNothingLoaded = @"F1/Ctrl+H - Show Help
+Ctrl+N - New View
+Ctrl+O - Open a .Designer.cs file";
+
+    const string Help = @"
+Ctrl+S - Save an opened .Designer.cs file
 F2 - Add Control
 F3 - Toggle mouse dragging on/off
 F4/Enter - Properties
@@ -24,9 +31,6 @@ F5 - Edit Root Properties
 Del - Delete selected View
 Shift+Cursor - Move focused View
 Ctrl+Cursor - Move focused View quickly
-Ctrl+O - Open a .Designer.cs file
-Ctrl+S - Save an opened .Designer.cs file
-Ctrl+N - New View
 Ctrl+Q - Quit
 Ctrl+Z - Undo
 Ctrl+Y - Redo";
@@ -73,7 +77,6 @@ Ctrl+Y - Redo";
                 ExceptionViewer.ShowException("Error processing mouse",ex);
             }            
         };
-        ShowHelp();
 
         Application.Run(this);
         Application.Shutdown();
@@ -120,6 +123,26 @@ Ctrl+Y - Redo";
             // push it onto the undo stack
             OperationManager.Instance.Do(dragOperation);
             dragOperation = null;
+        }
+    }
+
+    public override void Redraw(Rect bounds)
+    {
+        base.Redraw(bounds);
+
+        if(_viewBeingEdited != null)
+            return;
+
+        var lines = HelpWithNothingLoaded.Split('\n');
+        var tf = new TextFormatter();
+        var width = Frame.Width;
+        var grey = new Attribute(Color.Black);
+
+        for(int y = 0 ; y < lines.Length ; y++)
+        {
+            tf.Text = lines[y];
+            tf.Alignment = TextAlignment.Centered;
+            tf.Draw(new Rect(0,y+2,width,1),grey,grey);
         }
     }
 
@@ -236,7 +259,7 @@ Ctrl+Y - Redo";
 
     private void ShowHelp()
     {
-        MessageBox.Query("Help", Help, "Ok");
+        MessageBox.Query("Help", HelpWithNothingLoaded + Help, "Ok");
     }
 
     private void MoveControl(int deltaX, int deltaY)
