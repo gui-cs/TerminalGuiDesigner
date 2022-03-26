@@ -84,7 +84,7 @@ Ctrl+Y - Redo";
 
     private void HandleMouse(MouseEvent m)
     {
-        if (!enableDrag)
+        if (!enableDrag || _viewBeingEdited == null)
         {
             return;
         }
@@ -311,15 +311,31 @@ Ctrl+Y - Redo";
     }
     private void Open(FileInfo toOpen)
     {
+        var open = new LoadingDialog(toOpen);
+
         // since we are opening a new view we should
         // clear the history
         OperationManager.Instance.ClearUndoRedo();
+        Design? instance = null;
+       
+        Task.Run(()=>{
+            
+            var decompiler = new CodeToView(new SourceCodeFile(toOpen));
+            _currentDesignerFile = decompiler.SourceFile;
+            instance = decompiler.CreateInstance();
 
-        var decompiler = new CodeToView(new SourceCodeFile(toOpen));
+        }).ContinueWith((t,o)=>{
 
-        _currentDesignerFile = decompiler.SourceFile;
+            // no longer loading
+            Application.MainLoop.Invoke(()=>Application.RequestStop());
 
-        ReplaceViewBeingEdited(decompiler.CreateInstance());
+            // if loaded correctly then 
+            if(instance != null)
+                ReplaceViewBeingEdited(instance);
+
+        },TaskScheduler.FromCurrentSynchronizationContext());
+
+        Application.Run(open);
     }
 
     private void New()

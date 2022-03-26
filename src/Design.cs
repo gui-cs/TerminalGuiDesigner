@@ -150,11 +150,6 @@ public class Design
         {
             yield return CreateProperty(nameof(Window.Title));
         }
-
-        if (View is Dialog)
-        {
-            yield return CreateProperty(nameof(Dialog.Title));
-        }
         
         if (View is TableView tv)
         {
