@@ -1,130 +1,167 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Comment CommentText="Things that can be changed on the View.  Includes sub properties and FieldName for ToCode.  SnippetProperty is for complex types Pos and Dim">
-    <Position X="6.427" Y="2.604" Height="0.667" Width="3.345" />
+  <Comment CommentText="Things that can be changed on the View.  Includes sub properties and FieldName for ToCode.">
+    <Position X="6.365" Y="2.333" Height="0.844" Width="1.949" />
   </Comment>
   <Comment CommentText="Instance of your View that is being edited.  With design time changes (like allowing any sub View to be Focused)">
-    <Position X="7.167" Y="4.219" Height="0.844" Width="1.992" />
+    <Position X="6.417" Y="4.219" Height="0.844" Width="1.992" />
   </Comment>
   <Comment CommentText="All changes go through the Operation system so that they support undo/redo">
-    <Position X="10.302" Y="3.593" Height="0.677" Width="1.96" />
+    <Position X="8.802" Y="3.593" Height="0.677" Width="1.96" />
   </Comment>
   <Comment CommentText="Load any Designer.cs file.  Then instantiate a View instance for design time editing">
-    <Position X="17.562" Y="2.354" Height="1.052" Width="1.69" />
+    <Position X="15.843" Y="3.239" Height="1.052" Width="1.544" />
   </Comment>
   <Comment CommentText="Save the current designer state to .Designer.cs file.">
-    <Position X="17.542" Y="0.552" Height="0.75" Width="1.731" />
+    <Position X="15.792" Y="0.552" Height="0.75" Width="1.554" />
   </Comment>
   <Class Name="TerminalGuiDesigner.Design">
     <Position X="3.75" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAABFAAAAAIBAAAGAAAEAAAAAACBBAAgAkQAAAAAAAg=</HashCode>
+      <HashCode>AhABAAACACIBAAAGAAAAAEAQAACBhAAgAQAAAgAAgAg=</HashCode>
       <FileName>Design.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="View" />
+      <Property Name="SourceCode" />
     </ShowAsAssociation>
   </Class>
   <Class Name="Terminal.Gui.View" Collapsed="true">
-    <Position X="7.5" Y="3.5" Width="1.5" />
+    <Position X="6.75" Y="3.5" Width="1.5" />
     <TypeIdentifier />
   </Class>
   <Class Name="TerminalGuiDesigner.Operations.AddViewOperation" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="12.75" Y="2.25" Width="2" />
+    <Position X="11.25" Y="2.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAEAAAAABAAAAAAAAIgBCAAAAAAAAAAAAAACAAA=</HashCode>
+      <HashCode>AAAAAAEAAAAABAAAAAAAAIgBCBAAAAAAAAAAAAACAAA=</HashCode>
       <FileName>Operations\AddViewOperation.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="TerminalGuiDesigner.Operations.DeleteViewOperation" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="12.75" Y="2.75" Width="2" />
+    <Position X="11.25" Y="3" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAIAAAAABAAAAAAAAQABCAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Operations\DeleteViewOperation.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="TerminalGuiDesigner.Operations.RenameViewOperation" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="12.75" Y="3.25" Width="2" />
+    <Position X="11.25" Y="3.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAACAAAADAAAAAAAAAABCAAAAAAIAAAAAAAAAAA=</HashCode>
       <FileName>Operations\RenameViewOperation.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="TerminalGuiDesigner.Operations.SetPropertyOperation" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="12.75" Y="3.75" Width="2" />
+    <Position X="11.25" Y="4" Width="2" />
     <TypeIdentifier>
       <HashCode>AAQAAAAAAAAADAAAAAAAEAABCAAAAAAAAAAAAQAAAAA=</HashCode>
       <FileName>Operations\SetPropertyOperation.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="TerminalGuiDesigner.Operations.OperationManager">
-    <Position X="10.25" Y="0.75" Width="2" />
+    <Position X="8.75" Y="0.75" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAABAAAAAAAAAADCAAgAEAAQAAAAAAAAAA=</HashCode>
       <FileName>Operations\UndoRedoManager.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TerminalGuiDesigner.ToCode.ViewToCode">
-    <Position X="15.25" Y="0.5" Width="2.25" />
+    <Position X="13.5" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAACAAAAAAAAAAAAAAAAQAAAAAAAAABAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAgAAAAAAAAAAAAAAAAQAAAAAAAAABAQAAAAA=</HashCode>
       <FileName>ToCode\ViewToCode.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TerminalGuiDesigner.FromCode.CodeToView">
-    <Position X="15.25" Y="2.25" Width="2.25" />
+    <Position X="13.5" Y="2.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>gAAABAAAAACAAAACAACAAgAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>gAAABAAAAACAAAACAACAAgAAAAAAICAAAAAAAAAAAAA=</HashCode>
       <FileName>FromCode\CodeToView.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="SourceFile" />
+    </ShowAsAssociation>
   </Class>
   <Class Name="TerminalGuiDesigner.UI.Editor">
     <Position X="0.5" Y="0.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>EAQAAIAQAQBKIDAAQABCAAAAAAEAAAAAAAAAAAAAIAI=</HashCode>
+      <HashCode>EEQAAIAQAYBKIDAQQABCAIAAAAEAAAAAAABAAAAAIAM=</HashCode>
       <FileName>UI\Editor.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Field Name="_viewBeingEdited" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="TerminalGuiDesigner.ToCode.SnippetProperty" Collapsed="true">
-    <Position X="6.5" Y="1.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>BAAAAAAAAAAAAAAEAAAgAAAAAAAAAAABAAAkAAAAAAA=</HashCode>
-      <FileName>ToCode\SnippetProperty.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="TerminalGuiDesigner.ToCode.Property" Collapsed="true">
-    <Position X="7.25" Y="0.5" Width="1.5" />
+    <Position X="6.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAEAAAIAABChAEAAAAAAAAAAAAAEABAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAEAAAKAABChAEAAAAAAAAAAAAAEABAAAAAAAAAAA=</HashCode>
       <FileName>ToCode\Property.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TerminalGuiDesigner.ToCode.NameProperty" Collapsed="true">
-    <Position X="8.25" Y="1.75" Width="1.5" />
+    <Position X="6.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAIAAAAgAEAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
       <FileName>ToCode\NameProperty.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TerminalGuiDesigner.Operations.DragOperation" Collapsed="true">
-    <Position X="12.75" Y="4.25" Width="2" />
+    <Position X="11.25" Y="4.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAEAAAAAAAAADAAAAAAAAAABKAAAAAAEAAAAAAAAAAA=</HashCode>
       <FileName>Operations\DragOperation.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TerminalGuiDesigner.ToCode.CodeDomArgs">
+    <Position X="18.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>ToCode\CodeDomArgs.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TerminalGuiDesigner.ToCode.TabToCode" Collapsed="true">
+    <Position X="18.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAgCAAAAACAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>ToCode\TabToCode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TerminalGuiDesigner.ToCode.ToCodeBase" Collapsed="true">
+    <Position X="18.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAUAAAAAAAABAgAAAAAAAAAAAA=</HashCode>
+      <FileName>ToCode\ToCodeBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TerminalGuiDesigner.ToCode.DataTableToCode" Collapsed="true">
+    <Position X="20.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAABAACAAAAAAAQAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>ToCode\DataTableToCode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TerminalGuiDesigner.ToCode.DesignToCode">
+    <Position X="16.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ToCode\DesignToCode.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Design" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="TerminalGuiDesigner.SourceCodeFile">
+    <Position X="20.25" Y="2.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AgAABQAAAAAAAAAAAAACAAAAAAAAAAAAAIAAAAAAACA=</HashCode>
+      <FileName>SourceCodeFile.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Interface Name="TerminalGuiDesigner.Operations.IOperation">
-    <Position X="12.75" Y="0.5" Width="1.5" />
+    <Position X="11.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAABAAAAAAAAAABCAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAABCAAAAAAAACAAAAAAAAA=</HashCode>
       <FileName>Operations\IOperation.cs</FileName>
     </TypeIdentifier>
   </Interface>
