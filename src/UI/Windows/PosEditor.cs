@@ -15,7 +15,7 @@ namespace TerminalGuiDesigner.UI.Windows
     using TerminalGuiDesigner.ToCode;
     using TerminalGuiDesigner.UI.Windows;
 
-    public partial class PosEditor : Window {
+    public partial class PosEditor : Dialog {
 
         public Pos Result { get; private set; }
         public bool Cancelled { get; private set; }
@@ -29,10 +29,6 @@ namespace TerminalGuiDesigner.UI.Windows
             Design = design;
             Property = property;
 
-            X = Pos.Center()-21;
-            Y = Pos.Center()-7;
-            Width = 43;
-            Height = 12;
 
             Title = "Pos Designer";
             Border.BorderStyle = BorderStyle.Double;

@@ -13,7 +13,8 @@ namespace TerminalGuiDesigner.UI.Windows
     using TerminalGuiDesigner;
     using TerminalGuiDesigner.ToCode;
 
-    public partial class DimEditor : Window {
+    public partial class DimEditor : Dialog
+    {
 
         public Dim Result { get; private set; }
         public bool Cancelled { get; private set; }
@@ -27,10 +28,6 @@ namespace TerminalGuiDesigner.UI.Windows
             Design = design;
             Property = property;
 
-            X = Pos.Center()-20;
-            Y = Pos.Center()-5;
-            Width = 40;
-            Height = 9;
 
             Title = "Dim Designer";
             Border.BorderStyle = BorderStyle.Double;

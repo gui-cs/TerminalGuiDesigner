@@ -12,7 +12,7 @@ namespace TerminalGuiDesigner.UI.Windows {
     using Terminal.Gui;
     
     
-    public partial class PosEditor : Terminal.Gui.Window {
+    public partial class PosEditor : Terminal.Gui.Dialog {
         
         private Terminal.Gui.RadioGroup rgPosType;
         
@@ -38,10 +38,13 @@ namespace TerminalGuiDesigner.UI.Windows {
         
         private void InitializeComponent() {
             this.Text = "";
-            this.Width = Dim.Fill(0);
-            this.Height = Dim.Fill(0);
-            this.X = 0;
-            this.Y = 0;
+            this.Width = 43;
+            this.Height = 12;
+            this.X = Pos.Center();
+            this.Y = Pos.Center();
+            this.TextAlignment = TextAlignment.Left;
+            this.Title = "";
+            this.Title = "";
             this.rgPosType = new Terminal.Gui.RadioGroup();
             this.rgPosType.Data = "rgPosType";
             this.rgPosType.Text = "";
@@ -49,6 +52,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.rgPosType.Height = 4;
             this.rgPosType.X = 1;
             this.rgPosType.Y = 1;
+            this.rgPosType.TextAlignment = TextAlignment.Left;
             this.rgPosType.RadioLabels = new NStack.ustring[] {
                     "Absolute",
                     "Percent",
@@ -62,6 +66,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lblValue.Height = 1;
             this.lblValue.X = 18;
             this.lblValue.Y = 1;
+            this.lblValue.TextAlignment = TextAlignment.Left;
             this.Add(this.lblValue);
             this.tbValue = new Terminal.Gui.TextField();
             this.tbValue.Data = "tbValue";
@@ -70,6 +75,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.tbValue.Height = 1;
             this.tbValue.X = Pos.Right(lblValue) + 1;
             this.tbValue.Y = Pos.Top(lblValue);
+            this.tbValue.TextAlignment = TextAlignment.Left;
             this.Add(this.tbValue);
             this.lblRelativeTo = new Terminal.Gui.Label();
             this.lblRelativeTo.Data = "lblRelativeTo";
@@ -78,6 +84,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lblRelativeTo.Height = 1;
             this.lblRelativeTo.X = 12;
             this.lblRelativeTo.Y = 3;
+            this.lblRelativeTo.TextAlignment = TextAlignment.Left;
             this.Add(this.lblRelativeTo);
             this.ddRelativeTo = new Terminal.Gui.ComboBox();
             this.ddRelativeTo.Data = "ddRelativeTo";
@@ -86,6 +93,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.ddRelativeTo.Height = 2;
             this.ddRelativeTo.X = Pos.Right(lblRelativeTo) + 1;
             this.ddRelativeTo.Y = 3;
+            this.ddRelativeTo.TextAlignment = TextAlignment.Left;
             this.Add(this.ddRelativeTo);
             this.lblSide = new Terminal.Gui.Label();
             this.lblSide.Data = "lblSide";
@@ -94,6 +102,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lblSide.Height = 1;
             this.lblSide.X = 19;
             this.lblSide.Y = 5;
+            this.lblSide.TextAlignment = TextAlignment.Left;
             this.Add(this.lblSide);
             this.ddSide = new Terminal.Gui.ComboBox();
             this.ddSide.Data = "ddSide";
@@ -102,6 +111,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.ddSide.Height = 2;
             this.ddSide.X = Pos.Right(lblSide) + 1;
             this.ddSide.Y = Pos.Top(lblSide);
+            this.ddSide.TextAlignment = TextAlignment.Left;
             this.Add(this.ddSide);
             this.lblOffset = new Terminal.Gui.Label();
             this.lblOffset.Data = "lblOffset";
@@ -110,6 +120,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lblOffset.Height = 1;
             this.lblOffset.X = 17;
             this.lblOffset.Y = 7;
+            this.lblOffset.TextAlignment = TextAlignment.Left;
             this.Add(this.lblOffset);
             this.tbOffset = new Terminal.Gui.TextField();
             this.tbOffset.Data = "tbOffset";
@@ -118,6 +129,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.tbOffset.Height = 1;
             this.tbOffset.X = Pos.Right(lblOffset) + 1;
             this.tbOffset.Y = 7;
+            this.tbOffset.TextAlignment = TextAlignment.Left;
             this.Add(this.tbOffset);
             this.btnOk = new Terminal.Gui.Button();
             this.btnOk.Data = "btnOk";
@@ -126,6 +138,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnOk.Height = 1;
             this.btnOk.X = 11;
             this.btnOk.Y = 9;
+            this.btnOk.TextAlignment = TextAlignment.Centered;
             this.btnOk.IsDefault = true;
             this.Add(this.btnOk);
             this.btnCancel = new Terminal.Gui.Button();
@@ -135,6 +148,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnCancel.Height = 1;
             this.btnCancel.X = 21;
             this.btnCancel.Y = 9;
+            this.btnCancel.TextAlignment = TextAlignment.Centered;
             this.btnCancel.IsDefault = false;
             this.Add(this.btnCancel);
         }
