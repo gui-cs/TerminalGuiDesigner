@@ -61,7 +61,7 @@ public class Property : ToCodeBase
         AddPropertyAssignment(args, GetLhs(), GetRhs());
     }
 
-    protected virtual CodeExpression GetRhs()
+    public virtual CodeExpression GetRhs()
     {
         var val = GetValue();
         if(val == null)
