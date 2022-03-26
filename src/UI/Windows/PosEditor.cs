@@ -59,6 +59,9 @@ namespace TerminalGuiDesigner.UI.Windows
                         break;
                     case PosType.Relative:
                         rgPosType.SelectedItem = 2;
+                        break;
+                    case PosType.Center:
+                        rgPosType.SelectedItem = 3;
                         
                         // TODO: once the current 'main' branch is published to nuget package we can do this
                         //ddRelativeTo.SelectedItem = siblings.IndexOf(relativeTo);
@@ -101,6 +104,24 @@ namespace TerminalGuiDesigner.UI.Windows
                     lblOffset.Visible = true;
                     Remove(tbOffset);
                     tbOffset.Y = 3;
+                    tbOffset.Visible = true;
+                    Add(tbOffset);
+
+                    SetNeedsDisplay();
+                    break;
+                case PosType.Center:
+                    lblRelativeTo.Visible = false;
+                    ddRelativeTo.Visible = false;
+                    lblSide.Visible = false;
+                    ddSide.Visible = false;
+                    
+                    lblValue.Visible = false;
+                    tbValue.Visible = false;
+                    
+                    lblOffset.Y = 1;
+                    lblOffset.Visible = true;
+                    Remove(tbOffset);
+                    tbOffset.Y = 1;
                     tbOffset.Visible = true;
                     Add(tbOffset);
 
@@ -169,6 +190,8 @@ namespace TerminalGuiDesigner.UI.Windows
                     return BuildPosRelative(out result);
                 case PosType.Percent:
                     return BuildPosPercent(out result);
+                case PosType.Center:
+                    return BuildPosCenter(out result);
                 case PosType.Anchor: throw new NotImplementedException();
 
                 default: throw new ArgumentOutOfRangeException();
@@ -267,10 +290,24 @@ namespace TerminalGuiDesigner.UI.Windows
                     result = result + offset;
                     return true;
                 }
+
+                return true;
             }
 
             result = null;
             return false;
+        }
+        private bool BuildPosCenter(out Pos result)
+        {
+            result = Pos.Center();
+
+            if (GetOffset(out int offset) && offset != 0)
+            {
+                result = result + offset;
+                return true;
+            }
+
+            return true;
         }
     }
 }

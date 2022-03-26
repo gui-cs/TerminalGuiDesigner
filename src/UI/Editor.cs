@@ -354,7 +354,7 @@ Ctrl+Y - Redo";
         var viewToCode = new ViewToCode();
 
         viewToCode.GenerateDesignerCs(
-            _viewBeingEdited.View, _currentDesignerFile,
+            _viewBeingEdited, _currentDesignerFile,
             _viewBeingEdited.View.GetType().BaseType ?? throw new Exception("View being edited had no base class"));
     }
     private void ShowAddViewWindow()

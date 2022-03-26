@@ -40,7 +40,10 @@ public static class PosExtensions
         percent = 0;
         return false;
     }
-
+    public static bool IsCenter(this Pos p)
+    {
+        return p.GetType().Name == "PosCenter";
+    }
 
     public static bool IsRelative(this Pos p, out Pos posView)
     {
@@ -157,6 +160,14 @@ public static class PosExtensions
             return true;
         }
 
+        if(p.IsCenter())
+        {
+            type = PosType.Center;
+            value = 0;
+            offset = 0;
+            return true;
+        }
+
         if(p.IsCombine(out var left, out var right, out var add))
         {
             // we only deal in combines if the right is an absolute
@@ -254,7 +265,14 @@ public static class PosExtensions
                 if(offset < 0)
                     return $"Pos.Percent({val}) - {Math.Abs(offset)}";
                 return $"Pos.Percent({val})";
-            
+         
+            case PosType.Center:
+                if(offset > 0)
+                    return $"Pos.Center() + {offset}";
+                if(offset < 0)
+                    return $"Pos.Center() - {Math.Abs(offset)}";
+                return $"Pos.Center()";
+
             default: throw new ArgumentOutOfRangeException("Unknown PosType");
         }
 }

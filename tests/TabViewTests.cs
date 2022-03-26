@@ -24,7 +24,7 @@ class TabViewTests
 
         OperationManager.Instance.Do(new AddViewOperation(sourceCode, tvOut, designOut, "myTabview"));
 
-        viewToCode.GenerateDesignerCs(designOut.View, sourceCode,typeof(Dialog));
+        viewToCode.GenerateDesignerCs(designOut, sourceCode,typeof(Dialog));
 
         var tabOut = designOut.View.GetActualSubviews().OfType<TabView>().Single();
 
@@ -58,7 +58,7 @@ class TabViewTests
         OperationManager.Instance.Do(new AddViewOperation(sourceCode, label, (Design)tvOut.Data, "myLabel"));
         Assert.Contains(label, tvOut.SelectedTab.View.Subviews.ToArray(),"Expected currently selected tab to have the new label but it did not");
 
-        viewToCode.GenerateDesignerCs(designOut.View, sourceCode,typeof(Dialog));
+        viewToCode.GenerateDesignerCs(designOut, sourceCode,typeof(Dialog));
 
         var codeToView = new CodeToView(sourceCode);
         var designBackIn = codeToView.CreateInstance();

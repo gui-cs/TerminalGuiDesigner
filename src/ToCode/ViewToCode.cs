@@ -39,7 +39,7 @@ public class ViewToCode
         var design = new Design(sourceFile, Design.RootDesignName, view);
         design.CreateSubControlDesigns();
 
-        GenerateDesignerCs(view, sourceFile,viewType);
+        GenerateDesignerCs(design, sourceFile,viewType);
 
 
         var decompiler = new CodeToView(sourceFile);
@@ -92,7 +92,7 @@ public class ViewToCode
         }
     }
 
-    public void GenerateDesignerCs(View forView, SourceCodeFile file,Type viewType)
+    public void GenerateDesignerCs(Design rootDesign, SourceCodeFile file,Type viewType)
     {
         var rosylyn = new CodeToView(file);
 
@@ -111,7 +111,19 @@ public class ViewToCode
         var initMethod = new CodeMemberMethod();
         initMethod.Name = SourceCodeFile.InitializeComponentMethodName;
 
-        AddSubViewsToDesignerCs(forView, new CodeDomArgs(class1, initMethod));
+        var args = new CodeDomArgs(class1, initMethod);
+
+        // Add designable root properties to the InitializeComponent method
+        foreach (var prop in rootDesign.GetDesignableProperties())
+        {
+            // We don't need to name the root view in code
+            if(prop is NameProperty)
+                continue;
+
+            prop.ToCode(args);
+        }
+
+        AddSubViewsToDesignerCs(rootDesign.View, args);
 
         class1.Members.Add(initMethod);
         ns.Types.Add(class1);
@@ -153,7 +165,7 @@ public class ViewToCode
                 // Build the design code 
                 toCode.ToCode(args,
                     // if our parent is the root then the designed control should be assigned to 'this'
-                    parent == null || parent.FieldName == Design.RootDesignName ? new CodeThisReferenceExpression():
+                    parent == null || parent.IsRoot ? new CodeThisReferenceExpression():
                     // the view we are adding to is not root but some deeper nested view so reference it by name
                     new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),parent.FieldName)
                 );

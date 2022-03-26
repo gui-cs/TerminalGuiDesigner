@@ -19,6 +19,8 @@ public class Design
     /// </summary>
     public string FieldName { get; set; }
 
+    public bool IsRoot => FieldName.Equals(RootDesignName);
+
     public const string RootDesignName = "root";
 
     private List<Property> _designableProperties;
@@ -43,6 +45,7 @@ public class Design
             return View is TabView;
         }
     }
+
 
     public Design(SourceCodeFile sourceCode, string fieldName, View view)
     {
@@ -206,6 +209,13 @@ public class Design
     /// <returns></returns>
     public IEnumerable<Design> GetSiblings()
     {
+        // If there is no parent then we are likely the top rot Design
+        // or an orphan.  Either way we have no siblings
+        if(View.SuperView == null)
+        {
+            yield break;
+        }
+
         foreach(var v in View.SuperView.Subviews)
         {
             if(v == View)

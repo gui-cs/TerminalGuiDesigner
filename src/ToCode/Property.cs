@@ -98,6 +98,9 @@ public class Property : ToCodeBase
 
     public virtual string GetLhs()
     {
+        if(Design.IsRoot)
+            return $"this.{PropertyInfo.Name}";
+
         // if the property being designed exists on the View directly e.g. MyView.X
         return string.IsNullOrWhiteSpace(SubProperty) ?
             $"this.{Design.FieldName}.{PropertyInfo.Name}" :

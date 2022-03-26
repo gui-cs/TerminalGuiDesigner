@@ -24,7 +24,7 @@ class RadioGroupTests
 
         OperationManager.Instance.Do(new AddViewOperation(sourceCode, rgOut, designOut, "myRadioGroup"));
 
-        viewToCode.GenerateDesignerCs(designOut.View, sourceCode,typeof(View));
+        viewToCode.GenerateDesignerCs(designOut, sourceCode,typeof(View));
 
         var tabOut = designOut.View.GetActualSubviews().OfType<RadioGroup>().Single();
 

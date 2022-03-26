@@ -12,7 +12,7 @@ namespace TerminalGuiDesigner.UI.Windows {
     using Terminal.Gui;
     
     
-    public partial class PosEditor : Window {
+    public partial class PosEditor : Terminal.Gui.Window {
         
         private Terminal.Gui.RadioGroup rgPosType;
         
@@ -37,17 +37,23 @@ namespace TerminalGuiDesigner.UI.Windows {
         private Terminal.Gui.Button btnCancel;
         
         private void InitializeComponent() {
+            this.Text = "";
+            this.Width = Dim.Fill(0);
+            this.Height = Dim.Fill(0);
+            this.X = 0;
+            this.Y = 0;
             this.rgPosType = new Terminal.Gui.RadioGroup();
             this.rgPosType.Data = "rgPosType";
             this.rgPosType.Text = "";
             this.rgPosType.Width = 11;
-            this.rgPosType.Height = 3;
+            this.rgPosType.Height = 4;
             this.rgPosType.X = 1;
             this.rgPosType.Y = 1;
             this.rgPosType.RadioLabels = new NStack.ustring[] {
                     "Absolute",
                     "Percent",
-                    "Relative"};
+                    "Relative",
+                    "Center"};
             this.Add(this.rgPosType);
             this.lblValue = new Terminal.Gui.Label();
             this.lblValue.Data = "lblValue";

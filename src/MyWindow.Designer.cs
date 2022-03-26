@@ -27,6 +27,11 @@ namespace YourNamespace {
         private Terminal.Gui.Label label3;
         
         private void InitializeComponent() {
+            this.Text = "";
+            this.Width = Dim.Fill(0);
+            this.Height = Dim.Fill(0);
+            this.X = 0;
+            this.Y = 0;
             this.tabview1 = new Terminal.Gui.TabView();
             this.tabview1.Data = "tabview1";
             this.tabview1.Text = "";
@@ -47,8 +52,8 @@ namespace YourNamespace {
             this.label1.Text = "Heya";
             this.label1.Width = 4;
             this.label1.Height = 1;
-            this.label1.X = 15;
-            this.label1.Y = 7;
+            this.label1.X = Pos.Center();
+            this.label1.Y = Pos.Percent(25);
             tabview1Tab1.View.Add(this.label1);
             this.button1 = new Terminal.Gui.Button();
             this.button1.Data = "button1";

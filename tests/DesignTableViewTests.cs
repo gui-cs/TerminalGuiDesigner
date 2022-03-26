@@ -24,7 +24,7 @@ public class TableViewTests
 
         OperationManager.Instance.Do(new AddViewOperation(sourceCode, tvOut, designOut, "myTable"));
 
-        viewToCode.GenerateDesignerCs(designOut.View, sourceCode,typeof(Window));
+        viewToCode.GenerateDesignerCs(designOut, sourceCode,typeof(Window));
 
         var tableOut = designOut.View.GetActualSubviews().OfType<TableView>().Single();
 
