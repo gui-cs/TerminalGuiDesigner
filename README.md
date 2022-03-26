@@ -19,7 +19,10 @@ Outstanding Features
 
 Features to add are:
 
-- [ ] Design classes other than `Window` (e.g. View etc)
+- [ ] Design classes 
+    - [x] Window
+    - [x] Dialog
+    - [ ] View
 - [ ] Configure root properties of the class being designed (e.g. Window.Width)
 - [ ] Configure and persist properties
     - [x] (Name)
@@ -36,7 +39,7 @@ Features to add are:
 - [ ] Mutli select (select many views and hit delete or drag move)
 - [ ] Copy/Paste selected view(s)
 - [ ] Add views to subviews
-- [ ] Comprehensive Tests
+- [x] Comprehensive Tests
 - [x] CI
 
 Class Diagram
