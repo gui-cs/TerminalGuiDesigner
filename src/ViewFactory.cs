@@ -2,6 +2,7 @@
 using NStack;
 using Terminal.Gui;
 using static Terminal.Gui.Border;
+using Attribute = Terminal.Gui.Attribute;
 
 namespace TerminalGuiDesigner;
 
@@ -31,6 +32,19 @@ public class ViewFactory
         if (typeof(RadioGroup).IsAssignableFrom(t))
         {
             return CreateRadioGroup();
+        }
+
+        if(typeof(GraphView).IsAssignableFrom(t))
+        {
+            var g = new GraphView{
+                Width = 20,
+                Height = 5,
+            };
+
+            g.AxisX.Visible = true;
+
+            g.GraphColor = Attribute.Make(Color.White,Color.Black);
+            return g;
         }
 
         var instance = (View)Activator.CreateInstance(t);

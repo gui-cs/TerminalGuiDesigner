@@ -6,6 +6,7 @@ using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 using static Terminal.Gui.TableView;
 using static Terminal.Gui.TabView;
+using Attribute = Terminal.Gui.Attribute;
 
 namespace TerminalGuiDesigner;
 
@@ -89,8 +90,7 @@ public class Design
         // all views can be focused so that they can be edited
         // or deleted etc
         subView.CanFocus = true;
-
-        
+                
         if (subView is TableView tv && tv.Table != null && tv.Table.Rows.Count == 0)
         {
             // add example rows so that it is easier to design the view
