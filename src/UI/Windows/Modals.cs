@@ -98,4 +98,10 @@ public class Modals
         selected = pick.Selected;
         return toReturn;
     }
+
+    internal static bool GetEnum(string prompt, string okText, Enum oldValue, out Enum result)
+    {       
+        var enumType = oldValue.GetType();
+        return Get(prompt,okText,true,Enum.GetValues(enumType).Cast<Enum>().ToArray(),o=>o.ToString(),false,out result);
+    }
 }

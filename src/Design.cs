@@ -135,6 +135,8 @@ public class Design
         yield return CreateProperty(nameof(View.X));
         yield return CreateProperty(nameof(View.Y));
 
+        yield return CreateProperty(nameof(View.TextAlignment));
+
         if (View is Button)
         {
             yield return CreateProperty(nameof(Button.IsDefault));
@@ -142,6 +144,16 @@ public class Design
         if (View is CheckBox)
         {
             yield return CreateProperty(nameof(CheckBox.Checked));
+        }
+
+        if (View is Window)
+        {
+            yield return CreateProperty(nameof(Window.Title));
+        }
+
+        if (View is Dialog)
+        {
+            yield return CreateProperty(nameof(Dialog.Title));
         }
         
         if (View is TableView tv)

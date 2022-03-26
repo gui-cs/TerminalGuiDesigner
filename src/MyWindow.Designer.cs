@@ -32,6 +32,8 @@ namespace YourNamespace {
             this.Height = Dim.Fill(0);
             this.X = 0;
             this.Y = 0;
+            this.TextAlignment = TextAlignment.Centered;
+            this.Title = "Welcome to Demo";
             this.tabview1 = new Terminal.Gui.TabView();
             this.tabview1.Data = "tabview1";
             this.tabview1.Text = "";
@@ -39,6 +41,7 @@ namespace YourNamespace {
             this.tabview1.Height = Dim.Fill(0);
             this.tabview1.X = 0;
             this.tabview1.Y = 0;
+            this.tabview1.TextAlignment = TextAlignment.Left;
             this.tabview1.MaxTabTextWidth = 30u;
             this.tabview1.Style.ShowBorder = true;
             this.tabview1.Style.ShowTopLine = true;
@@ -50,10 +53,11 @@ namespace YourNamespace {
             this.label1 = new Terminal.Gui.Label();
             this.label1.Data = "label1";
             this.label1.Text = "Heya";
-            this.label1.Width = 4;
+            this.label1.Width = Dim.Fill(4);
             this.label1.Height = 1;
-            this.label1.X = Pos.Center();
-            this.label1.Y = Pos.Percent(25);
+            this.label1.X = 0;
+            this.label1.Y = Pos.Percent(50);
+            this.label1.TextAlignment = TextAlignment.Centered;
             tabview1Tab1.View.Add(this.label1);
             this.button1 = new Terminal.Gui.Button();
             this.button1.Data = "button1";
@@ -62,6 +66,7 @@ namespace YourNamespace {
             this.button1.Height = 1;
             this.button1.X = 5;
             this.button1.Y = 3;
+            this.button1.TextAlignment = TextAlignment.Centered;
             this.button1.IsDefault = true;
             tabview1Tab1.View.Add(this.button1);
             this.checkbox1 = new Terminal.Gui.CheckBox();
@@ -71,6 +76,7 @@ namespace YourNamespace {
             this.checkbox1.Height = 1;
             this.checkbox1.X = 0;
             this.checkbox1.Y = 0;
+            this.checkbox1.TextAlignment = TextAlignment.Left;
             this.checkbox1.Checked = true;
             tabview1Tab1.View.Add(this.checkbox1);
             tabview1.AddTab(tabview1Tab1, false);
@@ -85,6 +91,7 @@ namespace YourNamespace {
             this.label2.Height = 1;
             this.label2.X = 10;
             this.label2.Y = 3;
+            this.label2.TextAlignment = TextAlignment.Left;
             tabview1Tab2.View.Add(this.label2);
             this.label3 = new Terminal.Gui.Label();
             this.label3.Data = "label3";
@@ -93,6 +100,7 @@ namespace YourNamespace {
             this.label3.Height = 1;
             this.label3.X = 0;
             this.label3.Y = 0;
+            this.label3.TextAlignment = TextAlignment.Left;
             tabview1Tab2.View.Add(this.label3);
             tabview1.AddTab(tabview1Tab2, false);
             this.Add(this.tabview1);

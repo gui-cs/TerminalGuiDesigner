@@ -176,6 +176,15 @@ public class EditDialog : Window
             }
         }
 
+        if(property.PropertyInfo.PropertyType.IsEnum)
+        {
+            if(Modals.GetEnum((string)property.PropertyInfo.Name, "New Value", (Enum)oldValue, out var resultEnum))
+            {
+                newValue = resultEnum;
+                return true;
+            }
+        }
+
         if (Modals.GetString((string)property.PropertyInfo.Name, "New Value", oldValue?.ToString() ?? string.Empty, out string result))
         {
             newValue = result;

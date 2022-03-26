@@ -80,6 +80,12 @@ public class Property : ToCodeBase
             return new CodeSnippetExpression(p.ToCode(Design.GetSiblings().ToList()));
         }
 
+
+        if(val is Enum e)
+        {
+            return new CodeSnippetExpression($"{e.GetType().Name}.{e.ToString()}");
+        }
+
         var type = val.GetType();
 
         if(type.IsArray)

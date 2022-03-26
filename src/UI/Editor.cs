@@ -20,6 +20,7 @@ F2 - Add Control
 F3 - Toggle mouse dragging on/off
 F4/Enter - Properties
 Shift+F4/Enter - View Specific Operations
+F5 - Edit Root Properties
 Del - Delete selected View
 Shift+Cursor - Move focused View
 Ctrl+Cursor - Move focused View quickly
@@ -176,6 +177,9 @@ Ctrl+Y - Redo";
                 case Key.Enter:
                 case Key.F4:
                     ShowEditPropertiesWindow();
+                    return true;
+                case Key.F5:
+                    ShowEditPropertiesWindow(_viewBeingEdited);
                     return true;
                 case Key.Enter | Key.ShiftMask:
                 case Key.F4 | Key.ShiftMask:
@@ -408,9 +412,14 @@ Ctrl+Y - Redo";
         var d = GetMostFocused(this).GetNearestDesign();
         if (d != null)
         {
-            var edit = new EditDialog(d);
-            Application.Run(edit);
+            ShowEditPropertiesWindow(d);
         }
+    }
+
+    private void ShowEditPropertiesWindow(Design d)
+    {
+        var edit = new EditDialog(d);
+        Application.Run(edit);
     }
 
     private View? HitTest(View w, MouseEvent m)

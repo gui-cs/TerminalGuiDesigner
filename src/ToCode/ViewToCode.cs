@@ -36,6 +36,15 @@ public class ViewToCode
 
         var view = (View)(Activator.CreateInstance(viewType) ?? throw new Exception($"Could not create instance of Type '{viewType}' ('Activator.CreateInstance' returned null)"));
 
+        // Unlike Window and Dialog the default constructor on
+        // View will be a size 0 view.  Make it big so it can be 
+        // edited
+        if(viewType == typeof(View))
+        {
+            view.Width = Dim.Fill();
+            view.Height = Dim.Fill();
+        }
+
         var design = new Design(sourceFile, Design.RootDesignName, view);
         design.CreateSubControlDesigns();
 
