@@ -16,7 +16,7 @@ namespace YourNamespace {
         
         private Terminal.Gui.TabView tabview1;
         
-        private Terminal.Gui.Label label1;
+        private Terminal.Gui.Label lblHelloWorld;
         
         private Terminal.Gui.Button button1;
         
@@ -50,15 +50,15 @@ namespace YourNamespace {
             tabview1Tab1 = new Terminal.Gui.TabView.Tab("Tab1", new View());
             tabview1Tab1.View.Width = Dim.Fill();
             tabview1Tab1.View.Height = Dim.Fill();
-            this.label1 = new Terminal.Gui.Label();
-            this.label1.Data = "label1";
-            this.label1.Text = "Heya";
-            this.label1.Width = Dim.Fill(4);
-            this.label1.Height = 1;
-            this.label1.X = 0;
-            this.label1.Y = Pos.Percent(50);
-            this.label1.TextAlignment = TextAlignment.Centered;
-            tabview1Tab1.View.Add(this.label1);
+            this.lblHelloWorld = new Terminal.Gui.Label();
+            this.lblHelloWorld.Data = "lblHelloWorld";
+            this.lblHelloWorld.Text = "Heya";
+            this.lblHelloWorld.Width = Dim.Fill(4);
+            this.lblHelloWorld.Height = 1;
+            this.lblHelloWorld.X = 0;
+            this.lblHelloWorld.Y = Pos.Percent(50);
+            this.lblHelloWorld.TextAlignment = TextAlignment.Centered;
+            tabview1Tab1.View.Add(this.lblHelloWorld);
             this.button1 = new Terminal.Gui.Button();
             this.button1.Data = "button1";
             this.button1.Text = "Press Me!";

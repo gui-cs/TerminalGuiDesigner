@@ -16,7 +16,16 @@ public class EditDialog : Window
     {
         Design = design;
         collection = Design.GetDesignableProperties()
-            .OrderByDescending(p=>p is NameProperty).ThenBy(p=>p.PropertyInfo.Name).ToList();
+            .OrderByDescending(p=>p is NameProperty)
+            .ThenBy(p=>p.PropertyInfo.Name)
+            .ToList();
+
+        // Don't let them rename the root view that would go badly
+        // See `const string RootDesignName`
+        if(design.IsRoot)
+        {
+            collection = collection.Where(p=>p is not NameProperty).ToList();
+        }
 
         list = new ListView(collection)
         {
