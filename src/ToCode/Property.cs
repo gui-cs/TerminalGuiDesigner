@@ -3,6 +3,7 @@ using System.CodeDom;
 using System.Reflection;
 using Terminal.Gui;
 using TerminalGuiDesigner;
+using Attribute = Terminal.Gui.Attribute;
 
 namespace TerminalGuiDesigner.ToCode;
 
@@ -68,7 +69,10 @@ public class Property : ToCodeBase
         {
             return new CodeSnippetExpression("null");
         }
-
+        if(val is Attribute attribute)
+        {
+            return new CodeSnippetExpression(attribute.ToCode());
+        }
         if(val is Dim d)
         {
             return new CodeSnippetExpression(d.ToCode());
@@ -130,6 +134,13 @@ public class Property : ToCodeBase
         {
             return b ? "Yes" : "No";
         }
+
+        if(val is Attribute attribute)
+        {
+            return attribute.ToCode();
+        }
+
+
         if(val is Dim d)
         {
             return d.ToCode() ?? d.ToString() ?? "";

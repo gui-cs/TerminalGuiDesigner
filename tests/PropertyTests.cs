@@ -26,16 +26,31 @@ public class PropertyTests
     [Test]
     public void TestPropertyOfType_Attribute()
     {
-        var d = new Design(null,"FFF",new GraphView());
-        var colorProp = d.GetDesignableProperties().Single(p=>p.PropertyInfo.Name.Equals(nameof(GraphView.GraphColor)));
+        
+        var driver = new FakeDriver ();
+        Application.Init (driver, new FakeMainLoop (() => FakeConsole.ReadKey (true)));
+        driver.Init (() => { });
 
-        colorProp.SetValue(null);
+        try
+        {
+            var d = new Design(null,"FFF",new GraphView());
+            var colorProp = d.GetDesignableProperties().Single(p=>p.PropertyInfo.Name.Equals(nameof(GraphView.GraphColor)));
 
-        var rhs = (CodeSnippetExpression)colorProp.GetRhs();
-        Assert.AreEqual(rhs.Value,"null");
+            colorProp.SetValue(null);
 
-        // TODO: Set it to green or something and check GetRhs
+            var rhs = (CodeSnippetExpression)colorProp.GetRhs();
+            Assert.AreEqual(rhs.Value,"null");
 
+            colorProp.SetValue(Attribute.Make(Color.BrightMagenta,Color.Blue));
+
+            rhs = (CodeSnippetExpression)colorProp.GetRhs();
+            Assert.AreEqual(rhs.Value,"Terminal.Gui.Attribute.Make(Color.BrightMagenta,Color.Blue)");
+            
+        }
+        finally
+        {
+            driver.End();
+            Application.Shutdown();
+        }
     }
-
 }
