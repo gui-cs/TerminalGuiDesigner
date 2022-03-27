@@ -168,13 +168,13 @@ public class Design
         
         if (View is TableView tv)
         {
-            yield return new Property(this, typeof(TableStyle).GetProperty(nameof(TableStyle.AlwaysShowHeaders)),nameof(TableView.Style),tv.Style);
-            yield return new Property(this, typeof(TableStyle).GetProperty(nameof(TableStyle.ExpandLastColumn)), nameof(TableView.Style), tv.Style);
-            yield return new Property(this, typeof(TableStyle).GetProperty(nameof(TableStyle.InvertSelectedCellFirstCharacter)), nameof(TableView.Style), tv.Style);
-            yield return new Property(this, typeof(TableStyle).GetProperty(nameof(TableStyle.ShowHorizontalHeaderOverline)), nameof(TableView.Style), tv.Style);
-            yield return new Property(this, typeof(TableStyle).GetProperty(nameof(TableStyle.ShowHorizontalHeaderUnderline)), nameof(TableView.Style), tv.Style);
-            yield return new Property(this, typeof(TableStyle).GetProperty(nameof(TableStyle.ShowVerticalCellLines)), nameof(TableView.Style), tv.Style);
-            yield return new Property(this, typeof(TableStyle).GetProperty(nameof(TableStyle.ShowVerticalHeaderLines)), nameof(TableView.Style), tv.Style);
+            yield return CreateSubProperty(nameof(TableStyle.AlwaysShowHeaders),nameof(TableView.Style),tv.Style);
+            yield return CreateSubProperty(nameof(TableStyle.ExpandLastColumn), nameof(TableView.Style), tv.Style);
+            yield return CreateSubProperty(nameof(TableStyle.InvertSelectedCellFirstCharacter), nameof(TableView.Style), tv.Style);
+            yield return CreateSubProperty(nameof(TableStyle.ShowHorizontalHeaderOverline), nameof(TableView.Style), tv.Style);
+            yield return CreateSubProperty(nameof(TableStyle.ShowHorizontalHeaderUnderline), nameof(TableView.Style), tv.Style);
+            yield return CreateSubProperty(nameof(TableStyle.ShowVerticalCellLines), nameof(TableView.Style), tv.Style);
+            yield return CreateSubProperty(nameof(TableStyle.ShowVerticalHeaderLines), nameof(TableView.Style), tv.Style);
         }
 
         
@@ -182,9 +182,9 @@ public class Design
         {
             yield return CreateProperty(nameof(TabView.MaxTabTextWidth));
 
-            yield return new Property(this, typeof(TabStyle).GetProperty(nameof(TabStyle.ShowBorder)), nameof(TabView.Style), tabView.Style);
-            yield return new Property(this, typeof(TabStyle).GetProperty(nameof(TabStyle.ShowTopLine)), nameof(TabView.Style), tabView.Style);
-            yield return new Property(this, typeof(TabStyle).GetProperty(nameof(TabStyle.TabsOnBottom)), nameof(TabView.Style), tabView.Style);
+            yield return CreateSubProperty(nameof(TabStyle.ShowBorder), nameof(TabView.Style), tabView.Style);
+            yield return CreateSubProperty(nameof(TabStyle.ShowTopLine), nameof(TabView.Style), tabView.Style);
+            yield return CreateSubProperty(nameof(TabStyle.TabsOnBottom), nameof(TabView.Style), tabView.Style);
         }
 
         if(View is RadioGroup radioGroup)

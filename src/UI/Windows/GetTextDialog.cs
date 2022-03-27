@@ -5,21 +5,18 @@ namespace TerminalGuiDesigner.UI.Windows;
 class GetTextDialog
 {
     private readonly DialogArgs _args;
-    private readonly string _initialValue;
-
-    public string ResultText;
-    private TextView textField;
+    private readonly string? _initialValue;
+    private readonly Window win;
+    public string? ResultText;
+    private readonly TextView textField;
     private bool okClicked = false;
 
-    public GetTextDialog(DialogArgs args, string initialValue)
+    public GetTextDialog(DialogArgs args, string? initialValue)
     {
         _args = args;
         _initialValue = initialValue;
-    }
-    public bool ShowDialog()
-    {
 
-        var win = new Window(_args.WindowTitle)
+        win = new Window(_args.WindowTitle)
         {
             X = 0,
             Y = 0,
@@ -95,7 +92,9 @@ class GetTextDialog
         win.Add(btnOk);
         win.Add(btnCancel);
         win.Add(btnClear);
-
+    }
+    public bool ShowDialog()
+    {
         Application.Run(win);
 
         return okClicked;

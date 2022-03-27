@@ -42,7 +42,7 @@ public static class ViewExtensions
     /// <returns></returns>
     public static PropertyInfo GetActualTextProperty(this View view)
     {
-        return view.GetType().GetProperty("Text") ?? typeof(View).GetProperty("Text");
+        return view.GetType().GetProperty("Text") ?? typeof(View).GetProperty("Text") ?? throw new Exception("Expected property 'Text' on Type 'View' was missing");
     }
 
     /// <summary>

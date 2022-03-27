@@ -8,7 +8,7 @@ public class Modals
 
     public static bool GetInt(string windowTitle, string entryLabel, int initialValue, out int result)
     {
-        if (GetString(windowTitle, entryLabel, initialValue.ToString(), out string newValue))
+        if (GetString(windowTitle, entryLabel, initialValue.ToString(), out var newValue))
         {
             if (int.TryParse(newValue, out result))
             {
@@ -23,7 +23,7 @@ public class Modals
     // TODO : Can this be generic
     public static bool GetFloat(string windowTitle, string entryLabel, float initialValue, out float result)
     {
-        if (GetString(windowTitle, entryLabel, initialValue.ToString(), out string newValue))
+        if (GetString(windowTitle, entryLabel, initialValue.ToString(), out var newValue))
         {
             if (float.TryParse(newValue, out result))
             {
@@ -35,7 +35,7 @@ public class Modals
         return false;
     }
 
-    public static bool GetArray(string windowTitle, string entryLabel, Type arrayElement, Array initialValue, out Array? result)
+    public static bool GetArray(string windowTitle, string entryLabel, Type arrayElement, Array? initialValue, out Array? result)
     {
         var dlg = new GetTextDialog(new DialogArgs()
         {
@@ -68,7 +68,7 @@ public class Modals
         result = null;
         return false;
     }
-    public static bool GetString(string windowTitle, string entryLabel, string initialValue, out string? result)
+    public static bool GetString(string windowTitle, string entryLabel, string? initialValue, out string? result)
     {
         var dlg = new GetTextDialog(new DialogArgs()
         {
@@ -86,12 +86,12 @@ public class Modals
         return false;
     }
 
-    public static bool Get<T>(string prompt, string okText, T[] collection, out T selected)
+    public static bool Get<T>(string prompt, string okText, T[] collection, out T? selected)
     {
         return Get(prompt, okText, true, collection, o => o?.ToString() ?? "Null", false, out selected);
     }
 
-    public static bool Get<T>(string prompt, string okText, bool addSearch, T[] collection, Func<T, string> displayMember, bool addNull, out T selected)
+    public static bool Get<T>(string prompt, string okText, bool addSearch, T[] collection, Func<T?, string> displayMember, bool addNull, out T? selected)
     {
         var pick = new BigListBox<T>(prompt, okText, addSearch, collection, displayMember, addNull);
         bool toReturn = pick.ShowDialog();
@@ -99,9 +99,8 @@ public class Modals
         return toReturn;
     }
 
-    internal static bool GetEnum(string prompt, string okText, Enum oldValue, out Enum result)
+    internal static bool GetEnum(string prompt, string okText, Type enumType, out Enum? result)
     {       
-        var enumType = oldValue.GetType();
-        return Get(prompt,okText,true,Enum.GetValues(enumType).Cast<Enum>().ToArray(),o=>o.ToString(),false,out result);
+        return Get(prompt,okText,true,Enum.GetValues(enumType).Cast<Enum>().ToArray(),o=>o?.ToString() ?? "Null",false,out result);
     }
 }

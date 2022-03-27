@@ -18,7 +18,7 @@ public class Property : ToCodeBase
     /// <para>For example "TableStyle" or "Border"</para>
     /// 
     /// </summary>
-    public string SubProperty { get; }
+    public string? SubProperty { get; }
     public object DeclaringObject { get; set; }
 
     public PropertyInfo PropertyInfo { get; }
@@ -34,12 +34,12 @@ public class Property : ToCodeBase
         DeclaringObject = declaringObject;
     }
 
-    public virtual object GetValue()
+    public virtual object? GetValue()
     {
         return PropertyInfo.GetValue(DeclaringObject);
     }
 
-    public virtual void SetValue(object value)
+    public virtual void SetValue(object? value)
     {
         // handle type conversions
         if (PropertyInfo.PropertyType == typeof(ustring))

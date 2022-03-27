@@ -22,41 +22,28 @@ public class BigListBox<T>
 
     private bool _addNull;
 
-    public T Selected { get; private set; }
+    public T? Selected { get; private set; }
 
     /// <summary>
     /// Determines what is rendered in the list visually
     /// </summary>
-    public Func<T, string> AspectGetter { get; set; }
+    public Func<T?, string> AspectGetter { get; set; }
 
     /// <summary>
     /// Ongoing filtering of a large collection should be cancelled when the user changes the filter even if it is not completed yet
     /// </summary>
     ConcurrentBag<CancellationTokenSource> _cancelFiltering = new ConcurrentBag<CancellationTokenSource>();
-    Task _currentFilterTask;
     object _taskCancellationLock = new object();
-
+    private Window win;
     private ListView _listView;
     private bool _changes;
-    private TextField _mainInput;
+
+    private TextField? _searchBox;
     private DateTime _lastKeypress = DateTime.Now;
-
-    /// <summary>
-    /// Protected constructor for derived classes that want to do funky filtering and hot swap out lists as search
-    /// enters (e.g. to serve a completely different collection on each keystroke)
-    /// </summary>
-    /// <param name="prompt"></param>
-    /// <param name="okText"></param>
-    /// <param name="addSearch"></param>
-    /// <param name="displayMember"></param>
-    protected BigListBox(string prompt, string okText, bool addSearch, Func<T, string> displayMember)
-    {
-        _okText = okText;
-        _addSearch = addSearch;
-        _prompt = prompt;
-
-        AspectGetter = displayMember ?? (arg => arg?.ToString() ?? string.Empty);
-    }
+    
+    
+    private object _callback;
+    private bool _okClicked = false;
 
     /// <summary>
     /// Public constructor that uses normal (contains text) search to filter the fixed <paramref name="collection"/>
@@ -68,54 +55,22 @@ public class BigListBox<T>
     /// <param name="displayMember">What to display in the list box (defaults to <see cref="object.ToString"/></param>
     /// <param name="addNull">Creates a selection option "Null" that returns a null selection</param>
     public BigListBox(string prompt, string okText, bool addSearch, IList<T> collection,
-        Func<T, string> displayMember, bool addNull) : this(prompt, okText, addSearch, displayMember)
+        Func<T?, string> displayMember, bool addNull)
     {
+        _okText = okText;
+        _addSearch = addSearch;
+        _prompt = prompt;
+
+        AspectGetter = displayMember ?? (arg => arg?.ToString() ?? string.Empty);
+
         if (collection == null)
             throw new ArgumentNullException("collection");
 
         _publicCollection = collection;
         _addNull = addNull;
-    }
 
-    private class ListViewObject<T2> where T2 : T
-    {
-        private readonly Func<T2, string> _displayFunc;
-        public T2 Object { get; }
 
-        public ListViewObject(T2 o, Func<T2, string> displayFunc)
-        {
-            _displayFunc = displayFunc;
-            Object = o;
-        }
-
-        public override string ToString()
-        {
-            return _displayFunc(Object);
-        }
-
-        public override int GetHashCode()
-        {
-            return Object.GetHashCode();
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is ListViewObject<T2> other)
-                return Object.Equals(other.Object);
-
-            return false;
-        }
-    }
-
-    /// <summary>
-    /// Runs the dialog as modal blocking and returns true if a selection was made. 
-    /// </summary>
-    /// <returns>True if selection was made (see <see cref="Selected"/>) or false if user cancelled the dialog</returns>
-    public bool ShowDialog()
-    {
-        bool okClicked = false;
-
-        var win = new Window(_prompt)
+        win = new Window(_prompt)
         {
             X = 0,
             Y = 0,
@@ -146,7 +101,7 @@ public class BigListBox<T>
             if (_listView.SelectedItem >= _collection.Count)
                 return;
 
-            okClicked = true;
+            _okClicked = true;
             Application.RequestStop();
             Selected = _collection[_listView.SelectedItem].Object;
         };
@@ -167,7 +122,7 @@ public class BigListBox<T>
 
             win.Add(searchLabel);
 
-            _mainInput = new TextField("")
+            _searchBox = new TextField("")
             {
                 X = Pos.Right(searchLabel),
                 Y = Pos.Bottom(_listView),
@@ -177,10 +132,10 @@ public class BigListBox<T>
             btnOk.X = 38;
             btnCancel.X = Pos.Right(btnOk) + 2;
 
-            win.Add(_mainInput);
-            _mainInput.SetFocus();
+            win.Add(_searchBox);
+            _searchBox.SetFocus();
 
-            _mainInput.TextChanged += (s) =>
+            _searchBox.TextChanged += (s) =>
             {
                 // Don't update the UI while user is hammering away on the keyboard
                 _lastKeypress = DateTime.Now;
@@ -199,15 +154,55 @@ public class BigListBox<T>
 
         AddMoreButtonsAfter(win, btnCancel);
 
-        var callback = Application.MainLoop.AddTimeout(TimeSpan.FromMilliseconds(100), Timer);
+        _callback = Application.MainLoop.AddTimeout(TimeSpan.FromMilliseconds(100), Timer);
 
         _listView.FocusFirst();
+    }
 
+    private class ListViewObject<T2> where T2 : T
+    {
+        private readonly Func<T2?, string> _displayFunc;
+        public T2? Object { get; }
+
+        public ListViewObject(T2? o, Func<T2?, string> displayFunc)
+        {
+            _displayFunc = displayFunc;
+            Object = o;
+        }
+
+        public override string ToString()
+        {
+            return _displayFunc(Object);
+        }
+
+        public override int GetHashCode()
+        {
+            if(Object == null)
+                return 0;
+
+            return Object.GetHashCode();
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is ListViewObject<T2> other)
+                return Object?.Equals(other.Object) ?? false;
+
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Runs the dialog as modal blocking and returns true if a selection was made. 
+    /// </summary>
+    /// <returns>True if selection was made (see <see cref="Selected"/>) or false if user cancelled the dialog</returns>
+    public bool ShowDialog()
+    {
         Application.Run(win);
 
-        Application.MainLoop.RemoveTimeout(callback);
+        Application.MainLoop.RemoveTimeout(_callback);
 
-        return okClicked;
+        return _okClicked;
     }
 
     private void _listView_KeyPress(View.KeyEventEventArgs obj)
@@ -215,7 +210,7 @@ public class BigListBox<T>
         // if user types in some text change the focus to the text box to enable searching
         if (char.IsLetterOrDigit((char)obj.KeyEvent.KeyValue))
         {
-            _mainInput.FocusFirst();
+            _searchBox?.FocusFirst();
         }
     }
 
@@ -250,10 +245,10 @@ public class BigListBox<T>
     }
     protected void RestartFiltering()
     {
-        RestartFiltering(_mainInput.Text.ToString());
+        RestartFiltering(_searchBox?.Text.ToString());
     }
 
-    protected void RestartFiltering(string searchTerm)
+    protected void RestartFiltering(string? searchTerm)
     {
 
         lock (_taskCancellationLock)
@@ -268,7 +263,7 @@ public class BigListBox<T>
         var cts = new CancellationTokenSource();
         _cancelFiltering.Add(cts);
 
-        _currentFilterTask = Task.Run(() =>
+        Task.Run(() =>
         {
             var result = BuildList(GetListAfterSearch(searchTerm, cts.Token));
 
@@ -287,15 +282,20 @@ public class BigListBox<T>
         var toReturn = listOfT.Select(o => new ListViewObject<T>(o, AspectGetter)).ToList();
 
         if (_addNull)
-            toReturn.Add(new ListViewObject<T>((T)(object)null, (o) => "Null"));
+            toReturn.Add(new ListViewObject<T>(default, (o) => "Null"));
 
         return toReturn;
     }
 
-    protected virtual IList<T> GetListAfterSearch(string searchString, CancellationToken token)
+    protected virtual IList<T> GetListAfterSearch(string? searchString, CancellationToken token)
     {
         if (_publicCollection == null)
             throw new InvalidOperationException("When using the protected constructor derived classes must override this method ");
+
+        if(string.IsNullOrEmpty(searchString))
+        {
+            return _publicCollection.ToList();
+        }
 
         //stop the Contains searching when the user cancels the search
         return _publicCollection.Where(o => !token.IsCancellationRequested &&

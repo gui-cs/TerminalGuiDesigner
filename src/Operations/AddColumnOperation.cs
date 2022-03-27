@@ -6,7 +6,7 @@ namespace TerminalGuiDesigner.Operations;
 
 internal class AddColumnOperation : Operation
 {
-    private DataColumn _column;
+    private DataColumn? _column;
     private TableView _tableView;
 
     public Design Design { get; }
@@ -29,7 +29,7 @@ internal class AddColumnOperation : Operation
             throw new Exception("This command has already been performed once.  Use Redo instead of Do");
         }
 
-        if (Modals.GetString("Add Column", "Column Name", "MyCol", out string newColumnName))
+        if (Modals.GetString("Add Column", "Column Name", "MyCol", out var newColumnName))
         {
             _column = _tableView.Table.Columns.Add(newColumnName);
             _tableView.Update();

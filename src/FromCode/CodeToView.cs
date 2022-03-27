@@ -105,7 +105,7 @@ public class CodeToView
         var csTree = (CSharpSyntaxTree)CSharpSyntaxTree.ParseText(ViewToCode.GetGenerateNewViewCode(ClassName, Namespace));
 
         var dd = typeof(Enumerable).GetTypeInfo().Assembly.Location;
-        var coreDir = Directory.GetParent(dd);
+        var coreDir = Directory.GetParent(dd) ?? throw new Exception($"Could not find parent directory of dotnet sdk.  Sdk directory was {dd}");
 
         var netCoreLib = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
         var terminalGuilib = MetadataReference.CreateFromFile(typeof(View).Assembly.Location);
@@ -164,47 +164,5 @@ public class CodeToView
         return typeof(View).Assembly.GetTypes().Single(t=>
             !t.IsInterface && !t.IsAbstract && typeof(View).IsAssignableFrom(t)
             & ( t.Name.Equals(baseTypeName) || baseTypeName.Equals(t.FullName))) ?? throw new Exception($"Could not find Type '{baseTypeName}'");
-    }
-
-    public string GetRhsCodeFor(Design design, Property property)
-    {
-        if(!SourceFile.DesignerFile.Exists)
-            return null;
-
-        // read the .Designer.cs file
-        var syntaxTree = CSharpSyntaxTree.ParseText(File.ReadAllText(SourceFile.DesignerFile.FullName));
-
-        // look for an assignment for the given property
-        var filedName = design.FieldName;
-
-        // get the InitializeComponent method
-        var root = syntaxTree.GetRoot();
-        var initMethods = root.DescendantNodes().OfType<MethodDeclarationSyntax>()
-            .Where(m => m.Identifier.ToString().Equals(SourceCodeFile.InitializeComponentMethodName)).ToArray();
-
-        if (initMethods.Length != 1)
-        {
-            throw new Exception($"Expected {SourceFile.DesignerFile.FullName} to contain only a single '{SourceCodeFile.InitializeComponentMethodName}' method but it contained {initMethods.Length}");
-        }
-
-        var initMethod = initMethods.Single();
-
-        var lookingFor = property.GetLhs();
-
-        // find assignments where the lhs ends with the fieldName
-        var assignments = initMethod.DescendantNodes().OfType<AssignmentExpressionSyntax>()
-            .Where(a => a.Left.ToString().EndsWith(lookingFor)).ToArray();
-
-        if (assignments.Length > 1)
-        {
-            throw new Exception($"Found multiple assignments to the field '{lookingFor}' in the '{SourceCodeFile.InitializeComponentMethodName}' method in {SourceFile.DesignerFile.FullName}");
-        }
-
-        // there are no assignments to this property
-        if (assignments.Length == 0)
-            return null;
-
-        // return the Rhs code in the Designer.cs for this field
-        return assignments[0].Right.ToString();
     }
 }

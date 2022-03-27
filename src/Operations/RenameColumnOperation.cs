@@ -44,7 +44,7 @@ internal class RenameColumnOperation : Operation
             throw new Exception("No column was selected so command cannot be run");
         }
 
-        if (Modals.GetString("Rename Column", "Column Name", _originalName, out string newColumnName))
+        if (Modals.GetString("Rename Column", "Column Name", _originalName, out var newColumnName))
         {
             _newColumnName = newColumnName;
             _column.ColumnName = newColumnName;

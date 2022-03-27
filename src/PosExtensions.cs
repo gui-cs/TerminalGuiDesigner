@@ -14,8 +14,10 @@ public static class PosExtensions
     {
         if(p.IsAbsolute())
         {
-            var nField = p.GetType().GetField("n", BindingFlags.NonPublic | BindingFlags.Instance);
-            n = (int)nField.GetValue(p);
+            var nField = p.GetType().GetField("n", BindingFlags.NonPublic | BindingFlags.Instance)
+                ?? throw new Exception("Expected private field 'n' of PosAbsolute was missing");
+            n = (int?)nField.GetValue(p)
+                ?? throw new Exception("Expected private field 'n' of PosAbsolute to be int"); ;
             return true;
         }
 
@@ -32,8 +34,11 @@ public static class PosExtensions
     {
         if (p.IsPercent())
         {
-            var nField = p.GetType().GetField("factor", BindingFlags.NonPublic | BindingFlags.Instance);
-            percent = ((float)nField.GetValue(p))*100f;
+            var nField = p.GetType().GetField("factor", BindingFlags.NonPublic | BindingFlags.Instance)
+                ?? throw new Exception("Expected private field 'factor' was missing from PosFactor");
+            percent = ((float?)nField.GetValue(p) 
+                ?? throw new Exception("Expected private field 'factor' of PosFactor to be float"))
+                *100f;
             return true;
         }
 
@@ -62,11 +67,11 @@ public static class PosExtensions
             return true;
         }
 
-        posView = null;
+        posView = 0;
         return false;
     }
 
-    public static bool IsRelative(this Pos p,IList<Design> knownDesigns, out Design relativeTo, out Side side)
+    public static bool IsRelative(this Pos p,IList<Design> knownDesigns, out Design? relativeTo, out Side side)
     {
         relativeTo = null;
         side = default;
@@ -82,8 +87,8 @@ public static class PosExtensions
 
         if (p.IsRelative(out var posView))
         {
-            var fTarget = posView.GetType().GetField("Target");
-            var view = (View)fTarget.GetValue(posView);
+            var fTarget = posView.GetType().GetField("Target") ?? throw new Exception("PosView was missing expected field 'Target'");
+            View view = (View?)fTarget.GetValue(posView) ?? throw new Exception("PosView had a null 'Target' view");
 
             relativeTo = knownDesigns.FirstOrDefault(d=>d.View == view);
 
@@ -92,8 +97,9 @@ public static class PosExtensions
             if(relativeTo == null)
                 return false;
 
-            var fSide = posView.GetType().GetField("side", BindingFlags.NonPublic | BindingFlags.Instance);
-            var iSide = (int)fSide.GetValue(posView);
+            var fSide = posView.GetType().GetField("side", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("PosView was missing expected field 'side'"); ;
+            var iSide = (int?)fSide.GetValue(posView) 
+                ?? throw new Exception("Expected PosView property 'side' to be of Type int");
 
             side = (Side)iSide;
             return true;
@@ -111,26 +117,26 @@ public static class PosExtensions
     {
         if (p.IsCombine())
         {
-            var fLeft = p.GetType().GetField("left", BindingFlags.NonPublic | BindingFlags.Instance);
-            left = (Pos)fLeft.GetValue(p);
+            var fLeft = p.GetType().GetField("left", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field missing from PosCombine");
+            left = fLeft.GetValue(p) as Pos ?? throw new Exception("Expected field 'left' of PosCombine to be a Pos");
 
-            var fRight = p.GetType().GetField("right", BindingFlags.NonPublic | BindingFlags.Instance);
-            right = (Pos)fRight.GetValue(p);
+            var fRight = p.GetType().GetField("right", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field missing from PosCombine");
+            right = fRight.GetValue(p) as Pos ?? throw new Exception("Expected field 'right' of PosCombine to be a Pos");
            
-            var fAdd = p.GetType().GetField("add", BindingFlags.NonPublic | BindingFlags.Instance);
-            add = (bool)fAdd.GetValue(p);
+            var fAdd = p.GetType().GetField("add", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field missing from PosCombine");
+            add = fAdd.GetValue(p) as bool? ?? throw new Exception("Expected field 'add' of PosCombine to be a bool");
             
             return true;
         }
 
-        left = null;
-        right = null;
+        left = 0;
+        right = 0;
         add = false;
         return false;
     }
 
 
-    public static bool GetPosType(this Pos p,IList<Design> knownDesigns, out PosType type,out float value,out Design relativeTo, out Side side, out int offset)
+    public static bool GetPosType(this Pos p,IList<Design> knownDesigns, out PosType type,out float value,out Design? relativeTo, out Side side, out int offset)
     {
 
         type = default;
@@ -253,6 +259,10 @@ public static class PosExtensions
             case PosType.Absolute : 
                     return val.ToString();
             case PosType.Relative:
+
+                if (relativeTo == null)
+                    throw new Exception("Pos was Relative but 'relativeTo' was null.  What is the Pos relative to?!");
+
                 if(offset > 0)
                     return $"Pos.{GetMethodNameFor(side)}({relativeTo.FieldName}) + {offset}";
                 if(offset < 0)

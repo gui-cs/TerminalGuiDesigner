@@ -12,9 +12,9 @@ namespace TerminalGuiDesigner.UI;
 public class Editor : Toplevel
 {
     Design? _viewBeingEdited;
-    private SourceCodeFile _currentDesignerFile;
+    private SourceCodeFile? _currentDesignerFile;
     private bool enableDrag = true;
-    DragOperation dragOperation = null;
+    DragOperation? dragOperation = null;
     bool _editting = false;
 
     const string HelpWithNothingLoaded = @"F1/Ctrl+H - Show Help
@@ -202,6 +202,9 @@ Ctrl+Y - Redo";
                     ShowEditPropertiesWindow();
                     return true;
                 case Key.F5:
+                    if (_viewBeingEdited == null)
+                        return false;
+
                     ShowEditPropertiesWindow(_viewBeingEdited);
                     return true;
                 case Key.Enter | Key.ShiftMask:
@@ -250,7 +253,7 @@ Ctrl+Y - Redo";
         {
             var options = d.GetExtraOperations().Where(o=>!o.IsImpossible).ToArray();
 
-            if(options.Any() && Modals.Get("Operations","Ok",options, out IOperation selected))
+            if(options.Any() && Modals.Get("Operations","Ok",options, out var selected) && selected != null)
             {
                 OperationManager.Instance.Do(selected);
             }
@@ -301,7 +304,12 @@ Ctrl+Y - Redo";
         {
             try
             {
-                Open(new FileInfo(ofd.FilePath.ToString()));
+                var path = ofd.FilePath.ToString();
+
+                if (string.IsNullOrEmpty(path))
+                    return;
+
+                Open(new FileInfo(path));
             }
             catch (Exception ex)
             {
@@ -341,7 +349,7 @@ Ctrl+Y - Redo";
     private void New()
     {
 
-        if(!Modals.Get("Create New View","Ok",new Type[]{typeof(Window),typeof(View),typeof(Dialog)},out var selected))
+        if(!Modals.Get("Create New View","Ok",new Type[]{typeof(Window),typeof(Dialog)},out var selected))
         {
             return;
         }
@@ -358,7 +366,12 @@ Ctrl+Y - Redo";
         {
             try
             {
-                New(new FileInfo(ofd.FilePath.ToString()),selected);
+                var path = ofd.FilePath.ToString();
+
+                if (string.IsNullOrWhiteSpace(path) || selected == null)
+                    return;
+
+                New(new FileInfo(path),selected);
             }
             catch (Exception ex)
             {
@@ -394,6 +407,9 @@ Ctrl+Y - Redo";
     }
     private void Save()
     {
+        if (_viewBeingEdited == null || _currentDesignerFile == null)
+            return;
+
         var viewToCode = new ViewToCode();
 
         viewToCode.GenerateDesignerCs(
@@ -402,7 +418,7 @@ Ctrl+Y - Redo";
     }
     private void ShowAddViewWindow()
     {
-        if (_viewBeingEdited == null)
+        if (_viewBeingEdited == null || _currentDesignerFile == null)
         {
             return;
         }
@@ -413,7 +429,7 @@ Ctrl+Y - Redo";
         var factory = new ViewFactory();
         var selectable = factory.GetSupportedViews().ToArray();
             
-        if (Modals.Get("Type of Control", "Add", true, selectable, t => t.Name, false, out Type selected))
+        if (Modals.Get("Type of Control", "Add", true, selectable, t => t?.Name ?? "Null", false, out var selected) && selected != null)
         {
             var instance = factory.Create(selected);
 
@@ -432,6 +448,9 @@ Ctrl+Y - Redo";
     /// <exception cref="NotImplementedException"></exception>
     private string GetUniqueFieldName(Type viewType)
     {
+        if (_viewBeingEdited == null)
+            throw new Exception("Cannot generate unique field name because no view is being edited");
+
         var allDesigns = _viewBeingEdited.GetAllDesigns();
 
         // consider label1

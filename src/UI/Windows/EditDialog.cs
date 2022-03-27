@@ -196,10 +196,9 @@ public class EditDialog : Window
 
         if(property.PropertyInfo.PropertyType.IsArray)
         {
-            
             if(Modals.GetArray(property.PropertyInfo.Name, "New Value",
-                property.PropertyInfo.PropertyType.GetElementType(),
-                 (Array)oldValue, out Array resultArray))
+                property.PropertyInfo.PropertyType.GetElementType() ?? throw new Exception("Property was an Array but GetElementType returned null"),
+                 (Array?)oldValue, out Array? resultArray))
             {
                 newValue = resultArray;
                 return true;
@@ -208,14 +207,14 @@ public class EditDialog : Window
 
         if(property.PropertyInfo.PropertyType.IsEnum)
         {
-            if(Modals.GetEnum((string)property.PropertyInfo.Name, "New Value", (Enum)oldValue, out var resultEnum))
+            if(Modals.GetEnum(property.PropertyInfo.Name, "New Value", property.PropertyInfo.PropertyType, out var resultEnum))
             {
                 newValue = resultEnum;
                 return true;
             }
         }
 
-        if (Modals.GetString((string)property.PropertyInfo.Name, "New Value", oldValue?.ToString() ?? string.Empty, out string result))
+        if (Modals.GetString(property.PropertyInfo.Name, "New Value", oldValue?.ToString(), out var result))
         {
             newValue = result;
             return true;

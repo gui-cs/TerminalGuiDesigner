@@ -47,7 +47,7 @@ public class ViewFactory
             return g;
         }
 
-        var instance = (View)Activator.CreateInstance(t);
+        var instance = (View?)Activator.CreateInstance(t) ?? throw new Exception($"CreateInstance returned null for Type '{t}'");
 
         instance.SetActualText("Heya");
 
