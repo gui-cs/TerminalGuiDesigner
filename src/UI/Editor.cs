@@ -23,15 +23,15 @@ public class Editor : Toplevel
 
     private string GetHelpWithNothingLoaded()
     {
-    return @$"F1/Ctrl+H - Show Help
-Ctrl+N - New View
-Ctrl+O - Open a .Designer.cs file";
+    return @$"{_keyMap.ShowHelp} - Show Help
+{_keyMap.New} - New View
+{_keyMap.Open} - Open a .Designer.cs file";
     }
     private string GetHelp()
     {
 
         return GetHelpWithNothingLoaded() + @$"
-Ctrl+S - Save an opened .Designer.cs file
+{_keyMap.Save} - Save an opened .Designer.cs file
 F2 - Add Control
 F3 - Toggle mouse dragging on/off
 {_keyMap.EditProperties} - Edit View Properties
@@ -215,13 +215,29 @@ Ctrl+Y - Redo";
                 ShowEditProperties(_viewBeingEdited);
                 return true;
             }
-
-            switch (keyEvent.Key)
+            if(keyEvent.Key == _keyMap.Open)
             {
-                case Key.F1:
-                case Key.H | Key.CtrlMask:
+                    Open();
+                    return true;
+            }
+            if(keyEvent.Key == _keyMap.Save)
+            {
+                    Save();
+                    return true;
+            }
+            if(keyEvent.Key == _keyMap.New)
+            {
+                    New();
+                    return true;
+            }
+            if(keyEvent.Key == _keyMap.ShowHelp)
+            {
                     ShowHelp();
                     return true;
+            }
+            
+            switch (keyEvent.Key)
+            {
                 case Key.F2:
                     ShowAddViewWindow();
                     return true;
@@ -256,15 +272,6 @@ Ctrl+Y - Redo";
                     return true;
                 case Key.DeleteChar:
                     Delete();
-                    return true;
-                case Key.CtrlMask | Key.O:
-                    Open();
-                    return true;
-                case Key.CtrlMask | Key.S:
-                    Save();
-                    return true;
-                case Key.CtrlMask | Key.N:
-                    New();
                     return true;
                 case Key.CtrlMask | Key.Z:
                     OperationManager.Instance.Undo();
