@@ -1,6 +1,7 @@
 ﻿using Terminal.Gui;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
+using Attribute = Terminal.Gui.Attribute;
 
 namespace TerminalGuiDesigner.UI.Windows;
 
@@ -123,6 +124,26 @@ public class EditDialog : Window
     private bool GetNewValue(Property property, out object? newValue)
     {
         var oldValue = property.GetValue();
+
+        if(property.PropertyInfo.PropertyType == typeof(Attribute) ||
+            property.PropertyInfo.PropertyType == typeof(Attribute?))
+        {
+            // if its an Attribute or nullableAttribute
+            var picker = new ColorPicker((Attribute?)property.GetValue());
+            Application.Run(picker);
+
+            if (!picker.Cancelled)
+            {
+                newValue = picker.Result;
+                return true;
+            }
+            else
+            {
+                // user cancelled designing the Color
+                newValue = null;
+                return false;
+            }
+        }
 
         // user is editing a Pos
         if (property.PropertyInfo.PropertyType == typeof(Pos))
