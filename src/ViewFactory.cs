@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using NStack;
 using Terminal.Gui;
+using Terminal.Gui.Graphs;
 using static Terminal.Gui.Border;
 using Attribute = Terminal.Gui.Attribute;
 
@@ -42,6 +43,12 @@ public class ViewFactory
             };
 
             g.AxisX.Visible = true;
+
+            g.Annotations.Add(new TextAnnotation
+            {
+                ScreenPosition = new Point(1, 1),
+                Text = "Graph"
+            });
 
             g.GraphColor = Attribute.Make(Color.White,Color.Black);
             return g;

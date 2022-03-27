@@ -344,8 +344,15 @@ Ctrl+Y - Redo";
             // no longer loading
             Application.MainLoop.Invoke(()=>Application.RequestStop());
 
+            if (t.Exception != null)
+            {
+                Application.MainLoop.Invoke(() =>
+                    ExceptionViewer.ShowException($"Failed to open '{toOpen.Name}'", t.Exception));
+                return;
+            }
+
             // if loaded correctly then 
-            if(instance != null)
+            if (instance != null)
                 ReplaceViewBeingEdited(instance);
 
         },TaskScheduler.FromCurrentSynchronizationContext());
