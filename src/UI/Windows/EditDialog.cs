@@ -18,7 +18,7 @@ public class EditDialog : Window
         Design = design;
         collection = Design.GetDesignableProperties()
             .OrderByDescending(p=>p is NameProperty)
-            .ThenBy(p=>p.PropertyInfo.Name)
+            .ThenBy(p=>p.ToString())
             .ToList();
 
         // Don't let them rename the root view that would go badly

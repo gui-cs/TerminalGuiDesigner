@@ -119,6 +119,12 @@ public class Property : ToCodeBase
 
     public override string ToString()
     {
+        if(SubProperty != null)
+        {
+            return $"{SubProperty}.{PropertyInfo.Name}:" + GetHumanReadableValue();
+
+        }
+
         return PropertyInfo.Name + ":" + GetHumanReadableValue();
     }
 

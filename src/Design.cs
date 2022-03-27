@@ -1,6 +1,7 @@
 using System.Reflection;
 using NLog;
 using Terminal.Gui;
+using Terminal.Gui.Graphs;
 using TerminalGuiDesigner.FromCode;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
@@ -148,6 +149,16 @@ public class Design
         if(View is GraphView gv)
         {
             yield return CreateProperty(nameof(GraphView.GraphColor));
+
+            yield return CreateSubProperty(nameof(HorizontalAxis.Visible),nameof(GraphView.AxisX),gv.AxisX);
+            yield return CreateSubProperty(nameof(HorizontalAxis.Increment),nameof(GraphView.AxisX),gv.AxisX);
+            yield return CreateSubProperty(nameof(HorizontalAxis.ShowLabelsEvery),nameof(GraphView.AxisX),gv.AxisX);
+            yield return CreateSubProperty(nameof(HorizontalAxis.Minimum),nameof(GraphView.AxisX),gv.AxisX);
+
+            yield return CreateSubProperty(nameof(VerticalAxis.Visible),nameof(GraphView.AxisY),gv.AxisY);
+            yield return CreateSubProperty(nameof(VerticalAxis.Increment),nameof(GraphView.AxisY),gv.AxisY);
+            yield return CreateSubProperty(nameof(VerticalAxis.ShowLabelsEvery),nameof(GraphView.AxisY),gv.AxisY);
+            yield return CreateSubProperty(nameof(VerticalAxis.Minimum),nameof(GraphView.AxisY),gv.AxisY);
         }
 
         if (View is Window)
@@ -180,6 +191,13 @@ public class Design
         {
             yield return CreateProperty(nameof(RadioGroup.RadioLabels));
         }
+    }
+
+    private Property CreateSubProperty(string name, string subObjectName, object subObject)
+    {
+        return new Property(this,subObject.GetType().GetProperty(name)        
+            ?? throw new Exception($"Could not find expected Property '{name}' on Sub Object of Type '{subObject.GetType()}'")
+            ,subObjectName,subObject);
     }
 
     private Property CreateProperty(string name)
