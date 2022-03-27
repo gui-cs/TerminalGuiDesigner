@@ -134,15 +134,22 @@ Ctrl+Y - Redo";
             return;
 
         var lines = HelpWithNothingLoaded.Split('\n');
-        var tf = new TextFormatter();
-        var width = Frame.Width;
-        var grey = new Attribute(Color.Black);
 
-        for(int y = 0 ; y < lines.Length ; y++)
+        Driver.SetAttribute(new Attribute(Color.DarkGray, Color.Black));
+
+        int midX = Bounds.Width / 2;
+        int midY = Math.Max(0,(Bounds.Height / 2) - (lines.Length/2)) -1;
+
+        for (int y = 0 ; y < lines.Length ; y++)
         {
-            tf.Text = lines[y];
-            tf.Alignment = TextAlignment.Centered;
-            tf.Draw(new Rect(0,y+2,width,1),grey,grey);
+            var line = lines[y].TrimEnd();
+
+            int startFromX = midX - line.Length / 2;
+
+            for (int x = 0; x < line.Length; x++)
+            {
+                AddRune(startFromX + x, midY + y, line[x]);
+            }
         }
     }
 
