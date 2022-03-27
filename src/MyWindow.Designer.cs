@@ -16,6 +16,8 @@ namespace YourNamespace {
         
         private Terminal.Gui.GraphView graphview1;
         
+        private Terminal.Gui.TableView tableview1;
+        
         private void InitializeComponent() {
             this.Text = "";
             this.Width = Dim.Fill(0);
@@ -33,7 +35,50 @@ namespace YourNamespace {
             this.graphview1.Y = 1;
             this.graphview1.TextAlignment = TextAlignment.Left;
             this.graphview1.GraphColor = Terminal.Gui.Attribute.Make(Color.Magenta,Color.Cyan);
+            this.graphview1.AxisX.Visible = true;
+            this.graphview1.AxisX.Increment = 1F;
+            this.graphview1.AxisX.ShowLabelsEvery = 5u;
+            this.graphview1.AxisX.Minimum = null;
+            this.graphview1.AxisY.Visible = true;
+            this.graphview1.AxisY.Increment = 1F;
+            this.graphview1.AxisY.ShowLabelsEvery = 5u;
+            this.graphview1.AxisY.Minimum = null;
             this.Add(this.graphview1);
+            this.tableview1 = new Terminal.Gui.TableView();
+            this.tableview1.Data = "tableview1";
+            this.tableview1.Text = "";
+            this.tableview1.Width = 50;
+            this.tableview1.Height = 5;
+            this.tableview1.X = 6;
+            this.tableview1.Y = 9;
+            this.tableview1.TextAlignment = TextAlignment.Left;
+            this.tableview1.Style.AlwaysShowHeaders = false;
+            this.tableview1.Style.ExpandLastColumn = true;
+            this.tableview1.Style.InvertSelectedCellFirstCharacter = false;
+            this.tableview1.Style.ShowHorizontalHeaderOverline = true;
+            this.tableview1.Style.ShowHorizontalHeaderUnderline = true;
+            this.tableview1.Style.ShowVerticalCellLines = true;
+            this.tableview1.Style.ShowVerticalHeaderLines = true;
+            System.Data.DataTable tableview1Table;
+            tableview1Table = new System.Data.DataTable();
+            System.Data.DataColumn tableview1TableCol0;
+            tableview1TableCol0 = new System.Data.DataColumn();
+            tableview1TableCol0.ColumnName = "Column 0";
+            tableview1Table.Columns.Add(tableview1TableCol0);
+            System.Data.DataColumn tableview1TableCol1;
+            tableview1TableCol1 = new System.Data.DataColumn();
+            tableview1TableCol1.ColumnName = "Column 1";
+            tableview1Table.Columns.Add(tableview1TableCol1);
+            System.Data.DataColumn tableview1TableCol2;
+            tableview1TableCol2 = new System.Data.DataColumn();
+            tableview1TableCol2.ColumnName = "Column 2";
+            tableview1Table.Columns.Add(tableview1TableCol2);
+            System.Data.DataColumn tableview1TableCol3;
+            tableview1TableCol3 = new System.Data.DataColumn();
+            tableview1TableCol3.ColumnName = "Column 3";
+            tableview1Table.Columns.Add(tableview1TableCol3);
+            this.tableview1.Table = tableview1Table;
+            this.Add(this.tableview1);
         }
     }
 }

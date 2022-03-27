@@ -5,13 +5,13 @@ using Attribute = Terminal.Gui.Attribute;
 
 namespace TerminalGuiDesigner.UI.Windows;
 
+
 public class EditDialog : Window
 {
     private List<Property> collection;
     private ListView list;
 
     public Design Design { get; }
-
 
     public EditDialog(Design design)
     {

@@ -6,6 +6,7 @@ using TerminalGuiDesigner.FromCode;
 using TerminalGuiDesigner.ToCode;
 using System.Text.RegularExpressions;
 using Attribute = Terminal.Gui.Attribute;
+using YamlDotNet.Serialization;
 
 namespace TerminalGuiDesigner.UI;
 
@@ -17,17 +18,25 @@ public class Editor : Toplevel
     DragOperation? dragOperation = null;
     bool _editting = false;
 
-    const string HelpWithNothingLoaded = @"F1/Ctrl+H - Show Help
+    readonly KeyMap _keyMap;
+
+
+    private string GetHelpWithNothingLoaded()
+    {
+    return @$"F1/Ctrl+H - Show Help
 Ctrl+N - New View
 Ctrl+O - Open a .Designer.cs file";
+    }
+    private string GetHelp()
+    {
 
-    const string Help = @"
+        return GetHelpWithNothingLoaded() + @$"
 Ctrl+S - Save an opened .Designer.cs file
 F2 - Add Control
 F3 - Toggle mouse dragging on/off
-F4/Enter - Properties
-Shift+F4/Enter - View Specific Operations
-F5 - Edit Root Properties
+{_keyMap.EditProperties} - Edit View Properties
+{_keyMap.ViewSpecificOperations} - View Specific Operations
+{_keyMap.EditRootProperties} - Edit Root Properties
 Del - Delete selected View
 Shift+Cursor - Move focused View
 Ctrl+Cursor - Move focused View quickly
@@ -35,15 +44,37 @@ Ctrl+Q - Quit
 Ctrl+Z - Undo
 Ctrl+Y - Redo";
 
+    }
+
     public Editor()
     {
         CanFocus = true;
+
+        // If there are custom keybindings read those
+        if(File.Exists("Keys.yaml"))
+        {
+            var d = new Deserializer();
+            try
+            {
+                _keyMap = d.Deserialize<KeyMap>(File.ReadAllText("Keys.yaml"));
+            }
+            catch (Exception ex)
+            {
+                // if there is bad yaml use the defaults
+                ExceptionViewer.ShowException("Failed to read keybindings",ex);
+                _keyMap = new KeyMap();
+            }
+        }
+        else
+        {
+            // otherwise use the defaults
+            _keyMap = new KeyMap();
+        }
+
     }
 
     public void Run(string? fileToLoad)
     {
-        Application.Init();
-
         if(fileToLoad != null)
         {
             try
@@ -133,7 +164,7 @@ Ctrl+Y - Redo";
         if(_viewBeingEdited != null)
             return;
 
-        var lines = HelpWithNothingLoaded.Split('\n');
+        var lines = GetHelpWithNothingLoaded().Split('\n');
 
         Driver.SetAttribute(new Attribute(Color.DarkGray, Color.Black));
 
@@ -165,6 +196,25 @@ Ctrl+Y - Redo";
         try
         {
             _editting = true;
+
+            if(keyEvent.Key == _keyMap.EditProperties)
+            {
+                ShowEditProperties();
+                return true;
+            }
+            if(keyEvent.Key == _keyMap.ViewSpecificOperations)
+            {
+                ShowViewSpecificOperations();
+                return true;
+            }
+
+            if(keyEvent.Key == _keyMap.EditRootProperties)
+            {
+                if (_viewBeingEdited == null)
+                    return false;
+                ShowEditProperties(_viewBeingEdited);
+                return true;
+            }
 
             switch (keyEvent.Key)
             {
@@ -204,20 +254,6 @@ Ctrl+Y - Redo";
                 case Key.F3:
                     enableDrag = !enableDrag;
                     return true;
-                case Key.Enter:
-                case Key.F4:
-                    ShowEditPropertiesWindow();
-                    return true;
-                case Key.F5:
-                    if (_viewBeingEdited == null)
-                        return false;
-
-                    ShowEditPropertiesWindow(_viewBeingEdited);
-                    return true;
-                case Key.Enter | Key.ShiftMask:
-                case Key.F4 | Key.ShiftMask:
-                    ShowExtraOptions();
-                    return true;
                 case Key.DeleteChar:
                     Delete();
                     return true;
@@ -252,7 +288,7 @@ Ctrl+Y - Redo";
         return base.ProcessHotKey(keyEvent);
     }
 
-    private void ShowExtraOptions()
+    private void ShowViewSpecificOperations()
     {
         var d = GetMostFocused(this)?.GetNearestDesign();
 
@@ -269,7 +305,7 @@ Ctrl+Y - Redo";
 
     private void ShowHelp()
     {
-        MessageBox.Query("Help", HelpWithNothingLoaded + Help, "Ok");
+        MessageBox.Query("Help", GetHelp(), "Ok");
     }
 
     private void MoveControl(int deltaX, int deltaY)
@@ -479,16 +515,16 @@ Ctrl+Y - Redo";
         return $"{viewType.Name.ToLower()}{number}";
     }
 
-    private void ShowEditPropertiesWindow()
+    private void ShowEditProperties()
     {
         var d = GetMostFocused(this).GetNearestDesign();
         if (d != null)
         {
-            ShowEditPropertiesWindow(d);
+            ShowEditProperties(d);
         }
     }
 
-    private void ShowEditPropertiesWindow(Design d)
+    private void ShowEditProperties(Design d)
     {
         var edit = new EditDialog(d);
         Application.Run(edit);
