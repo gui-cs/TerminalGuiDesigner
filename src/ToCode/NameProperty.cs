@@ -4,7 +4,10 @@ namespace TerminalGuiDesigner.ToCode;
 
 public class NameProperty : Property
 {
-    public NameProperty(Design design) : base(design, typeof(Design).GetProperty("FieldName"))
+    public NameProperty(Design design) : base(design, 
+        typeof(Design).GetProperty(nameof(TerminalGuiDesigner.Design.FieldName))
+        ?? throw new MissingFieldException("Expected property was missing from Design")
+        )
     {
 
     }
@@ -13,16 +16,15 @@ public class NameProperty : Property
     {
         return $"(Name):{Design.FieldName}";
     }
-    public override void SetValue(object value)
+    public override void SetValue(object? value)
     {
         if (value == null)
         {
             throw new ArgumentException("Not Possible", "You cannot set a View (Name) property to null");
         }
-        else
-        {
-            Design.FieldName = value.ToString();
-        }
+        
+        Design.FieldName = value.ToString() ?? throw new Exception($"ToString returned null for value of Type {value.GetType().Name}");
+        
     }
 
     public override object GetValue()
