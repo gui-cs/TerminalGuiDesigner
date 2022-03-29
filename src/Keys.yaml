@@ -5,3 +5,8 @@ ShowHelp: H, CtrlMask
 New: N, CtrlMask
 Open: O, CtrlMask
 Save: S, CtrlMask
+Redo: Y, CtrlMask
+Undo: Z, CtrlMask
+Delete: DeleteChar
+ToggleDragging: F3
+AddView: F2

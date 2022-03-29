@@ -106,6 +106,18 @@ public class Design
             }
         }
 
+        // To make the graph render correctly we need some content
+        // either a Series or an Annotation
+        if(subView is GraphView gv && gv.Series.Count == 0 && gv.Annotations.Count == 0)
+        {
+            // We don't have  either so add one
+            gv.Annotations.Add(new TextAnnotation
+            {
+                ScreenPosition = new Point(1, 1),
+                Text = "Graph"
+            });
+        }
+
         if (super != null)
         {
             super.Add(subView);

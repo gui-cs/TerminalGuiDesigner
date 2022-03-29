@@ -42,14 +42,6 @@ public class ViewFactory
                 Height = 5,
             };
 
-            g.AxisX.Visible = true;
-
-            g.Annotations.Add(new TextAnnotation
-            {
-                ScreenPosition = new Point(1, 1),
-                Text = "Graph"
-            });
-
             g.GraphColor = Attribute.Make(Color.White,Color.Black);
             return g;
         }

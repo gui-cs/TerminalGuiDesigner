@@ -32,17 +32,17 @@ public class Editor : Toplevel
 
         return GetHelpWithNothingLoaded() + @$"
 {_keyMap.Save} - Save an opened .Designer.cs file
-F2 - Add Control
-F3 - Toggle mouse dragging on/off
+{_keyMap.AddView} - Add View
+{_keyMap.ToggleDragging} - Toggle mouse dragging on/off
 {_keyMap.EditProperties} - Edit View Properties
 {_keyMap.ViewSpecificOperations} - View Specific Operations
 {_keyMap.EditRootProperties} - Edit Root Properties
-Del - Delete selected View
+{_keyMap.Delete} - Delete selected View
 Shift+Cursor - Move focused View
 Ctrl+Cursor - Move focused View quickly
 Ctrl+Q - Quit
-Ctrl+Z - Undo
-Ctrl+Y - Redo";
+{_keyMap.Undo} - Undo
+{_keyMap.Redo} - Redo";
 
     }
 
@@ -217,31 +217,53 @@ Ctrl+Y - Redo";
             }
             if(keyEvent.Key == _keyMap.Open)
             {
-                    Open();
-                    return true;
+                Open();
+                return true;
             }
             if(keyEvent.Key == _keyMap.Save)
             {
-                    Save();
-                    return true;
+                Save();
+                return true;
             }
             if(keyEvent.Key == _keyMap.New)
             {
-                    New();
-                    return true;
+                New();
+                return true;
             }
             if(keyEvent.Key == _keyMap.ShowHelp)
             {
-                    ShowHelp();
-                    return true;
+                ShowHelp();
+                return true;
             }
-            
+            if(keyEvent.Key == _keyMap.AddView)
+            {
+                ShowAddViewWindow();
+                return true;
+            }
+            if(keyEvent.Key == _keyMap.ToggleDragging)
+            {
+                enableDrag = !enableDrag;
+                return true;
+            }
+            if(keyEvent.Key == _keyMap.Undo)
+            {
+                OperationManager.Instance.Undo();
+                return true;
+            }
+            if(keyEvent.Key == _keyMap.Redo)
+            {
+                OperationManager.Instance.Redo();
+                return true;
+            }
+            if(keyEvent.Key == _keyMap.Delete)
+            {
+                Delete();
+                return true;
+            }
+
+
             switch (keyEvent.Key)
             {
-                case Key.F2:
-                    ShowAddViewWindow();
-                    return true;
-
                 // Cursor keys
                 case Key.CursorUp | Key.ShiftMask:
                     MoveControl(0, -1);
@@ -266,18 +288,6 @@ Ctrl+Y - Redo";
                     return true;
                 case Key.CursorRight | Key.CtrlMask:
                     MoveControl(5, 0);
-                    return true;
-                case Key.F3:
-                    enableDrag = !enableDrag;
-                    return true;
-                case Key.DeleteChar:
-                    Delete();
-                    return true;
-                case Key.CtrlMask | Key.Z:
-                    OperationManager.Instance.Undo();
-                    return true;
-                case Key.CtrlMask | Key.Y:
-                    OperationManager.Instance.Redo();
                     return true;
             }
         }

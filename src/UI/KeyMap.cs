@@ -6,9 +6,14 @@ public class KeyMap
 {
     public Key EditProperties {get;set;} = Key.F4;
     public Key ViewSpecificOperations {get;set;} = Key.ShiftMask | Key.F4;
-    public Key EditRootProperties { get; internal set; } = Key.F5;
-    public Key ShowHelp { get; internal set; } = Key.CtrlMask | Key.H;
-    public Key New { get; internal set; } = Key.CtrlMask | Key.N;
-    public Key Open { get; internal set; } = Key.CtrlMask | Key.O;
-    public Key Save { get; internal set; } = Key.CtrlMask | Key.S;
+    public Key EditRootProperties { get; set; } = Key.F5;
+    public Key ShowHelp { get; set; } = Key.CtrlMask | Key.H;
+    public Key New { get; set; } = Key.CtrlMask | Key.N;
+    public Key Open { get; set; } = Key.CtrlMask | Key.O;
+    public Key Save { get; set; } = Key.CtrlMask | Key.S;
+    public Key Redo { get; set; } = Key.CtrlMask | Key.Y;
+    public Key Undo { get; set; } = Key.CtrlMask | Key.Z;
+    public Key Delete { get; set; } = Key.DeleteChar;
+    public Key ToggleDragging { get; set; } = Key.F3;
+    public Key AddView { get; set; } = Key.F2;
 }
