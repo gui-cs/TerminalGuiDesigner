@@ -6,12 +6,19 @@ namespace TerminalGuiDesigner.UI.Windows;
 public class Modals
 {
 
-    public static bool GetInt(string windowTitle, string entryLabel, int initialValue, out int result)
+    public static bool GetInt(string windowTitle, string entryLabel, int? initialValue, out int? result)
     {
         if (GetString(windowTitle, entryLabel, initialValue.ToString(), out var newValue))
         {
-            if (int.TryParse(newValue, out result))
+            if(string.IsNullOrWhiteSpace(newValue))
             {
+                result = null;
+                return true;
+            }
+
+            if (int.TryParse(newValue, out var r))
+            {
+                result = r;
                 return true;
             }
         }
@@ -20,13 +27,19 @@ public class Modals
         return false;
     }
 
-    // TODO : Can this be generic
-    public static bool GetFloat(string windowTitle, string entryLabel, float initialValue, out float result)
+    public static bool GetFloat(string windowTitle, string entryLabel, float? initialValue, out float? result)
     {
         if (GetString(windowTitle, entryLabel, initialValue.ToString(), out var newValue))
         {
-            if (float.TryParse(newValue, out result))
+            if(string.IsNullOrWhiteSpace(newValue))
             {
+                result = null;
+                return true;
+            }
+
+            if (float.TryParse(newValue, out var r))
+            {
+                result = r;
                 return true;
             }
         }

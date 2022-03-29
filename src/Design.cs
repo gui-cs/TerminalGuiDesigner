@@ -71,7 +71,7 @@ public class Design
 
             if(subView.Data is string name)
             {
-                subView.Data = CreateSubControlDesign(SourceCode,name, subView);
+                subView.Data = CreateSubControlDesign(SourceCode, name, subView);
             }
             
             CreateSubControlDesigns(subView);
@@ -114,7 +114,7 @@ public class Design
             gv.Annotations.Add(new TextAnnotation
             {
                 ScreenPosition = new Point(1, 1),
-                Text = "Graph"
+                Text = ""
             });
         }
 
@@ -161,6 +161,7 @@ public class Design
         if(View is GraphView gv)
         {
             yield return CreateProperty(nameof(GraphView.GraphColor));
+            yield return CreateProperty(nameof(GraphView.ScrollOffset));
 
             yield return CreateSubProperty(nameof(HorizontalAxis.Visible),nameof(GraphView.AxisX),gv.AxisX);
             yield return CreateSubProperty(nameof(HorizontalAxis.Increment),nameof(GraphView.AxisX),gv.AxisX);

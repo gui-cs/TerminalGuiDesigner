@@ -144,7 +144,7 @@ public class EditDialog : Window
                 return false;
             }
         }
-
+        else
         // user is editing a Pos
         if (property.PropertyInfo.PropertyType == typeof(Pos))
         {
@@ -165,7 +165,7 @@ public class EditDialog : Window
                 return false;
             }
         }
-
+        else
         // user is editing a Dim
         if (property.PropertyInfo.PropertyType == typeof(Dim))
         {
@@ -185,7 +185,7 @@ public class EditDialog : Window
             }
                 
         }
-
+        else
         if (property.PropertyInfo.PropertyType == typeof(bool))
         {
             int answer = MessageBox.Query(property.PropertyInfo.Name, $"New value for {property.PropertyInfo.PropertyType}", "Yes", "No");
@@ -193,10 +193,10 @@ public class EditDialog : Window
             newValue = answer ==0 ? true : false;
             return answer != -1;
         }
-
+        else
         if(property.PropertyInfo.PropertyType.IsArray)
         {
-            if(Modals.GetArray(property.PropertyInfo.Name, "New Value",
+            if(Modals.GetArray(property.PropertyInfo.Name, "New Array Value",
                 property.PropertyInfo.PropertyType.GetElementType() ?? throw new Exception("Property was an Array but GetElementType returned null"),
                  (Array?)oldValue, out Array? resultArray))
             {
@@ -204,17 +204,43 @@ public class EditDialog : Window
                 return true;
             }
         }
-
+        else
         if(property.PropertyInfo.PropertyType.IsEnum)
         {
-            if(Modals.GetEnum(property.PropertyInfo.Name, "New Value", property.PropertyInfo.PropertyType, out var resultEnum))
+            if(Modals.GetEnum(property.PropertyInfo.Name, "New Enum Value", property.PropertyInfo.PropertyType, out var resultEnum))
             {
                 newValue = resultEnum;
                 return true;
             }
         }
+        else
+        if(property.PropertyInfo.PropertyType == typeof(int) 
+            || property.PropertyInfo.PropertyType == typeof(int?)
+            || property.PropertyInfo.PropertyType == typeof(uint) 
+            || property.PropertyInfo.PropertyType == typeof(uint?))
+        {
+            // deals with null, int and uint
+            var v = oldValue == null ? null : (int?)Convert.ToInt32(oldValue);
 
-        if (Modals.GetString(property.PropertyInfo.Name, "New Value", oldValue?.ToString(), out var result))
+            if(Modals.GetInt(property.PropertyInfo.Name, "New Int Value", v, out var resultInt))
+            {
+                // change back to uint/int/null
+                newValue = resultInt == null ? null : Convert.ChangeType(resultInt,property.PropertyInfo.PropertyType);
+                return true;
+            }
+        }
+        else
+        if(property.PropertyInfo.PropertyType == typeof(float) 
+            || property.PropertyInfo.PropertyType == typeof(float?))
+        {
+            if(Modals.GetFloat(property.PropertyInfo.Name, "New Float Value", (float?)oldValue, out var resultInt))
+            {
+                newValue = resultInt;
+                return true;
+            }
+        }
+        else
+        if (Modals.GetString(property.PropertyInfo.Name, "New String Value", oldValue?.ToString(), out var result))
         {
             newValue = result;
             return true;
@@ -228,6 +254,7 @@ public class EditDialog : Window
 
     private void List_KeyPress(KeyEventEventArgs obj)
     {
+        // TODO: Should really be using the _keyMap here
         if (obj.KeyEvent.Key == Key.DeleteChar)
         {
             int rly = MessageBox.Query("Clear", "Clear Property Value?", "Yes", "Cancel");
