@@ -39,6 +39,7 @@ Features to add are:
 - [ ] Mutli select (select many views and hit delete or drag move)
 - [ ] Copy/Paste selected view(s)
 - [ ] Add views to subviews
+- [ ] Read and present xmldoc comments when editing properties
 - [x] Comprehensive Tests
 - [x] CI
 
