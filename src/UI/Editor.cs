@@ -20,6 +20,8 @@ public class Editor : Toplevel
 
     readonly KeyMap _keyMap;
 
+    AddMenuBarItemsByTypingManager menuBarTypingManager = new ();
+
 
     private string GetHelpWithNothingLoaded()
     {
@@ -193,8 +195,18 @@ Ctrl+Q - Quit
         if(_editting)
             return false;
 
+        var focused = GetMostFocused(this);
+
         try
         {
+            // If menu bar is focused and this key is consumed
+            // by adding/renaming a MenuBarItem
+            if(menuBarTypingManager.HandleKey(focused, keyEvent))
+            {
+                // no more processing
+                return true;
+            }
+            
             _editting = true;
 
             if(keyEvent.Key == _keyMap.EditProperties)
@@ -300,9 +312,7 @@ Ctrl+Q - Quit
             _editting = false;
         }
 
-        
-
-        return base.ProcessHotKey(keyEvent);
+        return false;
     }
 
     private void ShowViewSpecificOperations()

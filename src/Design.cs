@@ -247,7 +247,6 @@ public class Design
             yield return new RemoveTabOperation(this);
             yield return new RenameTabOperation(this);
         }
-
     }
 
     /// <summary>
