@@ -53,4 +53,18 @@ public class PropertyTests
             Application.Shutdown();
         }
     }
+    [Test]
+    public void TestPropertyOfType_PointF()
+    {
+        var d = new Design(null,"FFF",new GraphView());
+        var pointProp = d.GetDesignableProperties().Single(p=>p.PropertyInfo.Name.Equals(nameof(GraphView.ScrollOffset)));
+
+        pointProp.SetValue(new PointF(4.5f,4.1f));
+
+        var rhs = (CodeObjectCreateExpression)pointProp.GetRhs();
+
+        // The code generated should be a new PointF
+        Assert.AreEqual(rhs.Parameters.Count,2);
+
+    }
 }
