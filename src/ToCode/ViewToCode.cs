@@ -45,6 +45,27 @@ public class ViewToCode
             view.Height = Dim.Fill();
         }
 
+        if(viewType == typeof(Toplevel))
+        {
+            view.ColorScheme = Colors.TopLevel;
+
+            view.Add(new MenuBar{
+                Data = "menuBar",
+                ColorScheme = Colors.Base
+            });
+
+            view.Add(new Window{
+                Data = "content",
+                Y = 1, // space for menu
+                Width = Dim.Fill(),
+                Height = Dim.Fill(1),// space for status bar
+            });
+
+            view.Add(new StatusBar{
+                Data = "statusBar"
+            });
+        }
+
         var design = new Design(sourceFile, Design.RootDesignName, view);
         design.CreateSubControlDesigns();
 

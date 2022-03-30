@@ -416,7 +416,10 @@ Ctrl+Q - Quit
     private void New()
     {
 
-        if(!Modals.Get("Create New View","Ok",new Type[]{typeof(Window),typeof(Dialog)},out var selected))
+        if(!Modals.Get("Create New View","Ok",new Type[]{
+            typeof(Toplevel),
+            typeof(Window),
+            typeof(Dialog)},out var selected))
         {
             return;
         }
