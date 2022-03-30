@@ -7,12 +7,12 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace YourNamespace {
+namespace TerminalGuiDesigner {
     using System;
     using Terminal.Gui;
     
     
-    public partial class PointDesigner : Terminal.Gui.Dialog {
+    public partial class PointEditor : Terminal.Gui.Dialog {
         
         private Terminal.Gui.Label lblX;
         

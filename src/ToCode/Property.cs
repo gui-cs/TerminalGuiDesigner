@@ -77,6 +77,12 @@ public class Property : ToCodeBase
         {
             return new CodeSnippetExpression(d.ToCode());
         }
+        if(val is PointF pointf)
+        {
+            return new CodeObjectCreateExpression(typeof(PointF),
+                 new CodePrimitiveExpression(pointf.X),
+                 new CodePrimitiveExpression(pointf.Y));
+        }
 
         if(val is Pos p)
         {

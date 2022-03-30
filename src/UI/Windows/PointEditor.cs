@@ -7,13 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace YourNamespace {
+namespace TerminalGuiDesigner {
     using Terminal.Gui;
     
     
-    public partial class PointDesigner {
+    public partial class PointEditor {
         
-        public PointDesigner() {
+        public PointEditor() {
             InitializeComponent();
         }
     }
