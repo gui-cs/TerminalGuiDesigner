@@ -8,13 +8,53 @@
 //------------------------------------------------------------------------------
 
 namespace TerminalGuiDesigner {
+    using System;
     using Terminal.Gui;
     
     
     public partial class PointEditor {
+
+        public bool Cancelled {get;set;}
+        public float ResultX {get;set;}
+        public float ResultY {get;set;}
         
-        public PointEditor() {
+        public PointEditor(float x, float y) {
             InitializeComponent();
+
+            tbX.Text = x.ToString();
+            tbY.Text = y.ToString();
+
+            btnOk.Clicked += Ok;
+            btnCancel.Clicked += Cancel;
+        }
+
+        private void Cancel()
+        {
+            Cancelled = true;
+            Application.RequestStop();
+        }
+
+        private void Ok()
+        {
+            if(float.TryParse(tbX.Text.ToString(), out var x))
+            {
+                if(float.TryParse(tbY.Text.ToString(), out var y))
+                {
+                    ResultX = x;
+                    ResultY = y;
+
+                    Cancelled = false;
+                    Application.RequestStop();
+                }
+                else
+                {
+                    MessageBox.ErrorQuery(20,5,"Could no parse",$"Could not parse '{tbY.Text}'","Ok");
+                }
+            }
+            else
+            {
+                    MessageBox.ErrorQuery(20,5,"Could no parse",$"Could not parse '{tbX.Text}'","Ok");
+            }
         }
     }
 }

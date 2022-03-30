@@ -35,6 +35,9 @@ namespace YourNamespace {
             this.graphview1.Y = 1;
             this.graphview1.TextAlignment = TextAlignment.Left;
             this.graphview1.GraphColor = Terminal.Gui.Attribute.Make(Color.Black,Color.White);
+            this.graphview1.ScrollOffset = new Terminal.Gui.PointF(0F, 0F);
+            this.graphview1.MarginLeft = 2u;
+            this.graphview1.MarginBottom = 2u;
             this.graphview1.AxisX.Visible = true;
             this.graphview1.AxisX.Increment = 1F;
             this.graphview1.AxisX.ShowLabelsEvery = 5u;

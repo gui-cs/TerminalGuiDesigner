@@ -166,6 +166,28 @@ public class EditDialog : Window
             }
         }
         else
+        // user is editing a PointF
+        if (property.PropertyInfo.PropertyType == typeof(PointF))
+        {
+            var oldPointF = (PointF)(oldValue ?? throw new Exception($"Property {property.PropertyInfo.Name} is of Type PointF but it's current value is null"));
+            var designer = new PointEditor(oldPointF.X,oldPointF.Y);
+
+            Application.Run(designer);
+
+
+            if (!designer.Cancelled)
+            {
+                newValue = new PointF(designer.ResultX,designer.ResultY);
+                return true;
+            }
+            else
+            {
+                // user cancelled designing the Pos
+                newValue = null;
+                return false;
+            }
+        }
+        else
         // user is editing a Dim
         if (property.PropertyInfo.PropertyType == typeof(Dim))
         {
