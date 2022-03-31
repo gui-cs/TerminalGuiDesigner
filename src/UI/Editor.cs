@@ -16,6 +16,8 @@ public class Editor : Toplevel
     private SourceCodeFile? _currentDesignerFile;
     private bool enableDrag = true;
     DragOperation? dragOperation = null;
+    ResizeOperation? resizeOperation = null;
+
     bool _editting = false;
 
     readonly KeyMap _keyMap;
@@ -123,17 +125,23 @@ Ctrl+Q - Quit
         // start dragging
         if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && dragOperation == null)
         {
-            var drag = HitTest(_viewBeingEdited.View, m);
+            var drag = HitTest(_viewBeingEdited.View, m, out bool isLowerRight);
 
-            if (drag == null)
-            {
-                return;
-            }
 
-            if (drag.Data is Design design)
+            // if nothing is going on yet
+            if (drag != null && drag.Data is Design design && resizeOperation == null && dragOperation == null)
             {
                 var dest = ScreenToClient(_viewBeingEdited.View, m.X, m.Y);
-                dragOperation = new DragOperation(design, drag.X, drag.Y, dest.X, dest.Y);
+                
+                if (isLowerRight)
+                {
+                    resizeOperation = new ResizeOperation(design, dest.X, dest.Y);
+                }
+                else
+                {
+                    dragOperation = new DragOperation(design, dest.X, dest.Y);
+                }
+                
             }
         }
 
@@ -148,12 +156,34 @@ Ctrl+Q - Quit
             Application.DoEvents();
         }
 
-        // end dragging
-        if (!m.Flags.HasFlag(MouseFlags.Button1Pressed) && dragOperation != null)
+        // continue resizing
+        if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && resizeOperation != null)
         {
-            // push it onto the undo stack
-            OperationManager.Instance.Do(dragOperation);
-            dragOperation = null;
+            var dest = ScreenToClient(_viewBeingEdited.View, m.X, m.Y);
+
+            resizeOperation.ContinueResize(dest);
+
+            _viewBeingEdited.View.SetNeedsDisplay();
+            Application.DoEvents();
+        }
+
+        // end dragging
+        if (!m.Flags.HasFlag(MouseFlags.Button1Pressed))
+        {
+            if ( dragOperation != null)
+            {
+                // end drag
+                OperationManager.Instance.Do(dragOperation);
+                dragOperation = null;
+            }
+
+            if (resizeOperation != null)
+            {
+                // end resize
+                OperationManager.Instance.Do(resizeOperation);
+                resizeOperation = null;
+            }
+
         }
     }
 
@@ -547,10 +577,19 @@ Ctrl+Q - Quit
         Application.Run(edit);
     }
 
-    private View? HitTest(View w, MouseEvent m)
+    private View? HitTest(View w, MouseEvent m, out bool isLowerRight)
     {
         var point = ScreenToClient(w, m.X, m.Y);
-        return w.GetActualSubviews().FirstOrDefault(v => v.Frame.Contains(point));
+        var hit = w.GetActualSubviews().FirstOrDefault(v => v.Frame.Contains(point));
+
+        if (hit != null)
+        {
+            isLowerRight = hit.Frame.Right - 1 == point.X && hit.Frame.Bottom - 1 == point.Y;
+        }
+        else
+            isLowerRight = false;
+
+        return hit;
     }
 
     private View GetMostFocused(View view)
