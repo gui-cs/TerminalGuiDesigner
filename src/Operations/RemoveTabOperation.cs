@@ -5,8 +5,8 @@ namespace TerminalGuiDesigner.Operations;
 
 public class RemoveTabOperation : Operation
 {
-    private Tab _tab;
-    private TabView _TabView;
+    private readonly Tab? _tab;
+    private readonly TabView _tabView;
 
     public Design Design { get; }
 
@@ -18,9 +18,9 @@ public class RemoveTabOperation : Operation
         if (Design.View is not TabView)
             throw new ArgumentException($"Design must be for a {nameof(TabView)} to support {nameof(RemoveTabOperation)}");
 
-        _TabView = (TabView)Design.View;
+        _tabView = (TabView)Design.View;
 
-        _tab = _TabView.SelectedTab;
+        _tab = _tabView.SelectedTab;
 
         // user has no Tab selected
         if (_tab == null)
@@ -28,7 +28,7 @@ public class RemoveTabOperation : Operation
     }
     public override string ToString()
     {
-        return $"Remove Tab '{_tab.Text}'";
+        return $"Remove Tab '{_tab?.Text}'";
     }
     public override void Do()
     {
@@ -37,9 +37,9 @@ public class RemoveTabOperation : Operation
             throw new Exception("No Tab selected");
         }
 
-        if (_TabView.Tabs.Contains(_tab))
+        if (_tabView.Tabs.Contains(_tab))
         {
-            _TabView.RemoveTab(_tab);
+            _tabView.RemoveTab(_tab);
         }
     }
 
@@ -55,9 +55,9 @@ public class RemoveTabOperation : Operation
             throw new Exception("No Tab selected");
         }
 
-        if (!_TabView.Tabs.Contains(_tab))
+        if (!_tabView.Tabs.Contains(_tab))
         {
-            _TabView.AddTab(_tab,true);
+            _tabView.AddTab(_tab,true);
         }
     }
 }

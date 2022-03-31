@@ -73,12 +73,12 @@ public class PosTests
 
         Assert.IsTrue(Pos.Top(v).IsRelative(new List<Design>{d},out var relativeTo, out var side));
         Assert.AreSame(d,relativeTo);
-        Assert.AreEqual(Side.Above,side);
+        Assert.AreEqual(Side.Top,side);
 
         Assert.IsTrue(Pos.Top(v).GetPosType(new List<Design>{d},out var type, out var val,out relativeTo, out side, out var offset));
         Assert.AreEqual(PosType.Relative,type);
         Assert.AreSame(d,relativeTo);
-        Assert.AreEqual(Side.Above,side);
+        Assert.AreEqual(Side.Top,side);
     }
 
     [Test]
@@ -103,14 +103,14 @@ public class PosTests
         Assert.True(p.GetPosType(new List<Design>{d},out type,out value,out relativeTo,out side, out offset),$"Could not figure out PosType for '{p}'");
         Assert.AreEqual(PosType.Relative,type);
         Assert.AreSame(d,relativeTo);
-        Assert.AreEqual(Side.Above,side);
+        Assert.AreEqual(Side.Top,side);
         Assert.AreEqual(2,offset);
 
         p = Pos.Top(v) - 2;
         Assert.True(p.GetPosType(new List<Design>{d},out type,out value,out relativeTo,out side, out offset),$"Could not figure out PosType for '{p}'");
         Assert.AreEqual(PosType.Relative,type);
         Assert.AreSame(d,relativeTo);
-        Assert.AreEqual(Side.Above,side);
+        Assert.AreEqual(Side.Top,side);
         Assert.AreEqual(-2,offset);
     }
 

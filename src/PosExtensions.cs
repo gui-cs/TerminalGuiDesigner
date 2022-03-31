@@ -283,20 +283,12 @@ public static class PosExtensions
                     return $"Pos.Center() - {Math.Abs(offset)}";
                 return $"Pos.Center()";
 
-            default: throw new ArgumentOutOfRangeException("Unknown PosType");
+            default: throw new ArgumentOutOfRangeException(nameof(type));
         }
 }
 
     private static string GetMethodNameFor(Side side)
     {
-        switch (side)
-        {
-            case Side.Left : return "Left";
-            case Side.Right : return "Right";
-            case Side.Above : return "Top";
-            case Side.Below : return "Bottom";
-
-            default: throw new ArgumentOutOfRangeException("Unknown side");
-        }
+        return side.ToString();
     }
 }

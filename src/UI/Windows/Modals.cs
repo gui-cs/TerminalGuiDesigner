@@ -55,7 +55,7 @@ public class Modals
             WindowTitle = windowTitle,
             EntryLabel = entryLabel,
             MultiLine = true,
-        }, initialValue == null ? "" : string.Join('\n',initialValue.ToList().Select(v=>v.ToString())));
+        }, initialValue == null ? "" : string.Join('\n',initialValue.ToList().Select(v=>v?.ToString() ?? "")));
 
         if (dlg.ShowDialog())
         {

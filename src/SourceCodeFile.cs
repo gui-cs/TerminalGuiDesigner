@@ -32,6 +32,15 @@ public class SourceCodeFile
     }
 
     /// <summary>
+    /// Declares a new pair of files (e.g. MyClass.cs and MyClass.Designer.cs) which
+    /// may or may not both exist yet
+    /// </summary>
+    /// <param name="file">Either source file of the pair (e.g. either MyClass.cs or MyClass.Designer.cs)</param>
+    public SourceCodeFile(string path) : this(new FileInfo(path))
+    {
+
+    }
+    /// <summary>
     /// Returns the .Designer.cs file for the given class file.
     /// Returns a reference even if that file does not exist
     /// </summary>

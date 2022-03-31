@@ -6,8 +6,8 @@ namespace TerminalGuiDesigner.Operations;
 
 public class AddTabOperation : Operation
 {
-    private Tab _tab;
-    private TabView _tabView;
+    private Tab? _tab;
+    private readonly TabView _tabView;
 
     public Design Design { get; }
 
@@ -29,9 +29,9 @@ public class AddTabOperation : Operation
             throw new Exception("This command has already been performed once.  Use Redo instead of Do");
         }
 
-        if (Modals.GetString("Add Tab", "Tab Name", "MyTab", out string newTabName))
+        if (Modals.GetString("Add Tab", "Tab Name", "MyTab", out string? newTabName))
         {
-            _tabView.AddTab(_tab = new Tab(newTabName,null),true);
+            _tabView.AddTab(_tab = new Tab(newTabName ?? "Unamed Tab",null),true);
             _tabView.SetNeedsDisplay();
         }
     }

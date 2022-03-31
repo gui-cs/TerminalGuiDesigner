@@ -8,9 +8,9 @@ namespace TerminalGuiDesigner;
 
 internal class RenameTabOperation : Operation
 {
-    private TabView _tabView;
+    private readonly TabView _tabView;
     private Tab? _tab;
-    private ustring? _originalName;
+    private readonly ustring? _originalName;
     private string? _newTabName;
 
     public Design Design { get; }
@@ -45,7 +45,7 @@ internal class RenameTabOperation : Operation
             throw new Exception("No tab was selected so command cannot be run");
         }
 
-        if (Modals.GetString("Rename Tab", "Tab Name", _originalName?.ToString(), out string newTabName))
+        if (Modals.GetString("Rename Tab", "Tab Name", _originalName?.ToString(), out string? newTabName) && newTabName != null)
         {
             _newTabName = newTabName;
             _tab.Text = newTabName;

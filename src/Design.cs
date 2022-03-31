@@ -25,9 +25,9 @@ public class Design
 
     public const string RootDesignName = "root";
 
-    private List<Property> _designableProperties;
+    private readonly List<Property> _designableProperties;
 
-    private Logger logger = LogManager.GetCurrentClassLogger();
+    private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
     public Property GetDesignableProperty(string propertyName)
     {
@@ -206,7 +206,7 @@ public class Design
             yield return CreateSubProperty(nameof(TabStyle.TabsOnBottom), nameof(TabView.Style), tabView.Style);
         }
 
-        if(View is RadioGroup radioGroup)
+        if(View is RadioGroup)
         {
             yield return CreateProperty(nameof(RadioGroup.RadioLabels));
         }

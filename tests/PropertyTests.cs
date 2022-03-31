@@ -11,7 +11,7 @@ public class PropertyTests
     [Test]
     public void TestPropertyOfType_Pos()
     {
-        var d = new Design(null,"FFF",new Label());
+        var d = new Design(new SourceCodeFile(nameof(TestPropertyOfType_Pos) + ".cs"),"FFF",new Label());
         var xProp = d.GetDesignableProperties().Single(p=>p.PropertyInfo.Name.Equals(nameof(View.X)));
 
         xProp.SetValue(Pos.Center());
@@ -33,7 +33,7 @@ public class PropertyTests
 
         try
         {
-            var d = new Design(null,"FFF",new GraphView());
+            var d = new Design(new SourceCodeFile(nameof(TestPropertyOfType_Attribute)+".cs"),"FFF",new GraphView());
             var colorProp = d.GetDesignableProperties().Single(p=>p.PropertyInfo.Name.Equals(nameof(GraphView.GraphColor)));
 
             colorProp.SetValue(null);
@@ -56,7 +56,7 @@ public class PropertyTests
     [Test]
     public void TestPropertyOfType_PointF()
     {
-        var d = new Design(null,"FFF",new GraphView());
+        var d = new Design(new SourceCodeFile(nameof(TestPropertyOfType_PointF) + ".cs"), "FFF",new GraphView());
         var pointProp = d.GetDesignableProperties().Single(p=>p.PropertyInfo.Name.Equals(nameof(GraphView.ScrollOffset)));
 
         pointProp.SetValue(new PointF(4.5f,4.1f));

@@ -15,6 +15,6 @@ public static class ObjectExtensions
         var methodInfo = typeof(ObjectExtensions).GetMethod(nameof(CastTo), BindingFlags.Static | BindingFlags.Public);
         var genericArguments = new[] { type };
         var genericMethodInfo = methodInfo?.MakeGenericMethod(genericArguments);
-        return genericMethodInfo?.Invoke(null, new[] { o });
+        return genericMethodInfo?.Invoke(null, new[] { o }) ?? throw new Exception("Expected genericMethodInfo CastTo<T> to have a non null return value");
     }
 }

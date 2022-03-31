@@ -224,10 +224,10 @@ namespace TerminalGuiDesigner.UI.Windows
                     Pos pos;
                     switch (side)
                     {
-                        case Side.Above:
+                        case Side.Top:
                             pos = Pos.Top(relativeTo.View);
                             break;
-                        case Side.Below:
+                        case Side.Bottom:
                             pos = Pos.Bottom(relativeTo.View);
                             break;
                         case Side.Left:

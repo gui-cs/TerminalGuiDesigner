@@ -163,7 +163,7 @@ public static class DimExtensions
                     return $"Dim.Percent({val}) - {Math.Abs(offset)}";
                 return $"Dim.Percent({val})";
             
-            default: throw new ArgumentOutOfRangeException("Unknown DimType");
+            default: throw new ArgumentOutOfRangeException(nameof(type));
         }
     }
 }

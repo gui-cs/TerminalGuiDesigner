@@ -17,7 +17,7 @@ public class CodeToView
     public string ClassName { get; }
     public SourceCodeFile SourceFile { get; }
 
-    ILogger logger = LogManager.GetCurrentClassLogger();
+    readonly ILogger logger = LogManager.GetCurrentClassLogger();
 
     public CodeToView(SourceCodeFile sourceFile)
     {
@@ -127,17 +127,15 @@ public class CodeToView
                 mscorLib,
                 runtimeLib}, options: options);
 
-        using (var stream = new MemoryStream())
+        using var stream = new MemoryStream();
+        EmitResult result = compilation.Emit(stream);
+        if (result.Success)
         {
-            EmitResult result = compilation.Emit(stream);
-            if (result.Success)
-            {
-                var assembly = Assembly.Load(stream.GetBuffer());
-                return assembly;
-            }
-
-            throw new Exception($"Could not compile {SourceFile.DesignerFile}:" + Environment.NewLine + string.Join(Environment.NewLine, result.Diagnostics));
+            var assembly = Assembly.Load(stream.GetBuffer());
+            return assembly;
         }
+
+        throw new Exception($"Could not compile {SourceFile.DesignerFile}:" + Environment.NewLine + string.Join(Environment.NewLine, result.Diagnostics));
     }
 
 }
