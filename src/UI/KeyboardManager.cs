@@ -42,12 +42,21 @@ namespace TerminalGuiDesigner.UI
             if(_currentOperation == null)
             {
                 // start a new operation
-                _currentOperation = new SetPropertyOperation(d,d.GetDesignableProperty("Text"),d.View.Text,d.View.Text);
+                StartOperation(d);
             }
 
             ApplyKeystrokeToTextProperty(keystroke);
 
             return false;
+        }
+
+        private void StartOperation(Design d)
+        {
+            // these can already handle editing themselves
+            if(d.View is DateField || d.View is TextField || d.View is TextView)
+                return;
+
+            _currentOperation = new SetPropertyOperation(d,d.GetDesignableProperty("Text"),d.View.Text,d.View.Text);
         }
 
         private void FinishOperation()

@@ -51,6 +51,7 @@ public class ViewFactory
         instance.SetActualText("Heya");
 
         instance.Width = Math.Max(instance.Bounds.Width, 4);
+        instance.ColorScheme = Colors.Base;
 
         return instance;
     }

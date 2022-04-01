@@ -14,6 +14,8 @@ namespace YourNamespace {
     
     public partial class MyWindow : Terminal.Gui.Window {
         
+        private Terminal.Gui.DateField datefield1;
+        
         private void InitializeComponent() {
             this.Text = "";
             this.Width = Dim.Fill(0);
@@ -22,6 +24,15 @@ namespace YourNamespace {
             this.Y = 0;
             this.TextAlignment = TextAlignment.Centered;
             this.Title = "Welcome to Demo";
+            this.datefield1 = new Terminal.Gui.DateField();
+            this.datefield1.Data = "datefield1";
+            this.datefield1.Text = " 02/03/22";
+            this.datefield1.Width = 10;
+            this.datefield1.Height = 1;
+            this.datefield1.X = 11;
+            this.datefield1.Y = 2;
+            this.datefield1.TextAlignment = TextAlignment.Left;
+            this.Add(this.datefield1);
         }
     }
 }
