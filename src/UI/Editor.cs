@@ -22,6 +22,8 @@ public class Editor : Toplevel
 
     readonly KeyMap _keyMap;
 
+    KeyboardManager _keyboardManager = new ();
+
 
     private string GetHelpWithNothingLoaded()
     {
@@ -320,6 +322,8 @@ Ctrl+Q - Quit
                     MoveControl(5, 0);
                     return true;
             }
+
+            return _keyboardManager.HandleKey(GetMostFocused(this),keyEvent);
         }
         catch (System.Exception ex)
         {
@@ -329,8 +333,6 @@ Ctrl+Q - Quit
         {
             _editting = false;
         }
-
-        
 
         return base.ProcessHotKey(keyEvent);
     }

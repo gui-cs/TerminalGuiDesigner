@@ -47,6 +47,13 @@ public class Property : ToCodeBase
             if (value is string s)
             {
                 value = ustring.Make(s);
+
+                // TODO: This seems like something AutoSize should do automatically
+                // if renaming a button update its size to match
+                if(Design.View is Button b && PropertyInfo.Name.Equals("Text") && b.Width.IsAbsolute())
+                {
+                    b.Width = s.Length + (b.IsDefault ? 6 : 4);
+                }
             }
         }
 
@@ -54,6 +61,7 @@ public class Property : ToCodeBase
         // switching from Computed to Absolute values of Dim/Pos
         Design.View.IsInitialized = false;
         PropertyInfo.SetValue(DeclaringObject, value);
+
         Design.View.IsInitialized = true;
     }
 

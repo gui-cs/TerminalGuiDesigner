@@ -7,7 +7,7 @@ public class SetPropertyOperation : Operation
     public Design Design { get; }
     public Property Property { get; }
     public object? OldValue { get; }
-    public object? NewValue { get; }
+    public object? NewValue { get; set;}
 
     public SetPropertyOperation(Design design,Property property, object? oldValue, object? NewValue)
     {

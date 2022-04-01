@@ -59,16 +59,32 @@ public static class ViewExtensions
     {
         if (view is TextField f)
         {
-            f.Text = "Heya";
+            f.Text = text;
         }
         else
         if (view is Button b)
         {
-            b.Text = "Heya";
+            b.Text = text;
         }
         else
         {
             view.Text = text;
+        }
+    }
+    public static string GetActualText(this View view)
+    {
+        if (view is TextField f)
+        {
+            return f.Text?.ToString() ?? "";
+        }
+        else
+        if (view is Button b)
+        {
+            return b.Text?.ToString() ?? "";
+        }
+        else
+        {
+            return view.Text?.ToString() ?? "";
         }
     }
 
