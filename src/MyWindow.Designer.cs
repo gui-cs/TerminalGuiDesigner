@@ -36,6 +36,8 @@ namespace YourNamespace {
         
         private Terminal.Gui.Label label4;
         
+        private Terminal.Gui.ProgressBar progressbar1;
+        
         private Terminal.Gui.ListView listview2;
         
         private Terminal.Gui.ListView listview1;
@@ -152,13 +154,27 @@ namespace YourNamespace {
             this.label4.Y = 14;
             this.label4.TextAlignment = Terminal.Gui.TextAlignment.Left;
             this.Add(this.label4);
+            this.progressbar1 = new Terminal.Gui.ProgressBar();
+            this.progressbar1.Data = "progressbar1";
+            this.progressbar1.Text = "100%";
+            this.progressbar1.Width = 19;
+            this.progressbar1.Height = 4;
+            this.progressbar1.X = 34;
+            this.progressbar1.Y = 16;
+            this.progressbar1.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.progressbar1.Fraction = 1F;
+            this.progressbar1.BidirectionalMarquee = true;
+            this.progressbar1.ProgressBarStyle = Terminal.Gui.ProgressBarStyle.Blocks;
+            this.progressbar1.ProgressBarFormat = Terminal.Gui.ProgressBarFormat.FramedPlusPercentage;
+            this.progressbar1.SegmentCharacter = '|';
+            this.Add(this.progressbar1);
             this.listview2 = new Terminal.Gui.ListView();
             this.listview2.Data = "listview2";
             this.listview2.Text = "";
             this.listview2.Width = 20;
             this.listview2.Height = 3;
-            this.listview2.X = 20;
-            this.listview2.Y = 19;
+            this.listview2.X = 8;
+            this.listview2.Y = 17;
             this.listview2.TextAlignment = Terminal.Gui.TextAlignment.Left;
             this.listview2.Source = new Terminal.Gui.ListWrapper(new string[] {
                         "Bob",

@@ -54,7 +54,7 @@ The following feature list shows the current capabilities and the roadmap
   - [x] ListView
   - [ ] MenuBar
   - [ ] PanelView
-  - [ ] ProgressBar
+  - [x] ProgressBar
   - [x] RadioGroup
   - [ ] StatusBar
   - [x] TableView

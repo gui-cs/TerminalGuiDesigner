@@ -36,15 +36,22 @@ public class ViewFactory
             return CreateRadioGroup();
         }
 
+        if(t == typeof(ProgressBar))
+        {
+            return new ProgressBar{
+                Width = 10,
+                Height = 1,
+                Fraction = 1f
+            };
+        }
+
         if(typeof(GraphView).IsAssignableFrom(t))
         {
-            var g = new GraphView{
+            return new GraphView{
                 Width = 20,
                 Height = 5,
+                GraphColor = Attribute.Make(Color.White,Color.Black)
             };
-
-            g.GraphColor = Attribute.Make(Color.White,Color.Black);
-            return g;
         }
 
         if(typeof(ListView).IsAssignableFrom(t))

@@ -160,6 +160,14 @@ public class Design
             yield return CreateProperty(nameof(LineView.LineRune));
             yield return CreateProperty(nameof(LineView.Orientation));
         }
+        if(View is ProgressBar)
+        {
+            yield return CreateProperty(nameof(ProgressBar.Fraction));
+            yield return CreateProperty(nameof(ProgressBar.BidirectionalMarquee));
+            yield return CreateProperty(nameof(ProgressBar.ProgressBarStyle));
+            yield return CreateProperty(nameof(ProgressBar.ProgressBarFormat));
+            yield return CreateProperty(nameof(ProgressBar.SegmentCharacter));
+        }
         if (View is CheckBox)
         {
             yield return CreateProperty(nameof(CheckBox.Checked));
