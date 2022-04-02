@@ -227,6 +227,25 @@ public class EditDialog : Window
             }
         }
         else
+        if(property.PropertyInfo.PropertyType == typeof(IListDataSource))
+        {
+            // TODO : Make this work with non strings e.g. 
+            // if user types a bunch of numbers in or dates
+            var oldValueAsArrayOfStrings = oldValue == null ?
+                    new string[0] :
+                    ((IListDataSource)oldValue).ToList()
+                                               .Cast<object>()
+                                               .Select(o=>o?.ToString())
+                                               .ToArray();
+
+            if(Modals.GetArray(property.PropertyInfo.Name, "New List Value",typeof(string),
+                 oldValueAsArrayOfStrings ?? new string[0], out Array? resultArray))
+            {
+                newValue = resultArray;
+                return true;
+            }
+        }
+        else
         if(property.PropertyInfo.PropertyType.IsEnum)
         {
             if(Modals.GetEnum(property.PropertyInfo.Name, "New Enum Value", property.PropertyInfo.PropertyType, out var resultEnum))

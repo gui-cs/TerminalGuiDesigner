@@ -32,6 +32,8 @@ namespace YourNamespace {
         
         private Terminal.Gui.Label label4;
         
+        private Terminal.Gui.ListView listview2;
+        
         private Terminal.Gui.ListView listview1;
         
         private void InitializeComponent() {
@@ -124,6 +126,20 @@ namespace YourNamespace {
             this.label4.Y = 14;
             this.label4.TextAlignment = TextAlignment.Left;
             this.Add(this.label4);
+            this.listview2 = new Terminal.Gui.ListView();
+            this.listview2.Data = "listview2";
+            this.listview2.Text = "";
+            this.listview2.Width = 20;
+            this.listview2.Height = 3;
+            this.listview2.X = 20;
+            this.listview2.Y = 19;
+            this.listview2.TextAlignment = TextAlignment.Left;
+            this.listview2.Source = new Terminal.Gui.ListWrapper(new string[] {
+                        "Bob",
+                        "Frank",
+                        "Fish head",
+                        "Dave"});
+            this.Add(this.listview2);
             this.listview1 = new Terminal.Gui.ListView();
             this.listview1.Data = "listview1";
             this.listview1.Text = "Heya";
@@ -132,6 +148,7 @@ namespace YourNamespace {
             this.listview1.X = 60;
             this.listview1.Y = 19;
             this.listview1.TextAlignment = TextAlignment.Left;
+            this.listview1.Source = null;
             this.Add(this.listview1);
         }
     }
