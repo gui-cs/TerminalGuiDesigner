@@ -156,13 +156,13 @@ namespace YourNamespace {
             this.Add(this.label4);
             this.progressbar1 = new Terminal.Gui.ProgressBar();
             this.progressbar1.Data = "progressbar1";
-            this.progressbar1.Text = "100%";
+            this.progressbar1.Text = "50%";
             this.progressbar1.Width = 19;
             this.progressbar1.Height = 4;
             this.progressbar1.X = 34;
             this.progressbar1.Y = 16;
             this.progressbar1.TextAlignment = Terminal.Gui.TextAlignment.Left;
-            this.progressbar1.Fraction = 1F;
+            this.progressbar1.Fraction = 0.5F;
             this.progressbar1.BidirectionalMarquee = true;
             this.progressbar1.ProgressBarStyle = Terminal.Gui.ProgressBarStyle.Blocks;
             this.progressbar1.ProgressBarFormat = Terminal.Gui.ProgressBarFormat.FramedPlusPercentage;

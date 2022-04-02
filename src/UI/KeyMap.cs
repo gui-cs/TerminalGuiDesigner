@@ -16,4 +16,5 @@ public class KeyMap
     public Key Delete { get; set; } = Key.DeleteChar;
     public Key ToggleDragging { get; set; } = Key.F3;
     public Key AddView { get; set; } = Key.F2;
+    public Key ToggleShowFocused { get; set; } = Key.CtrlMask | Key.L;
 }
