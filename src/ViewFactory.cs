@@ -46,13 +46,14 @@ public class ViewFactory
             return g;
         }
 
-
-        if (typeof(FrameView).IsAssignableFrom(t))
+        if(typeof(ListView).IsAssignableFrom(t))
         {
-            return new FrameView{
+            var lv = new ListView(new List<string>{"Item1","Item2","Item3"}){
                 Width = 20,
-                Height = 5,
+                Height = 3,
             };
+
+            return lv;
         }
 
         var instance = (View?)Activator.CreateInstance(t) ?? throw new Exception($"CreateInstance returned null for Type '{t}'");
@@ -60,6 +61,14 @@ public class ViewFactory
         instance.SetActualText("Heya");
 
         instance.Width = Math.Max(instance.Bounds.Width, 4);
+        instance.Height = Math.Max(instance.Bounds.Height, 1);
+
+        if (instance is FrameView || instance is HexView)
+        {
+            instance.Height = 5;            
+        }
+
+
         instance.ColorScheme = Colors.Base;
 
         return instance;

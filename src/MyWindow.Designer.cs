@@ -26,6 +26,14 @@ namespace YourNamespace {
         
         private Terminal.Gui.DateField datefield1;
         
+        private Terminal.Gui.HexView hexview1;
+        
+        private Terminal.Gui.Views.LineView lineview1;
+        
+        private Terminal.Gui.Label label4;
+        
+        private Terminal.Gui.ListView listview1;
+        
         private void InitializeComponent() {
             this.Text = "";
             this.Width = Dim.Fill(0);
@@ -89,6 +97,42 @@ namespace YourNamespace {
             this.datefield1.Y = 3;
             this.datefield1.TextAlignment = TextAlignment.Left;
             this.Add(this.datefield1);
+            this.hexview1 = new Terminal.Gui.HexView();
+            this.hexview1.Data = "hexview1";
+            this.hexview1.Text = "Heya";
+            this.hexview1.Width = 4;
+            this.hexview1.Height = 5;
+            this.hexview1.X = 60;
+            this.hexview1.Y = 3;
+            this.hexview1.TextAlignment = TextAlignment.Left;
+            this.Add(this.hexview1);
+            this.lineview1 = new Terminal.Gui.Views.LineView();
+            this.lineview1.Data = "lineview1";
+            this.lineview1.Text = "Heya";
+            this.lineview1.Width = 76;
+            this.lineview1.Height = 1;
+            this.lineview1.X = 0;
+            this.lineview1.Y = 14;
+            this.lineview1.TextAlignment = TextAlignment.Left;
+            this.Add(this.lineview1);
+            this.label4 = new Terminal.Gui.Label();
+            this.label4.Data = "label4";
+            this.label4.Text = "(This is a line view)";
+            this.label4.Width = 21;
+            this.label4.Height = 1;
+            this.label4.X = 28;
+            this.label4.Y = 14;
+            this.label4.TextAlignment = TextAlignment.Left;
+            this.Add(this.label4);
+            this.listview1 = new Terminal.Gui.ListView();
+            this.listview1.Data = "listview1";
+            this.listview1.Text = "Heya";
+            this.listview1.Width = 19;
+            this.listview1.Height = 5;
+            this.listview1.X = 60;
+            this.listview1.Y = 19;
+            this.listview1.TextAlignment = TextAlignment.Left;
+            this.Add(this.listview1);
         }
     }
 }

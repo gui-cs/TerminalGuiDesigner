@@ -158,6 +158,11 @@ public class Design
         {
             yield return CreateProperty(nameof(CheckBox.Checked));
         }
+
+        if (View is ListView lv)
+        {
+            yield return CreateProperty(nameof(ListView.Source));
+        }
         if(View is GraphView gv)
         {
             yield return CreateProperty(nameof(GraphView.GraphColor));

@@ -56,6 +56,16 @@ public class Property : ToCodeBase
                 }
             }
         }
+        if(PropertyInfo.PropertyType == typeof(IListDataSource))
+        {
+            if(value != null && value is Array a)
+            {
+                // accept arrays as valid input values 
+                // for setting an IListDataSource.  Just
+                // convert them to ListWrappers
+                value = new ListWrapper(a.ToList());
+            }
+        }
 
         // TODO: This hack gets around an ArgumentException that gets thrown when
         // switching from Computed to Absolute values of Dim/Pos
@@ -90,6 +100,30 @@ public class Property : ToCodeBase
             return new CodeObjectCreateExpression(typeof(PointF),
                  new CodePrimitiveExpression(pointf.X),
                  new CodePrimitiveExpression(pointf.Y));
+        }
+        if(val is ListWrapper w)
+        {
+            // Create an Expression like:
+            // new ListWrapper(new string[]{"bob","frank"})
+
+            var a = new CodeArrayCreateExpression();
+            Type? listType = null;
+
+            foreach(var v in w.ToList())
+            {
+                if(v != null && listType == null)
+                {
+                    listType = v.GetType();
+                }
+                
+                CodeExpression element = v == null ? new CodeDefaultValueExpression() : new CodePrimitiveExpression(v);
+
+                a.Initializers.Add(element);
+            }
+            a.CreateType = new CodeTypeReference(listType ?? typeof(string)); 
+            var ctor = new CodeObjectCreateExpression(typeof(ListWrapper),a);
+
+            return ctor;
         }
 
         if(val is Pos p)
