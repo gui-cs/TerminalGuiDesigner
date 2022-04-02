@@ -14,6 +14,16 @@ namespace YourNamespace {
     
     public partial class MyWindow : Terminal.Gui.Window {
         
+        private Terminal.Gui.FrameView frameview1;
+        
+        private Terminal.Gui.Label label2;
+        
+        private Terminal.Gui.Button button1;
+        
+        private Terminal.Gui.Label label3;
+        
+        private Terminal.Gui.Label label1;
+        
         private Terminal.Gui.DateField datefield1;
         
         private void InitializeComponent() {
@@ -24,13 +34,59 @@ namespace YourNamespace {
             this.Y = 0;
             this.TextAlignment = TextAlignment.Centered;
             this.Title = "Welcome to Demo";
+            this.frameview1 = new Terminal.Gui.FrameView();
+            this.frameview1.Data = "frameview1";
+            this.frameview1.Text = "";
+            this.frameview1.Width = 29;
+            this.frameview1.Height = 11;
+            this.frameview1.X = 23;
+            this.frameview1.Y = 1;
+            this.frameview1.TextAlignment = TextAlignment.Left;
+            this.Add(this.frameview1);
+            this.label2 = new Terminal.Gui.Label();
+            this.label2.Data = "label2";
+            this.label2.Text = "I\'m in a frame view";
+            this.label2.Width = 19;
+            this.label2.Height = 1;
+            this.label2.X = 4;
+            this.label2.Y = 3;
+            this.label2.TextAlignment = TextAlignment.Left;
+            this.frameview1.Add(this.label2);
+            this.button1 = new Terminal.Gui.Button();
+            this.button1.Data = "button1";
+            this.button1.Text = "Yay";
+            this.button1.Width = 7;
+            this.button1.Height = 1;
+            this.button1.X = 9;
+            this.button1.Y = 5;
+            this.button1.TextAlignment = TextAlignment.Centered;
+            this.button1.IsDefault = false;
+            this.frameview1.Add(this.button1);
+            this.label3 = new Terminal.Gui.Label();
+            this.label3.Data = "label3";
+            this.label3.Text = "Cool eh?";
+            this.label3.Width = 8;
+            this.label3.Height = 1;
+            this.label3.X = 25;
+            this.label3.Y = 1;
+            this.label3.TextAlignment = TextAlignment.Left;
+            this.Add(this.label3);
+            this.label1 = new Terminal.Gui.Label();
+            this.label1.Data = "label1";
+            this.label1.Text = "Dob:";
+            this.label1.Width = 4;
+            this.label1.Height = 1;
+            this.label1.X = 6;
+            this.label1.Y = 3;
+            this.label1.TextAlignment = TextAlignment.Left;
+            this.Add(this.label1);
             this.datefield1 = new Terminal.Gui.DateField();
             this.datefield1.Data = "datefield1";
             this.datefield1.Text = " 02/03/22";
             this.datefield1.Width = 10;
             this.datefield1.Height = 1;
-            this.datefield1.X = 11;
-            this.datefield1.Y = 2;
+            this.datefield1.X = 10;
+            this.datefield1.Y = 3;
             this.datefield1.TextAlignment = TextAlignment.Left;
             this.Add(this.datefield1);
         }

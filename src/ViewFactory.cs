@@ -46,6 +46,15 @@ public class ViewFactory
             return g;
         }
 
+
+        if (typeof(FrameView).IsAssignableFrom(t))
+        {
+            return new FrameView{
+                Width = 20,
+                Height = 5,
+            };
+        }
+
         var instance = (View?)Activator.CreateInstance(t) ?? throw new Exception($"CreateInstance returned null for Type '{t}'");
 
         instance.SetActualText("Heya");
@@ -103,7 +112,11 @@ public class ViewFactory
         Type[] exclude = new Type[]{
             typeof(Toplevel),
              typeof(Window),
-             typeof(ToplevelContainer)};
+             typeof(ToplevelContainer),
+             typeof(Dialog),
+             typeof(FileDialog),
+             typeof(SaveDialog),
+             typeof(OpenDialog)};
 
         return typeof(View).Assembly.DefinedTypes.Where(t => 
                 typeof(View).IsAssignableFrom(t) && 

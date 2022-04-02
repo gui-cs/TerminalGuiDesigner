@@ -117,9 +117,11 @@ namespace TerminalGuiDesigner.UI
                 return true;
             }
 
+            var punctuation = "\"'a:;%^&*~`bc!@#.,? ";
+
             var ch = (char)keystroke.KeyValue;
 
-            return char.IsLetterOrDigit(ch) || ch == ' ';
+            return punctuation.Contains(ch) || char.IsLetterOrDigit(ch);
         }
     }
 }
