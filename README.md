@@ -46,12 +46,12 @@ The following feature list shows the current capabilities and the roadmap
   - [x] Checkbox
   - [ ] ComboBox
   - [x] DateField
-  - [ ] FrameView (partially implemented)
-  - [ ] GraphView (partially implemented)
+  - [x] FrameView
+  - [x] GraphView
   - [x] HexView
   - [x] Label
-  - [ ] LineView
-  - [ ] ListView
+  - [x] LineView
+  - [x] ListView
   - [ ] MenuBar
   - [ ] PanelView
   - [ ] ProgressBar
