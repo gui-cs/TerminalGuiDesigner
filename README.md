@@ -26,12 +26,7 @@ The following feature list shows the current capabilities and the roadmap
     - [x] X/Y
     - [x] Width/Height
     - [x] Text
-    - [ ] CanFocus
     - [ ] Color Schemes
-    - [x] Data Tables
-    - [ ] TreeView
-    - [x] Tab View
-    - [ ] Build Top Bar Menus
 - [x] Mouse Input
   - [x] Drag to move
   - [x] Drag to resize
@@ -46,6 +41,30 @@ The following feature list shows the current capabilities and the roadmap
 - [ ] Read and present xmldoc comments when editing properties
 - [x] Comprehensive Tests
 - [x] CI
+- [ ] Create and edit all views
+  - [x] Button
+  - [x] Checkbox
+  - [ ] ComboBox
+  - [x] DateField
+  - [ ] FrameView (partially implemented)
+  - [ ] GraphView (partially implemented)
+  - [x] HexView
+  - [x] Label
+  - [ ] LineView
+  - [ ] ListView
+  - [ ] MenuBar
+  - [ ] PanelView
+  - [ ] ProgressBar
+  - [x] RadioGroup
+  - [ ] StatusBar
+  - [x] TableView
+  - [x] TabView
+  - [x] TextField
+  - [ ] TextValidateField
+  - [ ] TextView
+  - [ ] TimeField
+  - [ ] TreeView
+  - [ ] View
 
 Class Diagram
 -------------------------------
