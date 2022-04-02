@@ -281,6 +281,16 @@ public class EditDialog : Window
             }
         }
         else
+        if(property.PropertyInfo.PropertyType == typeof(Rune) 
+            || property.PropertyInfo.PropertyType == typeof(char))
+        {
+            if(Modals.GetChar(property.PropertyInfo.Name, "New Single Character", oldValue is null ? null : (char?)oldValue.ToPrimitive() ?? null, out var resultChar))
+            {
+                newValue = resultChar;
+                return true;
+            }
+        }
+        else
         if (Modals.GetString(property.PropertyInfo.Name, "New String Value", oldValue?.ToString(), out var result))
         {
             newValue = result;

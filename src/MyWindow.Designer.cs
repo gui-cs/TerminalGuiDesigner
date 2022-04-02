@@ -28,6 +28,10 @@ namespace YourNamespace {
         
         private Terminal.Gui.HexView hexview1;
         
+        private Terminal.Gui.Views.LineView lineview2;
+        
+        private Terminal.Gui.Label label5;
+        
         private Terminal.Gui.Views.LineView lineview1;
         
         private Terminal.Gui.Label label4;
@@ -42,7 +46,7 @@ namespace YourNamespace {
             this.Height = Dim.Fill(0);
             this.X = 0;
             this.Y = 0;
-            this.TextAlignment = TextAlignment.Centered;
+            this.TextAlignment = Terminal.Gui.TextAlignment.Centered;
             this.Title = "Welcome to Demo";
             this.frameview1 = new Terminal.Gui.FrameView();
             this.frameview1.Data = "frameview1";
@@ -51,7 +55,7 @@ namespace YourNamespace {
             this.frameview1.Height = 11;
             this.frameview1.X = 23;
             this.frameview1.Y = 1;
-            this.frameview1.TextAlignment = TextAlignment.Left;
+            this.frameview1.TextAlignment = Terminal.Gui.TextAlignment.Left;
             this.Add(this.frameview1);
             this.label2 = new Terminal.Gui.Label();
             this.label2.Data = "label2";
@@ -60,7 +64,7 @@ namespace YourNamespace {
             this.label2.Height = 1;
             this.label2.X = 4;
             this.label2.Y = 3;
-            this.label2.TextAlignment = TextAlignment.Left;
+            this.label2.TextAlignment = Terminal.Gui.TextAlignment.Left;
             this.frameview1.Add(this.label2);
             this.button1 = new Terminal.Gui.Button();
             this.button1.Data = "button1";
@@ -69,7 +73,7 @@ namespace YourNamespace {
             this.button1.Height = 1;
             this.button1.X = 9;
             this.button1.Y = 5;
-            this.button1.TextAlignment = TextAlignment.Centered;
+            this.button1.TextAlignment = Terminal.Gui.TextAlignment.Centered;
             this.button1.IsDefault = false;
             this.frameview1.Add(this.button1);
             this.label3 = new Terminal.Gui.Label();
@@ -79,7 +83,7 @@ namespace YourNamespace {
             this.label3.Height = 1;
             this.label3.X = 25;
             this.label3.Y = 1;
-            this.label3.TextAlignment = TextAlignment.Left;
+            this.label3.TextAlignment = Terminal.Gui.TextAlignment.Left;
             this.Add(this.label3);
             this.label1 = new Terminal.Gui.Label();
             this.label1.Data = "label1";
@@ -88,7 +92,7 @@ namespace YourNamespace {
             this.label1.Height = 1;
             this.label1.X = 6;
             this.label1.Y = 3;
-            this.label1.TextAlignment = TextAlignment.Left;
+            this.label1.TextAlignment = Terminal.Gui.TextAlignment.Left;
             this.Add(this.label1);
             this.datefield1 = new Terminal.Gui.DateField();
             this.datefield1.Data = "datefield1";
@@ -97,7 +101,7 @@ namespace YourNamespace {
             this.datefield1.Height = 1;
             this.datefield1.X = 10;
             this.datefield1.Y = 3;
-            this.datefield1.TextAlignment = TextAlignment.Left;
+            this.datefield1.TextAlignment = Terminal.Gui.TextAlignment.Left;
             this.Add(this.datefield1);
             this.hexview1 = new Terminal.Gui.HexView();
             this.hexview1.Data = "hexview1";
@@ -106,8 +110,28 @@ namespace YourNamespace {
             this.hexview1.Height = 5;
             this.hexview1.X = 60;
             this.hexview1.Y = 3;
-            this.hexview1.TextAlignment = TextAlignment.Left;
+            this.hexview1.TextAlignment = Terminal.Gui.TextAlignment.Left;
             this.Add(this.hexview1);
+            this.lineview2 = new Terminal.Gui.Views.LineView();
+            this.lineview2.Data = "lineview2";
+            this.lineview2.Text = "";
+            this.lineview2.Width = 1;
+            this.lineview2.Height = 10;
+            this.lineview2.X = 55;
+            this.lineview2.Y = 9;
+            this.lineview2.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.lineview2.LineRune = 'o';
+            this.lineview2.Orientation = Terminal.Gui.Graphs.Orientation.Vertical;
+            this.Add(this.lineview2);
+            this.label5 = new Terminal.Gui.Label();
+            this.label5.Data = "label5";
+            this.label5.Text = "This is also";
+            this.label5.Width = 12;
+            this.label5.Height = 1;
+            this.label5.X = 57;
+            this.label5.Y = 11;
+            this.label5.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.Add(this.label5);
             this.lineview1 = new Terminal.Gui.Views.LineView();
             this.lineview1.Data = "lineview1";
             this.lineview1.Text = "Heya";
@@ -115,7 +139,9 @@ namespace YourNamespace {
             this.lineview1.Height = 1;
             this.lineview1.X = 0;
             this.lineview1.Y = 14;
-            this.lineview1.TextAlignment = TextAlignment.Left;
+            this.lineview1.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.lineview1.LineRune = '─';
+            this.lineview1.Orientation = Terminal.Gui.Graphs.Orientation.Horizontal;
             this.Add(this.lineview1);
             this.label4 = new Terminal.Gui.Label();
             this.label4.Data = "label4";
@@ -124,7 +150,7 @@ namespace YourNamespace {
             this.label4.Height = 1;
             this.label4.X = 28;
             this.label4.Y = 14;
-            this.label4.TextAlignment = TextAlignment.Left;
+            this.label4.TextAlignment = Terminal.Gui.TextAlignment.Left;
             this.Add(this.label4);
             this.listview2 = new Terminal.Gui.ListView();
             this.listview2.Data = "listview2";
@@ -133,7 +159,7 @@ namespace YourNamespace {
             this.listview2.Height = 3;
             this.listview2.X = 20;
             this.listview2.Y = 19;
-            this.listview2.TextAlignment = TextAlignment.Left;
+            this.listview2.TextAlignment = Terminal.Gui.TextAlignment.Left;
             this.listview2.Source = new Terminal.Gui.ListWrapper(new string[] {
                         "Bob",
                         "Frank",
@@ -147,8 +173,11 @@ namespace YourNamespace {
             this.listview1.Height = 5;
             this.listview1.X = 60;
             this.listview1.Y = 19;
-            this.listview1.TextAlignment = TextAlignment.Left;
-            this.listview1.Source = null;
+            this.listview1.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.listview1.Source = new Terminal.Gui.ListWrapper(new string[] {
+                        "Hey",
+                        "There",
+                        "Bob"});
             this.Add(this.listview1);
         }
     }

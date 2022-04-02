@@ -215,6 +215,11 @@ public static class PosExtensions
             return u.ToString();
         }
 
+        if (value is Rune r)
+        {
+            return (char)r;
+        }
+
         if (value is Pos p)
         {
             // Value is a position e.g. X=2

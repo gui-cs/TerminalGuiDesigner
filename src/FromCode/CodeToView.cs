@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis;
+﻿using Basic.Reference.Assemblies;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Emit;
@@ -105,27 +106,22 @@ public class CodeToView
         var dd = typeof(Enumerable).GetTypeInfo().Assembly.Location;
         var coreDir = Directory.GetParent(dd) ?? throw new Exception($"Could not find parent directory of dotnet sdk.  Sdk directory was {dd}");
 
-        var netCoreLib = MetadataReference.CreateFromFile(typeof(object).Assembly.Location);
-        var terminalGuilib = MetadataReference.CreateFromFile(typeof(View).Assembly.Location);
-        var nstackLib = MetadataReference.CreateFromFile(typeof(ustring).Assembly.Location);
-        var marshalLib = MetadataReference.CreateFromFile(typeof(MarshalByValueComponent).Assembly.Location);
-        var systemData = MetadataReference.CreateFromFile(typeof(System.Data.DataTable).Assembly.Location);
-        var mscorLib = MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "mscorlib.dll");
-        var runtimeLib = MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "System.Runtime.dll");
+
+        var references = new List<MetadataReference>(ReferenceAssemblies.Net60);
+
+        references.Add( MetadataReference.CreateFromFile(typeof(View).Assembly.Location));
+        references.Add( MetadataReference.CreateFromFile(typeof(ustring).Assembly.Location));
+        references.Add( MetadataReference.CreateFromFile(typeof(System.Data.DataTable).Assembly.Location));
+        references.Add( MetadataReference.CreateFromFile(typeof(object).Assembly.Location));
+        references.Add( MetadataReference.CreateFromFile(typeof(MarshalByValueComponent).Assembly.Location));
+        references.Add( MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "mscorlib.dll"));
+        references.Add( MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "System.Runtime.dll"));
 
         var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary);
 
         var compilation
             = CSharpCompilation.Create(Guid.NewGuid().ToString() + ".dll",
-            new CSharpSyntaxTree[] { csTree, designerTree }, references: new[]
-            {
-                netCoreLib,
-                terminalGuilib,
-                nstackLib,
-                systemData,
-                marshalLib,
-                mscorLib,
-                runtimeLib}, options: options);
+            new CSharpSyntaxTree[] { csTree, designerTree }, references: references, options: options);
 
         using var stream = new MemoryStream();
         EmitResult result = compilation.Emit(stream);

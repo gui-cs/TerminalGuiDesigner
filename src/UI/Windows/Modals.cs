@@ -116,4 +116,25 @@ public class Modals
     {       
         return Get(prompt,okText,true,Enum.GetValues(enumType).Cast<Enum>().ToArray(),o=>o?.ToString() ?? "Null",false,out result);
     }
+
+    internal static bool GetChar(string windowTitle, string entryLabel, char? oldValue, out char? resultChar)
+    {
+        if(GetString(windowTitle,entryLabel,oldValue?.ToString() ?? "",out var result))
+        {
+            if(result == null || result.Length == 0)
+            {
+                resultChar = null;
+                return true;
+            }
+
+            // TODO: pulling first character from what they type is all very
+            // well but we should try to actually put a max length on that field
+            // so they can't input more than 1 character in the first place
+            resultChar = result.First();
+            return true;
+        }
+
+        resultChar = null;
+        return false;
+    }
 }

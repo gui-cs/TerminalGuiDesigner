@@ -2,6 +2,7 @@
 using NStack;
 using Terminal.Gui;
 using Terminal.Gui.Graphs;
+using Terminal.Gui.Views;
 using static Terminal.Gui.Border;
 using Attribute = Terminal.Gui.Attribute;
 
@@ -54,6 +55,15 @@ public class ViewFactory
             };
 
             return lv;
+        }
+
+        if(t == typeof(LineView))
+        {
+            return new LineView(){
+                Width = 8,
+                Height = 1
+            };
+
         }
 
         var instance = (View?)Activator.CreateInstance(t) ?? throw new Exception($"CreateInstance returned null for Type '{t}'");
@@ -125,7 +135,9 @@ public class ViewFactory
              typeof(Dialog),
              typeof(FileDialog),
              typeof(SaveDialog),
-             typeof(OpenDialog)};
+             typeof(OpenDialog),
+             typeof(ScrollView),
+             typeof(ScrollBarView)};
 
         return typeof(View).Assembly.DefinedTypes.Where(t => 
                 typeof(View).IsAssignableFrom(t) && 

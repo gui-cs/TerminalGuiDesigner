@@ -2,6 +2,7 @@ using System.Reflection;
 using NLog;
 using Terminal.Gui;
 using Terminal.Gui.Graphs;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner.FromCode;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
@@ -153,6 +154,11 @@ public class Design
         if (View is Button)
         {
             yield return CreateProperty(nameof(Button.IsDefault));
+        }
+        if(View is LineView)
+        {
+            yield return CreateProperty(nameof(LineView.LineRune));
+            yield return CreateProperty(nameof(LineView.Orientation));
         }
         if (View is CheckBox)
         {
