@@ -10,6 +10,14 @@ This project is in pre-alpha.  See the feature list for progress.
 
 ![designer](https://user-images.githubusercontent.com/31306100/161325121-c6c03350-5d37-4830-b756-58daf79c972f.gif)
 
+Building
+----------------
+Build using the dotnet 6.0 sdk
+```
+cd src
+dotnet run
+```
+
 Features
 -------------------------------
 
