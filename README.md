@@ -69,8 +69,8 @@ The following feature list shows the current capabilities and the roadmap
   - [x] TabView
   - [x] TextField
   - [x] TextValidateField
-  - [ ] TextView
-  - [ ] TimeField
+  - [x] TextView
+  - [x] TimeField
   - [ ] TreeView
   - [ ] View
 

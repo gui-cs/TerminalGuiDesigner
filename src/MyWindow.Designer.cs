@@ -28,9 +28,15 @@ namespace YourNamespace {
         
         private Terminal.Gui.HexView hexview1;
         
+        private Terminal.Gui.Label label7;
+        
+        private Terminal.Gui.TimeField timefield1;
+        
         private Terminal.Gui.Label label6;
         
         private Terminal.Gui.TextValidateField textvalidatefield1;
+        
+        private Terminal.Gui.Label label8;
         
         private Terminal.Gui.TextView textview1;
         
@@ -120,11 +126,29 @@ namespace YourNamespace {
             this.hexview1.Text = "Heya";
             this.hexview1.TextAlignment = Terminal.Gui.TextAlignment.Left;
             this.Add(this.hexview1);
+            this.label7 = new Terminal.Gui.Label();
+            this.label7.Width = 5;
+            this.label7.Height = 1;
+            this.label7.X = 5;
+            this.label7.Y = 5;
+            this.label7.Data = "label7";
+            this.label7.Text = "Time:";
+            this.label7.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.Add(this.label7);
+            this.timefield1 = new Terminal.Gui.TimeField();
+            this.timefield1.Width = 7;
+            this.timefield1.Height = 1;
+            this.timefield1.X = 10;
+            this.timefield1.Y = 5;
+            this.timefield1.Data = "timefield1";
+            this.timefield1.Text = " 12:11";
+            this.timefield1.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.Add(this.timefield1);
             this.label6 = new Terminal.Gui.Label();
             this.label6.Width = 4;
             this.label6.Height = 1;
             this.label6.X = 6;
-            this.label6.Y = 6;
+            this.label6.Y = 7;
             this.label6.Data = "label6";
             this.label6.Text = "Age:";
             this.label6.TextAlignment = Terminal.Gui.TextAlignment.Left;
@@ -133,12 +157,21 @@ namespace YourNamespace {
             this.textvalidatefield1.Width = 5;
             this.textvalidatefield1.Height = 1;
             this.textvalidatefield1.X = 10;
-            this.textvalidatefield1.Y = 6;
+            this.textvalidatefield1.Y = 7;
             this.textvalidatefield1.Provider = new Terminal.Gui.TextValidateProviders.TextRegexProvider("[0-9]+");
             this.textvalidatefield1.Data = "textvalidatefield1";
             this.textvalidatefield1.Text = "123";
             this.textvalidatefield1.TextAlignment = Terminal.Gui.TextAlignment.Left;
             this.Add(this.textvalidatefield1);
+            this.label8 = new Terminal.Gui.Label();
+            this.label8.Width = 3;
+            this.label8.Height = 1;
+            this.label8.X = 16;
+            this.label8.Y = 7;
+            this.label8.Data = "label8";
+            this.label8.Text = "yrs";
+            this.label8.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.Add(this.label8);
             this.textview1 = new Terminal.Gui.TextView();
             this.textview1.Width = 15;
             this.textview1.Height = 4;
