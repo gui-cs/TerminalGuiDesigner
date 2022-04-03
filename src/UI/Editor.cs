@@ -28,9 +28,13 @@ public class Editor : Toplevel
 
     private string GetHelpWithNothingLoaded()
     {
-    return @$"{_keyMap.ShowHelp} - Show Help
-{_keyMap.New} - New View
+        return @$"{_keyMap.ShowHelp} - Show Help
+{_keyMap.New} - New Window/Class
 {_keyMap.Open} - Open a .Designer.cs file";
+    }
+    private string GetHelpWithEmptyFormLoaded()
+    {
+        return @$"{_keyMap.AddView} to Add a View";
     }
     private string GetHelp()
     {
@@ -200,19 +204,19 @@ Ctrl+Q - Quit
         {
             if(enableShowFocused)
             {
-                var d = GetMostFocused(this).GetNearestDesign();
+                string? toDisplay = GetLowerRightTextIfAny();
 
                 // and have a designable view focused
-                if(d != null)
+                if(toDisplay != null)
                 {
                     // write its name in the lower right
                     int y = Bounds.Height -1;
                     int right = bounds.Width -1;
-                    var len = d.FieldName.Length;
+                    var len = toDisplay.Length;
                     
                     for(int i=0;i<len;i++)
                     {
-                        AddRune(right -len +i,y,d.FieldName[i]);
+                        AddRune(right -len +i,y,toDisplay[i]);
                     }
                 }
             }
@@ -241,6 +245,18 @@ Ctrl+Q - Quit
                 AddRune(startFromX + x, midY + y, line[x]);
             }
         }
+    }
+
+    private string? GetLowerRightTextIfAny()
+    {
+        var design = GetMostFocused(this).GetNearestDesign();
+
+        if(design != null)
+        {
+            return $"Selected: {design.FieldName} ({_keyMap.EditProperties} to Edit, {_keyMap.ShowHelp} for Help)";
+        }
+
+        return  GetHelpWithEmptyFormLoaded();
     }
 
     public override bool ProcessHotKey(KeyEvent keyEvent)
