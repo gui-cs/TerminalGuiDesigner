@@ -308,7 +308,7 @@ public class EditDialog : Window
             }
         }
         else
-        if (Modals.GetString(property.PropertyInfo.Name, "New String Value", oldValue?.ToString(), out var result))
+        if (Modals.GetString(property.PropertyInfo.Name, "New String Value", oldValue?.ToString(), out var result,AllowMultiLine(property)))
         {
             newValue = result;
             return true;
@@ -318,7 +318,16 @@ public class EditDialog : Window
         return false;
     }
 
+    private bool AllowMultiLine(Property property)
+    {
+        // for the text editor control let them put multiple lines in
+        if(property.PropertyInfo.Name.Equals("Text") && property.Design.View is TextView tv && tv.Multiline)
+        {
+            return true;
+        }
 
+        return false;
+    }
 
     private void List_KeyPress(KeyEventEventArgs obj)
     {

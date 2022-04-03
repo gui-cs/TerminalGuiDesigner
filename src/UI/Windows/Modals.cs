@@ -81,12 +81,13 @@ public class Modals
         result = null;
         return false;
     }
-    public static bool GetString(string windowTitle, string entryLabel, string? initialValue, out string? result)
+    public static bool GetString(string windowTitle, string entryLabel, string? initialValue, out string? result, bool multiLine = false)
     {
         var dlg = new GetTextDialog(new DialogArgs()
         {
             WindowTitle = windowTitle,
             EntryLabel = entryLabel,
+            MultiLine = multiLine,
         }, initialValue);
 
         if (dlg.ShowDialog())
