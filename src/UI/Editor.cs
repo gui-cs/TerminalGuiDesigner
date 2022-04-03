@@ -325,7 +325,6 @@ Ctrl+Q - Quit
                 SetNeedsDisplay();
             }
 
-
             switch (keyEvent.Key)
             {
                 // Cursor keys

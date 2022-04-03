@@ -160,6 +160,10 @@ public class Design
             yield return CreateProperty(nameof(LineView.LineRune));
             yield return CreateProperty(nameof(LineView.Orientation));
         }
+        if(View is TextValidateField)
+        {
+            yield return CreateProperty(nameof(TextValidateField.Provider));
+        }
         if(View is ProgressBar)
         {
             yield return CreateProperty(nameof(ProgressBar.Fraction));

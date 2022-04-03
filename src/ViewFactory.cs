@@ -2,6 +2,7 @@
 using NStack;
 using Terminal.Gui;
 using Terminal.Gui.Graphs;
+using Terminal.Gui.TextValidateProviders;
 using Terminal.Gui.Views;
 using static Terminal.Gui.Border;
 using Attribute = Terminal.Gui.Attribute;
@@ -34,6 +35,17 @@ public class ViewFactory
         if (typeof(RadioGroup).IsAssignableFrom(t))
         {
             return CreateRadioGroup();
+        }
+
+        if(t == typeof(TextValidateField))
+        {
+            return new TextValidateField{
+
+                Provider = new TextRegexProvider(".*"),
+                Text = "Heya",
+                Width = 5,
+                Height = 1,
+            };
         }
 
         if(t == typeof(ProgressBar))
