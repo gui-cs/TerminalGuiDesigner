@@ -28,6 +28,10 @@ namespace YourNamespace {
         
         private Terminal.Gui.HexView hexview1;
         
+        private Terminal.Gui.Label label6;
+        
+        private Terminal.Gui.TextValidateField textvalidatefield1;
+        
         private Terminal.Gui.Views.LineView lineview2;
         
         private Terminal.Gui.Label label5;
@@ -114,6 +118,25 @@ namespace YourNamespace {
             this.hexview1.Y = 3;
             this.hexview1.TextAlignment = Terminal.Gui.TextAlignment.Left;
             this.Add(this.hexview1);
+            this.label6 = new Terminal.Gui.Label();
+            this.label6.Data = "label6";
+            this.label6.Text = "Age:";
+            this.label6.Width = 4;
+            this.label6.Height = 1;
+            this.label6.X = 6;
+            this.label6.Y = 6;
+            this.label6.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.Add(this.label6);
+            this.textvalidatefield1 = new Terminal.Gui.TextValidateField();
+            this.textvalidatefield1.Provider = new Terminal.Gui.TextValidateProviders.TextRegexProvider("[0-9]+");
+            this.textvalidatefield1.Data = "textvalidatefield1";
+            this.textvalidatefield1.Text = "123";
+            this.textvalidatefield1.Width = 5;
+            this.textvalidatefield1.Height = 1;
+            this.textvalidatefield1.X = 10;
+            this.textvalidatefield1.Y = 6;
+            this.textvalidatefield1.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.Add(this.textvalidatefield1);
             this.lineview2 = new Terminal.Gui.Views.LineView();
             this.lineview2.Data = "lineview2";
             this.lineview2.Text = "";

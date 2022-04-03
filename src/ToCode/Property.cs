@@ -2,6 +2,7 @@
 using System.CodeDom;
 using System.Reflection;
 using Terminal.Gui;
+using Terminal.Gui.TextValidateProviders;
 using TerminalGuiDesigner;
 using Attribute = Terminal.Gui.Attribute;
 
@@ -107,6 +108,11 @@ public class Property : ToCodeBase
             return new CodeObjectCreateExpression(typeof(PointF),
                  new CodePrimitiveExpression(pointf.X),
                  new CodePrimitiveExpression(pointf.Y));
+        }
+        if(val is TextRegexProvider regv)
+        {
+            return new CodeObjectCreateExpression(typeof(TextRegexProvider),
+                 new CodePrimitiveExpression(regv.Pattern.ToPrimitive()));
         }
         if(val is ListWrapper w)
         {

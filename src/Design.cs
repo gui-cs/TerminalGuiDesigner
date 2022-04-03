@@ -140,6 +140,13 @@ public class Design
 
     protected virtual IEnumerable<Property> LoadDesignableProperties()
     {
+        // its important that this comes before Text because
+        // changing the validator clears the text
+        if(View is TextValidateField)
+        {
+            yield return CreateProperty(nameof(TextValidateField.Provider));
+        }
+
         yield return new NameProperty(this);
         yield return new Property(this,View.GetActualTextProperty());
         
@@ -159,10 +166,6 @@ public class Design
         {
             yield return CreateProperty(nameof(LineView.LineRune));
             yield return CreateProperty(nameof(LineView.Orientation));
-        }
-        if(View is TextValidateField)
-        {
-            yield return CreateProperty(nameof(TextValidateField.Provider));
         }
         if(View is ProgressBar)
         {
