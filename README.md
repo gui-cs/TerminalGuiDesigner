@@ -6,6 +6,11 @@ Cross platform designer for [Terminal.Gui](https://github.com/migueldeicaza/gui.
 
 Built with CodeDom and Roslyn, TerminalGuiDesigner lets you create complicated Views with drag and drop just like the WinForms designer you know and love (or hate).
 
+Install the tool via NuGet:
+```
+dotnet tool install --global TerminalGuiDesigner
+```
+
 This project is in pre-alpha.  See the feature list for progress.
 
 ![designer](https://user-images.githubusercontent.com/31306100/161325121-c6c03350-5d37-4830-b756-58daf79c972f.gif)
