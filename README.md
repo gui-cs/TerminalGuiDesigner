@@ -25,7 +25,7 @@ dotnet run
 
 Keybindings
 ----------------
-You can change keybindings by creating copying [Keys.yaml](https://raw.githubusercontent.com/tznind/TerminalGuiDesigner/main/src/Keys.yaml) into your current directory.
+You can change keybindings by copying [Keys.yaml](https://raw.githubusercontent.com/tznind/TerminalGuiDesigner/main/src/Keys.yaml) into your current directory.
 
 Features
 -------------------------------
