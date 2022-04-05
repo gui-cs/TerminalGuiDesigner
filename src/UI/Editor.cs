@@ -503,6 +503,9 @@ Ctrl+Q - Quit
         var ofd = new SaveDialog("New", $"Class file",
             new List<string>(new[] { ".cs" }))
         {
+            NameDirLabel = "Directory",
+            NameFieldLabel = "Class",
+            FilePath = "MyView.cs",
             AllowsOtherFileTypes = false,
         };
 
@@ -531,8 +534,11 @@ Ctrl+Q - Quit
     {
         var viewToCode = new ViewToCode();
 
-        var design = viewToCode.GenerateNewView(toOpen, "YourNamespace", typeToCreate, out _currentDesignerFile);
-        ReplaceViewBeingEdited(design);
+        if(Modals.GetString("Namespace", "Enter the namespace for your class","YourNamespace",out string? ns))
+        {
+            var design = viewToCode.GenerateNewView(toOpen, ns ?? "YourNamespace", typeToCreate, out _currentDesignerFile);
+            ReplaceViewBeingEdited(design);
+        }
     }
 
     private void ReplaceViewBeingEdited(Design design)
