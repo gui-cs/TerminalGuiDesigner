@@ -10,3 +10,4 @@ Undo: Z, CtrlMask
 Delete: DeleteChar
 ToggleDragging: F3
 AddView: F2
+ToggleShowFocused: L, CtrlMask

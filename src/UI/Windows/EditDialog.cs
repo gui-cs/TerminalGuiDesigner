@@ -1,4 +1,5 @@
 ﻿using Terminal.Gui;
+using Terminal.Gui.TextValidateProviders;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 using Attribute = Terminal.Gui.Attribute;
@@ -145,6 +146,22 @@ public class EditDialog : Window
             }
         }
         else
+        if(property.PropertyInfo.PropertyType == typeof(ITextValidateProvider))
+        {
+            string? oldPattern = oldValue is TextRegexProvider r ? (string?)r.Pattern.ToPrimitive() : null;
+            if(Modals.GetString("New Validation Pattern","Regex Pattern",oldPattern,out var newPattern))
+            {
+
+                newValue = string.IsNullOrWhiteSpace(newPattern) ? null : new TextRegexProvider(newPattern);
+                return true;
+            }
+
+            // user cancelled entering a pattern
+            newValue = null;
+            return false;
+
+        }
+        else
         // user is editing a Pos
         if (property.PropertyInfo.PropertyType == typeof(Pos))
         {
@@ -281,7 +298,17 @@ public class EditDialog : Window
             }
         }
         else
-        if (Modals.GetString(property.PropertyInfo.Name, "New String Value", oldValue?.ToString(), out var result))
+        if(property.PropertyInfo.PropertyType == typeof(Rune) 
+            || property.PropertyInfo.PropertyType == typeof(char))
+        {
+            if(Modals.GetChar(property.PropertyInfo.Name, "New Single Character", oldValue is null ? null : (char?)oldValue.ToPrimitive() ?? null, out var resultChar))
+            {
+                newValue = resultChar;
+                return true;
+            }
+        }
+        else
+        if (Modals.GetString(property.PropertyInfo.Name, "New String Value", oldValue?.ToString(), out var result,AllowMultiLine(property)))
         {
             newValue = result;
             return true;
@@ -291,7 +318,16 @@ public class EditDialog : Window
         return false;
     }
 
+    private bool AllowMultiLine(Property property)
+    {
+        // for the text editor control let them put multiple lines in
+        if(property.PropertyInfo.Name.Equals("Text") && property.Design.View is TextView tv && tv.Multiline)
+        {
+            return true;
+        }
 
+        return false;
+    }
 
     private void List_KeyPress(KeyEventEventArgs obj)
     {

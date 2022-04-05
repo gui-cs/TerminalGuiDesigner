@@ -81,12 +81,13 @@ public class Modals
         result = null;
         return false;
     }
-    public static bool GetString(string windowTitle, string entryLabel, string? initialValue, out string? result)
+    public static bool GetString(string windowTitle, string entryLabel, string? initialValue, out string? result, bool multiLine = false)
     {
         var dlg = new GetTextDialog(new DialogArgs()
         {
             WindowTitle = windowTitle,
             EntryLabel = entryLabel,
+            MultiLine = multiLine,
         }, initialValue);
 
         if (dlg.ShowDialog())
@@ -115,5 +116,26 @@ public class Modals
     internal static bool GetEnum(string prompt, string okText, Type enumType, out Enum? result)
     {       
         return Get(prompt,okText,true,Enum.GetValues(enumType).Cast<Enum>().ToArray(),o=>o?.ToString() ?? "Null",false,out result);
+    }
+
+    internal static bool GetChar(string windowTitle, string entryLabel, char? oldValue, out char? resultChar)
+    {
+        if(GetString(windowTitle,entryLabel,oldValue?.ToString() ?? "",out var result))
+        {
+            if(result == null || result.Length == 0)
+            {
+                resultChar = null;
+                return true;
+            }
+
+            // TODO: pulling first character from what they type is all very
+            // well but we should try to actually put a max length on that field
+            // so they can't input more than 1 character in the first place
+            resultChar = result.First();
+            return true;
+        }
+
+        resultChar = null;
+        return false;
     }
 }

@@ -15,6 +15,7 @@ public class Editor : Toplevel
     Design? _viewBeingEdited;
     private SourceCodeFile? _currentDesignerFile;
     private bool enableDrag = true;
+    private bool enableShowFocused = true;
     DragOperation? dragOperation = null;
     ResizeOperation? resizeOperation = null;
 
@@ -27,9 +28,13 @@ public class Editor : Toplevel
 
     private string GetHelpWithNothingLoaded()
     {
-    return @$"{_keyMap.ShowHelp} - Show Help
-{_keyMap.New} - New View
+        return @$"{_keyMap.ShowHelp} - Show Help
+{_keyMap.New} - New Window/Class
 {_keyMap.Open} - Open a .Designer.cs file";
+    }
+    private string GetHelpWithEmptyFormLoaded()
+    {
+        return @$"{_keyMap.AddView} to Add a View";
     }
     private string GetHelp()
     {
@@ -38,6 +43,7 @@ public class Editor : Toplevel
 {_keyMap.Save} - Save an opened .Designer.cs file
 {_keyMap.AddView} - Add View
 {_keyMap.ToggleDragging} - Toggle mouse dragging on/off
+{_keyMap.ToggleShowFocused} - Toggle show focused view field name
 {_keyMap.EditProperties} - Edit View Properties
 {_keyMap.ViewSpecificOperations} - View Specific Operations
 {_keyMap.EditRootProperties} - Edit Root Properties
@@ -193,8 +199,33 @@ Ctrl+Q - Quit
     {
         base.Redraw(bounds);
 
+        // if we are editing a view
         if(_viewBeingEdited != null)
+        {
+            if(enableShowFocused)
+            {
+                string? toDisplay = GetLowerRightTextIfAny();
+
+                // and have a designable view focused
+                if(toDisplay != null)
+                {
+                    // write its name in the lower right
+                    int y = Bounds.Height -1;
+                    int right = bounds.Width -1;
+                    var len = toDisplay.Length;
+                    
+                    for(int i=0;i<len;i++)
+                    {
+                        AddRune(right -len +i,y,toDisplay[i]);
+                    }
+                }
+            }
             return;
+        }
+
+        // we are not editing a view (nothing is loaded)
+        // so show the generic help (open, new etc)
+        // in the center of the screen
 
         var lines = GetHelpWithNothingLoaded().Split('\n');
 
@@ -214,6 +245,18 @@ Ctrl+Q - Quit
                 AddRune(startFromX + x, midY + y, line[x]);
             }
         }
+    }
+
+    private string? GetLowerRightTextIfAny()
+    {
+        var design = GetMostFocused(this).GetNearestDesign();
+
+        if(design != null)
+        {
+            return $"Selected: {design.FieldName} ({_keyMap.EditProperties} to Edit, {_keyMap.ShowHelp} for Help)";
+        }
+
+        return  GetHelpWithEmptyFormLoaded();
     }
 
     public override bool ProcessHotKey(KeyEvent keyEvent)
@@ -292,7 +335,11 @@ Ctrl+Q - Quit
                 Delete();
                 return true;
             }
-
+            if(keyEvent.Key == _keyMap.ToggleShowFocused)
+            {
+                enableShowFocused = !enableShowFocused;
+                SetNeedsDisplay();
+            }
 
             switch (keyEvent.Key)
             {

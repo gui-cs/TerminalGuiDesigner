@@ -2,6 +2,7 @@ using System.Reflection;
 using NLog;
 using Terminal.Gui;
 using Terminal.Gui.Graphs;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner.FromCode;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
@@ -139,20 +140,47 @@ public class Design
 
     protected virtual IEnumerable<Property> LoadDesignableProperties()
     {
-        yield return new NameProperty(this);
-        yield return new Property(this,View.GetActualTextProperty());
-        
         yield return CreateProperty(nameof(View.Width));
         yield return CreateProperty(nameof(View.Height));
 
         yield return CreateProperty(nameof(View.X));
         yield return CreateProperty(nameof(View.Y));
 
+
+        // its important that this comes before Text because
+        // changing the validator clears the text
+        if(View is TextValidateField)
+        {
+            yield return CreateProperty(nameof(TextValidateField.Provider));
+        }
+        if(View is TextView)
+        {
+            yield return CreateProperty(nameof(TextView.AllowsTab));
+            yield return CreateProperty(nameof(TextView.AllowsReturn));
+            yield return CreateProperty(nameof(TextView.WordWrap));
+        }
+
+        yield return new NameProperty(this);
+        yield return new Property(this,View.GetActualTextProperty());
+        
         yield return CreateProperty(nameof(View.TextAlignment));
 
         if (View is Button)
         {
             yield return CreateProperty(nameof(Button.IsDefault));
+        }
+        if(View is LineView)
+        {
+            yield return CreateProperty(nameof(LineView.LineRune));
+            yield return CreateProperty(nameof(LineView.Orientation));
+        }
+        if(View is ProgressBar)
+        {
+            yield return CreateProperty(nameof(ProgressBar.Fraction));
+            yield return CreateProperty(nameof(ProgressBar.BidirectionalMarquee));
+            yield return CreateProperty(nameof(ProgressBar.ProgressBarStyle));
+            yield return CreateProperty(nameof(ProgressBar.ProgressBarFormat));
+            yield return CreateProperty(nameof(ProgressBar.SegmentCharacter));
         }
         if (View is CheckBox)
         {

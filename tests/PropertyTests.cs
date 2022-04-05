@@ -1,8 +1,15 @@
+using Microsoft.CSharp;
 using NUnit.Framework;
+using System;
 using System.CodeDom;
+using System.CodeDom.Compiler;
+using System.IO;
 using System.Linq;
 using Terminal.Gui;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner;
+using TerminalGuiDesigner.ToCode;
+using Attribute = Terminal.Gui.Attribute;
 
 namespace tests;
 
@@ -66,5 +73,52 @@ public class PropertyTests
         // The code generated should be a new PointF
         Assert.AreEqual(rhs.Parameters.Count,2);
 
+    }
+
+
+    [Test]
+    public void TestPropertyOfType_Rune()
+    {
+
+        var driver = new FakeDriver ();
+        Application.Init (driver, new FakeMainLoop (() => FakeConsole.ReadKey (true)));
+        driver.Init (() => { });
+
+        try
+        {
+            var viewToCode = new ViewToCode();
+
+            var file = new FileInfo("TestPropertyOfType_Rune.cs");
+            var lv = new LineView();
+            var d = new Design(new SourceCodeFile(file),"lv",lv);
+            var prop = d.GetDesignableProperties().Single(p=>p.PropertyInfo.Name.Equals("LineRune"));
+
+            prop.SetValue('F');
+
+            Assert.AreEqual(new Rune('F'),lv.LineRune);
+            
+            var code = ExpressionToCode(prop.GetRhs());
+
+            Assert.AreEqual("'F'",code);
+        }
+        finally
+        {
+            driver.End();
+            Application.Shutdown();
+        }
+    }
+
+    public static string ExpressionToCode(CodeExpression expression)
+    {
+        CSharpCodeProvider provider = new ();
+
+        using (var sw = new StringWriter())
+        {
+            IndentedTextWriter tw = new IndentedTextWriter(sw, "    ");
+            provider.GenerateCodeFromExpression(expression,tw,new CodeGeneratorOptions());
+            tw.Close();
+
+            return sw.GetStringBuilder().ToString();
+        }
     }
 }

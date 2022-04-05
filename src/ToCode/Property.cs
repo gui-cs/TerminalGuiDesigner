@@ -2,6 +2,7 @@
 using System.CodeDom;
 using System.Reflection;
 using Terminal.Gui;
+using Terminal.Gui.TextValidateProviders;
 using TerminalGuiDesigner;
 using Attribute = Terminal.Gui.Attribute;
 
@@ -42,6 +43,13 @@ public class Property : ToCodeBase
     public virtual void SetValue(object? value)
     {
         // handle type conversions
+        if (PropertyInfo.PropertyType == typeof(Rune))
+        {
+            if (value is char ch)
+            {
+                value = new Rune(ch);
+            }
+        }
         if (PropertyInfo.PropertyType == typeof(ustring))
         {
             if (value is string s)
@@ -101,6 +109,11 @@ public class Property : ToCodeBase
                  new CodePrimitiveExpression(pointf.X),
                  new CodePrimitiveExpression(pointf.Y));
         }
+        if(val is TextRegexProvider regv)
+        {
+            return new CodeObjectCreateExpression(typeof(TextRegexProvider),
+                 new CodePrimitiveExpression(regv.Pattern.ToPrimitive()));
+        }
         if(val is ListWrapper w)
         {
             // Create an Expression like:
@@ -135,7 +148,9 @@ public class Property : ToCodeBase
 
         if(val is Enum e)
         {
-            return new CodeSnippetExpression($"{e.GetType().Name}.{e.ToString()}");
+            return new CodeFieldReferenceExpression(
+                    new CodeTypeReferenceExpression(e.GetType()),
+                    e.ToString());
         }
 
         var type = val.GetType();

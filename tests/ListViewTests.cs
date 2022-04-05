@@ -13,6 +13,7 @@ using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 
 namespace tests;
+
 class ListViewTests
 {
     [Test]
@@ -59,23 +60,10 @@ class ListViewTests
 
         Assert.AreEqual(2,lv.Source.Count);
         
-        var code = ExpressionToCode(prop.GetRhs());
+        var code = PropertyTests.ExpressionToCode(prop.GetRhs());
 
         Assert.AreEqual("new Terminal.Gui.ListWrapper(new string[] {\n            \"hi there\",\n            \"my friend\"})",code);
     }
 
-    public static string ExpressionToCode(CodeExpression expression)
-    {
-        CSharpCodeProvider provider = new ();
-
-        using (var sw = new StringWriter())
-        {
-            IndentedTextWriter tw = new IndentedTextWriter(sw, "    ");
-            provider.GenerateCodeFromExpression(expression,tw,new CodeGeneratorOptions());
-            tw.Close();
-
-            return sw.GetStringBuilder().ToString();
-        }
-    }
 }
     

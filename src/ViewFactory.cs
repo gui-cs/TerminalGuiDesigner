@@ -2,6 +2,8 @@
 using NStack;
 using Terminal.Gui;
 using Terminal.Gui.Graphs;
+using Terminal.Gui.TextValidateProviders;
+using Terminal.Gui.Views;
 using static Terminal.Gui.Border;
 using Attribute = Terminal.Gui.Attribute;
 
@@ -35,15 +37,33 @@ public class ViewFactory
             return CreateRadioGroup();
         }
 
+        if(t == typeof(TextValidateField))
+        {
+            return new TextValidateField{
+
+                Provider = new TextRegexProvider(".*"),
+                Text = "Heya",
+                Width = 5,
+                Height = 1,
+            };
+        }
+
+        if(t == typeof(ProgressBar))
+        {
+            return new ProgressBar{
+                Width = 10,
+                Height = 1,
+                Fraction = 1f
+            };
+        }
+
         if(typeof(GraphView).IsAssignableFrom(t))
         {
-            var g = new GraphView{
+            return new GraphView{
                 Width = 20,
                 Height = 5,
+                GraphColor = Attribute.Make(Color.White,Color.Black)
             };
-
-            g.GraphColor = Attribute.Make(Color.White,Color.Black);
-            return g;
         }
 
         if(typeof(ListView).IsAssignableFrom(t))
@@ -54,6 +74,15 @@ public class ViewFactory
             };
 
             return lv;
+        }
+
+        if(t == typeof(LineView))
+        {
+            return new LineView(){
+                Width = 8,
+                Height = 1
+            };
+
         }
 
         var instance = (View?)Activator.CreateInstance(t) ?? throw new Exception($"CreateInstance returned null for Type '{t}'");
@@ -125,7 +154,9 @@ public class ViewFactory
              typeof(Dialog),
              typeof(FileDialog),
              typeof(SaveDialog),
-             typeof(OpenDialog)};
+             typeof(OpenDialog),
+             typeof(ScrollView),
+             typeof(ScrollBarView)};
 
         return typeof(View).Assembly.DefinedTypes.Where(t => 
                 typeof(View).IsAssignableFrom(t) && 

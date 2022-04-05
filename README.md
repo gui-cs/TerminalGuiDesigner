@@ -10,6 +10,14 @@ This project is in pre-alpha.  See the feature list for progress.
 
 ![designer](https://user-images.githubusercontent.com/31306100/161325121-c6c03350-5d37-4830-b756-58daf79c972f.gif)
 
+Building
+----------------
+Build using the dotnet 6.0 sdk
+```
+cd src
+dotnet run
+```
+
 Features
 -------------------------------
 
@@ -26,12 +34,7 @@ The following feature list shows the current capabilities and the roadmap
     - [x] X/Y
     - [x] Width/Height
     - [x] Text
-    - [ ] CanFocus
     - [ ] Color Schemes
-    - [x] Data Tables
-    - [ ] TreeView
-    - [x] Tab View
-    - [ ] Build Top Bar Menus
 - [x] Mouse Input
   - [x] Drag to move
   - [x] Drag to resize
@@ -46,6 +49,30 @@ The following feature list shows the current capabilities and the roadmap
 - [ ] Read and present xmldoc comments when editing properties
 - [x] Comprehensive Tests
 - [x] CI
+- [ ] Create and edit all views
+  - [x] Button
+  - [x] Checkbox
+  - [ ] ComboBox
+  - [x] DateField
+  - [x] FrameView
+  - [x] GraphView
+  - [x] HexView
+  - [x] Label
+  - [x] LineView
+  - [x] ListView
+  - [ ] MenuBar
+  - [ ] PanelView
+  - [x] ProgressBar
+  - [x] RadioGroup
+  - [ ] StatusBar
+  - [x] TableView
+  - [x] TabView
+  - [x] TextField
+  - [x] TextValidateField
+  - [x] TextView
+  - [x] TimeField
+  - [ ] TreeView
+  - [ ] View
 
 Class Diagram
 -------------------------------
