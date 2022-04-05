@@ -1,6 +1,6 @@
 # Terminal Gui Designer
 
-![example workflow](https://github.com/tznind/TerminalGuiDesigner/actions/workflows/build.yml/badge.svg)
+![example workflow](https://github.com/tznind/TerminalGuiDesigner/actions/workflows/build.yml/badge.svg) [![NuGet Badge](https://buildstats.info/nuget/TerminalGuiDesigner)](https://www.nuget.org/packages/TerminalGuiDesigner/)
 
 Cross platform designer for [Terminal.Gui](https://github.com/migueldeicaza/gui.cs) applications.  
 
