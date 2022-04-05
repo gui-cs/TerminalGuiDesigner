@@ -9,3 +9,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: Test
         run: cd tests && dotnet test --nologo
+      - name: Pack
+        run: cd src && dotnet pack
+      - name: Publish to Nuget
+        if: contains(github.ref, 'refs/tags/v')
+        run: dotnet nuget push ./src/TerminalGuiDesigner.1.0.0.nupkg --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
