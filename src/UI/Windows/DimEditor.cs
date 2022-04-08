@@ -75,12 +75,19 @@ namespace TerminalGuiDesigner.UI.Windows
             switch(GetDimType())
             {
                 case DimType.Absolute:
-                case DimType.Fill:
+                    lblValue.Text = "Value";
                     lblOffset.Visible = false;
                     tbOffset.Visible = false;
                     SetNeedsDisplay();
                     break;
+                case DimType.Fill:
+                    lblOffset.Visible = false;
+                    tbOffset.Visible = false;
+                    lblValue.Text = "Margin";
+                    SetNeedsDisplay();
+                    break;
                 case DimType.Percent:
+                    lblValue.Text = "Factor";
                     lblOffset.Visible = true;
                     tbOffset.Visible = true;
                     SetNeedsDisplay();

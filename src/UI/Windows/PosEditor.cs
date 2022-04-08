@@ -145,13 +145,20 @@ namespace TerminalGuiDesigner.UI.Windows
 
                     lblSide.Y = 3;
                     lblSide.Visible = true;
+
+                    this.Remove(ddSide);
+                    ddSide.IsInitialized = false;
+                    ddSide.Y = 3;
                     ddSide.Visible = true;
+                    ddSide.IsInitialized = true;
+                    this.Add(ddSide);
 
                     lblValue.Visible = false;
                     tbValue.Visible = false;
 
                     lblOffset.Y = 5;
                     lblOffset.Visible = true;
+                    tbOffset.Y = 5;
                     tbOffset.Visible = true;
                     SetNeedsDisplay();
                     break;
