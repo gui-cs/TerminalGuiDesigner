@@ -50,7 +50,7 @@ public class AddViewOperation : Operation
     public override void Undo()
     {
         var v = GetViewToAddTo();
-        v.Add(add);
+        v.Remove(add);
         v.SetNeedsDisplay();
     }
 }
