@@ -12,7 +12,7 @@
     <Authors>Thomas Nind</Authors>
     <Nullable>enable</Nullable>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Description>Command line visual designer tool for creating Terminal.Gui applications.  Create and edit Termianl.Gui views as easily as you could with the Windows Forms Designer.  All generated code is contained in a seperate file (e.g. MyControl.Designer.cs).</Description>
+    <Description>Command line visual designer tool for creating Terminal.Gui applications.  Create and edit Termianl.Gui views as easily as you could with the Windows Forms Designer.  All generated code is contained in a seperate file (e.g. MyControl.Designer.cs).  Run the tool by calling directly from the command line 'TerminalGuiDesigner'</Description>
     <Owners>Thomas Nind</Owners>
     <Title>TerminalGuiDesigner does for Terminal.Gui what the Windows Forms Designer does for WinForms</Title>
   </PropertyGroup>
