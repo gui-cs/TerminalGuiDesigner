@@ -16,6 +16,12 @@ public class CodeDomArgs
     /// </summary>
     public CodeMemberMethod InitMethod;
 
+    /// <summary>
+    /// The members that have already been outputted.  Prevents
+    /// any possibility of duplicate adding to the .Designer.cs
+    /// </summary>
+    public HashSet<Design> OutputAlready = new ();
+
     public CodeDomArgs(CodeTypeDeclaration rootClass, CodeMemberMethod initMethod)
     {
         this.Class = rootClass;

@@ -162,6 +162,14 @@ public class Design
 
         yield return new NameProperty(this);
         yield return new Property(this,View.GetActualTextProperty());
+
+        // Border properties - Most views dont have a border so Border is
+        if(View.Border != null)
+        {
+            yield return CreateSubProperty(nameof(Border.BorderStyle),nameof(View.Border),View.Border);
+            yield return CreateSubProperty(nameof(Border.BorderBrush),nameof(View.Border),View.Border);
+            yield return CreateSubProperty(nameof(Border.Effect3D),nameof(View.Border),View.Border);            
+        }
         
         yield return CreateProperty(nameof(View.TextAlignment));
 

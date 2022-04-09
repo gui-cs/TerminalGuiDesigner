@@ -166,6 +166,9 @@ public class ViewToCode
             // For example Contentview subview of Window
             if (sub.Data is Design d)
             {
+                if(args.OutputAlready.Contains(d))
+                    continue;
+
                 // The user is designing this view so it needs to be persisted
                 var toCode = new DesignToCode(d);
 
@@ -178,6 +181,11 @@ public class ViewToCode
                     // the view we are adding to is not root but some deeper nested view so reference it by name
                     new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),parent.FieldName)
                 );
+
+                // mark that we have now done this Design
+                // so don't output it again even if there is some
+                // wierd loop
+                args.OutputAlready.Add(d);
 
                 // TabToCode handles children so don't handle them
                 // here too otherwise we end up adding each view twice!

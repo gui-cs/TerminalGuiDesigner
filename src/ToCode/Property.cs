@@ -85,7 +85,14 @@ public class Property : ToCodeBase
 
     public virtual void ToCode(CodeDomArgs args)
     {
-        AddPropertyAssignment(args, GetLhs(), GetRhs());
+        try
+        {
+            AddPropertyAssignment(args, GetLhs(), GetRhs());   
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Failed to generate ToCode for Property '{PropertyInfo.Name}' of Design '{Design.FieldName}'",ex);
+        }
     }
 
     public virtual CodeExpression GetRhs()
@@ -172,7 +179,9 @@ public class Property : ToCodeBase
     public virtual string GetLhs()
     {
         if(Design.IsRoot)
-            return $"this.{PropertyInfo.Name}";
+            return string.IsNullOrWhiteSpace(SubProperty) ? 
+                $"this.{PropertyInfo.Name}" :
+                $"this.{SubProperty}.{PropertyInfo.Name}";
 
         // if the property being designed exists on the View directly e.g. MyView.X
         return string.IsNullOrWhiteSpace(SubProperty) ?

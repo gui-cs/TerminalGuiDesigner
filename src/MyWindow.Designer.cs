@@ -60,6 +60,9 @@ namespace YourNamespace {
             this.X = 0;
             this.Y = 0;
             this.Text = "";
+            this.Border.BorderStyle = Terminal.Gui.BorderStyle.Double;
+            this.Border.BorderBrush = Terminal.Gui.Color.Cyan;
+            this.Border.Effect3D = false;
             this.TextAlignment = Terminal.Gui.TextAlignment.Centered;
             this.Title = "Welcome to Demo";
             this.frameview1 = new Terminal.Gui.FrameView();
@@ -69,6 +72,9 @@ namespace YourNamespace {
             this.frameview1.Y = 1;
             this.frameview1.Data = "frameview1";
             this.frameview1.Text = "";
+            this.frameview1.Border.BorderStyle = Terminal.Gui.BorderStyle.Single;
+            this.frameview1.Border.BorderBrush = Terminal.Gui.Color.Black;
+            this.frameview1.Border.Effect3D = false;
             this.frameview1.TextAlignment = Terminal.Gui.TextAlignment.Left;
             this.Add(this.frameview1);
             this.label2 = new Terminal.Gui.Label();
@@ -177,11 +183,11 @@ namespace YourNamespace {
             this.textview1.Height = 4;
             this.textview1.X = 6;
             this.textview1.Y = 9;
-            this.textview1.AllowsTab = true;
+            this.textview1.AllowsTab = false;
             this.textview1.AllowsReturn = true;
             this.textview1.WordWrap = true;
             this.textview1.Data = "textview1";
-            this.textview1.Text = "This is a\nmulti line\ntext editor";
+            this.textview1.Text = "This is a\nmulti line text editor";
             this.textview1.TextAlignment = Terminal.Gui.TextAlignment.Left;
             this.Add(this.textview1);
             this.lineview2 = new Terminal.Gui.Views.LineView();
