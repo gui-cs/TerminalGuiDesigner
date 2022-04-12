@@ -1,4 +1,5 @@
-﻿using Terminal.Gui;
+﻿using CommandLine;
+using Terminal.Gui;
 using TerminalGuiDesigner.UI;
 
 namespace TerminalGuiDesigner;
@@ -9,8 +10,13 @@ public partial class Program
     public static void Main(string[] args)
     {
         Application.Init();
-        
-        var editor = new Editor();
-        editor.Run(args.Length > 0 ? args[0] : null);
+
+        Parser.Default.ParseArguments<Options>(args)
+                   .WithParsed<Options>(o =>
+                   {
+                       var editor = new Editor();
+                       editor.Run(o);
+
+                   });
     }
 }

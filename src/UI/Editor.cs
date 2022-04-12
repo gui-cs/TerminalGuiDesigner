@@ -83,17 +83,28 @@ Ctrl+Q - Quit
 
     }
 
-    public void Run(string? fileToLoad)
+    public void Run(Options options)
     {
-        if(fileToLoad != null)
+        if(!string.IsNullOrWhiteSpace(options.Path))
         {
             try
             {
-                var toLoadOrCreate = new FileInfo(fileToLoad);
+                var toLoadOrCreate = new FileInfo(options.Path);
 
-                if(toLoadOrCreate.Exists)
+                if (toLoadOrCreate.Exists)
                 {
                     Open(toLoadOrCreate);
+                }
+                else
+                {
+                    Type toCreate = typeof(Window);
+
+                    if(!string.IsNullOrWhiteSpace(options.ViewType))
+                    {
+                        toCreate = GetSupportedRootViews().FirstOrDefault(v => v.Name.Equals(options.ViewType))??toCreate;
+                    }
+
+                    New(toLoadOrCreate, toCreate, options.Namespace);
                 }
             }
             catch (Exception ex)
@@ -495,7 +506,7 @@ Ctrl+Q - Quit
     private void New()
     {
 
-        if(!Modals.Get("Create New View","Ok",new Type[]{typeof(Window),typeof(Dialog)},out var selected))
+        if(!Modals.Get("Create New View","Ok",GetSupportedRootViews(),out var selected))
         {
             return;
         }
@@ -520,7 +531,7 @@ Ctrl+Q - Quit
                 if (string.IsNullOrWhiteSpace(path) || selected == null)
                     return;
 
-                New(new FileInfo(path),selected);
+                New(new FileInfo(path),selected,null);
             }
             catch (Exception ex)
             {
@@ -530,12 +541,33 @@ Ctrl+Q - Quit
         }
     }
 
-    private void New(FileInfo toOpen, Type typeToCreate)
+    private Type[] GetSupportedRootViews()
+    {
+        return new Type[] { typeof(Window), typeof(Dialog) };
+    }
+
+    private void New(FileInfo toOpen, Type typeToCreate, string explicitNamespace)
     {
         var viewToCode = new ViewToCode();
+        string? ns = explicitNamespace;
 
-        if(Modals.GetString("Namespace", "Enter the namespace for your class","YourNamespace",out string? ns))
+        // if no explicit one
+        if (string.IsNullOrWhiteSpace(ns))
         {
+            // prompt user for namespace
+            if (!Modals.GetString("Namespace", "Enter the namespace for your class", "YourNamespace", out ns))
+            {
+                //user cancelled typing a namespace
+                return;
+            }
+        }
+        
+        //TODO: Validate the namespace
+
+        // if we have a valid namespace
+        if (!string.IsNullOrWhiteSpace(ns))
+        {
+            // Create the view and open it
             var design = viewToCode.GenerateNewView(toOpen, ns ?? "YourNamespace", typeToCreate, out _currentDesignerFile);
             ReplaceViewBeingEdited(design);
         }
