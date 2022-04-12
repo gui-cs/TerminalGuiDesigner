@@ -23,6 +23,36 @@ cd src
 dotnet run
 ```
 
+Usage
+------------------
+Install the dotnet sdk and create a new console application with references to Terminal.Gui.  Install the TerminalGuiDesigner and create a new dialog:
+```
+dotnet new console -n hello
+cd hello
+dotnet add package Terminal.Gui
+dotnet tool install --global TerminalGuiDesigner
+TerminalGuiDesigner MyDialog.cs
+```
+
+Enter a namespace then add a Button to the view.  Save with Ctrl+S.
+
+Enter the following into Program.cs
+
+```csharp
+using Terminal.Gui;
+
+Application.Init();
+
+Application.Run(new YourNamespace.MyDialog());
+
+Application.Shutdown();
+```
+
+Run your program with 
+`dotnet run`
+
+You can add new code to `MyDialog.cs` but avoid making any changes to `MyDialog.Designer.cs` as this will be rewritten when saving.
+
 Keybindings
 ----------------
 You can change keybindings by copying [Keys.yaml](https://raw.githubusercontent.com/tznind/TerminalGuiDesigner/main/src/Keys.yaml) into your current directory.
