@@ -53,6 +53,11 @@ Run your program with
 
 You can add new code to `MyDialog.cs` but avoid making any changes to `MyDialog.Designer.cs` as this will be rewritten when saving.
 
+You can remove the tool using the following:
+
+```
+dotnet tool uninstall --global TerminalGuiDesigner
+```
 Keybindings
 ----------------
 You can change keybindings by copying [Keys.yaml](https://raw.githubusercontent.com/tznind/TerminalGuiDesigner/main/src/Keys.yaml) into your current directory.
