@@ -546,7 +546,7 @@ Ctrl+Q - Quit
         return new Type[] { typeof(Window), typeof(Dialog) };
     }
 
-    private void New(FileInfo toOpen, Type typeToCreate, string explicitNamespace)
+    private void New(FileInfo toOpen, Type typeToCreate, string? explicitNamespace)
     {
         var viewToCode = new ViewToCode();
         string? ns = explicitNamespace;
