@@ -5,14 +5,17 @@ namespace TerminalGuiDesigner
 {
     public class Options
     {
+        #nullable disable warnings
         [Value(0, MetaName = "path", HelpText = "New to create or existing file to open.")]
-        public string? Path { get; set; }
+        public string Path { get; set; }
 
         [Option('v', HelpText = "The type of root View to create (Window or Dialog)")]
-        public string? ViewType { get; set; }
+        public string ViewType { get; set; }
 
         [Option('n', HelpText = "The C# namespace to be used for the View code generated")]
-        public string? Namespace { get; set; }
+        public string Namespace { get; set; }
+        
+        #nullable enable warnings
 
         [Usage(ApplicationAlias = "TerminalGuiDesigner")]
         public static IEnumerable<Example> Examples
