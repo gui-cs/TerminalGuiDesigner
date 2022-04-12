@@ -6,7 +6,7 @@ Cross platform designer for [Terminal.Gui](https://github.com/migueldeicaza/gui.
 
 Built with CodeDom and Roslyn, TerminalGuiDesigner lets you create complicated Views with drag and drop just like the WinForms designer you know and love (or hate).
 
-Install the tool via NuGet:
+Install the tool from NuGet or follow the [Hello World Tutorial](./#Usage):
 ```
 dotnet tool install --global TerminalGuiDesigner
 ```
@@ -15,7 +15,7 @@ This project is in pre-alpha.  See the feature list for progress.
 
 ![designer](https://user-images.githubusercontent.com/31306100/161325121-c6c03350-5d37-4830-b756-58daf79c972f.gif)
 
-Building
+### Building
 ----------------
 Build using the dotnet 6.0 sdk
 ```
@@ -23,7 +23,7 @@ cd src
 dotnet run
 ```
 
-Usage
+### Usage
 ------------------
 Install the dotnet sdk and create a new console application with references to Terminal.Gui.  Install the TerminalGuiDesigner and create a new dialog:
 ```
@@ -58,11 +58,12 @@ You can remove the tool using the following:
 ```
 dotnet tool uninstall --global TerminalGuiDesigner
 ```
-Keybindings
+
+### Keybindings
 ----------------
 You can change keybindings by copying [Keys.yaml](https://raw.githubusercontent.com/tznind/TerminalGuiDesigner/main/src/Keys.yaml) into your current directory.
 
-Features
+### Features
 -------------------------------
 
 The following feature list shows the current capabilities and the roadmap
@@ -118,6 +119,6 @@ The following feature list shows the current capabilities and the roadmap
   - [ ] TreeView
   - [ ] View
 
-Class Diagram
+### Class Diagram
 -------------------------------
 ![Terminal.Gui Class Diagram](./TerminalGuiDesigner.png)
