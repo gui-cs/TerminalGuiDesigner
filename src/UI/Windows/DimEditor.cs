@@ -36,6 +36,7 @@ namespace TerminalGuiDesigner.UI.Windows
             btnCancel.Clicked += BtnCancel_Clicked;
             Cancelled = true;
             Modal = true;
+            rgDimType.KeyPress += RgDimType_KeyPress;
 
             var val = (Dim)property.GetValue();
             if(val.GetDimType(out var type,out var value, out var offset))
@@ -60,6 +61,17 @@ namespace TerminalGuiDesigner.UI.Windows
             SetupForCurrentDimType();
 
             rgDimType.SelectedItemChanged += DdType_SelectedItemChanged;
+        }
+
+        private void RgDimType_KeyPress(KeyEventEventArgs obj)
+        {
+            var c = (char)obj.KeyEvent.KeyValue;
+
+            // if user types in some text change the focus to the text box to enable entering digits
+            if ((obj.KeyEvent.Key == Key.Backspace || char.IsDigit(c)) && tbValue.Visible)
+            {
+                tbValue?.FocusFirst();
+            }
         }
 
         private void DdType_SelectedItemChanged(RadioGroup.SelectedItemChangedArgs obj)

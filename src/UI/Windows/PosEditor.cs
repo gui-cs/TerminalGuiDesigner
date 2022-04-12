@@ -33,6 +33,8 @@ namespace TerminalGuiDesigner.UI.Windows
             Title = "Pos Designer";
             Border.BorderStyle = BorderStyle.Double;
 
+            rgPosType.KeyPress += RgPosType_KeyPress;
+
             btnOk.Clicked += BtnOk_Clicked;
             btnCancel.Clicked += BtnCancel_Clicked;
             Cancelled = true;
@@ -75,6 +77,17 @@ namespace TerminalGuiDesigner.UI.Windows
             ddSide.SetSource(Enum.GetValues(typeof(Side)).Cast<Enum>().ToList());
         }
 
+        private void RgPosType_KeyPress(KeyEventEventArgs obj)
+        {
+            var c = (char)obj.KeyEvent.KeyValue;
+            
+            // if user types in some text change the focus to the text box to enable entering digits
+            if ((obj.KeyEvent.Key == Key.Backspace || char.IsDigit(c)) && tbValue.Visible)
+            {
+                tbValue?.FocusFirst();
+            }            
+        }
+
         private void DdType_SelectedItemChanged(RadioGroup.SelectedItemChangedArgs obj)
         {
             SetupForCurrentPosType();            
@@ -98,6 +111,11 @@ namespace TerminalGuiDesigner.UI.Windows
                     
                     lblOffset.Y = 3;
                     lblOffset.Visible = true;
+                    
+                    // TODO: We really shouldn't have to do this try removing it but it causes
+                    // Exception with current Terminal.Gui nuget package (2022-04-12).  Later down
+                    // the line try removing and hammering the radio buttons to see if the problem
+                    // has disapeared.  It breaks the tab order for one :(
                     Remove(tbOffset);
                     tbOffset.Y = 3;
                     tbOffset.Visible = true;

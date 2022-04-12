@@ -208,7 +208,10 @@ public class BigListBox<T>
     private void _listView_KeyPress(View.KeyEventEventArgs obj)
     {
         // if user types in some text change the focus to the text box to enable searching
-        if (char.IsLetterOrDigit((char)obj.KeyEvent.KeyValue))
+        var c = (char)obj.KeyEvent.KeyValue;
+            
+        //backspace or letter/numbers
+        if (obj.KeyEvent.Key == Key.Backspace || char.IsLetterOrDigit(c))
         {
             _searchBox?.FocusFirst();
         }

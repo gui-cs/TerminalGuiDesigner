@@ -23,14 +23,10 @@ public class ViewToCode
     /// <exception cref="NotImplementedException"></exception>
     public Design GenerateNewView(FileInfo csFilePath, string namespaceName,Type viewType, out SourceCodeFile sourceFile)
     {
-        if (csFilePath.Name.EndsWith(SourceCodeFile.ExpectedExtension))
-        {
-            throw new ArgumentException($@"{nameof(csFilePath)} should be a class file not the designer file e.g. c:\MyProj\MyWindow1.cs");
-        }
-
-        var className = Path.GetFileNameWithoutExtension(csFilePath.Name);
         sourceFile = new SourceCodeFile(csFilePath);
 
+        var className = Path.GetFileNameWithoutExtension(sourceFile.CsFile.Name);
+        
         var csharpCode = GetGenerateNewViewCode(className, namespaceName);
         File.WriteAllText(sourceFile.CsFile.FullName, csharpCode);
 
