@@ -28,6 +28,8 @@ public class Design
 
     private readonly List<Property> _designableProperties;
 
+    private List<Property> _borderProperties;
+
     private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
     public Property GetDesignableProperty(string propertyName)
@@ -135,7 +137,14 @@ public class Design
     /// </summary>
     public IEnumerable<Property> GetDesignableProperties()
     {
-        return _designableProperties;
+        if(_borderProperties != null)
+        {
+            foreach(var property in _borderProperties)
+                yield return property;
+        }
+
+        foreach(var property in _designableProperties)
+            yield return property;
     }
 
     protected virtual IEnumerable<Property> LoadDesignableProperties()
@@ -166,9 +175,7 @@ public class Design
         // Border properties - Most views dont have a border so Border is
         if(View.Border != null)
         {
-            yield return CreateSubProperty(nameof(Border.BorderStyle),nameof(View.Border),View.Border);
-            yield return CreateSubProperty(nameof(Border.BorderBrush),nameof(View.Border),View.Border);
-            yield return CreateSubProperty(nameof(Border.Effect3D),nameof(View.Border),View.Border);            
+            LoadBorderProperties();
         }
         
         yield return CreateProperty(nameof(View.TextAlignment));
@@ -253,6 +260,26 @@ public class Design
         }
     }
 
+
+    internal void LoadBorderProperties()
+    {
+        _borderProperties = new List<Property>();
+
+        _borderProperties.AddRange(
+            new[]
+            {
+                CreateSubProperty(nameof(Border.BorderStyle), nameof(View.Border), View.Border),
+                CreateSubProperty(nameof(Border.BorderBrush), nameof(View.Border), View.Border),
+                CreateSubProperty(nameof(Border.Effect3D), nameof(View.Border), View.Border),
+            });
+            
+    }
+    internal void ClearBorderProperties()
+    {
+        _borderProperties.Clear();
+    }
+
+
     private Property CreateSubProperty(string name, string subObjectName, object subObject)
     {
         return new Property(this,subObject.GetType().GetProperty(name)        
@@ -287,6 +314,11 @@ public class Design
             yield return new AddTabOperation(this);
             yield return new RemoveTabOperation(this);
             yield return new RenameTabOperation(this);
+        }
+
+        if (View.Border == null)
+        {
+            yield return new AddBorderOperation(this);
         }
 
     }

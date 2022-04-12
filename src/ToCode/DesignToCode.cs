@@ -17,6 +17,10 @@ internal class DesignToCode : ToCodeBase
 
         AddFieldToClass(args, Design);
         AddConstructorCall(args, Design);
+    
+        // Add border if we have one
+        if(Design.View.Border != null)
+            AddBorderConstruct(args, Design);
 
         foreach (var prop in Design.GetDesignableProperties())
         {
@@ -42,5 +46,13 @@ internal class DesignToCode : ToCodeBase
 
         // call this.Add(someView)
         AddAddToViewStatement(args, Design, parentView);
+    }
+
+    private void AddBorderConstruct(CodeDomArgs args, Design design)
+    {
+        AddConstructorCall($"{design.FieldName}.{nameof(View.Border)}", typeof(Border), args);
+        AddPropertyAssignment(args, 
+            $"{design.FieldName}.{nameof(View.Border)}.{nameof(Border.Child)}",
+            new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), design.FieldName));
     }
 }

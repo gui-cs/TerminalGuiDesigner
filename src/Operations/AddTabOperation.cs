@@ -3,7 +3,6 @@ using TerminalGuiDesigner.UI.Windows;
 using static Terminal.Gui.TabView;
 
 namespace TerminalGuiDesigner.Operations;
-
 public class AddTabOperation : Operation
 {
     private Tab? _tab;
