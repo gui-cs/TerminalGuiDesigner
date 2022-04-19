@@ -219,16 +219,34 @@ Ctrl+Q - Quit
 
     private void CreateAndShowContextMenu(MouseEvent m, Design d)
     {
+        // things we can do/change
         var options = d.GetExtraOperations(ScreenToClient(d.View, m.X, m.Y));
+        var properties = d.GetDesignableProperties();
 
-        if(options.Any())
-        {
-            var menu = new ContextMenu(d.View, new MenuBarItem(
-                options.Select(o=>new MenuItem(o.ToString(),"",o.Do)).ToArray()));
-            menu.Show();
-
-        }
+        // menu items to click to make them happen/change
+        var setPropertyMenuItems = properties.Select(p => new MenuItem(p.PropertyInfo.Name, null,
+            () => EditDialog.SetPropertyToNewValue(d, p, p.GetValue()))).ToArray();
         
+        var extraOptionsMenuItems = options.Select(o => new MenuItem(o.ToString(), "", o.Do)).ToArray();
+
+        // if exra options
+        if (options.Any())
+        {
+            var propertiesCategory = new MenuBarItem("Properties", setPropertyMenuItems);
+
+            var items = new List<MenuItem>();
+            items.Add(propertiesCategory);
+            items.AddRange(extraOptionsMenuItems);
+
+            var menu = new ContextMenu(d.View, new MenuBarItem(items.ToArray()));
+            menu.Show();
+        }
+        else
+        {
+            // no operations so just add the properties directly 
+            var menu = new ContextMenu(d.View, new MenuBarItem(setPropertyMenuItems));
+            menu.Show();
+        }
     }
 
     public override void Redraw(Rect bounds)

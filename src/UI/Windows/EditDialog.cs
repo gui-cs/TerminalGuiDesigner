@@ -80,11 +80,7 @@ public class EditDialog : Window
             try
             {
                 var p = collection[list.SelectedItem];
-
-                // TODO make this work with PropertyDesign correctly
-                // i.e. return the PropertyDesign not the value
                 var oldValue = p.GetValue();
-
 
                 if (setNull)
                 {
@@ -95,14 +91,7 @@ public class EditDialog : Window
                 }
                 else
                 {
-                    // user wants to give us a new value for this property
-                    if (GetNewValue(p, out object? newValue))
-                    {
-                        OperationManager.Instance.Do(
-                            new SetPropertyOperation(Design, p, oldValue, newValue)
-                        );
-                    }
-                    else
+                    if(!SetPropertyToNewValue(Design, p, oldValue))
                     {
                         // user cancelled editing the value
                         return;
@@ -122,7 +111,22 @@ public class EditDialog : Window
         }
     }
 
-    private bool GetNewValue(Property property, out object? newValue)
+    public static bool SetPropertyToNewValue(Design design, Property p, object? oldValue)
+    {
+        // user wants to give us a new value for this property
+        if (GetNewValue(design, p, out object? newValue))
+        {
+            OperationManager.Instance.Do(
+                new SetPropertyOperation(design, p, oldValue, newValue)
+            );
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool GetNewValue(Design design, Property property, out object? newValue)
     {
         var oldValue = property.GetValue();
 
@@ -165,7 +169,7 @@ public class EditDialog : Window
         // user is editing a Pos
         if (property.PropertyInfo.PropertyType == typeof(Pos))
         {
-            var designer = new PosEditor(Design,property);
+            var designer = new PosEditor(design, property);
 
             Application.Run(designer);
 
@@ -208,7 +212,7 @@ public class EditDialog : Window
         // user is editing a Dim
         if (property.PropertyInfo.PropertyType == typeof(Dim))
         {
-            var designer = new DimEditor(Design,property);
+            var designer = new DimEditor(design, property);
             Application.Run(designer);
 
             if (!designer.Cancelled)
@@ -318,7 +322,7 @@ public class EditDialog : Window
         return false;
     }
 
-    private bool AllowMultiLine(Property property)
+    private static bool AllowMultiLine(Property property)
     {
         // for the text editor control let them put multiple lines in
         if(property.PropertyInfo.Name.Equals("Text") && property.Design.View is TextView tv && tv.Multiline)
