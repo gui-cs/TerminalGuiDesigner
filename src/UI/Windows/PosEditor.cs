@@ -43,6 +43,10 @@ namespace TerminalGuiDesigner.UI.Windows
             var siblings = Design.GetSiblings().ToList();
 
             ddRelativeTo.SetSource(siblings);
+            ddRelativeTo.AddKeyBinding(Key.CursorDown, Command.Expand);
+
+            ddSide.SetSource(Enum.GetValues(typeof(Side)).Cast<Enum>().ToList());
+            ddSide.AddKeyBinding(Key.CursorDown, Command.Expand);
 
             var val = (Pos)property.GetValue();
             if(val.GetPosType(siblings,out var type,out var value,out var relativeTo,out var side, out var offset))
@@ -57,12 +61,13 @@ namespace TerminalGuiDesigner.UI.Windows
                         break;
                     case PosType.Relative:
                         rgPosType.SelectedItem = 2;
+                        if(relativeTo != null)
+                            ddRelativeTo.SelectedItem = siblings.IndexOf(relativeTo);
+                        ddSide.SelectedItem = (int)side;
                         break;
                     case PosType.Center:
                         rgPosType.SelectedItem = 3;
                         
-                        // TODO: once the current 'main' branch is published to nuget package we can do this
-                        //ddRelativeTo.SelectedItem = siblings.IndexOf(relativeTo);
                         break;
                 }
 
@@ -74,7 +79,6 @@ namespace TerminalGuiDesigner.UI.Windows
 
             rgPosType.SelectedItemChanged += DdType_SelectedItemChanged;
 
-            ddSide.SetSource(Enum.GetValues(typeof(Side)).Cast<Enum>().ToList());
         }
 
         private void RgPosType_KeyPress(KeyEventEventArgs obj)
@@ -112,14 +116,8 @@ namespace TerminalGuiDesigner.UI.Windows
                     lblOffset.Y = 3;
                     lblOffset.Visible = true;
                     
-                    // TODO: We really shouldn't have to do this try removing it but it causes
-                    // Exception with current Terminal.Gui nuget package (2022-04-12).  Later down
-                    // the line try removing and hammering the radio buttons to see if the problem
-                    // has disapeared.  It breaks the tab order for one :(
-                    Remove(tbOffset);
                     tbOffset.Y = 3;
                     tbOffset.Visible = true;
-                    Add(tbOffset);
 
                     SetNeedsDisplay();
                     break;
@@ -134,10 +132,8 @@ namespace TerminalGuiDesigner.UI.Windows
                     
                     lblOffset.Y = 1;
                     lblOffset.Visible = true;
-                    Remove(tbOffset);
                     tbOffset.Y = 1;
                     tbOffset.Visible = true;
-                    Add(tbOffset);
 
                     SetNeedsDisplay();
                     break;
@@ -164,12 +160,10 @@ namespace TerminalGuiDesigner.UI.Windows
                     lblSide.Y = 3;
                     lblSide.Visible = true;
 
-                    this.Remove(ddSide);
                     ddSide.IsInitialized = false;
                     ddSide.Y = 3;
                     ddSide.Visible = true;
                     ddSide.IsInitialized = true;
-                    this.Add(ddSide);
 
                     lblValue.Visible = false;
                     tbValue.Visible = false;

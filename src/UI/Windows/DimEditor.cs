@@ -37,6 +37,7 @@ namespace TerminalGuiDesigner.UI.Windows
             Cancelled = true;
             Modal = true;
             rgDimType.KeyPress += RgDimType_KeyPress;
+            
 
             var val = (Dim)property.GetValue();
             if(val.GetDimType(out var type,out var value, out var offset))
