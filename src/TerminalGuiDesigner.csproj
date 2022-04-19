@@ -33,7 +33,7 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.1.0" />
     <PackageReference Include="nlog" Version="4.7.14" />
     <PackageReference Include="System.CodeDom" Version="6.0.0" />
-    <PackageReference Include="Terminal.gui" Version="1.4.0" />
+    <PackageReference Include="Terminal.gui" Version="1.5.0" />
     <PackageReference Include="YamlDotNet" Version="11.2.1" />
   </ItemGroup>
 

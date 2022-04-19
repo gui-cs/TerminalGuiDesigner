@@ -88,7 +88,7 @@ namespace TerminalGuiDesigner.UI.Windows
             }            
         }
 
-        private void DdType_SelectedItemChanged(RadioGroup.SelectedItemChangedArgs obj)
+        private void DdType_SelectedItemChanged(SelectedItemChangedArgs obj)
         {
             SetupForCurrentPosType();            
         }
