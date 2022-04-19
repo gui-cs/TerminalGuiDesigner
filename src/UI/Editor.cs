@@ -575,19 +575,22 @@ Ctrl+Q - Quit
 
     private void ReplaceViewBeingEdited(Design design)
     {
-        // remove the old view
-        if (_viewBeingEdited != null)
+        Application.MainLoop.Invoke(() =>
         {
-            // and dispose it
-            Remove(_viewBeingEdited.View);
-            _viewBeingEdited.View.Dispose();
-        }
+            // remove the old view
+            if (_viewBeingEdited != null)
+            {
+                // and dispose it
+                Remove(_viewBeingEdited.View);
+                _viewBeingEdited.View.Dispose();
+            }
 
-        // Load new instance
-        _viewBeingEdited = design;
+            // Load new instance
+            _viewBeingEdited = design;
 
-        // And add it to the editing window
-        Add(_viewBeingEdited.View);
+            // And add it to the editing window
+            Add(_viewBeingEdited.View);
+        });
     }
     private void Save()
     {
