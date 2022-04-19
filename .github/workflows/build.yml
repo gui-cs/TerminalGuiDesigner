@@ -10,8 +10,8 @@ jobs:
       - name: Test
         run: |
           cd tests && dotnet test --configuration Debug --no-restore --verbosity normal --collect:'XPlat Code Coverage' --settings coverlet.runsettings
-          mv -v tests/TestResults/*/*.* UnitTests/TestResults/
-
+      - name: Move test results to accessible directory
+        run: mv -v tests/TestResults/*/*.* TestResults/
       # Note: this step is currently not writing to the gist for some reason
       - name: Create Test Coverage Badge
         uses: simon-k/dotnet-code-coverage-badge@v1.0.0
@@ -19,7 +19,7 @@ jobs:
         with:
           label: Unit Test Coverage
           color: brightgreen
-          path: UnitTests/TestResults/coverage.opencover.xml
+          path: TestResults/coverage.opencover.xml
           gist-filename: code-coverage.json
           # https://gist.github.com/tznind/2a31eee1c9151917aa8d17b59bc86633
           gist-id: 2a31eee1c9151917aa8d17b59bc86633
