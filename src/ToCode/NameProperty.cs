@@ -12,9 +12,14 @@ public class NameProperty : Property
 
     }
 
+    public override string GetHumanReadableName()
+    {
+        return "(Name)";
+    }
+
     public override string ToString()
     {
-        return $"(Name):{Design.FieldName}";
+        return $"{GetHumanReadableName()}:{Design.FieldName}";
     }
     public override void SetValue(object? value)
     {

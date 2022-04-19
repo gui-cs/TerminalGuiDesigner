@@ -221,10 +221,10 @@ Ctrl+Q - Quit
     {
         // things we can do/change
         var options = d.GetExtraOperations(ScreenToClient(d.View, m.X, m.Y));
-        var properties = d.GetDesignableProperties();
+        var properties = d.GetDesignableProperties().OrderBy(p=>p.GetHumanReadableName());
 
         // menu items to click to make them happen/change
-        var setPropertyMenuItems = properties.Select(p => new MenuItem(p.PropertyInfo.Name, null,
+        var setPropertyMenuItems = properties.Select(p => new MenuItem(p.GetHumanReadableName(), null,
             () => EditDialog.SetPropertyToNewValue(d, p, p.GetValue()))).ToArray();
         
         var extraOptionsMenuItems = options.Select(o => new MenuItem(o.ToString(), "", o.Do)).ToArray();

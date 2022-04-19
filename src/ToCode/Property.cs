@@ -85,14 +85,19 @@ public class Property : ToCodeBase
         Design.View.IsInitialized = true;
     }
 
+    /// <summary>
+    /// Calls any methods that update the state of the View
+    /// and refresh it against its style e.g. <see cref="TableView.Update"/>
+    /// </summary>
     private void CallRefreshMethodsIfAny()
     {
         if(Design.View is TabView tv)
         {
-            // could be that we are making a change
-            // to a property that won't refresh until
-            // we apply the changes
             tv.ApplyStyleChanges();
+        }
+        if(Design.View is TableView t)
+        {
+            t.Update();
         }
     }
 
@@ -202,15 +207,18 @@ public class Property : ToCodeBase
             $"this.{Design.FieldName}.{SubProperty}.{PropertyInfo.Name}";
     }
 
+    /// <summary>
+    /// Returns the Name of the property including any <see cref="SubProperty"/>
+    /// and special formatting e.g. for <see cref="NameProperty"/>
+    /// </summary>
+    /// <returns></returns>
+    public virtual string GetHumanReadableName()
+    {
+        return SubProperty != null ? $"{SubProperty}.{PropertyInfo.Name}" : PropertyInfo.Name;
+    }
     public override string ToString()
     {
-        if(SubProperty != null)
-        {
-            return $"{SubProperty}.{PropertyInfo.Name}:" + GetHumanReadableValue();
-
-        }
-
-        return PropertyInfo.Name + ":" + GetHumanReadableValue();
+        return GetHumanReadableName() + ":" + GetHumanReadableValue();
     }
 
     private string GetHumanReadableValue()
