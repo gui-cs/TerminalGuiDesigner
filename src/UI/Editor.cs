@@ -696,8 +696,9 @@ Ctrl+Q - Quit
 
     private View? HitTest(View w, MouseEvent m, out bool isLowerRight)
     {
+
         var point = ScreenToClient(w, m.X, m.Y);
-        var hit = w.GetActualSubviews().FirstOrDefault(v => v.Frame.Contains(point));
+        var hit = ApplicationExtensions.FindDeepestView(w, m.X, m.Y);
 
         if (hit != null)
         {
