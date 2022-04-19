@@ -11,7 +11,9 @@ jobs:
         run: |
           cd tests && dotnet test --configuration Debug --no-restore --verbosity normal --collect:'XPlat Code Coverage' --settings coverlet.runsettings
       - name: Move test results to accessible directory
-        run: mv -v tests/TestResults/*/*.* TestResults/
+        run: |
+          mkdir TestResults
+          mv -v tests/TestResults/*/*.* TestResults/
       # Note: this step is currently not writing to the gist for some reason
       - name: Create Test Coverage Badge
         uses: simon-k/dotnet-code-coverage-badge@v1.0.0
