@@ -1,4 +1,5 @@
 
+using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
@@ -62,7 +63,9 @@ class ListViewTests
         
         var code = PropertyTests.ExpressionToCode(prop.GetRhs());
 
-        Assert.AreEqual("new Terminal.Gui.ListWrapper(new string[] {\n            \"hi there\",\n            \"my friend\"})",code);
+        Assert.AreEqual(
+            "new Terminal.Gui.ListWrapper(new string[] {\n            \"hi there\",\n            \"my friend\"})".Replace("\n",Environment.NewLine),
+            code);
     }
 
 }
