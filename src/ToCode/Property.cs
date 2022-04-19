@@ -80,7 +80,20 @@ public class Property : ToCodeBase
         Design.View.IsInitialized = false;
         PropertyInfo.SetValue(DeclaringObject, value);
 
+        CallRefreshMethodsIfAny();
+
         Design.View.IsInitialized = true;
+    }
+
+    private void CallRefreshMethodsIfAny()
+    {
+        if(Design.View is TabView tv)
+        {
+            // could be that we are making a change
+            // to a property that won't refresh until
+            // we apply the changes
+            tv.ApplyStyleChanges();
+        }
     }
 
     public virtual void ToCode(CodeDomArgs args)

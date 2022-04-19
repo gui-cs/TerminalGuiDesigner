@@ -7,13 +7,22 @@ public abstract class ToCodeBase
 {
     protected void AddAddToViewStatement(CodeDomArgs args, Design d, CodeExpression parentView)
     {
-        // Add it to the view 
-        var callAdd = new CodeMethodInvokeExpression();
-        callAdd.Method.TargetObject = parentView;
+        AddMethodCall(args,
+            parentView,
+            nameof(View.Add),
+            new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), d.FieldName)
+            );
+    }
 
-        callAdd.Method.MethodName = nameof(View.Add);
-        callAdd.Parameters.Add(new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), d.FieldName));
-        args.InitMethod.Statements.Add(callAdd);
+    protected void AddMethodCall(CodeDomArgs args, CodeExpression caller, string methodName, params CodeExpression[] methodArguments)
+    {
+        var call = new CodeMethodInvokeExpression();
+        call.Method.TargetObject = caller;
+
+        call.Method.MethodName = methodName;
+
+        call.Parameters.AddRange(methodArguments);
+        args.InitMethod.Statements.Add(call);
     }
 
     protected CodeMemberField AddFieldToClass(CodeDomArgs args, Design d)

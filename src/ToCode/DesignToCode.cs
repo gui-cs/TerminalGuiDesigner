@@ -38,6 +38,11 @@ internal class DesignToCode : ToCodeBase
                 var designTab = new TabToCode(Design,tab);
                 designTab.ToCode(args);
             }
+
+            // add call to ApplyStyleChanges();
+            AddMethodCall(args,        
+                new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), Design.FieldName),
+                nameof(TabView.ApplyStyleChanges));
         }
 
         // call this.Add(someView)

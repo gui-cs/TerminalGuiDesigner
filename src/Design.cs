@@ -203,20 +203,18 @@ public class Design
             yield return CreateProperty(nameof(GraphView.ScrollOffset));
             yield return CreateProperty(nameof(GraphView.MarginLeft));
             yield return CreateProperty(nameof(GraphView.MarginBottom));
+            yield return CreateProperty(nameof(GraphView.CellSize));
 
             yield return CreateSubProperty(nameof(HorizontalAxis.Visible),nameof(GraphView.AxisX),gv.AxisX);
             yield return CreateSubProperty(nameof(HorizontalAxis.Increment),nameof(GraphView.AxisX),gv.AxisX);
             yield return CreateSubProperty(nameof(HorizontalAxis.ShowLabelsEvery),nameof(GraphView.AxisX),gv.AxisX);
             yield return CreateSubProperty(nameof(HorizontalAxis.Minimum),nameof(GraphView.AxisX),gv.AxisX);
-            
-            // TODO: This is currently a Field not a Property :(
-            //yield return CreateSubProperty(nameof(HorizontalAxis.Text),nameof(GraphView.AxisX),gv.AxisX);
-
+            yield return CreateSubProperty(nameof(HorizontalAxis.Text),nameof(GraphView.AxisX),gv.AxisX);
             yield return CreateSubProperty(nameof(VerticalAxis.Visible),nameof(GraphView.AxisY),gv.AxisY);
             yield return CreateSubProperty(nameof(VerticalAxis.Increment),nameof(GraphView.AxisY),gv.AxisY);
             yield return CreateSubProperty(nameof(VerticalAxis.ShowLabelsEvery),nameof(GraphView.AxisY),gv.AxisY);
             yield return CreateSubProperty(nameof(VerticalAxis.Minimum),nameof(GraphView.AxisY),gv.AxisY);
-            //yield return CreateSubProperty(nameof(VerticalAxis.Text),nameof(GraphView.AxisY),gv.AxisY);
+            yield return CreateSubProperty(nameof(VerticalAxis.Text),nameof(GraphView.AxisY),gv.AxisY);
         }
 
         if (View is Window)
