@@ -1,3 +1,4 @@
+using System.Data;
 using System.Reflection;
 using NLog;
 using Terminal.Gui;
@@ -253,6 +254,8 @@ public class Design
         }
     }
 
+
+
     private Property CreateSubProperty(string name, string subObjectName, object subObject)
     {
         return new Property(this,subObject.GetType().GetProperty(name)        
@@ -274,11 +277,33 @@ public class Design
     /// <returns></returns>
     public IEnumerable<IOperation> GetExtraOperations()
     {
-        if (View is TableView)
+        return GetExtraOperations(Point.Empty);
+    }
+    /// <summary>
+    /// Returns one off atomic activities that can be performed on the view e.g. 'add a column'.
+    /// </summary>
+    /// <param name="pos">If this was triggered by a click then the position of the click
+    /// may inform what operations are returned (e.g. right clicking a specific table view column).  Otherwise
+    /// <see cref="Point.Empty"/></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    internal IEnumerable<IOperation> GetExtraOperations(Point pos)
+    {
+        if (View is TableView tv)
         {
+            DataColumn col = null;
+            if(!pos.IsEmpty)
+            {
+                // TODO: Currently you have to right click in the row (body) of the table
+                // and cannot right click the headers themselves
+                var cell = tv.ScreenToCell(pos.X, pos.Y);
+                if (cell != null)
+                    col = tv.Table.Columns[cell.Value.X];
+            }
+
             yield return new AddColumnOperation(this);
-            yield return new RemoveColumnOperation(this);
-            yield return new RenameColumnOperation(this);
+            yield return new RemoveColumnOperation(this, col);
+            yield return new RenameColumnOperation(this, col);
         }
 
 
@@ -288,7 +313,6 @@ public class Design
             yield return new RemoveTabOperation(this);
             yield return new RenameTabOperation(this);
         }
-
     }
 
     /// <summary>

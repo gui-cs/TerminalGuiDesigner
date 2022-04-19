@@ -13,7 +13,7 @@ using Attribute = Terminal.Gui.Attribute;
 
 namespace tests;
 
-public class PropertyTests
+public class PropertyTests : Tests
 {
     [Test]
     public void TestPropertyOfType_Pos()
@@ -33,32 +33,18 @@ public class PropertyTests
     [Test]
     public void TestPropertyOfType_Attribute()
     {
-        
-        var driver = new FakeDriver ();
-        Application.Init (driver, new FakeMainLoop (() => FakeConsole.ReadKey (true)));
-        driver.Init (() => { });
+        var d = new Design(new SourceCodeFile(nameof(TestPropertyOfType_Attribute)+".cs"),"FFF",new GraphView());
+        var colorProp = d.GetDesignableProperties().Single(p=>p.PropertyInfo.Name.Equals(nameof(GraphView.GraphColor)));
 
-        try
-        {
-            var d = new Design(new SourceCodeFile(nameof(TestPropertyOfType_Attribute)+".cs"),"FFF",new GraphView());
-            var colorProp = d.GetDesignableProperties().Single(p=>p.PropertyInfo.Name.Equals(nameof(GraphView.GraphColor)));
+        colorProp.SetValue(null);
 
-            colorProp.SetValue(null);
+        var rhs = (CodeSnippetExpression)colorProp.GetRhs();
+        Assert.AreEqual(rhs.Value,"null");
 
-            var rhs = (CodeSnippetExpression)colorProp.GetRhs();
-            Assert.AreEqual(rhs.Value,"null");
+        colorProp.SetValue(Attribute.Make(Color.BrightMagenta,Color.Blue));
 
-            colorProp.SetValue(Attribute.Make(Color.BrightMagenta,Color.Blue));
-
-            rhs = (CodeSnippetExpression)colorProp.GetRhs();
-            Assert.AreEqual(rhs.Value,"Terminal.Gui.Attribute.Make(Color.BrightMagenta,Color.Blue)");
-            
-        }
-        finally
-        {
-            driver.End();
-            Application.Shutdown();
-        }
+        rhs = (CodeSnippetExpression)colorProp.GetRhs();
+        Assert.AreEqual(rhs.Value,"Terminal.Gui.Attribute.Make(Color.BrightMagenta,Color.Blue)");
     }
     [Test]
     public void TestPropertyOfType_PointF()
@@ -80,32 +66,20 @@ public class PropertyTests
     public void TestPropertyOfType_Rune()
     {
 
-        var driver = new FakeDriver ();
-        Application.Init (driver, new FakeMainLoop (() => FakeConsole.ReadKey (true)));
-        driver.Init (() => { });
+        var viewToCode = new ViewToCode();
 
-        try
-        {
-            var viewToCode = new ViewToCode();
+        var file = new FileInfo("TestPropertyOfType_Rune.cs");
+        var lv = new LineView();
+        var d = new Design(new SourceCodeFile(file),"lv",lv);
+        var prop = d.GetDesignableProperties().Single(p=>p.PropertyInfo.Name.Equals("LineRune"));
 
-            var file = new FileInfo("TestPropertyOfType_Rune.cs");
-            var lv = new LineView();
-            var d = new Design(new SourceCodeFile(file),"lv",lv);
-            var prop = d.GetDesignableProperties().Single(p=>p.PropertyInfo.Name.Equals("LineRune"));
+        prop.SetValue('F');
 
-            prop.SetValue('F');
-
-            Assert.AreEqual(new Rune('F'),lv.LineRune);
+        Assert.AreEqual(new Rune('F'),lv.LineRune);
             
-            var code = ExpressionToCode(prop.GetRhs());
+        var code = ExpressionToCode(prop.GetRhs());
 
-            Assert.AreEqual("'F'",code);
-        }
-        finally
-        {
-            driver.End();
-            Application.Shutdown();
-        }
+        Assert.AreEqual("'F'",code);
     }
 
     public static string ExpressionToCode(CodeExpression expression)

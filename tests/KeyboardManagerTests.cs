@@ -10,15 +10,11 @@ using TerminalGuiDesigner.UI;
 
 namespace tests;
 
-public class KeyboardManagerTests
+public class KeyboardManagerTests : Tests
 {
     [Test]
     public void Backspace_WithDateFieldSelected()
     {
-        var driver = new FakeDriver ();
-        Application.Init (driver, new FakeMainLoop (() => FakeConsole.ReadKey (true)));
-        driver.Init (() => { });
-
         var vf = new ViewFactory();
         var v = vf.Create(typeof(DateField));
         var d = new Design(new SourceCodeFile(new FileInfo("ff.cs")),"ff",v);
@@ -27,15 +23,7 @@ public class KeyboardManagerTests
         var mgr = new KeyboardManager();
         Assert.IsFalse(mgr.HandleKey(v,new KeyEvent(Key.Backspace,new KeyModifiers())));
 
-        try
-        {
-            v.Redraw(v.Bounds = new Rect(0,0,6,1));
-        }
-        finally
-        {
-            driver.End();
-            Application.Shutdown();
-        }
+        v.Redraw(v.Bounds = new Rect(0,0,6,1));
     }
 
 

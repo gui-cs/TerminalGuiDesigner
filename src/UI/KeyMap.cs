@@ -17,4 +17,5 @@ public class KeyMap
     public Key ToggleDragging { get; set; } = Key.F3;
     public Key AddView { get; set; } = Key.F2;
     public Key ToggleShowFocused { get; set; } = Key.CtrlMask | Key.L;
+    public MouseFlags RightClick { get; set; } = MouseFlags.Button3Clicked;
 }

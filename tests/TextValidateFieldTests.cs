@@ -9,7 +9,7 @@ using TerminalGuiDesigner.ToCode;
 
 namespace tests;
 
-class TextValidateFieldTests
+class TextValidateFieldTests : Tests
 {
     [Test]
     public void TestRoundTrip_PreserveProvider()

@@ -15,7 +15,7 @@ using TerminalGuiDesigner.ToCode;
 
 namespace tests;
 
-class ListViewTests
+class ListViewTests : Tests
 {
     [Test]
     public void TestRoundTrip_PreserveList()

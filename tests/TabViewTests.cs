@@ -9,7 +9,7 @@ using TerminalGuiDesigner.ToCode;
 
 namespace tests;
 
-class TabViewTests
+class TabViewTests : Tests
 {
     [Test]
     public void TestRoundTrip_PreserveTabs()

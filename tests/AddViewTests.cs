@@ -12,7 +12,7 @@ using TerminalGuiDesigner.ToCode;
 
 namespace tests;
 
-public class AddViewTests
+public class AddViewTests : Tests
 {
     [Test]
     public void TestAdd_Undo()

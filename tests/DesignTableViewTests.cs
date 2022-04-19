@@ -9,7 +9,7 @@ using TerminalGuiDesigner.ToCode;
 
 namespace tests;
 
-public class TableViewTests
+public class TableViewTests : Tests
 {
     [Test]
     public void TestRoundTrip_PreserveColumns()

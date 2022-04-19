@@ -25,7 +25,6 @@ public class Editor : Toplevel
 
     KeyboardManager _keyboardManager = new ();
 
-
     private string GetHelpWithNothingLoaded()
     {
         return @$"{_keyMap.ShowHelp} - Show Help
@@ -204,6 +203,34 @@ Ctrl+Q - Quit
             }
 
         }
+        
+        //right click
+        if(m.Flags.HasFlag(_keyMap.RightClick))
+        {
+            var hit = HitTest(_viewBeingEdited.View, m, out _);
+            
+            if(hit != null)
+            {
+                var d = hit.GetNearestDesign();
+                if(d != null)
+                    CreateAndShowContextMenu(m,d);
+            }
+
+        }
+    }
+
+    private void CreateAndShowContextMenu(MouseEvent m, Design d)
+    {
+        var options = d.GetExtraOperations(ScreenToClient(d.View, m.X, m.Y));
+
+        if(options.Any())
+        {
+            var menu = new ContextMenu(d.View, new MenuBarItem(
+                options.Select(o=>new MenuItem(o.ToString(),"",o.Do)).ToArray()));
+            menu.Show();
+
+        }
+        
     }
 
     public override void Redraw(Rect bounds)

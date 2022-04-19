@@ -10,7 +10,7 @@ internal class RemoveColumnOperation : Operation
 
     public Design Design { get; }
 
-    public RemoveColumnOperation(Design design)
+    public RemoveColumnOperation(Design design, DataColumn? column)
     {
         Design = design;
 
@@ -20,7 +20,9 @@ internal class RemoveColumnOperation : Operation
 
         _tableView = (TableView)Design.View;
 
-        _column = _tableView.SelectedColumn < 0 ? null : _tableView.Table.Columns[_tableView.SelectedColumn];
+        // user specified column, or the currently selected cell in the table
+        _column = column ??
+            (_tableView.SelectedColumn < 0 ? null : _tableView.Table.Columns[_tableView.SelectedColumn]);
 
         // user has no column selected
         if (_column == null)
