@@ -1,6 +1,5 @@
 using System.CodeDom;
 using System.Text.RegularExpressions;
-using Terminal.Gui;
 using static Terminal.Gui.TabView;
 
 namespace TerminalGuiDesigner.ToCode;

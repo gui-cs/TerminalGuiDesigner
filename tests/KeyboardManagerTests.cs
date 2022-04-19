@@ -1,11 +1,7 @@
 using NUnit.Framework;
-using System;
 using System.IO;
-using System.Linq;
 using Terminal.Gui;
 using TerminalGuiDesigner;
-using TerminalGuiDesigner.Operations;
-using TerminalGuiDesigner.ToCode;
 using TerminalGuiDesigner.UI;
 
 namespace tests;

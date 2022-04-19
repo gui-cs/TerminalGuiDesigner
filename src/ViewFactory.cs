@@ -1,7 +1,6 @@
 ﻿using System.Data;
 using NStack;
 using Terminal.Gui;
-using Terminal.Gui.Graphs;
 using Terminal.Gui.TextValidateProviders;
 using Terminal.Gui.Views;
 using static Terminal.Gui.Border;

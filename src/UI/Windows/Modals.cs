@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using TerminalGuiDesigner.Operations;
-
-namespace TerminalGuiDesigner.UI.Windows;
+﻿namespace TerminalGuiDesigner.UI.Windows;
 
 public class Modals
 {

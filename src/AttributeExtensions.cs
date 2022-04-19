@@ -1,5 +1,3 @@
-using Terminal.Gui;
-
 namespace TerminalGuiDesigner;
 
 public static class AttributeExtensions

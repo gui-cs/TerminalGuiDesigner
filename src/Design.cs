@@ -1,15 +1,12 @@
 using System.Data;
-using System.Reflection;
 using NLog;
 using Terminal.Gui;
 using Terminal.Gui.Graphs;
 using Terminal.Gui.Views;
-using TerminalGuiDesigner.FromCode;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 using static Terminal.Gui.TableView;
 using static Terminal.Gui.TabView;
-using Attribute = Terminal.Gui.Attribute;
 
 namespace TerminalGuiDesigner;
 
@@ -291,7 +288,7 @@ public class Design
     {
         if (View is TableView tv)
         {
-            DataColumn col = null;
+            DataColumn? col = null;
             if(!pos.IsEmpty)
             {
                 // TODO: Currently you have to right click in the row (body) of the table

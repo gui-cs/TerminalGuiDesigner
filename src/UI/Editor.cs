@@ -1,10 +1,8 @@
-﻿using System.Reflection;
-using Terminal.Gui;
+﻿using Terminal.Gui;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.UI.Windows;
 using TerminalGuiDesigner.FromCode;
 using TerminalGuiDesigner.ToCode;
-using System.Text.RegularExpressions;
 using Attribute = Terminal.Gui.Attribute;
 using YamlDotNet.Serialization;
 
