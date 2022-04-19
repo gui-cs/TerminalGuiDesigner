@@ -7,9 +7,11 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+      - name: Build
+        run: cd src && dotnet build
       - name: Test
         run: |
-          cd tests && dotnet test --configuration Debug --no-restore --verbosity normal --collect:'XPlat Code Coverage' --settings coverlet.runsettings
+          cd tests && dotnet test --configuration Debug --verbosity normal --collect:'XPlat Code Coverage' --settings coverlet.runsettings
       - name: Move test results to accessible directory
         run: |
           mkdir TestResults
