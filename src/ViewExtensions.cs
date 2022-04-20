@@ -126,4 +126,34 @@ public static class ViewExtensions
 
         return GetNearestContainerDesign(d.View.SuperView);
     }
+
+
+    /// <summary>
+    /// Converts a view-relative (col,row) position to a screen-relative position (col,row). The values are optionally clamped to the screen dimensions.
+    /// </summary>
+    /// <param name="col">View-relative column.</param>
+    /// <param name="row">View-relative row.</param>
+    /// <param name="rcol">Absolute column; screen-relative.</param>
+    /// <param name="rrow">Absolute row; screen-relative.</param>
+    /// <param name="clipped">Whether to clip the result of the ViewToScreen method, if set to <c>true</c>, the rcol, rrow values are clamped to the screen (terminal) dimensions (0..TerminalDim-1).</param>
+    public static void ViewToScreen(this View v, int col, int row, out int rcol, out int rrow, bool clipped = true)
+    {
+        // Computes the real row, col relative to the screen.
+        rrow = row + v.Frame.Y;
+        rcol = col + v.Frame.X;
+        var ccontainer = v.SuperView;
+        while (ccontainer != null)
+        {
+            rrow += ccontainer.Frame.Y;
+            rcol += ccontainer.Frame.X;
+            ccontainer = ccontainer.SuperView;
+        }
+
+        // The following ensures that the cursor is always in the screen boundaries.
+        if (clipped)
+        {
+            rrow = Math.Min(rrow, Application.Driver.Rows - 1);
+            rcol = Math.Min(rcol, Application.Driver.Cols - 1);
+        }
+    }
 }

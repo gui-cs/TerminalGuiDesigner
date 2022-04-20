@@ -716,9 +716,12 @@ Ctrl+Q - Quit
         var point = ScreenToClient(w, m.X, m.Y);
         var hit = ApplicationExtensions.FindDeepestView(w, m.X, m.Y);
 
+        int resizeBoxArea = 2;
+        
         if (hit != null)
         {
-            isLowerRight = hit.Frame.Right - 1 == point.X && hit.Frame.Bottom - 1 == point.Y;
+            hit.ViewToScreen(hit.Bounds.Right, hit.Bounds.Bottom,out int screenX, out int screenY,true);
+            isLowerRight = Math.Abs(screenX - point.X) <= resizeBoxArea && Math.Abs(screenY - point.Y) <= resizeBoxArea;
         }
         else
             isLowerRight = false;
