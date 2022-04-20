@@ -99,6 +99,8 @@ public class Property : ToCodeBase
         {
             t.Update();
         }
+        
+        Design.View.SetNeedsDisplay();
     }
 
     public virtual void ToCode(CodeDomArgs args)

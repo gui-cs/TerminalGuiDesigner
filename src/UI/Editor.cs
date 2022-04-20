@@ -229,24 +229,32 @@ Ctrl+Q - Quit
         
         var extraOptionsMenuItems = options.Select(o => new MenuItem(o.ToString(), "", o.Do)).ToArray();
 
+        MenuBarItem allItems;
+
         // if exra options
         if (options.Any())
         {
             var propertiesCategory = new MenuBarItem("Properties", setPropertyMenuItems);
+            propertiesCategory.Action = ()=>{
+                ShowEditProperties(d);
+            };
 
             var items = new List<MenuItem>();
             items.Add(propertiesCategory);
             items.AddRange(extraOptionsMenuItems);
 
-            var menu = new ContextMenu(d.View, new MenuBarItem(items.ToArray()));
-            menu.Show();
+            allItems = new MenuBarItem(items.ToArray());
         }
         else
         {
-            // no operations so just add the properties directly 
-            var menu = new ContextMenu(d.View, new MenuBarItem(setPropertyMenuItems));
-            menu.Show();
+            // no operations so just add the properties directly
+            allItems = new MenuBarItem(setPropertyMenuItems);
         }
+
+        var menu = new ContextMenu();
+        menu.MenuItens = allItems;
+        menu.Position = new Point(m.X,m.Y);
+        menu.Show();
     }
 
     public override void Redraw(Rect bounds)

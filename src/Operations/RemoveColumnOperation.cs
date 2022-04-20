@@ -35,7 +35,7 @@ internal class RemoveColumnOperation : Operation
     }
     public override string ToString()
     {
-        return $"Remove Column {_column}";
+        return $"Remove Column '{_column}'";
     }
     public override void Do()
     {

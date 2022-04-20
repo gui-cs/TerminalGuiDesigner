@@ -37,7 +37,7 @@ internal class RenameColumnOperation : Operation
 
     public override string ToString()
     {
-        return $"Rename Column {_originalName}";
+        return $"Rename Column '{_originalName}'";
     }
     public override void Do()
     {
