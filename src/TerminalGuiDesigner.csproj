@@ -8,7 +8,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>TerminalGuiDesigner</PackageId>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
     <Authors>Thomas Nind</Authors>
     <Nullable>enable</Nullable>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -17,7 +17,15 @@
     <Title>TerminalGuiDesigner does for Terminal.Gui what the Windows Forms Designer does for WinForms</Title>
     <PackageProjectUrl>https://github.com/tznind/TerminalGuiDesigner/</PackageProjectUrl>
     <IncludeSymbols>true</IncludeSymbols>
-    <PackageTags>csharp, terminal, c#, gui, toolkit, designer, console</PackageTags>    
+    <PackageTags>csharp, terminal, c#, gui, toolkit, designer, console</PackageTags>
+
+    <PackageReleaseNotes>
+		v1.0.5
+		* Right click context menu support
+		* Increased mouse resizing click hit box
+		* Added progress indicator for creating new Views
+		* Fixed mouse dragging/resizing of views in subviews (e.g. TabViews)
+	</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="NLog.config">
