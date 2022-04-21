@@ -613,15 +613,45 @@ Ctrl+Q - Quit
             }
         }
         
-        //TODO: Validate the namespace
-
-        // if we have a valid namespace
-        if (!string.IsNullOrWhiteSpace(ns))
+        //Validate the namespace
+        if (string.IsNullOrWhiteSpace(ns) || ns.Contains(" ") || char.IsDigit(ns.First()))
         {
-            // Create the view and open it
-            var design = viewToCode.GenerateNewView(toOpen, ns ?? "YourNamespace", typeToCreate, out _currentDesignerFile);
-            ReplaceViewBeingEdited(design);
+            MessageBox.ErrorQuery("Invalid Namespace","Namespace must not contain spaces, be empty or begin with a number","Ok");
+            return;
         }
+
+        // since we are creating a new view we should
+        // clear the history
+        OperationManager.Instance.ClearUndoRedo();
+        Design? instance = null;
+
+        var open = new LoadingDialog(toOpen);
+
+        Task.Run(() => {
+
+            // Create the view files and compile
+            instance = viewToCode.GenerateNewView(toOpen, ns ?? "YourNamespace", typeToCreate, out _currentDesignerFile);
+
+        }).ContinueWith((t, o) => {
+
+            // no longer loading
+            Application.MainLoop.Invoke(() => Application.RequestStop());
+
+            if (t.Exception != null)
+            {
+                Application.MainLoop.Invoke(() =>
+                    ExceptionViewer.ShowException($"Failed to create '{toOpen.Name}'", t.Exception));
+                return;
+            }
+
+            // if loaded correctly then 
+            if (instance != null)
+                ReplaceViewBeingEdited(instance);
+
+        }, TaskScheduler.FromCurrentSynchronizationContext());
+
+
+        Application.Run(open);
     }
 
     private void ReplaceViewBeingEdited(Design design)
