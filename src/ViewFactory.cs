@@ -81,7 +81,13 @@ public class ViewFactory
                 Width = 8,
                 Height = 1
             };
-
+        }
+        if(t == typeof(TreeView))
+        {
+            return new TreeView(){
+                Width = 16,
+                Height = 5
+            };
         }
 
         var instance = (View?)Activator.CreateInstance(t) ?? throw new Exception($"CreateInstance returned null for Type '{t}'");
@@ -155,7 +161,8 @@ public class ViewFactory
              typeof(SaveDialog),
              typeof(OpenDialog),
              typeof(ScrollView),
-             typeof(ScrollBarView)};
+             typeof(ScrollBarView),
+             typeof(TreeView<>)}; // The generic version of TreeView
 
         return typeof(View).Assembly.DefinedTypes.Where(t => 
                 typeof(View).IsAssignableFrom(t) && 

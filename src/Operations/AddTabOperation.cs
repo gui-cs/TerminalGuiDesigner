@@ -31,7 +31,7 @@ public class AddTabOperation : Operation
 
         if (Modals.GetString("Add Tab", "Tab Name", "MyTab", out string? newTabName))
         {
-            _tabView.AddTab(_tab = new Tab(newTabName ?? "Unamed Tab",null),true);
+            _tabView.AddTab(_tab = new Tab(newTabName ?? "Unamed Tab",new View{Width = Dim.Fill(),Height=Dim.Fill()}),true);
             _tabView.SetNeedsDisplay();
         }
 

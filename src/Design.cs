@@ -2,6 +2,7 @@ using System.Data;
 using NLog;
 using Terminal.Gui;
 using Terminal.Gui.Graphs;
+using Terminal.Gui.Trees;
 using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
@@ -99,7 +100,7 @@ public class Design
                 var row = tv.Table.NewRow();
                 for (int c = 0; c < tv.Table.Columns.Count; c++)
                 {
-                    row[c] = $"{i},{c}";
+                    row[c] = DBNull.Value;
                 }
                 tv.Table.Rows.Add(row);
             }
@@ -115,6 +116,21 @@ public class Design
                 ScreenPosition = new Point(1, 1),
                 Text = ""
             });
+        }
+
+        if(subView is TreeView tree)
+        {
+            tree.AddObject(new TreeNode("Example Branch 1"){
+                Children = new []{new TreeNode("Child 1")}
+            });
+            tree.AddObject(new TreeNode("Example Branch 2"){
+                Children = new []{
+                    new TreeNode("Child 1"),
+                    new TreeNode("Child 2")}
+            });
+            
+            for (int l = 0; l < 20; l++)
+                tree.AddObject(new TreeNode($"Example Leaf {l}"));
         }
 
         if (super != null)
@@ -221,6 +237,16 @@ public class Design
         {
             yield return CreateProperty(nameof(Window.Title));
         }
+
+        if(View is TreeView tree)
+        {
+            yield return CreateSubProperty(nameof(TreeStyle.CollapseableSymbol),nameof(TreeView<ITreeNode>.Style),tree.Style);
+            yield return CreateSubProperty(nameof(TreeStyle.ColorExpandSymbol),nameof(TreeView<ITreeNode>.Style),tree.Style);
+            yield return CreateSubProperty(nameof(TreeStyle.ExpandableSymbol),nameof(TreeView<ITreeNode>.Style),tree.Style);
+            yield return CreateSubProperty(nameof(TreeStyle.InvertExpandSymbolColors),nameof(TreeView<ITreeNode>.Style),tree.Style);
+            yield return CreateSubProperty(nameof(TreeStyle.LeaveLastRow),nameof(TreeView<ITreeNode>.Style),tree.Style);
+            yield return CreateSubProperty(nameof(TreeStyle.ShowBranchLines),nameof(TreeView<ITreeNode>.Style),tree.Style);
+        }
         
         if (View is TableView tv)
         {
@@ -305,7 +331,6 @@ public class Design
         {
             yield return new AddViewOperation(SourceCode,this);
         }
-
 
         if (View is TabView)
         {

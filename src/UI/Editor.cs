@@ -225,9 +225,9 @@ Ctrl+Q - Quit
 
         // menu items to click to make them happen/change
         var setPropertyMenuItems = properties.Select(p => new MenuItem(p.GetHumanReadableName(), null,
-            () => EditDialog.SetPropertyToNewValue(d, p, p.GetValue()))).ToArray();
+            () => Try(()=>EditDialog.SetPropertyToNewValue(d, p, p.GetValue())))).ToArray();
         
-        var extraOptionsMenuItems = options.Select(o => new MenuItem(o.ToString(), "", ()=>OperationManager.Instance.Do(o))).ToArray();
+        var extraOptionsMenuItems = options.Select(o => new MenuItem(o.ToString(), "", ()=>Try(()=>OperationManager.Instance.Do(o)))).ToArray();
 
         MenuBarItem allItems;
 
@@ -255,6 +255,18 @@ Ctrl+Q - Quit
         menu.MenuItens = allItems;
         menu.Position = new Point(m.X,m.Y);
         menu.Show();
+    }
+
+    private void Try(Action action)
+    {
+        try
+        {
+            action();
+        }
+        catch (Exception ex)
+        {
+            ExceptionViewer.ShowException("Operation failed",ex);
+        }
     }
 
     public override void Redraw(Rect bounds)
