@@ -37,7 +37,7 @@ internal class RemoveColumnOperation : Operation
     {
         return $"Remove Column '{_column}'";
     }
-    public override void Do()
+    public override bool Do()
     {
         if (_column == null)
         {
@@ -48,7 +48,11 @@ internal class RemoveColumnOperation : Operation
         {
             _tableView.Table.Columns.Remove(_column.ColumnName);
             _tableView.Update();
+
+            return true;
         }
+
+        return false;
     }
 
     public override void Redo()

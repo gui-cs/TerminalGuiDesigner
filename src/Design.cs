@@ -301,6 +301,11 @@ public class Design
             yield return new RenameColumnOperation(this, col);
         }
 
+        if(IsContainerView || IsRoot)
+        {
+            yield return new AddViewOperation(SourceCode,this);
+        }
+
 
         if (View is TabView)
         {
@@ -396,5 +401,30 @@ public class Design
     public override string ToString()
     {
         return FieldName;
+    }
+
+    /// <summary>
+    /// Returns a new unique name for a view of type <paramref name="viewType"/>
+    /// </summary>
+    /// <param name="instance"></param>
+    /// <param name="viewType"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public string GetUniqueFieldName(Type viewType)
+    {
+        var root = GetRootDesign();
+
+        var allDesigns = root.GetAllDesigns();
+
+        // consider label1
+        int number = 1;
+        while (allDesigns.Any(d => d.FieldName.Equals($"{viewType.Name.ToLower()}{number}")))
+        {
+            // label1 is taken, try label2 etc
+            number++;
+        }
+
+        // found a unique one
+        return $"{viewType.Name.ToLower()}{number}";
     }
 }

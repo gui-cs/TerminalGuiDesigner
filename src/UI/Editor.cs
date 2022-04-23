@@ -209,7 +209,7 @@ Ctrl+Q - Quit
             
             if(hit != null)
             {
-                var d = hit.GetNearestDesign();
+                var d = hit.GetNearestDesign() ?? _viewBeingEdited;
                 if(d != null)
                     CreateAndShowContextMenu(m,d);
             }
@@ -227,7 +227,7 @@ Ctrl+Q - Quit
         var setPropertyMenuItems = properties.Select(p => new MenuItem(p.GetHumanReadableName(), null,
             () => EditDialog.SetPropertyToNewValue(d, p, p.GetValue()))).ToArray();
         
-        var extraOptionsMenuItems = options.Select(o => new MenuItem(o.ToString(), "", o.Do)).ToArray();
+        var extraOptionsMenuItems = options.Select(o => new MenuItem(o.ToString(), "", ()=>OperationManager.Instance.Do(o))).ToArray();
 
         MenuBarItem allItems;
 
@@ -694,44 +694,11 @@ Ctrl+Q - Quit
         // what is the currently selected design
         var toAddTo = GetMostFocused(_viewBeingEdited.View)?.GetNearestContainerDesign() ?? _viewBeingEdited;
 
-        var factory = new ViewFactory();
-        var selectable = factory.GetSupportedViews().ToArray();
-            
-        if (Modals.Get("Type of Control", "Add", true, selectable, t => t?.Name ?? "Null", false, out var selected) && selected != null)
-        {
-            var instance = factory.Create(selected);
-
-            OperationManager.Instance.Do(
-                new AddViewOperation(_currentDesignerFile, instance, toAddTo, GetUniqueFieldName(selected))
-            );
-        }
+        OperationManager.Instance.Do(
+            new AddViewOperation(_currentDesignerFile,toAddTo)
+        );
     }
 
-    /// <summary>
-    /// Returns a new unique name for a view of type <paramref name="viewType"/>
-    /// </summary>
-    /// <param name="instance"></param>
-    /// <param name="viewType"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    private string GetUniqueFieldName(Type viewType)
-    {
-        if (_viewBeingEdited == null)
-            throw new Exception("Cannot generate unique field name because no view is being edited");
-
-        var allDesigns = _viewBeingEdited.GetAllDesigns();
-
-        // consider label1
-        int number = 1;
-        while (allDesigns.Any(d => d.FieldName.Equals($"{viewType.Name.ToLower()}{number}")))
-        {
-            // label1 is taken, try label2 etc
-            number++;
-        }
-
-        // found a unique one
-        return $"{viewType.Name.ToLower()}{number}";
-    }
 
     private void ShowEditProperties()
     {

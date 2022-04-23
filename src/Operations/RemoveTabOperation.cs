@@ -30,7 +30,7 @@ public class RemoveTabOperation : Operation
     {
         return $"Remove Tab '{_tab?.Text}'";
     }
-    public override void Do()
+    public override bool Do()
     {
         if (_tab == null)
         {
@@ -40,7 +40,10 @@ public class RemoveTabOperation : Operation
         if (_tabView.Tabs.Contains(_tab))
         {
             _tabView.RemoveTab(_tab);
+            return true;
         }
+
+        return false;
     }
 
     public override void Redo()

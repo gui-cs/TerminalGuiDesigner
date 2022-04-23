@@ -14,12 +14,15 @@ public class DeleteViewOperation : Operation
         this.from = delete.SuperView;
     }
 
-    public override void Do()
+    public override bool Do()
     {
         if(from != null)
         {
             from.Remove(delete);
+            return true;
         }
+
+        return false;
     }
 
     public override void Redo()

@@ -18,9 +18,10 @@ public class SetPropertyOperation : Operation
         this.NewValue = NewValue;
     }
 
-    public override void Do()
+    public override bool Do()
     {
         Property.SetValue(NewValue);
+        return true;
     }
 
     public override void Undo()

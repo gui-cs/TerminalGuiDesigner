@@ -13,9 +13,10 @@ public class RenameViewOperation : Operation
         NewName = newName;
     }
 
-    public override void Do()
+    public override bool Do()
     {
         Design.FieldName = NewName;
+        return true;
     }
 
     public override void Redo()

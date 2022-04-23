@@ -38,7 +38,7 @@ public abstract class Operation : IOperation
         return pascalCaseString;
     }
 
-    public abstract void Do();
+    public abstract bool Do();
     public abstract void Undo();
     public abstract void Redo();
 }

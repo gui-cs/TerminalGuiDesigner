@@ -14,11 +14,14 @@ public class OperationManager
 
     public void Do(IOperation op){
         
-        op.Do();
+        // If operation completes successfully
+        if(op.Do())
+        {
+            // We can no longer redo
+            redoStack.Clear();
+            undoStack.Push(op);
+        }
 
-        // We can no longer redo
-        redoStack.Clear();
-        undoStack.Push(op);
     }
 
     public void Undo()

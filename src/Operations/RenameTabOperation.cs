@@ -38,7 +38,7 @@ internal class RenameTabOperation : Operation
     {
         return $"Rename Tab '{_originalName}'";
     }
-    public override void Do()
+    public override bool Do()
     {
         if (_tab == null)
         {
@@ -50,7 +50,9 @@ internal class RenameTabOperation : Operation
             _newTabName = newTabName;
             _tab.Text = newTabName;
             _tabView.SetNeedsDisplay();
+            return true;
         }
+        return false;
     }
 
     public override void Redo()

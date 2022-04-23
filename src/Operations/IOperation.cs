@@ -4,7 +4,7 @@ public interface IOperation
 {
     bool IsImpossible { get; }
 
-    void Do();
+    bool Do();
 
     void Undo();
 

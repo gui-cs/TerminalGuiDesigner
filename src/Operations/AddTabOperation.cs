@@ -22,7 +22,7 @@ public class AddTabOperation : Operation
         _tabView = (TabView)Design.View;
     }
 
-    public override void Do()
+    public override bool Do()
     {
         if (_tab != null)
         {
@@ -34,6 +34,8 @@ public class AddTabOperation : Operation
             _tabView.AddTab(_tab = new Tab(newTabName ?? "Unamed Tab",null),true);
             _tabView.SetNeedsDisplay();
         }
+
+        return true;
     }
 
     public override void Redo()

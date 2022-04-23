@@ -22,7 +22,7 @@ internal class AddColumnOperation : Operation
         _tableView = (TableView)Design.View;
     }
 
-    public override void Do()
+    public override bool Do()
     {
         if (_column != null)
         {
@@ -34,6 +34,8 @@ internal class AddColumnOperation : Operation
             _column = _tableView.Table.Columns.Add(newColumnName);
             _tableView.Update();
         }
+        
+        return true;
     }
 
     public override void Redo()

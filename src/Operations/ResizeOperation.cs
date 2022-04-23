@@ -24,7 +24,7 @@ public class ResizeOperation : Operation
         DestinationX = destX;
         DestinationY = destY;
     }
-    public override void Do()
+    public override bool Do()
     {
         if (BeingResized.View.X.IsAbsolute(out var x))
         {
@@ -35,6 +35,8 @@ public class ResizeOperation : Operation
         {
             BeingResized.GetDesignableProperty("Height").SetValue(Dim.Sized(Math.Max(1, DestinationY - y)));
         }
+        
+        return true;
     }
 
     public override void Undo()

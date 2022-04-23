@@ -39,7 +39,7 @@ internal class RenameColumnOperation : Operation
     {
         return $"Rename Column '{_originalName}'";
     }
-    public override void Do()
+    public override bool Do()
     {
         if (_column == null)
         {
@@ -51,7 +51,9 @@ internal class RenameColumnOperation : Operation
             _newColumnName = newColumnName;
             _column.ColumnName = newColumnName;
             _tableView.Update();
+            return true;
         }
+        return false;
     }
 
     public override void Redo()

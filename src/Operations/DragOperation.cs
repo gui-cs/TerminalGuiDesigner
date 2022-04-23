@@ -38,7 +38,7 @@ public class DragOperation : Operation
         OriginalClickX = destX;
         OriginalClickY = destY;
     }
-    public override void Do()
+    public override bool Do()
     {
         if (BeingDragged.View.X.IsAbsolute() && OriginX.IsAbsolute(out var originX))
         {
@@ -49,6 +49,8 @@ public class DragOperation : Operation
         {
             BeingDragged.GetDesignableProperty("Y").SetValue(Pos.At(originY + (DestinationY - OriginalClickY)));
         }
+
+        return true;
     }
 
     public override void Undo()
