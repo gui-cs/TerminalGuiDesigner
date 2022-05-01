@@ -112,6 +112,22 @@ Ctrl+Q - Quit
             }
         }
 
+        Application.RootKeyEvent += (k) =>
+        {
+            if (_editting)
+                return false;
+
+            try
+            {
+                return HandleKey(k);
+            }
+            catch (System.Exception ex)
+            {
+                ExceptionViewer.ShowException("Error processing keystroke", ex);
+                return false;
+            }
+        };
+
         Application.RootMouseEvent += (m) =>
         {
             if(_editting)
@@ -333,7 +349,7 @@ Ctrl+Q - Quit
         return  GetHelpWithEmptyFormLoaded();
     }
 
-    public override bool ProcessHotKey(KeyEvent keyEvent)
+    public bool HandleKey(KeyEvent keyEvent)
     {
         // if another window is showing don't respond to hotkeys
         if (!IsCurrentTop)

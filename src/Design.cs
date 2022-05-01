@@ -338,6 +338,11 @@ public class Design
             yield return new RemoveTabOperation(this);
             yield return new RenameTabOperation(this);
         }
+
+        if(View is MenuBar)
+        {
+            yield return new AddMenuOperation(this);
+        }
     }
 
     /// <summary>
