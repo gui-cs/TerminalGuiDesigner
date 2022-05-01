@@ -36,6 +36,8 @@ namespace TerminalGuiDesigner.ToCode
                 string fieldName = $"m{i}";
                 AddFieldToClass(args,child.GetType(),fieldName);
                 AddConstructorCall(args, $"this.{fieldName}",child.GetType());
+                AddPropertyAssignment(args,$"this.{fieldName}.{nameof(MenuItem.Title)}",child.Title);
+                
                 menus.Add(fieldName);
 
                 List<string> children = new();
@@ -48,6 +50,7 @@ namespace TerminalGuiDesigner.ToCode
                     string subFieldName = $"m{i}_{j}";
                     AddFieldToClass(args,sub.GetType(),subFieldName);
                     AddConstructorCall(args, $"this.{subFieldName}",sub.GetType());
+                    AddPropertyAssignment(args,$"this.{subFieldName}.{nameof(MenuItem.Title)}",sub.Title);
 
                     children.Add(subFieldName);
                 }
