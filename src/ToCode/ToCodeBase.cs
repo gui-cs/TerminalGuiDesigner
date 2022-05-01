@@ -46,9 +46,9 @@ public abstract class ToCodeBase
 
     protected void AddConstructorCall(CodeDomArgs args, Design d, params CodeExpression[] parameters)
     {
-        AddConstructorCall($"this.{d.FieldName}", d.View.GetType(), args, parameters);
+        AddConstructorCall(args, $"this.{d.FieldName}", d.View.GetType(), parameters);
     }
-    protected void AddConstructorCall(string fullySpecifiedFieldName,Type typeToConstruct, CodeDomArgs args, params CodeExpression[] parameters)
+    protected void AddConstructorCall(CodeDomArgs args, string fullySpecifiedFieldName,Type typeToConstruct, params CodeExpression[] parameters)
     {
         // Construct it
         var constructLhs = new CodeFieldReferenceExpression();

@@ -31,6 +31,12 @@ internal class DesignToCode : ToCodeBase
             designTable.ToCode(args);
         }
 
+        if(Design.View is MenuBar mb)
+        {
+            var designItems = new MenuBarItemsToCode(Design,mb);
+            designItems.ToCode(args);
+        }
+
         if(Design.View is TabView tabView)
         {
             foreach(var tab in tabView.Tabs)
