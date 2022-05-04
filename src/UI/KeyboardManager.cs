@@ -15,33 +15,7 @@ namespace TerminalGuiDesigner.UI
             // if we are in a menu
             if (menuItem != null)
             {
-                // TODO: This probably lets us edit the Editors own context menus lol
-
-                // TODO once https://github.com/migueldeicaza/gui.cs/pull/1689 is merged and published
-                // we can integrate this into the Design undo/redo systems
-
-
-                // if taking a new line add an extra menu item
-                if (keystroke.Key == Key.Enter)
-                {
-                    // TODO: this seems to always be null. need to investigate why
-                    var parent = menuItem.Parent as MenuBarItem;
-                    if(parent != null)
-                    {
-                        var children = parent.Children.ToList<MenuItem>();
-                        children.Add(new MenuItem());
-                        parent.Children = children.ToArray();
-                        focusedView.SetNeedsDisplay();
-                        return true;
-                    }
-                }
-                else
-                if (ApplyKeystrokeToString(menuItem.Title.ToString() ?? "", keystroke, out var newValue))
-                {
-                    menuItem.Title = newValue;
-                    focusedView.SetNeedsDisplay();
-                    return true;
-                }
+                return HandleKeyPressInMenu(focusedView, menuItem, keystroke);
             }
 
             var d = focusedView.GetNearestDesign();
@@ -80,6 +54,66 @@ namespace TerminalGuiDesigner.UI
             }
 
             ApplyKeystrokeToTextProperty(keystroke);
+
+            return false;
+        }
+
+        private bool HandleKeyPressInMenu(View focusedView, MenuItem menuItem, KeyEvent keystroke)
+        {
+            // Allow typing but also Enter to create a new subitem
+            if(!IsActionableKey(keystroke) && keystroke.Key != Key.Enter)
+                return false;
+
+            // TODO: This probably lets us edit the Editors own context menus lol
+
+            // TODO once https://github.com/migueldeicaza/gui.cs/pull/1689 is merged and published
+            // we can integrate this into the Design undo/redo systems
+
+
+            if(keystroke.Key == Key.Backspace && string.IsNullOrWhiteSpace(menuItem.Title.ToString()))
+            {
+                // deleting the menu item using backspace to
+                // remove all characters in the title then they
+                // can hit backspace again 1 more time to delete
+                // the menu item
+
+                // menuItem.Parent doesn't work for root menu items
+                var parent = MenuTracker.Instance.GetParent(menuItem);
+
+                if(parent != null)
+                {
+                    var children = parent.Children.ToList<MenuItem>();
+                    children.Remove(menuItem);
+                    parent.Children = children.ToArray();
+                    focusedView.SetNeedsDisplay();
+                    return true;
+                }                
+            }
+            else
+            if (keystroke.Key == Key.Enter)
+            {
+                // if taking a new line add an extra menu item
+                // menuItem.Parent doesn't work for root menu items
+                var parent = MenuTracker.Instance.GetParent(menuItem);
+
+                if(parent != null)
+                {
+                    var children = parent.Children.ToList<MenuItem>();
+                    children.Add(new MenuItem{Title = "New Item"});
+                    parent.Children = children.ToArray();
+                    focusedView.SetNeedsDisplay();
+                    return true;
+                }
+            }
+            else
+            if (ApplyKeystrokeToString(menuItem.Title.ToString() ?? "", keystroke, out var newValue))
+            {
+                // changing the title
+                menuItem.Title = newValue;
+                focusedView.SetNeedsDisplay();
+                return true;
+            
+            }
 
             return false;
         }
@@ -153,6 +187,10 @@ namespace TerminalGuiDesigner.UI
             {
                 return true;
             }
+
+            // Don't let Ctrl+Q add a Q!
+            if(keystroke.Key.HasFlag(Key.CtrlMask))
+                return false;
 
             var punctuation = "\"'a:;%^&*~`bc!@#.,? ";
 

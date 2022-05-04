@@ -1,7 +1,7 @@
 EditProperties: F4
 ViewSpecificOperations: F4, ShiftMask
 EditRootProperties: F5
-ShowHelp: H, CtrlMask
+ShowHelp: E, CtrlMask
 New: N, CtrlMask
 Open: O, CtrlMask
 Save: S, CtrlMask
