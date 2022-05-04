@@ -6,6 +6,7 @@ public class RemoveMenuOperation: Operation
 {
     private MenuBar _menuBar;
     private MenuBarItem? _toRemove;
+    private int idx;
 
     public Design Design { get; }
     public RemoveMenuOperation(Design design)
@@ -28,6 +29,7 @@ public class RemoveMenuOperation: Operation
             return false;
 
         var current = _menuBar.Menus.ToList<MenuBarItem>();
+        idx = current.IndexOf(_toRemove);
         current.Remove(_toRemove);
         _menuBar.Menus = current.ToArray();
         _menuBar.SetNeedsDisplay();
@@ -42,7 +44,7 @@ public class RemoveMenuOperation: Operation
             return;
 
         var current = _menuBar.Menus.ToList<MenuBarItem>();
-        current.Add(_toRemove);
+        current.Insert(idx,_toRemove);
         _menuBar.Menus = current.ToArray();
         _menuBar.SetNeedsDisplay();
     }

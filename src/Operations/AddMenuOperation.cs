@@ -46,7 +46,7 @@ public class AddMenuOperation: Operation
 
 
         var current = _menuBar.Menus.ToList<MenuBarItem>();
-        current.Add(_newItem = new MenuBarItem() { Title = _name });
+        current.Add(_newItem = new MenuBarItem(_name,new MenuItem[] { new MenuItem { Title = "Edit Me" } }));
         _menuBar.Menus = current.ToArray();
         _menuBar.SetNeedsDisplay();
 

@@ -236,7 +236,7 @@ Ctrl+Q - Quit
     private void CreateAndShowContextMenu(MouseEvent m, Design d)
     {
         // things we can do/change
-        var options = d.GetExtraOperations(ScreenToClient(d.View, m.X, m.Y));
+        var options = d.GetExtraOperations(ScreenToClient(d.View, m.X, m.Y)).Where(c=>!c.IsImpossible);
         var properties = d.GetDesignableProperties().OrderBy(p=>p.GetHumanReadableName());
 
         // menu items to click to make them happen/change
