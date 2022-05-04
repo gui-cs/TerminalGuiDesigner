@@ -341,7 +341,8 @@ public class Design
 
         if(View is MenuBar)
         {
-            yield return new AddMenuOperation(this);
+            yield return new AddMenuOperation(this,null);
+            yield return new RemoveMenuOperation(this);
         }
     }
 

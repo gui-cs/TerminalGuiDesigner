@@ -1,4 +1,5 @@
 ﻿using Terminal.Gui;
+using TerminalGuiDesigner.UI.Windows;
 
 namespace TerminalGuiDesigner.Operations;
 
@@ -8,9 +9,19 @@ public class AddMenuOperation: Operation
     private MenuBarItem? _newItem;
 
     public Design Design { get; }
-    public AddMenuOperation(Design design)
+
+    private string? _name;
+
+    /// <summary>
+    /// Adds a new top level menu to a <see cref="MenuBar"/>. 
+    /// </summary>
+    /// <param name="design"></param>
+    /// <param name="name">Optional explicit name to add with or null to prompt user interactively</param>
+    /// <exception cref="ArgumentException"></exception>
+    public AddMenuOperation(Design design, string? name)
     {
         Design = design;
+        _name = name;
 
         // somehow user ran this command for a non tab view
         if (Design.View is not MenuBar)
@@ -25,8 +36,17 @@ public class AddMenuOperation: Operation
         if (_newItem != null)
             return false;
 
+        if (_name == null)
+            if (Modals.GetString("Name", "Name", "MyMenu", out string? newName) && !string.IsNullOrWhiteSpace(newName))
+            {
+                _name = newName;
+            }
+            else
+                return false; //user cancelled naming the new menu
+
+
         var current = _menuBar.Menus.ToList<MenuBarItem>();
-        current.Add(_newItem = new MenuBarItem() { Title = "Test" });
+        current.Add(_newItem = new MenuBarItem() { Title = _name });
         _menuBar.Menus = current.ToArray();
         _menuBar.SetNeedsDisplay();
 
