@@ -20,18 +20,43 @@ namespace TerminalGuiDesigner
         /// <exception cref="Exception"></exception>
         public static MenuBarItem? GetSelectedMenuItem(this MenuBar menuBar)
         {
-            var field = "selected";
-            var selectedField = typeof(MenuBar).GetField(field, BindingFlags.NonPublic | BindingFlags.Instance)
-                ?? throw new Exception($"Expected private field {field} was not present on {nameof(MenuBar)}");
-
-            var selected = (int)(selectedField.GetValue(menuBar)
-                ?? throw new Exception($"Private field {field} was unexpectedly null on {nameof(MenuBar)}"));
-
+            var selected = (int)GetNonNullPrivateFieldValue("selected", menuBar, typeof(MenuBar));
+            
             if (selected < 0 || selected >= menuBar.Menus.Length)
                 return null;
 
             return menuBar.Menus[selected];
         }
 
+        private static object GetNonNullPrivateFieldValue(string fieldName, object item, Type type)
+        {
+            var selectedField = type.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance)
+                ?? throw new Exception($"Expected private field {fieldName} was not present on {type.Name}");
+            return (selectedField.GetValue(item)
+                ?? throw new Exception($"Private field {fieldName} was unexpectedly null on {type.Name}"));
+        }
+
+        /// <summary>
+        /// Returns the currently selected <paramref name="menu"/> in a dropdown menu that
+        /// is currently expanded and being explored.
+        /// </summary>
+        /// <param name="menu">Must be the internal Terminal.Gui class "Menu"</param>
+        /// <returns></returns>
+        internal static MenuItem? GetSelectedSubMenuItemFromMenu(View menu)
+        {
+            var menuClass = menu.GetType();
+            if (menuClass.Name != "Menu")
+            {
+                return null;
+            }
+
+            var barItems = (MenuBarItem)GetNonNullPrivateFieldValue("barItems", menu, menuClass);
+            var current = (int)GetNonNullPrivateFieldValue("current", menu, menuClass);
+
+            if (current < 0 || current >= barItems.Children.Length)
+                return null;
+
+            return barItems.Children[current];
+        }
     }
 }

@@ -10,6 +10,40 @@ namespace TerminalGuiDesigner.UI
 
         public bool HandleKey(View focusedView,KeyEvent keystroke)
         {
+            var menuItem = MenuTracker.Instance.CurrentlyOpenMenuItem;
+
+            // if we are in a menu
+            if (menuItem != null)
+            {
+                // TODO: This probably lets us edit the Editors own context menus lol
+
+                // TODO once https://github.com/migueldeicaza/gui.cs/pull/1689 is merged and published
+                // we can integrate this into the Design undo/redo systems
+
+
+                // if taking a new line add an extra menu item
+                if (keystroke.Key == Key.Enter)
+                {
+                    // TODO: this seems to always be null. need to investigate why
+                    var parent = menuItem.Parent as MenuBarItem;
+                    if(parent != null)
+                    {
+                        var children = parent.Children.ToList<MenuItem>();
+                        children.Add(new MenuItem());
+                        parent.Children = children.ToArray();
+                        focusedView.SetNeedsDisplay();
+                        return true;
+                    }
+                }
+                else
+                if (ApplyKeystrokeToString(menuItem.Title.ToString() ?? "", keystroke, out var newValue))
+                {
+                    menuItem.Title = newValue;
+                    focusedView.SetNeedsDisplay();
+                    return true;
+                }
+            }
+
             var d = focusedView.GetNearestDesign();
 
             // if we are no longer focused 
@@ -77,34 +111,37 @@ namespace TerminalGuiDesigner.UI
                 return false;
             }
 
-            if(keystroke.Key == Key.Backspace)
-            {
-                var str = _currentOperation.Design.View.GetActualText(); 
+            var str = _currentOperation.Design.View.GetActualText();
+            
+            if (!ApplyKeystrokeToString(str, keystroke, out var newStr)) // not a keystroke we can act upon
+                return false;
 
+            _currentOperation.Design.View.SetActualText(newStr);
+            _currentOperation.Design.View.SetNeedsDisplay();
+            _currentOperation.NewValue = str;
+            
+            return true;
+
+        }
+
+        private bool ApplyKeystrokeToString(string str, KeyEvent keystroke, out string newString)
+        {
+            newString = str;
+
+            if (keystroke.Key == Key.Backspace)
+            {
                 // no change
-                if(str == null || str.Length == 0)
+                if (str == null || str.Length == 0)
                     return false;
 
                 // chop off a letter
-                str = str.Length == 1 ? "" : str.Substring(0,str.Length -1);
-
-                _currentOperation.Design.View.SetActualText(str);
-                _currentOperation.Design.View.SetNeedsDisplay();
-                _currentOperation.NewValue = str;
-                
-                // we acted upon the backspace so consume it
+                newString = str.Length == 1 ? "" : str.Substring(0, str.Length - 1);
                 return true;
             }
             else
             {
                 var ch = (char)keystroke.KeyValue;
-
-                var str = _currentOperation.Design.View.GetActualText(); 
-                str += ch;
-
-                _currentOperation.Design.View.SetActualText(str);
-                _currentOperation.Design.View.SetNeedsDisplay();
-                _currentOperation.NewValue = str;
+                newString += ch;
 
                 return true;
             }
