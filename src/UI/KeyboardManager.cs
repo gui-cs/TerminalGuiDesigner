@@ -62,16 +62,35 @@ namespace TerminalGuiDesigner.UI
         {
             if(keystroke.Key == Key.Enter)
             {
-                AddMenuItem(1,focusedView,menuItem);
+                AddMenuItem(focusedView,menuItem);
+                keystroke.Key = Key.CursorDown;
+                return false;
             }
 
             if(keystroke.Key == (Key.CursorUp | Key.ShiftMask))
             {
                 MoveMenuItem(true,focusedView,menuItem);
+                keystroke.Key = Key.CursorUp;
+                return false;
             }
             if(keystroke.Key == (Key.CursorDown | Key.ShiftMask))
             {
                 MoveMenuItem(false,focusedView,menuItem);
+                keystroke.Key = Key.CursorDown;
+                return false;
+            }
+
+            if( (keystroke.Key == Key.DeleteChar)
+                || 
+                (keystroke.Key == Key.Backspace && string.IsNullOrWhiteSpace(menuItem.Title.ToString())))
+            {
+                // deleting the menu item using backspace to
+                // remove all characters in the title or the Del key
+                if(DeleteMenuItem(focusedView,menuItem))
+                {
+                    keystroke.Key = Key.CursorUp;
+                    return false;
+                }
             }
 
             // Allow typing but also Enter to create a new subitem
@@ -84,25 +103,7 @@ namespace TerminalGuiDesigner.UI
             // we can integrate this into the Design undo/redo systems
 
 
-            if(keystroke.Key == Key.Backspace && string.IsNullOrWhiteSpace(menuItem.Title.ToString()))
-            {
-                // deleting the menu item using backspace to
-                // remove all characters in the title then they
-                // can hit backspace again 1 more time to delete
-                // the menu item
 
-                // menuItem.Parent doesn't work for root menu items
-                var parent = MenuTracker.Instance.GetParent(menuItem);
-
-                if(parent != null)
-                {
-                    var children = parent.Children.ToList<MenuItem>();
-                    children.Remove(menuItem);
-                    parent.Children = children.ToArray();
-                    focusedView.SetNeedsDisplay();
-                    return true;
-                }                
-            }
             else
             if (ApplyKeystrokeToString(menuItem.Title.ToString() ?? "", keystroke, out var newValue))
             {
@@ -116,12 +117,35 @@ namespace TerminalGuiDesigner.UI
             return false;
         }
 
+        private bool DeleteMenuItem(View focusedView, MenuItem menuItem)
+        {
+            // menuItem.Parent doesn't work for root menu items
+            var parent = MenuTracker.Instance.GetParent(menuItem, out var bar);
+
+            if(parent != null)
+            {
+                var children = parent.Children.ToList<MenuItem>();
+                children.Remove(menuItem);
+                parent.Children = children.ToArray();
+                focusedView.SetNeedsDisplay();
+
+                if(!children.Any())
+                {
+                    bar?.CloseMenu();
+                }
+                    
+                return children.Any();
+            }             
+
+            return false;   
+        }
+
         // TODO: xml comments
-        private bool AddMenuItem(int idxOffset, View focusedView, MenuItem menuItem)
+        private bool AddMenuItem(View focusedView, MenuItem menuItem)
         {
             // if taking a new line add an extra menu item
             // menuItem.Parent doesn't work for root menu items
-            var parent = MenuTracker.Instance.GetParent(menuItem);
+            var parent = MenuTracker.Instance.GetParent(menuItem, out var bar);
 
             if(parent != null)
             {
@@ -133,12 +157,13 @@ namespace TerminalGuiDesigner.UI
                 if(currentItemIdx == -1)
                     return false;
 
-                int insertAt = Math.Max(0,idxOffset + currentItemIdx);
+                int insertAt = Math.Max(0,currentItemIdx + 1);
 
                 children.Insert(insertAt,new MenuItem{Title = "New Item"});
                 parent.Children = children.ToArray();
                 
-                SendDown();
+                if(bar != null)
+                    SendDown(bar);
 
                 focusedView.SetNeedsDisplay();
                 return true;
@@ -147,23 +172,20 @@ namespace TerminalGuiDesigner.UI
             return false;
         }
 
-        private void SendDown()
+        private void SendDown(MenuBar bar)
         {
-            // TODO: Implement this
+        //    bar.ProcessKey(new KeyEvent(Key.CursorDown,new KeyModifiers()));
         }
-        private void SendUp()
+        private void SendUp(MenuBar bar)
         {
-
-            // TODO: Implement this
-            // The below doesnt work:
-            //Application.Driver.SendKeys(' ',ConsoleKey.UpArrow,false,false,false);
+          //  bar.ProcessKey(new KeyEvent(Key.CursorUp,new KeyModifiers()));
         }
 
         private bool MoveMenuItem (bool up, View focusedView, MenuItem menuItem)
         {
             // if taking a new line add an extra menu item
             // menuItem.Parent doesn't work for root menu items
-            var parent = MenuTracker.Instance.GetParent(menuItem);
+            var parent = MenuTracker.Instance.GetParent(menuItem, out var bar);
             
             if(parent != null)
             {
@@ -186,13 +208,17 @@ namespace TerminalGuiDesigner.UI
                 children.Insert(moveTo,menuItem);
                 parent.Children = children.ToArray();
 
-                if(up)
+
+                if(bar != null)
                 {
-                    SendUp();
-                }
-                else
-                {
-                    SendDown();
+                    if(up)
+                    {
+                        SendUp(bar);
+                    }
+                    else
+                    {
+                        SendDown(bar);
+                    }
                 }
 
                 focusedView.SetNeedsDisplay();

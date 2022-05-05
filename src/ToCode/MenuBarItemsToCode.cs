@@ -47,6 +47,7 @@ namespace TerminalGuiDesigner.ToCode
                 int j=0;
                 foreach(var sub in child.Children)
                 {
+                    j++;
                     string subFieldName = $"m{i}_{j}";
                     AddFieldToClass(args,sub.GetType(),subFieldName);
                     AddConstructorCall(args, $"this.{subFieldName}",sub.GetType());

@@ -44,7 +44,7 @@ internal class MenuTracker
     /// Searches child items of all MenuBars tracked by this class
     /// to try and find the parent of the item passed
     /// </summary>
-    public MenuBarItem? GetParent(MenuItem item)
+    public MenuBarItem? GetParent(MenuItem item, out MenuBar? hostBar)
     {
         foreach(var bar in bars)
         {
@@ -54,11 +54,13 @@ internal class MenuTracker
 
                 if(candidate != null)
                 {
+                    hostBar = bar;
                     return candidate;
                 }
             }
         }
-
+    
+        hostBar = null;
         return null;
     }
 
