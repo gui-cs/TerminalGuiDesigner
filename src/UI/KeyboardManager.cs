@@ -60,8 +60,22 @@ namespace TerminalGuiDesigner.UI
 
         private bool HandleKeyPressInMenu(View focusedView, MenuItem menuItem, KeyEvent keystroke)
         {
+            if(keystroke.Key == Key.Enter)
+            {
+                AddMenuItem(1,focusedView,menuItem);
+            }
+
+            if(keystroke.Key == (Key.CursorUp | Key.ShiftMask))
+            {
+                MoveMenuItem(true,focusedView,menuItem);
+            }
+            if(keystroke.Key == (Key.CursorDown | Key.ShiftMask))
+            {
+                MoveMenuItem(false,focusedView,menuItem);
+            }
+
             // Allow typing but also Enter to create a new subitem
-            if(!IsActionableKey(keystroke) && keystroke.Key != Key.Enter)
+            if(!IsActionableKey(keystroke))
                 return false;
 
             // TODO: This probably lets us edit the Editors own context menus lol
@@ -90,22 +104,6 @@ namespace TerminalGuiDesigner.UI
                 }                
             }
             else
-            if (keystroke.Key == Key.Enter)
-            {
-                // if taking a new line add an extra menu item
-                // menuItem.Parent doesn't work for root menu items
-                var parent = MenuTracker.Instance.GetParent(menuItem);
-
-                if(parent != null)
-                {
-                    var children = parent.Children.ToList<MenuItem>();
-                    children.Add(new MenuItem{Title = "New Item"});
-                    parent.Children = children.ToArray();
-                    focusedView.SetNeedsDisplay();
-                    return true;
-                }
-            }
-            else
             if (ApplyKeystrokeToString(menuItem.Title.ToString() ?? "", keystroke, out var newValue))
             {
                 // changing the title
@@ -113,6 +111,92 @@ namespace TerminalGuiDesigner.UI
                 focusedView.SetNeedsDisplay();
                 return true;
             
+            }
+
+            return false;
+        }
+
+        // TODO: xml comments
+        private bool AddMenuItem(int idxOffset, View focusedView, MenuItem menuItem)
+        {
+            // if taking a new line add an extra menu item
+            // menuItem.Parent doesn't work for root menu items
+            var parent = MenuTracker.Instance.GetParent(menuItem);
+
+            if(parent != null)
+            {
+                var children = parent.Children.ToList<MenuItem>();
+                var currentItemIdx = children.IndexOf(menuItem);
+
+                // We are the parent but parents children don't contain
+                // us.  Thats bad. TODO: log this
+                if(currentItemIdx == -1)
+                    return false;
+
+                int insertAt = Math.Max(0,idxOffset + currentItemIdx);
+
+                children.Insert(insertAt,new MenuItem{Title = "New Item"});
+                parent.Children = children.ToArray();
+                
+                SendDown();
+
+                focusedView.SetNeedsDisplay();
+                return true;
+            }
+
+            return false;
+        }
+
+        private void SendDown()
+        {
+            // TODO: Implement this
+        }
+        private void SendUp()
+        {
+
+            // TODO: Implement this
+            // The below doesnt work:
+            //Application.Driver.SendKeys(' ',ConsoleKey.UpArrow,false,false,false);
+        }
+
+        private bool MoveMenuItem (bool up, View focusedView, MenuItem menuItem)
+        {
+            // if taking a new line add an extra menu item
+            // menuItem.Parent doesn't work for root menu items
+            var parent = MenuTracker.Instance.GetParent(menuItem);
+            
+            if(parent != null)
+            {
+                var children = parent.Children.ToList<MenuItem>();
+                var currentItemIdx = children.IndexOf(menuItem);
+
+                // We are the parent but parents children don't contain
+                // us.  Thats bad. TODO: log this
+                if(currentItemIdx == -1)
+                    return false;
+
+                int moveTo = Math.Max(0, (up?-1:1) + currentItemIdx);
+
+                // pull it out from wherever it is
+                children.Remove(menuItem);
+
+                moveTo = Math.Min(moveTo, children.Count);
+
+                // push it in at the destination
+                children.Insert(moveTo,menuItem);
+                parent.Children = children.ToArray();
+
+                if(up)
+                {
+                    SendUp();
+                }
+                else
+                {
+                    SendDown();
+                }
+
+                focusedView.SetNeedsDisplay();
+                return true;
             }
 
             return false;

@@ -358,6 +358,13 @@ Ctrl+Q - Quit
         if(_editting)
             return false;
 
+
+        // Give the keyboard manager first shot at consuming
+        // this key e.g. for typing into menus / reordering menus
+        // etc
+        if(_keyboardManager.HandleKey(GetMostFocused(this),keyEvent))
+            return true;
+
         try
         {
             _editting = true;
@@ -459,8 +466,6 @@ Ctrl+Q - Quit
                     MoveControl(5, 0);
                     return true;
             }
-
-            return _keyboardManager.HandleKey(GetMostFocused(this),keyEvent);
         }
         catch (System.Exception ex)
         {
@@ -471,7 +476,7 @@ Ctrl+Q - Quit
             _editting = false;
         }
 
-        return base.ProcessHotKey(keyEvent);
+        return false;
     }
 
     private void ShowViewSpecificOperations()
