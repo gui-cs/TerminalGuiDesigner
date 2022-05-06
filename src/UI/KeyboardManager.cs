@@ -124,17 +124,10 @@ namespace TerminalGuiDesigner.UI
 
             if(parent != null)
             {
-                var children = parent.Children.ToList<MenuItem>();
-                children.Remove(menuItem);
-                parent.Children = children.ToArray();
-                focusedView.SetNeedsDisplay();
-
-                if(!children.Any())
-                {
-                    bar?.CloseMenu();
-                }
-                    
-                return children.Any();
+                OperationManager.Instance.Do(
+                    new DeleteMenuItemOperation(focusedView,bar,parent,menuItem)
+                );
+                return true;
             }             
 
             return false;   
@@ -162,9 +155,6 @@ namespace TerminalGuiDesigner.UI
                 children.Insert(insertAt,new MenuItem{Title = "New Item"});
                 parent.Children = children.ToArray();
                 
-                if(bar != null)
-                    SendDown(bar);
-
                 focusedView.SetNeedsDisplay();
                 return true;
             }
@@ -172,14 +162,6 @@ namespace TerminalGuiDesigner.UI
             return false;
         }
 
-        private void SendDown(MenuBar bar)
-        {
-        //    bar.ProcessKey(new KeyEvent(Key.CursorDown,new KeyModifiers()));
-        }
-        private void SendUp(MenuBar bar)
-        {
-          //  bar.ProcessKey(new KeyEvent(Key.CursorUp,new KeyModifiers()));
-        }
 
         private bool MoveMenuItem (bool up, View focusedView, MenuItem menuItem)
         {
@@ -189,39 +171,11 @@ namespace TerminalGuiDesigner.UI
             
             if(parent != null)
             {
-                var children = parent.Children.ToList<MenuItem>();
-                var currentItemIdx = children.IndexOf(menuItem);
 
-                // We are the parent but parents children don't contain
-                // us.  Thats bad. TODO: log this
-                if(currentItemIdx == -1)
-                    return false;
+                OperationManager.Instance.Do(
+                    new MoveMenuItemOperation(focusedView,bar,parent,menuItem,up)
+                );
 
-                int moveTo = Math.Max(0, (up?-1:1) + currentItemIdx);
-
-                // pull it out from wherever it is
-                children.Remove(menuItem);
-
-                moveTo = Math.Min(moveTo, children.Count);
-
-                // push it in at the destination
-                children.Insert(moveTo,menuItem);
-                parent.Children = children.ToArray();
-
-
-                if(bar != null)
-                {
-                    if(up)
-                    {
-                        SendUp(bar);
-                    }
-                    else
-                    {
-                        SendDown(bar);
-                    }
-                }
-
-                focusedView.SetNeedsDisplay();
                 return true;
             }
 
