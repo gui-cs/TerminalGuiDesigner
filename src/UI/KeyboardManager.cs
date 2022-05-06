@@ -142,20 +142,10 @@ namespace TerminalGuiDesigner.UI
 
             if(parent != null)
             {
-                var children = parent.Children.ToList<MenuItem>();
-                var currentItemIdx = children.IndexOf(menuItem);
-
-                // We are the parent but parents children don't contain
-                // us.  Thats bad. TODO: log this
-                if(currentItemIdx == -1)
-                    return false;
-
-                int insertAt = Math.Max(0,currentItemIdx + 1);
-
-                children.Insert(insertAt,new MenuItem{Title = "New Item"});
-                parent.Children = children.ToArray();
-                
-                focusedView.SetNeedsDisplay();
+                OperationManager.Instance.Do(
+                    new AddMenuItemOperation(focusedView,bar,parent,menuItem)
+                );
+               
                 return true;
             }
 
