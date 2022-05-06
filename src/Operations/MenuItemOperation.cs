@@ -2,7 +2,7 @@ using Terminal.Gui;
 
 namespace TerminalGuiDesigner.Operations
 {
-    abstract class MenuItemOperation : Operation
+    public abstract class MenuItemOperation : Operation
     {
         protected readonly View FocusedView;
         protected readonly MenuBar? Bar;

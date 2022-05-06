@@ -2,15 +2,29 @@ using Terminal.Gui;
 
 namespace TerminalGuiDesigner.Operations
 {
-    internal class MoveMenuItemOperation : MenuItemOperation
+    public class MoveMenuItemOperation : MenuItemOperation
     {
 
         private bool _up;
+        private List<MenuItem> _siblings;
+        private int _currentItemIdx;
 
         public MoveMenuItemOperation(View focusedView, MenuBar? bar, MenuBarItem parent, MenuItem toMove, bool up)
             : base(focusedView, bar, parent, toMove)
         {
             _up = up;
+            
+            _siblings = Parent.Children.ToList<MenuItem>();
+            _currentItemIdx = _siblings.IndexOf(OperateOn);
+
+            if(_currentItemIdx < 0)
+            {
+                IsImpossible = true;
+            }
+            else
+            {
+                IsImpossible = up ? _currentItemIdx == 0 : _currentItemIdx == _siblings.Count-1;
+            }
         }
 
         public override bool Do()
@@ -29,25 +43,16 @@ namespace TerminalGuiDesigner.Operations
 
         private bool Move(int amount)
         {
-            
-            var children = Parent.Children.ToList<MenuItem>();
-            var currentItemIdx = children.IndexOf(OperateOn);
-
-            // We are the parent but parents children don't contain
-            // us.  Thats bad. TODO: log this
-            if(currentItemIdx == -1)
-                return false;
-
-            int moveTo = Math.Max(0, (amount) + currentItemIdx);
+            int moveTo = Math.Max(0, (amount) + _currentItemIdx);
 
             // pull it out from wherever it is
-            children.Remove(OperateOn);
+            _siblings.Remove(OperateOn);
 
-            moveTo = Math.Min(moveTo, children.Count);
+            moveTo = Math.Min(moveTo, _siblings.Count);
 
             // push it in at the destination
-            children.Insert(moveTo,OperateOn);
-            Parent.Children = children.ToArray();
+            _siblings.Insert(moveTo,OperateOn);
+            Parent.Children = _siblings.ToArray();
 
             FocusedView.SetNeedsDisplay();
 

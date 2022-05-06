@@ -2,7 +2,7 @@ using Terminal.Gui;
 
 namespace TerminalGuiDesigner.Operations;
 
-internal class AddMenuItemOperation : MenuItemOperation
+public class AddMenuItemOperation : MenuItemOperation
 {
     private MenuItem? _added;
 
