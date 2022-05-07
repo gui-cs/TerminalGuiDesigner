@@ -531,7 +531,7 @@ Ctrl+Q - Quit
     {
         var ofd = new OpenDialog("Open", $"Select {SourceCodeFile.ExpectedExtension} file",
             new List<string>(new[] { SourceCodeFile.ExpectedExtension }));
-
+        
         Application.Run(ofd);
 
         if (!ofd.Canceled)

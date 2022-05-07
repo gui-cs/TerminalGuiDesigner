@@ -20,11 +20,15 @@ public class AddMenuItemOperation : MenuItemOperation
 
     public override void Redo()
     {
-        Add(_added);
+        if(_added != null)
+            Add(_added);
     }
 
     public override void Undo()
     {
+        if(_added == null)
+            return;
+
         var remove = new DeleteMenuItemOperation(FocusedView,Bar,Parent,_added);
         remove.Do();
     }
