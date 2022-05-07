@@ -3,11 +3,11 @@ using TerminalGuiDesigner.Operations;
 
 namespace TerminalGuiDesigner.Operations
 {
-    internal class DeleteMenuItemOperation : MenuItemOperation
+    internal class RemoveMenuItemOperation : MenuItemOperation
     {
         private int _removedAtIdx;
 
-        public DeleteMenuItemOperation(View focusedView, MenuBar? bar, MenuBarItem parent, MenuItem toRemove)
+        public RemoveMenuItemOperation(View focusedView, MenuBar? bar, MenuBarItem parent, MenuItem toRemove)
             : base(focusedView, bar, parent, toRemove)
         {
         }
@@ -25,7 +25,7 @@ namespace TerminalGuiDesigner.Operations
 
             if(!children.Any())
             {
-                Bar?.CloseMenu();
+                Application.MainLoop.Invoke(MenuTracker.Instance.CloseAllMenus);
             }
                 
             return children.Any();

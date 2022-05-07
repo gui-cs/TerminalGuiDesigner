@@ -128,7 +128,7 @@ namespace TerminalGuiDesigner.UI
             if(parent != null)
             {
                 OperationManager.Instance.Do(
-                    new DeleteMenuItemOperation(focusedView,bar,parent,menuItem)
+                    new RemoveMenuItemOperation(focusedView,bar,parent,menuItem)
                 );
                 return true;
             }             
@@ -171,8 +171,8 @@ namespace TerminalGuiDesigner.UI
 
                 // add a new category menu item
                 // with us as its child
-                children.Insert(insertAt,new MenuBarItem("Test",new MenuItem[]{menuItem}));             ;
-                parent.Children = children.ToArray();                
+                children.Insert(insertAt,new MenuBarItem("Test",new MenuItem[]{menuItem}));
+                parent.Children = children.ToArray();
                 focusedView.SetNeedsDisplay();
                 
                 return true;

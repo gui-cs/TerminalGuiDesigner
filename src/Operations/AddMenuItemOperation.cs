@@ -29,7 +29,7 @@ public class AddMenuItemOperation : MenuItemOperation
         if(_added == null)
             return;
 
-        var remove = new DeleteMenuItemOperation(FocusedView,Bar,Parent,_added);
+        var remove = new RemoveMenuItemOperation(FocusedView,Bar,Parent,_added);
         remove.Do();
     }
 
