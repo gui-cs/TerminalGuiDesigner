@@ -143,7 +143,7 @@ Ctrl+Q - Quit
             }            
         };
 
-        Application.Run(this);
+        Application.Run(this,ErrorHandler);
         Application.Shutdown();
     }
 
@@ -532,7 +532,7 @@ Ctrl+Q - Quit
         var ofd = new OpenDialog("Open", $"Select {SourceCodeFile.ExpectedExtension} file",
             new List<string>(new[] { SourceCodeFile.ExpectedExtension }));
         
-        Application.Run(ofd);
+        Application.Run(ofd,ErrorHandler);
 
         if (!ofd.Canceled)
         {
@@ -551,6 +551,13 @@ Ctrl+Q - Quit
             }
         }
     }
+
+    private bool ErrorHandler(Exception arg)
+    {
+        ExceptionViewer.ShowException("Global Exception",arg);
+        return true;
+    }
+
     private void Open(FileInfo toOpen)
     {
         var open = new LoadingDialog(toOpen);
@@ -584,7 +591,7 @@ Ctrl+Q - Quit
 
         },TaskScheduler.FromCurrentSynchronizationContext());
 
-        Application.Run(open);
+        Application.Run(open,ErrorHandler);
     }
 
     private void New()
@@ -684,7 +691,7 @@ Ctrl+Q - Quit
         }, TaskScheduler.FromCurrentSynchronizationContext());
 
 
-        Application.Run(open);
+        Application.Run(open,ErrorHandler);
     }
 
     private void ReplaceViewBeingEdited(Design design)
@@ -745,7 +752,7 @@ Ctrl+Q - Quit
     private void ShowEditProperties(Design d)
     {
         var edit = new EditDialog(d);
-        Application.Run(edit);
+        Application.Run(edit,ErrorHandler);
     }
 
     private View? HitTest(View w, MouseEvent m, out bool isLowerRight)

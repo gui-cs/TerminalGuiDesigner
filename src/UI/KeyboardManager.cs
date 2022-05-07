@@ -67,6 +67,13 @@ namespace TerminalGuiDesigner.UI
                 return false;
             }
 
+            if(keystroke.Key == (Key.CursorRight | Key.ShiftMask))
+            {
+                AddMenuItemRight(focusedView,menuItem);
+                keystroke.Key = Key.CursorRight;
+                return false;
+            }
+
             if(keystroke.Key == (Key.CursorUp | Key.ShiftMask))
             {
                 MoveMenuItem(true,focusedView,menuItem);
@@ -101,21 +108,17 @@ namespace TerminalGuiDesigner.UI
 
             // TODO once https://github.com/migueldeicaza/gui.cs/pull/1689 is merged and published
             // we can integrate this into the Design undo/redo systems
-
-
-
-            else
             if (ApplyKeystrokeToString(menuItem.Title.ToString() ?? "", keystroke, out var newValue))
             {
                 // changing the title
                 menuItem.Title = newValue;
                 focusedView.SetNeedsDisplay();
-                return true;
-            
+                return true;            
             }
 
             return false;
         }
+
 
         private bool DeleteMenuItem(View focusedView, MenuItem menuItem)
         {
@@ -152,6 +155,31 @@ namespace TerminalGuiDesigner.UI
             return false;
         }
 
+        private bool AddMenuItemRight(View focusedView, MenuItem menuItem)
+        {
+            var parent = MenuTracker.Instance.GetParent(menuItem, out var bar);
+            
+            if(parent != null)
+            {
+                
+                var children = parent.Children.ToList<MenuItem>();
+                var currentItemIdx = children.IndexOf(menuItem);
+                int insertAt = Math.Max(0,currentItemIdx + 1);
+                
+                // pull us out
+                children.Remove(menuItem);
+
+                // add a new category menu item
+                // with us as its child
+                children.Insert(insertAt,new MenuBarItem("Test",new MenuItem[]{menuItem}));             ;
+                parent.Children = children.ToArray();                
+                focusedView.SetNeedsDisplay();
+                
+                return true;
+            }
+
+            return false;
+        }
 
         private bool MoveMenuItem (bool up, View focusedView, MenuItem menuItem)
         {

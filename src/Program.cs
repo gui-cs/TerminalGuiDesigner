@@ -13,6 +13,8 @@ public partial class Program
         Parser.Default.ParseArguments<Options>(args)
                    .WithParsed<Options>(o =>
                    {
+                       Application.UseSystemConsole = o.Usc;
+                       
                        Application.Init();
                        var editor = new Editor();
                        editor.Run(o);

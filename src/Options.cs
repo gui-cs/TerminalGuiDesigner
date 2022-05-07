@@ -14,6 +14,9 @@ namespace TerminalGuiDesigner
 
         [Option('n', HelpText = "The C# namespace to be used for the View code generated")]
         public string Namespace { get; set; }
+
+        [Option( HelpText = "Enables UseSystemConsole, an alternative console display driver")]
+        public bool Usc { get;set; }
         
         #nullable enable warnings
 
