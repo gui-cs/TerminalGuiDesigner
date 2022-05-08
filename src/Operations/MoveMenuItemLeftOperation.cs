@@ -4,8 +4,8 @@ namespace TerminalGuiDesigner.Operations;
 
 public class MoveMenuItemLeftOperation : MenuItemOperation
 {
-    public MoveMenuItemLeftOperation(View focusedView, MenuBar? bar, MenuBarItem parent, MenuItem toMove)
-        : base(focusedView, bar, parent, toMove)
+    public MoveMenuItemLeftOperation(MenuItem toMove)
+        : base(toMove)
     {
         // TODO prevent this if a root menu item
     }
@@ -17,13 +17,15 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
         if(parentsParent == null)
             return false;
 
-        // remove us
-        if(new RemoveMenuItemOperation(FocusedView,Bar,Parent,OperateOn).Do())
-        {
-            // if that worked then add us to the root
-            var children = parentsParent.Children.ToList<MenuItem>();
-            var parentsIdx = children.IndexOf(Parent);
+        // Figure out where the parent MenuBarItem was in the list because
+        // after we remove ourselves from its sublist it might
+        // turn into a MenuItem (i.e. we loose the reference).
+        var children = parentsParent.Children.ToList<MenuItem>();
+        var parentsIdx = children.IndexOf(Parent);
 
+        // remove us
+        if (new RemoveMenuItemOperation(OperateOn).Do())
+        {
             // We are the parent but parents children don't contain
             // us.  Thats bad. TODO: log this
             if(parentsIdx == -1)
@@ -33,8 +35,8 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
 
             children.Insert(insertAt, OperateOn);
             parentsParent.Children = children.ToArray();
-            
-            FocusedView.SetNeedsDisplay();
+
+            Bar?.SetNeedsDisplay();
             
             return true;
         }
@@ -50,7 +52,7 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
 
     public override void Undo()
     {
-        new MoveMenuItemRightOperation(FocusedView,Bar,Parent,OperateOn)
+        new MoveMenuItemRightOperation(OperateOn)
         .Do();
     }
 

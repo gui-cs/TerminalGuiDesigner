@@ -7,8 +7,7 @@ namespace TerminalGuiDesigner.Operations
     {
         private int _removedAtIdx;
 
-        public RemoveMenuItemOperation(View focusedView, MenuBar? bar, MenuBarItem parent, MenuItem toRemove)
-            : base(focusedView, bar, parent, toRemove)
+        public RemoveMenuItemOperation(MenuItem toRemove): base(toRemove)
         {
         }
         
@@ -21,7 +20,7 @@ namespace TerminalGuiDesigner.Operations
             
             children.Remove(OperateOn);
             Parent.Children = children.ToArray();
-            FocusedView.SetNeedsDisplay();
+            Bar?.SetNeedsDisplay();
 
             ConvertMenuBarItemToRegularItemIfEmpty(Parent);
 
@@ -54,7 +53,7 @@ namespace TerminalGuiDesigner.Operations
                 
             children.Insert(_removedAtIdx, OperateOn);
             Parent.Children = children.ToArray();
-            FocusedView.SetNeedsDisplay();
+            Bar?.SetNeedsDisplay();
         }
 
         private void ConvertMenuBarItemToRegularItemIfEmpty(MenuBarItem bar)
@@ -69,7 +68,7 @@ namespace TerminalGuiDesigner.Operations
                 return;
 
             var children = parent.Children.ToList<MenuItem>();
-            var idx = children.IndexOf(parent);
+            var idx = children.IndexOf(bar);
 
             if(idx < 0)
                 return;

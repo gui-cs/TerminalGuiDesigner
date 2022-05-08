@@ -56,12 +56,12 @@ class MenuBarTests : Tests
         OperationManager.Instance.Do(new AddViewOperation(sourceCode, mbOut, designOut, "myMenuBar"));
 
         // create some more children in the menu
-        new AddMenuItemOperation(mbOut,mbOut,mbOut.Menus[0],mbOut.Menus[0].Children[0]).Do();
-        new AddMenuItemOperation(mbOut,mbOut,mbOut.Menus[0],mbOut.Menus[0].Children[0]).Do();
-        new AddMenuItemOperation(mbOut,mbOut,mbOut.Menus[0],mbOut.Menus[0].Children[0]).Do();
+        new AddMenuItemOperation(mbOut.Menus[0].Children[0]).Do();
+        new AddMenuItemOperation(mbOut.Menus[0].Children[0]).Do();
+        new AddMenuItemOperation(mbOut.Menus[0].Children[0]).Do();
 
         // move the last child to 
-        new MoveMenuItemRightOperation(mbOut,mbOut,mbOut.Menus[0],mbOut.Menus[0].Children[1]).Do();
+        new MoveMenuItemRightOperation(mbOut.Menus[0].Children[1]).Do();
 
         // 1 visible root menu (e.g. File)
         Assert.AreEqual(1, mbOut.Menus.Length);
@@ -98,6 +98,8 @@ class MenuBarTests : Tests
         var factory = new ViewFactory();
         var mbOut = (MenuBar)factory.Create(typeof(MenuBar));
 
+        MenuTracker.Instance.Register(mbOut);
+
         // 1 visible root menu (e.g. File)
         Assert.AreEqual(1, mbOut.Menus.Length);
         // 1 child menu item (e.g. Open)
@@ -106,7 +108,7 @@ class MenuBarTests : Tests
         var orig = mbOut.Menus[0].Children[0];
 
         OperationManager.Instance.Do(
-            new AddMenuItemOperation(designOut.View,mbOut,mbOut.Menus[0],mbOut.Menus[0].Children[0])
+            new AddMenuItemOperation(mbOut.Menus[0].Children[0])
         );
 
         // Now 2 child menu item
@@ -129,7 +131,7 @@ class MenuBarTests : Tests
         var toMove = mbOut.Menus[0].Children[1];
 
         // Move second menu item up
-        var up = new MoveMenuItemOperation(designOut.View,mbOut,mbOut.Menus[0],toMove,true);
+        var up = new MoveMenuItemOperation(toMove,true);
         Assert.IsFalse(up.IsImpossible);
         OperationManager.Instance.Do(up);
 
@@ -137,9 +139,9 @@ class MenuBarTests : Tests
         Assert.AreSame(orig,mbOut.Menus[0].Children[1]); 
 
         // can't move top one up
-        Assert.IsTrue(new MoveMenuItemOperation(designOut.View,mbOut,mbOut.Menus[0],toMove,true).IsImpossible);
+        Assert.IsTrue(new MoveMenuItemOperation(toMove,true).IsImpossible);
         // cant move bottom one down
-        Assert.IsTrue(new MoveMenuItemOperation(designOut.View,mbOut,mbOut.Menus[0],mbOut.Menus[0].Children[1],false).IsImpossible);
+        Assert.IsTrue(new MoveMenuItemOperation(mbOut.Menus[0].Children[1],false).IsImpossible);
 
         OperationManager.Instance.Undo();
 
@@ -150,7 +152,7 @@ class MenuBarTests : Tests
         var toMove2 = mbOut.Menus[0].Children[1];
 
         // Move first menu item down
-        var down = new MoveMenuItemOperation(designOut.View,mbOut,mbOut.Menus[0],toMove2,true);
+        var down = new MoveMenuItemOperation(toMove2,true);
         Assert.IsFalse(down.IsImpossible);
         OperationManager.Instance.Do(down);
 
