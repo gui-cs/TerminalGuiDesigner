@@ -98,6 +98,8 @@ class MenuBarTests : Tests
         var factory = new ViewFactory();
         var mbOut = (MenuBar)factory.Create(typeof(MenuBar));
 
+        MenuTracker.Instance.Register(mbOut);
+
         // 1 visible root menu (e.g. File)
         Assert.AreEqual(1, mbOut.Menus.Length);
         // 1 child menu item (e.g. Open)

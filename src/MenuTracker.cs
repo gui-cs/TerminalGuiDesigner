@@ -2,7 +2,7 @@
 
 namespace TerminalGuiDesigner;
 
-internal class MenuTracker
+public class MenuTracker
 {
     public static MenuTracker Instance = new();
 
@@ -16,7 +16,7 @@ internal class MenuTracker
 
     }
 
-    internal void Register(MenuBar mb)
+    public void Register(MenuBar mb)
     {
         mb.MenuAllClosed += MenuAllClosed;
         mb.MenuOpened += MenuOpened;
