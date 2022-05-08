@@ -3,7 +3,6 @@ using TerminalGuiDesigner.UI.Windows;
 using static Terminal.Gui.TabView;
 
 namespace TerminalGuiDesigner.Operations;
-
 public class AddTabOperation : Operation
 {
     private Tab? _tab;
@@ -15,7 +14,7 @@ public class AddTabOperation : Operation
     {
         Design = design;
 
-        // somehow user ran this command for a non table view
+        // somehow user ran this command for a non tab view
         if (Design.View is not TabView)
             throw new ArgumentException($"Design must be for a {nameof(TabView)} to support {nameof(AddTabOperation)}");
 

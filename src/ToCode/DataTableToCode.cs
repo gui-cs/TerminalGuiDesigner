@@ -21,14 +21,14 @@ public class DataTableToCode : ToCodeBase
         // add a field to the class for the Table that is in the view
         AddLocalFieldToMethod(args, typeof(DataTable), dataTableFieldName);
 
-        AddConstructorCall(dataTableFieldName, typeof(DataTable), args);
+        AddConstructorCall(args, dataTableFieldName, typeof(DataTable));
 
         foreach (DataColumn col in Table.Columns)
         {
             var colFieldName = dataTableFieldName + "Col" + col.Ordinal;
 
             AddLocalFieldToMethod(args, typeof(DataColumn), colFieldName);
-            AddConstructorCall(colFieldName, typeof(DataColumn), args);
+            AddConstructorCall(args, colFieldName, typeof(DataColumn));
 
             AddPropertyAssignment(args, $"{colFieldName}.{nameof(DataColumn.ColumnName)}", col.ColumnName);
 

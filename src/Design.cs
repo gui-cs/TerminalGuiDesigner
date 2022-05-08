@@ -117,6 +117,10 @@ public class Design
                 Text = ""
             });
         }
+        if(subView is MenuBar mb)
+        {        
+            MenuTracker.Instance.Register(mb);
+        }
 
         if(subView is TreeView tree)
         {
@@ -140,6 +144,7 @@ public class Design
 
         return new Design(sourceCode,name, subView);
     }
+
 
 
 
@@ -337,6 +342,12 @@ public class Design
             yield return new AddTabOperation(this);
             yield return new RemoveTabOperation(this);
             yield return new RenameTabOperation(this);
+        }
+
+        if(View is MenuBar)
+        {
+            yield return new AddMenuOperation(this,null);
+            yield return new RemoveMenuOperation(this);
         }
     }
 

@@ -12,7 +12,7 @@ public class OperationManager
 
     }
 
-    public void Do(IOperation op){
+    public bool Do(IOperation op){
         
         // If operation completes successfully
         if(op.Do())
@@ -20,8 +20,10 @@ public class OperationManager
             // We can no longer redo
             redoStack.Clear();
             undoStack.Push(op);
+            return true;
         }
 
+        return false;
     }
 
     public void Undo()

@@ -112,6 +112,22 @@ Ctrl+Q - Quit
             }
         }
 
+        Application.RootKeyEvent += (k) =>
+        {
+            if (_editting)
+                return false;
+
+            try
+            {
+                return HandleKey(k);
+            }
+            catch (System.Exception ex)
+            {
+                ExceptionViewer.ShowException("Error processing keystroke", ex);
+                return false;
+            }
+        };
+
         Application.RootMouseEvent += (m) =>
         {
             if(_editting)
@@ -127,7 +143,7 @@ Ctrl+Q - Quit
             }            
         };
 
-        Application.Run(this);
+        Application.Run(this,ErrorHandler);
         Application.Shutdown();
     }
 
@@ -220,7 +236,7 @@ Ctrl+Q - Quit
     private void CreateAndShowContextMenu(MouseEvent m, Design d)
     {
         // things we can do/change
-        var options = d.GetExtraOperations(ScreenToClient(d.View, m.X, m.Y));
+        var options = d.GetExtraOperations(ScreenToClient(d.View, m.X, m.Y)).Where(c=>!c.IsImpossible);
         var properties = d.GetDesignableProperties().OrderBy(p=>p.GetHumanReadableName());
 
         // menu items to click to make them happen/change
@@ -333,7 +349,7 @@ Ctrl+Q - Quit
         return  GetHelpWithEmptyFormLoaded();
     }
 
-    public override bool ProcessHotKey(KeyEvent keyEvent)
+    public bool HandleKey(KeyEvent keyEvent)
     {
         // if another window is showing don't respond to hotkeys
         if (!IsCurrentTop)
@@ -341,6 +357,13 @@ Ctrl+Q - Quit
 
         if(_editting)
             return false;
+
+
+        // Give the keyboard manager first shot at consuming
+        // this key e.g. for typing into menus / reordering menus
+        // etc
+        if(_keyboardManager.HandleKey(GetMostFocused(this),keyEvent))
+            return true;
 
         try
         {
@@ -443,8 +466,6 @@ Ctrl+Q - Quit
                     MoveControl(5, 0);
                     return true;
             }
-
-            return _keyboardManager.HandleKey(GetMostFocused(this),keyEvent);
         }
         catch (System.Exception ex)
         {
@@ -455,7 +476,7 @@ Ctrl+Q - Quit
             _editting = false;
         }
 
-        return base.ProcessHotKey(keyEvent);
+        return false;
     }
 
     private void ShowViewSpecificOperations()
@@ -510,8 +531,8 @@ Ctrl+Q - Quit
     {
         var ofd = new OpenDialog("Open", $"Select {SourceCodeFile.ExpectedExtension} file",
             new List<string>(new[] { SourceCodeFile.ExpectedExtension }));
-
-        Application.Run(ofd);
+        
+        Application.Run(ofd,ErrorHandler);
 
         if (!ofd.Canceled)
         {
@@ -530,6 +551,13 @@ Ctrl+Q - Quit
             }
         }
     }
+
+    private bool ErrorHandler(Exception arg)
+    {
+        ExceptionViewer.ShowException("Global Exception",arg);
+        return true;
+    }
+
     private void Open(FileInfo toOpen)
     {
         var open = new LoadingDialog(toOpen);
@@ -563,7 +591,7 @@ Ctrl+Q - Quit
 
         },TaskScheduler.FromCurrentSynchronizationContext());
 
-        Application.Run(open);
+        Application.Run(open,ErrorHandler);
     }
 
     private void New()
@@ -663,7 +691,7 @@ Ctrl+Q - Quit
         }, TaskScheduler.FromCurrentSynchronizationContext());
 
 
-        Application.Run(open);
+        Application.Run(open,ErrorHandler);
     }
 
     private void ReplaceViewBeingEdited(Design design)
@@ -724,7 +752,7 @@ Ctrl+Q - Quit
     private void ShowEditProperties(Design d)
     {
         var edit = new EditDialog(d);
-        Application.Run(edit);
+        Application.Run(edit,ErrorHandler);
     }
 
     private View? HitTest(View w, MouseEvent m, out bool isLowerRight)

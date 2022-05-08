@@ -35,6 +35,10 @@ public class ViewFactory
         {
             return CreateRadioGroup();
         }
+        if (typeof(MenuBar).IsAssignableFrom(t))
+        {
+            return CreateMenuBar();
+        }
 
         if(t == typeof(TextValidateField))
         {
@@ -106,6 +110,15 @@ public class ViewFactory
         instance.ColorScheme = Colors.Base;
 
         return instance;
+    }
+
+    private MenuBar CreateMenuBar()
+    {
+         return new MenuBar (new MenuBarItem [] {
+				new MenuBarItem ("_File (F9)", new MenuItem [] {
+					new MenuItem ("_Do Something", "", () => {})
+                })
+         });
     }
 
     private View CreateRadioGroup()

@@ -29,7 +29,7 @@ public class TabToCode : ToCodeBase
         AddLocalFieldToMethod(args, typeof(Tab), tabName);
 
         // initialize the field by calling its constructor in InitializeComponent
-        AddConstructorCall(tabName, typeof(Tab), args,
+        AddConstructorCall(args, tabName, typeof(Tab),
             new CodePrimitiveExpression(Tab.Text.ToPrimitive()),
             new CodeSnippetExpression("new View()"));
 

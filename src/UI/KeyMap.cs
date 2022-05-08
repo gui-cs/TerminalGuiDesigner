@@ -7,7 +7,7 @@ public class KeyMap
     public Key EditProperties {get;set;} = Key.F4;
     public Key ViewSpecificOperations {get;set;} = Key.ShiftMask | Key.F4;
     public Key EditRootProperties { get; set; } = Key.F5;
-    public Key ShowHelp { get; set; } = Key.CtrlMask | Key.H;
+    public Key ShowHelp { get; set; } = Key.CtrlMask | Key.E;
     public Key New { get; set; } = Key.CtrlMask | Key.N;
     public Key Open { get; set; } = Key.CtrlMask | Key.O;
     public Key Save { get; set; } = Key.CtrlMask | Key.S;
