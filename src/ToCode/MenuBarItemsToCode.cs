@@ -86,7 +86,10 @@ internal class MenuBarItemsToCode : ToCodeBase
 
     public string GetUniqueFieldName(MenuItem item)
     {
-        var name = Regex.Replace(item.Title.ToString()??"emptyMenu","\\W","");
+        var name = item.Title.ToString();
+        
+        name = string.IsNullOrWhiteSpace(name) ? "emptyMenu" : name;
+        name = Regex.Replace(name,"\\W","");
 
         if(!fieldNamesUsed.Contains(name))
         {
