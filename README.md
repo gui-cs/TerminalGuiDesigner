@@ -86,19 +86,19 @@ The following feature list shows the current capabilities and the roadmap
   - [x] Drag to resize
 - [x] Undo/Redo
 - [x] Direct editing of Text just by typing
-- [ ] Easy Menu Bar Designing
+- [x] Easy Menu Bar Designing
 - [ ] Easy Status Bar Designing
 - [ ] Create Events e.g. MyButton_OnClick
 - [ ] Mutli select (select many views and hit delete or drag move)
 - [ ] Copy/Paste selected view(s)
-- [ ] Add views to subviews
+- [ ] Add/Move views to subviews
 - [ ] Read and present xmldoc comments when editing properties
 - [x] Comprehensive Tests
 - [x] CI
 - [ ] Create and edit all views
   - [x] Button
   - [x] Checkbox
-  - [ ] ComboBox
+  - [x] ComboBox
   - [x] DateField
   - [x] FrameView
   - [x] GraphView
@@ -106,7 +106,7 @@ The following feature list shows the current capabilities and the roadmap
   - [x] Label
   - [x] LineView
   - [x] ListView
-  - [ ] MenuBar
+  - [x] MenuBar
   - [ ] PanelView
   - [x] ProgressBar
   - [x] RadioGroup
@@ -117,7 +117,7 @@ The following feature list shows the current capabilities and the roadmap
   - [x] TextValidateField
   - [x] TextView
   - [x] TimeField
-  - [ ] TreeView
+  - [x] TreeView
   - [ ] View
 
 ### Class Diagram
