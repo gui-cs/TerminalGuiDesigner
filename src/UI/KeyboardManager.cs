@@ -75,7 +75,8 @@ namespace TerminalGuiDesigner.UI
                     new MoveMenuItemRightOperation(menuItem)
                 );
 
-                return true;
+                keystroke.Key = Key.CursorUp;
+                return false;
             }
 
             if(keystroke.Key == (Key.CursorLeft | Key.ShiftMask))
@@ -83,7 +84,9 @@ namespace TerminalGuiDesigner.UI
                 OperationManager.Instance.Do(
                     new MoveMenuItemLeftOperation(menuItem)
                 );
-                return true;
+                
+                keystroke.Key = Key.CursorDown;
+                return false;
             }
 
             if(keystroke.Key == (Key.CursorUp | Key.ShiftMask))
