@@ -36,6 +36,8 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
             children.Insert(insertAt, OperateOn);
             parentsParent.Children = children.ToArray();
 
+            MenuTracker.Instance.ConvertEmptyMenus();
+
             Bar?.SetNeedsDisplay();
             
             return true;

@@ -118,8 +118,8 @@ public class Design
             });
         }
         if(subView is MenuBar mb)
-        {
-            RegisterMenuTracker(mb);
+        {        
+            MenuTracker.Instance.Register(mb);
         }
 
         if(subView is TreeView tree)
@@ -145,10 +145,6 @@ public class Design
         return new Design(sourceCode,name, subView);
     }
 
-    private void RegisterMenuTracker(MenuBar mb)
-    {
-        MenuTracker.Instance.Register(mb);
-    }
 
 
 

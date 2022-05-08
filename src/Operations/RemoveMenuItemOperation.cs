@@ -22,24 +22,9 @@ namespace TerminalGuiDesigner.Operations
             Parent.Children = children.ToArray();
             Bar?.SetNeedsDisplay();
 
-            ConvertMenuBarItemToRegularItemIfEmpty(Parent);
-
-            if(!children.Any())
-            {
-                RefreshMenus();   
-            }
+            MenuTracker.Instance.ConvertEmptyMenus();
                 
             return true;
-        }
-
-
-        internal void RefreshMenus()
-        {
-            if(Bar != null && Bar.IsMenuOpen)
-            {
-                Bar.CloseMenu();
-                Bar.OpenMenu();
-            }
         }
 
         public override void Redo()
@@ -54,32 +39,6 @@ namespace TerminalGuiDesigner.Operations
             children.Insert(_removedAtIdx, OperateOn);
             Parent.Children = children.ToArray();
             Bar?.SetNeedsDisplay();
-        }
-
-        private void ConvertMenuBarItemToRegularItemIfEmpty(MenuBarItem bar)
-        {
-            // bar still has more children so don't convert
-            if(bar.Children.Any())
-                return;
-
-            var parent = MenuTracker.Instance.GetParent(bar,out _);
-
-            if(parent == null)
-                return;
-
-            var children = parent.Children.ToList<MenuItem>();
-            var idx = children.IndexOf(bar);
-
-            if(idx < 0)
-                return;
-            
-            // bar has no children so convert to MenuItem
-            var added = new MenuItem {Title = parent.Title};
-
-            children.RemoveAt(idx);
-            children.Insert(idx,added);
-
-            parent.Children = children.ToArray();
         }
     }
 }

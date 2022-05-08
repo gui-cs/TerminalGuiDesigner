@@ -45,6 +45,7 @@ public class MenuTracker
     private void MenuOpened(MenuItem obj)
     {
         CurrentlyOpenMenuItem = obj;
+        ConvertEmptyMenus();
     }
 
     private void MenuAllClosed()
@@ -74,6 +75,53 @@ public class MenuTracker
     
         hostBar = null;
         return null;
+    }
+
+    public void ConvertEmptyMenus()
+    {
+        foreach(var b in bars)
+            foreach(var bi in b.Menus)
+                ConvertEmptyMenus(b,bi);
+    }
+
+    private void ConvertEmptyMenus(MenuBar bar, MenuBarItem mbi)
+    {
+        foreach(var c in mbi.Children.OfType<MenuBarItem>())
+        {
+            ConvertEmptyMenus(bar, c);
+            if(ConvertMenuBarItemToRegularItemIfEmpty(c))
+            {
+                bar.CloseMenu();
+                bar.OpenMenu();
+            }
+        }
+    }
+    private bool ConvertMenuBarItemToRegularItemIfEmpty(MenuBarItem bar)
+    {
+        // bar still has more children so don't convert
+        if(bar.Children.Any())
+            return false;
+
+        var parent = MenuTracker.Instance.GetParent(bar,out _);
+
+        if(parent == null)
+            return false;
+
+        var children = parent.Children.ToList<MenuItem>();
+        var idx = children.IndexOf(bar);
+
+        if(idx < 0)
+            return false;
+        
+        // bar has no children so convert to MenuItem
+        var added = new MenuItem {Title = bar.Title};
+
+        children.RemoveAt(idx);
+        children.Insert(idx,added);
+
+        parent.Children = children.ToArray();
+        
+        return true;
     }
 
     private MenuBarItem? GetParent(MenuItem item, MenuBarItem sub)
