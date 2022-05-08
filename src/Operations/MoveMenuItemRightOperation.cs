@@ -47,7 +47,8 @@ public class MoveMenuItemRightOperation : MenuItemOperation
 
     public override void Undo()
     {
-        // TODO
+        new MoveMenuItemLeftOperation(FocusedView, Bar, Parent, OperateOn)
+        .Do();
     }
 
 

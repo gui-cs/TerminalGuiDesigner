@@ -19,25 +19,12 @@ internal class MenuTracker
     internal void Register(MenuBar mb)
     {
         mb.MenuAllClosed += MenuAllClosed;
-        mb.MenuOpening += MenuOpening;
         mb.MenuOpened += MenuOpened;
         mb.MenuClosing += MenuClosing;
 
         bars.Add(mb);
     }
 
-    private void MenuOpening(MenuOpeningEventArgs obj)
-    {
-        PruneEmptyBars(obj.CurrentMenu);
-    }
-
-    private void PruneEmptyBars(MenuBarItem currentMenu)
-    {
-        foreach(var sub in currentMenu.Children.OfType<MenuBarItem>())
-        {
-            PruneEmptyBars(currentMenu,sub);
-        }
-    }
 
     private void PruneEmptyBars(MenuBarItem parent, MenuBarItem child)
     {
@@ -64,15 +51,6 @@ internal class MenuTracker
     {
         CurrentlyOpenMenuItem = null;
     }
-
-    internal void CloseAllMenus()
-    {
-        foreach(var bar in bars)
-        {
-            bar.CloseMenu();
-        }
-    }
-
 
     /// <summary>
     /// Searches child items of all MenuBars tracked by this class
