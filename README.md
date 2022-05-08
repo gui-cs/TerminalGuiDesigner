@@ -73,6 +73,7 @@ To edit MenuBar items use the following controls
 | Shift Left    | Move selected sub menu item up a level |
 | Del    | Remove selected menu item |
 | Enter    | Add a new menu item |
+| Typing    | Edit the Title of the selected item |
 
 Currently there is no support for custom field naming (i.e. `(Name)`) or assigning shortcuts to menu items but this is planned for the future.
 
