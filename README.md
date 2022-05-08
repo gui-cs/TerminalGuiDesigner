@@ -75,6 +75,8 @@ To edit MenuBar items use the following controls
 | Enter    | Add a new menu item |
 | Typing    | Edit the Title of the selected item |
 
+New root level menus can be added by right clicking the `MenuBar` and selecting 'Add Menu'.
+
 Currently there is no support for custom field naming (i.e. `(Name)`) or assigning shortcuts to menu items but this is planned for the future.
 
 ### Features
