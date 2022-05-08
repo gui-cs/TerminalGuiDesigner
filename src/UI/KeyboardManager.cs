@@ -61,33 +61,44 @@ namespace TerminalGuiDesigner.UI
         {
             if(keystroke.Key == Key.Enter)
             {
-                AddMenuItem(focusedView,menuItem);
+                OperationManager.Instance.Do(
+                        new AddMenuItemOperation(menuItem)
+                    );
+
                 keystroke.Key = Key.CursorDown;
                 return false;
             }
 
             if(keystroke.Key == (Key.CursorRight | Key.ShiftMask))
             {
-                MoveMenuItemRight(focusedView,menuItem);
-                keystroke.Key = Key.CursorRight;
+                OperationManager.Instance.Do(
+                    new MoveMenuItemRightOperation(menuItem)
+                );
+
                 return true;
             }
 
             if(keystroke.Key == (Key.CursorLeft | Key.ShiftMask))
             {
-                MoveMenuItemLeft(focusedView,menuItem);
+                OperationManager.Instance.Do(
+                    new MoveMenuItemLeftOperation(menuItem)
+                );
                 return true;
             }
 
             if(keystroke.Key == (Key.CursorUp | Key.ShiftMask))
             {
-                MoveMenuItem(true,focusedView,menuItem);
+                OperationManager.Instance.Do(
+                    new MoveMenuItemOperation(menuItem, true)
+                );
                 keystroke.Key = Key.CursorUp;
                 return false;
             }
             if(keystroke.Key == (Key.CursorDown | Key.ShiftMask))
             {
-                MoveMenuItem(false,focusedView,menuItem);
+                OperationManager.Instance.Do(
+                    new MoveMenuItemOperation(menuItem, false)
+                );
                 keystroke.Key = Key.CursorDown;
                 return false;
             }
@@ -98,7 +109,9 @@ namespace TerminalGuiDesigner.UI
             {
                 // deleting the menu item using backspace to
                 // remove all characters in the title or the Del key
-                if(DeleteMenuItem(focusedView,menuItem))
+                if(OperationManager.Instance.Do(
+                        new RemoveMenuItemOperation(menuItem)
+                    ))
                 {
                     keystroke.Key = Key.CursorUp;
                     return false;
@@ -119,94 +132,6 @@ namespace TerminalGuiDesigner.UI
                 menuItem.Title = newValue;
                 focusedView.SetNeedsDisplay();
                 return true;            
-            }
-
-            return false;
-        }
-
-
-        private bool DeleteMenuItem(View focusedView, MenuItem menuItem)
-        {
-            // menuItem.Parent doesn't work for root menu items
-            var parent = MenuTracker.Instance.GetParent(menuItem, out var bar);
-
-            if(parent != null)
-            {
-                OperationManager.Instance.Do(
-                    new RemoveMenuItemOperation(focusedView,bar,parent,menuItem)
-                );
-                return true;
-            }             
-
-            return false;   
-        }
-
-        // TODO: xml comments
-        private bool AddMenuItem(View focusedView, MenuItem menuItem)
-        {
-            // if taking a new line add an extra menu item
-            // menuItem.Parent doesn't work for root menu items
-            var parent = MenuTracker.Instance.GetParent(menuItem, out var bar);
-
-            if(parent != null)
-            {
-                OperationManager.Instance.Do(
-                    new AddMenuItemOperation(focusedView,bar,parent,menuItem)
-                );
-               
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool MoveMenuItemLeft(View focusedView, MenuItem menuItem)
-        {
-            var parent = MenuTracker.Instance.GetParent(menuItem, out var bar);
-            
-            if(parent != null)
-            {
-
-                OperationManager.Instance.Do(
-                    new MoveMenuItemLeftOperation(focusedView,bar,parent,menuItem)
-                );
-                
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool MoveMenuItemRight(View focusedView, MenuItem menuItem)
-        {
-            var parent = MenuTracker.Instance.GetParent(menuItem, out var bar);
-            
-            if(parent != null)
-            {
-
-                OperationManager.Instance.Do(
-                    new MoveMenuItemRightOperation(focusedView,bar,parent,menuItem)
-                );
-                
-                return true;
-            }
-
-            return false;
-        }
-        private bool MoveMenuItem (bool up, View focusedView, MenuItem menuItem)
-        {
-            // if taking a new line add an extra menu item
-            // menuItem.Parent doesn't work for root menu items
-            var parent = MenuTracker.Instance.GetParent(menuItem, out var bar);
-            
-            if(parent != null)
-            {
-
-                OperationManager.Instance.Do(
-                    new MoveMenuItemOperation(focusedView,bar,parent,menuItem,up)
-                );
-
-                return true;
             }
 
             return false;

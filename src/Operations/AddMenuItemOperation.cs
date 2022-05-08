@@ -6,10 +6,9 @@ public class AddMenuItemOperation : MenuItemOperation
 {
     private MenuItem? _added;
 
-    public AddMenuItemOperation(View focusedView, MenuBar? bar, MenuBarItem parent, MenuItem adacentTo)
-        : base(focusedView,bar,parent,adacentTo)
+    public AddMenuItemOperation(MenuItem adjacentTo):base(adjacentTo)
     {
-        
+
     }
 
     public override bool Do()
@@ -29,7 +28,7 @@ public class AddMenuItemOperation : MenuItemOperation
         if(_added == null)
             return;
 
-        var remove = new RemoveMenuItemOperation(FocusedView,Bar,Parent,_added);
+        var remove = new RemoveMenuItemOperation(_added);
         remove.Do();
     }
 
@@ -48,7 +47,7 @@ public class AddMenuItemOperation : MenuItemOperation
         children.Insert(insertAt,menuItem);
         Parent.Children = children.ToArray();
         
-        FocusedView.SetNeedsDisplay();
+        Bar?.SetNeedsDisplay();
         
         return true;
     }

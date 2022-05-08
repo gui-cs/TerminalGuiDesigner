@@ -9,8 +9,8 @@ public class MoveMenuItemOperation : MenuItemOperation
     private List<MenuItem> _siblings;
     private int _currentItemIdx;
 
-    public MoveMenuItemOperation(View focusedView, MenuBar? bar, MenuBarItem parent, MenuItem toMove, bool up)
-        : base(focusedView, bar, parent, toMove)
+    public MoveMenuItemOperation(MenuItem toMove, bool up)
+        : base(toMove)
     {
         _up = up;
         
@@ -54,7 +54,7 @@ public class MoveMenuItemOperation : MenuItemOperation
         _siblings.Insert(moveTo,OperateOn);
         Parent.Children = _siblings.ToArray();
 
-        FocusedView.SetNeedsDisplay();
+        Bar?.SetNeedsDisplay();
 
         return true;            
     }

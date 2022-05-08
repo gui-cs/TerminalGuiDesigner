@@ -4,8 +4,7 @@ namespace TerminalGuiDesigner.Operations;
 
 public class MoveMenuItemRightOperation : MenuItemOperation
 {
-    public MoveMenuItemRightOperation(View focusedView, MenuBar? bar, MenuBarItem parent, MenuItem toMove)
-        : base(focusedView, bar, parent, toMove)
+    public MoveMenuItemRightOperation(MenuItem toMove): base(toMove)
     {
     }
 
@@ -34,8 +33,8 @@ public class MoveMenuItemRightOperation : MenuItemOperation
         Parent.Children = children.ToArray();
         // update the submenu
         addTo.Children = submenuChildren.ToArray();
-        
-        FocusedView.SetNeedsDisplay();
+
+        Bar?.SetNeedsDisplay();
 
         return true;
     }
@@ -47,8 +46,7 @@ public class MoveMenuItemRightOperation : MenuItemOperation
 
     public override void Undo()
     {
-        new MoveMenuItemLeftOperation(FocusedView, Bar, Parent, OperateOn)
-        .Do();
+        new MoveMenuItemLeftOperation(OperateOn).Do();
     }
 
 
