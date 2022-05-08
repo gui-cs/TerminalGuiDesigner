@@ -60,9 +60,21 @@ You can remove the tool using the following:
 dotnet tool uninstall --global TerminalGuiDesigner
 ```
 
-### Keybindings
+### Keybindings & Controls
 ----------------
 You can change keybindings by copying [Keys.yaml](https://raw.githubusercontent.com/tznind/TerminalGuiDesigner/main/src/Keys.yaml) into your current directory.
+
+To edit MenuBar items use the following controls
+
+| Key          |  Action |
+|--------------|------------|
+| Shift Up/Down | Move selected menu item up/down|
+| Shift Right   | Move selected menu item to a submenu of the one above |
+| Shift Left    | Move selected sub menu item up a level |
+| Del    | Remove selected menu item |
+| Enter    | Add a new menu item |
+
+Currently there is no support for custom field naming (i.e. `(Name)`) or assigning shortcuts to menu items but this is planned for the future.
 
 ### Features
 -------------------------------
@@ -87,6 +99,11 @@ The following feature list shows the current capabilities and the roadmap
 - [x] Undo/Redo
 - [x] Direct editing of Text just by typing
 - [x] Easy Menu Bar Designing
+  - [x] Create new items
+  - [x] Move items
+  - [x] Move in/out of submenus
+  - [ ] Assign shortcuts
+  - [ ] Set fieldnames `(Name)`
 - [ ] Easy Status Bar Designing
 - [ ] Create Events e.g. MyButton_OnClick
 - [ ] Mutli select (select many views and hit delete or drag move)
