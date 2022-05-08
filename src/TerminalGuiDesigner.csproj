@@ -8,7 +8,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>TerminalGuiDesigner</PackageId>
-    <Version>1.0.6</Version>
+    <Version>1.0.7</Version>
     <Authors>Thomas Nind</Authors>
     <Nullable>enable</Nullable>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -20,8 +20,10 @@
     <PackageTags>csharp, terminal, c#, gui, toolkit, designer, console</PackageTags>
 
     <PackageReleaseNotes>
+    v1.0.7
+    * Support for editing MenuBars
     v1.0.6
-		* Fixed bug adding Views to newly created TabViews
+    * Fixed bug adding Views to newly created TabViews
     * Fixed undo for operations performed via context menus
     * Added Try/Catch to context menu operations
     * Added support for TreeView
