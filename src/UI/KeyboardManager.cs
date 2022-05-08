@@ -70,14 +70,13 @@ namespace TerminalGuiDesigner.UI
             {
                 MoveMenuItemRight(focusedView,menuItem);
                 keystroke.Key = Key.CursorRight;
-                return false;
+                return true;
             }
 
             if(keystroke.Key == (Key.CursorLeft | Key.ShiftMask))
             {
                 MoveMenuItemLeft(focusedView,menuItem);
-                keystroke.Key = Key.CursorLeft;
-                return false;
+                return true;
             }
 
             if(keystroke.Key == (Key.CursorUp | Key.ShiftMask))

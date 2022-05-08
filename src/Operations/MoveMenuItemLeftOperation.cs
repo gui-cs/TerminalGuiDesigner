@@ -17,13 +17,15 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
         if(parentsParent == null)
             return false;
 
-        // remove us
-        if(new RemoveMenuItemOperation(FocusedView,Bar,Parent,OperateOn).Do())
-        {
-            // if that worked then add us to the root
-            var children = parentsParent.Children.ToList<MenuItem>();
-            var parentsIdx = children.IndexOf(Parent);
+        // Figure out where the parent MenuBarItem was in the list because
+        // after we remove ourselves from its sublist it might
+        // turn into a MenuItem (i.e. we loose the reference).
+        var children = parentsParent.Children.ToList<MenuItem>();
+        var parentsIdx = children.IndexOf(Parent);
 
+        // remove us
+        if (new RemoveMenuItemOperation(FocusedView,Bar,Parent,OperateOn).Do())
+        {
             // We are the parent but parents children don't contain
             // us.  Thats bad. TODO: log this
             if(parentsIdx == -1)

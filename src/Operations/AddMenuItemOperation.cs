@@ -14,7 +14,7 @@ public class AddMenuItemOperation : MenuItemOperation
 
     public override bool Do()
     {
-        return Add(_added = new MenuItem{Title = "New Item"});
+        return Add(_added = new MenuItem());
     }
 
 

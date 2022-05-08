@@ -69,7 +69,7 @@ namespace TerminalGuiDesigner.Operations
                 return;
 
             var children = parent.Children.ToList<MenuItem>();
-            var idx = children.IndexOf(parent);
+            var idx = children.IndexOf(bar);
 
             if(idx < 0)
                 return;
