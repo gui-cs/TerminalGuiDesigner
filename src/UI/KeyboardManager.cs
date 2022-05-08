@@ -5,7 +5,6 @@ namespace TerminalGuiDesigner.UI
 {
     public class KeyboardManager
     {
-
         SetPropertyOperation? _currentOperation;
 
         public bool HandleKey(View focusedView,KeyEvent keystroke)
@@ -69,7 +68,7 @@ namespace TerminalGuiDesigner.UI
 
             if(keystroke.Key == (Key.CursorRight | Key.ShiftMask))
             {
-                AddMenuItemRight(focusedView,menuItem);
+                MoveMenuItemRight(focusedView,menuItem);
                 keystroke.Key = Key.CursorRight;
                 return false;
             }
@@ -155,30 +154,58 @@ namespace TerminalGuiDesigner.UI
             return false;
         }
 
-        private bool AddMenuItemRight(View focusedView, MenuItem menuItem)
+        private bool MoveMenuItemRight(View focusedView, MenuItem menuItem)
         {
             var parent = MenuTracker.Instance.GetParent(menuItem, out var bar);
             
             if(parent != null)
             {
-                
+
+                OperationManager.Instance.Do(
+                    new MoveMenuItemRightOperation(focusedView,bar,parent,menuItem)
+                );
+
+                // When user hits shift right
                 var children = parent.Children.ToList<MenuItem>();
                 var currentItemIdx = children.IndexOf(menuItem);
-                int insertAt = Math.Max(0,currentItemIdx + 1);
+                var aboveIdx = currentItemIdx - 1;
+
+                // and there is an item above
+                if(aboveIdx < 0)
+                    return false;
                 
+                var addTo = ConvertToMenuBarItem(children,aboveIdx);
+
                 // pull us out
                 children.Remove(menuItem);
 
-                // add a new category menu item
-                // with us as its child
-                children.Insert(insertAt,new MenuBarItem("Test",new MenuItem[]{menuItem}));
+                // add us to the submenu
+                var submenuChildren = addTo.Children.ToList<MenuItem>();
+                submenuChildren.Add(menuItem);
+
+                // update the main menu
                 parent.Children = children.ToArray();
+                // update the submenu
+                addTo.Children = submenuChildren.ToArray();
+                
                 focusedView.SetNeedsDisplay();
                 
                 return true;
             }
 
             return false;
+        }
+
+        private MenuBarItem ConvertToMenuBarItem(List<MenuItem> children, int idx)
+        {
+            if(children[idx] is MenuBarItem mb)
+                return mb;
+            
+            var added = new MenuBarItem(children[idx].Title,new MenuItem[0],null);
+
+            children.RemoveAt(idx);
+            children.Insert(idx,added);
+            return added;
         }
 
         private bool MoveMenuItem (bool up, View focusedView, MenuItem menuItem)

@@ -1,62 +1,61 @@
 using Terminal.Gui;
 
-namespace TerminalGuiDesigner.Operations
+namespace TerminalGuiDesigner.Operations;
+
+public class MoveMenuItemOperation : MenuItemOperation
 {
-    public class MoveMenuItemOperation : MenuItemOperation
+
+    private bool _up;
+    private List<MenuItem> _siblings;
+    private int _currentItemIdx;
+
+    public MoveMenuItemOperation(View focusedView, MenuBar? bar, MenuBarItem parent, MenuItem toMove, bool up)
+        : base(focusedView, bar, parent, toMove)
     {
+        _up = up;
+        
+        _siblings = Parent.Children.ToList<MenuItem>();
+        _currentItemIdx = _siblings.IndexOf(OperateOn);
 
-        private bool _up;
-        private List<MenuItem> _siblings;
-        private int _currentItemIdx;
-
-        public MoveMenuItemOperation(View focusedView, MenuBar? bar, MenuBarItem parent, MenuItem toMove, bool up)
-            : base(focusedView, bar, parent, toMove)
+        if(_currentItemIdx < 0)
         {
-            _up = up;
-            
-            _siblings = Parent.Children.ToList<MenuItem>();
-            _currentItemIdx = _siblings.IndexOf(OperateOn);
-
-            if(_currentItemIdx < 0)
-            {
-                IsImpossible = true;
-            }
-            else
-            {
-                IsImpossible = up ? _currentItemIdx == 0 : _currentItemIdx == _siblings.Count-1;
-            }
+            IsImpossible = true;
         }
-
-        public override bool Do()
+        else
         {
-            return Move(_up ? -1:1);
+            IsImpossible = up ? _currentItemIdx == 0 : _currentItemIdx == _siblings.Count-1;
         }
-        public override void Redo()
-        {
-            Do();   
-        }
+    }
 
-        public override void Undo()
-        {
-            Move(_up ? 1:-1);
-        }
+    public override bool Do()
+    {
+        return Move(_up ? -1:1);
+    }
+    public override void Redo()
+    {
+        Do();   
+    }
 
-        private bool Move(int amount)
-        {
-            int moveTo = Math.Max(0, (amount) + _currentItemIdx);
+    public override void Undo()
+    {
+        Move(_up ? 1:-1);
+    }
 
-            // pull it out from wherever it is
-            _siblings.Remove(OperateOn);
+    private bool Move(int amount)
+    {
+        int moveTo = Math.Max(0, (amount) + _currentItemIdx);
 
-            moveTo = Math.Min(moveTo, _siblings.Count);
+        // pull it out from wherever it is
+        _siblings.Remove(OperateOn);
 
-            // push it in at the destination
-            _siblings.Insert(moveTo,OperateOn);
-            Parent.Children = _siblings.ToArray();
+        moveTo = Math.Min(moveTo, _siblings.Count);
 
-            FocusedView.SetNeedsDisplay();
+        // push it in at the destination
+        _siblings.Insert(moveTo,OperateOn);
+        Parent.Children = _siblings.ToArray();
 
-            return true;            
-        }
+        FocusedView.SetNeedsDisplay();
+
+        return true;            
     }
 }
