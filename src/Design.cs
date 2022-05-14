@@ -172,7 +172,11 @@ public class Design
         {
             yield return CreateProperty(nameof(TextValidateField.Provider));
         }
-        if(View is TextView)
+        if (View is TextField)
+        {
+            yield return CreateProperty(nameof(TextField.Secret));
+        }
+        if (View is TextView)
         {
             yield return CreateProperty(nameof(TextView.AllowsTab));
             yield return CreateProperty(nameof(TextView.AllowsReturn));
