@@ -174,7 +174,7 @@ namespace TerminalGuiDesigner.UI
 
             _currentOperation.Design.View.SetActualText(newStr);
             _currentOperation.Design.View.SetNeedsDisplay();
-            _currentOperation.NewValue = str;
+            _currentOperation.NewValue = newStr;
             
             return true;
 
