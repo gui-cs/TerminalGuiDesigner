@@ -67,6 +67,11 @@ public static class ViewExtensions
             b.Text = text;
         }
         else
+        if (view is CheckBox cb)
+        {
+            cb.Text = text;
+        }
+        else
         {
             view.Text = text;
         }
@@ -81,6 +86,11 @@ public static class ViewExtensions
         if (view is Button b)
         {
             return b.Text?.ToString() ?? "";
+        }
+        else
+        if (view is CheckBox cb)
+        {
+            return cb.Text?.ToString() ?? "";
         }
         else
         {
