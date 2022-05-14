@@ -12,6 +12,10 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
 
     public override bool Do()
     {
+
+        if(Parent == null || OperateOn == null)
+            return false;
+
         var parentsParent = MenuTracker.Instance.GetParent(Parent, out var bar);
         
         if(parentsParent == null)
@@ -54,6 +58,9 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
 
     public override void Undo()
     {
+        if(OperateOn == null)
+            return;
+            
         new MoveMenuItemRightOperation(OperateOn)
         .Do();
     }

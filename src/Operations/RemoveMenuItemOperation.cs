@@ -14,6 +14,9 @@ namespace TerminalGuiDesigner.Operations
 
         public override bool Do()
         {
+            if(Parent == null || OperateOn == null)
+                return false;
+
             var children = Parent.Children.ToList<MenuItem>();
                 
             _removedAtIdx = Math.Max(0,children.IndexOf(OperateOn));
@@ -34,6 +37,9 @@ namespace TerminalGuiDesigner.Operations
 
         public override void Undo()
         {
+            if(Parent == null || OperateOn == null)
+                return;
+
             var children = Parent.Children.ToList<MenuItem>();
                 
             children.Insert(_removedAtIdx, OperateOn);

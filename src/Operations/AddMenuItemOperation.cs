@@ -34,6 +34,9 @@ public class AddMenuItemOperation : MenuItemOperation
 
     private bool Add(MenuItem menuItem)
     {
+        if(Parent == null || OperateOn == null)
+            return false;
+
         var children = Parent.Children.ToList<MenuItem>();
         var currentItemIdx = children.IndexOf(OperateOn);
 

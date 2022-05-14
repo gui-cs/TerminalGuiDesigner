@@ -6,13 +6,20 @@ public class MoveMenuItemOperation : MenuItemOperation
 {
 
     private bool _up;
-    private List<MenuItem> _siblings;
+    private List<MenuItem>? _siblings;
     private int _currentItemIdx;
 
     public MoveMenuItemOperation(MenuItem toMove, bool up)
         : base(toMove)
     {
         _up = up;
+
+
+        if(Parent == null || OperateOn == null)
+        {
+            IsImpossible = true;
+            return;
+        }
         
         _siblings = Parent.Children.ToList<MenuItem>();
         _currentItemIdx = _siblings.IndexOf(OperateOn);
@@ -43,6 +50,10 @@ public class MoveMenuItemOperation : MenuItemOperation
 
     private bool Move(int amount)
     {
+        if(Parent == null || OperateOn == null || _siblings == null)
+            return false;
+
+        
         int moveTo = Math.Max(0, (amount) + _currentItemIdx);
 
         // pull it out from wherever it is

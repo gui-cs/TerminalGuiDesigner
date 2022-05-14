@@ -10,6 +10,8 @@ public class MoveMenuItemRightOperation : MenuItemOperation
 
     public override bool Do()
     {
+        if(Parent == null || OperateOn == null)
+            return false;
         
         // When user hits shift right
         var children = Parent.Children.ToList<MenuItem>();
@@ -46,6 +48,9 @@ public class MoveMenuItemRightOperation : MenuItemOperation
 
     public override void Undo()
     {
+        if(Parent == null || OperateOn == null)
+            return;
+
         new MoveMenuItemLeftOperation(OperateOn).Do();
     }
 
