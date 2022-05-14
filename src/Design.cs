@@ -183,7 +183,11 @@ public class Design
             yield return CreateProperty(nameof(TextView.WordWrap));
         }
 
-        yield return new NameProperty(this);
+        // Allow changing the FieldName on anything but root where 
+        // such an action would break things badly
+        if(!this.IsRoot)
+            yield return new NameProperty(this);
+
         yield return new Property(this,View.GetActualTextProperty());
 
         // Border properties - Most views dont have a border so Border is
@@ -339,6 +343,12 @@ public class Design
         if(IsContainerView || IsRoot)
         {
             yield return new AddViewOperation(SourceCode,this);
+        }
+        else
+        {
+            var nearestContainer = this.View.GetNearestContainerDesign();
+            if(nearestContainer != null)
+                yield return new AddViewOperation(SourceCode,nearestContainer);
         }
 
         if (View is TabView)

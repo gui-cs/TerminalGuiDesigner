@@ -16,6 +16,10 @@ public class SetPropertyOperation : Operation
         Property = property;
         OldValue = oldValue;
         this.NewValue = NewValue;
+
+        // don't let user rename the root
+        if(property is NameProperty && design.IsRoot)
+            IsImpossible = true;
     }
 
     public override bool Do()

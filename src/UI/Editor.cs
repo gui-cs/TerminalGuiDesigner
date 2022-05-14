@@ -22,6 +22,7 @@ public class Editor : Toplevel
     readonly KeyMap _keyMap;
 
     KeyboardManager _keyboardManager = new ();
+    private bool _menuOpen;
 
     private string GetHelpWithNothingLoaded()
     {
@@ -38,6 +39,7 @@ public class Editor : Toplevel
 
         return GetHelpWithNothingLoaded() + @$"
 {_keyMap.Save} - Save an opened .Designer.cs file
+{_keyMap.ShowContextMenu} - Show right click context menu;
 {_keyMap.AddView} - Add View
 {_keyMap.ToggleDragging} - Toggle mouse dragging on/off
 {_keyMap.ToggleShowFocused} - Toggle show focused view field name
@@ -233,12 +235,36 @@ Ctrl+Q - Quit
         }
     }
 
-    private void CreateAndShowContextMenu(MouseEvent m, Design d)
+    private bool CreateAndShowContextMenu()
     {
-        // things we can do/change
-        var options = d.GetExtraOperations(ScreenToClient(d.View, m.X, m.Y)).Where(c=>!c.IsImpossible);
-        var properties = d.GetDesignableProperties().OrderBy(p=>p.GetHumanReadableName());
+        var d = GetMostFocused(this)?.GetNearestDesign();
+        if(d != null)
+        {
+            CreateAndShowContextMenu(null,d);
+            return true;
+        }    
 
+        return false;        
+    }
+
+    private void CreateAndShowContextMenu(MouseEvent? m, Design d)
+    {
+        
+        // things we can do/change
+        IEnumerable<IOperation> options;
+
+        if(m == null)
+        {
+            options = d.GetExtraOperations().Where(c=>!c.IsImpossible);
+        }
+        else
+        {
+            options = d.GetExtraOperations(ScreenToClient(d.View, m.Value.X, m.Value.Y)).Where(c=>!c.IsImpossible);
+        }
+        
+        
+        var properties = d.GetDesignableProperties().OrderBy(p=>p.GetHumanReadableName());
+        
         // menu items to click to make them happen/change
         var setPropertyMenuItems = properties.Select(p => new MenuItem(p.GetHumanReadableName(), null,
             () => Try(()=>EditDialog.SetPropertyToNewValue(d, p, p.GetValue())))).ToArray();
@@ -247,30 +273,33 @@ Ctrl+Q - Quit
 
         MenuBarItem allItems;
 
-        // if exra options
-        if (options.Any())
+        var propertiesCategory = new MenuBarItem(d.FieldName, setPropertyMenuItems);
+        propertiesCategory.Action = ()=>{
+            ShowEditProperties(d);
+        };
+
+        var items = new List<MenuItem>();
+        items.Add(propertiesCategory);
+        items.AddRange(extraOptionsMenuItems);
+
+        allItems = new MenuBarItem(items.ToArray());
+    
+        var menu = new ContextMenu();
+        menu.MenuItens = allItems;
+
+        if(m.HasValue)
         {
-            var propertiesCategory = new MenuBarItem("Properties", setPropertyMenuItems);
-            propertiesCategory.Action = ()=>{
-                ShowEditProperties(d);
-            };
-
-            var items = new List<MenuItem>();
-            items.Add(propertiesCategory);
-            items.AddRange(extraOptionsMenuItems);
-
-            allItems = new MenuBarItem(items.ToArray());
+            menu.Position = new Point(m.Value.X,m.Value.Y);
         }
         else
         {
-            // no operations so just add the properties directly
-            allItems = new MenuBarItem(setPropertyMenuItems);
+            d.View.ViewToScreen(0,0,out var x, out var y);
+            menu.Position = new Point(x,y);
         }
 
-        var menu = new ContextMenu();
-        menu.MenuItens = allItems;
-        menu.Position = new Point(m.X,m.Y);
+        _menuOpen = true;
         menu.Show();
+        menu.MenuBar.MenuClosing += (m)=> _menuOpen = false;
     }
 
     private void Try(Action action)
@@ -368,6 +397,11 @@ Ctrl+Q - Quit
         try
         {
             _editting = true;
+
+            if(keyEvent.Key == _keyMap.ShowContextMenu && !_menuOpen)
+            {
+                return CreateAndShowContextMenu();
+            }
 
             if(keyEvent.Key == _keyMap.EditProperties)
             {
@@ -478,6 +512,7 @@ Ctrl+Q - Quit
 
         return false;
     }
+
 
     private void ShowViewSpecificOperations()
     {

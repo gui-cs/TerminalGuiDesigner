@@ -5,6 +5,8 @@ namespace TerminalGuiDesigner.UI;
 public class KeyMap
 {
     public Key EditProperties {get;set;} = Key.F4;
+
+    public Key ShowContextMenu {get;set;} = Key.Enter;
     public Key ViewSpecificOperations {get;set;} = Key.ShiftMask | Key.F4;
     public Key EditRootProperties { get; set; } = Key.F5;
     public Key ShowHelp { get; set; } = Key.CtrlMask | Key.E;
