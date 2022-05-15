@@ -61,6 +61,14 @@ button1.Clicked += ()=>MessageBox.Query("Hello","Hello World","Ok");
 ```
 Now when run clicking the button will trigger a message box.
 
+![msgbox](https://user-images.githubusercontent.com/31306100/168493639-c7230505-0215-45e3-90a7-b7c24934a8fa.jpg)
+
+You can re-open the designer by running it from the command line with the file you want to edit/create.
+
+```
+TerminalGuiDesigner MyDialog.cs
+```
+
 You can remove the tool using the following:
 
 ```
