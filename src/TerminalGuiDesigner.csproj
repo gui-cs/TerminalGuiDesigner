@@ -8,7 +8,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>TerminalGuiDesigner</PackageId>
-    <Version>1.0.7</Version>
+    <Version>1.0.8</Version>
     <Authors>Thomas Nind</Authors>
     <Nullable>enable</Nullable>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -20,6 +20,11 @@
     <PackageTags>csharp, terminal, c#, gui, toolkit, designer, console</PackageTags>
 
     <PackageReleaseNotes>
+    v1.0.8
+    * Fixed bug free typing new titles for checkboxes
+    * Fixed bug free typing new titles dropping last character typed
+    * Added keybinding (defaults to Enter) for opening context menu
+    * Changed context menu title from 'Properties' to the fieldname of the control being edited
     v1.0.7
     * Support for editing MenuBars
     v1.0.6
