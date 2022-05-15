@@ -35,7 +35,7 @@ dotnet tool install --global TerminalGuiDesigner
 TerminalGuiDesigner MyDialog.cs
 ```
 
-Enter a namespace then add a Button to the view.  Save with Ctrl+S.
+Enter a namespace then add a Button to the view.  Save with Ctrl+S.  Exit the designer with Ctrl+Q.
 
 Enter the following into Program.cs
 
