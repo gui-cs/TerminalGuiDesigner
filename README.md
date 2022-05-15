@@ -54,6 +54,13 @@ Run your program with
 
 You can add new code to `MyDialog.cs` but avoid making any changes to `MyDialog.Designer.cs` as this will be rewritten when saving.
 
+For example in `MyDialog.cs` after `InitializeComponent()` add the following:
+
+```csharp
+button1.Clicked += ()=>MessageBox.Query("Hello","Hello World","Ok");
+```
+Now when run clicking the button will trigger a message box.
+
 You can remove the tool using the following:
 
 ```
