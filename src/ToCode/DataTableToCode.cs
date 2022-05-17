@@ -16,7 +16,7 @@ public class DataTableToCode : ToCodeBase
 
     internal void ToCode(CodeDomArgs args)
     {
-        var dataTableFieldName = $"{Design.FieldName}Table";
+        var dataTableFieldName = args.GetUniqueFieldName($"{Design.FieldName}Table");
 
         // add a field to the class for the Table that is in the view
         AddLocalFieldToMethod(args, typeof(DataTable), dataTableFieldName);
@@ -25,7 +25,7 @@ public class DataTableToCode : ToCodeBase
 
         foreach (DataColumn col in Table.Columns)
         {
-            var colFieldName = dataTableFieldName + "Col" + col.Ordinal;
+            var colFieldName = args.GetUniqueFieldName(dataTableFieldName + col.ColumnName);
 
             AddLocalFieldToMethod(args, typeof(DataColumn), colFieldName);
             AddConstructorCall(args, colFieldName, typeof(DataColumn));

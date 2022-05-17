@@ -9,9 +9,6 @@ internal class MenuBarItemsToCode : ToCodeBase
     public Design Design {get;}
     public MenuBar MenuBar {get;}
 
-    HashSet<string> fieldNamesUsed = new ();
-
-
     public MenuBarItemsToCode(Design design, MenuBar mb)
     {
         this.Design = design;
@@ -48,7 +45,7 @@ internal class MenuBarItemsToCode : ToCodeBase
 
     private void ToCode(CodeDomArgs args, MenuBarItem child, out string fieldName)
     {
-        fieldName = GetUniqueFieldName(child);
+        fieldName = GetUniqueFieldName(args, child);
         AddFieldToClass(args,child.GetType(),fieldName);
         AddConstructorCall(args, $"this.{fieldName}",child.GetType());
         AddPropertyAssignment(args,$"this.{fieldName}.{nameof(MenuItem.Title)}",child.Title);
@@ -67,7 +64,7 @@ internal class MenuBarItemsToCode : ToCodeBase
             }
             else
             {
-                string subFieldName = GetUniqueFieldName(sub);
+                string subFieldName = GetUniqueFieldName(args,sub);
                 AddFieldToClass(args,sub.GetType(),subFieldName);
                 AddConstructorCall(args, $"this.{subFieldName}",sub.GetType());
                 AddPropertyAssignment(args,$"this.{subFieldName}.{nameof(MenuItem.Title)}",sub.Title);
@@ -84,30 +81,9 @@ internal class MenuBarItemsToCode : ToCodeBase
         
     }
 
-    public string GetUniqueFieldName(MenuItem item)
+    public string GetUniqueFieldName(CodeDomArgs args, MenuItem item)
     {
-        var name = item.Title.ToString();
-        
-        name = string.IsNullOrWhiteSpace(name) ? "emptyMenu" : name;
-        name = Regex.Replace(name,"\\W","");
-
-        if(!fieldNamesUsed.Contains(name))
-        {
-            fieldNamesUsed.Add(name);
-            return name;
-        }
-
-        // name is already used, add a number
-        int number = 2;
-        while (fieldNamesUsed.Contains(name + number))
-        {
-            // menu2 is taken, try menu3 etc
-            number++;
-        }
-
-        // found a unique one
-        fieldNamesUsed.Add(name + number);
-        return name + number;
+        return args.GetUniqueFieldName(item.Title.ToString());
     }
 
 }

@@ -23,7 +23,7 @@ public class TabToCode : ToCodeBase
     /// </summary>
     internal void ToCode(CodeDomArgs args)
     {
-        var tabName = $"{Design.FieldName}{GetTabFieldName()}";
+        var tabName = $"{Design.FieldName}{GetTabFieldName(args)}";
 
         // add a field to the class for the Tab
         AddLocalFieldToMethod(args, typeof(Tab), tabName);
@@ -52,11 +52,15 @@ public class TabToCode : ToCodeBase
         AddAddTabCall(tabName,args);
     }
 
-    private string GetTabFieldName()
+    private string GetTabFieldName(CodeDomArgs args)
     {
-        return Regex.Replace(Tab.Text.ToString() 
-            ?? throw new Exception("Could not generate Tab variable name because its Text was blank or null"),
-            @"\W","");
+        var tabname = Tab.Text?.ToString();
+        if(string.IsNullOrWhiteSpace(tabname))
+        {
+            throw new Exception("Could not generate Tab variable name because its Text was blank or null");
+        }
+
+        return args.GetUniqueFieldName(tabname);
     }
 
     private void AddAddTabCall(string tabFieldName, CodeDomArgs args)

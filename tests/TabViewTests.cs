@@ -38,6 +38,38 @@ class TabViewTests : Tests
         Assert.AreEqual("Tab1",tabIn.Tabs.ElementAt(0).Text);
         Assert.AreEqual("Tab2",tabIn.Tabs.ElementAt(1).Text);
     }
+    [Test]
+    public void TestRoundTrip_DuplicateTabNames()
+    {
+        var viewToCode = new ViewToCode();
+
+        var file = new FileInfo("TestRoundTrip_DuplicateTabNames.cs");
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace",typeof(Dialog), out var sourceCode);
+
+        var factory = new ViewFactory();
+        var tvOut = (TabView)factory.Create(typeof(TabView));
+
+        OperationManager.Instance.Do(new AddViewOperation(sourceCode, tvOut, designOut, "myTabview"));
+
+        // Give both tabs the same name
+        tvOut.Tabs.ElementAt(0).Text = "MyTab";
+        tvOut.Tabs.ElementAt(1).Text = "MyTab";
+
+        viewToCode.GenerateDesignerCs(designOut, sourceCode,typeof(Dialog));
+
+        var tabOut = designOut.View.GetActualSubviews().OfType<TabView>().Single();
+
+
+        var codeToView = new CodeToView(sourceCode);
+        var designBackIn = codeToView.CreateInstance();
+
+        var tabIn = designBackIn.View.GetActualSubviews().OfType<TabView>().Single();
+
+        Assert.AreEqual(2,tabIn.Tabs.Count());
+
+        Assert.AreEqual("MyTab",tabIn.Tabs.ElementAt(0).Text.ToString());
+        Assert.AreEqual("MyTab",tabIn.Tabs.ElementAt(1).Text.ToString());
+    }
 
 
     [Test]
