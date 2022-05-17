@@ -183,6 +183,11 @@ public class Design
             yield return CreateProperty(nameof(TextView.WordWrap));
         }
 
+        if(View is Toplevel)
+        {
+            yield return CreateProperty(nameof(Toplevel.Modal));
+        }
+
         // Allow changing the FieldName on anything but root where 
         // such an action would break things badly
         if(!this.IsRoot)
