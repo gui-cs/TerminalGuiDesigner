@@ -173,4 +173,43 @@ public static class ViewExtensions
         // TODO: are there any others?
         return v is TabView || v is FrameView || v is Window || type == typeof(View) || type.Name.Equals("ContentView");
     }
+    public static View? HitTest(this View w, MouseEvent m, out bool isLowerRight, params View[] ignoring)
+    {
+        // hide the views while we perform the hit test
+        foreach(View v in ignoring)
+        {
+            v.Visible = false;
+        }
+
+        var point = ScreenToClient(w, m.X, m.Y);
+        var hit = ApplicationExtensions.FindDeepestView(w, m.X, m.Y);
+
+        int resizeBoxArea = 2;
+        
+        if (hit != null)
+        {
+            hit.ViewToScreen(hit.Bounds.Right, hit.Bounds.Bottom,out int screenX, out int screenY,true);
+            isLowerRight = Math.Abs(screenX - point.X) <= resizeBoxArea && Math.Abs(screenY - point.Y) <= resizeBoxArea;
+        }
+        else
+            isLowerRight = false;
+
+        // hide the views while we perform the hit test
+        foreach (View v in ignoring)
+        {
+            v.Visible = true;
+        }
+        return hit;
+    }
+
+    public static Point ScreenToClient(this View view, int x, int y)
+    {
+        if (view is Window w)
+        {
+            // has invisible ContentView pane
+            return w.Subviews[0].ScreenToView(x, y);
+        }
+
+        return view.ScreenToView(x, y);
+    }
 }

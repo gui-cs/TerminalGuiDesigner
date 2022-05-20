@@ -14,14 +14,13 @@ public class Editor : Toplevel
     private SourceCodeFile? _currentDesignerFile;
     private bool enableDrag = true;
     private bool enableShowFocused = true;
-    DragOperation? dragOperation = null;
-    ResizeOperation? resizeOperation = null;
 
     bool _editting = false;
 
     readonly KeyMap _keyMap;
 
     KeyboardManager _keyboardManager = new ();
+    MouseManager _mouseManager = new();
     private bool _menuOpen;
 
     private string GetHelpWithNothingLoaded()
@@ -132,12 +131,26 @@ Ctrl+Q - Quit
 
         Application.RootMouseEvent += (m) =>
         {
-            if(_editting)
+            if(_editting || !enableDrag || _viewBeingEdited == null)
                 return;
 
             try
             {
-                HandleMouse(m);
+                _mouseManager.HandleMouse(m,_viewBeingEdited);
+
+      
+                //right click
+                if(m.Flags.HasFlag(_keyMap.RightClick))
+                {
+                    var hit = _viewBeingEdited.View.HitTest(m, out _);
+                    
+                    if(hit != null)
+                    {
+                        var d = hit.GetNearestDesign() ?? _viewBeingEdited;
+                        if(d != null)
+                            CreateAndShowContextMenu(m,d);
+                    }
+                }
             }
             catch (System.Exception ex)
             {
@@ -147,98 +160,6 @@ Ctrl+Q - Quit
 
         Application.Run(this,ErrorHandler);
         Application.Shutdown();
-    }
-
-    private void HandleMouse(MouseEvent m)
-    {
-        if (!enableDrag || _viewBeingEdited == null)
-        {
-            return;
-        }
-
-        // start dragging
-        if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && dragOperation == null)
-        {
-            var drag = HitTest(_viewBeingEdited.View, m, out bool isLowerRight);
-
-
-            // if nothing is going on yet
-            if (drag != null && drag.Data is Design design && resizeOperation == null && dragOperation == null)
-            {
-                var dest = ScreenToClient(_viewBeingEdited.View, m.X, m.Y);
-                
-                if (isLowerRight)
-                {
-                    resizeOperation = new ResizeOperation(design, dest.X, dest.Y);
-                }
-                else
-                {
-                    dragOperation = new DragOperation(design, dest.X, dest.Y);
-                }
-                
-            }
-        }
-
-        // continue dragging
-        if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && dragOperation != null)
-        {
-            var dest = ScreenToClient(_viewBeingEdited.View, m.X, m.Y);
-
-            dragOperation.ContinueDrag(dest);
-
-            _viewBeingEdited.View.SetNeedsDisplay();
-            Application.DoEvents();
-        }
-
-        // continue resizing
-        if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && resizeOperation != null)
-        {
-            var dest = ScreenToClient(_viewBeingEdited.View, m.X, m.Y);
-
-            resizeOperation.ContinueResize(dest);
-
-            _viewBeingEdited.View.SetNeedsDisplay();
-            Application.DoEvents();
-        }
-
-        // end dragging
-        if (!m.Flags.HasFlag(MouseFlags.Button1Pressed))
-        {
-            if ( dragOperation != null)
-            {
-                // see if we are dragging into a new container
-                var dropInto = HitTest(_viewBeingEdited.View, m, out _, dragOperation.BeingDragged.View);
-
-                // we are dragging into a new container
-                dragOperation.DropInto = dropInto;
-
-                // end drag
-                OperationManager.Instance.Do(dragOperation);
-                dragOperation = null;
-            }
-
-            if (resizeOperation != null)
-            {
-                // end resize
-                OperationManager.Instance.Do(resizeOperation);
-                resizeOperation = null;
-            }
-
-        }
-        
-        //right click
-        if(m.Flags.HasFlag(_keyMap.RightClick))
-        {
-            var hit = HitTest(_viewBeingEdited.View, m, out _);
-            
-            if(hit != null)
-            {
-                var d = hit.GetNearestDesign() ?? _viewBeingEdited;
-                if(d != null)
-                    CreateAndShowContextMenu(m,d);
-            }
-
-        }
     }
 
     private bool CreateAndShowContextMenu()
@@ -265,7 +186,7 @@ Ctrl+Q - Quit
         }
         else
         {
-            options = d.GetExtraOperations(ScreenToClient(d.View, m.Value.X, m.Value.Y)).Where(c=>!c.IsImpossible);
+            options = d.GetExtraOperations(d.View.ScreenToClient(m.Value.X, m.Value.Y)).Where(c=>!c.IsImpossible);
         }
         
         
@@ -796,34 +717,7 @@ Ctrl+Q - Quit
         Application.Run(edit,ErrorHandler);
     }
 
-    private View? HitTest(View w, MouseEvent m, out bool isLowerRight, params View[] ignoring)
-    {
-        // hide the views while we perform the hit test
-        foreach(View v in ignoring)
-        {
-            v.Visible = false;
-        }
-
-        var point = ScreenToClient(w, m.X, m.Y);
-        var hit = ApplicationExtensions.FindDeepestView(w, m.X, m.Y);
-
-        int resizeBoxArea = 2;
-        
-        if (hit != null)
-        {
-            hit.ViewToScreen(hit.Bounds.Right, hit.Bounds.Bottom,out int screenX, out int screenY,true);
-            isLowerRight = Math.Abs(screenX - point.X) <= resizeBoxArea && Math.Abs(screenY - point.Y) <= resizeBoxArea;
-        }
-        else
-            isLowerRight = false;
-
-        // hide the views while we perform the hit test
-        foreach (View v in ignoring)
-        {
-            v.Visible = true;
-        }
-        return hit;
-    }
+    
 
     private View GetMostFocused(View view)
     {
@@ -835,15 +729,4 @@ Ctrl+Q - Quit
         return GetMostFocused(view.Focused);
     }
 
-
-    private Point ScreenToClient(View view, int x, int y)
-    {
-        if (view is Window w)
-        {
-            // has invisible ContentView pane
-            return w.Subviews[0].ScreenToView(x, y);
-        }
-
-        return view.ScreenToView(x, y);
-    }
 }
