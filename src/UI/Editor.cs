@@ -206,6 +206,12 @@ Ctrl+Q - Quit
         {
             if ( dragOperation != null)
             {
+                // see if we are dragging into a new container
+                var dropInto = HitTest(_viewBeingEdited.View, m, out _, dragOperation.BeingDragged.View);
+
+                // we are dragging into a new container
+                dragOperation.DropInto = dropInto;
+
                 // end drag
                 OperationManager.Instance.Do(dragOperation);
                 dragOperation = null;
@@ -790,8 +796,13 @@ Ctrl+Q - Quit
         Application.Run(edit,ErrorHandler);
     }
 
-    private View? HitTest(View w, MouseEvent m, out bool isLowerRight)
+    private View? HitTest(View w, MouseEvent m, out bool isLowerRight, params View[] ignoring)
     {
+        // hide the views while we perform the hit test
+        foreach(View v in ignoring)
+        {
+            v.Visible = false;
+        }
 
         var point = ScreenToClient(w, m.X, m.Y);
         var hit = ApplicationExtensions.FindDeepestView(w, m.X, m.Y);
@@ -806,6 +817,11 @@ Ctrl+Q - Quit
         else
             isLowerRight = false;
 
+        // hide the views while we perform the hit test
+        foreach (View v in ignoring)
+        {
+            v.Visible = true;
+        }
         return hit;
     }
 
