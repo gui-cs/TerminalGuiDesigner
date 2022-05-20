@@ -44,8 +44,7 @@ public class Design
     public View View {get;}
     public bool IsContainerView { get
         {
-            // TODO: View and probably others (group box)?
-            return View is TabView || View is FrameView;
+            return View.IsContainerView();
         }
     }
 

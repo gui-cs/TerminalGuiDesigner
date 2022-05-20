@@ -47,6 +47,10 @@ public class DragOperation : Operation
             // Don't let them attempt to drop a view into itself!
             if (value == BeingDragged.View)
                 return;
+
+            // don't let user drop stuff into labels or tables etc
+            if (value != null && !value.IsContainerView())
+                return;
             
             dropInto = value;
         }

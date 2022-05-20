@@ -166,4 +166,11 @@ public static class ViewExtensions
             rcol = Math.Min(rcol, Application.Driver.Cols - 1);
         }
     }
+
+    public static bool IsContainerView(this View v)
+    {
+        var type = v.GetType();
+        // TODO: are there any others?
+        return v is TabView || v is FrameView || v is Window || type == typeof(View) || type.Name.Equals("ContentView");
+    }
 }
