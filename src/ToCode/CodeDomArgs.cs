@@ -36,6 +36,17 @@ public class CodeDomArgs
         this.InitMethod = initMethod;
     }
 
+    public static string MakeValidFieldName(string? name)
+    {
+        name = string.IsNullOrWhiteSpace(name) ? "empty" : name;
+        name = Regex.Replace(name,"\\W","");
+
+        // remove leading digits
+        name = Regex.Replace(name,"^\\d+","");
+
+        return name;
+    }
+
     /// <summary>
     /// Returns a unique field name based on the passed value.
     /// Removes non word characters and applies a numerical
@@ -43,8 +54,7 @@ public class CodeDomArgs
     /// </summary>
     public string GetUniqueFieldName(string? name)
     {        
-        name = string.IsNullOrWhiteSpace(name) ? "empty" : name;
-        name = Regex.Replace(name,"\\W","");
+        name = MakeValidFieldName(name);
 
         if(!FieldNamesUsed.Contains(name))
         {

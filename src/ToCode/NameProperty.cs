@@ -23,13 +23,15 @@ public class NameProperty : Property
     }
     public override void SetValue(object? value)
     {
-        if (value == null)
+
+        var chosen = value?.ToString();
+
+        if (string.IsNullOrWhiteSpace(chosen))
         {
             throw new ArgumentException("Not Possible", "You cannot set a View (Name) property to null");
         }
-        
-        Design.FieldName = value.ToString() ?? throw new Exception($"ToString returned null for value of Type {value.GetType().Name}");
-        
+                
+        Design.FieldName = Design.GetUniqueFieldName(chosen);
     }
 
     public override object GetValue()

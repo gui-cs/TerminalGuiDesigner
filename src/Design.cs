@@ -1,4 +1,5 @@
 using System.Data;
+using System.Text.RegularExpressions;
 using NLog;
 using Terminal.Gui;
 using Terminal.Gui.Graphs;
@@ -428,7 +429,14 @@ public class Design
         while(v.SuperView != null)
         {
             v = v.SuperView;
-            toReturn = v.Data as Design ?? toReturn;
+
+            if(v.Data is Design d)
+            {
+                if(d.IsRoot)
+                    return d;
+
+                toReturn = d;
+            }
         }
 
         return toReturn;
@@ -481,5 +489,33 @@ public class Design
 
         // found a unique one
         return $"{viewType.Name.ToLower()}{number}";
+    }
+
+    public string GetUniqueFieldName(string candidate)
+    {
+        var root = GetRootDesign();
+
+        // remove problematic characters
+        candidate = CodeDomArgs.MakeValidFieldName(candidate);
+
+        var allDesigns = root.GetAllDesigns().ToList();
+        allDesigns.Remove(this);
+
+        // if name is already unique thats great
+        if(!allDesigns.Any(d => d.FieldName.Equals(candidate)))
+        {
+            return candidate;
+        }
+
+        // name collides with something else
+        int number = 2;
+        while (allDesigns.Any(d => d.FieldName.Equals($"{candidate}{number}")))
+        {
+            // bob is taken, try bob2 etc
+            number++;
+        }
+
+        // found a unique one
+        return $"{candidate}{number}";
     }
 }
