@@ -328,6 +328,8 @@ public class Design
     /// <exception cref="NotImplementedException"></exception>
     internal IEnumerable<IOperation> GetExtraOperations(Point pos)
     {
+        yield return new CopyOperation(this);
+
         if (View is TableView tv)
         {
             DataColumn? col = null;
@@ -348,6 +350,7 @@ public class Design
         if(IsContainerView || IsRoot)
         {
             yield return new AddViewOperation(SourceCode,this);
+            yield return new PasteOperation(this);
         }
         else
         {

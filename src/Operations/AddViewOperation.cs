@@ -3,7 +3,6 @@ using TerminalGuiDesigner.UI;
 using TerminalGuiDesigner.UI.Windows;
 
 namespace TerminalGuiDesigner.Operations;
-
 public class AddViewOperation : Operation
 {
     private readonly SourceCodeFile sourceCode;
@@ -11,11 +10,11 @@ public class AddViewOperation : Operation
     private string? fieldName;
     private readonly Design to;
 
-    public AddViewOperation(SourceCodeFile sourceCode,View add, Design to,string fieldName)
+    public AddViewOperation(SourceCodeFile sourceCode,View add, Design to,string? fieldName)
     {
         this.sourceCode = sourceCode;
         this.add = add;
-        this.fieldName = fieldName;
+        this.fieldName = fieldName ?? to.GetUniqueFieldName(add.GetType());
         this.to = to;
     }
 
