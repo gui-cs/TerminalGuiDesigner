@@ -20,4 +20,6 @@ public class KeyMap
     public Key AddView { get; set; } = Key.F2;
     public Key ToggleShowFocused { get; set; } = Key.CtrlMask | Key.L;
     public MouseFlags RightClick { get; set; } = MouseFlags.Button3Clicked;
+    public Key Copy { get; set; } = Key.CtrlMask | Key.C;
+    public Key Paste { get; set; } = Key.CtrlMask | Key.V;
 }

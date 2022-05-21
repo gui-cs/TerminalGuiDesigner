@@ -335,6 +335,19 @@ Ctrl+Q - Quit
                 ShowEditProperties();
                 return true;
             }
+
+            if(keyEvent.Key == _keyMap.Copy)
+            {
+                Copy();
+                return true;
+            }
+
+            if(keyEvent.Key == _keyMap.Paste)
+            {
+                Paste();
+                return true;
+            }
+
             if(keyEvent.Key == _keyMap.ViewSpecificOperations)
             {
                 ShowViewSpecificOperations();
@@ -440,6 +453,31 @@ Ctrl+Q - Quit
         return false;
     }
 
+    private void Paste()
+    {
+        var d = GetMostFocused(this)?.GetNearestContainerDesign() ?? _viewBeingEdited;
+
+        if (d != null)
+        {
+            var paste = new PasteOperation(d);
+
+            if(paste.IsImpossible)
+                return;
+
+            OperationManager.Instance.Do(paste);
+        }
+    }
+
+    private void Copy()
+    {
+        var d = GetMostFocused(this)?.GetNearestDesign();
+
+        if (d != null)
+        {
+            var copy = new CopyOperation(d);
+            OperationManager.Instance.Do(copy);
+        }
+    }
 
     private void ShowViewSpecificOperations()
     {
