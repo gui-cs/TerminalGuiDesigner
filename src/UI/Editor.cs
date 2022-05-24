@@ -5,6 +5,7 @@ using TerminalGuiDesigner.FromCode;
 using TerminalGuiDesigner.ToCode;
 using Attribute = Terminal.Gui.Attribute;
 using YamlDotNet.Serialization;
+using System.Text;
 
 namespace TerminalGuiDesigner.UI;
 
@@ -622,7 +623,32 @@ Ctrl+Q - Quit
                 if (string.IsNullOrWhiteSpace(path) || selected == null)
                     return;
 
-                New(new FileInfo(path),selected,null);
+                var file = new FileInfo(path);
+        
+                // Check if we are about to overwrite some files
+                // and if so warn the user
+                var files = new SourceCodeFile(file);
+                var sb = new StringBuilder();
+                
+                if(files.CsFile.Exists)
+                {
+                    sb.AppendLine(files.CsFile.Name);
+                }
+                if(files.DesignerFile.Exists)
+                {
+                    sb.AppendLine(files.DesignerFile.Name);
+                }
+
+                if(sb.Length > 0)
+                {
+                    var chosen = MessageBox.Query("Overwrite Files?",$"The following files will be overwritten:{Environment.NewLine}{sb}","Ok","Cancel");
+                    
+                    // user cancelled
+                    if(chosen != 0)
+                        return;
+                }
+
+                New(file,selected,null);
             }
             catch (Exception ex)
             {
