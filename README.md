@@ -134,7 +134,9 @@ The following feature list shows the current capabilities and the roadmap
 - [ ] Mutli select (select many views and hit delete or drag move)
 - [ ] Copy/Paste 
   - [x] Single view
+  - [ ] Complex Views (TableView, MenuBar etc)
   - [ ] Multiple views at onces
+  - [ ] To OS clipboard (e.g. open one Designer.cs View and copy to another)
 - [ ] Move views to subviews
   - [x] With mouse
   - [ ] With keyboard
