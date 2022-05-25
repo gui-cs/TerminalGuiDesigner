@@ -12,6 +12,11 @@ Install the tool from NuGet or follow the [Hello World Tutorial](./README.md#usa
 dotnet tool install --global TerminalGuiDesigner
 ```
 
+Update to the latest version using
+```
+dotnet tool update --global TerminalGuiDesigner
+```
+
 This project is in alpha.  See the [feature list](./README.md#features) for progress.
 
 ![designer](https://user-images.githubusercontent.com/31306100/161325121-c6c03350-5d37-4830-b756-58daf79c972f.gif)
