@@ -113,6 +113,7 @@ The following feature list shows the current capabilities and the roadmap
     - [ ] Color Schemes
 - [x] Mouse Input
   - [x] Drag to move
+  - [x] Drag into/out of sub view
   - [x] Drag to resize
 - [x] Undo/Redo
 - [x] Direct editing of Text just by typing
@@ -120,13 +121,18 @@ The following feature list shows the current capabilities and the roadmap
   - [x] Create new items
   - [x] Move items
   - [x] Move in/out of submenus
+  - [x] Add menu bar separators (Type '---')
   - [ ] Assign shortcuts
   - [ ] Set fieldnames `(Name)`
 - [ ] Easy Status Bar Designing
 - [ ] Create Events e.g. MyButton_OnClick
 - [ ] Mutli select (select many views and hit delete or drag move)
-- [ ] Copy/Paste selected view(s)
-- [ ] Add/Move views to subviews
+- [ ] Copy/Paste 
+  - [x] Single view
+  - [ ] Multiple views at onces
+- [ ] Move views to subviews
+  - [x] With mouse
+  - [ ] With keyboard
 - [ ] Read and present xmldoc comments when editing properties
 - [x] Comprehensive Tests
 - [x] CI

@@ -20,24 +20,33 @@
     <PackageTags>csharp, terminal, c#, gui, toolkit, designer, console</PackageTags>
 
     <PackageReleaseNotes>
-    v1.0.8
-    * Fixed bug free typing new titles for checkboxes
-    * Fixed bug free typing new titles dropping last character typed
-    * Added keybinding (defaults to Enter) for opening context menu
-    * Changed context menu title from 'Properties' to the fieldname of the control being edited
+    v1.0.9
+	 * Support for adding menu separators by typing '---'
+	 * Prevent deleting when another view has a RelativeTo specified on it
+	 * Warn when overwritting a file when creating a new View
+	 * Replaced generic code comments in files generated to indicate the tool and version used
+	 * Added copy and paste of single views
+	 * Support for dragging a control into a seperate container (e.g. into a tab view)
+	 * Prevent illegal field `(Name)` values being entered
+	 * Fixed bad code being generated if multiple tables/tab views had columns/tabs with the same name
+	v1.0.8
+     * Fixed bug free typing new titles for checkboxes
+     * Fixed bug free typing new titles dropping last character typed
+     * Added keybinding (defaults to Enter) for opening context menu
+     * Changed context menu title from 'Properties' to the fieldname of the control being edited
     v1.0.7
-    * Support for editing MenuBars
+     * Support for editing MenuBars
     v1.0.6
-    * Fixed bug adding Views to newly created TabViews
-    * Fixed undo for operations performed via context menus
-    * Added Try/Catch to context menu operations
-    * Added support for TreeView
-    * Changed TableView example data to be all nulls
-		v1.0.5
-		* Right click context menu support
-		* Increased mouse resizing click hit box
-		* Added progress indicator for creating new Views
-		* Fixed mouse dragging/resizing of views in subviews (e.g. TabViews)
+     * Fixed bug adding Views to newly created TabViews
+     * Fixed undo for operations performed via context menus
+     * Added Try/Catch to context menu operations
+     * Added support for TreeView
+     * Changed TableView example data to be all nulls
+	v1.0.5
+	 * Right click context menu support
+	 * Increased mouse resizing click hit box
+	 * Added progress indicator for creating new Views
+	 * Fixed mouse dragging/resizing of views in subviews (e.g. TabViews)
 	</PackageReleaseNotes>
   </PropertyGroup>
   <ItemGroup>
