@@ -139,6 +139,9 @@ The following feature list shows the current capabilities and the roadmap
   - [x] With mouse
   - [ ] With keyboard
 - [ ] Read and present xmldoc comments when editing properties
+- [ ] Dev Environment Integration
+  - [ ] Visual Studio plugin (e.g. right click a .Designer.cs to open in TerminalGuiDesigner console)
+  - [ ] Visual Studio Code plugin 
 - [x] Comprehensive Tests
 - [x] CI
 - [ ] Create and edit all views
