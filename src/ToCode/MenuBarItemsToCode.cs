@@ -56,11 +56,16 @@ internal class MenuBarItemsToCode : ToCodeBase
         // plus again let user name these
         foreach(var sub in child.Children)
         {
-
             if(sub is MenuBarItem bar)
             {
                 ToCode(args,bar,out string f);
                 children.Add(f);
+            }
+            else
+            if(sub == null)
+            {
+                // its a menu seperator (in Terminal.Gui separators are indicated by having a null element).
+                children.Add(null);
             }
             else
             {
@@ -72,11 +77,18 @@ internal class MenuBarItemsToCode : ToCodeBase
             }
         }
 
+        // we have created fields and constructor calls for our menu
+        // now set the menu to an array of all those fields
         AddPropertyAssignment(args,
             $"this.{fieldName}.{nameof(MenuBarItem.Children)}",
             new CodeArrayCreateExpression(typeof(MenuItem),
             children.Select(c=> 
-                    new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),c))
+                    
+                    // the array elements have null for separator
+                    c is null ? new CodePrimitiveExpression(null):
+
+                    // or the name of the field for each menu item
+                    (CodeExpression) new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),c))
                     .ToArray()));
         
     }

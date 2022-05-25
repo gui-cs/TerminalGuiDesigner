@@ -131,9 +131,24 @@ namespace TerminalGuiDesigner.UI
             // we can integrate this into the Design undo/redo systems
             if (ApplyKeystrokeToString(menuItem.Title.ToString() ?? "", keystroke, out var newValue))
             {
-                // changing the title
-                menuItem.Title = newValue;
-                focusedView.SetNeedsDisplay();
+                // convert to a separator by typing three hyphens
+                if(newValue.Equals("---"))
+                {
+                    if (OperationManager.Instance.Do(
+                            new ConvertMenuItemToSeperatorOperation(menuItem)
+                        ))
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    // changing the title
+                    menuItem.Title = newValue;
+                }
+
+                focusedView.SetNeedsDisplay();              
+
                 return true;            
             }
 
@@ -214,7 +229,7 @@ namespace TerminalGuiDesigner.UI
             if(keystroke.Key.HasFlag(Key.CtrlMask))
                 return false;
 
-            var punctuation = "\"\\/'a:;%^&*~`bc!@#.,? ()";
+            var punctuation = "\"\\/'a:;%^&*~`bc!@#.,? ()-";
 
             var ch = (char)keystroke.KeyValue;
 
