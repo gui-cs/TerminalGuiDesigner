@@ -12,6 +12,14 @@ public class DeleteViewOperation : Operation
     {
         this.delete = delete;
         this.from = delete.SuperView;
+
+        if (delete.Data is Design d)
+        {
+            // there are view(s) that depend on us (e.g. for positioning)
+            // deleting us would go very badly
+            if (d.GetDependantDesigns().Any())
+                IsImpossible = true;
+        }
     }
 
     public override bool Do()

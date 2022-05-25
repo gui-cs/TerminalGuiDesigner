@@ -15,7 +15,7 @@ public class OperationManager
     public bool Do(IOperation op){
         
         // If operation completes successfully
-        if(op.Do())
+        if(!op.IsImpossible && op.Do())
         {
             if(op.SupportsUndo)
             {

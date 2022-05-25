@@ -520,4 +520,36 @@ public class Design
         // found a unique one
         return $"{candidate}{number}";
     }
+
+    /// <summary>
+    /// Returns all <see cref="Design"/> that have dependency on this
+    /// </summary>
+    public IEnumerable<Design> GetDependantDesigns()
+    {
+        var everyone = GetAllDesigns().ToArray();
+        return everyone.Where(o=>DependsOnUs(o,everyone));
+    }
+
+    private bool DependsOnUs(Design other, Design[] everyone)
+    {
+        // obviously we cannot depend on ourselves
+        if (other == this)
+            return false;
+
+        // if their X depends on us
+        if(other.View.X.GetPosType(everyone,out _,out _, out var relativeTo,out _,out _))
+        {
+            if (relativeTo == this)
+                return true;
+        }
+
+        // if their Y depends on us
+        if (other.View.Y.GetPosType(everyone, out _, out _, out relativeTo, out _, out _))
+        {
+            if (relativeTo == this)
+                return true;
+        }
+
+        return false;
+    }
 }

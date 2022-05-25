@@ -91,6 +91,10 @@ public class CodeToView
         var toReturn = new Design(SourceFile, Design.RootDesignName, view);
         toReturn.CreateSubControlDesigns();
 
+        // Record the design in Data field so it can be found later by controls
+        // looking up their hierarchy to find top level control designs.
+        toReturn.View.Data = toReturn;
+
         return toReturn;
     }
 
