@@ -213,7 +213,7 @@ Ctrl+Q - Quit
         allItems = new MenuBarItem(items.ToArray());
     
         var menu = new ContextMenu();
-        menu.MenuItens = allItems;
+        menu.MenuItems = allItems;
 
         if(m.HasValue)
         {

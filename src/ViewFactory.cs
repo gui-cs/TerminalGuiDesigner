@@ -2,7 +2,6 @@
 using NStack;
 using Terminal.Gui;
 using Terminal.Gui.TextValidateProviders;
-using Terminal.Gui.Views;
 using static Terminal.Gui.Border;
 using Attribute = Terminal.Gui.Attribute;
 
