@@ -22,4 +22,5 @@ public class KeyMap
     public MouseFlags RightClick { get; set; } = MouseFlags.Button3Clicked;
     public Key Copy { get; set; } = Key.CtrlMask | Key.C;
     public Key Paste { get; set; } = Key.CtrlMask | Key.V;
+    public Key Rename {get; set;} = Key.CtrlMask | Key.R;
 }

@@ -73,6 +73,13 @@ internal class MenuBarItemsToCode : ToCodeBase
                 AddFieldToClass(args,sub.GetType(),subFieldName);
                 AddConstructorCall(args, $"this.{subFieldName}",sub.GetType());
                 AddPropertyAssignment(args,$"this.{subFieldName}.{nameof(MenuItem.Title)}",sub.Title);
+                AddPropertyAssignment(args,$"this.{subFieldName}.{nameof(MenuItem.Data)}",subFieldName);
+                
+                AddPropertyAssignment(args,$"this.{subFieldName}.{nameof(MenuItem.Shortcut)}",
+                    new CodeCastExpression(
+                        new CodeTypeReference(typeof(Key))
+                        ,new CodePrimitiveExpression((uint)sub.Shortcut)));
+
                 children.Add(subFieldName);
             }
         }
@@ -95,7 +102,9 @@ internal class MenuBarItemsToCode : ToCodeBase
 
     public string GetUniqueFieldName(CodeDomArgs args, MenuItem item)
     {
-        return args.GetUniqueFieldName(item.Title.ToString());
+        return args.GetUniqueFieldName(
+            item.Data as string ??
+            item.Title.ToString());
     }
 
 }

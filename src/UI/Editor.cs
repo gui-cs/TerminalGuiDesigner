@@ -20,7 +20,7 @@ public class Editor : Toplevel
 
     readonly KeyMap _keyMap;
 
-    KeyboardManager _keyboardManager = new ();
+    KeyboardManager _keyboardManager;
     MouseManager _mouseManager = new();
     private bool _menuOpen;
 
@@ -79,6 +79,8 @@ Ctrl+Q - Quit
             // otherwise use the defaults
             _keyMap = new KeyMap();
         }
+
+        _keyboardManager = new KeyboardManager(_keyMap);
 
     }
 

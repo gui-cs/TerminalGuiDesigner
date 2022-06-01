@@ -5,7 +5,13 @@ namespace TerminalGuiDesigner.UI
 {
     public class KeyboardManager
     {
-        SetPropertyOperation? _currentOperation;
+        private SetPropertyOperation? _currentOperation;
+        private KeyMap _keyMap;
+
+        public KeyboardManager(KeyMap keyMap)
+        {
+            _keyMap = keyMap;
+        }
 
         public bool HandleKey(View focusedView,KeyEvent keystroke)
         {
@@ -59,6 +65,14 @@ namespace TerminalGuiDesigner.UI
 
         private bool HandleKeyPressInMenu(View focusedView, MenuItem menuItem, KeyEvent keystroke)
         {
+            if(keystroke.Key == _keyMap.Rename)
+            {
+                OperationManager.Instance.Do(
+                        new RenameMenuItemOperation(menuItem)
+                    );
+                return true;
+            }
+
             if(keystroke.Key == Key.Enter)
             {
                 OperationManager.Instance.Do(
@@ -119,6 +133,16 @@ namespace TerminalGuiDesigner.UI
                     keystroke.Key = Key.CursorUp;
                     return false;
                 }
+            }
+
+            // If its not a keypress that is reserved for menu
+            // editing but Ctrl is held down then assign a shortcut
+            // to the selected menu item
+            if(keystroke.Key.HasFlag(Key.CtrlMask))
+            {
+                // TODO: Make this support undo
+                menuItem.Shortcut = keystroke.Key;
+                return true;
             }
 
             // Allow typing but also Enter to create a new subitem
