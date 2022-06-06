@@ -12,11 +12,20 @@ namespace TerminalGuiDesigner {
     
     
     public partial class LoadingDialog {
-        
-        public LoadingDialog(FileInfo file) {
-            InitializeComponent();
 
-            lblLoadingFile.Text = $"Loading {file.Name}";
+        private LoadingDialog()
+        {
+            InitializeComponent();
+        }
+
+        public LoadingDialog(string message):this() {
+
+            lblLoading.Text = message;
+        }
+        
+        public LoadingDialog(FileInfo file):this() {
+
+            lblLoading.Text = $"Loading {file.Name}";
         }
     }
 }

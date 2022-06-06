@@ -83,6 +83,23 @@ namespace TerminalGuiDesigner.UI
                 return false;
             }
 
+            if(keystroke.Key == _keyMap.SetShortcut)
+            {
+                Key key = 0;
+
+                var dlg = new LoadingDialog("Press Shortcut or Del");
+                dlg.KeyPress += (s)=>{
+                    key = s.KeyEvent.Key;
+                    Application.RequestStop();
+                };
+                Application.Run(dlg);
+
+                menuItem.Shortcut = key == Key.DeleteChar ? 0 : key;
+                
+                focusedView.SetNeedsDisplay();
+                return false;
+            }
+
             if(keystroke.Key == (Key.CursorRight | Key.ShiftMask))
             {
                 OperationManager.Instance.Do(
@@ -90,7 +107,7 @@ namespace TerminalGuiDesigner.UI
                 );
 
                 keystroke.Key = Key.CursorUp;
-                return false;
+                return true;
             }
 
             if(keystroke.Key == (Key.CursorLeft | Key.ShiftMask))
@@ -133,16 +150,6 @@ namespace TerminalGuiDesigner.UI
                     keystroke.Key = Key.CursorUp;
                     return false;
                 }
-            }
-
-            // If its not a keypress that is reserved for menu
-            // editing but Ctrl is held down then assign a shortcut
-            // to the selected menu item
-            if(keystroke.Key.HasFlag(Key.CtrlMask))
-            {
-                // TODO: Make this support undo
-                menuItem.Shortcut = keystroke.Key;
-                return true;
             }
 
             // Allow typing but also Enter to create a new subitem

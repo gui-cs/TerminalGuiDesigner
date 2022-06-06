@@ -50,7 +50,7 @@ internal class MenuBarItemsToCode : ToCodeBase
         AddConstructorCall(args, $"this.{fieldName}",child.GetType());
         AddPropertyAssignment(args,$"this.{fieldName}.{nameof(MenuItem.Title)}",child.Title);
 
-        List<string> children = new();
+        List<string?> children = new();
 
         // TODO: Make recursive for more children
         // plus again let user name these

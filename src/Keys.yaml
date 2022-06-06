@@ -16,3 +16,4 @@ RightClick: Button3Clicked
 Copy: C, CtrlMask
 Paste: V, CtrlMask
 Rename: R, CtrlMask
+SetShortcut: T, CtrlMask

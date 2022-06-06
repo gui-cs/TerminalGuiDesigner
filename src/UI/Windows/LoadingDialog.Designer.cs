@@ -14,7 +14,7 @@ namespace TerminalGuiDesigner {
     
     public partial class LoadingDialog : Terminal.Gui.Dialog {
         
-        private Terminal.Gui.Label lblLoadingFile;
+        private Terminal.Gui.Label lblLoading;
         
         private void InitializeComponent() {
             this.Text = "";
@@ -25,15 +25,15 @@ namespace TerminalGuiDesigner {
             this.TextAlignment = TextAlignment.Left;
             this.Title = "Loading...";
             this.Title = "Loading...";
-            this.lblLoadingFile = new Terminal.Gui.Label();
-            this.lblLoadingFile.Data = "lblLoadingFile";
-            this.lblLoadingFile.Text = "Please wait while your file loads...";
-            this.lblLoadingFile.Width = 36;
-            this.lblLoadingFile.Height = 1;
-            this.lblLoadingFile.X = 1;
-            this.lblLoadingFile.Y = 1;
-            this.lblLoadingFile.TextAlignment = TextAlignment.Left;
-            this.Add(this.lblLoadingFile);
+            this.lblLoading = new Terminal.Gui.Label();
+            this.lblLoading.Data = "lblLoading";
+            this.lblLoading.Text = "Please wait ...";
+            this.lblLoading.Width = 36;
+            this.lblLoading.Height = 1;
+            this.lblLoading.X = 1;
+            this.lblLoading.Y = 1;
+            this.lblLoading.TextAlignment = TextAlignment.Left;
+            this.Add(this.lblLoading);
         }
     }
 }
