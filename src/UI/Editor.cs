@@ -508,8 +508,15 @@ Ctrl+Q - Quit
 
         if (view.Data is Design d)
         {
-            d.View.X = Math.Min(Math.Max(d.View.Frame.Left + deltaX, 0), view.SuperView.Bounds.Width - 1);
-            d.View.Y = Math.Min(Math.Max(d.View.Frame.Top + deltaY, 0), view.SuperView.Bounds.Height - 1);
+            if (d.View.X.IsAbsolute(out int x))
+            {
+                d.View.X = Math.Min(Math.Max(x + deltaX, 0), view.SuperView.Bounds.Width - 1);
+            }
+
+            if (d.View.Y.IsAbsolute(out int y))
+            {
+                d.View.Y = Math.Min(Math.Max(y + deltaY, 0), view.SuperView.Bounds.Height - 1);
+            }
         }
     }
 
