@@ -110,11 +110,6 @@ namespace TerminalGuiDesigner.UI.Windows
             }
         }
 
-        private bool GetValue(out int newPos)
-        {
-            return int.TryParse(tbValue.Text.ToString(),out newPos);
-        }
-
         private void BtnCancel_Clicked()
         {
             Cancelled = true;
@@ -132,8 +127,8 @@ namespace TerminalGuiDesigner.UI.Windows
         {
             // pick what type of Pos they want
             var type = GetDimType();
-            var val = float.Parse(tbValue.Text.ToString());
-            var offset = int.Parse(tbOffset.Text.ToString());
+            var val = string.IsNullOrWhiteSpace(tbValue.Text.ToString()) ? 0 : float.Parse(tbValue.Text.ToString());
+            var offset = string.IsNullOrWhiteSpace(tbOffset.Text.ToString()) ? 0 : int.Parse(tbOffset.Text.ToString());
 
             switch (type)
             {

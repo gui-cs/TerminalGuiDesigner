@@ -227,6 +227,13 @@ namespace TerminalGuiDesigner.UI.Windows
 
         private bool GetOffset(out int offset)
         {
+            // blank text box counts as 0
+            if(string.IsNullOrWhiteSpace(tbOffset.Text.ToString()))
+            {
+                offset = 0;
+                return true;
+            }
+
             return int.TryParse(tbOffset.Text.ToString(),out offset);
         }
 
@@ -291,6 +298,13 @@ namespace TerminalGuiDesigner.UI.Windows
 
         private bool GetValue(out int newPos)
         {
+            // blank text box counts as 0
+            if(string.IsNullOrWhiteSpace(tbValue.Text.ToString()))
+            {
+                newPos = 0;
+                return true;
+            }
+
             return int.TryParse(tbValue.Text.ToString(),out newPos);
         }
 
