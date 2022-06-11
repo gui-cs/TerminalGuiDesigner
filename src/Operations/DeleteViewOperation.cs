@@ -45,4 +45,9 @@ public class DeleteViewOperation : Operation
             from.Add(delete);
         }
     }
+
+    public override string ToString()
+    {
+        return "Delete";
+    }
 }

@@ -1,5 +1,7 @@
 using Terminal.Gui;
 using TerminalGuiDesigner.Operations;
+using TerminalGuiDesigner.ToCode;
+using TerminalGuiDesigner.UI.Windows;
 
 namespace TerminalGuiDesigner.UI
 {
@@ -44,6 +46,15 @@ namespace TerminalGuiDesigner.UI
                 FinishOperation();
             }
 
+            if(keystroke.Key == _keyMap.Rename)
+            {
+                var nameProp = d.GetDesignableProperties().OfType<NameProperty>().FirstOrDefault();
+                if(nameProp != null)
+                {
+                    EditDialog.SetPropertyToNewValue(d, nameProp, nameProp.GetValue());
+                    return true;
+                }
+            }
 
             if(!IsActionableKey(keystroke))
             {

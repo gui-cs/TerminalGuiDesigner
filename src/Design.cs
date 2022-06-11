@@ -358,6 +358,8 @@ public class Design
                 yield return new AddViewOperation(SourceCode,nearestContainer);
         }
 
+        yield return new DeleteViewOperation(this.View);
+
         if (View is TabView)
         {
             yield return new AddTabOperation(this);
