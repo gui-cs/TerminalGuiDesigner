@@ -127,8 +127,8 @@ The following feature list shows the current capabilities and the roadmap
   - [x] Move items
   - [x] Move in/out of submenus
   - [x] Add menu bar separators (Type '---')
-  - [ ] Assign shortcuts
-  - [ ] Set fieldnames `(Name)`
+  - [x] Assign shortcuts
+  - [x] Set fieldnames `(Name)`
 - [ ] Easy Status Bar Designing
 - [ ] Create Events e.g. MyButton_OnClick
 - [ ] Mutli select (select many views and hit delete or drag move)

@@ -8,7 +8,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>TerminalGuiDesigner</PackageId>
-    <Version>1.0.9</Version>
+    <Version>1.0.10</Version>
     <Authors>Thomas Nind</Authors>
     <Nullable>enable</Nullable>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -20,16 +20,21 @@
     <PackageTags>csharp, terminal, c#, gui, toolkit, designer, console</PackageTags>
 
     <PackageReleaseNotes>
+    v1.0.10
+     * Support for setting shortcuts in menus (defaults to Ctrl+T)
+     * Support for renaming menu items (defaults to Ctrl+R)
+     * Delete added to view context menu
+     * Blank values in Pos/Dim editor (e.g. Margin size) are now treated as 0
     v1.0.9
-	 * Support for adding menu separators by typing '---'
-	 * Prevent deleting when another view has a RelativeTo specified on it
-	 * Warn when overwritting a file when creating a new View
-	 * Replaced generic code comments in files generated to indicate the tool and version used
-	 * Added copy and paste of single views
-	 * Support for dragging a control into a seperate container (e.g. into a tab view)
-	 * Prevent illegal field `(Name)` values being entered
-	 * Fixed bad code being generated if multiple tables/tab views had columns/tabs with the same name
-	v1.0.8
+     * Support for adding menu separators by typing '---'
+     * Prevent deleting when another view has a RelativeTo specified on it
+     * Warn when overwritting a file when creating a new View
+     * Replaced generic code comments in files generated to indicate the tool and version used
+     * Added copy and paste of single views
+     * Support for dragging a control into a seperate container (e.g. into a tab view)
+     * Prevent illegal field `(Name)` values being entered
+     * Fixed bad code being generated if multiple tables/tab views had columns/tabs with the same name
+    v1.0.8
      * Fixed bug free typing new titles for checkboxes
      * Fixed bug free typing new titles dropping last character typed
      * Added keybinding (defaults to Enter) for opening context menu
