@@ -1,5 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+  <ItemGroup>
+    <None Include=".\logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <PackAsTool>true</PackAsTool>
@@ -18,7 +27,8 @@
     <PackageProjectUrl>https://github.com/tznind/TerminalGuiDesigner/</PackageProjectUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <PackageTags>csharp, terminal, c#, gui, toolkit, designer, console</PackageTags>
-
+    <PackageIcon>logo.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>
     v1.0.10
      * Support for setting shortcuts in menus (defaults to Ctrl+T)
