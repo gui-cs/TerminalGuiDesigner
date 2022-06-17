@@ -537,21 +537,46 @@ Ctrl+Q - Quit
 
     private void Delete()
     {
+        if(_selectionManager.Selected.Any())
+        {
+            MultiDelete();
+        }
+        else
+        {
+            SingleDelete();
+        }
+    }
+
+    private void MultiDelete()
+    {
         if (_viewBeingEdited == null)
             return;
-        
+
+
+        var op = new CompositeOperation(
+            _selectionManager.Selected
+            .Select(v => new DeleteViewOperation(v)).ToArray());
+
+        OperationManager.Instance.Do(op);
+    }
+
+    private void SingleDelete()
+    {
+        if (_viewBeingEdited == null)
+            return;
+
         var viewToDelete = GetMostFocused(_viewBeingEdited.View);
         var viewDesign = viewToDelete?.GetNearestDesign();
 
         // don't delete the root view
-        if(viewDesign != null && viewDesign != _viewBeingEdited)
+        if (viewDesign != null && viewDesign != _viewBeingEdited)
         {
             OperationManager.Instance.Do(
                 new DeleteViewOperation(viewDesign.View)
             );
         }
-
     }
+
     private void Open()
     {
         var ofd = new OpenDialog("Open", $"Select {SourceCodeFile.ExpectedExtension} file",

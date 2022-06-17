@@ -17,22 +17,27 @@ public class MultiSelectionManager
 {
     List<View> selection = new();
 
+    /// <summary>
+    /// Collection of all the views currently multi selected
+    /// </summary>
+    public IReadOnlyCollection<View> Selected => selection.AsReadOnly();
+
     Dictionary<View, ColorScheme> oldSchemes = new();
     
     /// <summary>
     /// The color scheme to assign to controls that have been 
     /// multi selected
     /// </summary>
-    public ColorScheme SelectedScheme { get; private set; }
+    private ColorScheme SelectedScheme { get; set; }
 
     public MultiSelectionManager()
     {
         SelectedScheme = new ColorScheme()
         {
             Normal = new Attribute(Color.BrightGreen, Color.Green),
-            Focus = new Attribute(Color.BrightGreen, Color.Green),
+            Focus = new Attribute(Color.BrightYellow, Color.Green),
             Disabled = new Attribute(Color.BrightGreen, Color.Green),
-            HotFocus = new Attribute(Color.BrightGreen, Color.Green),
+            HotFocus = new Attribute(Color.BrightYellow, Color.Green),
             HotNormal = new Attribute(Color.BrightGreen, Color.Green),
         };
     }
