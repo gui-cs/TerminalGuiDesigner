@@ -48,7 +48,7 @@ public class MultiSelectionManager
         Clear();
 
         // create a new selection based on these
-        selection = new List<Design>(designs);
+        selection = new List<Design>(designs.Distinct());
 
         foreach(var d in designs)
         {
