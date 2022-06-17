@@ -21,7 +21,8 @@ public class Editor : Toplevel
     readonly KeyMap _keyMap;
 
     KeyboardManager _keyboardManager;
-    MouseManager _mouseManager = new();
+    MultiSelectionManager _selectionManager = new();
+    MouseManager _mouseManager;
     private bool _menuOpen;
 
     private string GetHelpWithNothingLoaded()
@@ -81,7 +82,7 @@ Ctrl+Q - Quit
         }
 
         _keyboardManager = new KeyboardManager(_keyMap);
-
+        _mouseManager = new MouseManager(_selectionManager);
     }
 
     public void Run(Options options)
@@ -538,7 +539,7 @@ Ctrl+Q - Quit
     {
         if (_viewBeingEdited == null)
             return;
-
+        
         var viewToDelete = GetMostFocused(_viewBeingEdited.View);
         var viewDesign = viewToDelete?.GetNearestDesign();
 
@@ -590,7 +591,8 @@ Ctrl+Q - Quit
         // clear the history
         OperationManager.Instance.ClearUndoRedo();
         Design? instance = null;
-       
+        _selectionManager.Clear();
+
         Task.Run(()=>{
             
             var decompiler = new CodeToView(new SourceCodeFile(toOpen));
@@ -713,6 +715,7 @@ Ctrl+Q - Quit
         // clear the history
         OperationManager.Instance.ClearUndoRedo();
         Design? instance = null;
+        _selectionManager.Clear();
 
         var open = new LoadingDialog(toOpen);
 

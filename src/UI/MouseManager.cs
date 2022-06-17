@@ -8,6 +8,7 @@ class MouseManager
     DragOperation? dragOperation = null;
     ResizeOperation? resizeOperation = null;
 
+
     /// <summary>
     /// If the user is dragging a selection box then this is the current area
     /// that is being pulled over or null if no multi select is underway.
@@ -15,7 +16,15 @@ class MouseManager
 
     private Point? SelectionStart = null;
     private Point? SelectionEnd = null;
+    private MultiSelectionManager _selectionManager;
+
+    public MouseManager(MultiSelectionManager selectionManager)
+    {
+        this._selectionManager = selectionManager;
+    }
+
     public Rect? SelectionBox => RectExtensions.FromBetweenPoints(SelectionStart,SelectionEnd);
+    public View? SelectionContainer { get; private set; }
 
     public void HandleMouse(MouseEvent m, Design viewBeingEdited)
     {
@@ -26,10 +35,10 @@ class MouseManager
             var drag = viewBeingEdited.View.HitTest(m, out bool isLowerRight);
 
             // if mousing down in empty space
-            // TODO: why this doesn't conditional work?
-            // if (drag == null || drag.IsContainerView())
+            if (drag != null && drag.IsContainerView())
             {
                 // start dragging a selection box
+                SelectionContainer = drag;
                 SelectionStart = new Point(m.X,m.Y);
             }
 
@@ -87,12 +96,17 @@ class MouseManager
         if (!m.Flags.HasFlag(MouseFlags.Button1Pressed))
         {
             // end selection box
-            if (SelectionStart != null)
-            {
-                // TODO: record what was multi selected somewhere
+            if (SelectionStart != null && SelectionBox != null && SelectionContainer != null)
+            {       
+                _selectionManager.SetSelection(
+                    SelectionContainer.Subviews.Where(v => v.IntersectsScreenRect(SelectionBox.Value)).ToArray()
+                    );
 
                 SelectionStart = null;
                 SelectionEnd = null;
+                SelectionContainer = null;
+                viewBeingEdited.View.SetNeedsDisplay();
+                Application.DoEvents();
             }
 
             //end dragging

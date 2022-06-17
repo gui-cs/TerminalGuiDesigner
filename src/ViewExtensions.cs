@@ -212,4 +212,20 @@ public static class ViewExtensions
 
         return view.ScreenToView(x, y);
     }
+
+    /// <summary>
+    /// Returns true if the current screen bounds of <paramref name="v"/> intersect
+    /// with the <paramref name="screenRect"/> rectangle.
+    /// </summary>
+    /// <param name="v"></param>
+    /// <param name="screenRect"></param>
+    /// <returns></returns>
+    public static bool IntersectsScreenRect(this View v, Rect screenRect)
+    {
+        v.ViewToScreen(0, 0, out var x0, out var y0);
+        v.ViewToScreen(v.Bounds.Width, v.Bounds.Height, out var x1, out var y1);
+
+        return Rect.FromLTRB(x0,y0,x1,y1).IntersectsWith(screenRect);
+
+    }
 }
