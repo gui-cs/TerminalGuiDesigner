@@ -104,13 +104,13 @@ Currently there is no support for custom field naming (i.e. `(Name)`) or assigni
 
 The following feature list shows the current capabilities and the roadmap
 
-- [ ] Design classes 
+- [x] Design classes 
     - [x] Window
     - [x] Dialog
     - [ ] View
     - [ ] Top level (with statusbar and or menu)
 - [x] Configure root properties (e.g. Window.Width, Title etc)
-- [ ] Configure subview properties
+- [x] Configure subview properties
     - [x] (Name)
     - [x] X/Y
     - [x] Width/Height
@@ -131,13 +131,17 @@ The following feature list shows the current capabilities and the roadmap
   - [x] Set fieldnames `(Name)`
 - [ ] Easy Status Bar Designing
 - [ ] Create Events e.g. MyButton_OnClick
-- [ ] Mutli select (select many views and hit delete or drag move)
-- [ ] Copy/Paste 
-  - [x] Single view
+- [x] Mutli select
+  - [x] Multi delete
+  - [x] Multi keyboard move
+  - [ ] Multi mouse drag move
+  - [ ] Multi set Property
+  - [ ] Multi Copy/Paste
+- [x] Copy/Paste 
+  - [x] Single simple views
   - [ ] Complex Views (TableView, MenuBar etc)
-  - [ ] Multiple views at onces
   - [ ] To OS clipboard (e.g. open one Designer.cs View and copy to another)
-- [ ] Move views to subviews
+- [x] Move views to subviews
   - [x] With mouse
   - [ ] With keyboard
 - [ ] Read and present xmldoc comments when editing properties
@@ -146,7 +150,7 @@ The following feature list shows the current capabilities and the roadmap
   - [ ] Visual Studio Code plugin 
 - [x] Comprehensive Tests
 - [x] CI
-- [ ] Create and edit all views
+- [x] Create and edit views
   - [x] Button
   - [x] Checkbox
   - [x] ComboBox
