@@ -3,7 +3,7 @@ using TerminalGuiDesigner.Operations;
 
 namespace TerminalGuiDesigner.UI;
 
-class MouseManager
+public class MouseManager
 {
     DragOperation? dragOperation = null;
     ResizeOperation? resizeOperation = null;

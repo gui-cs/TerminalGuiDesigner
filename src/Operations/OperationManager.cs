@@ -5,6 +5,9 @@ public class OperationManager
     Stack<IOperation> undoStack = new();
     Stack<IOperation> redoStack = new();
 
+    public int UndoStackSize => undoStack.Count;
+    public int RedoStackSize => redoStack.Count;
+
     public static OperationManager Instance = new();
 
     private OperationManager()
