@@ -403,23 +403,6 @@ public class Design
     }
 
     /// <summary>
-    /// Moves the X and Y a distance equal to the provided deltas assuming
-    /// that X and Y are currently PosAbsolute
-    /// </summary>
-    internal void Offset(int deltaX, int deltaY)
-    {
-        if (View.X.IsAbsolute(out int x))
-        {
-            View.X = Math.Min(Math.Max(x + deltaX, 0), View.SuperView.Bounds.Width - 1);
-        }
-
-        if (View.Y.IsAbsolute(out int y))
-        {
-            View.Y = Math.Min(Math.Max(y + deltaY, 0), View.SuperView.Bounds.Height - 1);
-        }
-    }
-
-    /// <summary>
     /// Gets all Designs in the current scope.  Starting from the root
     /// parent of this on down.  Gets everyone... Everyone? EVERYONE!!!
     /// </summary>

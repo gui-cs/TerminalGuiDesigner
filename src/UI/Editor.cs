@@ -535,72 +535,42 @@ Ctrl+Q - Quit
 
     private void MoveControl(int deltaX, int deltaY)
     {
-        if(_selectionManager.Selected.Any())
-        {
-            MultiMoveControl(deltaX,deltaY);
-        }
-        else
-        {
-            SingleMoveControl(deltaX,deltaY);
-        }
-    }
-
-    private void MultiMoveControl(int deltaX, int deltaY)
-    {
-        foreach(var d in _selectionManager.Selected)
-        {
-            d.Offset(deltaX,deltaY);
-        }
-    }
-
-    private void SingleMoveControl(int deltaX, int deltaY)
-    {
-        var view = GetMostFocused(this);
-
-        if (view.Data is Design d)
-        { 
-            d.Offset(deltaX,deltaY);
-        }
+        DoForSelectedViews((d)=>new MoveViewOperation(d,deltaX,deltaY));
     }
 
     private void Delete()
     {
+        DoForSelectedViews((d)=>new DeleteViewOperation(d.View));
+    }
+
+    private void DoForSelectedViews(Func<Design, Operation> operationFuc, bool allowOnRoot=false)
+    {
+        if(_viewBeingEdited == null)
+            return;
+
         if(_selectionManager.Selected.Any())
         {
-            MultiDelete();
+            var op = new CompositeOperation(
+                _selectionManager.Selected
+                .Select(operationFuc).ToArray());
+
+            OperationManager.Instance.Do(op);
         }
         else
         {
-            SingleDelete();
-        }
-    }
+            var singleSelection = GetMostFocused(_viewBeingEdited.View);
+            var viewDesign = singleSelection?.GetNearestDesign();
 
-    private void MultiDelete()
-    {
-        if (_viewBeingEdited == null)
-            return;
+            // don't delete the root view
+            if (viewDesign != null)
+            {
+                if(viewDesign.IsRoot && !allowOnRoot)
+                    return;
 
-        var op = new CompositeOperation(
-            _selectionManager.Selected
-            .Select(v => new DeleteViewOperation(v.View)).ToArray());
-
-        OperationManager.Instance.Do(op);
-    }
-
-    private void SingleDelete()
-    {
-        if (_viewBeingEdited == null)
-            return;
-
-        var viewToDelete = GetMostFocused(_viewBeingEdited.View);
-        var viewDesign = viewToDelete?.GetNearestDesign();
-
-        // don't delete the root view
-        if (viewDesign != null && viewDesign != _viewBeingEdited)
-        {
-            OperationManager.Instance.Do(
-                new DeleteViewOperation(viewDesign.View)
-            );
+                OperationManager.Instance.Do(
+                    operationFuc(viewDesign)
+                );
+            }
         }
     }
 
