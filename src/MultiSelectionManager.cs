@@ -15,14 +15,14 @@ namespace TerminalGuiDesigner;
 /// </summary>
 public class MultiSelectionManager
 {
-    List<View> selection = new();
+    List<Design> selection = new();
 
     /// <summary>
     /// Collection of all the views currently multi selected
     /// </summary>
-    public IReadOnlyCollection<View> Selected => selection.AsReadOnly();
+    public IReadOnlyCollection<Design> Selected => selection.AsReadOnly();
 
-    Dictionary<View, ColorScheme> oldSchemes = new();
+    Dictionary<Design, ColorScheme> oldSchemes = new();
     
     /// <summary>
     /// The color scheme to assign to controls that have been 
@@ -42,22 +42,22 @@ public class MultiSelectionManager
         };
     }
 
-    public void SetSelection(params View[] views)
+    public void SetSelection(params Design[] designs)
     {
         // reset anything that was previously selected
         Clear();
 
         // create a new selection based on these
-        selection = new List<View>(views);
+        selection = new List<Design>(designs);
 
-        foreach(var v in views)
+        foreach(var d in designs)
         {
             // record the old color scheme so we can get reset it
             // later when it is no longer selected
-            oldSchemes.Add(v, v.ColorScheme);
+            oldSchemes.Add(d, d.View.ColorScheme);
 
             // since the view is selected mark it so
-            v.ColorScheme = SelectedScheme;
+            d.View.ColorScheme = SelectedScheme;
         }
     }
     internal void Clear()
@@ -67,7 +67,7 @@ public class MultiSelectionManager
         // reset old color schemes so views don't still look selected
         foreach(var kvp in oldSchemes)
         {
-            kvp.Key.ColorScheme = kvp.Value;
+            kvp.Key.View.ColorScheme = kvp.Value;
         }
         oldSchemes.Clear();
     }

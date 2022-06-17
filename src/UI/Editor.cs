@@ -519,19 +519,31 @@ Ctrl+Q - Quit
 
     private void MoveControl(int deltaX, int deltaY)
     {
+        if(_selectionManager.Selected.Any())
+        {
+            MultiMoveControl(deltaX,deltaY);
+        }
+        else
+        {
+            SingleMoveControl(deltaX,deltaY);
+        }
+    }
+
+    private void MultiMoveControl(int deltaX, int deltaY)
+    {
+        foreach(var d in _selectionManager.Selected)
+        {
+            d.Offset(deltaX,deltaY);
+        }
+    }
+
+    private void SingleMoveControl(int deltaX, int deltaY)
+    {
         var view = GetMostFocused(this);
 
         if (view.Data is Design d)
-        {
-            if (d.View.X.IsAbsolute(out int x))
-            {
-                d.View.X = Math.Min(Math.Max(x + deltaX, 0), view.SuperView.Bounds.Width - 1);
-            }
-
-            if (d.View.Y.IsAbsolute(out int y))
-            {
-                d.View.Y = Math.Min(Math.Max(y + deltaY, 0), view.SuperView.Bounds.Height - 1);
-            }
+        { 
+            d.Offset(deltaX,deltaY);
         }
     }
 
@@ -552,10 +564,9 @@ Ctrl+Q - Quit
         if (_viewBeingEdited == null)
             return;
 
-
         var op = new CompositeOperation(
             _selectionManager.Selected
-            .Select(v => new DeleteViewOperation(v)).ToArray());
+            .Select(v => new DeleteViewOperation(v.View)).ToArray());
 
         OperationManager.Instance.Do(op);
     }
