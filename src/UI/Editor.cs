@@ -248,6 +248,7 @@ Ctrl+Q - Quit
     {
         base.Redraw(bounds);
 
+
         // if we are editing a view
         if(_viewBeingEdited != null)
         {
@@ -269,6 +270,19 @@ Ctrl+Q - Quit
                     }
                 }
             }
+
+            
+            if(_mouseManager.SelectionBox != null)
+            {
+                var box = _mouseManager.SelectionBox.Value;
+                for(int x = 0;x<box.Width;x++)
+                    for(int y = 0;y<box.Height;y++)
+                { 	
+                    if(y==0 || y == box.Height-1 || x==0 || x== box.Width-1)
+                        AddRune(box.X + x,box.Y + y,'.');
+                }
+            }
+
             return;
         }
 
