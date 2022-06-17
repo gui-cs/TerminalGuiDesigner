@@ -429,6 +429,10 @@ Ctrl+Q - Quit
                 enableShowFocused = !enableShowFocused;
                 SetNeedsDisplay();
             }
+            if(keyEvent.Key == _keyMap.SelectAll)
+            {
+                SelectAll();
+            }
 
             switch (keyEvent.Key)
             {
@@ -469,6 +473,18 @@ Ctrl+Q - Quit
         }
 
         return false;
+    }
+
+    private void SelectAll()
+    {
+        if(_viewBeingEdited == null)
+            return;
+
+        var everyone = _viewBeingEdited.GetAllDesigns()
+            .Where(d=>!d.IsRoot)
+            .ToArray();
+
+        _selectionManager.SetSelection(everyone);
     }
 
     private void Paste()

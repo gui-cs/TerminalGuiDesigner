@@ -24,4 +24,5 @@ public class KeyMap
     public Key Paste { get; set; } = Key.CtrlMask | Key.V;
     public Key Rename {get; set;} = Key.CtrlMask | Key.R;
     public Key SetShortcut {get; set;} = Key.CtrlMask | Key.T;
+    public Key SelectAll {get; set;} = Key.CtrlMask | Key.A;
 }
