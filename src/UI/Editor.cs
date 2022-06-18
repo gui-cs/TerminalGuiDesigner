@@ -21,7 +21,8 @@ public class Editor : Toplevel
     readonly KeyMap _keyMap;
 
     KeyboardManager _keyboardManager;
-    MouseManager _mouseManager = new();
+    MultiSelectionManager _selectionManager = new();
+    MouseManager _mouseManager;
     private bool _menuOpen;
 
     private string GetHelpWithNothingLoaded()
@@ -81,7 +82,7 @@ Ctrl+Q - Quit
         }
 
         _keyboardManager = new KeyboardManager(_keyMap);
-
+        _mouseManager = new MouseManager(_selectionManager);
     }
 
     public void Run(Options options)
@@ -248,6 +249,7 @@ Ctrl+Q - Quit
     {
         base.Redraw(bounds);
 
+
         // if we are editing a view
         if(_viewBeingEdited != null)
         {
@@ -269,6 +271,19 @@ Ctrl+Q - Quit
                     }
                 }
             }
+
+            
+            if(_mouseManager.SelectionBox != null)
+            {
+                var box = _mouseManager.SelectionBox.Value;
+                for(int x = 0;x<box.Width;x++)
+                    for(int y = 0;y<box.Height;y++)
+                { 	
+                    if(y==0 || y == box.Height-1 || x==0 || x== box.Width-1)
+                        AddRune(box.X + x,box.Y + y,'.');
+                }
+            }
+
             return;
         }
 
@@ -414,6 +429,10 @@ Ctrl+Q - Quit
                 enableShowFocused = !enableShowFocused;
                 SetNeedsDisplay();
             }
+            if(keyEvent.Key == _keyMap.SelectAll)
+            {
+                SelectAll();
+            }
 
             switch (keyEvent.Key)
             {
@@ -454,6 +473,18 @@ Ctrl+Q - Quit
         }
 
         return false;
+    }
+
+    private void SelectAll()
+    {
+        if(_viewBeingEdited == null)
+            return;
+
+        var everyone = _viewBeingEdited.GetAllDesigns()
+            .Where(d=>!d.IsRoot)
+            .ToArray();
+
+        _selectionManager.SetSelection(everyone);
     }
 
     private void Paste()
@@ -504,39 +535,45 @@ Ctrl+Q - Quit
 
     private void MoveControl(int deltaX, int deltaY)
     {
-        var view = GetMostFocused(this);
-
-        if (view.Data is Design d)
-        {
-            if (d.View.X.IsAbsolute(out int x))
-            {
-                d.View.X = Math.Min(Math.Max(x + deltaX, 0), view.SuperView.Bounds.Width - 1);
-            }
-
-            if (d.View.Y.IsAbsolute(out int y))
-            {
-                d.View.Y = Math.Min(Math.Max(y + deltaY, 0), view.SuperView.Bounds.Height - 1);
-            }
-        }
+        DoForSelectedViews((d)=>new MoveViewOperation(d,deltaX,deltaY));
     }
 
     private void Delete()
     {
-        if (_viewBeingEdited == null)
+        DoForSelectedViews((d)=>new DeleteViewOperation(d.View));
+    }
+
+    private void DoForSelectedViews(Func<Design, Operation> operationFuc, bool allowOnRoot=false)
+    {
+        if(_viewBeingEdited == null)
             return;
 
-        var viewToDelete = GetMostFocused(_viewBeingEdited.View);
-        var viewDesign = viewToDelete?.GetNearestDesign();
-
-        // don't delete the root view
-        if(viewDesign != null && viewDesign != _viewBeingEdited)
+        if(_selectionManager.Selected.Any())
         {
-            OperationManager.Instance.Do(
-                new DeleteViewOperation(viewDesign.View)
-            );
-        }
+            var op = new CompositeOperation(
+                _selectionManager.Selected
+                .Select(operationFuc).ToArray());
 
+            OperationManager.Instance.Do(op);
+        }
+        else
+        {
+            var singleSelection = GetMostFocused(_viewBeingEdited.View);
+            var viewDesign = singleSelection?.GetNearestDesign();
+
+            // don't delete the root view
+            if (viewDesign != null)
+            {
+                if(viewDesign.IsRoot && !allowOnRoot)
+                    return;
+
+                OperationManager.Instance.Do(
+                    operationFuc(viewDesign)
+                );
+            }
+        }
     }
+
     private void Open()
     {
         var ofd = new OpenDialog("Open", $"Select {SourceCodeFile.ExpectedExtension} file",
@@ -576,7 +613,8 @@ Ctrl+Q - Quit
         // clear the history
         OperationManager.Instance.ClearUndoRedo();
         Design? instance = null;
-       
+        _selectionManager.Clear();
+
         Task.Run(()=>{
             
             var decompiler = new CodeToView(new SourceCodeFile(toOpen));
@@ -699,6 +737,7 @@ Ctrl+Q - Quit
         // clear the history
         OperationManager.Instance.ClearUndoRedo();
         Design? instance = null;
+        _selectionManager.Clear();
 
         var open = new LoadingDialog(toOpen);
 

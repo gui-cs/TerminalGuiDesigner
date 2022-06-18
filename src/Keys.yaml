@@ -17,3 +17,4 @@ Copy: C, CtrlMask
 Paste: V, CtrlMask
 Rename: R, CtrlMask
 SetShortcut: T, CtrlMask
+SelectAll: A, CtrlMask
