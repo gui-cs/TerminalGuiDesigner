@@ -17,7 +17,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>TerminalGuiDesigner</PackageId>
-    <Version>1.0.10</Version>
+    <Version>1.0.11</Version>
     <Authors>Thomas Nind</Authors>
     <Nullable>enable</Nullable>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -30,6 +30,11 @@
     <PackageIcon>logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>
+    v1.0.11
+     * Multi select support for delete and keyboard move
+     * Prevent Copy/Paste on root view
+     * Prevent changing Height on Buttons
+     * Added nuget icon
     v1.0.10
      * Support for setting shortcuts in menus (defaults to Ctrl+T)
      * Support for renaming menu items (defaults to Ctrl+R)
