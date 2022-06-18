@@ -1,6 +1,9 @@
 ﻿using NUnit.Framework;
 using System;
+using System.IO;
 using Terminal.Gui;
+using TerminalGuiDesigner;
+using TerminalGuiDesigner.Operations;
 
 namespace tests
 {
@@ -25,6 +28,18 @@ namespace tests
         {
             Application.Shutdown();
             _init = false;
+        }
+
+        protected Design Get10By10View()
+        {
+            // start with blank slate
+            OperationManager.Instance.ClearUndoRedo();
+
+            var v = new View(new Rect(0, 0, 10, 10));
+            var d = new Design(new SourceCodeFile(new FileInfo("TenByTen.cs")), Design.RootDesignName, v);
+            v.Data = d;
+
+            return d;
         }
     }
 }

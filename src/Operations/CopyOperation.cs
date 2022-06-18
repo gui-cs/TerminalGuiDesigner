@@ -10,8 +10,8 @@ public class CopyOperation : Operation
         _toCopy = toCopy;
         SupportsUndo = false;
 
-        // cannot copy a view if it is orphaned
-        if(toCopy.View.SuperView == null)
+        // cannot copy a view if it is orphaned or root
+        if(toCopy.View.SuperView == null || toCopy.IsRoot)
             IsImpossible = true;
     }
 
