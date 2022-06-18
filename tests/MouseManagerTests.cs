@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
@@ -142,5 +143,79 @@ public class MouseManagerTests : Tests
 
         // we have now committed the drag so could undo
         Assert.AreEqual(1,OperationManager.Instance.UndoStackSize);
+    }
+
+    [TestCase(0,0,3,5,new []{0,2})] // drag from 0,0 to 3,5 and expect labels 0 and 2 to be selected
+    [TestCase(0,0,10,10,new []{0,1,2})] // drag over all
+    public void TestDragSelectionBox(int xStart,int yStart,int xEnd, int yEnd,int[] expectSelected)
+    {
+        var d = Get10By10View();
+
+/*
+  Hi
+    Hi
+  Hi
+*/
+
+        var lbl1 = new Label(2,0,"Hi");
+        var lbl2 = new Label(4,1,"Hi");
+        var lbl3 = new Label(2,2,"Hi");
+
+        var lbl1Design = new Design(d.SourceCode,"lbl1",lbl1);
+        var lbl2Design = new Design(d.SourceCode,"lbl2",lbl2);
+        var lbl3Design = new Design(d.SourceCode,"lbl3",lbl3);
+
+        lbl1.Data = lbl1Design;
+        lbl2.Data = lbl2Design;
+        lbl3.Data = lbl3Design;
+
+        var labels = new []{lbl1Design,lbl2Design,lbl3Design};
+
+        d.View.Add(lbl1);
+        d.View.Add(lbl2);
+        d.View.Add(lbl3);
+
+        var selection = new MultiSelectionManager();
+        var mgr = new MouseManager(selection);
+
+        // user presses down
+        var e = new MouseEvent{
+            X = xStart,
+            Y = yStart,
+            Flags = MouseFlags.Button1Pressed
+        };
+
+        mgr.HandleMouse(e,d);
+
+        // user pulled selection box to destination
+        e = new MouseEvent{
+            X = xEnd,
+            Y = yEnd,
+            Flags = MouseFlags.Button1Pressed
+        };
+        mgr.HandleMouse(e,d);
+
+        // user releases mouse (in place)
+        e = new MouseEvent{
+            X = xEnd,
+            Y = yEnd,
+        };
+        mgr.HandleMouse(e,d);
+
+        // do not expect dragging selection box to change anything
+        // or be undoable
+        Assert.AreEqual(0,OperationManager.Instance.UndoStackSize);
+
+        // for each selectable thing
+        for (int i = 0; i < labels.Length; i++)
+        {
+            // its selection status should match the expectation
+            // passed in the test case
+            Assert.AreEqual(
+                expectSelected.Contains(i),
+                selection.Selected.ToList().Contains(labels[i])
+                ,$"Expectation wrong for label index {i} (indexes are 0 based)");
+        }
+
     }
 }
