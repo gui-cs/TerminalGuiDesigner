@@ -50,6 +50,13 @@ public class Property : ToCodeBase
                 value = new Rune(ch);
             }
         }
+        if (PropertyInfo.PropertyType == typeof(Dim))
+        {
+            if (value is int i)
+            {
+                value = Dim.Sized(i);
+            }
+        }
         if (PropertyInfo.PropertyType == typeof(ustring))
         {
             if (value is string s)

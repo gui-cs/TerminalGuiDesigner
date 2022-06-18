@@ -203,7 +203,12 @@ namespace TerminalGuiDesigner.UI
             if(d.View is DateField || d.View is TextField || d.View is TextView)
                 return;
 
-            _currentOperation = new SetPropertyOperation(d,d.GetDesignableProperty("Text"),d.View.Text,d.View.Text);
+            var textProp = d.GetDesignableProperty("Text");
+
+            if(textProp != null)
+            {
+                _currentOperation = new SetPropertyOperation(d,textProp,d.View.Text,d.View.Text);
+            }
         }
 
         private void FinishOperation()

@@ -76,4 +76,71 @@ public class MouseManagerTests : Tests
         // we have now committed the drag so could undo
         Assert.AreEqual(1,OperationManager.Instance.UndoStackSize);
     }
+
+
+    [Test]
+    public void TestDragResizeButton()
+    {
+        var d = Get10By10View();
+
+        var btn = new Button(0,0,"Hey");
+        var btnDesign = new Design(d.SourceCode,"myBtn",btn);
+        btn.Data = btnDesign;
+        d.View.Add(btn);
+
+        var selection = new MultiSelectionManager();
+        var mgr = new MouseManager(selection);
+
+        // we haven't done anything yet
+        Assert.AreEqual(0,OperationManager.Instance.UndoStackSize);
+        Assert.AreEqual(0,btn.Bounds.X);
+        Assert.AreEqual(0,btn.Bounds.Y);
+        Assert.AreEqual(7,btn.Bounds.Width);
+        Assert.AreEqual(1,btn.Bounds.Height);
+
+        // user presses down in the lower right of control
+        var e = new MouseEvent{
+            X = 6,
+            Y = 0,
+            Flags = MouseFlags.Button1Pressed
+        };
+
+        mgr.HandleMouse(e,d);
+
+        Assert.AreEqual(0,btn.Bounds.Y);
+
+        // we still haven't committed to anything
+        Assert.AreEqual(0,OperationManager.Instance.UndoStackSize);
+
+        // user pulled view size +1 width and +1 height
+        e = new MouseEvent{
+            X = 8,
+            Y = 1,
+            Flags = MouseFlags.Button1Pressed
+        };
+        mgr.HandleMouse(e,d);
+
+        Assert.AreEqual(0,btn.Bounds.X);
+        Assert.AreEqual(0,btn.Bounds.Y);
+        Assert.AreEqual(8,btn.Bounds.Width,"Expected resize to increase Width when dragging");
+        Assert.AreEqual(1,btn.Bounds.Height,"Expected resize of button to ignore Y component");
+
+        // we still haven't committed to anything
+        Assert.AreEqual(0,OperationManager.Instance.UndoStackSize);
+
+        // user releases mouse (in place)
+        e = new MouseEvent{
+            X = 8,
+            Y = 1,
+        };
+        mgr.HandleMouse(e,d);
+
+        Assert.AreEqual(0,btn.Bounds.X);
+        Assert.AreEqual(0,btn.Bounds.Y);
+        Assert.AreEqual(8,btn.Bounds.Width,"Expected resize to increase Width when dragging");
+        Assert.AreEqual(1,btn.Bounds.Height,"Expected resize of button to ignore Y component");
+
+        // we have now committed the drag so could undo
+        Assert.AreEqual(1,OperationManager.Instance.UndoStackSize);
+    }
 }
