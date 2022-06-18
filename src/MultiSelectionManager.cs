@@ -50,7 +50,7 @@ public class MultiSelectionManager
         // create a new selection based on these
         selection = new List<Design>(designs.Distinct());
 
-        foreach(var d in designs)
+        foreach(var d in selection)
         {
             // record the old color scheme so we can get reset it
             // later when it is no longer selected
