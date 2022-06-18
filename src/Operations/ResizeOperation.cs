@@ -28,12 +28,12 @@ public class ResizeOperation : Operation
     {
         if (BeingResized.View.X.IsAbsolute(out var x))
         {
-            BeingResized.GetDesignableProperty("Width").SetValue(Dim.Sized(Math.Max(1, DestinationX - x)));
+            BeingResized.GetDesignableProperty("Width")?.SetValue(Dim.Sized(Math.Max(1, DestinationX - x)));
         }
 
         if (BeingResized.View.Y.IsAbsolute(out var y))
         {
-            BeingResized.GetDesignableProperty("Height").SetValue(Dim.Sized(Math.Max(1, DestinationY - y)));
+            BeingResized.GetDesignableProperty("Height")?.SetValue(Dim.Sized(Math.Max(1, DestinationY - y)));
         }
         
         return true;
@@ -41,8 +41,8 @@ public class ResizeOperation : Operation
 
     public override void Undo()
     {
-        BeingResized.GetDesignableProperty("Width").SetValue(OriginalWidth);
-        BeingResized.GetDesignableProperty("Height").SetValue(OriginalHeight);
+        BeingResized.GetDesignableProperty("Width")?.SetValue(OriginalWidth);
+        BeingResized.GetDesignableProperty("Height")?.SetValue(OriginalHeight);
     }
 
     public override void Redo()
@@ -56,14 +56,13 @@ public class ResizeOperation : Operation
         // positions (i.e. not relative positioning - Bottom of other control etc).
 
         if (BeingResized.View.X.IsAbsolute(out var x))
-            BeingResized.View.Width = Math.Max(1,dest.X - x);
+            BeingResized.GetDesignableProperty("Width")?.SetValue(Math.Max(1,dest.X - x));
 
         DestinationX = dest.X;
 
         if (BeingResized.View.Y.IsAbsolute(out var y))
-            BeingResized.View.Height = Math.Max(1,dest.Y - y);
+            BeingResized.GetDesignableProperty("Height")?.SetValue(Math.Max(1,dest.Y - y));
 
         DestinationY = dest.Y;
-
     }
 }

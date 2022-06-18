@@ -88,12 +88,12 @@ public class DragOperation : Operation
 
         if (BeingDragged.View.X.IsAbsolute() && OriginX.IsAbsolute(out var originX))
         {
-            BeingDragged.GetDesignableProperty("X").SetValue(Pos.At(originX + (DestinationX - dx)));
+            BeingDragged.GetDesignableProperty("X")?.SetValue(Pos.At(originX + (DestinationX - dx)));
         }
 
         if (BeingDragged.View.Y.IsAbsolute() && OriginY.IsAbsolute(out var originY))
         {
-            BeingDragged.GetDesignableProperty("Y").SetValue(Pos.At(originY + (DestinationY - dy)));
+            BeingDragged.GetDesignableProperty("Y")?.SetValue(Pos.At(originY + (DestinationY - dy)));
         }
 
         return true;
@@ -130,12 +130,12 @@ public class DragOperation : Operation
 
         if (BeingDragged.View.X.IsAbsolute())
         {
-            BeingDragged.GetDesignableProperty("X").SetValue(OriginX);
+            BeingDragged.GetDesignableProperty("X")?.SetValue(OriginX);
         }
 
         if (BeingDragged.View.Y.IsAbsolute())
         {
-            BeingDragged.GetDesignableProperty("Y").SetValue(OriginY);
+            BeingDragged.GetDesignableProperty("Y")?.SetValue(OriginY);
         }
     }
 

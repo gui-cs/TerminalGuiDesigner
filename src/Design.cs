@@ -29,9 +29,9 @@ public class Design
 
     private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
-    public Property GetDesignableProperty(string propertyName)
+    public Property? GetDesignableProperty(string propertyName)
     {
-        return GetDesignableProperties().Single(p=>p.PropertyInfo.Name.Equals(propertyName));
+        return GetDesignableProperties().SingleOrDefault(p=>p.PropertyInfo.Name.Equals(propertyName));
     }
 
 
@@ -159,7 +159,9 @@ public class Design
     protected virtual IEnumerable<Property> LoadDesignableProperties()
     {
         yield return CreateProperty(nameof(View.Width));
-        yield return CreateProperty(nameof(View.Height));
+
+        if(AllowChangingHeight())
+            yield return CreateProperty(nameof(View.Height));
 
         yield return CreateProperty(nameof(View.X));
         yield return CreateProperty(nameof(View.Y));
@@ -292,7 +294,14 @@ public class Design
         }
     }
 
+    private bool AllowChangingHeight()
+    {
+        // don't support multi line buttons
+        if(View is Button)
+            return false;
 
+        return true; 
+    }
 
     private Property CreateSubProperty(string name, string subObjectName, object subObject)
     {
