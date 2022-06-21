@@ -5,7 +5,6 @@ using Terminal.Gui;
 using TerminalGuiDesigner;
 
 namespace tests;
-
 public class PosTests
 {
     [Test]

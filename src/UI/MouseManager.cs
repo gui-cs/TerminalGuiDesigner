@@ -32,10 +32,10 @@ public class MouseManager
         if (m.Flags.HasFlag(MouseFlags.Button1Pressed) 
             && resizeOperation == null && dragOperation == null && SelectionStart == null)
         {
-            var drag = viewBeingEdited.View.HitTest(m, out bool isLowerRight);
+            var drag = viewBeingEdited.View.HitTest(m, out bool isBorder, out bool isLowerRight);
 
             // if mousing down in empty space
-            if (drag != null && drag.IsContainerView() && !isLowerRight)
+            if (drag != null && drag.IsContainerView() && !isLowerRight && !isBorder)
             {
                 // start dragging a selection box
                 SelectionContainer = drag;
@@ -118,7 +118,7 @@ public class MouseManager
             if ( dragOperation != null)
             {
                 // see if we are dragging into a new container
-                var dropInto = viewBeingEdited.View.HitTest(m, out _, dragOperation.BeingDragged.View);
+                var dropInto = viewBeingEdited.View.HitTest(m, out _, out _, dragOperation.BeingDragged.View);
 
                 // we are dragging into a new container
                 dragOperation.DropInto = dropInto;

@@ -173,7 +173,7 @@ public static class ViewExtensions
         // TODO: are there any others?
         return v is TabView || v is FrameView || v is Window || type == typeof(View) || type.Name.Equals("ContentView");
     }
-    public static View? HitTest(this View w, MouseEvent m, out bool isLowerRight, params View[] ignoring)
+    public static View? HitTest(this View w, MouseEvent m, out bool isBorder,out bool isLowerRight, params View[] ignoring)
     {
         // hide the views while we perform the hit test
         foreach(View v in ignoring)
@@ -188,11 +188,22 @@ public static class ViewExtensions
         
         if (hit != null)
         {
-            hit.ViewToScreen(hit.Bounds.Right, hit.Bounds.Bottom,out int screenX, out int screenY,true);
-            isLowerRight = Math.Abs(screenX - point.X) <= resizeBoxArea && Math.Abs(screenY - point.Y) <= resizeBoxArea;
+            hit.ViewToScreen(hit.Bounds.Right, hit.Bounds.Bottom,out int lowerRightX, out int lowerRightY,true);
+            hit.ViewToScreen(0, 0,out int upperLeftX, out int upperLeftY,true);
+
+            isLowerRight = Math.Abs(lowerRightX - point.X) <= resizeBoxArea && Math.Abs(lowerRightY - point.Y) <= resizeBoxArea;
+
+            isBorder = 
+                m.X == lowerRightX-1 ||
+                m.X == upperLeftX ||
+                m.Y == lowerRightY-1 ||
+                m.Y == upperLeftY;
         }
         else
+        {
             isLowerRight = false;
+            isBorder = false;
+        }
 
         // hide the views while we perform the hit test
         foreach (View v in ignoring)

@@ -146,7 +146,7 @@ Ctrl+Q - Quit
                 //right click
                 if(m.Flags.HasFlag(_keyMap.RightClick))
                 {
-                    var hit = _viewBeingEdited.View.HitTest(m, out _);
+                    var hit = _viewBeingEdited.View.HitTest(m, out _, out _);
                     
                     if(hit != null)
                     {
