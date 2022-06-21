@@ -35,7 +35,7 @@ public class MouseManager
             var drag = viewBeingEdited.View.HitTest(m, out bool isLowerRight);
 
             // if mousing down in empty space
-            if (drag != null && drag.IsContainerView())
+            if (drag != null && drag.IsContainerView() && !isLowerRight)
             {
                 // start dragging a selection box
                 SelectionContainer = drag;
