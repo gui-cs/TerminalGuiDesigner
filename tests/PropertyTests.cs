@@ -6,6 +6,7 @@ using System.CodeDom.Compiler;
 using System.IO;
 using System.Linq;
 using Terminal.Gui;
+using Terminal.Gui.Graphs;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.ToCode;
 using Attribute = Terminal.Gui.Attribute;
@@ -81,6 +82,36 @@ public class PropertyTests : Tests
         Assert.AreEqual("'F'",code);
     }
 
+    [Test]
+    public void TestChanging_LineViewOrientation()
+    {
+        var v = Get10By10View();
+        var lv = (LineView)new ViewFactory().Create(typeof(LineView));
+        var d = new Design(v.SourceCode, "lv", lv);
+
+        v.View.Add(lv);
+        lv.IsInitialized = true;
+
+        Assert.AreEqual(Orientation.Horizontal, lv.Orientation);
+        Assert.AreEqual(Application.Driver.HRLine, lv.LineRune);
+        var prop = d.GetDesignableProperty(nameof(LineView.Orientation));
+        
+        Assert.IsNotNull(prop);
+        prop?.SetValue(Orientation.Vertical);
+        Assert.AreEqual(Application.Driver.VLine, lv.LineRune);
+
+        // now try with a dim fill 
+        lv.Height = Dim.Fill();
+        lv.Width = 1;
+
+        prop?.SetValue(Orientation.Horizontal);
+        Assert.AreEqual(Orientation.Horizontal, lv.Orientation);
+        Assert.AreEqual(Application.Driver.HRLine, lv.LineRune);
+        Assert.AreEqual(Dim.Fill(), lv.Width);
+        Assert.AreEqual(Dim.Sized(1), lv.Height);
+
+
+    }
     public static string ExpressionToCode(CodeExpression expression)
     {
         CSharpCodeProvider provider = new ();

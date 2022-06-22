@@ -82,9 +82,16 @@ public class Property : ToCodeBase
                 value = new ListWrapper(a.ToList());
             }
         }
-        if(PropertyInfo.Name == nameof(LineView.Orientation) && Design.View is LineView v && value is Orientation newOrientation)
-        {
 
+        // TODO: This hack gets around an ArgumentException that gets thrown when
+        // switching from Computed to Absolute values of Dim/Pos
+        Design.View.IsInitialized = false;
+
+        // if a LineView and changing Orientation then also flip
+        // the Height/Width and set appropriate new rune
+        if (PropertyInfo.Name == nameof(LineView.Orientation) 
+            && Design.View is LineView v && value is Orientation newOrientation)
+        {
             switch (newOrientation)
             {
                 case Orientation.Horizontal:
@@ -103,9 +110,6 @@ public class Property : ToCodeBase
             }
         }
 
-        // TODO: This hack gets around an ArgumentException that gets thrown when
-        // switching from Computed to Absolute values of Dim/Pos
-        Design.View.IsInitialized = false;
         PropertyInfo.SetValue(DeclaringObject, value);
 
         CallRefreshMethodsIfAny();
