@@ -2,6 +2,7 @@
 using System.CodeDom;
 using System.Reflection;
 using Terminal.Gui;
+using Terminal.Gui.Graphs;
 using Terminal.Gui.TextValidateProviders;
 using TerminalGuiDesigner;
 using Attribute = Terminal.Gui.Attribute;
@@ -79,6 +80,26 @@ public class Property : ToCodeBase
                 // for setting an IListDataSource.  Just
                 // convert them to ListWrappers
                 value = new ListWrapper(a.ToList());
+            }
+        }
+        if(PropertyInfo.Name == nameof(LineView.Orientation) && Design.View is LineView v && value is Orientation newOrientation)
+        {
+
+            switch (newOrientation)
+            {
+                case Orientation.Horizontal:
+                    v.Width = v.Height;
+                    v.Height = 1;
+                    v.LineRune = Application.Driver.HLine;
+
+                    break;
+                case Orientation.Vertical:
+                    v.Height = v.Width;
+                    v.Width = 1;
+                    v.LineRune = Application.Driver.VLine;
+                    break;
+                default:
+                    throw new ArgumentException($"Unknown Orientation {newOrientation}");
             }
         }
 
