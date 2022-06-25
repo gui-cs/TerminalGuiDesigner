@@ -68,7 +68,7 @@ public class DragOperation : Operation
     }
 
     private View? dropInto;
-    public DragOperation(Design beingDragged, int destX, int destY, Design[] alsoDrag)
+    public DragOperation(Design beingDragged, int destX, int destY, Design[]? alsoDrag)
     {
         BeingDragged = beingDragged;
         
@@ -76,7 +76,7 @@ public class DragOperation : Operation
 
         DestinationX = destX;
         DestinationY = destY;
-        AlsoDrag = alsoDrag;
+        AlsoDrag = alsoDrag ?? new Design[0];
 
         foreach(var d in AlsoDrag)
         {
