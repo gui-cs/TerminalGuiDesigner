@@ -54,9 +54,22 @@ public class MouseManager
                 }
                 else
                 {
-                    dragOperation = new DragOperation(design, dest.X, dest.Y);
+                    var multiSelected = _selectionManager.Selected.ToArray();
+                    
+                    // if user is click and drag moving a single view
+                    // in a multi selection.
+                    if(multiSelected.Contains(design))
+                    {
+                        // drag all the views at once                    
+                        dragOperation = new DragOperation(design, dest.X, dest.Y,
+                            multiSelected.Except(new []{design}).ToArray());
+                    }
+                    else
+                    {
+                        // else drag only the non selected one
+                        dragOperation = new DragOperation(design, dest.X, dest.Y,new Design[0]);
+                    }                    
                 }
-                
             }
         }
 
