@@ -322,9 +322,9 @@ public class Design
     /// are view specific e.g. add/remove column from a <see cref="TableView"/>
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<IOperation> GetExtraOperations()
+    public IEnumerable<IOperation> GetExtraOperations(MultiSelectionManager selectionManager)
     {
-        return GetExtraOperations(Point.Empty);
+        return GetExtraOperations(Point.Empty,selectionManager);
     }
     /// <summary>
     /// Returns one off atomic activities that can be performed on the view e.g. 'add a column'.
@@ -334,9 +334,9 @@ public class Design
     /// <see cref="Point.Empty"/></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    internal IEnumerable<IOperation> GetExtraOperations(Point pos)
+    internal IEnumerable<IOperation> GetExtraOperations(Point pos, MultiSelectionManager selectionManager)
     {
-        yield return new CopyOperation(this);
+        yield return new CopyOperation(this,selectionManager);
 
         if (View is TableView tv)
         {
@@ -358,7 +358,7 @@ public class Design
         if(IsContainerView || IsRoot)
         {
             yield return new AddViewOperation(SourceCode,this);
-            yield return new PasteOperation(this);
+            yield return new PasteOperation(this,selectionManager);
         }
         else
         {

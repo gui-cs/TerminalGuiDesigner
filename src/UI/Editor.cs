@@ -186,11 +186,14 @@ Ctrl+Q - Quit
 
         if(m == null)
         {
-            options = d.GetExtraOperations().Where(c=>!c.IsImpossible);
+            options = d.GetExtraOperations(_selectionManager).Where(c=>!c.IsImpossible);
         }
         else
         {
-            options = d.GetExtraOperations(d.View.ScreenToClient(m.Value.X, m.Value.Y)).Where(c=>!c.IsImpossible);
+            options = d.GetExtraOperations(
+                d.View.ScreenToClient(m.Value.X, m.Value.Y),
+                _selectionManager                
+                ).Where(c=>!c.IsImpossible);
         }
         
         
@@ -493,7 +496,7 @@ Ctrl+Q - Quit
 
         if (d != null)
         {
-            var paste = new PasteOperation(d);
+            var paste = new PasteOperation(d,_selectionManager);
 
             if(paste.IsImpossible)
                 return;
@@ -508,7 +511,7 @@ Ctrl+Q - Quit
 
         if (d != null)
         {
-            var copy = new CopyOperation(d);
+            var copy = new CopyOperation(d,_selectionManager);
             OperationManager.Instance.Do(copy);
         }
     }
@@ -519,7 +522,7 @@ Ctrl+Q - Quit
 
         if (d != null)
         {
-            var options = d.GetExtraOperations().Where(o=>!o.IsImpossible).ToArray();
+            var options = d.GetExtraOperations(_selectionManager).Where(o=>!o.IsImpossible).ToArray();
 
             if(options.Any() && Modals.Get("Operations","Ok",options, out var selected) && selected != null)
             {

@@ -22,7 +22,7 @@ internal class CopyPasteTests : Tests
         top.Add(d.View);
 
         Assert.IsTrue(d.IsRoot);
-        var copy = new CopyOperation(d);
+        var copy = new CopyOperation(d,new MultiSelectionManager());
 
         Assert.IsTrue(copy.IsImpossible);
     }

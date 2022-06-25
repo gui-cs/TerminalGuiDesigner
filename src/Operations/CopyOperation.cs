@@ -2,20 +2,40 @@ namespace TerminalGuiDesigner.Operations;
 
 public class CopyOperation : Operation
 {
-    public static Design? LastCopiedDesign {get; private set;}
-    private Design _toCopy;
+    public static Design[]? LastCopiedDesign {get; private set;}
+    private Design[] _toCopy;
 
-    public CopyOperation(Design toCopy)
+    public CopyOperation(Design? single, MultiSelectionManager multi)
     {
-        _toCopy = toCopy;
+        if(multi.Selected.Any())
+        {
+            _toCopy = multi.Selected.ToArray();
+        }
+        else if(single != null)
+        {
+            _toCopy = new []{single};
+        }
+        else
+        {
+            _toCopy = new Design[0];
+            IsImpossible = true;
+            return;
+        }
+
         SupportsUndo = false;
 
         // cannot copy a view if it is orphaned or root
-        if(toCopy.View.SuperView == null || toCopy.IsRoot)
+        if(_toCopy.Any(c=>c.View.SuperView == null || c.IsRoot))
             IsImpossible = true;
     }
 
-    // TODO: override ToString to indicate what they are actually copying
+    public override string ToString()
+    {
+        if(_toCopy.Length > 1)
+            return $"Copy {_toCopy.Length} Items";
+
+        return _toCopy.Length > 0 ? $"Copy {_toCopy[0]}" : "Copy";
+    }
 
     public override bool Do()
     {
