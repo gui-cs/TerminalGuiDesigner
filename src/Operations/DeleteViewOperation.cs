@@ -14,6 +14,10 @@ public class DeleteViewOperation : Operation
 
         if (delete.Data is Design d)
         {
+            // don't delete the root view!
+            if (d.IsRoot)
+                IsImpossible = true;
+
             // there are view(s) that depend on us (e.g. for positioning)
             // deleting us would go very badly
             if (d.GetDependantDesigns().Any())

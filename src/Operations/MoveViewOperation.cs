@@ -25,12 +25,15 @@ public class MoveViewOperation : Operation
 
         // start out assuming X and Y are PosRelative so cannot be moved
         IsImpossible = true;
+        var super = BeingMoved.View.SuperView;
+        int maxWidth = (super?.Bounds.Width ?? int.MaxValue) - 1;
+        int maxHeight = (super?.Bounds.Height ?? int.MaxValue) - 1;
 
-        if(BeingMoved.View.X.IsAbsolute(out var x))
+        if (BeingMoved.View.X.IsAbsolute(out var x))
         {
             // x is absolute so record where this operation
             // moves to
-            DestinationX = Math.Min(Math.Max(x + deltaX, 0), BeingMoved.View.SuperView.Bounds.Width - 1);
+            DestinationX = Math.Min(Math.Max(x + deltaX, 0), maxWidth);
 
             // if it moves it somewhere then command isn't impossible
             if(DestinationX != x)
@@ -41,7 +44,7 @@ public class MoveViewOperation : Operation
         {
             // y is absolute so record where this operation
             // moves to
-            DestinationY = Math.Min(Math.Max(y + deltaY, 0), BeingMoved.View.SuperView.Bounds.Height - 1);
+            DestinationY = Math.Min(Math.Max(y + deltaY, 0), maxHeight);
         
             // if it moves it somewhere then command isn't impossible
             if(DestinationY != y)
