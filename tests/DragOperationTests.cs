@@ -1,3 +1,4 @@
+using System.Linq;
 using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
@@ -78,8 +79,60 @@ public class DragOperationTests : Tests
         Assert.AreEqual(Pos.At(0),lbl1.Y);
         Assert.AreEqual(Pos.At(1),lbl2.X);
         Assert.AreEqual(Pos.At(1),lbl2.Y);
+    }
+    
+    [Test]
+    public void TestSimpleDrag_IntoAnotherView()
+    {
+        var d = Get10By10View();
+
+        // setup 2 large subviews at diagonals 
+        // to one another within the main 10x10 view
+        var container1 = new View{
+            X=0,
+            Y=1,
+            Width = 5,
+            Height = 4
+        };
+        var container2 = new View{
+            X=5,
+            Y=6,
+            Width = 5,
+            Height = 4
+        };
+
+        d.View.Add(container1);
+        d.View.Add(container2);
+
+
+        var lbl = new Label(1,2,"Hi there buddy");
+        var lblDesign = new Design(d.SourceCode,"mylabel",lbl);
+        lbl.Data = lblDesign;
+        container1.Add(lbl);
+
+        // start drag in center of control
+        var drag = new DragOperation(lblDesign,3,2,null);
+      
+        // drag down to 1,1 of the other box
+        drag.ContinueDrag(new Point(6,7));
+        drag.DropInto = container2;
+
+        Assert.AreEqual(Pos.At(4),lbl.X);
+        Assert.AreEqual(Pos.At(7),lbl.Y);
+        Assert.Contains(lbl,container1.Subviews.ToArray(),"Did not expect continue drag to move to a new container");
+        
+        // finalise the operation
+        drag.Do();
+        Assert.IsFalse(container1.Subviews.Contains(lbl));
+        Assert.Contains(lbl,container2.Subviews.ToArray(),"Expected new container to be the one we dropped into");
+        Assert.AreEqual(Pos.At(-1),lbl.X);
+        Assert.AreEqual(Pos.At(2),lbl.Y);
+
+        // now test undoing it
+        drag.Undo();
+        Assert.AreEqual(Pos.At(1),lbl.X);
+        Assert.AreEqual(Pos.At(2),lbl.Y);
+        Assert.Contains(lbl,container1.Subviews.ToArray(),"Expected undo to return view to its original parent");
 
     }
-
-    //TODO: Drag into another view tests
 }
