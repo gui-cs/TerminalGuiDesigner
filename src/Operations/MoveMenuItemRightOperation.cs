@@ -4,9 +4,17 @@ namespace TerminalGuiDesigner.Operations;
 
 public class MoveMenuItemRightOperation : MenuItemOperation
 {
+
+    /// <summary>
+    /// Set to insert at a specific index.  Leave null
+    /// to simply move it to the bottom of the new submenu
+    /// </summary>
+    public int? InsertionIndex { get; internal set; }
+
     public MoveMenuItemRightOperation(MenuItem toMove): base(toMove)
     {
     }
+
 
     public override bool Do()
     {
@@ -29,7 +37,15 @@ public class MoveMenuItemRightOperation : MenuItemOperation
 
         // add us to the submenu
         var submenuChildren = addTo.Children.ToList<MenuItem>();
-        submenuChildren.Add(OperateOn);
+        
+        if(InsertionIndex != null)
+        {
+            submenuChildren.Insert(InsertionIndex.Value,OperateOn);
+        }
+        else
+        {
+            submenuChildren.Add(OperateOn);
+        }
 
         // update the main menu
         Parent.Children = children.ToArray();

@@ -267,4 +267,91 @@ class MenuBarTests : Tests
         Assert.AreEqual(mi.Shortcut,bar.Menus[0].Children[0].Shortcut);
         Assert.AreNotSame(mi,bar.Menus[0].Children[1]);
     }
+
+    [Test]
+    public void TestMoveMenuItemLeft_CannotMoveRootItems()
+    {
+        var bar = GetMenuBar();
+
+        var mi = bar.Menus[0].Children[0];
+
+        // cannot move a root item
+        Assert.IsFalse(new MoveMenuItemLeftOperation(
+            bar.Menus[0].Children[0]
+        ).Do());
+    }
+
+    [Test]
+    public void TestMoveMenuItemLeft_MoveTopChild()
+    {
+        var bar = GetMenuBar();
+
+        // Set up a menu like:
+
+        /*
+           File
+            Head1
+            Head2 -> Child1
+            Head3 -> Child2 
+        */
+
+        var mi = bar.Menus[0].Children[0];
+        mi.Title = "Head1";
+
+        MenuItem topChild;
+        MenuBarItem head2;
+
+        bar.Menus[0].Children = new []
+        {
+            bar.Menus[0].Children[0],
+            head2 = new MenuBarItem(new []
+            {
+                topChild = new MenuItem("Child1",null,()=>{})
+                {
+                    Data = "Child1",
+                    Shortcut = Key.J | Key.CtrlMask
+                },
+                new MenuItem("Child2",null,()=>{})
+                {
+                    Data = "Child2",
+                    Shortcut = Key.F | Key.CtrlMask
+                }
+            }){
+                Title = "Head2"
+            },
+            new MenuItem("Head3",null,()=>{})
+        };
+
+        Assert.AreEqual(3, bar.Menus[0].Children.Length);
+        Assert.AreEqual(2, head2.Children.Length);
+        Assert.AreSame(topChild,head2.Children[0]);
+
+        var cmd = new MoveMenuItemLeftOperation(topChild);
+        Assert.IsTrue(cmd.Do());
+
+        // move the top child left should pull
+        // it out of the submenu and onto the root
+        Assert.AreEqual(4, bar.Menus[0].Children.Length);
+        Assert.AreEqual(1, head2.Children.Length);
+        
+        // it should be pulled out underneath its parent
+        // and preserve its (Name) and Shortcuts
+        Assert.AreEqual(topChild.Title, bar.Menus[0].Children[2].Title);
+        Assert.AreEqual(topChild.Data, bar.Menus[0].Children[2].Data);
+        Assert.AreEqual(topChild.Shortcut, bar.Menus[0].Children[2].Shortcut);
+        Assert.AreSame(topChild, bar.Menus[0].Children[2]);
+
+        // undoing command should return us to
+        // previous state
+        cmd.Undo();
+
+        Assert.AreEqual(3, bar.Menus[0].Children.Length);
+        Assert.AreEqual(2, head2.Children.Length);
+
+        Assert.AreEqual(topChild.Title.ToString(), head2.Children[0].Title.ToString());
+        Assert.AreEqual(topChild.Data, head2.Children[0].Data);
+        Assert.AreEqual(topChild.Shortcut, head2.Children[0].Shortcut);
+        Assert.AreSame(topChild, head2.Children[0]);
+
+    }
 }
