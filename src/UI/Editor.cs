@@ -316,6 +316,11 @@ Ctrl+Q - Quit
 
     private string? GetLowerRightTextIfAny()
     {
+        if(MenuTracker.Instance.CurrentlyOpenMenuItem != null)
+        {
+            return $"Selected: {MenuTracker.Instance.CurrentlyOpenMenuItem.Title}";
+        }
+
         var design = GetMostFocused(this).GetNearestDesign();
 
         if(design != null)

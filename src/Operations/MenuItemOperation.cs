@@ -4,11 +4,15 @@ namespace TerminalGuiDesigner.Operations
 {
     public abstract class MenuItemOperation : Operation
     {
-        protected readonly MenuBar? Bar;
+        /// <summary>
+        /// The big long bar view that goes at the top
+        /// of windows.
+        /// </summary>
+        public MenuBar? Bar {get; private set;}
         
         /// <summary>
         /// The collection that contains the menu item 
-        /// being operated on
+        /// being operated on.
         /// </summary>
         public MenuBarItem? Parent {get; private set;}
 
