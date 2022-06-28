@@ -165,9 +165,43 @@ class MenuBarTests : Tests
         // should be back to how we started now
         Assert.AreSame(orig,mbOut.Menus[0].Children[0]); 
         Assert.AreNotSame(orig,mbOut.Menus[0].Children[1]); 
+    }
 
+    /// <summary>
+    /// Tests removing the last menu item (i.e. 'Do Something')
+    /// under the only remaining menu header (e.g. 'File F9')
+    /// should result in a completely empty menu bar and be undoable
+    /// </summary>
+    [Test]
+    public void TestRemoveFinalMenuItemOnBar()
+    {
+        var d = Get10By10View();
 
+        
+        var bar = (MenuBar)new ViewFactory().Create(typeof(MenuBar));
+        var addBarCmd = new AddViewOperation(d.SourceCode,bar,d,"mb");
+        Assert.IsTrue(addBarCmd.Do());
 
+        // Expect ViewFactory to have created a single
+        // placeholder menu item
+        Assert.AreEqual(1,bar.Menus.Length);
+        Assert.AreEqual(1,bar.Menus[0].Children.Length);
+
+        var fileMenu = bar.Menus[0];
+        var placeholderMenuItem = fileMenu.Children[0];
+
+        var remove = new RemoveMenuItemOperation(placeholderMenuItem);
+
+        // we are able to remove the last one
+        Assert.IsTrue(remove.Do());
+        Assert.IsEmpty(bar.Menus,"menu bar should now be completely empty");
+
+        remove.Undo();
+
+        // should be back to where we started
+        Assert.AreEqual(1,bar.Menus.Length);
+        Assert.AreEqual(1,bar.Menus[0].Children.Length);
+        Assert.AreSame(placeholderMenuItem,bar.Menus[0].Children[0]);
 
     }
 }

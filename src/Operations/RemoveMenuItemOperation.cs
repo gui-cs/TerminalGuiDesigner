@@ -3,7 +3,7 @@ using TerminalGuiDesigner.Operations;
 
 namespace TerminalGuiDesigner.Operations
 {
-    internal class RemoveMenuItemOperation : MenuItemOperation
+    public class RemoveMenuItemOperation : MenuItemOperation
     {
         private int _removedAtIdx;
 
