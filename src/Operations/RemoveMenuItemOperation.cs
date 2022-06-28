@@ -7,6 +7,19 @@ namespace TerminalGuiDesigner.Operations
     {
         private int _removedAtIdx;
 
+        /// <summary>
+        /// If as a result of removing this menu item any
+        /// top level menu items were also removed (for being
+        /// empty). Track indexes here so we can undo if necessary
+        /// </summary>
+        private Dictionary<int, MenuBarItem>? prunedEmptyTopLevelMenus;
+
+        /// <summary>
+        /// True if as a result of removing a this menu item any
+        /// top level menu items were also removed (for being empty)
+        /// </summary>
+        public bool PrunedTopLevelMenu => prunedEmptyTopLevelMenus != null && prunedEmptyTopLevelMenus.Any();
+
         public RemoveMenuItemOperation(MenuItem toRemove): base(toRemove)
         {
         }
@@ -26,6 +39,20 @@ namespace TerminalGuiDesigner.Operations
             Bar?.SetNeedsDisplay();
 
             MenuTracker.Instance.ConvertEmptyMenus();
+
+
+            // if a top level menu now has no children 
+            if(Bar != null)
+            {
+                var empty = Bar.Menus.Where(bi => bi.Children.Length == 0).ToArray();
+                if(empty.Any())
+                {
+                    // remember where they were
+                    prunedEmptyTopLevelMenus = empty.ToDictionary(e=>Array.IndexOf(Bar.Menus,e),v=>v);
+                    // and remove them
+                    Bar.Menus = Bar.Menus.Except(prunedEmptyTopLevelMenus.Values).ToArray();
+                }               
+            }            
                 
             return true;
         }
@@ -45,6 +72,22 @@ namespace TerminalGuiDesigner.Operations
             children.Insert(_removedAtIdx, OperateOn);
             Parent.Children = children.ToArray();
             Bar?.SetNeedsDisplay();
+
+            // if we removed any top level empty menus as a 
+            // side effect of the removal then put them back
+            if(prunedEmptyTopLevelMenus != null && Bar != null)
+            {
+                var l = Bar.Menus.ToList<MenuBarItem>();
+
+                // for each index they used to be at
+                foreach(var kvp in prunedEmptyTopLevelMenus.OrderBy(k=>k))
+                {
+                    // put them back
+                    l.Insert(kvp.Key,kvp.Value);
+                }
+
+                Bar.Menus = l.ToArray();
+            }
         }
     }
 }

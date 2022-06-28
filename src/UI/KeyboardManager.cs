@@ -159,7 +159,7 @@ namespace TerminalGuiDesigner.UI
                 if(OperationManager.Instance.Do(remove))
                 {
                     // if we are removing the last item
-                    if(remove.Parent?.Children.Length == 0)
+                    if(remove.PrunedTopLevelMenu)
                     {
                         // if we deleted the last menu item
                         if(remove.Bar?.Menus.Length == 0)

@@ -79,20 +79,9 @@ public class MenuTracker
 
     public void ConvertEmptyMenus()
     {
-        foreach(var b in bars.ToArray())
-            foreach(var bi in b.Menus.ToArray())
-            {
-                // if a top level menu has no children 
-                if(bi.Children.Length == 0)
-                {
-                    // get rid of it
-                    b.Menus = b.Menus.Except(new []{bi}).ToArray();
-                    continue;
-                }
-
-                ConvertEmptyMenus(b,bi);
-            }
-                
+        foreach(var b in bars)
+            foreach(var bi in b.Menus)
+                ConvertEmptyMenus(b,bi);                
     }
 
     private void ConvertEmptyMenus(MenuBar bar, MenuBarItem mbi)
