@@ -115,6 +115,8 @@ public class MenuTracker
         
         // bar has no children so convert to MenuItem
         var added = new MenuItem {Title = bar.Title};
+        added.Data = bar.Data;
+        added.Shortcut = bar.Shortcut;
 
         children.RemoveAt(idx);
         children.Insert(idx,added);

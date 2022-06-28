@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -166,17 +167,9 @@ class MenuBarTests : Tests
         Assert.AreSame(orig,mbOut.Menus[0].Children[0]); 
         Assert.AreNotSame(orig,mbOut.Menus[0].Children[1]); 
     }
-
-    /// <summary>
-    /// Tests removing the last menu item (i.e. 'Do Something')
-    /// under the only remaining menu header (e.g. 'File F9')
-    /// should result in a completely empty menu bar and be undoable
-    /// </summary>
-    [Test]
-    public void TestRemoveFinalMenuItemOnBar()
+    private MenuBar GetMenuBar()
     {
         var d = Get10By10View();
-
         
         var bar = (MenuBar)new ViewFactory().Create(typeof(MenuBar));
         var addBarCmd = new AddViewOperation(d.SourceCode,bar,d,"mb");
@@ -186,6 +179,19 @@ class MenuBarTests : Tests
         // placeholder menu item
         Assert.AreEqual(1,bar.Menus.Length);
         Assert.AreEqual(1,bar.Menus[0].Children.Length);
+        
+        return bar;
+    }
+
+    /// <summary>
+    /// Tests removing the last menu item (i.e. 'Do Something')
+    /// under the only remaining menu header (e.g. 'File F9')
+    /// should result in a completely empty menu bar and be undoable
+    /// </summary>
+    [Test]
+    public void TestRemoveFinalMenuItemOnBar()
+    {
+        var bar = GetMenuBar();
 
         var fileMenu = bar.Menus[0];
         var placeholderMenuItem = fileMenu.Children[0];
@@ -202,6 +208,63 @@ class MenuBarTests : Tests
         Assert.AreEqual(1,bar.Menus.Length);
         Assert.AreEqual(1,bar.Menus[0].Children.Length);
         Assert.AreSame(placeholderMenuItem,bar.Menus[0].Children[0]);
+    }
 
+    /// <summary>
+    /// Tests that when there is only one menu item
+    /// that it cannot be moved into a submenu
+    /// </summary>
+    [Test]
+    public void TestMoveMenuItemRight_CannotMoveLast()
+    {
+        var bar = GetMenuBar();
+
+        var mi = bar.Menus[0].Children[0];
+        var cmd = new MoveMenuItemRightOperation(mi);
+        Assert.IsFalse(cmd.Do());
+    }
+
+    [Test]
+    public void TestMoveMenuItemRight_CannotMoveElementZero()
+    {
+        var bar = GetMenuBar();
+
+        var mi = bar.Menus[0].Children[0];
+        mi.Data = "yarg";
+        mi.Shortcut = Key.Y | Key.CtrlMask;
+        var addAnother = new AddMenuItemOperation(mi);
+        Assert.True(addAnother.Do());
+
+        // should have added below us
+        Assert.AreSame(mi,bar.Menus[0].Children[0]);
+        Assert.AreNotSame(mi,bar.Menus[0].Children[1]);
+        Assert.AreEqual(2, bar.Menus[0].Children.Length);
+
+        // cannot move element 0
+        Assert.IsFalse(new MoveMenuItemRightOperation(
+            bar.Menus[0].Children[0]
+        ).Do());
+        
+        var cmd = new MoveMenuItemRightOperation(
+                    bar.Menus[0].Children[1]
+                );
+
+        // can move element 1
+        Assert.IsTrue(cmd.Do());
+
+        // We will have changed from a MenuItem to a MenuBarItem
+        // so element 0 will not be us.  In Terminal.Gui there is
+        // a different class for a menu item and one with submenus
+        Assert.AreNotSame(mi,bar.Menus[0].Children[0]);
+        Assert.AreEqual(mi.Title,bar.Menus[0].Children[0].Title);
+        Assert.AreEqual(mi.Data,bar.Menus[0].Children[0].Data);
+        Assert.AreEqual(1, bar.Menus[0].Children.Length);
+
+        cmd.Undo();
+
+        Assert.AreEqual(mi.Title,bar.Menus[0].Children[0].Title);
+        Assert.AreEqual(mi.Data,bar.Menus[0].Children[0].Data);
+        Assert.AreEqual(mi.Shortcut,bar.Menus[0].Children[0].Shortcut);
+        Assert.AreNotSame(mi,bar.Menus[0].Children[1]);
     }
 }

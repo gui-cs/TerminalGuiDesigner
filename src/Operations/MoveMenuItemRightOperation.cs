@@ -61,6 +61,8 @@ public class MoveMenuItemRightOperation : MenuItemOperation
             return mb;
         
         var added = new MenuBarItem(children[idx].Title,new MenuItem[0],null);
+        added.Data = children[idx].Data;
+        added.Shortcut = children[idx].Shortcut;
 
         children.RemoveAt(idx);
         children.Insert(idx,added);
