@@ -169,10 +169,14 @@ class MenuBarTests : Tests
     }
     private MenuBar GetMenuBar()
     {
-        var d = Get10By10View();
+        return GetMenuBar(out _);
+    }
+    private MenuBar GetMenuBar(out Design root)
+    {
+        root = Get10By10View();
         
         var bar = (MenuBar)new ViewFactory().Create(typeof(MenuBar));
-        var addBarCmd = new AddViewOperation(d.SourceCode,bar,d,"mb");
+        var addBarCmd = new AddViewOperation(root.SourceCode,bar,root,"mb");
         Assert.IsTrue(addBarCmd.Do());
 
         // Expect ViewFactory to have created a single
@@ -352,6 +356,32 @@ class MenuBarTests : Tests
         Assert.AreEqual(topChild.Data, head2.Children[0].Data);
         Assert.AreEqual(topChild.Shortcut, head2.Children[0].Shortcut);
         Assert.AreSame(topChild, head2.Children[0]);
+
+    }
+
+
+    [Test]
+    public void TestDeletingLastMenuItem_ShouldRemoveWholeBar()
+    {
+        var bar = GetMenuBar(out Design root);
+
+        var mi = bar.Menus[0].Children[0];
+
+        Assert.Contains(bar,root.View.Subviews.ToArray(),
+                "The MenuBar should be on the main view being edited");
+
+        var cmd = new RemoveMenuItemOperation(mi);
+        Assert.IsTrue(cmd.Do());
+
+        Assert.IsEmpty(bar.Menus,"Expected menu bar header (File) to be removed along with it's last (only) child");
+
+        Assert.IsFalse(root.View.Subviews.Contains(bar),
+                "Now that the MenuBar is completely empty it should be automatically removed");
+
+        cmd.Undo();
+
+        Assert.Contains(bar,root.View.Subviews.ToArray(),
+                "Undo should put the MenuBar back on the view again");
 
     }
 }
