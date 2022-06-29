@@ -1,4 +1,5 @@
 using System.Drawing;
+using Terminal.Gui;
 
 namespace TerminalGuiDesigner.Operations;
 
@@ -64,6 +65,18 @@ public class PasteOperation : Operation
         }
 
         _clones.Add(cloneDesign);
+
+        // If pasting a TableView make sure to 
+        // replicate the Table too.  
+        // TODO: think of a way to make this pattern
+        
+        // sustainable e.g. IPasteExtraBits or something
+        if(d.View is TableView copyTv)
+        {
+            var pasteTv = (TableView)cloneDesign.View;
+            pasteTv.Table = copyTv.Table.Clone();
+            pasteTv.Update();
+        }
         
         // TODO: adjust X/Y etc to make clone more visible
 
