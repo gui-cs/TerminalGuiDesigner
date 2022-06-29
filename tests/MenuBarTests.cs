@@ -285,25 +285,21 @@ class MenuBarTests : Tests
         ).Do());
     }
 
-    [Test]
-    public void TestMoveMenuItemLeft_MoveTopChild()
+    private MenuBar GetMenuBarWithSubmenuItems(out MenuBarItem head2, out MenuItem topChild)
     {
         var bar = GetMenuBar();
-
         // Set up a menu like:
 
         /*
            File
             Head1
             Head2 -> Child1
-            Head3 -> Child2 
+            Head3    Child2 
         */
 
         var mi = bar.Menus[0].Children[0];
         mi.Title = "Head1";
 
-        MenuItem topChild;
-        MenuBarItem head2;
 
         bar.Menus[0].Children = new []
         {
@@ -325,6 +321,14 @@ class MenuBarTests : Tests
             },
             new MenuItem("Head3",null,()=>{})
         };
+
+        return bar;
+    }
+
+    [Test]
+    public void TestMoveMenuItemLeft_MoveTopChild()
+    {
+        var bar = GetMenuBarWithSubmenuItems(out var head2, out var topChild);
 
         Assert.AreEqual(3, bar.Menus[0].Children.Length);
         Assert.AreEqual(2, head2.Children.Length);
@@ -359,7 +363,69 @@ class MenuBarTests : Tests
 
     }
 
+    [Test]
+    public void TestDeletingMenuItemFromSubmenu_TopChild()
+    {
+        var bar = GetMenuBarWithSubmenuItems(out var head2, out var topChild);
 
+        Assert.AreEqual(3, bar.Menus[0].Children.Length);
+        Assert.AreEqual(2, head2.Children.Length);
+        Assert.AreSame(topChild,head2.Children[0]);
+
+        var cmd = new RemoveMenuItemOperation(topChild);
+        Assert.IsTrue(cmd.Do());
+
+        // Delete the top child should leave only 1 in submenu
+        Assert.AreEqual(3, bar.Menus[0].Children.Length);
+        Assert.AreEqual(1, head2.Children.Length);
+        Assert.AreNotSame(topChild,head2.Children[0]);
+
+        cmd.Undo();
+
+        // should come back now
+        Assert.AreEqual(3, bar.Menus[0].Children.Length);
+        Assert.AreEqual(2, head2.Children.Length);
+        Assert.AreSame(topChild,head2.Children[0]);
+    }
+
+    [Test]
+    public void TestDeletingMenuItemFromSubmenu_AllSubmenChild()
+    {
+        var bar = GetMenuBarWithSubmenuItems(out var head2, out var topChild);
+        var bottomChild = head2.Children[1];
+
+        Assert.AreEqual(3, bar.Menus[0].Children.Length);
+        Assert.AreEqual(typeof(MenuBarItem), bar.Menus[0].Children[1].GetType());
+        Assert.AreEqual(2, head2.Children.Length);
+        Assert.AreSame(topChild,head2.Children[0]);
+
+        var cmd1 = new RemoveMenuItemOperation(topChild);
+        Assert.IsTrue(cmd1.Do());
+
+        var cmd2 = new RemoveMenuItemOperation(bottomChild);
+        Assert.IsTrue(cmd2.Do());
+
+        // Deleting both children should convert us from
+        // a dropdown submenu to just a regular MenuItem
+        Assert.AreEqual(3, bar.Menus[0].Children.Length);
+        Assert.AreEqual(typeof(MenuItem), bar.Menus[0].Children[1].GetType());
+
+        cmd2.Undo();
+
+        // should bring the bottom one back
+        Assert.AreEqual(3, bar.Menus[0].Children.Length);
+        Assert.AreEqual(typeof(MenuBarItem), bar.Menus[0].Children[1].GetType());
+        Assert.AreSame (bottomChild, ((MenuBarItem)bar.Menus[0].Children[1]).Children[0]);
+
+        cmd1.Undo();
+
+        // Both submenu items should now be back
+        Assert.AreEqual(3, bar.Menus[0].Children.Length);
+        Assert.AreEqual(typeof(MenuBarItem), bar.Menus[0].Children[1].GetType());
+        Assert.AreSame(topChild, ((MenuBarItem)bar.Menus[0].Children[1]).Children[0]);
+        Assert.AreSame(bottomChild, ((MenuBarItem)bar.Menus[0].Children[1]).Children[1]);
+
+    }
     [Test]
     public void TestDeletingLastMenuItem_ShouldRemoveWholeBar()
     {

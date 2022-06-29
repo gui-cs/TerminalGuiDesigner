@@ -27,6 +27,14 @@ namespace TerminalGuiDesigner.Operations
         /// </summary>
         private View? _barRemovedFrom;
 
+        /// <summary>
+        /// If the removed MenuItem was a submenu item and it was the last one then
+        /// its parent will have been converted from a MenuBarItem (has children)
+        /// to a regular MenuItem (does not have children).  This collection 
+        /// stores all such replacements made during carrying out the command
+        /// </summary>
+        private Dictionary<MenuBarItem, MenuItem>? _convertedMenuBars;
+
         public RemoveMenuItemOperation(MenuItem toRemove): base(toRemove)
         {
         }
@@ -45,8 +53,10 @@ namespace TerminalGuiDesigner.Operations
             Parent.Children = children.ToArray();
             Bar?.SetNeedsDisplay();
 
-            MenuTracker.Instance.ConvertEmptyMenus();
-
+            if (Bar != null)
+            {
+                _convertedMenuBars = MenuTracker.Instance.ConvertEmptyMenus();
+            }
 
             // if a top level menu now has no children 
             if(Bar != null)
@@ -89,6 +99,26 @@ namespace TerminalGuiDesigner.Operations
             children.Insert(_removedAtIdx, OperateOn);
             Parent.Children = children.ToArray();
             Bar?.SetNeedsDisplay();
+
+            // if any MenuBarItem were converted to vanilla MenuItem
+            // because we were removed from a submenu then convert
+            // it back
+            if(_convertedMenuBars != null)
+            {
+                foreach(var converted in _convertedMenuBars)
+                {
+                    var grandparent = MenuTracker.Instance.GetParent(converted.Value, out _);
+                    if(grandparent != null)
+                    {
+                        var popIdx = Array.IndexOf(grandparent.Children,converted.Value);
+                        var newParents = grandparent.Children.ToList<MenuItem>();
+                        newParents.RemoveAt(popIdx);
+                        newParents.Insert(popIdx,converted.Key);
+                        
+                        grandparent.Children = newParents.ToArray();
+                    }
+                }
+            }
 
             // if we removed any top level empty menus as a 
             // side effect of the removal then put them back

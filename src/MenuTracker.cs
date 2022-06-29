@@ -77,27 +77,58 @@ public class MenuTracker
         return null;
     }
 
-    public void ConvertEmptyMenus()
+
+    /// <summary>
+    /// Iterates all menus (e.g. 'File F9', 'View' etc) of a MenuBar and
+    /// identifies any entries that have empty submenus (MenuBarItem)
+    /// .  Each of those are converted to 'no submenu' Type node MenuItem
+    /// </summary>
+    public Dictionary<MenuBarItem,MenuItem> ConvertEmptyMenus()
     {
+        var toReturn = new Dictionary<MenuBarItem,MenuItem>();
+
         foreach(var b in bars)
             foreach(var bi in b.Menus)
-                ConvertEmptyMenus(b,bi);                
+            {
+                foreach(var converted in ConvertEmptyMenus(b,bi))
+                {
+                    toReturn.Add(converted.Key,converted.Value);
+                }
+            }
+                
+
+        return toReturn;
     }
 
-    private void ConvertEmptyMenus(MenuBar bar, MenuBarItem mbi)
+    /// <summary>
+    /// Considers a single menu (e.g. 'File F9') of a MenuBar and
+    /// identifies any entries that have empty submenus (MenuBarItem)
+    /// .  Each of those are converted to 'no submenu' Type node MenuItem
+    /// </summary>
+    public Dictionary<MenuBarItem,MenuItem> ConvertEmptyMenus(MenuBar bar, MenuBarItem mbi)
     {
+        var toReturn = new Dictionary<MenuBarItem,MenuItem>();
+
         foreach(var c in mbi.Children.OfType<MenuBarItem>())
         {
             ConvertEmptyMenus(bar, c);
-            if(ConvertMenuBarItemToRegularItemIfEmpty(c))
+            if(ConvertMenuBarItemToRegularItemIfEmpty(c,out var added))
             {
+                if(added != null)
+                {
+                    toReturn.Add(c,added);
+                }
+
                 bar.CloseMenu();
                 bar.OpenMenu();
             }
         }
+
+        return toReturn;
     }
-    private bool ConvertMenuBarItemToRegularItemIfEmpty(MenuBarItem bar)
+    public bool ConvertMenuBarItemToRegularItemIfEmpty(MenuBarItem bar,out MenuItem? added)
     {
+        added = null;
         // bar still has more children so don't convert
         if(bar.Children.Any())
             return false;
@@ -114,7 +145,7 @@ public class MenuTracker
             return false;
         
         // bar has no children so convert to MenuItem
-        var added = new MenuItem {Title = bar.Title};
+        added = new MenuItem {Title = bar.Title};
         added.Data = bar.Data;
         added.Shortcut = bar.Shortcut;
 
