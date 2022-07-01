@@ -94,10 +94,12 @@ To edit MenuBar items use the following controls
 | Del    | Remove selected menu item |
 | Enter    | Add a new menu item |
 | Typing    | Edit the Title of the selected item |
+| Ctrl + T | Set Shortcut |
+| Ctrl + R | Set menu field name |
 
 New root level menus can be added by right clicking the `MenuBar` and selecting 'Add Menu'.
 
-Currently there is no support for custom field naming (i.e. `(Name)`) or assigning shortcuts to menu items but this is planned for the future.
+You can create a menu separator by typing `---`
 
 ### Features
 -------------------------------

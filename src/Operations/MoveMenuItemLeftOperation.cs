@@ -4,9 +4,21 @@ namespace TerminalGuiDesigner.Operations;
 
 public class MoveMenuItemLeftOperation : MenuItemOperation
 {
+    /// <summary>
+    /// The index that the menu item started off with in
+    /// its parents submenu so that if we undo we can reinstate
+    /// its previous position
+    /// </summary>
+    private int? _pulledFromIndex;
+
     public MoveMenuItemLeftOperation(MenuItem toMove)
         : base(toMove)
     {
+        if(Parent != null)
+        {
+            _pulledFromIndex = Array.IndexOf(Parent.Children,OperateOn);
+        }
+
         // TODO prevent this if a root menu item
     }
 
@@ -62,6 +74,9 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
             return;
             
         new MoveMenuItemRightOperation(OperateOn)
+        {
+            InsertionIndex = _pulledFromIndex
+        }
         .Do();
     }
 

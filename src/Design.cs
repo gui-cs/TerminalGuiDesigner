@@ -269,6 +269,9 @@ public class Design
         
         if (View is TableView tv)
         {
+
+            yield return CreateProperty(nameof(TableView.FullRowSelect));
+
             yield return CreateSubProperty(nameof(TableStyle.AlwaysShowHeaders),nameof(TableView.Style),tv.Style);
             yield return CreateSubProperty(nameof(TableStyle.ExpandLastColumn), nameof(TableView.Style), tv.Style);
             yield return CreateSubProperty(nameof(TableStyle.InvertSelectedCellFirstCharacter), nameof(TableView.Style), tv.Style);

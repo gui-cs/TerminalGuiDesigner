@@ -152,12 +152,31 @@ namespace TerminalGuiDesigner.UI
                 || 
                 (keystroke.Key == Key.Backspace && string.IsNullOrWhiteSpace(menuItem.Title.ToString())))
             {
+                
                 // deleting the menu item using backspace to
                 // remove all characters in the title or the Del key
-                if(OperationManager.Instance.Do(
-                        new RemoveMenuItemOperation(menuItem)
-                    ))
+                var remove = new RemoveMenuItemOperation(menuItem);
+                if(OperationManager.Instance.Do(remove))
                 {
+                    // if we are removing the last item
+                    if(remove.PrunedTopLevelMenu)
+                    {
+                        // if we deleted the last menu item
+                        if(remove.Bar?.Menus.Length == 0)
+                        {
+                            remove.Bar.CloseMenu();
+                            return true;
+                        }
+
+                        // convert keystroke to left
+                        // so we move to the next menu
+                        keystroke.Key = Key.CursorLeft;
+                        return false;
+                    }
+                        
+                    // otherwise convert keystroke to up
+                    // so that focus now sits nicely on the 
+                    // menu item above the deleted one
                     keystroke.Key = Key.CursorUp;
                     return false;
                 }
