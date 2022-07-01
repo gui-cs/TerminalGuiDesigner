@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -73,10 +75,10 @@ public class AddViewTests : Tests
     /// and not a double (which won't compile)
     /// </summary>
     /// <param name="offset"></param>
-    [TestCase(1)]
-    [TestCase(0)]
-    [TestCase(-1)]
-    public void Test60Percent_RoundTrip(int offset)
+    [TestCase(true)]
+    [TestCase(null)]
+    [TestCase(false)]
+    public void Test60Percent_RoundTrip(bool? offset)
     {
         var viewToCode = new ViewToCode();
 
@@ -88,8 +90,8 @@ public class AddViewTests : Tests
         var op = new AddViewOperation(sourceCode, lbl, designOut, "label1");
 
         OperationManager.Instance.Do(op);
-        lbl.Width = offset == 0 ? Dim.Percent(60) : Dim.Percent(60) + offset;
-        lbl.X = offset == 0 ? Pos.Percent(60) : Pos.Percent(60) + offset;
+        lbl.Width = offset == null ? Dim.Percent(60) : offset.Value ? Dim.Percent(60) + 1 : Dim.Percent(60) - 1;
+        lbl.X = offset == null ? Pos.Percent(60) : offset.Value ? Pos.Percent(60) + 1 : Pos.Percent(60) - 1;
 
         viewToCode.GenerateDesignerCs(designOut, sourceCode, typeof(Dialog));
 
@@ -101,5 +103,14 @@ public class AddViewTests : Tests
         var lblIn = designBackIn.View.GetActualSubviews().OfType<Label>().Single();
 
         Assert.AreEqual(lblOut.Text, lblIn.Text);
+
+        lblIn.Width.GetDimType(out var outDimType, out var outDimValue, out var outDimOffset);
+        lblIn.X.GetPosType(new List<Design>(),out var outPosType, out var outPosValue, out var outPosOffset,out _, out _);
+
+        Assert.AreEqual(DimType.Percent,outDimType);
+        Assert.Less(Math.Abs(60f - outDimValue) , 0.0001);
+
+        Assert.AreEqual(PosType.Percent, outPosType);
+        Assert.Less(Math.Abs(60f - outPosValue), 0.0001);
     }
 }

@@ -118,7 +118,7 @@ public class PosTests
         var d = new Design(new SourceCodeFile(new FileInfo("yarg.cs")),"myView",v);
 
         var p = Pos.Percent(50);
-        Assert.AreEqual("Pos.Percent(50)",p.ToCode(new List<Design>{d}));
+        Assert.AreEqual("Pos.Percent(50f)",p.ToCode(new List<Design>{d}));
 
         p = Pos.Left(v);
         Assert.AreEqual("Pos.Left(myView)",p.ToCode(new List<Design>{d}));
@@ -140,10 +140,10 @@ public class PosTests
         var d = new Design(new SourceCodeFile(new FileInfo("yarg.cs")),"myView",v);
 
         var p = Pos.Percent(50) + 2;
-        Assert.AreEqual("Pos.Percent(50) + 2",p.ToCode(new List<Design>{d}));
+        Assert.AreEqual("Pos.Percent(50f) + 2",p.ToCode(new List<Design>{d}));
 
         p = Pos.Percent(50) - 2;
-        Assert.AreEqual("Pos.Percent(50) - 2",p.ToCode(new List<Design>{d}));
+        Assert.AreEqual("Pos.Percent(50f) - 2",p.ToCode(new List<Design>{d}));
 
         p = Pos.Right(v) + 2;
         Assert.AreEqual("Pos.Right(myView) + 2",p.ToCode(new List<Design>{d}));

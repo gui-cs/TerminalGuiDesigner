@@ -276,10 +276,10 @@ public static class PosExtensions
 
             case PosType.Percent:
                 if(offset > 0)
-                    return $"Pos.Percent({val:n5}f) + {offset}";
+                    return $"Pos.Percent({val:G5}f) + {offset}";
                 if(offset < 0)
-                    return $"Pos.Percent({val:n5}f) - {Math.Abs(offset)}";
-                return $"Pos.Percent({val:n5}f)";
+                    return $"Pos.Percent({val:G5}f) - {Math.Abs(offset)}";
+                return $"Pos.Percent({val:G5}f)";
          
             case PosType.Center:
                 if(offset > 0)
