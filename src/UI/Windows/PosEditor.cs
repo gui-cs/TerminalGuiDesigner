@@ -71,7 +71,7 @@ namespace TerminalGuiDesigner.UI.Windows
                         break;
                 }
 
-                tbValue.Text = value.ToString();
+                tbValue.Text = value.ToString("G5");
                 tbOffset.Text = offset.ToString();
             }
 
