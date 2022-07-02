@@ -17,7 +17,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>TerminalGuiDesigner</PackageId>
-    <Version>1.0.14</Version>
+    <Version>1.0.15</Version>
     <Authors>Thomas Nind</Authors>
     <Nullable>enable</Nullable>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -30,7 +30,9 @@
     <PackageIcon>logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>
-    v1.0.14
+    v1.0.15
+	 * Fixed bug generating code for Pos/Dim values that had decimal places (e.g. Percent(60))
+	v1.0.14
      * Improved MenuBar undo and fixed stability issues
      * Deleting the last item on a MenuBar now removes the MenuBar too
      * Added multi copy/paste (drag selection box and copy/paste).  Still restricted to non container views (i.e. not TabView etc)
