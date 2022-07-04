@@ -3,25 +3,12 @@ using static Terminal.Gui.TabView;
 
 namespace TerminalGuiDesigner.Operations;
 
-public class RemoveTabOperation : Operation
+public class RemoveTabOperation : TabViewOperation
 {
     private readonly Tab? _tab;
-    private readonly TabView _tabView;
 
-    public Design Design { get; }
-
-    public RemoveTabOperation(Design design)
+    public RemoveTabOperation(Design design) : base(design)
     {
-        Design = design;
-
-        // somehow user ran this command for a non TabView
-        if (Design.View is not TabView)
-            throw new ArgumentException($"Design must be for a {nameof(TabView)} to support {nameof(RemoveTabOperation)}");
-
-        _tabView = (TabView)Design.View;
-
-        _tab = _tabView.SelectedTab;
-
         // user has no Tab selected
         if (_tab == null)
             IsImpossible = true;
@@ -37,9 +24,9 @@ public class RemoveTabOperation : Operation
             throw new Exception("No Tab selected");
         }
 
-        if (_tabView.Tabs.Contains(_tab))
+        if (View.Tabs.Contains(_tab))
         {
-            _tabView.RemoveTab(_tab);
+            View.RemoveTab(_tab);
             return true;
         }
 
@@ -58,9 +45,9 @@ public class RemoveTabOperation : Operation
             throw new Exception("No Tab selected");
         }
 
-        if (!_tabView.Tabs.Contains(_tab))
+        if (!View.Tabs.Contains(_tab))
         {
-            _tabView.AddTab(_tab,true);
+            View.AddTab(_tab,true);
         }
     }
 }

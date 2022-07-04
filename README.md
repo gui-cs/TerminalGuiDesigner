@@ -152,6 +152,7 @@ The following feature list shows the current capabilities and the roadmap
   - [ ] Visual Studio Code plugin 
 - [x] Comprehensive Tests
 - [x] CI
+- [ ] Ability to lock some of the views (prevent changes).  This prevents accidentally dragging a given control
 - [x] Create and edit views
   - [x] Button
   - [x] Checkbox

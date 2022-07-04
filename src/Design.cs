@@ -377,6 +377,9 @@ public class Design
             yield return new AddTabOperation(this);
             yield return new RemoveTabOperation(this);
             yield return new RenameTabOperation(this);
+
+            yield return new MoveTabOperation(this, -1);
+            yield return new MoveTabOperation(this, 1);
         }
 
         if(View is MenuBar)

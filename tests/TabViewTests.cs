@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -38,6 +39,65 @@ class TabViewTests : Tests
         Assert.AreEqual("Tab1",tabIn.Tabs.ElementAt(0).Text);
         Assert.AreEqual("Tab2",tabIn.Tabs.ElementAt(1).Text);
     }
+
+    /// <summary>
+    /// Creates a Dialog with a <see cref="TabView"/> in it.  Returns the <see cref="Design"/>
+    /// </summary>
+    /// <returns></returns>
+    private Design GetTabView()
+    {
+        var viewToCode = new ViewToCode();
+
+        var file = new FileInfo("TestGetTabView.cs");
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog), out var sourceCode);
+
+        var factory = new ViewFactory();
+        var tvOut = factory.Create(typeof(TabView));
+
+        OperationManager.Instance.Do(new AddViewOperation(sourceCode, tvOut, designOut, "myTabview"));
+
+        return (Design)tvOut.Data;
+    }
+    [Test]
+    public void TestChangeTabViewOrder_MoveTabLeft()
+    {
+        var d = GetTabView();
+        var tv = (TabView)d.View;
+
+        Assert.AreEqual("Tab1", tv.Tabs.ElementAt(0).Text);
+        Assert.AreEqual("Tab2", tv.Tabs.ElementAt(1).Text);
+
+        // Select Tab1
+        tv.SelectedTab = tv.Tabs.First();
+
+        // try to move tab 1 left
+        var cmd = new MoveTabOperation(d, -1);
+        Assert.IsFalse(cmd.Do(), "Expected not to be able to move tab left because selected is the first");
+
+        // Select Tab2
+        tv.SelectedTab = tv.Tabs.Last();
+
+        Assert.AreEqual(tv.SelectedTab.Text, "Tab2","Tab2 should be selected before operation is applied");
+
+        // try to move tab 2 left
+        cmd = new MoveTabOperation(d, -1);
+        Assert.IsFalse(cmd.IsImpossible);
+        Assert.IsTrue(cmd.Do());
+
+        Assert.AreEqual(tv.SelectedTab.Text, "Tab2", "Tab2 should still be selected after operation is applied");
+
+        // tabs should now be in reverse order
+        Assert.AreEqual("Tab2", tv.Tabs.ElementAt(0).Text);
+        Assert.AreEqual("Tab1", tv.Tabs.ElementAt(1).Text);
+
+        cmd.Undo();
+
+        // undoing command should revert to original tab order
+        Assert.AreEqual("Tab1", tv.Tabs.ElementAt(0).Text);
+        Assert.AreEqual("Tab2", tv.Tabs.ElementAt(1).Text);
+    }
+
+
     [Test]
     public void TestRoundTrip_DuplicateTabNames()
     {

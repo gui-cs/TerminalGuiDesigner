@@ -111,7 +111,7 @@ namespace TerminalGuiDesigner.UI
                 return false;
             }
 
-            if(keystroke.Key == (Key.CursorRight | Key.ShiftMask))
+            if(keystroke.Key == _keyMap.MoveRight)
             {
                 OperationManager.Instance.Do(
                     new MoveMenuItemRightOperation(menuItem)
@@ -121,7 +121,7 @@ namespace TerminalGuiDesigner.UI
                 return true;
             }
 
-            if(keystroke.Key == (Key.CursorLeft | Key.ShiftMask))
+            if(keystroke.Key == _keyMap.MoveLeft)
             {
                 OperationManager.Instance.Do(
                     new MoveMenuItemLeftOperation(menuItem)
@@ -131,7 +131,7 @@ namespace TerminalGuiDesigner.UI
                 return false;
             }
 
-            if(keystroke.Key == (Key.CursorUp | Key.ShiftMask))
+            if(keystroke.Key == _keyMap.MoveUp)
             {
                 OperationManager.Instance.Do(
                     new MoveMenuItemOperation(menuItem, true)
@@ -139,7 +139,7 @@ namespace TerminalGuiDesigner.UI
                 keystroke.Key = Key.CursorUp;
                 return false;
             }
-            if(keystroke.Key == (Key.CursorDown | Key.ShiftMask))
+            if(keystroke.Key == _keyMap.MoveDown)
             {
                 OperationManager.Instance.Do(
                     new MoveMenuItemOperation(menuItem, false)

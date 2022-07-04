@@ -351,120 +351,125 @@ Ctrl+Q - Quit
         {
             _editting = true;
 
-            if(keyEvent.Key == _keyMap.ShowContextMenu && !_menuOpen)
+            if (keyEvent.Key == _keyMap.ShowContextMenu && !_menuOpen)
             {
                 return CreateAndShowContextMenu();
             }
 
-            if(keyEvent.Key == _keyMap.EditProperties)
+            if (keyEvent.Key == _keyMap.EditProperties)
             {
                 ShowEditProperties();
                 return true;
             }
 
-            if(keyEvent.Key == _keyMap.Copy)
+            if (keyEvent.Key == _keyMap.Copy)
             {
                 Copy();
                 return true;
             }
 
-            if(keyEvent.Key == _keyMap.Paste)
+            if (keyEvent.Key == _keyMap.Paste)
             {
                 Paste();
                 return true;
             }
 
-            if(keyEvent.Key == _keyMap.ViewSpecificOperations)
+            if (keyEvent.Key == _keyMap.ViewSpecificOperations)
             {
                 ShowViewSpecificOperations();
                 return true;
             }
 
-            if(keyEvent.Key == _keyMap.EditRootProperties)
+            if (keyEvent.Key == _keyMap.EditRootProperties)
             {
                 if (_viewBeingEdited == null)
                     return false;
                 ShowEditProperties(_viewBeingEdited);
                 return true;
             }
-            if(keyEvent.Key == _keyMap.Open)
+            if (keyEvent.Key == _keyMap.Open)
             {
                 Open();
                 return true;
             }
-            if(keyEvent.Key == _keyMap.Save)
+            if (keyEvent.Key == _keyMap.Save)
             {
                 Save();
                 return true;
             }
-            if(keyEvent.Key == _keyMap.New)
+            if (keyEvent.Key == _keyMap.New)
             {
                 New();
                 return true;
             }
-            if(keyEvent.Key == _keyMap.ShowHelp)
+            if (keyEvent.Key == _keyMap.ShowHelp)
             {
                 ShowHelp();
                 return true;
             }
-            if(keyEvent.Key == _keyMap.AddView)
+            if (keyEvent.Key == _keyMap.AddView)
             {
                 ShowAddViewWindow();
                 return true;
             }
-            if(keyEvent.Key == _keyMap.ToggleDragging)
+            if (keyEvent.Key == _keyMap.ToggleDragging)
             {
                 enableDrag = !enableDrag;
                 return true;
             }
-            if(keyEvent.Key == _keyMap.Undo)
+            if (keyEvent.Key == _keyMap.Undo)
             {
                 OperationManager.Instance.Undo();
                 return true;
             }
-            if(keyEvent.Key == _keyMap.Redo)
+            if (keyEvent.Key == _keyMap.Redo)
             {
                 OperationManager.Instance.Redo();
                 return true;
             }
-            if(keyEvent.Key == _keyMap.Delete)
+            if (keyEvent.Key == _keyMap.Delete)
             {
                 Delete();
                 return true;
             }
-            if(keyEvent.Key == _keyMap.ToggleShowFocused)
+            if (keyEvent.Key == _keyMap.ToggleShowFocused)
             {
                 enableShowFocused = !enableShowFocused;
                 SetNeedsDisplay();
             }
-            if(keyEvent.Key == _keyMap.SelectAll)
+            if (keyEvent.Key == _keyMap.SelectAll)
             {
                 SelectAll();
             }
 
+            if (keyEvent.Key == _keyMap.MoveUp)
+            { 
+                MoveControl(0, -1);
+            }
+            if (keyEvent.Key == _keyMap.MoveDown)
+            {
+                MoveControl(0, 1);
+            }
+            if (keyEvent.Key == _keyMap.MoveLeft)
+            {
+                MoveControl(-1, 0);
+            }
+            if (keyEvent.Key == _keyMap.MoveRight)
+            {
+                MoveControl(1, 0);
+            }
+
+            // Fast moving things
             switch (keyEvent.Key)
             {
-                // Cursor keys
-                case Key.CursorUp | Key.ShiftMask:
-                    MoveControl(0, -1);
-                    return true;
                 case Key.CursorUp | Key.CtrlMask:
                     MoveControl(0, -3);
-                    return true;
-                case Key.CursorDown | Key.ShiftMask:
-                    MoveControl(0, 1);
                     return true;
                 case Key.CursorDown | Key.CtrlMask:
                     MoveControl(0, 3);
                     return true;
-                case Key.CursorLeft | Key.ShiftMask:
-                    MoveControl(-1, 0);
-                    return true;
                 case Key.CursorLeft | Key.CtrlMask:
                     MoveControl(-5, 0);
-                    return true;
-                case Key.CursorRight | Key.ShiftMask:
-                    MoveControl(1, 0);
                     return true;
                 case Key.CursorRight | Key.CtrlMask:
                     MoveControl(5, 0);

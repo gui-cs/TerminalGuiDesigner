@@ -3,22 +3,13 @@ using TerminalGuiDesigner.UI.Windows;
 using static Terminal.Gui.TabView;
 
 namespace TerminalGuiDesigner.Operations;
-public class AddTabOperation : Operation
+
+public class AddTabOperation : TabViewOperation
 {
     private Tab? _tab;
-    private readonly TabView _tabView;
 
-    public Design Design { get; }
-
-    public AddTabOperation(Design design)
+    public AddTabOperation(Design design) : base(design)
     {
-        Design = design;
-
-        // somehow user ran this command for a non tab view
-        if (Design.View is not TabView)
-            throw new ArgumentException($"Design must be for a {nameof(TabView)} to support {nameof(AddTabOperation)}");
-
-        _tabView = (TabView)Design.View;
     }
 
     public override bool Do()
@@ -30,8 +21,8 @@ public class AddTabOperation : Operation
 
         if (Modals.GetString("Add Tab", "Tab Name", "MyTab", out string? newTabName))
         {
-            _tabView.AddTab(_tab = new Tab(newTabName ?? "Unamed Tab",new View{Width = Dim.Fill(),Height=Dim.Fill()}),true);
-            _tabView.SetNeedsDisplay();
+            View.AddTab(_tab = new Tab(newTabName ?? "Unamed Tab", new View { Width = Dim.Fill(), Height = Dim.Fill() }), true);
+            View.SetNeedsDisplay();
         }
 
         return true;
@@ -40,24 +31,24 @@ public class AddTabOperation : Operation
     public override void Redo()
     {
         // cannot redo (maybe user hit redo twice thats fine)
-        if (_tab == null || _tabView.Tabs.Contains(_tab))
+        if (_tab == null || View.Tabs.Contains(_tab))
         {
             return;
         }
 
-        _tabView.AddTab(_tab,true);
-        _tabView.SetNeedsDisplay();
+        View.AddTab(_tab, true);
+        View.SetNeedsDisplay();
     }
 
     public override void Undo()
     {
         // cannot undo
-        if (_tab == null || !_tabView.Tabs.Contains(_tab))
+        if (_tab == null || !View.Tabs.Contains(_tab))
         {
             return;
         }
 
-        _tabView.RemoveTab(_tab);
-        _tabView.SetNeedsDisplay();
+        View.RemoveTab(_tab);
+        View.SetNeedsDisplay();
     }
 }

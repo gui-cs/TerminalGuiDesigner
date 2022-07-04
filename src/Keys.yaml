@@ -18,3 +18,7 @@ Paste: V, CtrlMask
 Rename: R, CtrlMask
 SetShortcut: T, CtrlMask
 SelectAll: A, CtrlMask
+MoveRight: CursorRight, ShiftMask
+MoveLeft: CursorLeft, ShiftMask
+MoveUp: CursorUp, ShiftMask
+MoveDown: CursorDown, ShiftMask
