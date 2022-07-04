@@ -133,16 +133,20 @@ The following feature list shows the current capabilities and the roadmap
   - [x] Set fieldnames `(Name)`
 - [ ] Easy Status Bar Designing
 - [ ] Create Events e.g. MyButton_OnClick
+- [ ] View Dependency Management
+  - [x] Prevent deleting views where other Views hold RelativeTo dependencies
+  - [ ] Write out dependant views to `InitializeComponent` before dependers
+  - [ ] Order Multi Delete operations to delete dependers before dependants
 - [x] Mutli select
   - [x] Multi delete
   - [x] Multi keyboard move
-  - [ ] Multi mouse drag move
+  - [x] Multi mouse drag move
   - [ ] Multi set Property
-  - [ ] Multi Copy/Paste
+  - [x] Multi Copy/Paste
 - [x] Copy/Paste 
   - [x] Single simple views
-  - [ ] Complex Views (TableView, MenuBar etc)
   - [ ] To OS clipboard (e.g. open one Designer.cs View and copy to another)
+  - [ ] Retain PosRelative mappings in pasted views (e.g. `A` LeftOf `B`)
 - [x] Move views to subviews
   - [x] With mouse
   - [ ] With keyboard
@@ -165,12 +169,18 @@ The following feature list shows the current capabilities and the roadmap
   - [x] LineView
   - [x] ListView
   - [x] MenuBar
+    - [ ] Copy/Paste preserve menu entries
   - [ ] PanelView
   - [x] ProgressBar
   - [x] RadioGroup
   - [ ] StatusBar
   - [x] TableView
+    - [x] Add/Remove Columns
+    - [x] Copy/Paste preserve table schema
   - [x] TabView
+    - [x] Add/Remove new Tabs
+    - [x] Reorder Tabs
+    - [ ] Copy/Paste preserve tabs/content
   - [x] TextField
   - [x] TextValidateField
   - [x] TextView
