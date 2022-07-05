@@ -157,6 +157,12 @@ The following feature list shows the current capabilities and the roadmap
 - [x] Comprehensive Tests
 - [x] CI
 - [ ] Ability to lock some of the views (prevent changes).  This prevents accidentally dragging a given control
+- [ ] Support adding user defined `View` Types e.g. `MyCustomView`
+- [ ] Corner Cases
+  - [ ] Allow designing `abstract` classes
+  - [ ] Allow designing generic classes (e.g. `MyDialog<T>`)
+  - [ ] Allow designing classes that inherit from another e.g. `class MyDialog : MyOtherDialog`
+     - [ ] Inherited views should be locked to prevent editing
 - [x] Create and edit views
   - [x] Button
   - [x] Checkbox
