@@ -135,7 +135,12 @@ Ctrl+Q - Quit
 
         Application.RootMouseEvent += (m) =>
         {
-            if(_editting || !enableDrag || _viewBeingEdited == null)
+
+            // if another window is showing don't respond to mouse
+            if (!IsCurrentTop)
+                return;
+
+            if (_editting || !enableDrag || _viewBeingEdited == null)
                 return;
 
             try
