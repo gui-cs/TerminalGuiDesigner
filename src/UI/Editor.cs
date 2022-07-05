@@ -564,7 +564,27 @@ Ctrl+Q - Quit
 
     private void Delete()
     {
-        DoForSelectedViews((d)=>new DeleteViewOperation(d.View));
+        if(_viewBeingEdited == null)
+            return;
+
+        var singleSelection = GetMostFocused(_viewBeingEdited.View);
+        
+        DeleteViewOperation cmd;
+        
+        if(_selectionManager.Selected.Any())
+        {
+            cmd = new DeleteViewOperation(_selectionManager.Selected.Select(d=>d.View).ToArray());
+        }
+        else
+        {
+            if(singleSelection == null)
+            {
+                return;
+            }
+            cmd = new DeleteViewOperation(singleSelection);
+        }
+        
+        OperationManager.Instance.Do(cmd);
     }
 
     private void DoForSelectedViews(Func<Design, Operation> operationFuc, bool allowOnRoot=false)

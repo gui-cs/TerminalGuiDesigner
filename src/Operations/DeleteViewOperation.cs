@@ -8,15 +8,6 @@ public class DeleteViewOperation : Operation
     private readonly View[] delete;
     private readonly View[] from;
 
-    public DeleteViewOperation(View? selected, MultiSelectionManager selectionManager)
-        :this(selectionManager.Selected.ToList<Design>()
-                .Select(d=>d.View).Union(new []{selected})
-                .Where(d=>d != null)
-                .Cast<View>().ToArray())
-    {
-
-    }
-
     public DeleteViewOperation(params View[] delete)
     {
         this.delete = delete;
