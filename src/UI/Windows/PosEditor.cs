@@ -234,7 +234,15 @@ namespace TerminalGuiDesigner.UI.Windows
                 return true;
             }
 
-            return int.TryParse(tbOffset.Text.ToString(),out offset);
+            if (int.TryParse(tbOffset.Text.ToString(), out offset))
+            {
+                return true;
+            }
+            else
+            {
+                offset = 0;
+                return false;
+            }
         }
 
         private bool BuildPosRelative(out Pos result)
@@ -247,34 +255,9 @@ namespace TerminalGuiDesigner.UI.Windows
 
                 if (side != null)
                 {
-                    Pos pos;
-                    switch (side)
-                    {
-                        case Side.Top:
-                            pos = Pos.Top(relativeTo.View);
-                            break;
-                        case Side.Bottom:
-                            pos = Pos.Bottom(relativeTo.View);
-                            break;
-                        case Side.Left:
-                            pos = Pos.Left(relativeTo.View);
-                            break;
-                        case Side.Right:
-                            pos = Pos.Right(relativeTo.View);
-                            break;
-                        default: throw new ArgumentOutOfRangeException(nameof(side));
-                    }
+                    GetOffset(out int offset);
 
-                    if (GetOffset(out int offset))
-                    {
-                        if(offset != 0)
-                        {
-                            result = pos + offset;   
-                            return true;
-                        }
-                    }
-
-                    result = pos;
+                    result = PosExtensions.CreatePosRelative(relativeTo, side.Value,offset);
                     return true;
                 }
             }

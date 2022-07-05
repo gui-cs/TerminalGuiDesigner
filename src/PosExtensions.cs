@@ -290,10 +290,48 @@ public static class PosExtensions
 
             default: throw new ArgumentOutOfRangeException(nameof(type));
         }
-}
+    }
 
     private static string GetMethodNameFor(Side side)
     {
         return side.ToString();
+    }
+
+    /// <summary>
+    /// Creates a <see cref="PosType.Relative"/> by calling appropriate method
+    /// e.g. <see cref="Pos.Top(View)"/>
+    /// </summary>
+    /// <param name="relativeTo"></param>
+    /// <param name="side"></param>
+    /// <param name="offset"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    public static Pos CreatePosRelative(Design relativeTo, Side side, int offset)
+    {
+        Pos pos;
+        switch (side)
+        {
+            case Side.Top:
+                pos = Pos.Top(relativeTo.View);
+                break;
+            case Side.Bottom:
+                pos = Pos.Bottom(relativeTo.View);
+                break;
+            case Side.Left:
+                pos = Pos.Left(relativeTo.View);
+                break;
+            case Side.Right:
+                pos = Pos.Right(relativeTo.View);
+                break;
+            default: throw new ArgumentOutOfRangeException(nameof(side));
+        }
+
+
+        if (offset != 0)
+        {
+            return pos + offset;
+        }
+
+        return pos;
     }
 }
