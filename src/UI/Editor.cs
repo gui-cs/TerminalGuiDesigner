@@ -436,27 +436,33 @@ Ctrl+Q - Quit
             {
                 enableShowFocused = !enableShowFocused;
                 SetNeedsDisplay();
+                return true;
             }
             if (keyEvent.Key == _keyMap.SelectAll)
             {
                 SelectAll();
+                return true;
             }
 
             if (keyEvent.Key == _keyMap.MoveUp)
             { 
                 MoveControl(0, -1);
+                return true;
             }
             if (keyEvent.Key == _keyMap.MoveDown)
             {
                 MoveControl(0, 1);
+                return true;
             }
             if (keyEvent.Key == _keyMap.MoveLeft)
             {
                 MoveControl(-1, 0);
+                return true;
             }
             if (keyEvent.Key == _keyMap.MoveRight)
             {
                 MoveControl(1, 0);
+                return true;
             }
 
             // Fast moving things

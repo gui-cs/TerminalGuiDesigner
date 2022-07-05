@@ -1,3 +1,4 @@
+using System.Data;
 using System.Drawing;
 using Terminal.Gui;
 
@@ -73,9 +74,7 @@ public class PasteOperation : Operation
         // sustainable e.g. IPasteExtraBits or something
         if(d.View is TableView copyTv)
         {
-            var pasteTv = (TableView)cloneDesign.View;
-            pasteTv.Table = copyTv.Table.Clone();
-            pasteTv.Update();
+            CloneTableView(copyTv, (TableView)cloneDesign.View);
         }
         
         // TODO: adjust X/Y etc to make clone more visible
@@ -83,6 +82,17 @@ public class PasteOperation : Operation
         // TODO: Clone child designs too e.g. copy and paste a TabView
         return true;
 
+    }
+
+    private void CloneTableView(TableView copy, TableView paste)
+    {
+        paste.Table = copy.Table.Clone();
+
+        foreach(DataRow row in copy.Table.Rows)
+        {
+            paste.Table.Rows.Add(row.ItemArray);
+        }
+        paste.Update();
     }
 
     public override void Undo()
