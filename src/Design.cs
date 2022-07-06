@@ -47,7 +47,6 @@ public class Design
         }
     }
 
-
     public Design(SourceCodeFile sourceCode, string fieldName, View view)
     {
         View = view;
@@ -145,6 +144,19 @@ public class Design
     }
 
 
+
+    /// <summary>
+    /// Returns true if there is an explicit ColorScheme set
+    /// on this Design's View or false if it is inherited from
+    /// a View further up the Layout (or a library default scheme)
+    /// </summary>
+    public bool HasColorScheme()
+    {
+        if(Colors.ColorSchemes.Values.Contains(View.ColorScheme))
+            return false;
+
+        return true;
+    }
 
 
 
