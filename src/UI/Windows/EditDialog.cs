@@ -130,6 +130,22 @@ public class EditDialog : Window
     {
         var oldValue = property.GetValue();
 
+        if(property.PropertyInfo.PropertyType == typeof(ColorScheme))
+        {
+            var current = design.HasColorScheme() ? (ColorScheme?)property.GetValue() 
+                ?? new ColorScheme()
+                : new ColorScheme();
+
+            var dlg = new ColorSchemeEditor(current);
+            Application.Run(dlg);
+
+            if (!dlg.Cancelled)
+            {
+            }
+
+
+        }
+        else
         if(property.PropertyInfo.PropertyType == typeof(Attribute) ||
             property.PropertyInfo.PropertyType == typeof(Attribute?))
         {

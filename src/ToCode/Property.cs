@@ -263,6 +263,14 @@ public class Property : ToCodeBase
         {
             return "null";
         }
+
+        if(val is ColorScheme s)
+        {
+            // TODO : Summarise 
+            return Design.HasColorScheme() ?
+                "BLAH" : "Inherited";
+        }
+
         if(val is bool b)
         {
             return b ? "Yes" : "No";

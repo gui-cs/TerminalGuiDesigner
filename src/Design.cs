@@ -179,6 +179,8 @@ public class Design
         yield return CreateProperty(nameof(View.Y));
 
 
+        yield return CreateProperty(nameof(View.ColorScheme));
+
         // its important that this comes before Text because
         // changing the validator clears the text
         if(View is TextValidateField)

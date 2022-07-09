@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TerminalGuiDesigner {
+namespace TerminalGuiDesigner.UI.Windows {
     using System;
     using Terminal.Gui;
     
