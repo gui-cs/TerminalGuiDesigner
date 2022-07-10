@@ -7,59 +7,61 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TerminalGuiDesigner.UI.Windows; 
 using Terminal.Gui;
+using Attribute = Terminal.Gui.Attribute;
+
+namespace TerminalGuiDesigner.UI.Windows
+{
+
+    public partial class ColorPicker
+    {
 
 
-public partial class 
-ColorPicker {
-    
+        public Terminal.Gui.Attribute? Result { get; internal set; }
+        public bool Cancelled { get; internal set; }
 
-    public Attribute? Result { get; internal set; }
-    public bool Cancelled { get; internal set; }
-
-    public ColorPicker(Attribute? currentValue) {
-        InitializeComponent();
-
-        if(currentValue != null)
+        public ColorPicker(Attribute? currentValue)
         {
-             radiogroup1.SelectedItem =  (int)currentValue.Value.Foreground;
-             radiogroup2.SelectedItem =  (int)currentValue.Value.Background;
+            InitializeComponent();
+
+            if (currentValue != null)
+            {
+                radiogroup1.SelectedItem = (int)currentValue.Value.Foreground;
+                radiogroup2.SelectedItem = (int)currentValue.Value.Background;
+            }
+
+            lblPreview.ColorScheme = new ColorScheme();
+            UpdatePreview();
+
+            radiogroup1.SelectedItemChanged += (s) => UpdatePreview();
+            radiogroup2.SelectedItemChanged += (s) => UpdatePreview();
+
+            btnOk.Clicked += () => Ok();
+            btnCancel.Clicked += () => Cancel();
         }
 
-        lblPreview.ColorScheme = new ColorScheme();                 
-        UpdatePreview();
+        private void Ok()
+        {
+            Cancelled = false;
+            Result = GetColor();
+            Application.RequestStop();
+        }
+        private void Cancel()
+        {
+            Cancelled = true;
+            Result = null;
+            Application.RequestStop();
+        }
 
-        radiogroup1.SelectedItemChanged += (s)=>UpdatePreview();
-        radiogroup2.SelectedItemChanged += (s)=>UpdatePreview();
+        private void UpdatePreview()
+        {
+            lblPreview.ColorScheme.Normal = GetColor();
+            lblPreview.SetNeedsDisplay();
+        }
 
-        btnOk.Clicked += ()=>Ok();
-        btnCancel.Clicked += ()=>Cancel();
+        private Attribute GetColor()
+        {
+            return Attribute.Make((Color)radiogroup1.SelectedItem, (Color)radiogroup2.SelectedItem);
+        }
     }
-
-    private void Ok()
-    {
-        Cancelled = false;
-        Result = GetColor();
-        Application.RequestStop();
-    }
-    private void Cancel()
-    {
-        Cancelled = true;
-        Result = null;
-        Application.RequestStop();
-    }
-
-    private void UpdatePreview()
-    {
-        lblPreview.ColorScheme.Normal = GetColor();            
-        lblPreview.SetNeedsDisplay();
-    }
-
-    private Attribute GetColor()
-    {
-        return Attribute.Make((Color)radiogroup1.SelectedItem,(Color)radiogroup2.SelectedItem);
-    }
-
-    
 }
