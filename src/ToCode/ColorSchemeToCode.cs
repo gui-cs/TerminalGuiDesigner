@@ -25,8 +25,15 @@ namespace TerminalGuiDesigner.ToCode
             AddPropertyAssignment(args,$"this.{fieldName}.{nameof(ColorScheme.Normal)}",
                 new CodeObjectCreateExpression(
                     new CodeTypeReference(typeof(Attribute)), 
-                        new CodePrimitiveExpression(colorScheme.Normal.Foreground),
-                        new CodePrimitiveExpression(colorScheme.Normal.Background)));
+                        GetEnumExpression(colorScheme.Normal.Foreground),
+                        GetEnumExpression(colorScheme.Normal.Background)));
+        }
+
+        private CodeExpression GetEnumExpression(Color foreground)
+        {
+            return new CodeFieldReferenceExpression(
+                new CodeTypeReferenceExpression(typeof(Color)),
+                foreground.ToString());
         }
     }
 }

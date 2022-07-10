@@ -177,6 +177,8 @@ public class ViewToCode
 
         var args = new CodeDomArgs(class1, initMethod);
 
+        AddColorSchemesToClass(args,rootDesign);
+
         // Add designable root properties to the InitializeComponent method
         foreach (var prop in rootDesign.GetDesignableProperties())
         {
@@ -208,6 +210,15 @@ public class ViewToCode
             File.WriteAllText(file.DesignerFile.FullName, 
                 TrimHeader(sw.ToString()));
         }
+    }
+    private void AddColorSchemesToClass(CodeDomArgs args, Design design)
+    {
+        foreach(var scheme in ColorSchemeManager.Instance.Schemes)
+        {
+            var toCode = new ColorSchemeToCode(scheme.Key,scheme.Value);
+            toCode.ToCode(args);
+        }
+        
     }
 
     private void AddSubViewsToDesignerCs(View forView, CodeDomArgs args)

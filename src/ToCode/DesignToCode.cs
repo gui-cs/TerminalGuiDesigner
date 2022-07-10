@@ -14,11 +14,6 @@ internal class DesignToCode : ToCodeBase
 
     internal void ToCode(CodeDomArgs args, CodeExpression parentView)
     {
-        if(Design.IsRoot)
-        {
-            AddColorSchemesToClass(args,Design);
-        }
-
         AddFieldToClass(args, Design);
         AddConstructorCall(args, Design);
 
@@ -57,15 +52,5 @@ internal class DesignToCode : ToCodeBase
 
         // call this.Add(someView)
         AddAddToViewStatement(args, Design, parentView);
-    }
-
-    private void AddColorSchemesToClass(CodeDomArgs args, Design design)
-    {
-        foreach(var scheme in ColorSchemeManager.Instance.Schemes)
-        {
-            var toCode = new ColorSchemeToCode(scheme.Key,scheme.Value);
-            toCode.ToCode(args);
-        }
-        
     }
 }
