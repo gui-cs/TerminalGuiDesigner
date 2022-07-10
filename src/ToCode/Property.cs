@@ -8,7 +8,6 @@ using TerminalGuiDesigner;
 using Attribute = Terminal.Gui.Attribute;
 
 namespace TerminalGuiDesigner.ToCode;
-
 public class Property : ToCodeBase
 {
     public Design Design { get; }
@@ -255,20 +254,13 @@ public class Property : ToCodeBase
         return GetHumanReadableName() + ":" + GetHumanReadableValue();
     }
 
-    private string GetHumanReadableValue()
+    protected virtual string GetHumanReadableValue()
     {
         var val = GetValue();
 
         if(val == null)
         {
             return "null";
-        }
-
-        if(val is ColorScheme s)
-        {
-            // TODO : Summarise 
-            return Design.HasColorScheme() ?
-                "BLAH" : "Inherited";
         }
 
         if(val is bool b)

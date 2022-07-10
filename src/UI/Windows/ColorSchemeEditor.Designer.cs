@@ -12,6 +12,7 @@ namespace TerminalGuiDesigner.UI.Windows {
     using System;
     using Terminal.Gui;
     
+    using ColorPicker = TerminalGuiDesigner.UI.Windows.ColorPicker;
     
     public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         
