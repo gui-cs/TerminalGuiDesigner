@@ -1,3 +1,4 @@
+using System.CodeDom;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner.ToCode;
@@ -19,13 +20,37 @@ public class ColorSchemeProperty : Property
         if(!Design.HasColorScheme() )
             return;
 
+        // Note that this branch calls GetRhs()
         base.ToCode(args);
+    }
+
+    public override CodeExpression GetRhs()
+    {
+        var s  = GetValue() as ColorScheme;
+
+        if(s == null)
+            return new CodeDefaultValueExpression();
+
+        var scheme = ColorSchemeManager.Instance.GetNameForColorScheme(s);
+
+        if(scheme == null)
+            return new CodeDefaultValueExpression();
+
+        return new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),scheme);
     }
 
     protected override string GetHumanReadableValue()
     {
-        // TODO : Summarise instead of BLAH
-        return Design.HasColorScheme() ?
-            "BLAH" : "Inherited";
+        const string inherited =  "(Inherited)";
+
+        if(!Design.HasColorScheme())
+            return inherited;
+
+        var s  = GetValue() as ColorScheme;
+
+        if(s == null)
+            return inherited;
+
+        return ColorSchemeManager.Instance.GetNameForColorScheme(s) ?? "Unknown ColorScheme";
     }
 }

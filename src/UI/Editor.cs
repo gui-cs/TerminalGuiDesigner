@@ -23,7 +23,6 @@ public class Editor : Toplevel
     KeyboardManager _keyboardManager;
     MultiSelectionManager _selectionManager = new();
     MouseManager _mouseManager;
-    ColorSchemeManager _colorSchemeManager = new();
     private bool _menuOpen;
 
     private string GetHelpWithNothingLoaded()
@@ -659,7 +658,6 @@ Ctrl+Q - Quit
         OperationManager.Instance.ClearUndoRedo();
         Design? instance = null;
         _selectionManager.Clear();
-        _colorSchemeManager.Clear();
 
         Task.Run(()=>{
             
@@ -784,7 +782,6 @@ Ctrl+Q - Quit
         OperationManager.Instance.ClearUndoRedo();
         Design? instance = null;
         _selectionManager.Clear();
-        _colorSchemeManager.Clear();
 
         var open = new LoadingDialog(toOpen);
 
@@ -830,7 +827,8 @@ Ctrl+Q - Quit
             // Load new instance
             _viewBeingEdited = design;
 
-            _colorSchemeManager.FindDeclaredColorSchemes(_viewBeingEdited);
+            // TODO: Find a better place for this
+            ColorSchemeManager.Instance.FindDeclaredColorSchemes(_viewBeingEdited);
 
             // And add it to the editing window
             Add(_viewBeingEdited.View);

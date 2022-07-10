@@ -14,6 +14,12 @@ namespace TerminalGuiDesigner
         /// </summary>
         public ReadOnlyCollection<KeyValuePair<string, ColorScheme>> Schemes => _colorSchemes.ToList().AsReadOnly();
 
+        public static ColorSchemeManager Instance = new();
+
+        private ColorSchemeManager()
+        {
+
+        }
         public void Clear()
         {
             _colorSchemes = new();
@@ -58,6 +64,11 @@ namespace TerminalGuiDesigner
                 a.Focus.Value == b.Focus.Value &&
                 a.HotFocus.Value == b.HotFocus.Value &&
                 a.Disabled.Value == b.Disabled.Value;
+        }
+
+        public void AddOrUpdateScheme(string name, ColorScheme scheme)
+        {
+            _colorSchemes.AddOrUpdate(name,scheme);
         }
     }
 }
