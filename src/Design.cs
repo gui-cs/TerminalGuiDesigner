@@ -149,10 +149,16 @@ public class Design
     /// Returns true if there is an explicit ColorScheme set
     /// on this Design's View or false if it is inherited from
     /// a View further up the Layout (or a library default scheme)
+    /// <para> If a scheme is found that is not known about by ColorSchemeManager
+    /// then false is returned </para>
     /// </summary>
-    public bool HasColorScheme()
+    public bool HasKnownColorScheme()
     {
         if(Colors.ColorSchemes.Values.Contains(View.ColorScheme))
+            return false;
+
+        // it has a ColorScheme but not one we are tracking
+        if(ColorSchemeManager.Instance.GetNameForColorScheme(View.ColorScheme) == null)
             return false;
 
         return true;

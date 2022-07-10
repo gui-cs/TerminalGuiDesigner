@@ -17,7 +17,7 @@ public class ColorSchemeProperty : Property
         // if no explicit color scheme defined
         // then we don't output any code (view's
         // scheme is inherited)
-        if(!Design.HasColorScheme() )
+        if(!Design.HasKnownColorScheme() )
             return;
 
         // Note that this branch calls GetRhs()
@@ -28,22 +28,20 @@ public class ColorSchemeProperty : Property
     {
         var s  = GetValue() as ColorScheme;
 
-        if(s == null)
-            return new CodeDefaultValueExpression();
+        var name = ColorSchemeManager.Instance.GetNameForColorScheme(s 
+            ?? throw new Exception("GetRhs is only valid when there is a known ColorScheme"));
 
-        var scheme = ColorSchemeManager.Instance.GetNameForColorScheme(s);
+        if(string.IsNullOrWhiteSpace(name))
+            throw new Exception("GetRhs is only valid when there is a known ColorScheme");
 
-        if(scheme == null)
-            return new CodeDefaultValueExpression();
-
-        return new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),scheme);
+        return new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),name);
     }
 
     protected override string GetHumanReadableValue()
     {
         const string inherited =  "(Inherited)";
 
-        if(!Design.HasColorScheme())
+        if(!Design.HasKnownColorScheme())
             return inherited;
 
         var s  = GetValue() as ColorScheme;

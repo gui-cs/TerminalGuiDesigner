@@ -21,19 +21,27 @@ namespace TerminalGuiDesigner.ToCode
 
             AddConstructorCall(args,$"this.{fieldName}",typeof(ColorScheme));
 
-            // TODO: add other color member
-            AddPropertyAssignment(args,$"this.{fieldName}.{nameof(ColorScheme.Normal)}",
-                new CodeObjectCreateExpression(
-                    new CodeTypeReference(typeof(Attribute)), 
-                        GetEnumExpression(colorScheme.Normal.Foreground),
-                        GetEnumExpression(colorScheme.Normal.Background)));
+            AddColorSchemeField(args,colorScheme.Normal,nameof(ColorScheme.Normal));
+            AddColorSchemeField(args,colorScheme.HotNormal,nameof(ColorScheme.HotNormal));
+            AddColorSchemeField(args,colorScheme.Focus,nameof(ColorScheme.Focus));
+            AddColorSchemeField(args,colorScheme.HotFocus,nameof(ColorScheme.HotFocus));
+            AddColorSchemeField(args,colorScheme.Disabled,nameof(ColorScheme.Disabled));
         }
 
-        private CodeExpression GetEnumExpression(Color foreground)
+        private void AddColorSchemeField(CodeDomArgs args, Attribute color, string colorSchemeSubfield)
+        {
+            AddPropertyAssignment(args,$"this.{fieldName}.{colorSchemeSubfield}",
+                new CodeObjectCreateExpression(
+                    new CodeTypeReference(typeof(Attribute)), 
+                        GetEnumExpression(color.Foreground),
+                        GetEnumExpression(color.Background)));
+        }
+
+        private CodeExpression GetEnumExpression(Color color)
         {
             return new CodeFieldReferenceExpression(
                 new CodeTypeReferenceExpression(typeof(Color)),
-                foreground.ToString());
+                color.ToString());
         }
     }
 }

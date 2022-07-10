@@ -25,10 +25,18 @@ public class ColorSchemeTests : Tests
 
         Assert.AreSame(Colors.Base,d.View.ColorScheme);
         Assert.IsNotNull(d.View.ColorScheme);
-        Assert.IsFalse(d.HasColorScheme());
+        Assert.IsFalse(d.HasKnownColorScheme());
 
         d.View.ColorScheme = new ColorScheme();
-        Assert.IsTrue(d.HasColorScheme());
+        
+        // we still don't know about this scheme yet
+        Assert.IsFalse(d.HasKnownColorScheme());
+
+        ColorSchemeManager.Instance.AddOrUpdateScheme("fff",d.View.ColorScheme);
+        // now we know about it
+        Assert.IsTrue(d.HasKnownColorScheme());
+
+        ColorSchemeManager.Instance.Clear();
 
         Application.End(state);
     }
@@ -57,6 +65,8 @@ public class ColorSchemeTests : Tests
         Assert.AreEqual("aaa", found);
         mgr.Clear();
     }
+
+    
 
     [Test]
     public void TestColorScheme_RoundTrip()
@@ -89,7 +99,7 @@ public class ColorSchemeTests : Tests
 
         var lblDesignIn = designBackIn.GetAllDesigns().Single(d=>d.View is Label);
 
-        Assert.IsTrue(lblDesignIn.HasColorScheme());
+        Assert.IsTrue(lblDesignIn.HasKnownColorScheme());
 
         Assert.AreEqual("pink",mgr.GetNameForColorScheme(lblDesignIn.View.ColorScheme));
 
