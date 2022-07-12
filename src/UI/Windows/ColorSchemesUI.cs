@@ -8,13 +8,105 @@
 //  </auto-generated>
 // -----------------------------------------------------------------------------
 namespace TerminalGuiDesigner.UI.Windows {
+    using System;
+    using System.Collections.Generic;
     using Terminal.Gui;
     
     
     public partial class ColorSchemesUI {
-        
+        const string NameColumn = "Name";
+        const string ColorsColumn = "Colors";
+        const string EditColumnName = " ";
+        const string DeleteColumnName = "  ";
+        private KeyValuePair<string, ColorScheme>[] _schemes;
+
         public ColorSchemesUI() {
             InitializeComponent();
+
+
+            tvColorSchemes.NullSymbol = "";
+
+            var tbl = tvColorSchemes.Table;
+
+            tbl.Columns[NameColumn].DataType = typeof(int);
+            tbl.Columns[ColorsColumn].DataType = typeof(int);
+            tbl.Columns[EditColumnName].DataType = typeof(int);
+            tbl.Columns[DeleteColumnName].DataType = typeof(int);
+
+            var sName = tvColorSchemes.Style.GetOrCreateColumnStyle(tbl.Columns[NameColumn]);
+            sName.RepresentationGetter = GetName;
+
+            var sColors = tvColorSchemes.Style.GetOrCreateColumnStyle(tbl.Columns[ColorsColumn]);
+            
+            var sEdit = tvColorSchemes.Style.GetOrCreateColumnStyle(tbl.Columns[EditColumnName]);
+            sEdit.RepresentationGetter = GetEditString;
+            
+            var sDelete = tvColorSchemes.Style.GetOrCreateColumnStyle(tbl.Columns[DeleteColumnName]);
+            sDelete.RepresentationGetter = GetDeleteString;
+
+            tvColorSchemes.CellActivated += CellActivated;
+
+            BuildDataTable();
+        }
+
+        private void CellActivated(TableView.CellActivatedEventArgs e)
+        {
+            var col = e.Table.Columns[e.Col];
+            var val = (int)e.Table.Rows[e.Row][e.Col];
+
+            if(col.ColumnName == DeleteColumnName)
+            {
+                // actually its the [+] button
+                if(val == int.MaxValue)
+                {
+                    ColorSchemeManager.Instance.AddOrUpdateScheme(GetNewColorName(),new ColorScheme());
+                    BuildDataTable();
+                    tvColorSchemes.SelectedRow++;
+                }
+            }
+        }
+
+        private string GetNewColorName()
+        {
+            // TODO: Do this properly
+            // TODO: Also don't collide with Design.FieldName values
+            var r = new Random();
+            return "scheme" + r.Next(100);
+        }
+
+        private string GetDeleteString(object arg)
+        {
+            return (int)arg == int.MaxValue ? "[+]" : "[ Delete ]";
+        }
+
+        private string GetEditString(object arg)
+        {
+            return (int)arg == int.MaxValue ? "" : "[ Edit ]";
+        }
+
+        private string GetName(object arg)
+        {
+            if(arg is int i && i <_schemes.Length)
+            {
+                return _schemes[i].Key;
+            }
+            return "";
+        }
+
+        private void BuildDataTable()
+        {
+            tvColorSchemes.Table.Rows.Clear();
+
+            _schemes = ColorSchemeManager.Instance.Schemes.ToArray();
+
+            for(int i = 0 ; i < _schemes.Length;i++)
+            {
+                tvColorSchemes.Table.Rows.Add(i,i,i,i);
+            }
+
+            // Add one last blank row to table for the '[+]' row
+            tvColorSchemes.Table.Rows.Add(int.MaxValue,int.MaxValue,int.MaxValue,int.MaxValue);
+            tvColorSchemes.Update();
         }
     }
 }
