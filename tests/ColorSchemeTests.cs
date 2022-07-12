@@ -86,7 +86,7 @@ public class ColorSchemeTests : Tests
 
         // create label with custom color scheme
         var lblOut = new Label{
-            ColorScheme = mgr.Schemes.Single().Value
+            ColorScheme = mgr.Schemes.Single().Scheme
         };
 
         // add it to view

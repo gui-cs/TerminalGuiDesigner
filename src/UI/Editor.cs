@@ -884,7 +884,10 @@ Ctrl+Q - Quit
 
     private void ShowColorSchemes()
     {
-        var schemes = new ColorSchemesUI();
+        if(_viewBeingEdited == null)
+            return;
+        
+        var schemes = new ColorSchemesUI(_viewBeingEdited);
         Application.Run(schemes);        
     }
 

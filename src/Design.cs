@@ -539,15 +539,19 @@ public class Design
         var allDesigns = root.GetAllDesigns().ToList();
         allDesigns.Remove(this);
 
+        // what field names are already taken by other objects?
+        var usedFieldNames = allDesigns.Select(d => d.FieldName).ToList();
+        usedFieldNames.AddRange(ColorSchemeManager.Instance.Schemes.Select(k=>k.Name));
+
         // if name is already unique thats great
-        if(!allDesigns.Any(d => d.FieldName.Equals(candidate)))
+        if(!usedFieldNames.Contains(candidate))
         {
             return candidate;
         }
 
         // name collides with something else
         int number = 2;
-        while (allDesigns.Any(d => d.FieldName.Equals($"{candidate}{number}")))
+        while (usedFieldNames.Contains($"{candidate}{number}"))
         {
             // bob is taken, try bob2 etc
             number++;

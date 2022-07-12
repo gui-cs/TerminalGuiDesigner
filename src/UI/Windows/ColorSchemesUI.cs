@@ -11,18 +11,22 @@ namespace TerminalGuiDesigner.UI.Windows {
     using System;
     using System.Collections.Generic;
     using Terminal.Gui;
-    
-    
+    using static TerminalGuiDesigner.ColorSchemeManager;
+
     public partial class ColorSchemesUI {
         const string NameColumn = "Name";
         const string ColorsColumn = "Colors";
         const string EditColumnName = " ";
         const string DeleteColumnName = "  ";
-        private KeyValuePair<string, ColorScheme>[] _schemes;
+        private NamedColorScheme[] _schemes;
 
-        public ColorSchemesUI() {
+        public Design Design { get; }
+
+        public ColorSchemesUI(Design design) {
+            
             InitializeComponent();
 
+            Design = design;
 
             tvColorSchemes.NullSymbol = "";
 
@@ -54,6 +58,16 @@ namespace TerminalGuiDesigner.UI.Windows {
             var col = e.Table.Columns[e.Col];
             var val = (int)e.Table.Rows[e.Row][e.Col];
 
+
+            if(col.ColumnName == NameColumn)
+            {
+                var oldName = GetName(val);
+                if(Modals.GetString("Rename Color Scheme","Name",oldName,out var newName) && !string.IsNullOrWhiteSpace(newName))
+                {
+                    ColorSchemeManager.Instance.RenameScheme(oldName,Design.GetUniqueFieldName(newName));
+                }
+            }
+
             if(col.ColumnName == DeleteColumnName)
             {
                 // actually its the [+] button
@@ -67,11 +81,8 @@ namespace TerminalGuiDesigner.UI.Windows {
         }
 
         private string GetNewColorName()
-        {
-            // TODO: Do this properly
-            // TODO: Also don't collide with Design.FieldName values
-            var r = new Random();
-            return "scheme" + r.Next(100);
+        {  
+            return Design.GetUniqueFieldName("scheme");
         }
 
         private string GetDeleteString(object arg)
@@ -88,7 +99,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         {
             if(arg is int i && i <_schemes.Length)
             {
-                return _schemes[i].Key;
+                return _schemes[i].Name;
             }
             return "";
         }

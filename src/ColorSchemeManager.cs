@@ -7,12 +7,23 @@ namespace TerminalGuiDesigner
 {
     public class ColorSchemeManager
     {
-        Dictionary<string, ColorScheme> _colorSchemes = new();
+        public class NamedColorScheme
+        {
+
+            public string Name { get; set;}
+            public ColorScheme Scheme { get; set;}
+            public NamedColorScheme(string name,ColorScheme scheme)
+            {
+                Name = name;
+                Scheme = scheme;
+            }
+        }
+        List<NamedColorScheme> _colorSchemes = new();
 
         /// <summary>
         /// All known color schemes defined by name
         /// </summary>
-        public ReadOnlyCollection<KeyValuePair<string, ColorScheme>> Schemes => _colorSchemes.ToList().AsReadOnly();
+        public ReadOnlyCollection<NamedColorScheme> Schemes => _colorSchemes.ToList().AsReadOnly();
 
         public static ColorSchemeManager Instance = new();
 
@@ -40,17 +51,17 @@ namespace TerminalGuiDesigner
             {
                 var val = f.GetValue(view) as ColorScheme;
 
-                if (val != null && !_colorSchemes.ContainsKey(f.Name))
-                    _colorSchemes.Add(f.Name, val);
+                if (val != null && !_colorSchemes.Any(s=>s.Name.Equals(f.Name)))
+                    _colorSchemes.Add(new NamedColorScheme(f.Name, val));
             }
         }
 
         public string? GetNameForColorScheme(ColorScheme s)
         {
-            var match = _colorSchemes.Where(kvp => AreEqual(s, kvp.Value)).ToArray();
+            var match = _colorSchemes.Where(kvp => AreEqual(s, kvp.Scheme)).ToArray();
 
             if (match.Length > 0)
-                return match[0].Key;
+                return match[0].Name;
 
             // no match
             return null;
@@ -68,7 +79,26 @@ namespace TerminalGuiDesigner
 
         public void AddOrUpdateScheme(string name, ColorScheme scheme)
         {
-            _colorSchemes.AddOrUpdate(name,scheme);
+            var match = _colorSchemes.FirstOrDefault(c=>c.Name.Equals(name));
+
+            if(match!=null)
+            {
+                match.Scheme = scheme;
+            }
+            else
+            {
+                _colorSchemes.Add(new NamedColorScheme(name,scheme));
+            }
+        }
+
+        public void RenameScheme(string oldName, string newName)
+        {
+            var match = _colorSchemes.FirstOrDefault(c=>c.Name.Equals(oldName));
+
+            if(match!=null)
+            {
+                match.Name = newName;
+            }
         }
     }
 }
