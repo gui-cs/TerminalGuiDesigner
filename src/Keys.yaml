@@ -22,3 +22,4 @@ MoveRight: CursorRight, ShiftMask
 MoveLeft: CursorLeft, ShiftMask
 MoveUp: CursorUp, ShiftMask
 MoveDown: CursorDown, ShiftMask
+ShowColorSchemes: F6

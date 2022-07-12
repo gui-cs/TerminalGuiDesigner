@@ -367,6 +367,12 @@ Ctrl+Q - Quit
                 return true;
             }
 
+            if (keyEvent.Key == _keyMap.ShowColorSchemes)
+            {
+                ShowColorSchemes();
+                return true;
+            }
+
             if (keyEvent.Key == _keyMap.Copy)
             {
                 Copy();
@@ -874,6 +880,12 @@ Ctrl+Q - Quit
     {
         var edit = new EditDialog(d);
         Application.Run(edit,ErrorHandler);
+    }
+
+    private void ShowColorSchemes()
+    {
+        var schemes = new ColorSchemesUI();
+        Application.Run(schemes);        
     }
 
     
