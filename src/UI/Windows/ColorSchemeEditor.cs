@@ -10,17 +10,17 @@
 namespace TerminalGuiDesigner.UI.Windows {
     using System;
     using Terminal.Gui;
-    
-    
+    using Attribute = Terminal.Gui.Attribute;
+
     public partial class ColorSchemeEditor {
         
-        ColorScheme Result {get;}
+        public ColorScheme Result {get;}
         public bool Cancelled { get; set; } = true;
 
         public ColorSchemeEditor(ColorScheme scheme) {
             InitializeComponent();
 
-            Result = scheme;
+            Result = Clone(scheme);
 
             SetColorPatches();
 
@@ -28,7 +28,52 @@ namespace TerminalGuiDesigner.UI.Windows {
                 Result.Normal = PickNewColorsFor(Result.Normal);
                 SetColorPatches();
                 };
+
+
+            btnEditHotNormal.Clicked += ()=>{
+                Result.HotNormal = PickNewColorsFor(Result.HotNormal);
+                SetColorPatches();
+                };
+
+
+            btnEditFocus.Clicked += ()=>{
+                Result.Focus = PickNewColorsFor(Result.Focus);
+                SetColorPatches();
+                };
+
+
+            btnEditHotFocus.Clicked += ()=>{
+                Result.HotFocus = PickNewColorsFor(Result.HotFocus);
+                SetColorPatches();
+                };
+
+
+            btnEditDisabled.Clicked += ()=>{
+                Result.Disabled = PickNewColorsFor(Result.Disabled);
+                SetColorPatches();
+                };
+
+            btnCancel.Clicked += ()=>{
+                Cancelled = true;
+                Application.RequestStop();
+            };
+
+            btnOk.Clicked += ()=>{
+                Cancelled = false;
+                Application.RequestStop();
+            };
             
+        }
+
+        private ColorScheme Clone(ColorScheme scheme)
+        {
+            return new ColorScheme{
+                Normal = new Attribute(scheme.Normal.Foreground,scheme.Normal.Background),
+                HotNormal = new Attribute(scheme.HotNormal.Foreground,scheme.HotNormal.Background),
+                Focus = new Attribute(scheme.Focus.Foreground,scheme.Focus.Background),
+                HotFocus = new Attribute(scheme.HotFocus.Foreground,scheme.HotFocus.Background),
+                Disabled = new Attribute(scheme.Disabled.Foreground,scheme.Disabled.Background),
+            };
         }
 
         private Terminal.Gui.Attribute PickNewColorsFor(Terminal.Gui.Attribute current)
@@ -43,6 +88,18 @@ namespace TerminalGuiDesigner.UI.Windows {
         {
             SetColor(lblBackgroundNormal,Result.Normal.Background);
             SetColor(lblForegroundNormal,Result.Normal.Foreground);
+
+            SetColor(lblBackgroundHotNormal,Result.HotNormal.Background);
+            SetColor(lblForegroundHotNormal,Result.HotNormal.Foreground);
+
+            SetColor(lblBackgroundFocus,Result.Focus.Background);
+            SetColor(lblForegroundFocus,Result.Focus.Foreground);
+
+            SetColor(lblBackgroundHotFocus,Result.HotFocus.Background);
+            SetColor(lblForegroundHotFocus,Result.HotFocus.Foreground);
+
+            SetColor(lblBackgroundDisabled,Result.Disabled.Background);
+            SetColor(lblForegroundDisabled,Result.Disabled.Foreground);
         }
 
         private void SetColor(Label label, Color color)

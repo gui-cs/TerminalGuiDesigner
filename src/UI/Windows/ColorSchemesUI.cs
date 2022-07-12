@@ -58,6 +58,14 @@ namespace TerminalGuiDesigner.UI.Windows {
             var col = e.Table.Columns[e.Col];
             var val = (int)e.Table.Rows[e.Row][e.Col];
 
+            if(col.ColumnName == EditColumnName && val < _schemes.Length)
+            {
+                var edit = new ColorSchemeEditor(_schemes[val].Scheme);
+                Application.Run(edit);
+
+                ColorSchemeManager.Instance.AddOrUpdateScheme(_schemes[val].Name,edit.Result);
+                BuildDataTable();
+            }
 
             if(col.ColumnName == NameColumn)
             {
