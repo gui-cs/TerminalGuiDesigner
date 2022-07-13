@@ -10,22 +10,18 @@
 namespace TerminalGuiDesigner.UI.Windows {
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using Terminal.Gui;
     using static TerminalGuiDesigner.ColorSchemeManager;
 
     public partial class ColorSchemesUI {
         const string NameColumn = "Name";
-        const string ColorsColumn = "Colors";
         const string EditColumnName = " ";
         const string DeleteColumnName = "  ";
-        private NamedColorScheme[] _schemes;
-
-        /// <summary>
-        /// swatches for each of Normal, Hot Normal, Focus, HotFocus and Disabled
-        /// </summary>
-        private const string Swatches = @" \   \   \   \   \ ";
 
         public Design Design { get; }
+
+        private NamedColorScheme[] _schemes;
 
         public ColorSchemesUI(Design design) {
             
@@ -37,17 +33,13 @@ namespace TerminalGuiDesigner.UI.Windows {
 
             var tbl = tvColorSchemes.Table;
 
-            tbl.Columns[NameColumn].DataType = typeof(int);
-            tbl.Columns[ColorsColumn].DataType = typeof(int);
-            tbl.Columns[EditColumnName].DataType = typeof(int);
-            tbl.Columns[DeleteColumnName].DataType = typeof(int);
+            foreach(DataColumn col in tbl.Columns)
+            {
+                col.DataType = typeof(int);
+            }
 
             var sName = tvColorSchemes.Style.GetOrCreateColumnStyle(tbl.Columns[NameColumn]);
             sName.RepresentationGetter = GetName;
-
-            var sColors = tvColorSchemes.Style.GetOrCreateColumnStyle(tbl.Columns[ColorsColumn]);
-            sColors.RepresentationGetter = GetPattern;
-            sColors.MinWidth = Swatches.Length;
 
             var sEdit = tvColorSchemes.Style.GetOrCreateColumnStyle(tbl.Columns[EditColumnName]);
             sEdit.RepresentationGetter = GetEditString;
@@ -59,17 +51,14 @@ namespace TerminalGuiDesigner.UI.Windows {
 
             tvColorSchemes.CellActivated += CellActivated;
 
-            BuildDataTable();
+            SetupSwatchColumn(tbl,tbl.Columns["0"],(s)=>s?.Normal.Foreground ?? tvColorSchemes.ColorScheme.Normal.Background);
+
+            BuildDataTableRows();
         }
 
-        private string GetPattern(object arg)
+        private void SetupSwatchColumn(DataTable tbl, DataColumn dataColumn, Func<ColorScheme, Color> value)
         {
-            if((int)arg ==int.MaxValue)
-            {
-                return " ";
-            }
-
-            return Swatches;
+            //TODO: Set cell color delegate and Representation
         }
 
         private void CellActivated(TableView.CellActivatedEventArgs e)
@@ -83,7 +72,7 @@ namespace TerminalGuiDesigner.UI.Windows {
                 Application.Run(edit);
 
                 ColorSchemeManager.Instance.AddOrUpdateScheme(_schemes[val].Name,edit.Result);
-                BuildDataTable();
+                BuildDataTableRows();
             }
 
             if(col.ColumnName == NameColumn)
@@ -101,7 +90,7 @@ namespace TerminalGuiDesigner.UI.Windows {
                 if(val == int.MaxValue)
                 {
                     ColorSchemeManager.Instance.AddOrUpdateScheme(GetNewColorName(),new ColorScheme());
-                    BuildDataTable();
+                    BuildDataTableRows();
                     tvColorSchemes.SelectedRow++;
                 }
             }
@@ -131,20 +120,32 @@ namespace TerminalGuiDesigner.UI.Windows {
             return "";
         }
 
-        private void BuildDataTable()
+        private void BuildDataTableRows()
         {
-            tvColorSchemes.Table.Rows.Clear();
+            var tbl = tvColorSchemes.Table;
+            tbl.Rows.Clear();
 
             _schemes = ColorSchemeManager.Instance.Schemes.ToArray();
 
             for(int i = 0 ; i < _schemes.Length;i++)
             {
-                tvColorSchemes.Table.Rows.Add(i,i,i,i);
+                AddRowToTableWithAllCellsHavingValue(i);
             }
 
-            // Add one last blank row to table for the '[+]' row
-            tvColorSchemes.Table.Rows.Add(int.MaxValue,int.MaxValue,int.MaxValue,int.MaxValue);
+            // Add one last blank row to table for the add row button
+            AddRowToTableWithAllCellsHavingValue(int.MaxValue);
             tvColorSchemes.Update();
+        }
+
+        private void AddRowToTableWithAllCellsHavingValue(int i)
+        {            
+            var tbl = tvColorSchemes.Table;
+
+            var r = tbl.Rows.Add();
+            for(int j = 0;j<tbl.Columns.Count;j++)
+            {
+                r[j] = i;
+            }
         }
     }
 }

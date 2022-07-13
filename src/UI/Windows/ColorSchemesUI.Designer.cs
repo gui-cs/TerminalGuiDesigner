@@ -17,7 +17,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         
         private Terminal.Gui.TableView tvColorSchemes;
         
-        private Terminal.Gui.Label lblNoColorSchemesDefined;
+        private Terminal.Gui.Label lblHelp;
         
         private void InitializeComponent() {
             this.Width = Dim.Fill(0);
@@ -33,7 +33,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Title = "Color Schemes (Ctrl+Q to exit)";
             this.tvColorSchemes = new Terminal.Gui.TableView();
             this.tvColorSchemes.Width = Dim.Fill(0);
-            this.tvColorSchemes.Height = Dim.Fill(0);
+            this.tvColorSchemes.Height = Dim.Fill(1);
             this.tvColorSchemes.X = 0;
             this.tvColorSchemes.Y = 0;
             this.tvColorSchemes.Data = "tvColorSchemes";
@@ -41,7 +41,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.tvColorSchemes.TextAlignment = Terminal.Gui.TextAlignment.Left;
             this.tvColorSchemes.FullRowSelect = false;
             this.tvColorSchemes.Style.AlwaysShowHeaders = false;
-            this.tvColorSchemes.Style.ExpandLastColumn = true;
+            this.tvColorSchemes.Style.ExpandLastColumn = false;
             this.tvColorSchemes.Style.InvertSelectedCellFirstCharacter = false;
             this.tvColorSchemes.Style.ShowHorizontalHeaderOverline = true;
             this.tvColorSchemes.Style.ShowHorizontalHeaderUnderline = true;
@@ -53,10 +53,6 @@ namespace TerminalGuiDesigner.UI.Windows {
             tvColorSchemesTableName = new System.Data.DataColumn();
             tvColorSchemesTableName.ColumnName = "Name";
             tvColorSchemesTable.Columns.Add(tvColorSchemesTableName);
-            System.Data.DataColumn tvColorSchemesTableColors;
-            tvColorSchemesTableColors = new System.Data.DataColumn();
-            tvColorSchemesTableColors.ColumnName = "Colors";
-            tvColorSchemesTable.Columns.Add(tvColorSchemesTableColors);
             System.Data.DataColumn tvColorSchemesTable2;
             tvColorSchemesTable2 = new System.Data.DataColumn();
             tvColorSchemesTable2.ColumnName = " ";
@@ -65,17 +61,65 @@ namespace TerminalGuiDesigner.UI.Windows {
             tvColorSchemesTable3 = new System.Data.DataColumn();
             tvColorSchemesTable3.ColumnName = "  ";
             tvColorSchemesTable.Columns.Add(tvColorSchemesTable3);
+            System.Data.DataColumn tvColorSchemesTable0;
+            tvColorSchemesTable0 = new System.Data.DataColumn();
+            tvColorSchemesTable0.ColumnName = "0";
+            tvColorSchemesTable.Columns.Add(tvColorSchemesTable0);
+            System.Data.DataColumn tvColorSchemesTable1;
+            tvColorSchemesTable1 = new System.Data.DataColumn();
+            tvColorSchemesTable1.ColumnName = "1";
+            tvColorSchemesTable.Columns.Add(tvColorSchemesTable1);
+            System.Data.DataColumn tvColorSchemesTable22;
+            tvColorSchemesTable22 = new System.Data.DataColumn();
+            tvColorSchemesTable22.ColumnName = "2";
+            tvColorSchemesTable.Columns.Add(tvColorSchemesTable22);
+            System.Data.DataColumn tvColorSchemesTable32;
+            tvColorSchemesTable32 = new System.Data.DataColumn();
+            tvColorSchemesTable32.ColumnName = "3";
+            tvColorSchemesTable.Columns.Add(tvColorSchemesTable32);
+            System.Data.DataColumn tvColorSchemesTable4;
+            tvColorSchemesTable4 = new System.Data.DataColumn();
+            tvColorSchemesTable4.ColumnName = "4";
+            tvColorSchemesTable.Columns.Add(tvColorSchemesTable4);
+            System.Data.DataColumn tvColorSchemesTable5;
+            tvColorSchemesTable5 = new System.Data.DataColumn();
+            tvColorSchemesTable5.ColumnName = "5";
+            tvColorSchemesTable.Columns.Add(tvColorSchemesTable5);
+            System.Data.DataColumn tvColorSchemesTable6;
+            tvColorSchemesTable6 = new System.Data.DataColumn();
+            tvColorSchemesTable6.ColumnName = "6";
+            tvColorSchemesTable.Columns.Add(tvColorSchemesTable6);
+            System.Data.DataColumn tvColorSchemesTable7;
+            tvColorSchemesTable7 = new System.Data.DataColumn();
+            tvColorSchemesTable7.ColumnName = "7";
+            tvColorSchemesTable.Columns.Add(tvColorSchemesTable7);
+            System.Data.DataColumn tvColorSchemesTable8;
+            tvColorSchemesTable8 = new System.Data.DataColumn();
+            tvColorSchemesTable8.ColumnName = "8";
+            tvColorSchemesTable.Columns.Add(tvColorSchemesTable8);
+            System.Data.DataColumn tvColorSchemesTable9;
+            tvColorSchemesTable9 = new System.Data.DataColumn();
+            tvColorSchemesTable9.ColumnName = "9";
+            tvColorSchemesTable.Columns.Add(tvColorSchemesTable9);
+            System.Data.DataColumn tvColorSchemesTableA;
+            tvColorSchemesTableA = new System.Data.DataColumn();
+            tvColorSchemesTableA.ColumnName = "A";
+            tvColorSchemesTable.Columns.Add(tvColorSchemesTableA);
+            System.Data.DataColumn tvColorSchemesTableB;
+            tvColorSchemesTableB = new System.Data.DataColumn();
+            tvColorSchemesTableB.ColumnName = "B";
+            tvColorSchemesTable.Columns.Add(tvColorSchemesTableB);
             this.tvColorSchemes.Table = tvColorSchemesTable;
             this.Add(this.tvColorSchemes);
-            this.lblNoColorSchemesDefined = new Terminal.Gui.Label();
-            this.lblNoColorSchemesDefined.Width = 44;
-            this.lblNoColorSchemesDefined.Height = 1;
-            this.lblNoColorSchemesDefined.X = Pos.Center();
-            this.lblNoColorSchemesDefined.Y = Pos.Center();
-            this.lblNoColorSchemesDefined.Data = "lblNoColorSchemesDefined";
-            this.lblNoColorSchemesDefined.Text = "You do not have any ColorSchemes defined yet";
-            this.lblNoColorSchemesDefined.TextAlignment = Terminal.Gui.TextAlignment.Left;
-            this.Add(this.lblNoColorSchemesDefined);
+            this.lblHelp = new Terminal.Gui.Label();
+            this.lblHelp.Width = 5;
+            this.lblHelp.Height = 1;
+            this.lblHelp.X = 0;
+            this.lblHelp.Y = Pos.Percent(100f) - 1;
+            this.lblHelp.Data = "lblHelp";
+            this.lblHelp.Text = "Help:";
+            this.lblHelp.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.Add(this.lblHelp);
         }
     }
 }
