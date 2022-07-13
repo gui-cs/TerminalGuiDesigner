@@ -36,6 +36,11 @@ namespace TerminalGuiDesigner
             _colorSchemes = new();
         }
 
+        public void Remove(NamedColorScheme toDelete)
+        {
+            _colorSchemes.Remove(toDelete);
+        }
+
         public void FindDeclaredColorSchemes(Design viewBeingEdited)
         {
             if (!viewBeingEdited.IsRoot)
@@ -58,23 +63,13 @@ namespace TerminalGuiDesigner
 
         public string? GetNameForColorScheme(ColorScheme s)
         {
-            var match = _colorSchemes.Where(kvp => AreEqual(s, kvp.Scheme)).ToArray();
+            var match = _colorSchemes.Where(kvp => s.AreEqual(kvp.Scheme)).ToArray();
 
             if (match.Length > 0)
                 return match[0].Name;
 
             // no match
             return null;
-        }
-
-        private bool AreEqual(ColorScheme a, ColorScheme b)
-        {
-            return
-                a.Normal.Value == b.Normal.Value &&
-                a.HotNormal.Value == b.HotNormal.Value &&
-                a.Focus.Value == b.Focus.Value &&
-                a.HotFocus.Value == b.HotFocus.Value &&
-                a.Disabled.Value == b.Disabled.Value;
         }
 
         public void AddOrUpdateScheme(string name, ColorScheme scheme)

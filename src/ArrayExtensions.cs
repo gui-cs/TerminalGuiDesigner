@@ -1,7 +1,4 @@
 namespace TerminalGuiDesigner;
-
-
-
 public static class ArrayExtensions
 {
     /// <summary>

@@ -168,6 +168,15 @@ public class Design
     }
 
 
+    /// <summary>
+    /// True if this view EXPLICITLY states that it uses the scheme
+    /// False if its scheme is inherited from a parent or it explicitly
+    /// uses a different ColorScheme
+    /// </summary>
+    public bool UsesColorScheme(ColorScheme scheme)
+    {
+        return HasKnownColorScheme() && View.ColorScheme.AreEqual(scheme);
+    }
 
     /// <summary>
     /// Gets the designable properties of the hosted View

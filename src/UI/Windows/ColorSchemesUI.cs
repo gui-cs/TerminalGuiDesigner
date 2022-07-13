@@ -12,7 +12,10 @@ namespace TerminalGuiDesigner.UI.Windows {
     using System.Collections.Generic;
     using System.Data;
     using Terminal.Gui;
+    using TerminalGuiDesigner.Operations;
+    using static Terminal.Gui.TableView;
     using static TerminalGuiDesigner.ColorSchemeManager;
+    using Attribute = Terminal.Gui.Attribute;
 
     public partial class ColorSchemesUI {
         const string NameColumn = "Name";
@@ -50,15 +53,48 @@ namespace TerminalGuiDesigner.UI.Windows {
             sDelete.MinWidth = 8;
 
             tvColorSchemes.CellActivated += CellActivated;
+            tvColorSchemes.SelectedCellChanged += CellChanged;
 
-            SetupSwatchColumn(tbl,tbl.Columns["0"],(s)=>s?.Normal.Foreground ?? tvColorSchemes.ColorScheme.Normal.Background);
+            SetupSwatchColumn(tbl,tbl.Columns["0"],(s)=>s.Normal.Foreground);
+            SetupSwatchColumn(tbl,tbl.Columns["1"],(s)=>s.Normal.Background);
+            SetupSwatchColumn(tbl,tbl.Columns["2"],(s)=>s.HotNormal.Foreground);
+            SetupSwatchColumn(tbl,tbl.Columns["3"],(s)=>s.HotNormal.Background);
+
+            SetupSwatchColumn(tbl,tbl.Columns["4"],(s)=>s.Focus.Foreground);
+            SetupSwatchColumn(tbl,tbl.Columns["5"],(s)=>s.Focus.Background);
+            SetupSwatchColumn(tbl,tbl.Columns["6"],(s)=>s.HotFocus.Foreground);
+            SetupSwatchColumn(tbl,tbl.Columns["7"],(s)=>s.HotFocus.Background);
+
+            SetupSwatchColumn(tbl,tbl.Columns["8"],(s)=>s.Disabled.Foreground);
+            SetupSwatchColumn(tbl,tbl.Columns["9"],(s)=>s.Disabled.Background);
 
             BuildDataTableRows();
         }
 
-        private void SetupSwatchColumn(DataTable tbl, DataColumn dataColumn, Func<ColorScheme, Color> value)
+        private void CellChanged(SelectedCellChangedEventArgs e)
         {
-            //TODO: Set cell color delegate and Representation
+            // don't let user select the color swatches
+            if(e.NewCol > 2)
+                tvColorSchemes.SelectedColumn = 2;
+        }
+
+        private void SetupSwatchColumn(DataTable tbl, DataColumn col, Func<ColorScheme, Color> func)
+        {
+            var colStyle = tvColorSchemes.Style.GetOrCreateColumnStyle(col);
+
+            colStyle.RepresentationGetter = (o)=> " ";
+            colStyle.ColorGetter = (e)=>(int)e.CellValue == int.MaxValue ? null : ColorToScheme(func(_schemes[(int)e.CellValue].Scheme));
+        }
+
+        private ColorScheme ColorToScheme(Color color)
+        {
+            return new ColorScheme{
+                Normal = new Attribute(color,color),
+                HotNormal = new Attribute(color,color),
+                Focus = new Attribute(color,color),
+                HotFocus = new Attribute(color,color),
+                Disabled = new Attribute(color,color),
+            };
         }
 
         private void CellActivated(TableView.CellActivatedEventArgs e)
@@ -92,6 +128,18 @@ namespace TerminalGuiDesigner.UI.Windows {
                     ColorSchemeManager.Instance.AddOrUpdateScheme(GetNewColorName(),new ColorScheme());
                     BuildDataTableRows();
                     tvColorSchemes.SelectedRow++;
+                }
+                else
+                {
+                    var cmd = new DeleteColorSchemeOperation(Design,_schemes[val]);
+                    
+                    if(cmd.IsImpossible)
+                        return;
+
+                    OperationManager.Instance.Do(cmd);
+
+                    BuildDataTableRows();
+                    tvColorSchemes.SelectedRow--;
                 }
             }
         }
