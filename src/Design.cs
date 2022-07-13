@@ -154,6 +154,9 @@ public class Design
     /// </summary>
     public bool HasKnownColorScheme()
     {
+        if(View.ColorScheme == null)
+            return false;
+
         if(Colors.ColorSchemes.Values.Contains(View.ColorScheme))
             return false;
 

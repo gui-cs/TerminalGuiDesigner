@@ -20,6 +20,11 @@ namespace TerminalGuiDesigner.UI.Windows {
         const string DeleteColumnName = "  ";
         private NamedColorScheme[] _schemes;
 
+        /// <summary>
+        /// swatches for each of Normal, Hot Normal, Focus, HotFocus and Disabled
+        /// </summary>
+        private const string Swatches = @" \   \   \   \   \ ";
+
         public Design Design { get; }
 
         public ColorSchemesUI(Design design) {
@@ -28,7 +33,7 @@ namespace TerminalGuiDesigner.UI.Windows {
 
             Design = design;
 
-            tvColorSchemes.NullSymbol = "";
+            tvColorSchemes.NullSymbol = " ";
 
             var tbl = tvColorSchemes.Table;
 
@@ -41,16 +46,30 @@ namespace TerminalGuiDesigner.UI.Windows {
             sName.RepresentationGetter = GetName;
 
             var sColors = tvColorSchemes.Style.GetOrCreateColumnStyle(tbl.Columns[ColorsColumn]);
-            
+            sColors.RepresentationGetter = GetPattern;
+            sColors.MinWidth = Swatches.Length;
+
             var sEdit = tvColorSchemes.Style.GetOrCreateColumnStyle(tbl.Columns[EditColumnName]);
             sEdit.RepresentationGetter = GetEditString;
+            sEdit.MinWidth = 7;
             
             var sDelete = tvColorSchemes.Style.GetOrCreateColumnStyle(tbl.Columns[DeleteColumnName]);
             sDelete.RepresentationGetter = GetDeleteString;
+            sDelete.MinWidth = 8;
 
             tvColorSchemes.CellActivated += CellActivated;
 
             BuildDataTable();
+        }
+
+        private string GetPattern(object arg)
+        {
+            if((int)arg ==int.MaxValue)
+            {
+                return " ";
+            }
+
+            return Swatches;
         }
 
         private void CellActivated(TableView.CellActivatedEventArgs e)
@@ -95,7 +114,7 @@ namespace TerminalGuiDesigner.UI.Windows {
 
         private string GetDeleteString(object arg)
         {
-            return (int)arg == int.MaxValue ? "[+]" : "[ Delete ]";
+            return (int)arg == int.MaxValue ? "[New]" : "[Delete]";
         }
 
         private string GetEditString(object arg)
