@@ -132,18 +132,26 @@ public class EditDialog : Window
 
         if(property.PropertyInfo.PropertyType == typeof(ColorScheme))
         {
-            var current = design.HasKnownColorScheme() ? (ColorScheme?)property.GetValue() 
-                ?? new ColorScheme()
-                : new ColorScheme();
+            var schemes = ColorSchemeManager.Instance.Schemes.ToArray();
 
-            var dlg = new ColorSchemeEditor(current);
-            Application.Run(dlg);
-
-            if (!dlg.Cancelled)
+            if(!schemes.Any())
             {
+                MessageBox.Query("No ColorSchemes defined","You have not defined any ColorSchemes yet","Ok");
+                newValue = oldValue;
+                return false;
             }
-
-
+            
+            if(Modals.Get("Color Scheme","Ok",schemes,out var selected))
+            {
+                newValue = selected?.Scheme;
+                return true;
+            }
+            else
+            {
+                // user cancelled selecting scheme
+                newValue = null;
+                return false;
+            }
         }
         else
         if(property.PropertyInfo.PropertyType == typeof(Attribute) ||

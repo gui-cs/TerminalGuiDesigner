@@ -117,6 +117,7 @@ namespace TerminalGuiDesigner.UI.Windows {
                 if(Modals.GetString("Rename Color Scheme","Name",oldName,out var newName) && !string.IsNullOrWhiteSpace(newName))
                 {
                     ColorSchemeManager.Instance.RenameScheme(oldName,Design.GetUniqueFieldName(newName));
+                    BuildDataTableRows();
                 }
             }
 
