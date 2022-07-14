@@ -11,14 +11,11 @@ public class EditDialog : Window
 {
     private List<Property> _collection;
     private ListView _list;
-    private KeyMap _keyMap;
 
     public Design Design { get; }
 
-    public EditDialog(Design design, KeyMap keyMap)
+    public EditDialog(Design design)
     {
-        _keyMap = keyMap;
-
         Design = design;
         _collection = Design.GetDesignableProperties()
             .OrderByDescending(p=>p is NameProperty)
@@ -94,7 +91,7 @@ public class EditDialog : Window
                 }
                 else
                 {
-                    if(!SetPropertyToNewValue(Design, p, oldValue,_keyMap))
+                    if(!SetPropertyToNewValue(Design, p, oldValue))
                     {
                         // user cancelled editing the value
                         return;
@@ -114,10 +111,10 @@ public class EditDialog : Window
         }
     }
 
-    public static bool SetPropertyToNewValue(Design design, Property p, object? oldValue,KeyMap keyMap)
+    public static bool SetPropertyToNewValue(Design design, Property p, object? oldValue)
     {
         // user wants to give us a new value for this property
-        if (GetNewValue(design, p, out object? newValue,keyMap))
+        if (GetNewValue(design, p, out object? newValue))
         {
             OperationManager.Instance.Do(
                 new SetPropertyOperation(design, p, oldValue, newValue)
@@ -129,7 +126,7 @@ public class EditDialog : Window
         return false;
     }
 
-    private static bool GetNewValue(Design design, Property property, out object? newValue,KeyMap keymap)
+    private static bool GetNewValue(Design design, Property property, out object? newValue)
     {
         var oldValue = property.GetValue();
 
@@ -139,7 +136,13 @@ public class EditDialog : Window
 
             if(!schemes.Any())
             {
-                MessageBox.Query("No ColorSchemes defined",$"You have not defined any ColorSchemes yet.  Use '{keymap.ShowColorSchemes}' from the main editor screen to define ColorSchemes","Ok");
+                int answer = MessageBox.Query("No ColorSchemes defined",$"You have not defined any ColorSchemes yet.  Do you want to go to ColorSchemes dialog?","Yes","No");
+                if(answer == 0)
+                {
+                    var colorSchemesUI = new ColorSchemesUI(design);
+                    Application.Run(colorSchemesUI);
+                }
+
                 newValue = oldValue;
                 return false;
             }

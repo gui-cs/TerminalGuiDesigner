@@ -207,7 +207,7 @@ Ctrl+Q - Quit
         
         // menu items to click to make them happen/change
         var setPropertyMenuItems = properties.Select(p => new MenuItem(p.GetHumanReadableName(), null,
-            () => Try(()=>EditDialog.SetPropertyToNewValue(d, p, p.GetValue(), _keyMap)))).ToArray();
+            () => Try(()=>EditDialog.SetPropertyToNewValue(d, p, p.GetValue())))).ToArray();
         
         var extraOptionsMenuItems = options.Select(o => new MenuItem(o.ToString(), "", ()=>Try(()=>OperationManager.Instance.Do(o)))).ToArray();
 
@@ -879,7 +879,7 @@ Ctrl+Q - Quit
 
     private void ShowEditProperties(Design d)
     {
-        var edit = new EditDialog(d,_keyMap);
+        var edit = new EditDialog(d);
         Application.Run(edit,ErrorHandler);
     }
 

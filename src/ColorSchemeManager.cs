@@ -48,7 +48,11 @@ namespace TerminalGuiDesigner
 
         public void Remove(NamedColorScheme toDelete)
         {
-            _colorSchemes.Remove(toDelete);
+            // match on name as instances may change e.g. due to Undo/Redo etc
+            var match = _colorSchemes.FirstOrDefault(s=>s.Name.Equals(toDelete.Name));
+            
+            if(match != null)
+                _colorSchemes.Remove(match);
         }
 
         public void FindDeclaredColorSchemes(Design viewBeingEdited)

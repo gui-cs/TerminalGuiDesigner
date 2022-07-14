@@ -1,3 +1,5 @@
+using Terminal.Gui;
+
 namespace TerminalGuiDesigner.Operations;
 
 public class DeleteColorSchemeOperation : Operation
@@ -16,11 +18,29 @@ public class DeleteColorSchemeOperation : Operation
     {
         foreach (var u in _users)
         {
-            u.View.ColorScheme = null;
+            u.View.ColorScheme = GetDefaultColorScheme(u);
         }
 
         ColorSchemeManager.Instance.Remove(ToDelete);
         return true;
+    }
+
+    private ColorScheme? GetDefaultColorScheme(Design d)
+    {
+        if (d.IsRoot)
+        {
+            switch (d.View)
+            {
+                case Dialog: return Colors.Dialog;
+                case Window: return Colors.Base;
+                default: return null;
+            }
+        }
+
+        if(d.View is MenuBar)
+            return Colors.Menu;
+
+        return null;
     }
 
     public override void Redo()

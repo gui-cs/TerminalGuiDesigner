@@ -68,6 +68,15 @@ namespace TerminalGuiDesigner.UI.Windows {
 
             tvColorSchemes.CellActivated += CellActivated;
             tvColorSchemes.SelectedCellChanged += CellChanged;
+
+            // When entering control for the first time ensure a valid selection
+            CellChanged(
+                new SelectedCellChangedEventArgs(
+                    tvColorSchemes.Table,
+                    tvColorSchemes.SelectedColumn,
+                    tvColorSchemes.SelectedColumn,
+                    tvColorSchemes.SelectedRow,
+                    tvColorSchemes.SelectedRow));
         }
 
         private void CellChanged(SelectedCellChangedEventArgs e)
