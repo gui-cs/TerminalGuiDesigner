@@ -51,7 +51,7 @@ namespace TerminalGuiDesigner.UI
                 var nameProp = d.GetDesignableProperties().OfType<NameProperty>().FirstOrDefault();
                 if(nameProp != null)
                 {
-                    EditDialog.SetPropertyToNewValue(d, nameProp, nameProp.GetValue());
+                    EditDialog.SetPropertyToNewValue(d, nameProp, nameProp.GetValue(),_keyMap);
                     return true;
                 }
             }

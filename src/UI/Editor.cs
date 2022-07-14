@@ -42,6 +42,7 @@ public class Editor : Toplevel
 {_keyMap.Save} - Save an opened .Designer.cs file
 {_keyMap.ShowContextMenu} - Show right click context menu;
 {_keyMap.AddView} - Add View
+{_keyMap.ShowColorSchemes} - Color Schemes
 {_keyMap.ToggleDragging} - Toggle mouse dragging on/off
 {_keyMap.ToggleShowFocused} - Toggle show focused view field name
 {_keyMap.EditProperties} - Edit View Properties
@@ -206,7 +207,7 @@ Ctrl+Q - Quit
         
         // menu items to click to make them happen/change
         var setPropertyMenuItems = properties.Select(p => new MenuItem(p.GetHumanReadableName(), null,
-            () => Try(()=>EditDialog.SetPropertyToNewValue(d, p, p.GetValue())))).ToArray();
+            () => Try(()=>EditDialog.SetPropertyToNewValue(d, p, p.GetValue(), _keyMap)))).ToArray();
         
         var extraOptionsMenuItems = options.Select(o => new MenuItem(o.ToString(), "", ()=>Try(()=>OperationManager.Instance.Do(o)))).ToArray();
 
@@ -878,7 +879,7 @@ Ctrl+Q - Quit
 
     private void ShowEditProperties(Design d)
     {
-        var edit = new EditDialog(d);
+        var edit = new EditDialog(d,_keyMap);
         Application.Run(edit,ErrorHandler);
     }
 

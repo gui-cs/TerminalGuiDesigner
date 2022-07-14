@@ -1,5 +1,3 @@
-using static TerminalGuiDesigner.ColorSchemeManager;
-
 namespace TerminalGuiDesigner.Operations;
 
 public class DeleteColorSchemeOperation : Operation

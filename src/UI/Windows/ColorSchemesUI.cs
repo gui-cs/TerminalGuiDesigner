@@ -14,7 +14,6 @@ namespace TerminalGuiDesigner.UI.Windows {
     using Terminal.Gui;
     using TerminalGuiDesigner.Operations;
     using static Terminal.Gui.TableView;
-    using static TerminalGuiDesigner.ColorSchemeManager;
     using Attribute = Terminal.Gui.Attribute;
 
     public partial class ColorSchemesUI {
@@ -52,9 +51,6 @@ namespace TerminalGuiDesigner.UI.Windows {
             sDelete.RepresentationGetter = GetDeleteString;
             sDelete.MinWidth = 8;
 
-            tvColorSchemes.CellActivated += CellActivated;
-            tvColorSchemes.SelectedCellChanged += CellChanged;
-
             SetupSwatchColumn(tbl,tbl.Columns["0"],(s)=>s.Normal.Foreground);
             SetupSwatchColumn(tbl,tbl.Columns["1"],(s)=>s.Normal.Background);
             SetupSwatchColumn(tbl,tbl.Columns["2"],(s)=>s.HotNormal.Foreground);
@@ -69,6 +65,9 @@ namespace TerminalGuiDesigner.UI.Windows {
             SetupSwatchColumn(tbl,tbl.Columns["9"],(s)=>s.Disabled.Background);
 
             BuildDataTableRows();
+
+            tvColorSchemes.CellActivated += CellActivated;
+            tvColorSchemes.SelectedCellChanged += CellChanged;
         }
 
         private void CellChanged(SelectedCellChangedEventArgs e)
@@ -76,6 +75,13 @@ namespace TerminalGuiDesigner.UI.Windows {
             // don't let user select the color swatches
             if(e.NewCol > 2)
                 tvColorSchemes.SelectedColumn = 2;
+
+            // if selecting last row in the table
+            if(e.NewRow == tvColorSchemes.Table.Rows.Count-1)
+            {
+                // only let them press the Add button
+                tvColorSchemes.SelectedColumn = 2;
+            }
         }
 
         private void SetupSwatchColumn(DataTable tbl, DataColumn col, Func<ColorScheme, Color> func)

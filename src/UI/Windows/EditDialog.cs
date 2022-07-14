@@ -9,15 +9,18 @@ namespace TerminalGuiDesigner.UI.Windows;
 
 public class EditDialog : Window
 {
-    private List<Property> collection;
-    private ListView list;
+    private List<Property> _collection;
+    private ListView _list;
+    private KeyMap _keyMap;
 
     public Design Design { get; }
 
-    public EditDialog(Design design)
+    public EditDialog(Design design, KeyMap keyMap)
     {
+        _keyMap = keyMap;
+
         Design = design;
-        collection = Design.GetDesignableProperties()
+        _collection = Design.GetDesignableProperties()
             .OrderByDescending(p=>p is NameProperty)
             .ThenBy(p=>p.ToString())
             .ToList();
@@ -26,22 +29,22 @@ public class EditDialog : Window
         // See `const string RootDesignName`
         if(design.IsRoot)
         {
-            collection = collection.Where(p=>p is not NameProperty).ToList();
+            _collection = _collection.Where(p=>p is not NameProperty).ToList();
         }
 
-        list = new ListView(collection)
+        _list = new ListView(_collection)
         {
             X = 0,
             Y = 0,
             Width = Dim.Fill(2),
             Height = Dim.Fill(2)
         };
-        list.KeyPress += List_KeyPress;
+        _list.KeyPress += List_KeyPress;
 
         var btnSet = new Button("Set")
         {
             X = 0,
-            Y = Pos.Bottom(list),
+            Y = Pos.Bottom(_list),
             IsDefault = true
         };
 
@@ -53,18 +56,18 @@ public class EditDialog : Window
         var btnClose = new Button("Close")
         {
             X = Pos.Right(btnSet),
-            Y = Pos.Bottom(list)
+            Y = Pos.Bottom(_list)
         };
         btnClose.Clicked += () => Application.RequestStop();
 
-        Add(list);
+        Add(_list);
         Add(btnSet);
         Add(btnClose);
     }
 
     public override bool ProcessHotKey(KeyEvent keyEvent)
     {
-        if(keyEvent.Key == Key.Enter && list.HasFocus)
+        if(keyEvent.Key == Key.Enter && _list.HasFocus)
         {
             SetProperty(false);
             return true;
@@ -75,11 +78,11 @@ public class EditDialog : Window
 
     private void SetProperty(bool setNull)
     {
-        if (list.SelectedItem != -1)
+        if (_list.SelectedItem != -1)
         {
             try
             {
-                var p = collection[list.SelectedItem];
+                var p = _collection[_list.SelectedItem];
                 var oldValue = p.GetValue();
 
                 if (setNull)
@@ -91,17 +94,17 @@ public class EditDialog : Window
                 }
                 else
                 {
-                    if(!SetPropertyToNewValue(Design, p, oldValue))
+                    if(!SetPropertyToNewValue(Design, p, oldValue,_keyMap))
                     {
                         // user cancelled editing the value
                         return;
                     }
                 }
 
-                var oldSelected = list.SelectedItem;
-                list.SetSource(collection = collection.ToList());
-                list.SelectedItem = oldSelected;
-                list.EnsureSelectedItemVisible();
+                var oldSelected = _list.SelectedItem;
+                _list.SetSource(_collection = _collection.ToList());
+                _list.SelectedItem = oldSelected;
+                _list.EnsureSelectedItemVisible();
 
             }
             catch (Exception e)
@@ -111,10 +114,10 @@ public class EditDialog : Window
         }
     }
 
-    public static bool SetPropertyToNewValue(Design design, Property p, object? oldValue)
+    public static bool SetPropertyToNewValue(Design design, Property p, object? oldValue,KeyMap keyMap)
     {
         // user wants to give us a new value for this property
-        if (GetNewValue(design, p, out object? newValue))
+        if (GetNewValue(design, p, out object? newValue,keyMap))
         {
             OperationManager.Instance.Do(
                 new SetPropertyOperation(design, p, oldValue, newValue)
@@ -126,7 +129,7 @@ public class EditDialog : Window
         return false;
     }
 
-    private static bool GetNewValue(Design design, Property property, out object? newValue)
+    private static bool GetNewValue(Design design, Property property, out object? newValue,KeyMap keymap)
     {
         var oldValue = property.GetValue();
 
@@ -136,7 +139,7 @@ public class EditDialog : Window
 
             if(!schemes.Any())
             {
-                MessageBox.Query("No ColorSchemes defined","You have not defined any ColorSchemes yet","Ok");
+                MessageBox.Query("No ColorSchemes defined",$"You have not defined any ColorSchemes yet.  Use '{keymap.ShowColorSchemes}' from the main editor screen to define ColorSchemes","Ok");
                 newValue = oldValue;
                 return false;
             }

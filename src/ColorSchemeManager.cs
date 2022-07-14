@@ -5,23 +5,29 @@ using TerminalGuiDesigner;
 
 namespace TerminalGuiDesigner
 {
+    /// <summary>
+    /// A user defined <see cref="ColorScheme"/> and its name as defined
+    /// by the user.  The <see cref="Name"/> will be used as Field name
+    /// in the class code generated so must not contain illegal characters/spaces
+    /// </summary>
+    public class NamedColorScheme
+    {
+        public string Name { get; set; }
+        public ColorScheme Scheme { get; set; }
+        public NamedColorScheme(string name, ColorScheme scheme)
+        {
+            Name = name;
+            Scheme = scheme;
+        }
+        public override string ToString()
+        {
+            return Name;
+        }
+    }
+
     public class ColorSchemeManager
     {
-        public class NamedColorScheme
-        {
-
-            public string Name { get; set;}
-            public ColorScheme Scheme { get; set;}
-            public NamedColorScheme(string name,ColorScheme scheme)
-            {
-                Name = name;
-                Scheme = scheme;
-            }
-            public override string ToString()
-            {
-                return Name;
-            }
-        }
+        
         List<NamedColorScheme> _colorSchemes = new();
 
         /// <summary>
