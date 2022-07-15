@@ -21,7 +21,6 @@ public class Editor : Toplevel
     readonly KeyMap _keyMap;
 
     KeyboardManager _keyboardManager;
-    MultiSelectionManager _selectionManager = new();
     MouseManager _mouseManager;
     private bool _menuOpen;
 
@@ -42,6 +41,7 @@ public class Editor : Toplevel
 {_keyMap.Save} - Save an opened .Designer.cs file
 {_keyMap.ShowContextMenu} - Show right click context menu;
 {_keyMap.AddView} - Add View
+{_keyMap.ShowColorSchemes} - Color Schemes
 {_keyMap.ToggleDragging} - Toggle mouse dragging on/off
 {_keyMap.ToggleShowFocused} - Toggle show focused view field name
 {_keyMap.EditProperties} - Edit View Properties
@@ -82,7 +82,7 @@ Ctrl+Q - Quit
         }
 
         _keyboardManager = new KeyboardManager(_keyMap);
-        _mouseManager = new MouseManager(_selectionManager);
+        _mouseManager = new MouseManager();
     }
 
     public void Run(Options options)
@@ -191,13 +191,12 @@ Ctrl+Q - Quit
 
         if(m == null)
         {
-            options = d.GetExtraOperations(_selectionManager).Where(c=>!c.IsImpossible);
+            options = d.GetExtraOperations().Where(c=>!c.IsImpossible);
         }
         else
         {
             options = d.GetExtraOperations(
-                d.View.ScreenToClient(m.Value.X, m.Value.Y),
-                _selectionManager                
+                d.View.ScreenToClient(m.Value.X, m.Value.Y)
                 ).Where(c=>!c.IsImpossible);
         }
         
@@ -367,6 +366,12 @@ Ctrl+Q - Quit
                 return true;
             }
 
+            if (keyEvent.Key == _keyMap.ShowColorSchemes)
+            {
+                ShowColorSchemes();
+                return true;
+            }
+
             if (keyEvent.Key == _keyMap.Copy)
             {
                 Copy();
@@ -508,7 +513,7 @@ Ctrl+Q - Quit
             .Where(d=>!d.IsRoot)
             .ToArray();
 
-        _selectionManager.SetSelection(everyone);
+        MultiSelectionManager.Instance.SetSelection(everyone);
     }
 
     private void Paste()
@@ -517,7 +522,7 @@ Ctrl+Q - Quit
 
         if (d != null)
         {
-            var paste = new PasteOperation(d,_selectionManager);
+            var paste = new PasteOperation(d);
 
             if(paste.IsImpossible)
                 return;
@@ -532,7 +537,7 @@ Ctrl+Q - Quit
 
         if (d != null)
         {
-            var copy = new CopyOperation(d,_selectionManager);
+            var copy = new CopyOperation(d);
             OperationManager.Instance.Do(copy);
         }
     }
@@ -543,7 +548,7 @@ Ctrl+Q - Quit
 
         if (d != null)
         {
-            var options = d.GetExtraOperations(_selectionManager).Where(o=>!o.IsImpossible).ToArray();
+            var options = d.GetExtraOperations().Where(o=>!o.IsImpossible).ToArray();
 
             if(options.Any() && Modals.Get("Operations","Ok",options, out var selected) && selected != null)
             {
@@ -571,9 +576,9 @@ Ctrl+Q - Quit
         
         DeleteViewOperation cmd;
         
-        if(_selectionManager.Selected.Any())
+        if(MultiSelectionManager.Instance.Selected.Any())
         {
-            cmd = new DeleteViewOperation(_selectionManager.Selected.Select(d=>d.View).ToArray());
+            cmd = new DeleteViewOperation(MultiSelectionManager.Instance.Selected.Select(d=>d.View).ToArray());
         }
         else
         {
@@ -592,10 +597,10 @@ Ctrl+Q - Quit
         if(_viewBeingEdited == null)
             return;
 
-        if(_selectionManager.Selected.Any())
+        if(MultiSelectionManager.Instance.Selected.Any())
         {
             var op = new CompositeOperation(
-                _selectionManager.Selected
+                MultiSelectionManager.Instance.Selected
                 .Select(operationFuc).ToArray());
 
             OperationManager.Instance.Do(op);
@@ -657,7 +662,7 @@ Ctrl+Q - Quit
         // clear the history
         OperationManager.Instance.ClearUndoRedo();
         Design? instance = null;
-        _selectionManager.Clear();
+        MultiSelectionManager.Instance.Clear();
 
         Task.Run(()=>{
             
@@ -781,7 +786,7 @@ Ctrl+Q - Quit
         // clear the history
         OperationManager.Instance.ClearUndoRedo();
         Design? instance = null;
-        _selectionManager.Clear();
+        MultiSelectionManager.Instance.Clear();
 
         var open = new LoadingDialog(toOpen);
 
@@ -827,6 +832,9 @@ Ctrl+Q - Quit
             // Load new instance
             _viewBeingEdited = design;
 
+            // TODO: Find a better place for this
+            ColorSchemeManager.Instance.FindDeclaredColorSchemes(_viewBeingEdited);
+
             // And add it to the editing window
             Add(_viewBeingEdited.View);
         });
@@ -871,6 +879,15 @@ Ctrl+Q - Quit
     {
         var edit = new EditDialog(d);
         Application.Run(edit,ErrorHandler);
+    }
+
+    private void ShowColorSchemes()
+    {
+        if(_viewBeingEdited == null)
+            return;
+        
+        var schemes = new ColorSchemesUI(_viewBeingEdited);
+        Application.Run(schemes);        
     }
 
     

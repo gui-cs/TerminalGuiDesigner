@@ -5,9 +5,11 @@ public class CopyOperation : Operation
     public static Design[]? LastCopiedDesign {get; private set;}
     private Design[] _toCopy;
 
-    public CopyOperation(Design? single, MultiSelectionManager multi)
+    public CopyOperation(Design? single)
     {
-        if(multi.Selected.Any())
+        var multi = MultiSelectionManager.Instance;
+
+        if (multi.Selected.Any())
         {
             _toCopy = multi.Selected.ToArray();
         }

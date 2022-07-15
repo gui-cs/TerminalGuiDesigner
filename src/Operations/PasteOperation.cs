@@ -7,7 +7,6 @@ namespace TerminalGuiDesigner.Operations;
 public class PasteOperation : Operation
 {
     private Design _to;
-    private MultiSelectionManager _selectionManager;
     private IReadOnlyCollection<Design> _oldSelection;
     private List<AddViewOperation> _addOperations = new ();
 
@@ -17,12 +16,11 @@ public class PasteOperation : Operation
     private Dictionary<Design,Design> _clones = new ();
 
 
-    public PasteOperation(Design addTo,MultiSelectionManager selectionManager)
+    public PasteOperation(Design addTo)
     {
         IsImpossible = CopyOperation.LastCopiedDesign == null;
         _to = addTo;
-        _selectionManager = selectionManager;
-        _oldSelection = selectionManager.Selected;
+        _oldSelection = MultiSelectionManager.Instance.Selected;
     }
 
     public override bool Do()
@@ -42,7 +40,7 @@ public class PasteOperation : Operation
 
         MigratePosRelatives();
 
-        _selectionManager.SetSelection(_clones.Values.ToArray());
+        MultiSelectionManager.Instance.SetSelection(_clones.Values.ToArray());
         return didAny;
     }
 
@@ -107,7 +105,7 @@ public class PasteOperation : Operation
             a.Undo();
 
 
-        _selectionManager.SetSelection(_oldSelection.ToArray());
+        MultiSelectionManager.Instance.SetSelection(_oldSelection.ToArray());
     }
 
     public override void Redo()
@@ -115,7 +113,7 @@ public class PasteOperation : Operation
         foreach(var a in _addOperations)
             a.Redo();
 
-        _selectionManager.SetSelection(_clones.Values.ToArray());
+        MultiSelectionManager.Instance.SetSelection(_clones.Values.ToArray());
     }
     private void MigratePosRelatives()
     {

@@ -29,4 +29,5 @@ public class KeyMap
     public Key MoveLeft { get; set; } = Key.ShiftMask | Key.CursorLeft;
     public Key MoveUp { get; set; } = Key.ShiftMask | Key.CursorUp;
     public Key MoveDown { get; set; } = Key.ShiftMask | Key.CursorDown;
+    public Key ShowColorSchemes {get;set;} = Key.F6;
 }

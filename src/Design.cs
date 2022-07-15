@@ -47,7 +47,6 @@ public class Design
         }
     }
 
-
     public Design(SourceCodeFile sourceCode, string fieldName, View view)
     {
         View = view;
@@ -146,7 +145,43 @@ public class Design
 
 
 
+    /// <summary>
+    /// Returns true if there is an explicit ColorScheme set
+    /// on this Design's View or false if it is inherited from
+    /// a View further up the Layout (or a library default scheme)
+    /// <para> If a scheme is found that is not known about by ColorSchemeManager
+    /// then false is returned </para>
+    /// </summary>
+    public bool HasKnownColorScheme()
+    {
+        var userDefinedColorScheme = MultiSelectionManager.Instance.GetOriginalColorScheme(this) ?? View.ColorScheme;
 
+        if(userDefinedColorScheme == null)
+            return false;
+
+        // theres a color scheme defined but we aren't tracking it
+        // so report it as inherited since it must have got it from
+        // the API somehow
+        if(Colors.ColorSchemes.Values.Contains(userDefinedColorScheme))
+            return false;
+
+        // it has a ColorScheme but not one we are tracking
+        if(ColorSchemeManager.Instance.GetNameForColorScheme(userDefinedColorScheme) == null)
+            return false;
+
+        return true;
+    }
+
+
+    /// <summary>
+    /// True if this view EXPLICITLY states that it uses the scheme
+    /// False if its scheme is inherited from a parent or it explicitly
+    /// uses a different ColorScheme
+    /// </summary>
+    public bool UsesColorScheme(ColorScheme scheme)
+    {
+        return HasKnownColorScheme() && View.ColorScheme.AreEqual(scheme);
+    }
 
     /// <summary>
     /// Gets the designable properties of the hosted View
@@ -166,6 +201,8 @@ public class Design
         yield return CreateProperty(nameof(View.X));
         yield return CreateProperty(nameof(View.Y));
 
+
+        yield return new ColorSchemeProperty(this);
 
         // its important that this comes before Text because
         // changing the validator clears the text
@@ -325,9 +362,9 @@ public class Design
     /// are view specific e.g. add/remove column from a <see cref="TableView"/>
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<IOperation> GetExtraOperations(MultiSelectionManager selectionManager)
+    public IEnumerable<IOperation> GetExtraOperations()
     {
-        return GetExtraOperations(Point.Empty,selectionManager);
+        return GetExtraOperations(Point.Empty);
     }
     /// <summary>
     /// Returns one off atomic activities that can be performed on the view e.g. 'add a column'.
@@ -337,9 +374,9 @@ public class Design
     /// <see cref="Point.Empty"/></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    internal IEnumerable<IOperation> GetExtraOperations(Point pos, MultiSelectionManager selectionManager)
+    internal IEnumerable<IOperation> GetExtraOperations(Point pos)
     {
-        yield return new CopyOperation(this,selectionManager);
+        yield return new CopyOperation(this);
 
         if (View is TableView tv)
         {
@@ -361,7 +398,7 @@ public class Design
         if(IsContainerView || IsRoot)
         {
             yield return new AddViewOperation(SourceCode,this);
-            yield return new PasteOperation(this,selectionManager);
+            yield return new PasteOperation(this);
         }
         else
         {
@@ -519,15 +556,19 @@ public class Design
         var allDesigns = root.GetAllDesigns().ToList();
         allDesigns.Remove(this);
 
+        // what field names are already taken by other objects?
+        var usedFieldNames = allDesigns.Select(d => d.FieldName).ToList();
+        usedFieldNames.AddRange(ColorSchemeManager.Instance.Schemes.Select(k=>k.Name));
+
         // if name is already unique thats great
-        if(!allDesigns.Any(d => d.FieldName.Equals(candidate)))
+        if(!usedFieldNames.Contains(candidate))
         {
             return candidate;
         }
 
         // name collides with something else
         int number = 2;
-        while (allDesigns.Any(d => d.FieldName.Equals($"{candidate}{number}")))
+        while (usedFieldNames.Contains($"{candidate}{number}"))
         {
             // bob is taken, try bob2 etc
             number++;

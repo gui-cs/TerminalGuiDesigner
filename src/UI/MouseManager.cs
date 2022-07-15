@@ -16,11 +16,9 @@ public class MouseManager
 
     private Point? SelectionStart = null;
     private Point? SelectionEnd = null;
-    private MultiSelectionManager _selectionManager;
 
-    public MouseManager(MultiSelectionManager selectionManager)
+    public MouseManager()
     {
-        this._selectionManager = selectionManager;
     }
 
     public Rect? SelectionBox => RectExtensions.FromBetweenPoints(SelectionStart,SelectionEnd);
@@ -54,7 +52,7 @@ public class MouseManager
                 }
                 else
                 {
-                    var multiSelected = _selectionManager.Selected.ToArray();
+                    var multiSelected = MultiSelectionManager.Instance.Selected.ToArray();
                     
                     // if user is click and drag moving a single view
                     // in a multi selection.
@@ -110,8 +108,8 @@ public class MouseManager
         {
             // end selection box
             if (SelectionStart != null && SelectionBox != null && SelectionContainer != null)
-            {       
-                _selectionManager.SetSelection(
+            {
+                MultiSelectionManager.Instance.SetSelection(
                     SelectionContainer.Subviews
                     .Where(v => v.IntersectsScreenRect(SelectionBox.Value))
                     .Select(v=>v.GetNearestDesign())

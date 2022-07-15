@@ -1,10 +1,6 @@
 ﻿using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
@@ -22,7 +18,7 @@ internal class CopyPasteTests : Tests
         top.Add(d.View);
 
         Assert.IsTrue(d.IsRoot);
-        var copy = new CopyOperation(d, new MultiSelectionManager());
+        var copy = new CopyOperation(d);
 
         Assert.IsTrue(copy.IsImpossible);
     }
@@ -58,9 +54,9 @@ internal class CopyPasteTests : Tests
 
         OperationManager.Instance.ClearUndoRedo();
 
-        var selectionManager = new MultiSelectionManager();
+        var selectionManager = MultiSelectionManager.Instance;
 
-        var copy = new CopyOperation(tvDesign, selectionManager);
+        var copy = new CopyOperation(tvDesign);
         OperationManager.Instance.Do(copy);
 
         Assert.AreEqual(0, OperationManager.Instance.UndoStackSize,
@@ -68,7 +64,7 @@ internal class CopyPasteTests : Tests
 
         Assert.IsEmpty(selectionManager.Selected);
 
-        var paste = new PasteOperation(d, selectionManager);
+        var paste = new PasteOperation(d);
         OperationManager.Instance.Do(paste);
 
         Assert.AreEqual(1, OperationManager.Instance.UndoStackSize,
@@ -111,11 +107,12 @@ internal class CopyPasteTests : Tests
         new AddViewOperation(d.SourceCode, lbl, d, "lbl").Do();
         new AddViewOperation(d.SourceCode, tb, d, "tb").Do();
 
-        var selected = new MultiSelectionManager();
+        var selected = MultiSelectionManager.Instance;
+        selected.Clear();
         selected.SetSelection((Design)lbl.Data, (Design)tb.Data);
 
-        new CopyOperation(null, selected).Do();
-        var cmd = new PasteOperation(d, selected);
+        new CopyOperation(null).Do();
+        var cmd = new PasteOperation(d);
         
         Assert.IsFalse(cmd.IsImpossible);
         OperationManager.Instance.Do(cmd);
@@ -159,12 +156,12 @@ internal class CopyPasteTests : Tests
         new AddViewOperation(d.SourceCode, lbl, d, "lbl").Do();
         new AddViewOperation(d.SourceCode, tb, d, "tb").Do();
 
-        var selected = new MultiSelectionManager();
+        var selected = MultiSelectionManager.Instance;
 
         // Copy only the TextField and not the View it's Pos points to
-        new CopyOperation((Design)tb.Data, selected).Do();
+        new CopyOperation((Design)tb.Data).Do();
         
-        var cmd = new PasteOperation(d, selected);
+        var cmd = new PasteOperation(d);
 
         Assert.IsFalse(cmd.IsImpossible);
         OperationManager.Instance.Do(cmd);

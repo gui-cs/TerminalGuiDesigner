@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terminal.Gui;
+﻿using Terminal.Gui;
 using Attribute = Terminal.Gui.Attribute;
 
 namespace TerminalGuiDesigner;
@@ -30,7 +25,9 @@ public class MultiSelectionManager
     /// </summary>
     private ColorScheme SelectedScheme { get; set; }
 
-    public MultiSelectionManager()
+    public static MultiSelectionManager Instance = new();
+
+    private MultiSelectionManager()
     {
         SelectedScheme = new ColorScheme()
         {
@@ -40,6 +37,14 @@ public class MultiSelectionManager
             HotFocus = new Attribute(Color.BrightYellow, Color.Green),
             HotNormal = new Attribute(Color.BrightGreen, Color.Green),
         };
+    }
+
+    public ColorScheme? GetOriginalColorScheme(Design design)
+    {
+        if (oldSchemes.ContainsKey(design))
+            return oldSchemes[design];
+
+        return null;
     }
 
     public void SetSelection(params Design[] designs)
@@ -60,7 +65,7 @@ public class MultiSelectionManager
             d.View.ColorScheme = SelectedScheme;
         }
     }
-    internal void Clear()
+    public void Clear()
     {
         selection.Clear();
 

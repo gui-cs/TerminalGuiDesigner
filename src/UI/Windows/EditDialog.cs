@@ -9,15 +9,15 @@ namespace TerminalGuiDesigner.UI.Windows;
 
 public class EditDialog : Window
 {
-    private List<Property> collection;
-    private ListView list;
+    private List<Property> _collection;
+    private ListView _list;
 
     public Design Design { get; }
 
     public EditDialog(Design design)
     {
         Design = design;
-        collection = Design.GetDesignableProperties()
+        _collection = Design.GetDesignableProperties()
             .OrderByDescending(p=>p is NameProperty)
             .ThenBy(p=>p.ToString())
             .ToList();
@@ -26,22 +26,22 @@ public class EditDialog : Window
         // See `const string RootDesignName`
         if(design.IsRoot)
         {
-            collection = collection.Where(p=>p is not NameProperty).ToList();
+            _collection = _collection.Where(p=>p is not NameProperty).ToList();
         }
 
-        list = new ListView(collection)
+        _list = new ListView(_collection)
         {
             X = 0,
             Y = 0,
             Width = Dim.Fill(2),
             Height = Dim.Fill(2)
         };
-        list.KeyPress += List_KeyPress;
+        _list.KeyPress += List_KeyPress;
 
         var btnSet = new Button("Set")
         {
             X = 0,
-            Y = Pos.Bottom(list),
+            Y = Pos.Bottom(_list),
             IsDefault = true
         };
 
@@ -53,18 +53,18 @@ public class EditDialog : Window
         var btnClose = new Button("Close")
         {
             X = Pos.Right(btnSet),
-            Y = Pos.Bottom(list)
+            Y = Pos.Bottom(_list)
         };
         btnClose.Clicked += () => Application.RequestStop();
 
-        Add(list);
+        Add(_list);
         Add(btnSet);
         Add(btnClose);
     }
 
     public override bool ProcessHotKey(KeyEvent keyEvent)
     {
-        if(keyEvent.Key == Key.Enter && list.HasFocus)
+        if(keyEvent.Key == Key.Enter && _list.HasFocus)
         {
             SetProperty(false);
             return true;
@@ -75,11 +75,11 @@ public class EditDialog : Window
 
     private void SetProperty(bool setNull)
     {
-        if (list.SelectedItem != -1)
+        if (_list.SelectedItem != -1)
         {
             try
             {
-                var p = collection[list.SelectedItem];
+                var p = _collection[_list.SelectedItem];
                 var oldValue = p.GetValue();
 
                 if (setNull)
@@ -98,10 +98,10 @@ public class EditDialog : Window
                     }
                 }
 
-                var oldSelected = list.SelectedItem;
-                list.SetSource(collection = collection.ToList());
-                list.SelectedItem = oldSelected;
-                list.EnsureSelectedItemVisible();
+                var oldSelected = _list.SelectedItem;
+                _list.SetSource(_collection = _collection.ToList());
+                _list.SelectedItem = oldSelected;
+                _list.EnsureSelectedItemVisible();
 
             }
             catch (Exception e)
@@ -130,6 +130,36 @@ public class EditDialog : Window
     {
         var oldValue = property.GetValue();
 
+        if(property.PropertyInfo.PropertyType == typeof(ColorScheme))
+        {
+            var schemes = ColorSchemeManager.Instance.Schemes.ToArray();
+
+            if(!schemes.Any())
+            {
+                int answer = MessageBox.Query("No ColorSchemes defined",$"You have not defined any ColorSchemes yet.  Do you want to go to ColorSchemes dialog?","Yes","No");
+                if(answer == 0)
+                {
+                    var colorSchemesUI = new ColorSchemesUI(design);
+                    Application.Run(colorSchemesUI);
+                }
+
+                newValue = oldValue;
+                return false;
+            }
+            
+            if(Modals.Get("Color Scheme","Ok",schemes,out var selected))
+            {
+                newValue = selected?.Scheme;
+                return true;
+            }
+            else
+            {
+                // user cancelled selecting scheme
+                newValue = null;
+                return false;
+            }
+        }
+        else
         if(property.PropertyInfo.PropertyType == typeof(Attribute) ||
             property.PropertyInfo.PropertyType == typeof(Attribute?))
         {

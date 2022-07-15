@@ -14,7 +14,6 @@ internal class DesignToCode : ToCodeBase
 
     internal void ToCode(CodeDomArgs args, CodeExpression parentView)
     {
-
         AddFieldToClass(args, Design);
         AddConstructorCall(args, Design);
 
