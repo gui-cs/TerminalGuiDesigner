@@ -154,14 +154,19 @@ public class Design
     /// </summary>
     public bool HasKnownColorScheme()
     {
-        if(View.ColorScheme == null)
+        var userDefinedColorScheme = MultiSelectionManager.Instance.GetOriginalColorScheme(this) ?? View.ColorScheme;
+
+        if(userDefinedColorScheme == null)
             return false;
 
-        if(Colors.ColorSchemes.Values.Contains(View.ColorScheme))
+        // theres a color scheme defined but we aren't tracking it
+        // so report it as inherited since it must have got it from
+        // the API somehow
+        if(Colors.ColorSchemes.Values.Contains(userDefinedColorScheme))
             return false;
 
         // it has a ColorScheme but not one we are tracking
-        if(ColorSchemeManager.Instance.GetNameForColorScheme(View.ColorScheme) == null)
+        if(ColorSchemeManager.Instance.GetNameForColorScheme(userDefinedColorScheme) == null)
             return false;
 
         return true;
@@ -357,9 +362,9 @@ public class Design
     /// are view specific e.g. add/remove column from a <see cref="TableView"/>
     /// </summary>
     /// <returns></returns>
-    public IEnumerable<IOperation> GetExtraOperations(MultiSelectionManager selectionManager)
+    public IEnumerable<IOperation> GetExtraOperations()
     {
-        return GetExtraOperations(Point.Empty,selectionManager);
+        return GetExtraOperations(Point.Empty);
     }
     /// <summary>
     /// Returns one off atomic activities that can be performed on the view e.g. 'add a column'.
@@ -369,9 +374,9 @@ public class Design
     /// <see cref="Point.Empty"/></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    internal IEnumerable<IOperation> GetExtraOperations(Point pos, MultiSelectionManager selectionManager)
+    internal IEnumerable<IOperation> GetExtraOperations(Point pos)
     {
-        yield return new CopyOperation(this,selectionManager);
+        yield return new CopyOperation(this);
 
         if (View is TableView tv)
         {
@@ -393,7 +398,7 @@ public class Design
         if(IsContainerView || IsRoot)
         {
             yield return new AddViewOperation(SourceCode,this);
-            yield return new PasteOperation(this,selectionManager);
+            yield return new PasteOperation(this);
         }
         else
         {

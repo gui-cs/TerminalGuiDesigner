@@ -21,8 +21,7 @@ public class MouseManagerTests : Tests
         lbl.Data = lblDesign;
         d.View.Add(lbl);
 
-        var selection = new MultiSelectionManager();
-        var mgr = new MouseManager(selection);
+        var mgr = new MouseManager();
 
         // we haven't done anything yet
         Assert.AreEqual(0,OperationManager.Instance.UndoStackSize);
@@ -83,8 +82,7 @@ public class MouseManagerTests : Tests
         view.Data = design;
         d.View.Add(view);
 
-        var selection = new MultiSelectionManager();
-        var mgr = new MouseManager(selection);
+        var mgr = new MouseManager();
 
         // we haven't done anything yet
         Assert.AreEqual(0,OperationManager.Instance.UndoStackSize);
@@ -169,8 +167,9 @@ public class MouseManagerTests : Tests
         d.View.Add(lbl2);
         d.View.Add(lbl3);
 
-        var selection = new MultiSelectionManager();
-        var mgr = new MouseManager(selection);
+        var selection = MultiSelectionManager.Instance;
+        selection.Clear();
+        var mgr = new MouseManager();
 
         // user presses down
         var e = new MouseEvent{

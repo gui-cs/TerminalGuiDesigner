@@ -36,7 +36,13 @@ public class ColorSchemeProperty : Property
 
         return new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),name);
     }
+    public override object? GetValue()
+    {
+        if (MultiSelectionManager.Instance.Selected.Contains(Design))
+            return MultiSelectionManager.Instance.GetOriginalColorScheme(Design);
 
+        return base.GetValue();
+    }
     protected override string GetHumanReadableValue()
     {
         const string inherited =  "(Inherited)";

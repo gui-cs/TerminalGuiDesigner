@@ -28,6 +28,9 @@ namespace tests
         {
             Application.Shutdown();
             _init = false;
+
+            MultiSelectionManager.Instance.Clear();
+            ColorSchemeManager.Instance.Clear();
         }
 
         protected Design Get10By10View()
