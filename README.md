@@ -80,6 +80,14 @@ You can remove the tool using the following:
 dotnet tool uninstall --global TerminalGuiDesigner
 ```
 
+### Troubleshooting 
+If when running the tool you have issues seeing the colors add the `--usc` flag:
+```
+TerminalGuiDesigner --usc
+```
+
+The designer is built to be robust and has top level catch blocks but if you are still able to crash it you may find your console blocking input.  If this happens you should be able to fix your console by typing `reset<enter>` but also :heart: [please report it](https://github.com/tznind/TerminalGuiDesigner/issues/new) :heart:
+
 ### Keybindings & Controls
 ----------------
 You can change keybindings by copying [Keys.yaml](https://raw.githubusercontent.com/tznind/TerminalGuiDesigner/main/src/Keys.yaml) into your current directory.
