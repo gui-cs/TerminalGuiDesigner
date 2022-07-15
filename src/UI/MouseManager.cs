@@ -66,7 +66,11 @@ public class MouseManager
                     {
                         // else drag only the non selected one
                         dragOperation = new DragOperation(design, dest.X, dest.Y,new Design[0]);
-                    }                    
+                    }
+
+                    // don't begin an impossible drag!
+                    if (dragOperation.IsImpossible)
+                        dragOperation = null;
                 }
             }
         }

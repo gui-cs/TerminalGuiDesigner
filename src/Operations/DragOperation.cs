@@ -71,7 +71,12 @@ public class DragOperation : Operation
     private View? dropInto;
     public DragOperation(Design beingDragged, int destX, int destY, Design[]? alsoDrag)
     {
-        
+        // don't let the user drag the root view anywhere
+        if(beingDragged.IsRoot || (alsoDrag?.Any(d=>d.IsRoot) ?? false))
+        {
+            IsImpossible = true;
+            return;
+        }
         Mementos.Add(new DragMemento(beingDragged));
 
         DestinationX = destX;
