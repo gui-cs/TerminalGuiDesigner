@@ -39,9 +39,9 @@ public class ColorSchemeProperty : Property
     public override object? GetValue()
     {
         if (MultiSelectionManager.Instance.Selected.Contains(Design))
-            return MultiSelectionManager.Instance.GetOriginalColorScheme(Design);
+            return MultiSelectionManager.Instance.GetOriginalExplicitColorScheme(Design);
 
-        return base.GetValue();
+        return Design.View.GetExplicitColorScheme();
     }
     protected override string GetHumanReadableValue()
     {

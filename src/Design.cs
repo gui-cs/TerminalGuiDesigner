@@ -154,7 +154,7 @@ public class Design
     /// </summary>
     public bool HasKnownColorScheme()
     {
-        var userDefinedColorScheme = MultiSelectionManager.Instance.GetOriginalColorScheme(this) ?? View.ColorScheme;
+        var userDefinedColorScheme = MultiSelectionManager.Instance.GetOriginalExplicitColorScheme(this) ?? View.GetExplicitColorScheme();
 
         if(userDefinedColorScheme == null)
             return false;

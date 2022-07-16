@@ -239,4 +239,17 @@ public static class ViewExtensions
         return Rect.FromLTRB(x0,y0,x1,y1).IntersectsWith(screenRect);
 
     }
+
+    /// <summary>
+    /// Returns the explicitly defined private ColorScheme on the view
+    /// Or null if it inherits it from its parent or a globa scheme
+    /// </summary>
+    /// <returns></returns>
+    public static ColorScheme? GetExplicitColorScheme(this View v)
+    {
+        var explicitColorSchemeField = typeof(View).GetField("colorScheme",System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+            ?? throw new Exception("ColorScheme private backing field no longer exists");
+
+        return (ColorScheme?)explicitColorSchemeField.GetValue(v);
+    }
 }

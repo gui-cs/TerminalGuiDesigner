@@ -17,7 +17,7 @@ public class MultiSelectionManager
     /// </summary>
     public IReadOnlyCollection<Design> Selected => selection.AsReadOnly();
 
-    Dictionary<Design, ColorScheme> oldSchemes = new();
+    Dictionary<Design, ColorScheme?> oldSchemes = new();
     
     /// <summary>
     /// The color scheme to assign to controls that have been 
@@ -39,7 +39,7 @@ public class MultiSelectionManager
         };
     }
 
-    public ColorScheme? GetOriginalColorScheme(Design design)
+    public ColorScheme? GetOriginalExplicitColorScheme(Design design)
     {
         if (oldSchemes.ContainsKey(design))
             return oldSchemes[design];
@@ -59,7 +59,7 @@ public class MultiSelectionManager
         {
             // record the old color scheme so we can get reset it
             // later when it is no longer selected
-            oldSchemes.Add(d, d.View.ColorScheme);
+            oldSchemes.Add(d, d.View.GetExplicitColorScheme());
 
             // since the view is selected mark it so
             d.View.ColorScheme = SelectedScheme;
