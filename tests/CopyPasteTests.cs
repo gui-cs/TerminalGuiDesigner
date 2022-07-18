@@ -4,6 +4,8 @@ using System.Linq;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
+using TerminalGuiDesigner.ToCode;
+using Attribute = Terminal.Gui.Attribute;
 
 namespace tests;
 
@@ -180,5 +182,63 @@ internal class CopyPasteTests : Tests
         Assert.AreEqual(Side.Right, side);
 
         Assert.AreSame(lbl.Data, relativeTo, "Pasted clone should be relative to the original label");
+    }
+
+    [Test]
+    public void CopyPasteColorScheme()
+    {
+        var d = Get10By10View();
+
+        var lbl = new Label("Name:");
+        var tb = new TextField();
+
+        new AddViewOperation(d.SourceCode, lbl, d, "lbl").Do();
+        new AddViewOperation(d.SourceCode, tb, d, "tb").Do();
+
+        var dlbl = d.GetAllDesigns().Single(d => d.FieldName == "lbl");
+        var dtb = d.GetAllDesigns().Single(d => d.FieldName == "tb");
+
+        var selected = MultiSelectionManager.Instance;
+        
+        ColorScheme green;
+        ColorSchemeManager.Instance.AddOrUpdateScheme("green", green = new ColorScheme { Normal = new Attribute(Color.Green, Color.Cyan)});
+        tb.ColorScheme = green;
+        d.View.ColorScheme = green;
+
+        Assert.AreEqual(lbl.ColorScheme, green, "The label should inherit color scheme from the parent");
+
+        Assert.AreEqual("ColorScheme:(Inherited)",
+            dlbl.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
+            "Expected ColorScheme to be known to be inherited");
+        
+        Assert.AreEqual("ColorScheme:green",
+            dtb.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
+            "TextBox inherits but also is explicitly marked as green");
+
+        MultiSelectionManager.Instance.SetSelection(dlbl, dtb);
+        new CopyOperation(null).Do();
+        MultiSelectionManager.Instance.SetSelection(dlbl, dtb);
+
+        OperationManager.Instance.Do(new PasteOperation(d));
+
+        // (Root + 2 original + 2 cloned)
+        Assert.AreEqual(5, d.GetAllDesigns().Count());
+
+        var dlbl2 = d.GetAllDesigns().Single(d => d.FieldName == "lbl2");
+        var dtb2 = d.GetAllDesigns().Single(d => d.FieldName == "tb2");
+        
+        // clear whatever the current selection is (probably the pasted views)
+        MultiSelectionManager.Instance.Clear();
+
+        Assert.AreEqual(dlbl2.View.ColorScheme, green, "The newly pasted label should also inherit color scheme from the parent");
+
+        //but be known to inherit
+        Assert.AreEqual("ColorScheme:(Inherited)",
+            dlbl2.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
+            "Expected ColorScheme to be known to be inherited");
+
+        Assert.AreEqual("ColorScheme:green",
+            dtb2.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
+            "TextBox2 should have its copy pasted explicitly marked green");
     }
 }
