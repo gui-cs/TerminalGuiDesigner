@@ -19,6 +19,11 @@ namespace TerminalGuiDesigner
             Name = name;
             Scheme = scheme;
         }
+        public NamedColorScheme(string name)
+        {
+            Name = name;
+            Scheme = new ColorScheme();
+        }
         public override string ToString()
         {
             return Name;

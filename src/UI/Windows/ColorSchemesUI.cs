@@ -122,7 +122,10 @@ namespace TerminalGuiDesigner.UI.Windows {
                 var edit = new ColorSchemeEditor(_schemes[val].Scheme);
                 Application.Run(edit);
 
-                ColorSchemeManager.Instance.AddOrUpdateScheme(_schemes[val].Name,edit.Result);
+                if (edit.Cancelled)
+                    return;
+                
+                ColorSchemeManager.Instance.AddOrUpdateScheme(_schemes[val].Name, edit.Result);
                 BuildDataTableRows();
             }
 

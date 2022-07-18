@@ -132,32 +132,7 @@ public class EditDialog : Window
 
         if(property.PropertyInfo.PropertyType == typeof(ColorScheme))
         {
-            var schemes = ColorSchemeManager.Instance.Schemes.ToArray();
-
-            if(!schemes.Any())
-            {
-                int answer = MessageBox.Query("No ColorSchemes defined",$"You have not defined any ColorSchemes yet.  Do you want to go to ColorSchemes dialog?","Yes","No");
-                if(answer == 0)
-                {
-                    var colorSchemesUI = new ColorSchemesUI(design);
-                    Application.Run(colorSchemesUI);
-                }
-
-                newValue = oldValue;
-                return false;
-            }
-            
-            if(Modals.Get("Color Scheme","Ok",schemes,out var selected))
-            {
-                newValue = selected?.Scheme;
-                return true;
-            }
-            else
-            {
-                // user cancelled selecting scheme
-                newValue = null;
-                return false;
-            }
+            return GetNewColorSchemeValue(design, property, out newValue);            
         }
         else
         if(property.PropertyInfo.PropertyType == typeof(Attribute) ||
@@ -362,6 +337,63 @@ public class EditDialog : Window
 
         newValue = null;
         return false;
+    }
+
+    private static bool GetNewColorSchemeValue(Design design, Property property, out object? newValue)
+    {
+        const string custom = "Custom...";
+        List<object> offer = new();
+
+        var defaults = new DefaultColorSchemes();
+        var schemes = ColorSchemeManager.Instance.Schemes.ToList();
+
+        offer.AddRange(schemes);
+
+        foreach (var d in defaults.GetDefaultSchemes())
+        {
+            // user is already explicitly using this default and may even have modified it
+            if (offer.OfType<NamedColorScheme>().Any(s => s.Name.Equals(d.Name)))
+                continue;
+
+            offer.Add(d);
+        }
+
+        // add the option to jump to custom colors
+        offer.Add(custom);
+
+        if (Modals.Get("Color Scheme", "Ok", offer.ToArray(), out var selected))
+        {
+            // if user clicked "Custom..."
+            if (selected is string s && string.Equals(s, custom))
+            {
+                // show the custom colors dialog
+                var colorSchemesUI = new ColorSchemesUI(design);
+                Application.Run(colorSchemesUI);
+                newValue = null;
+                return false;
+            }
+            if(selected is NamedColorScheme ns)
+            {
+                newValue = ns.Scheme;
+                
+                // if it was a default one, tell ColorSchemeManager we are now using it
+                if(!schemes.Contains(ns))
+                {
+                    ColorSchemeManager.Instance.AddOrUpdateScheme(ns.Name, ns.Scheme);
+                }
+
+                return true;
+            }
+
+            newValue = null;
+            return false;
+        }
+        else
+        {
+            // user cancelled selecting scheme
+            newValue = null;
+            return false;
+        }
     }
 
     private static bool AllowMultiLine(Property property)

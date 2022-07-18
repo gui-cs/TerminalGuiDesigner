@@ -169,6 +169,16 @@ public class ColorSchemeTests : Tests
         mgr.Clear();
     }
 
+    [Test]
+    public void TestDefaultColors()
+    {
+        var d = new DefaultColorSchemes();
+
+        Assert.Contains(d.GreenOnBlack, d.GetDefaultSchemes().ToArray());
+        Assert.Contains(d.RedOnBlack, d.GetDefaultSchemes().ToArray());
+        Assert.Contains(d.BlueOnBlack, d.GetDefaultSchemes().ToArray());
+    }
+
     class TestClass : View
     {
         private ColorScheme aaa = new ColorScheme { 
