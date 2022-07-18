@@ -23,3 +23,15 @@ MoveLeft: CursorLeft, ShiftMask
 MoveUp: CursorUp, ShiftMask
 MoveDown: CursorDown, ShiftMask
 ShowColorSchemes: F6
+SelectionColor:
+  NormalForeground: BrightGreen
+  NormalBackground: Green
+  HotNormalForeground: BrightGreen
+  HotNormalBackground: Green
+  FocusForeground: BrightYellow
+  FocusBackground: Green
+  HotFocusForeground: BrightYellow
+  HotFocusBackground: Green
+  DisabledForeground: BrightGreen
+  DisabledBackground: Green
+    

@@ -67,6 +67,11 @@ Ctrl+Q - Quit
             try
             {
                 _keyMap = d.Deserialize<KeyMap>(File.ReadAllText("Keys.yaml"));
+
+                if(_keyMap.SelectionColor != null)
+                {
+                    MultiSelectionManager.Instance.SelectedScheme = _keyMap.SelectionColor.Scheme;
+                }
             }
             catch (Exception ex)
             {

@@ -30,4 +30,25 @@ public class KeyMap
     public Key MoveUp { get; set; } = Key.ShiftMask | Key.CursorUp;
     public Key MoveDown { get; set; } = Key.ShiftMask | Key.CursorDown;
     public Key ShowColorSchemes {get;set;} = Key.F6;
+
+    /// <summary>
+    /// Custom <see cref="ColorScheme"/> to apply to multi selections in designer.
+    /// <remarks>Default color is green, this is useful if you have a heavily 
+    /// green theme where it could get confusing what is multi selected and what
+    /// just has focus/uses your custom scheme</remarks>
+    /// </summary>
+    public ColorSchemeBlueprint SelectionColor { get; set; } = new
+        ColorSchemeBlueprint
+    {
+        NormalForeground = Color.BrightGreen,
+        NormalBackground = Color.Green,
+        HotNormalForeground = Color.BrightGreen,
+        HotNormalBackground = Color.Green,
+        FocusForeground = Color.BrightYellow,
+        FocusBackground = Color.Green,
+        HotFocusForeground = Color.BrightYellow,
+        HotFocusBackground = Color.Green,
+        DisabledForeground = Color.BrightGreen,
+        DisabledBackground = Color.Green
+    };
 }
