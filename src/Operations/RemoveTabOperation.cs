@@ -5,28 +5,29 @@ namespace TerminalGuiDesigner.Operations;
 
 public class RemoveTabOperation : TabViewOperation
 {
-    private readonly Tab? _tab;
+    public int RemovedAtIdx { get; private set; }
 
     public RemoveTabOperation(Design design) : base(design)
     {
         // user has no Tab selected
-        if (_tab == null)
+        if (SelectedTab == null)
             IsImpossible = true;
     }
     public override string ToString()
     {
-        return $"Remove Tab '{_tab?.Text}'";
+        return $"Remove Tab '{SelectedTab?.Text}'";
     }
     public override bool Do()
     {
-        if (_tab == null)
+        if (SelectedTab == null)
         {
             throw new Exception("No Tab selected");
         }
 
-        if (View.Tabs.Contains(_tab))
+        if (View.Tabs.Contains(SelectedTab))
         {
-            View.RemoveTab(_tab);
+            RemovedAtIdx = View.Tabs.ToList().IndexOf(SelectedTab);
+            View.RemoveTab(SelectedTab);
             return true;
         }
 
@@ -40,14 +41,14 @@ public class RemoveTabOperation : TabViewOperation
 
     public override void Undo()
     {
-        if (_tab == null)
+        if (SelectedTab == null)
         {
             throw new Exception("No Tab selected");
         }
 
-        if (!View.Tabs.Contains(_tab))
+        if (!View.Tabs.Contains(SelectedTab))
         {
-            View.AddTab(_tab,true);
+            View.InsertTab(RemovedAtIdx,SelectedTab);
         }
     }
 }

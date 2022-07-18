@@ -96,7 +96,45 @@ class TabViewTests : Tests
         Assert.AreEqual("Tab1", tv.Tabs.ElementAt(0).Text);
         Assert.AreEqual("Tab2", tv.Tabs.ElementAt(1).Text);
     }
+    [Test]
+    public void TestRemoveTabOperation()
+    {
+        var d = GetTabView();
+        var tv = (TabView)d.View;
 
+        Assert.AreEqual(2, tv.Tabs.Count);
+        Assert.AreEqual("Tab1", tv.Tabs.ElementAt(0).Text);
+        Assert.AreEqual("Tab2", tv.Tabs.ElementAt(1).Text);
+
+        // Select Tab1
+        tv.SelectedTab = tv.Tabs.First();
+
+        // try to remove the first tab
+        Assert.IsTrue(OperationManager.Instance.Do(new RemoveTabOperation(d)));
+
+        Assert.AreEqual(1, tv.Tabs.Count);
+        Assert.AreEqual("Tab2", tv.Tabs.ElementAt(0).Text);
+
+        // remove the last tab (tab2
+        Assert.IsTrue(OperationManager.Instance.Do(new RemoveTabOperation(d)));
+        Assert.IsEmpty(tv.Tabs);
+
+        OperationManager.Instance.Undo();
+
+        Assert.AreEqual(1, tv.Tabs.Count);
+        Assert.AreEqual("Tab2", tv.Tabs.ElementAt(0).Text);
+
+        OperationManager.Instance.Redo();
+        Assert.IsEmpty(tv.Tabs);
+
+        // undo removing both
+        OperationManager.Instance.Undo();
+        OperationManager.Instance.Undo();
+
+        Assert.AreEqual(2, tv.Tabs.Count);
+        Assert.AreEqual("Tab1", tv.Tabs.ElementAt(0).Text.ToString());
+        Assert.AreEqual("Tab2", tv.Tabs.ElementAt(1).Text.ToString());
+    }
 
     [Test]
     public void TestRoundTrip_DuplicateTabNames()

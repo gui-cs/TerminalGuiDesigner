@@ -57,34 +57,14 @@ public class MoveTabOperation : TabViewOperation
         if (SelectedTab == null || originalIdx == -1)
             return false;
 
-        var list = View.Tabs.ToList();
 
-        var newIndex = Math.Min(Math.Max(0, originalIdx + adjustment), list.Count - 1);
+        var newIndex = Math.Max(0, Math.Min(View.Tabs.Count - 1, originalIdx + adjustment));
 
         // if we would end up putting it back where it was then abandon this operation
         if (originalIdx == newIndex)
             return false;
 
-        list.Remove(SelectedTab);
-        list.Insert(newIndex, SelectedTab);
-
-        // View.Tabs is readonly so we have to
-        // remove all the tabs
-        foreach (var t in View.Tabs.ToArray())
-        {
-            View.RemoveTab(t);
-        }
-
-        // then add them back in again in the new order
-        for (int i = 0; i < list.Count; i++)
-        {
-            var t = list[i];
-
-            // put all the tabs back in again and select
-            // the tab in it's new position
-            View.AddTab(t, i == newIndex);
-        }
-
+        View.InsertTab(newIndex, SelectedTab);
         return true;
     }
 }
