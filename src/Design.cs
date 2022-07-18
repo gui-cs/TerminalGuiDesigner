@@ -236,8 +236,8 @@ public class Design
         // Border properties - Most views dont have a border so Border is
         if(View.Border != null)
         {
+            yield return CreateSubProperty(nameof(Border.DrawMarginFrame), nameof(View.Border), View.Border);
             yield return CreateSubProperty(nameof(Border.BorderStyle),nameof(View.Border),View.Border);
-            yield return CreateSubProperty(nameof(Border.BorderBrush),nameof(View.Border),View.Border);
             yield return CreateSubProperty(nameof(Border.Effect3D),nameof(View.Border),View.Border);            
         }
         
