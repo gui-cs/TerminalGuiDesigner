@@ -70,7 +70,7 @@ Ctrl+Q - Quit
 
                 if(_keyMap.SelectionColor != null)
                 {
-                    MultiSelectionManager.Instance.SelectedScheme = _keyMap.SelectionColor.Scheme;
+                    SelectionManager.Instance.SelectedScheme = _keyMap.SelectionColor.Scheme;
                 }
             }
             catch (Exception ex)
@@ -518,7 +518,7 @@ Ctrl+Q - Quit
             .Where(d=>!d.IsRoot)
             .ToArray();
 
-        MultiSelectionManager.Instance.SetSelection(everyone);
+        SelectionManager.Instance.SetSelection(everyone);
     }
 
     private void Paste()
@@ -581,9 +581,9 @@ Ctrl+Q - Quit
         
         DeleteViewOperation cmd;
         
-        if(MultiSelectionManager.Instance.Selected.Any())
+        if(SelectionManager.Instance.Selected.Any())
         {
-            cmd = new DeleteViewOperation(MultiSelectionManager.Instance.Selected.Select(d=>d.View).ToArray());
+            cmd = new DeleteViewOperation(SelectionManager.Instance.Selected.Select(d=>d.View).ToArray());
         }
         else
         {
@@ -602,10 +602,10 @@ Ctrl+Q - Quit
         if(_viewBeingEdited == null)
             return;
 
-        if(MultiSelectionManager.Instance.Selected.Any())
+        if(SelectionManager.Instance.Selected.Any())
         {
             var op = new CompositeOperation(
-                MultiSelectionManager.Instance.Selected
+                SelectionManager.Instance.Selected
                 .Select(operationFuc).ToArray());
 
             OperationManager.Instance.Do(op);
@@ -667,7 +667,7 @@ Ctrl+Q - Quit
         // clear the history
         OperationManager.Instance.ClearUndoRedo();
         Design? instance = null;
-        MultiSelectionManager.Instance.Clear();
+        SelectionManager.Instance.Clear();
 
         Task.Run(()=>{
             
@@ -791,7 +791,7 @@ Ctrl+Q - Quit
         // clear the history
         OperationManager.Instance.ClearUndoRedo();
         Design? instance = null;
-        MultiSelectionManager.Instance.Clear();
+        SelectionManager.Instance.Clear();
 
         var open = new LoadingDialog(toOpen);
 

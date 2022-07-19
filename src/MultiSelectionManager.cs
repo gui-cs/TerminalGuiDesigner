@@ -8,7 +8,7 @@ namespace TerminalGuiDesigner;
 /// <see cref="View"/> are selected at once within
 /// the editor
 /// </summary>
-public class MultiSelectionManager
+public class SelectionManager
 {
     List<Design> selection = new();
 
@@ -49,7 +49,7 @@ public class MultiSelectionManager
         }
     }
 
-    public static MultiSelectionManager Instance = new();
+    public static SelectionManager Instance = new();
     private ColorScheme selectedScheme;
 
 

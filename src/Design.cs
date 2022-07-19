@@ -119,7 +119,7 @@ public class Design
         {        
             MenuTracker.Instance.Register(mb);
         }
-
+        
         if(subView is TreeView tree)
         {
             tree.AddObject(new TreeNode("Example Branch 1"){
@@ -140,7 +140,9 @@ public class Design
             super.Add(subView);
         }
 
-        return new Design(sourceCode,name, subView);
+        var d = new Design(sourceCode,name, subView);
+        subView.Enter += (s=>SelectionManager.Instance.SetSelection(d));
+        return d;
     }
 
 
@@ -154,7 +156,7 @@ public class Design
     /// </summary>
     public bool HasKnownColorScheme()
     {
-        var userDefinedColorScheme = MultiSelectionManager.Instance.GetOriginalExplicitColorScheme(this) ?? View.GetExplicitColorScheme();
+        var userDefinedColorScheme = SelectionManager.Instance.GetOriginalExplicitColorScheme(this) ?? View.GetExplicitColorScheme();
 
         if(userDefinedColorScheme == null)
             return false;

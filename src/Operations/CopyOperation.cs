@@ -7,7 +7,7 @@ public class CopyOperation : Operation
 
     public CopyOperation(Design? single)
     {
-        var multi = MultiSelectionManager.Instance;
+        var multi = SelectionManager.Instance;
 
         if (multi.Selected.Any())
         {

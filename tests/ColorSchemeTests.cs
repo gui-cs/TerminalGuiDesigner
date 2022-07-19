@@ -37,7 +37,7 @@ public class ColorSchemeTests : Tests
 
         if (whenMultiSelected)
         {
-            MultiSelectionManager.Instance.SetSelection(d);
+            SelectionManager.Instance.SetSelection(d);
         }
 
         // now we know about it
@@ -101,7 +101,7 @@ public class ColorSchemeTests : Tests
         // when multiselecting (with a selection box) a bunch of views
         // all the views turn to green.  But we shouldn't loose track
         // of the actual color scheme the user set
-        var selection = MultiSelectionManager.Instance;
+        var selection = SelectionManager.Instance;
         selection.SetSelection(p.Design);
 
         Assert.AreEqual("ColorScheme:pink", p.ToString());
@@ -148,7 +148,7 @@ public class ColorSchemeTests : Tests
         if (multiSelectBeforeSaving)
         {            
             Assert.AreEqual(mgr.Schemes.Single().Scheme, lblOut.ColorScheme);
-            MultiSelectionManager.Instance.SetSelection((Design)lblOut.Data);
+            SelectionManager.Instance.SetSelection((Design)lblOut.Data);
             Assert.AreNotEqual(mgr.Schemes.Single().Scheme, lblOut.ColorScheme,"Expected multi selecting the view to change its color to the selected color");
         }
 
@@ -162,7 +162,7 @@ public class ColorSchemeTests : Tests
         Assert.IsTrue(lblDesignIn.HasKnownColorScheme());
 
         // clear the selection before we do the comparison
-        MultiSelectionManager.Instance.Clear();
+        SelectionManager.Instance.Clear();
 
         Assert.AreEqual("pink",mgr.GetNameForColorScheme(lblDesignIn.View.ColorScheme));
 

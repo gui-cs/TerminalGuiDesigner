@@ -20,7 +20,7 @@ public class PasteOperation : Operation
     {
         IsImpossible = CopyOperation.LastCopiedDesign == null;
         _to = addTo;
-        _oldSelection = MultiSelectionManager.Instance.Selected;
+        _oldSelection = SelectionManager.Instance.Selected;
     }
 
     public override bool Do()
@@ -40,7 +40,7 @@ public class PasteOperation : Operation
 
         MigratePosRelatives();
 
-        MultiSelectionManager.Instance.SetSelection(_clones.Values.ToArray());
+        SelectionManager.Instance.SetSelection(_clones.Values.ToArray());
         return didAny;
     }
 
@@ -105,7 +105,7 @@ public class PasteOperation : Operation
             a.Undo();
 
 
-        MultiSelectionManager.Instance.SetSelection(_oldSelection.ToArray());
+        SelectionManager.Instance.SetSelection(_oldSelection.ToArray());
     }
 
     public override void Redo()
@@ -113,7 +113,7 @@ public class PasteOperation : Operation
         foreach(var a in _addOperations)
             a.Redo();
 
-        MultiSelectionManager.Instance.SetSelection(_clones.Values.ToArray());
+        SelectionManager.Instance.SetSelection(_clones.Values.ToArray());
     }
     private void MigratePosRelatives()
     {

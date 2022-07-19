@@ -29,7 +29,7 @@ namespace tests
             Application.Shutdown();
             _init = false;
 
-            MultiSelectionManager.Instance.Clear();
+            SelectionManager.Instance.Clear();
             ColorSchemeManager.Instance.Clear();
         }
 

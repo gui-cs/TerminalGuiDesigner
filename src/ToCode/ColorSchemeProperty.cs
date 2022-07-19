@@ -38,8 +38,8 @@ public class ColorSchemeProperty : Property
     }
     public override object? GetValue()
     {
-        if (MultiSelectionManager.Instance.Selected.Contains(Design))
-            return MultiSelectionManager.Instance.GetOriginalExplicitColorScheme(Design);
+        if (SelectionManager.Instance.Selected.Contains(Design))
+            return SelectionManager.Instance.GetOriginalExplicitColorScheme(Design);
 
         return Design.View.GetExplicitColorScheme();
     }
