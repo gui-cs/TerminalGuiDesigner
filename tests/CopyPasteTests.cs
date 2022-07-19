@@ -64,6 +64,8 @@ internal class CopyPasteTests : Tests
         Assert.AreEqual(0, OperationManager.Instance.UndoStackSize,
             "Since you cannot Undo a Copy we expected undo stack to be empty");
 
+        selectionManager.Clear();
+        
         Assert.IsEmpty(selectionManager.Selected);
 
         var paste = new PasteOperation(d);
@@ -202,7 +204,7 @@ internal class CopyPasteTests : Tests
         
         ColorScheme green;
         ColorSchemeManager.Instance.AddOrUpdateScheme("green", green = new ColorScheme { Normal = new Attribute(Color.Green, Color.Cyan)});
-        tb.ColorScheme = green;
+        dtb.GetDesignableProperty(nameof(ColorScheme))?.SetValue(green);
         d.View.ColorScheme = green;
 
         Assert.AreEqual(lbl.ColorScheme, green, "The label should inherit color scheme from the parent");

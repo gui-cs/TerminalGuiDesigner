@@ -79,6 +79,19 @@ public class SelectionManager
             d.View.ColorScheme = SelectedScheme;
         }
     }
+
+    /// <summary>
+    /// Updates the cached known ColorScheme (prior to selection).  Use this method
+    /// if you are making changes to the ColorScheme of an actively selected object
+    /// </summary>
+    public void UpdateKnownScheme(Design design, ColorScheme? colorScheme)
+    {
+        if(oldSchemes.ContainsKey(design))
+        {
+            oldSchemes[design] = colorScheme;
+        }
+    }
+
     public void Clear()
     {
         selection.Clear();

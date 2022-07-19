@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -73,8 +72,9 @@ public class ColorSchemeTests : Tests
         mgr.Clear();
     }
 
-    [Test]
-    public void TestColorSchemeProperty_ToString()
+    [TestCase(true)]
+    [TestCase(false)]
+    public void TestColorSchemeProperty_ToString(bool testMultiSelectingSeveralTimes)
     {
         // default when creating a new view is to have no explicit 
         // ColorScheme defined and just inherit from parent
@@ -102,13 +102,60 @@ public class ColorSchemeTests : Tests
         // all the views turn to green.  But we shouldn't loose track
         // of the actual color scheme the user set
         var selection = SelectionManager.Instance;
-        selection.SetSelection(p.Design);
 
-        Assert.AreEqual("ColorScheme:pink", p.ToString());
+        if(testMultiSelectingSeveralTimes)
+        {
+            selection.SetSelection(p.Design);
+            selection.Clear();
+            selection.SetSelection(p.Design);
+            selection.SetSelection(p.Design);
+            selection.SetSelection(p.Design);
+            selection.Clear();
+
+            Assert.AreEqual(pink,p.Design.View.ColorScheme);
+        }
+
+        selection.SetSelection(p.Design);
+        Assert.AreNotEqual(pink,p.Design.View.ColorScheme, "Expected view to be selected so be green not pink");
+        Assert.AreEqual("ColorScheme:pink", p.ToString(), "Expected us to know it was pink under the hood even while selected");
         selection.Clear();
 
-    }
+        Assert.AreEqual(pink,p.Design.View.ColorScheme);
 
+    }
+    
+    [Test]
+    public void TestColorSchemeProperty_ToString_SelectThenSetScheme()
+    {
+        // default when creating a new view is to have no explicit 
+        // ColorScheme defined and just inherit from parent
+        var v = Get10By10View();
+        var p = (ColorSchemeProperty)(v.GetDesignableProperty(nameof(View.ColorScheme))?? throw new Exception("Expected this not to be null"));
+
+        Assert.AreEqual("ColorScheme:(Inherited)", p.ToString());
+
+        // Define a new color scheme
+        var mgr = ColorSchemeManager.Instance;
+        mgr.Clear();
+
+        var pink = new ColorScheme
+        {
+            Normal = new Attribute(Color.Magenta, Color.Black),
+            Focus = new Attribute(Color.Cyan, Color.Black)
+        };
+
+        mgr.AddOrUpdateScheme("pink", pink);
+
+        // select it first to make it green
+        SelectionManager.Instance.SetSelection(p.Design);
+
+        p.SetValue(pink);
+        Assert.AreEqual("ColorScheme:pink", p.ToString());
+
+        SelectionManager.Instance.Clear();
+        Assert.AreEqual("ColorScheme:pink", p.ToString(), "Expected clearing selection not to reset an old scheme");
+
+    }
 
     /// <summary>
     /// <para>
@@ -144,6 +191,9 @@ public class ColorSchemeTests : Tests
 
         // add it to view
         OperationManager.Instance.Do(new AddViewOperation(dOut.SourceCode, lblOut,dOut, "mylbl"));
+        
+        //unselect it so it is rendered with correct scheme
+        SelectionManager.Instance.Clear();
 
         if (multiSelectBeforeSaving)
         {            

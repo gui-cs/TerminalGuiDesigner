@@ -57,4 +57,11 @@ public class ColorSchemeProperty : Property
 
         return ColorSchemeManager.Instance.GetNameForColorScheme(s) ?? "Unknown ColorScheme";
     }
+
+    public override void SetValue(object? value)
+    {
+        base.SetValue(value);
+
+        SelectionManager.Instance.UpdateKnownScheme(Design,value as ColorScheme);
+    }
 }
