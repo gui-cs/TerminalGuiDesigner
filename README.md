@@ -126,6 +126,7 @@ The following feature list shows the current capabilities and the roadmap
     - [x] Width/Height
     - [x] Text
     - [ ] Color Schemes
+- [ ] Edit multiple Views' property at once (e.g. select 3 views and set all Width to 10)
 - [x] Mouse Input
   - [x] Drag to move
   - [x] Drag into/out of sub view
@@ -153,8 +154,10 @@ The following feature list shows the current capabilities and the roadmap
   - [x] Multi Copy/Paste
 - [x] Copy/Paste 
   - [x] Single simple views
+  - [ ] Cut
+  - [ ] Container views (e.g. TabView)
   - [ ] To OS clipboard (e.g. open one Designer.cs View and copy to another)
-  - [ ] Retain PosRelative mappings in pasted views (e.g. `A` LeftOf `B`)
+  - [x] Retain PosRelative mappings in pasted views (e.g. `A` LeftOf `B`)
 - [x] Move views to subviews
   - [x] With mouse
   - [ ] With keyboard
