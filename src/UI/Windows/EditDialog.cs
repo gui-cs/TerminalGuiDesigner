@@ -114,7 +114,7 @@ public class EditDialog : Window
     public static bool SetPropertyToNewValue(Design design, Property p, object? oldValue)
     {
         // user wants to give us a new value for this property
-        if (GetNewValue(design, p, out object? newValue))
+        if (GetNewValue(design, p, p.GetValue(), out object? newValue))
         {
             OperationManager.Instance.Do(
                 new SetPropertyOperation(design, p, oldValue, newValue)
@@ -126,10 +126,8 @@ public class EditDialog : Window
         return false;
     }
 
-    public static bool GetNewValue(Design design, Property property, out object? newValue)
+    public static bool GetNewValue(Design design, Property property, object? oldValue, out object? newValue)
     {
-        var oldValue = property.GetValue();
-
         if(property.PropertyInfo.PropertyType == typeof(ColorScheme))
         {
             return GetNewColorSchemeValue(design, property, out newValue);            

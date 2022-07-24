@@ -60,7 +60,7 @@
   <Class Name="TerminalGuiDesigner.Operations.SetPropertyOperation" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="10.75" Y="4.25" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAQAAAAAAAAADAAEAAAAEAgBCAAAAAAAAAAAAQAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAADAgEAAAAEAgBCAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Operations\SetPropertyOperation.cs</FileName>
     </TypeIdentifier>
   </Class>

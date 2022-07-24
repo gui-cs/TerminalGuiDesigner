@@ -5,9 +5,9 @@ namespace TerminalGuiDesigner.Operations
 {
     public class OperationFactory
     {
-        private Func<Property, object?> _valueGetter;
+        private PropertyValueGetterDelegate _valueGetter;
 
-        public OperationFactory(Func<Property,object?> valueGetter)
+        public OperationFactory(PropertyValueGetterDelegate valueGetter)
         {
             _valueGetter = valueGetter;
         }
@@ -33,19 +33,27 @@ namespace TerminalGuiDesigner.Operations
 
             }
             else
-            if (selected.Length > 0)
+            if (selected.Length > 1)
             {
-                // TODO: Multi selections!
                 name = $"{selected.Length} Items";
-                foreach(var op in CreateOperations(m, selected[0]))
-                {
-                    // TODO: this is wrong we should be doing 
-                    // multi set properties here not just throwing them away
-                    if(op is not SetPropertyOperation)
-                    {
-                        toReturn.Add(op);
-                    }
 
+                // for each property name
+                var propGroup = 
+                    selected.SelectMany(d => d.GetDesignableProperties())
+                    .GroupBy(p=>p.PropertyInfo.Name);
+                
+                foreach(var g in propGroup)
+                {
+                    var propertyName = g.Key;
+
+                    var all = g.ToList();
+                    
+                    // if all views in the collection have this Property declared designable on them
+                    if(all.Count == selected.Length)
+                    {
+                        // create an operation to change them all at once
+                        toReturn.Add(new SetPropertyOperation(all.Select(v => v.Design).ToArray(), propertyName, _valueGetter));
+                    }   
                 }
             }
             else

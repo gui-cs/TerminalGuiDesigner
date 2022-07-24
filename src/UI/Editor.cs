@@ -184,7 +184,8 @@ Ctrl+Q - Quit
         var selected = SelectionManager.Instance.Selected.ToArray();
 
         var factory = new OperationFactory(
-                (p) => { return EditDialog.GetNewValue(p.Design, p, out var newValue) ? newValue : throw new OperationCanceledException(); });
+                (p, v) => { return EditDialog.GetNewValue(p.Design, p, v, out var newValue) ? newValue 
+                    : throw new OperationCanceledException(); });
 
         var operations = factory
             .CreateOperations(selected, m, rightClicked, out string name)
