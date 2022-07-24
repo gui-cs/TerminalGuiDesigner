@@ -103,4 +103,27 @@ public class SelectionManager
         }
         oldSchemes.Clear();
     }
+
+    /// <summary>
+    /// If there is only one element in <see cref="Selected"/> then this is returned
+    /// otherwise returns null.  Returns null if there is a multi selection going on
+    /// or nothing is selected
+    /// </summary>
+    /// <returns></returns>
+    public Design? GetSingleSelectionOrNull()
+    {
+        if(selection.Count == 1)
+            return selection[0];
+        
+        return null;
+    }
+
+    /// <summary>
+    /// Returns the container of the currently selected item (if a single item is selected)
+    /// </summary>
+    /// <returns></returns>
+    public Design? GetMostSelectedContainerOrNull()
+    {
+        return GetSingleSelectionOrNull()?.View.GetNearestContainerDesign();
+    }
 }

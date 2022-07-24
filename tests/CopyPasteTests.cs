@@ -115,7 +115,7 @@ internal class CopyPasteTests : Tests
         selected.Clear();
         selected.SetSelection((Design)lbl.Data, (Design)tb.Data);
 
-        new CopyOperation(null).Do();
+        new CopyOperation(SelectionManager.Instance.Selected.ToArray()).Do();
         var cmd = new PasteOperation(d);
         
         Assert.IsFalse(cmd.IsImpossible);
@@ -218,7 +218,7 @@ internal class CopyPasteTests : Tests
             "TextBox inherits but also is explicitly marked as green");
 
         SelectionManager.Instance.SetSelection(dlbl, dtb);
-        new CopyOperation(null).Do();
+        new CopyOperation(SelectionManager.Instance.Selected.ToArray()).Do();
         SelectionManager.Instance.SetSelection(dlbl, dtb);
 
         OperationManager.Instance.Do(new PasteOperation(d));

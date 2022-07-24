@@ -178,7 +178,8 @@ Ctrl+Q - Quit
 
     private bool CreateAndShowContextMenu()
     {
-        var d = GetMostFocused(this)?.GetNearestDesign();
+        var d = SelectionManager.Instance.GetSingleSelectionOrNull();
+
         if(d != null)
         {
             CreateAndShowContextMenu(null,d);
@@ -330,11 +331,13 @@ Ctrl+Q - Quit
             return $"Selected: {MenuTracker.Instance.CurrentlyOpenMenuItem.Title}";
         }
 
-        var design = GetMostFocused(this).GetNearestDesign();
+        var selected = SelectionManager.Instance.Selected.ToArray();
 
-        if(design != null)
+        string name = selected.Length == 1 ? selected[0].FieldName : $"{selected.Length} objects";
+
+        if(selected.Any())
         {
-            return $"Selected: {design.FieldName} ({_keyMap.EditProperties} to Edit, {_keyMap.ShowHelp} for Help)";
+            return $"Selected: {name} ({_keyMap.EditProperties} to Edit, {_keyMap.ShowHelp} for Help)";
         }
 
         return  GetHelpWithEmptyFormLoaded();
@@ -350,10 +353,13 @@ Ctrl+Q - Quit
             return false;
 
 
+        
+
         // Give the keyboard manager first shot at consuming
         // this key e.g. for typing into menus / reordering menus
         // etc
-        if(_keyboardManager.HandleKey(GetMostFocused(this),keyEvent))
+        if(_keyboardManager.HandleKey(
+            SelectionManager.Instance.GetSingleSelectionOrNull()?.View ?? this, keyEvent))
             return true;
 
         try
@@ -523,7 +529,7 @@ Ctrl+Q - Quit
 
     private void Paste()
     {
-        var d = GetMostFocused(this)?.GetNearestContainerDesign() ?? _viewBeingEdited;
+        var d = SelectionManager.Instance.GetMostSelectedContainerOrNull() ?? _viewBeingEdited;
 
         if (d != null)
         {
@@ -538,18 +544,13 @@ Ctrl+Q - Quit
 
     private void Copy()
     {
-        var d = GetMostFocused(this)?.GetNearestDesign();
-
-        if (d != null)
-        {
-            var copy = new CopyOperation(d);
-            OperationManager.Instance.Do(copy);
-        }
+        var copy = new CopyOperation(SelectionManager.Instance.Selected.ToArray());
+        OperationManager.Instance.Do(copy);
     }
 
     private void ShowViewSpecificOperations()
     {
-        var d = GetMostFocused(this)?.GetNearestDesign();
+        var d = SelectionManager.Instance.GetSingleSelectionOrNull();
 
         if (d != null)
         {
@@ -576,25 +577,13 @@ Ctrl+Q - Quit
     {
         if(_viewBeingEdited == null)
             return;
-
-        var singleSelection = GetMostFocused(_viewBeingEdited.View);
-        
-        DeleteViewOperation cmd;
-        
+                
         if(SelectionManager.Instance.Selected.Any())
         {
-            cmd = new DeleteViewOperation(SelectionManager.Instance.Selected.Select(d=>d.View).ToArray());
+            var cmd = new DeleteViewOperation(SelectionManager.Instance.Selected.Select(d=>d.View).ToArray());
+            OperationManager.Instance.Do(cmd);
         }
-        else
-        {
-            if(singleSelection == null)
-            {
-                return;
-            }
-            cmd = new DeleteViewOperation(singleSelection);
-        }
-        
-        OperationManager.Instance.Do(cmd);
+       
     }
 
     private void DoForSelectedViews(Func<Design, Operation> operationFuc, bool allowOnRoot=false)
@@ -602,7 +591,9 @@ Ctrl+Q - Quit
         if(_viewBeingEdited == null)
             return;
 
-        if(SelectionManager.Instance.Selected.Any())
+        var selected = SelectionManager.Instance.Selected.ToArray();
+
+        if (selected.Length > 1)
         {
             var op = new CompositeOperation(
                 SelectionManager.Instance.Selected
@@ -610,10 +601,9 @@ Ctrl+Q - Quit
 
             OperationManager.Instance.Do(op);
         }
-        else
+        else if(selected.Length == 1)
         {
-            var singleSelection = GetMostFocused(_viewBeingEdited.View);
-            var viewDesign = singleSelection?.GetNearestDesign();
+            var viewDesign = selected.Single();
 
             // don't delete the root view
             if (viewDesign != null)
@@ -863,7 +853,7 @@ Ctrl+Q - Quit
         }
 
         // what is the currently selected design
-        var toAddTo = GetMostFocused(_viewBeingEdited.View)?.GetNearestContainerDesign() ?? _viewBeingEdited;
+        var toAddTo = SelectionManager.Instance.GetMostSelectedContainerOrNull() ?? _viewBeingEdited;
 
         OperationManager.Instance.Do(
             new AddViewOperation(_currentDesignerFile,toAddTo)
@@ -873,7 +863,7 @@ Ctrl+Q - Quit
 
     private void ShowEditProperties()
     {
-        var d = GetMostFocused(this).GetNearestDesign();
+        var d = SelectionManager.Instance.GetSingleSelectionOrNull();
         if (d != null)
         {
             ShowEditProperties(d);
@@ -894,17 +884,4 @@ Ctrl+Q - Quit
         var schemes = new ColorSchemesUI(_viewBeingEdited);
         Application.Run(schemes);        
     }
-
-    
-
-    private View GetMostFocused(View view)
-    {
-        if (view.Focused == null)
-        {
-            return view;
-        }
-
-        return GetMostFocused(view.Focused);
-    }
-
 }
