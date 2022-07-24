@@ -176,67 +176,46 @@ Ctrl+Q - Quit
         Application.Shutdown();
     }
 
-    private bool CreateAndShowContextMenu()
+    private void CreateAndShowContextMenu(MouseEvent? m, Design? rightClicked)
     {
-        var d = SelectionManager.Instance.GetSingleSelectionOrNull();
+        if (_viewBeingEdited == null)
+            return;
 
-        if(d != null)
-        {
-            CreateAndShowContextMenu(null,d);
-            return true;
-        }    
+        var selected = SelectionManager.Instance.Selected.ToArray();
 
-        return false;        
-    }
+        var factory = new OperationFactory(
+                (p) => { return EditDialog.GetNewValue(p.Design, p, out var newValue) ? newValue : throw new OperationCanceledException(); });
 
-    private void CreateAndShowContextMenu(MouseEvent? m, Design d)
-    {
+        var operations = factory.CreateOperations(selected, m, rightClicked, out string name).ToArray();
+
+        var setProps = operations.OfType<SetPropertyOperation>();
+        var others = operations.Except(setProps);
+
+        var setPropsItems = setProps.Select(o => new MenuItem(o.ToString(), "", () => Try(() => OperationManager.Instance.Do(o))));
+        var othersItems = others.Select(o => new MenuItem(o.ToString(), "", () => Try(() => OperationManager.Instance.Do(o))));
+
+        var all = new List<MenuItem>();
         
-        // things we can do/change
-        IEnumerable<IOperation> options;
+        // only add the set properties category if there are some
+        if(setPropsItems.Any())
+            all.Add(new MenuBarItem(name, setPropsItems.ToArray()));
 
-        if(m == null)
-        {
-            options = d.GetExtraOperations().Where(c=>!c.IsImpossible);
-        }
-        else
-        {
-            options = d.GetExtraOperations(
-                d.View.ScreenToClient(m.Value.X, m.Value.Y)
-                ).Where(c=>!c.IsImpossible);
-        }
-        
-        
-        var properties = d.GetDesignableProperties().OrderBy(p=>p.GetHumanReadableName());
-        
-        // menu items to click to make them happen/change
-        var setPropertyMenuItems = properties.Select(p => new MenuItem(p.GetHumanReadableName(), null,
-            () => Try(()=>EditDialog.SetPropertyToNewValue(d, p, p.GetValue())))).ToArray();
-        
-        var extraOptionsMenuItems = options.Select(o => new MenuItem(o.ToString(), "", ()=>Try(()=>OperationManager.Instance.Do(o)))).ToArray();
+        all.AddRange(othersItems.ToArray());
 
-        MenuBarItem allItems;
+        // theres nothing we can do
+        if (all.Count == 0)
+            return;
 
-        var propertiesCategory = new MenuBarItem(d.FieldName, setPropertyMenuItems);
-        propertiesCategory.Action = ()=>{
-            ShowEditProperties(d);
-        };
-
-        var items = new List<MenuItem>();
-        items.Add(propertiesCategory);
-        items.AddRange(extraOptionsMenuItems);
-
-        allItems = new MenuBarItem(items.ToArray());
-    
         var menu = new ContextMenu();
-        menu.MenuItems = allItems;
+        menu.MenuItems = new MenuBarItem(all.ToArray());
 
-        if(m.HasValue)
+        if (m.HasValue)
         {
             menu.Position = new Point(m.Value.X,m.Value.Y);
         }
         else
         {
+            var d = SelectionManager.Instance.Selected.FirstOrDefault() ?? _viewBeingEdited;
             d.View.ViewToScreen(0,0,out var x, out var y);
             menu.Position = new Point(x,y);
         }
@@ -368,7 +347,8 @@ Ctrl+Q - Quit
 
             if (keyEvent.Key == _keyMap.ShowContextMenu && !_menuOpen)
             {
-                return CreateAndShowContextMenu();
+                CreateAndShowContextMenu(null,null);
+                return true;
             }
 
             if (keyEvent.Key == _keyMap.EditProperties)

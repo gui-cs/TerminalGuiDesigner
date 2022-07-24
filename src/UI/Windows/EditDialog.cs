@@ -126,7 +126,7 @@ public class EditDialog : Window
         return false;
     }
 
-    private static bool GetNewValue(Design design, Property property, out object? newValue)
+    public static bool GetNewValue(Design design, Property property, out object? newValue)
     {
         var oldValue = property.GetValue();
 
