@@ -378,8 +378,6 @@ public class Design
     /// <exception cref="NotImplementedException"></exception>
     internal IEnumerable<IOperation> GetExtraOperations(Point pos)
     {
-        yield return new CopyOperation(SelectionManager.Instance.Selected.ToArray());
-
         if (View is TableView tv)
         {
             DataColumn? col = null;

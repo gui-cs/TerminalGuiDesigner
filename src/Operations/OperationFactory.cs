@@ -14,33 +14,55 @@ namespace TerminalGuiDesigner.Operations
 
         public IEnumerable<IOperation> CreateOperations(Design[] selected, MouseEvent? m, Design? rightClicked, out string name)
         {
+            List<IOperation> toReturn = new();
+
             // user right clicked something that isn't part of the current multiselection
             if(rightClicked != null && !selected.Contains(rightClicked))
             {
                 // give them options for the thing they right clicked
                 name = rightClicked.FieldName;
-                return CreateOperations(m, rightClicked);
+                foreach (var op in CreateOperations(m, rightClicked))
+                    toReturn.Add(op);
             }
-
+            else
             if(selected.Length == 1)
             {
                 name = selected[0].FieldName;
-                return CreateOperations(m, selected[0]);
+                foreach (var op in CreateOperations(m, selected[0]))
+                    toReturn.Add(op);
+
             }
+            else
             if (selected.Length > 0)
             {
                 // TODO: Multi selections!
                 name = $"{selected.Length} Items";
-                return CreateOperations(m, selected[0])
+                foreach(var op in CreateOperations(m, selected[0]))
+                {
                     // TODO: this is wrong we should be doing 
                     // multi set properties here not just throwing them away
-                    .Where(o=>o is not SetPropertyOperation);
+                    if(op is not SetPropertyOperation)
+                    {
+                        toReturn.Add(op);
+                    }
+
+                }
             }
             else
             {
-                name = "Comming Soon";
-                return Enumerable.Empty<IOperation>();
+                name = "";
             }
+
+            if(SelectionManager.Instance.Selected.Any())
+            {
+                toReturn.Add(new CopyOperation(SelectionManager.Instance.Selected.ToArray()));
+            }
+            else if(rightClicked != null)
+            {
+                toReturn.Add(new CopyOperation(rightClicked));
+            }
+
+            return toReturn;
         }
 
         private IEnumerable<IOperation> CreateOperations(MouseEvent? m, Design d)

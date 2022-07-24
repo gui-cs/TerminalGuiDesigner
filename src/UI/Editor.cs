@@ -186,13 +186,16 @@ Ctrl+Q - Quit
         var factory = new OperationFactory(
                 (p) => { return EditDialog.GetNewValue(p.Design, p, out var newValue) ? newValue : throw new OperationCanceledException(); });
 
-        var operations = factory.CreateOperations(selected, m, rightClicked, out string name).ToArray();
+        var operations = factory
+            .CreateOperations(selected, m, rightClicked, out string name)
+            .Where(o=>!o.IsImpossible)
+            .ToArray();
 
         var setProps = operations.OfType<SetPropertyOperation>();
         var others = operations.Except(setProps);
 
-        var setPropsItems = setProps.Select(o => new MenuItem(o.ToString(), "", () => Try(() => OperationManager.Instance.Do(o))));
-        var othersItems = others.Select(o => new MenuItem(o.ToString(), "", () => Try(() => OperationManager.Instance.Do(o))));
+        var setPropsItems = setProps.Select(ToMenuItem);
+        var othersItems = others.Select(ToMenuItem);
 
         var all = new List<MenuItem>();
         
@@ -223,6 +226,11 @@ Ctrl+Q - Quit
         _menuOpen = true;
         menu.Show();
         menu.MenuBar.MenuClosing += (m)=> _menuOpen = false;
+    }
+
+    private MenuItem ToMenuItem(IOperation operation)
+    {
+        return new MenuItem(operation.ToString(), "", () => Try(() => OperationManager.Instance.Do(operation)));
     }
 
     private void Try(Action action)
