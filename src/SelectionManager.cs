@@ -103,6 +103,9 @@ public class SelectionManager
 
     public void Clear()
     {
+        if (LockSelection)
+            return;
+
         selection.Clear();
 
         // reset old color schemes so views don't still look selected
