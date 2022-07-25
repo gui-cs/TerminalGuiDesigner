@@ -202,7 +202,13 @@ Ctrl+Q - Quit
         
         // only add the set properties category if there are some
         if(setPropsItems.Any())
-            all.Add(new MenuBarItem(name, setPropsItems.ToArray()));
+            all.Add(new MenuBarItem(name, setPropsItems.ToArray())
+            {
+                Action = () => {
+                    if (selected.Length == 1 || rightClicked != null)
+                        ShowEditProperties(rightClicked ?? selected[0]);
+                        }
+            });
 
         all.AddRange(othersItems.ToArray());
 
@@ -264,12 +270,14 @@ Ctrl+Q - Quit
     {
         base.Redraw(bounds);
 
-
+        
         // if we are editing a view
         if(_viewBeingEdited != null)
         {
-            if(enableShowFocused)
+            if (enableShowFocused)
             {
+                Application.Driver.SetAttribute(_viewBeingEdited.View.ColorScheme.Normal);
+
                 string? toDisplay = GetLowerRightTextIfAny();
 
                 // and have a designable view focused
