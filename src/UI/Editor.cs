@@ -225,8 +225,17 @@ Ctrl+Q - Quit
         }
 
         _menuOpen = true;
+        SelectionManager.Instance.LockSelection = true;
         menu.Show();
-        menu.MenuBar.MenuClosing += (m)=> _menuOpen = false;
+        menu.MenuBar.MenuClosing += (m) =>
+        {
+            // we only care about the root menu being closed
+            if (m.IsSubMenu)
+                return;
+
+            _menuOpen = false;
+            SelectionManager.Instance.LockSelection = false;
+        };
     }
 
     private MenuItem ToMenuItem(IOperation operation)
@@ -238,11 +247,16 @@ Ctrl+Q - Quit
     {
         try
         {
+            SelectionManager.Instance.LockSelection = true;
             action();
         }
         catch (Exception ex)
         {
             ExceptionViewer.ShowException("Operation failed",ex);
+        }
+        finally
+        {
+            SelectionManager.Instance.LockSelection = false;
         }
     }
 
@@ -353,6 +367,7 @@ Ctrl+Q - Quit
         try
         {
             _editting = true;
+            SelectionManager.Instance.LockSelection = true;
 
             if (keyEvent.Key == _keyMap.ShowContextMenu && !_menuOpen)
             {
@@ -498,6 +513,7 @@ Ctrl+Q - Quit
         }
         finally
         {
+            SelectionManager.Instance.LockSelection = false;
             _editting = false;
         }
 

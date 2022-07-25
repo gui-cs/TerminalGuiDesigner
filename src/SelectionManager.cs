@@ -20,6 +20,12 @@ public class SelectionManager
     Dictionary<Design, ColorScheme?> oldSchemes = new();
 
     /// <summary>
+    /// Set to true to prevent changes to the current <see cref="Selected"/>
+    /// collection (e.g. if running a modal dialog / context menu).
+    /// </summary>
+    public bool LockSelection { get; set; }
+
+    /// <summary>
     /// The color scheme to assign to controls that have been 
     /// multi selected
     /// </summary>
@@ -63,6 +69,9 @@ public class SelectionManager
 
     public void SetSelection(params Design[] designs)
     {
+        if (LockSelection)
+            return;
+
         // reset anything that was previously selected
         Clear();
 
