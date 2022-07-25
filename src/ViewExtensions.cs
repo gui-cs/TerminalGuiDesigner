@@ -72,6 +72,16 @@ public static class ViewExtensions
             cb.Text = text;
         }
         else
+        if (view is FrameView fr)
+        {
+            fr.Title = text;
+        }
+        else
+        if (view is Window w)
+        {
+            w.Title = text;
+        }
+        else
         {
             view.Text = text;
         }

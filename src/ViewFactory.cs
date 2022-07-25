@@ -94,7 +94,6 @@ public class ViewFactory
         }
 
         var instance = (View?)Activator.CreateInstance(t) ?? throw new Exception($"CreateInstance returned null for Type '{t}'");
-
         instance.SetActualText("Heya");
 
         instance.Width = Math.Max(instance.Bounds.Width, 4);
@@ -102,7 +101,8 @@ public class ViewFactory
 
         if (instance is FrameView || instance is HexView)
         {
-            instance.Height = 5;            
+            instance.Height = 5;
+            instance.Width = 10;
         }
 
 
