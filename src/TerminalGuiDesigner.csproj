@@ -17,7 +17,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>TerminalGuiDesigner</PackageId>
-    <Version>1.0.15</Version>
+    <Version>1.0.16</Version>
     <Authors>Thomas Nind</Authors>
     <Nullable>enable</Nullable>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -30,7 +30,15 @@
     <PackageIcon>logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>
-    v1.0.15
+    v1.0.16
+	 * Support for designing ColorSchemes
+	 * Ability to update the same field on multiple selected Views at once (e.g. set all width to 10)
+	 * Selection color (defaults to green) is now applied to single selections (e.g. tab/mouse selection).  Previously this scheme was only used for multi selection
+	 * Lower right status text now shows when there is an ongoing multi selection (e.g. 'Selected: 3 objects')
+	 * Fixed new FrameView instances being created with Text instead of Title set
+	 * Added DrawMarginFrame as a designable property on Window allowing for removing Border from root view if desired
+	 * Multi Copy/paste now preserves/maps PosRelative (e.g. view1.X = Pos.Right(otherView)) when all referenced views are in the copy/paste collection
+	v1.0.15
 	 * Fixed bug generating code for Pos/Dim values that had decimal places (e.g. Percent(60))
 	v1.0.14
      * Improved MenuBar undo and fixed stability issues
