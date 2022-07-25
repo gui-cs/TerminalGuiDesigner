@@ -238,9 +238,9 @@ public class Design
         // Border properties - Most views dont have a border so Border is
         if(View.Border != null)
         {
-            yield return CreateSubProperty(nameof(Border.DrawMarginFrame), nameof(View.Border), View.Border);
             yield return CreateSubProperty(nameof(Border.BorderStyle),nameof(View.Border),View.Border);
-            yield return CreateSubProperty(nameof(Border.Effect3D),nameof(View.Border),View.Border);            
+            yield return CreateSubProperty(nameof(Border.Effect3D),nameof(View.Border),View.Border);
+            yield return CreateSubProperty(nameof(Border.DrawMarginFrame), nameof(View.Border), View.Border);
         }
         
         yield return CreateProperty(nameof(View.TextAlignment));
@@ -295,8 +295,12 @@ public class Design
         {
             yield return CreateProperty(nameof(Window.Title));
         }
+        if (View is FrameView)
+        {
+            yield return CreateProperty(nameof(FrameView.Title));
+        }
 
-        if(View is TreeView tree)
+        if (View is TreeView tree)
         {
             yield return CreateSubProperty(nameof(TreeStyle.CollapseableSymbol),nameof(TreeView<ITreeNode>.Style),tree.Style);
             yield return CreateSubProperty(nameof(TreeStyle.ColorExpandSymbol),nameof(TreeView<ITreeNode>.Style),tree.Style);
