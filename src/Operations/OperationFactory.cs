@@ -35,6 +35,8 @@ namespace TerminalGuiDesigner.Operations
             else
             if (selected.Length > 1)
             {
+                var props = new List<SetPropertyOperation>();
+
                 name = $"{selected.Length} Items";
 
                 // for each property name
@@ -52,9 +54,11 @@ namespace TerminalGuiDesigner.Operations
                     if(all.Count == selected.Length)
                     {
                         // create an operation to change them all at once
-                        toReturn.Add(new SetPropertyOperation(all.Select(v => v.Design).ToArray(), propertyName, _valueGetter));
+                        props.Add(new SetPropertyOperation(all.Select(v => v.Design).ToArray(), propertyName, _valueGetter));
                     }   
                 }
+
+                toReturn.AddRange(props.OrderBy(p=>p.ToString()));
             }
             else
             {
