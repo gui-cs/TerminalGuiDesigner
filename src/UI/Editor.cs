@@ -70,7 +70,7 @@ Ctrl+Q - Quit
 
                 if(_keyMap.SelectionColor != null)
                 {
-                    MultiSelectionManager.Instance.SelectedScheme = _keyMap.SelectionColor.Scheme;
+                    SelectionManager.Instance.SelectedScheme = _keyMap.SelectionColor.Scheme;
                 }
             }
             catch (Exception ex)
@@ -176,84 +176,87 @@ Ctrl+Q - Quit
         Application.Shutdown();
     }
 
-    private bool CreateAndShowContextMenu()
+    private void CreateAndShowContextMenu(MouseEvent? m, Design? rightClicked)
     {
-        var d = GetMostFocused(this)?.GetNearestDesign();
-        if(d != null)
-        {
-            CreateAndShowContextMenu(null,d);
-            return true;
-        }    
+        if (_viewBeingEdited == null)
+            return;
 
-        return false;        
-    }
+        var selected = SelectionManager.Instance.Selected.ToArray();
 
-    private void CreateAndShowContextMenu(MouseEvent? m, Design d)
-    {
+        var factory = new OperationFactory(
+                (p, v) => { return EditDialog.GetNewValue(p.Design, p, v, out var newValue) ? newValue 
+                    : throw new OperationCanceledException(); });
+
+        var operations = factory
+            .CreateOperations(selected, m, rightClicked, out string name)
+            .Where(o=>!o.IsImpossible)
+            .ToArray();
+
+        var setProps = operations.OfType<SetPropertyOperation>();
+        var others = operations.Except(setProps);
+
+        var setPropsItems = setProps.Select(ToMenuItem);
+        var othersItems = others.Select(ToMenuItem);
+
+        var all = new List<MenuItem>();
         
-        // things we can do/change
-        IEnumerable<IOperation> options;
+        // only add the set properties category if there are some
+        if(setPropsItems.Any())
+            all.Add(new MenuBarItem(name, setPropsItems.ToArray()));
 
-        if(m == null)
-        {
-            options = d.GetExtraOperations().Where(c=>!c.IsImpossible);
-        }
-        else
-        {
-            options = d.GetExtraOperations(
-                d.View.ScreenToClient(m.Value.X, m.Value.Y)
-                ).Where(c=>!c.IsImpossible);
-        }
-        
-        
-        var properties = d.GetDesignableProperties().OrderBy(p=>p.GetHumanReadableName());
-        
-        // menu items to click to make them happen/change
-        var setPropertyMenuItems = properties.Select(p => new MenuItem(p.GetHumanReadableName(), null,
-            () => Try(()=>EditDialog.SetPropertyToNewValue(d, p, p.GetValue())))).ToArray();
-        
-        var extraOptionsMenuItems = options.Select(o => new MenuItem(o.ToString(), "", ()=>Try(()=>OperationManager.Instance.Do(o)))).ToArray();
+        all.AddRange(othersItems.ToArray());
 
-        MenuBarItem allItems;
+        // theres nothing we can do
+        if (all.Count == 0)
+            return;
 
-        var propertiesCategory = new MenuBarItem(d.FieldName, setPropertyMenuItems);
-        propertiesCategory.Action = ()=>{
-            ShowEditProperties(d);
-        };
-
-        var items = new List<MenuItem>();
-        items.Add(propertiesCategory);
-        items.AddRange(extraOptionsMenuItems);
-
-        allItems = new MenuBarItem(items.ToArray());
-    
         var menu = new ContextMenu();
-        menu.MenuItems = allItems;
+        menu.MenuItems = new MenuBarItem(all.ToArray());
 
-        if(m.HasValue)
+        if (m.HasValue)
         {
             menu.Position = new Point(m.Value.X,m.Value.Y);
         }
         else
         {
+            var d = SelectionManager.Instance.Selected.FirstOrDefault() ?? _viewBeingEdited;
             d.View.ViewToScreen(0,0,out var x, out var y);
             menu.Position = new Point(x,y);
         }
 
         _menuOpen = true;
+        SelectionManager.Instance.LockSelection = true;
         menu.Show();
-        menu.MenuBar.MenuClosing += (m)=> _menuOpen = false;
+        menu.MenuBar.MenuClosing += (m) =>
+        {
+            // we only care about the root menu being closed
+            if (m.IsSubMenu)
+                return;
+
+            _menuOpen = false;
+            SelectionManager.Instance.LockSelection = false;
+        };
+    }
+
+    private MenuItem ToMenuItem(IOperation operation)
+    {
+        return new MenuItem(operation.ToString(), "", () => Try(() => OperationManager.Instance.Do(operation)));
     }
 
     private void Try(Action action)
     {
         try
         {
+            SelectionManager.Instance.LockSelection = true;
             action();
         }
         catch (Exception ex)
         {
             ExceptionViewer.ShowException("Operation failed",ex);
+        }
+        finally
+        {
+            SelectionManager.Instance.LockSelection = false;
         }
     }
 
@@ -330,11 +333,13 @@ Ctrl+Q - Quit
             return $"Selected: {MenuTracker.Instance.CurrentlyOpenMenuItem.Title}";
         }
 
-        var design = GetMostFocused(this).GetNearestDesign();
+        var selected = SelectionManager.Instance.Selected.ToArray();
 
-        if(design != null)
+        string name = selected.Length == 1 ? selected[0].FieldName : $"{selected.Length} objects";
+
+        if(selected.Any())
         {
-            return $"Selected: {design.FieldName} ({_keyMap.EditProperties} to Edit, {_keyMap.ShowHelp} for Help)";
+            return $"Selected: {name} ({_keyMap.EditProperties} to Edit, {_keyMap.ShowHelp} for Help)";
         }
 
         return  GetHelpWithEmptyFormLoaded();
@@ -350,19 +355,24 @@ Ctrl+Q - Quit
             return false;
 
 
+        
+
         // Give the keyboard manager first shot at consuming
         // this key e.g. for typing into menus / reordering menus
         // etc
-        if(_keyboardManager.HandleKey(GetMostFocused(this),keyEvent))
+        if(_keyboardManager.HandleKey(
+            SelectionManager.Instance.GetSingleSelectionOrNull()?.View ?? this, keyEvent))
             return true;
 
         try
         {
             _editting = true;
+            SelectionManager.Instance.LockSelection = true;
 
             if (keyEvent.Key == _keyMap.ShowContextMenu && !_menuOpen)
             {
-                return CreateAndShowContextMenu();
+                CreateAndShowContextMenu(null,null);
+                return true;
             }
 
             if (keyEvent.Key == _keyMap.EditProperties)
@@ -503,6 +513,7 @@ Ctrl+Q - Quit
         }
         finally
         {
+            SelectionManager.Instance.LockSelection = false;
             _editting = false;
         }
 
@@ -518,12 +529,12 @@ Ctrl+Q - Quit
             .Where(d=>!d.IsRoot)
             .ToArray();
 
-        MultiSelectionManager.Instance.SetSelection(everyone);
+        SelectionManager.Instance.SetSelection(everyone);
     }
 
     private void Paste()
     {
-        var d = GetMostFocused(this)?.GetNearestContainerDesign() ?? _viewBeingEdited;
+        var d = SelectionManager.Instance.GetMostSelectedContainerOrNull() ?? _viewBeingEdited;
 
         if (d != null)
         {
@@ -538,18 +549,13 @@ Ctrl+Q - Quit
 
     private void Copy()
     {
-        var d = GetMostFocused(this)?.GetNearestDesign();
-
-        if (d != null)
-        {
-            var copy = new CopyOperation(d);
-            OperationManager.Instance.Do(copy);
-        }
+        var copy = new CopyOperation(SelectionManager.Instance.Selected.ToArray());
+        OperationManager.Instance.Do(copy);
     }
 
     private void ShowViewSpecificOperations()
     {
-        var d = GetMostFocused(this)?.GetNearestDesign();
+        var d = SelectionManager.Instance.GetSingleSelectionOrNull();
 
         if (d != null)
         {
@@ -576,25 +582,13 @@ Ctrl+Q - Quit
     {
         if(_viewBeingEdited == null)
             return;
-
-        var singleSelection = GetMostFocused(_viewBeingEdited.View);
-        
-        DeleteViewOperation cmd;
-        
-        if(MultiSelectionManager.Instance.Selected.Any())
+                
+        if(SelectionManager.Instance.Selected.Any())
         {
-            cmd = new DeleteViewOperation(MultiSelectionManager.Instance.Selected.Select(d=>d.View).ToArray());
+            var cmd = new DeleteViewOperation(SelectionManager.Instance.Selected.Select(d=>d.View).ToArray());
+            OperationManager.Instance.Do(cmd);
         }
-        else
-        {
-            if(singleSelection == null)
-            {
-                return;
-            }
-            cmd = new DeleteViewOperation(singleSelection);
-        }
-        
-        OperationManager.Instance.Do(cmd);
+       
     }
 
     private void DoForSelectedViews(Func<Design, Operation> operationFuc, bool allowOnRoot=false)
@@ -602,18 +596,19 @@ Ctrl+Q - Quit
         if(_viewBeingEdited == null)
             return;
 
-        if(MultiSelectionManager.Instance.Selected.Any())
+        var selected = SelectionManager.Instance.Selected.ToArray();
+
+        if (selected.Length > 1)
         {
             var op = new CompositeOperation(
-                MultiSelectionManager.Instance.Selected
+                SelectionManager.Instance.Selected
                 .Select(operationFuc).ToArray());
 
             OperationManager.Instance.Do(op);
         }
-        else
+        else if(selected.Length == 1)
         {
-            var singleSelection = GetMostFocused(_viewBeingEdited.View);
-            var viewDesign = singleSelection?.GetNearestDesign();
+            var viewDesign = selected.Single();
 
             // don't delete the root view
             if (viewDesign != null)
@@ -667,7 +662,7 @@ Ctrl+Q - Quit
         // clear the history
         OperationManager.Instance.ClearUndoRedo();
         Design? instance = null;
-        MultiSelectionManager.Instance.Clear();
+        SelectionManager.Instance.Clear();
 
         Task.Run(()=>{
             
@@ -791,7 +786,7 @@ Ctrl+Q - Quit
         // clear the history
         OperationManager.Instance.ClearUndoRedo();
         Design? instance = null;
-        MultiSelectionManager.Instance.Clear();
+        SelectionManager.Instance.Clear();
 
         var open = new LoadingDialog(toOpen);
 
@@ -863,7 +858,7 @@ Ctrl+Q - Quit
         }
 
         // what is the currently selected design
-        var toAddTo = GetMostFocused(_viewBeingEdited.View)?.GetNearestContainerDesign() ?? _viewBeingEdited;
+        var toAddTo = SelectionManager.Instance.GetMostSelectedContainerOrNull() ?? _viewBeingEdited;
 
         OperationManager.Instance.Do(
             new AddViewOperation(_currentDesignerFile,toAddTo)
@@ -873,7 +868,7 @@ Ctrl+Q - Quit
 
     private void ShowEditProperties()
     {
-        var d = GetMostFocused(this).GetNearestDesign();
+        var d = SelectionManager.Instance.GetSingleSelectionOrNull();
         if (d != null)
         {
             ShowEditProperties(d);
@@ -894,17 +889,4 @@ Ctrl+Q - Quit
         var schemes = new ColorSchemesUI(_viewBeingEdited);
         Application.Run(schemes);        
     }
-
-    
-
-    private View GetMostFocused(View view)
-    {
-        if (view.Focused == null)
-        {
-            return view;
-        }
-
-        return GetMostFocused(view.Focused);
-    }
-
 }

@@ -43,4 +43,30 @@ public abstract class Operation : IOperation
     public abstract bool Do();
     public abstract void Undo();
     public abstract void Redo();
+
+    /// <summary>
+    /// Clears <see cref="SelectionManager.Selected"/> without respecting
+    /// <see cref="SelectionManager.LockSelection"/>
+    /// </summary>
+    /// <param name="selection"></param>
+    protected void ForceSelectionClear()
+    {
+        var before = SelectionManager.Instance.LockSelection;
+        SelectionManager.Instance.LockSelection = false;
+        SelectionManager.Instance.Clear();
+        SelectionManager.Instance.LockSelection = before;
+    }
+
+    /// <summary>
+    /// Changes <see cref="SelectionManager.Selected"/> without respecting
+    /// <see cref="SelectionManager.LockSelection"/>
+    /// </summary>
+    /// <param name="selection"></param>
+    protected void ForceSelection(params Design[] selection)
+    {
+        var before = SelectionManager.Instance.LockSelection;
+        SelectionManager.Instance.LockSelection = false;
+        SelectionManager.Instance.SetSelection(selection);
+        SelectionManager.Instance.LockSelection = before;
+    }
 }

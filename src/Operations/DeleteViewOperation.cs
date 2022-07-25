@@ -7,11 +7,14 @@ public class DeleteViewOperation : Operation
 {
     private readonly View[] delete;
     private readonly View[] from;
+    private readonly Design[] _originalSelection;
 
     public DeleteViewOperation(params View[] delete)
     {
         this.delete = delete;
         this.from = delete.Select(d=>d.SuperView).ToArray();
+
+        _originalSelection = SelectionManager.Instance.Selected.ToArray();
 
         foreach(var del in delete)
         {
@@ -46,7 +49,8 @@ public class DeleteViewOperation : Operation
                 removedAny = true;
             }
         }
-        
+
+        ForceSelectionClear();
 
         return removedAny;
     }
@@ -65,6 +69,8 @@ public class DeleteViewOperation : Operation
                 from[i].Add(delete[i]);
             }
         }
+
+        ForceSelection(_originalSelection);
     }
 
     public override string ToString()

@@ -167,7 +167,7 @@ public class MouseManagerTests : Tests
         d.View.Add(lbl2);
         d.View.Add(lbl3);
 
-        var selection = MultiSelectionManager.Instance;
+        var selection = SelectionManager.Instance;
         selection.Clear();
         var mgr = new MouseManager();
 

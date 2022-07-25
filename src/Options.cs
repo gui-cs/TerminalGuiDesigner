@@ -3,6 +3,10 @@ using CommandLine.Text;
 
 namespace TerminalGuiDesigner
 {
+    /// <summary>
+    /// Command line options that can be supplied to TerminalGuiDesigner e.g. to immediately open
+    /// a file on startup instead of just showing splash screen.
+    /// </summary>
     public class Options
     {
         #nullable disable warnings

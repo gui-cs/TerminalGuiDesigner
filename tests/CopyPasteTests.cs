@@ -56,7 +56,7 @@ internal class CopyPasteTests : Tests
 
         OperationManager.Instance.ClearUndoRedo();
 
-        var selectionManager = MultiSelectionManager.Instance;
+        var selectionManager = SelectionManager.Instance;
 
         var copy = new CopyOperation(tvDesign);
         OperationManager.Instance.Do(copy);
@@ -64,6 +64,8 @@ internal class CopyPasteTests : Tests
         Assert.AreEqual(0, OperationManager.Instance.UndoStackSize,
             "Since you cannot Undo a Copy we expected undo stack to be empty");
 
+        selectionManager.Clear();
+        
         Assert.IsEmpty(selectionManager.Selected);
 
         var paste = new PasteOperation(d);
@@ -109,11 +111,11 @@ internal class CopyPasteTests : Tests
         new AddViewOperation(d.SourceCode, lbl, d, "lbl").Do();
         new AddViewOperation(d.SourceCode, tb, d, "tb").Do();
 
-        var selected = MultiSelectionManager.Instance;
+        var selected = SelectionManager.Instance;
         selected.Clear();
         selected.SetSelection((Design)lbl.Data, (Design)tb.Data);
 
-        new CopyOperation(null).Do();
+        new CopyOperation(SelectionManager.Instance.Selected.ToArray()).Do();
         var cmd = new PasteOperation(d);
         
         Assert.IsFalse(cmd.IsImpossible);
@@ -158,7 +160,7 @@ internal class CopyPasteTests : Tests
         new AddViewOperation(d.SourceCode, lbl, d, "lbl").Do();
         new AddViewOperation(d.SourceCode, tb, d, "tb").Do();
 
-        var selected = MultiSelectionManager.Instance;
+        var selected = SelectionManager.Instance;
 
         // Copy only the TextField and not the View it's Pos points to
         new CopyOperation((Design)tb.Data).Do();
@@ -198,11 +200,11 @@ internal class CopyPasteTests : Tests
         var dlbl = d.GetAllDesigns().Single(d => d.FieldName == "lbl");
         var dtb = d.GetAllDesigns().Single(d => d.FieldName == "tb");
 
-        var selected = MultiSelectionManager.Instance;
+        var selected = SelectionManager.Instance;
         
         ColorScheme green;
         ColorSchemeManager.Instance.AddOrUpdateScheme("green", green = new ColorScheme { Normal = new Attribute(Color.Green, Color.Cyan)});
-        tb.ColorScheme = green;
+        dtb.GetDesignableProperty(nameof(ColorScheme))?.SetValue(green);
         d.View.ColorScheme = green;
 
         Assert.AreEqual(lbl.ColorScheme, green, "The label should inherit color scheme from the parent");
@@ -215,9 +217,9 @@ internal class CopyPasteTests : Tests
             dtb.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
             "TextBox inherits but also is explicitly marked as green");
 
-        MultiSelectionManager.Instance.SetSelection(dlbl, dtb);
-        new CopyOperation(null).Do();
-        MultiSelectionManager.Instance.SetSelection(dlbl, dtb);
+        SelectionManager.Instance.SetSelection(dlbl, dtb);
+        new CopyOperation(SelectionManager.Instance.Selected.ToArray()).Do();
+        SelectionManager.Instance.SetSelection(dlbl, dtb);
 
         OperationManager.Instance.Do(new PasteOperation(d));
 
@@ -228,7 +230,7 @@ internal class CopyPasteTests : Tests
         var dtb2 = d.GetAllDesigns().Single(d => d.FieldName == "tb2");
         
         // clear whatever the current selection is (probably the pasted views)
-        MultiSelectionManager.Instance.Clear();
+        SelectionManager.Instance.Clear();
 
         Assert.AreEqual(dlbl2.View.ColorScheme, green, "The newly pasted label should also inherit color scheme from the parent");
 

@@ -52,7 +52,7 @@ public class MouseManager
                 }
                 else
                 {
-                    var multiSelected = MultiSelectionManager.Instance.Selected.ToArray();
+                    var multiSelected = SelectionManager.Instance.Selected.ToArray();
                     
                     // if user is click and drag moving a single view
                     // in a multi selection.
@@ -113,7 +113,7 @@ public class MouseManager
             // end selection box
             if (SelectionStart != null && SelectionBox != null && SelectionContainer != null)
             {
-                MultiSelectionManager.Instance.SetSelection(
+                SelectionManager.Instance.SetSelection(
                     SelectionContainer.Subviews
                     .Where(v => v.IntersectsScreenRect(SelectionBox.Value))
                     .Select(v=>v.GetNearestDesign())

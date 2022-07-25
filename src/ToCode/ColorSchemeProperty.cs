@@ -38,8 +38,8 @@ public class ColorSchemeProperty : Property
     }
     public override object? GetValue()
     {
-        if (MultiSelectionManager.Instance.Selected.Contains(Design))
-            return MultiSelectionManager.Instance.GetOriginalExplicitColorScheme(Design);
+        if (SelectionManager.Instance.Selected.Contains(Design))
+            return SelectionManager.Instance.GetOriginalExplicitColorScheme(Design);
 
         return Design.View.GetExplicitColorScheme();
     }
@@ -56,5 +56,12 @@ public class ColorSchemeProperty : Property
             return inherited;
 
         return ColorSchemeManager.Instance.GetNameForColorScheme(s) ?? "Unknown ColorScheme";
+    }
+
+    public override void SetValue(object? value)
+    {
+        base.SetValue(value);
+
+        SelectionManager.Instance.UpdateKnownScheme(Design,value as ColorScheme);
     }
 }

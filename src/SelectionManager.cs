@@ -8,7 +8,7 @@ namespace TerminalGuiDesigner;
 /// <see cref="View"/> are selected at once within
 /// the editor
 /// </summary>
-public class MultiSelectionManager
+public class SelectionManager
 {
     List<Design> selection = new();
 
@@ -18,6 +18,12 @@ public class MultiSelectionManager
     public IReadOnlyCollection<Design> Selected => selection.AsReadOnly();
 
     Dictionary<Design, ColorScheme?> oldSchemes = new();
+
+    /// <summary>
+    /// Set to true to prevent changes to the current <see cref="Selected"/>
+    /// collection (e.g. if running a modal dialog / context menu).
+    /// </summary>
+    public bool LockSelection { get; set; }
 
     /// <summary>
     /// The color scheme to assign to controls that have been 
@@ -49,7 +55,7 @@ public class MultiSelectionManager
         }
     }
 
-    public static MultiSelectionManager Instance = new();
+    public static SelectionManager Instance = new();
     private ColorScheme selectedScheme;
 
 
@@ -63,6 +69,9 @@ public class MultiSelectionManager
 
     public void SetSelection(params Design[] designs)
     {
+        if (LockSelection)
+            return;
+
         // reset anything that was previously selected
         Clear();
 
@@ -79,8 +88,24 @@ public class MultiSelectionManager
             d.View.ColorScheme = SelectedScheme;
         }
     }
+
+    /// <summary>
+    /// Updates the cached known ColorScheme (prior to selection).  Use this method
+    /// if you are making changes to the ColorScheme of an actively selected object
+    /// </summary>
+    public void UpdateKnownScheme(Design design, ColorScheme? colorScheme)
+    {
+        if(oldSchemes.ContainsKey(design))
+        {
+            oldSchemes[design] = colorScheme;
+        }
+    }
+
     public void Clear()
     {
+        if (LockSelection)
+            return;
+
         selection.Clear();
 
         // reset old color schemes so views don't still look selected
@@ -89,5 +114,28 @@ public class MultiSelectionManager
             kvp.Key.View.ColorScheme = kvp.Value;
         }
         oldSchemes.Clear();
+    }
+
+    /// <summary>
+    /// If there is only one element in <see cref="Selected"/> then this is returned
+    /// otherwise returns null.  Returns null if there is a multi selection going on
+    /// or nothing is selected
+    /// </summary>
+    /// <returns></returns>
+    public Design? GetSingleSelectionOrNull()
+    {
+        if(selection.Count == 1)
+            return selection[0];
+        
+        return null;
+    }
+
+    /// <summary>
+    /// Returns the container of the currently selected item (if a single item is selected)
+    /// </summary>
+    /// <returns></returns>
+    public Design? GetMostSelectedContainerOrNull()
+    {
+        return GetSingleSelectionOrNull()?.View.GetNearestContainerDesign();
     }
 }

@@ -215,7 +215,7 @@ public class ViewToCode
     {
         foreach(var scheme in ColorSchemeManager.Instance.Schemes)
         {
-            var toCode = new ColorSchemeToCode(scheme.Name,scheme.Scheme);
+            var toCode = new ColorSchemeToCode(scheme);
             toCode.ToCode(args);
         }
         

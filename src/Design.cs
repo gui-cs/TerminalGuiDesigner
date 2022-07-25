@@ -119,7 +119,7 @@ public class Design
         {        
             MenuTracker.Instance.Register(mb);
         }
-
+        
         if(subView is TreeView tree)
         {
             tree.AddObject(new TreeNode("Example Branch 1"){
@@ -140,7 +140,9 @@ public class Design
             super.Add(subView);
         }
 
-        return new Design(sourceCode,name, subView);
+        var d = new Design(sourceCode,name, subView);
+        subView.Enter += (s=>SelectionManager.Instance.SetSelection(d));
+        return d;
     }
 
 
@@ -154,7 +156,7 @@ public class Design
     /// </summary>
     public bool HasKnownColorScheme()
     {
-        var userDefinedColorScheme = MultiSelectionManager.Instance.GetOriginalExplicitColorScheme(this) ?? View.GetExplicitColorScheme();
+        var userDefinedColorScheme = SelectionManager.Instance.GetOriginalExplicitColorScheme(this) ?? View.GetExplicitColorScheme();
 
         if(userDefinedColorScheme == null)
             return false;
@@ -236,9 +238,9 @@ public class Design
         // Border properties - Most views dont have a border so Border is
         if(View.Border != null)
         {
-            yield return CreateSubProperty(nameof(Border.DrawMarginFrame), nameof(View.Border), View.Border);
             yield return CreateSubProperty(nameof(Border.BorderStyle),nameof(View.Border),View.Border);
-            yield return CreateSubProperty(nameof(Border.Effect3D),nameof(View.Border),View.Border);            
+            yield return CreateSubProperty(nameof(Border.Effect3D),nameof(View.Border),View.Border);
+            yield return CreateSubProperty(nameof(Border.DrawMarginFrame), nameof(View.Border), View.Border);
         }
         
         yield return CreateProperty(nameof(View.TextAlignment));
@@ -293,8 +295,12 @@ public class Design
         {
             yield return CreateProperty(nameof(Window.Title));
         }
+        if (View is FrameView)
+        {
+            yield return CreateProperty(nameof(FrameView.Title));
+        }
 
-        if(View is TreeView tree)
+        if (View is TreeView tree)
         {
             yield return CreateSubProperty(nameof(TreeStyle.CollapseableSymbol),nameof(TreeView<ITreeNode>.Style),tree.Style);
             yield return CreateSubProperty(nameof(TreeStyle.ColorExpandSymbol),nameof(TreeView<ITreeNode>.Style),tree.Style);
@@ -376,8 +382,6 @@ public class Design
     /// <exception cref="NotImplementedException"></exception>
     internal IEnumerable<IOperation> GetExtraOperations(Point pos)
     {
-        yield return new CopyOperation(this);
-
         if (View is TableView tv)
         {
             DataColumn? col = null;
