@@ -6,14 +6,25 @@ namespace TerminalGuiDesigner;
 
 public static class PosExtensions
 {
+    private static bool TreatNullPosAs0 = true;
+
     public static bool IsAbsolute(this Pos p)
     {
+        if (p == null)
+            return TreatNullPosAs0;
+
         return p.GetType().Name == "PosAbsolute";
     }
     public static bool IsAbsolute(this Pos p, out int n)
     {
         if(p.IsAbsolute())
         {
+            if(p == null)
+            {
+                n = 0;
+                return TreatNullPosAs0;
+            }
+
             var nField = p.GetType().GetField("n", BindingFlags.NonPublic | BindingFlags.Instance)
                 ?? throw new Exception("Expected private field 'n' of PosAbsolute was missing");
             n = (int?)nField.GetValue(p)
@@ -27,12 +38,15 @@ public static class PosExtensions
 
     public static bool IsPercent(this Pos p)
     {
+        if (p == null)
+            return false;
+
         return p.GetType().Name == "PosFactor";
     }
 
     public static bool IsPercent(this Pos p, out float percent)
     {
-        if (p.IsPercent())
+        if (p != null && p.IsPercent())
         {
             var nField = p.GetType().GetField("factor", BindingFlags.NonPublic | BindingFlags.Instance)
                 ?? throw new Exception("Expected private field 'factor' was missing from PosFactor");
@@ -47,13 +61,16 @@ public static class PosExtensions
     }
     public static bool IsCenter(this Pos p)
     {
+        if (p == null)
+            return false;
+
         return p.GetType().Name == "PosCenter";
     }
 
     public static bool IsRelative(this Pos p, out Pos posView)
     {
         // Terminal.Gui will often use Pos.Combine with RHS of 0 instead of just PosView alone
-        if(p.IsCombine(out var left, out var right, out _))
+        if(p != null && p.IsCombine(out var left, out var right, out _))
         {
             if(right.IsAbsolute(out int n) && n == 0)
             {
@@ -61,7 +78,7 @@ public static class PosExtensions
             }
         }        
         
-        if(p.GetType().Name == "PosView")
+        if(p != null && p.GetType().Name == "PosView")
         {
             posView = p;
             return true;
@@ -110,6 +127,9 @@ public static class PosExtensions
 
     public static bool IsCombine(this Pos p)
     {
+        if (p == null)
+            return false;
+
         return p.GetType().Name == "PosCombine";
     }
 

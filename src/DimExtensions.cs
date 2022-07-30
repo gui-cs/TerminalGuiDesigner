@@ -6,15 +6,20 @@ namespace TerminalGuiDesigner;
 public static class DimExtensions
 {
 
+    private static bool TreatNullDimAs0 = true;
+
     public static bool IsPercent(this Dim d)
     {
+        if (d == null)
+            return false;
+
         return d.GetType().Name == "DimFactor";
     }
 
 
     public static bool IsPercent(this Dim d, out float percent)
     {
-        if (d.IsPercent())
+        if (d != null && d.IsPercent())
         {
             var nField = d.GetType().GetField("factor", BindingFlags.NonPublic | BindingFlags.Instance) 
                 ?? throw new Exception("Expected private field 'factor' of DimPercent was missing");
@@ -28,12 +33,15 @@ public static class DimExtensions
 
     public static bool IsFill(this Dim d)
     {
+        if (d == null)
+            return false;
+
         return d.GetType().Name == "DimFill";
     }
 
     public static bool IsFill(this Dim d, out int margin)
     {
-        if (d.IsFill())
+        if (d != null && d.IsFill())
         {
             var nField = d.GetType().GetField("margin", BindingFlags.NonPublic | BindingFlags.Instance)
                  ?? throw new Exception("Expected private field 'margin' of DimFill was missing"); ;
@@ -48,12 +56,22 @@ public static class DimExtensions
 
     public static bool IsAbsolute(this Dim d)
     {
+        if (d == null)
+            return TreatNullDimAs0;
+
         return d.GetType().Name == "DimAbsolute";
     }
     public static bool IsAbsolute(this Dim d, out int n)
     {
         if (d.IsAbsolute())
         {
+
+            if (d == null)
+            {
+                n = 0;
+                return TreatNullDimAs0;
+            }
+
             var nField = d.GetType().GetField("n", BindingFlags.NonPublic | BindingFlags.Instance)
                 ?? throw new Exception("Expected private field was missing from DimAbsolute");
             n = (int?)nField.GetValue(d) 
@@ -68,6 +86,9 @@ public static class DimExtensions
 
     public static bool IsCombine(this Dim d)
     {
+        if (d == null)
+            return false;
+
         return d.GetType().Name == "DimCombine";
     }
     public static bool IsCombine(this Dim d, out Dim left,out Dim right, out bool add)

@@ -74,6 +74,27 @@ public class DimTests
     }
 
     [Test]
+    public void TestNullDim()
+    {
+        var v = new View();
+
+        Assert.IsNull(v.Width, "As of v1.7.0 a new View started getting null for its Width, if this assert fails it means that behaviour was reverted and this test can be altered or suppressed");
+
+        Assert.IsTrue(v.Width.IsAbsolute());
+        Assert.IsTrue(v.Width.IsAbsolute(out int n));
+        Assert.AreEqual(0, n);
+
+        Assert.IsFalse(v.Width.IsFill());
+        Assert.IsFalse(v.Width.IsPercent());
+        Assert.IsFalse(v.Width.IsCombine());
+
+        Assert.IsTrue(v.Width.GetDimType(out var type, out var val, out _));
+
+        Assert.AreEqual(DimType.Absolute, type);
+        Assert.AreEqual(0, val);
+    }
+
+    [Test]
     public void TestGetDimType_WithOffset()
     {
         var d = Dim.Percent(50) + 2;

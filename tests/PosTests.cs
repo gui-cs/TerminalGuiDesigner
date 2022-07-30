@@ -111,6 +111,30 @@ public class PosTests
     }
 
     [Test]
+    public void TestNullPos()
+    {
+        var v = new View();
+        
+        Assert.IsNull(v.X, "As of v1.7.0 a new View started getting null for its X, if this assert fails it means that behaviour was reverted and this test can be altered or suppressed");
+
+        Assert.IsTrue(v.X.IsAbsolute());
+        Assert.IsTrue(v.X.IsAbsolute(out int n));
+        Assert.AreEqual(0,n);
+
+        Assert.IsFalse(v.X.IsPercent());
+        Assert.IsFalse(v.X.IsCombine());
+        Assert.IsFalse(v.X.IsCenter());
+
+        Assert.IsFalse(v.X.IsRelative(out var _));
+        Assert.IsFalse(v.X.IsRelative(new List<Design>(),out _,out _));
+
+        Assert.IsTrue(v.X.GetPosType(new List<Design>(),out var type,out var val,out _, out _,out _));
+
+        Assert.AreEqual(PosType.Absolute,type);
+        Assert.AreEqual(0, val);
+    }
+
+    [Test]
     public void TestGetCode_WithNoOffset()
     {
 

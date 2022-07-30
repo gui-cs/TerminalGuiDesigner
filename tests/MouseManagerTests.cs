@@ -67,28 +67,30 @@ public class MouseManagerTests : Tests
         Assert.AreEqual(1,OperationManager.Instance.UndoStackSize);
     }
 
-
     [TestCase(typeof(Button))]
     [TestCase(typeof(TabView))]
+    [TestCase(typeof(TableView))]
+    [TestCase(typeof(View))]
     public void TestDragResizeView(Type t)
     {
         var d = Get10By10View();
 
         var view = new ViewFactory().Create(t);
-        view.Width = 7;
+        view.Width = 8;
         view.Height = 1;
 
         var design = new Design(d.SourceCode,"myView",view);
         view.Data = design;
         d.View.Add(view);
 
+        Assert.AreEqual(8, view.Bounds.Width);
         var mgr = new MouseManager();
 
         // we haven't done anything yet
         Assert.AreEqual(0,OperationManager.Instance.UndoStackSize);
         Assert.AreEqual(0,view.Bounds.X);
         Assert.AreEqual(0,view.Bounds.Y);
-        Assert.AreEqual(7,view.Bounds.Width);
+        Assert.AreEqual(8,view.Bounds.Width);
         Assert.AreEqual(1,view.Bounds.Height);
 
         // user presses down in the lower right of control
@@ -107,15 +109,15 @@ public class MouseManagerTests : Tests
 
         // user pulled view size +1 width and +1 height
         e = new MouseEvent{
-            X = 8,
-            Y = 1,
+            X = 9,
+            Y = 0,
             Flags = MouseFlags.Button1Pressed
         };
         mgr.HandleMouse(e,d);
 
         Assert.AreEqual(0,view.Bounds.X);
         Assert.AreEqual(0,view.Bounds.Y);
-        Assert.AreEqual(8,view.Bounds.Width,"Expected resize to increase Width when dragging");
+        Assert.AreEqual(10,view.Bounds.Width,"Expected resize to increase Width when dragging");
         Assert.AreEqual(1,view.Bounds.Height,"Expected resize of button to ignore Y component");
 
         // we still haven't committed to anything
@@ -123,14 +125,14 @@ public class MouseManagerTests : Tests
 
         // user releases mouse (in place)
         e = new MouseEvent{
-            X = 8,
-            Y = 1,
+            X = 9,
+            Y = 0,
         };
         mgr.HandleMouse(e,d);
 
         Assert.AreEqual(0,view.Bounds.X);
         Assert.AreEqual(0,view.Bounds.Y);
-        Assert.AreEqual(8,view.Bounds.Width,"Expected resize to increase Width when dragging");
+        Assert.AreEqual(10, view.Bounds.Width,"Expected resize to increase Width when dragging");
         Assert.AreEqual(1,view.Bounds.Height,"Expected resize of button to ignore Y component");
 
         // we have now committed the drag so could undo
