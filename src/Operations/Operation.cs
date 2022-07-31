@@ -8,6 +8,8 @@ public abstract class Operation : IOperation
 
     public bool SupportsUndo {get; protected set;} = true;
 
+    public Guid UniqueIdentifier { get; } = Guid.NewGuid();
+
     public override string ToString()
     {
         return GetOperationName();

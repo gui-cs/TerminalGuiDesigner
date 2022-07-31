@@ -56,4 +56,14 @@ public class OperationManager
         undoStack.Clear();
         redoStack.Clear();
     }
+
+    /// <summary>
+    /// Returns the latest operation undertaken.  This excludes any that have
+    /// been Undone (i.e. <see cref="Undo"/>).
+    /// </summary>
+    /// <returns></returns>
+    public IOperation? GetLastAppliedOperation()
+    {
+        return undoStack.TryPeek(out var op) ? op : null;
+    }
 }
