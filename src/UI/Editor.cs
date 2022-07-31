@@ -24,6 +24,19 @@ public class Editor : Toplevel
     MouseManager _mouseManager;
     private bool _menuOpen;
 
+    /// <summary>
+    /// Set this to have a short duration message appear in lower right
+    /// (see <see cref="GetLowerRightTextIfAny"/>)
+    /// </summary>
+    private string? _flashMessage = null;
+
+    /// <summary>
+    /// The <see cref="IOperation.UniqueIdentifier"/> of the last undertaken
+    /// operation at the time of the last save or null if no save or last save
+    /// was before applying any operations.
+    /// </summary>
+    private Guid? _lastSavedOperation;
+
     private string GetHelpWithNothingLoaded()
     {
         return @$"{_keyMap.ShowHelp} - Show Help
@@ -88,6 +101,32 @@ Ctrl+Q - Quit
 
         _keyboardManager = new KeyboardManager(_keyMap);
         _mouseManager = new MouseManager();
+        Closing += Editor_Closing;
+    }
+
+    private void Editor_Closing(ToplevelClosingEventArgs obj)
+    {
+        if (_viewBeingEdited == null)
+            return;
+
+        if (HasUnsavedChanges())
+        {
+            int answer =  MessageBox.Query("Unsaved Changes", $"You have unsaved changes to {_viewBeingEdited.SourceCode.DesignerFile.Name}", "Save", "Don't Save", "Cancel");
+
+            if(answer == 0)
+            {
+                Save();
+            }
+            else
+            if(answer == 1)
+            {
+                return;
+            }
+            else
+            {
+                obj.Cancel = true;
+            }
+        }
     }
 
     public void Run(Options options)
@@ -336,6 +375,14 @@ Ctrl+Q - Quit
 
     private string? GetLowerRightTextIfAny()
     {
+
+        if(_flashMessage != null)
+        {
+            var m = _flashMessage;
+            _flashMessage = null;
+            return m;
+        }
+
         if(MenuTracker.Instance.CurrentlyOpenMenuItem != null)
         {
             return $"Selected: {MenuTracker.Instance.CurrentlyOpenMenuItem.Title}";
@@ -857,6 +904,28 @@ Ctrl+Q - Quit
         viewToCode.GenerateDesignerCs(
             _viewBeingEdited, _currentDesignerFile,
             _viewBeingEdited.View.GetType().BaseType ?? throw new Exception("View being edited had no base class"));
+
+        _flashMessage = $"Saved {_viewBeingEdited.SourceCode.DesignerFile.Name}";
+        SetNeedsDisplay();
+
+        _lastSavedOperation = OperationManager.Instance.GetLastAppliedOperation()?.UniqueIdentifier;
+    }
+    
+    public bool HasUnsavedChanges()
+    {
+        var savedOp = _lastSavedOperation;
+        var currentOp = OperationManager.Instance.GetLastAppliedOperation()?.UniqueIdentifier;
+
+        // if we have nothing saved
+        if (savedOp == null)
+        {
+            // then we must save if we have done something
+            return currentOp != null;
+        }
+
+        // we must save if the head of the operations stack doesn't match what we saved
+        // this lets us save, perform action, undo action and then still consider us saved
+        return savedOp != currentOp;
     }
     private void ShowAddViewWindow()
     {
