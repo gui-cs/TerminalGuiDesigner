@@ -15,7 +15,8 @@ internal class DesignToCode : ToCodeBase
     internal void ToCode(CodeDomArgs args, CodeExpression parentView)
     {
         AddFieldToClass(args, Design);
-        AddConstructorCall(args, Design);
+        var constructorCall = GetConstructorCall($"this.{Design.FieldName}",Design.View.GetType());
+        args.InitMethod.Statements.Insert(0, constructorCall);
 
         foreach (var prop in Design.GetDesignableProperties())
         {

@@ -1,11 +1,16 @@
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Terminal.Gui;
 using TerminalGuiDesigner;
+using TerminalGuiDesigner.FromCode;
+using TerminalGuiDesigner.Operations;
+using TerminalGuiDesigner.ToCode;
 
 namespace tests;
-public class PosTests
+public class PosTests : Tests
 {
     [Test]
     public void TestIsAbsolute()
@@ -174,5 +179,69 @@ public class PosTests
 
         p = Pos.Right(v) - 2;
         Assert.AreEqual("Pos.Right(myView) - 2",p.ToCode(new List<Design>{d}));
+    }
+
+    [TestCase(Side.Left,-2,"X")]
+    [TestCase(Side.Right, 1, "X")]
+    [TestCase(Side.Top, -2, "Y")]
+    [TestCase(Side.Bottom, 5, "Y")]
+    public void TestRoundTrip_PosRelative(Side side, int offset, string property)
+    {
+        var viewToCode = new ViewToCode();
+
+        var file = new FileInfo("TestRoundTrip_PosRelative.cs");
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window), out var sourceCode);
+
+        designOut.View.Width = 100;
+        designOut.View.Height = 100;
+
+        var factory = new ViewFactory();
+        var lbl = factory.Create(typeof(Label));
+        lbl.X = 50;
+        lbl.Y = 50;
+
+        var btn = factory.Create(typeof(Button));
+
+        new AddViewOperation(sourceCode, lbl, designOut, "label1").Do();
+        new AddViewOperation(sourceCode, btn, designOut, "btn").Do();
+
+        if (property == "X")
+        {
+            btn.X = PosExtensions.CreatePosRelative((Design)lbl.Data, side, offset);
+        }
+        else if (property == "Y")
+        {
+            btn.Y = PosExtensions.CreatePosRelative((Design)lbl.Data, side, offset);
+        }
+        else
+            throw new ArgumentException($"Unknown property for test '{property}'");
+
+
+        viewToCode.GenerateDesignerCs(designOut, designOut.SourceCode, typeof(Window));
+
+        var codeToView = new CodeToView(sourceCode);
+        var designBackIn = codeToView.CreateInstance();
+
+        var btnIn = designBackIn.View.GetActualSubviews().OfType<Button>().Single();
+
+        PosType backInType;
+        Design? backInRelativeTo;
+        Side backInSide;
+        int backInOffset;
+
+        if (property == "X")
+        {
+            btnIn.X.GetPosType(designBackIn.GetAllDesigns().ToList(),out backInType,out _, out backInRelativeTo, out backInSide, out backInOffset);
+        }
+        else
+        {
+            btnIn.Y.GetPosType(designBackIn.GetAllDesigns().ToList(), out backInType, out _, out backInRelativeTo, out backInSide, out backInOffset);
+        }
+
+        Assert.AreEqual(side, backInSide);
+        Assert.AreEqual(PosType.Relative, backInType);
+        Assert.AreEqual(offset, backInOffset);
+        Assert.IsNotNull(backInRelativeTo);
+        Assert.IsInstanceOf<Label>(backInRelativeTo.View);
     }
 }

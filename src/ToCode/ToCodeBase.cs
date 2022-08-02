@@ -50,6 +50,11 @@ public abstract class ToCodeBase
     }
     protected void AddConstructorCall(CodeDomArgs args, string fullySpecifiedFieldName,Type typeToConstruct, params CodeExpression[] parameters)
     {
+        var constructAssign = GetConstructorCall(fullySpecifiedFieldName,typeToConstruct,parameters);
+        args.InitMethod.Statements.Add(constructAssign);
+    }
+    protected CodeAssignStatement GetConstructorCall(string fullySpecifiedFieldName, Type typeToConstruct, params CodeExpression[] parameters)
+    {
         // Construct it
         var constructLhs = new CodeFieldReferenceExpression();
         constructLhs.FieldName = fullySpecifiedFieldName;
@@ -57,9 +62,9 @@ public abstract class ToCodeBase
         var constructAssign = new CodeAssignStatement();
         constructAssign.Left = constructLhs;
         constructAssign.Right = constructRhs;
-        args.InitMethod.Statements.Add(constructAssign);
-    }
 
+        return constructAssign;
+    }
 
     /// <summary>
     /// Adds a line "this.someField.Text = "Heya"
