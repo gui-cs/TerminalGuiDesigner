@@ -89,6 +89,8 @@ public class BigListBox<T>
             Width = Dim.Fill(2)
         };
         _listView.KeyPress += _listView_KeyPress;
+
+        _listView.MouseClick += _listView_MouseClick;
         _listView.SetSource((_collection = BuildList(GetInitialSource())).ToList());
         win.Add(_listView);
 
@@ -98,12 +100,7 @@ public class BigListBox<T>
         };
         btnOk.Clicked += () =>
         {
-            if (_listView.SelectedItem >= _collection.Count)
-                return;
-
-            _okClicked = true;
-            Application.RequestStop();
-            Selected = _collection[_listView.SelectedItem].Object;
+            Accept();
         };
 
         var btnCancel = new Button("Cancel")
@@ -157,6 +154,25 @@ public class BigListBox<T>
         _callback = Application.MainLoop.AddTimeout(TimeSpan.FromMilliseconds(100), Timer);
 
         _listView.FocusFirst();
+    }
+
+    private void Accept()
+    {
+        if (_listView.SelectedItem >= _collection.Count)
+            return;
+
+        _okClicked = true;
+        Application.RequestStop();
+        Selected = _collection[_listView.SelectedItem].Object;
+    }
+
+    private void _listView_MouseClick(View.MouseEventArgs obj)
+    {
+        if(obj.MouseEvent.Flags.HasFlag(MouseFlags.Button1DoubleClicked))
+        {
+            obj.Handled = true;
+            Accept();
+        }   
     }
 
     private class ListViewObject<T2> where T2 : T
