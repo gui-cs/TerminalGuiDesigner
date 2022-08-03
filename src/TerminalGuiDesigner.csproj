@@ -17,7 +17,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>TerminalGuiDesigner</PackageId>
-    <Version>1.0.16</Version>
+    <Version>1.0.17</Version>
     <Authors>Thomas Nind</Authors>
     <Nullable>enable</Nullable>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -30,7 +30,11 @@
     <PackageIcon>logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>
-    v1.0.16
+    v1.0.17
+	 * Added prompt if there are unsaved changes when closing	  
+	 * Fixed bug where code generated for PosRelative could not compile due to statement sequence order
+	 * Updated to use Terminal.Gui 1.7.1 package
+	v1.0.16
 	 * Support for designing ColorSchemes
 	 * Ability to update the same field on multiple selected Views at once (e.g. set all width to 10)
 	 * Selection color (defaults to green) is now applied to single selections (e.g. tab/mouse selection).  Previously this scheme was only used for multi selection
