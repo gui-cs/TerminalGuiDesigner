@@ -272,12 +272,8 @@ Ctrl+Q - Quit
         _menuOpen = true;
         SelectionManager.Instance.LockSelection = true;
         menu.Show();
-        menu.MenuBar.MenuClosing += (m) =>
+        menu.MenuBar.MenuAllClosed += () =>
         {
-            // we only care about the root menu being closed
-            if (m.IsSubMenu)
-                return;
-
             _menuOpen = false;
             SelectionManager.Instance.LockSelection = false;
         };

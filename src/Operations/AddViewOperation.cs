@@ -44,8 +44,9 @@ public class AddViewOperation : Operation
         // user cancelled picking a type
         if(add == null || string.IsNullOrWhiteSpace(fieldName))
             return false;
-        
-        add.Data = to.CreateSubControlDesign(sourceCode,fieldName, add);
+
+        Design design;
+        add.Data = design = to.CreateSubControlDesign(sourceCode,fieldName, add);
 
         var v = GetViewToAddTo();
         v.Add(add);
@@ -53,6 +54,7 @@ public class AddViewOperation : Operation
         if(Application.Driver != null){
             add.SetFocus();
         }
+        SelectionManager.Instance.ForceSetSelection(design);
 
         v.SetNeedsDisplay();
         return true;
