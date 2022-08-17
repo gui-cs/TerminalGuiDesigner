@@ -55,6 +55,7 @@ public class SelectionManager
         }
     }
 
+
     public static SelectionManager Instance = new();
     private ColorScheme selectedScheme;
 
@@ -67,13 +68,31 @@ public class SelectionManager
         return null;
     }
 
+    /// <summary>
+    /// Changes the selection without respecting <see cref="LockSelection"/>
+    /// </summary>
+    /// <param name="designs"></param>
+    public void ForceSetSelection(params Design[] designs)
+    {
+        SetSelection(false,designs);
+    }
+
+    /// <summary>
+    /// Sets the current <see cref="Selected"/> <see cref="Design"/> collection to <paramref name="designs"/>.
+    /// Does nothing if <see cref="LockSelection"/> is true.
+    /// </summary>
+    /// <param name="designs"></param>
     public void SetSelection(params Design[] designs)
     {
-        if (LockSelection)
+        SetSelection(true, designs);
+    }
+    private void SetSelection(bool respectLock, Design[] designs)
+    {
+        if (LockSelection && respectLock)
             return;
 
         // reset anything that was previously selected
-        Clear();
+        Clear(respectLock);
 
         // create a new selection based on these
         selection = new List<Design>(designs.Distinct());
@@ -101,9 +120,9 @@ public class SelectionManager
         }
     }
 
-    public void Clear()
+    public void Clear(bool respectLock = true)
     {
-        if (LockSelection)
+        if (LockSelection && respectLock)
             return;
 
         selection.Clear();

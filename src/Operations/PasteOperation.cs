@@ -40,7 +40,7 @@ public class PasteOperation : Operation
 
         MigratePosRelatives();
 
-        SelectionManager.Instance.SetSelection(_clones.Values.ToArray());
+        SelectionManager.Instance.ForceSetSelection(_clones.Values.ToArray());
         return didAny;
     }
 
