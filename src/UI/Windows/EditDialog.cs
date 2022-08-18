@@ -411,9 +411,10 @@ public class EditDialog : Window
         if (obj.KeyEvent.Key == Key.DeleteChar)
         {
             int rly = MessageBox.Query("Clear", "Clear Property Value?", "Yes", "Cancel");
+            obj.Handled = true;
+
             if (rly == 0)
             {
-                obj.Handled = true;
                 SetProperty(true);
             }
         }
