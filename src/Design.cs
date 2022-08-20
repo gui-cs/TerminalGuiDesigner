@@ -119,6 +119,11 @@ public class Design
         {        
             MenuTracker.Instance.Register(mb);
         }
+
+        if(subView is CheckBox cb)
+        {
+            RegisterCheckboxDesignTimeChanges(cb);
+        }
         
         if(subView is TreeView tree)
         {
@@ -143,6 +148,21 @@ public class Design
         var d = new Design(sourceCode,name, subView);
         subView.Enter += (s=>SelectionManager.Instance.SetSelection(d));
         return d;
+    }
+
+    private void RegisterCheckboxDesignTimeChanges(CheckBox cb)
+    {
+        // prevent space toggling the checkbox
+        // (gives better typing experience e.g. "my lovely checkbox")
+        cb.ClearKeybinding(Key.Space);
+        cb.MouseClick += (e) =>
+        {
+            if (e.MouseEvent.Flags.HasFlag(MouseFlags.Button1Clicked))
+            {
+                e.Handled = true;
+                cb.SetFocus();
+            }
+        };
     }
 
 
