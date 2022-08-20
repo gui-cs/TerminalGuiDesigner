@@ -580,7 +580,7 @@ Ctrl+Q - Quit
             .Where(d=>!d.IsRoot)
             .ToArray();
 
-        SelectionManager.Instance.SetSelection(everyone);
+        SelectionManager.Instance.ForceSetSelection(everyone);
     }
 
     private void Paste()
