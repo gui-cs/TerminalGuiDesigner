@@ -17,7 +17,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>TerminalGuiDesigner</PackageId>
-    <Version>1.0.17</Version>
+    <Version>1.0.18</Version>
     <Authors>Thomas Nind</Authors>
     <Nullable>enable</Nullable>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -30,7 +30,11 @@
     <PackageIcon>logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>
-    v1.0.17
+    v1.0.18
+	 * Fixed Checkbox ticking/unticking itself when typing 'space' (e.g. editing its name)
+	 * Fixed issues where pasted/new items sometimes did not recieve focus
+	 * Fixed select all not working
+	v1.0.17
 	 * Added prompt if there are unsaved changes when closing	  
 	 * Fixed bug where code generated for PosRelative could not compile due to statement sequence order
 	 * Updated to use Terminal.Gui 1.7.1 package
