@@ -3,7 +3,6 @@ using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.UI.Windows;
 using TerminalGuiDesigner.FromCode;
 using TerminalGuiDesigner.ToCode;
-using Attribute = Terminal.Gui.Attribute;
 using YamlDotNet.Serialization;
 using System.Text;
 
@@ -22,6 +21,7 @@ public class Editor : Toplevel
 
     KeyboardManager _keyboardManager;
     MouseManager _mouseManager;
+    ListView? _rootCommandsListView;
     private bool _menuOpen;
 
     /// <summary>
@@ -37,12 +37,6 @@ public class Editor : Toplevel
     /// </summary>
     private Guid? _lastSavedOperation;
 
-    private string GetHelpWithNothingLoaded()
-    {
-        return @$"{_keyMap.ShowHelp} - Show Help
-{_keyMap.New} - New Window/Class
-{_keyMap.Open} - Open a .Designer.cs file";
-    }
     private string GetHelpWithEmptyFormLoaded()
     {
         return @$"{_keyMap.AddView} to Add a View";
@@ -50,7 +44,10 @@ public class Editor : Toplevel
     private string GetHelp()
     {
 
-        return GetHelpWithNothingLoaded() + @$"
+        return @$"
+{_keyMap.ShowHelp} - Show Help
+{_keyMap.New} - New Window/Class
+{_keyMap.Open} - Open a .Designer.cs file
 {_keyMap.Save} - Save an opened .Designer.cs file
 {_keyMap.ShowContextMenu} - Show right click context menu;
 {_keyMap.AddView} - Add View
@@ -102,8 +99,68 @@ Ctrl+Q - Quit
         _keyboardManager = new KeyboardManager(_keyMap);
         _mouseManager = new MouseManager();
         Closing += Editor_Closing;
+
+        BuildRootMenu();
     }
 
+    private void BuildRootMenu()
+    {
+        // setup views for when we are not editing a
+        // view (nothing is loaded) so show the generic
+        // help (open, new etc) in the center of the
+        // screen
+
+        var rootCommands = new List<string>
+        {
+            $"{_keyMap.ShowHelp} - Show Help",
+            $"{_keyMap.New} - New Window/Class",
+            $"{_keyMap.Open} - Open a .Designer.cs file"
+        };
+
+        // center all the commands
+        int maxWidth = rootCommands.Max(v => v.Length);
+        for(int i=0;i<rootCommands.Count; i++)
+        {
+            rootCommands[i] = PadBoth(rootCommands[i], maxWidth);
+        }
+
+        _rootCommandsListView = new ListView(rootCommands)
+        {
+            X = Pos.Center(),
+            Y = Pos.Center(),
+            Width = maxWidth,
+            Height = 3,
+            ColorScheme = new DefaultColorSchemes().GetDefaultScheme("greyOnBlack").Scheme
+        };
+
+        _rootCommandsListView.KeyDown += (e) =>
+        {
+            if (e.KeyEvent.Key == Key.Enter)
+            {
+                e.Handled = true;
+
+                switch (_rootCommandsListView.SelectedItem)
+                {
+                    case 0: ShowHelp();
+                        break;
+                    case 1:
+                        New();
+                        break;
+                    case 2:
+                        Open();
+                        break;
+                }
+            }
+        };
+
+        Add(_rootCommandsListView);
+    }
+    public string PadBoth(string source, int length)
+    {
+        int spaces = length - source.Length;
+        int padLeft = spaces / 2 + source.Length;
+        return source.PadLeft(padLeft).PadRight(length);
+    }
     private void Editor_Closing(ToplevelClosingEventArgs obj)
     {
         if (_viewBeingEdited == null)
@@ -343,29 +400,6 @@ Ctrl+Q - Quit
             }
 
             return;
-        }
-
-        // we are not editing a view (nothing is loaded)
-        // so show the generic help (open, new etc)
-        // in the center of the screen
-
-        var lines = GetHelpWithNothingLoaded().Split('\n');
-
-        Driver.SetAttribute(new Attribute(Color.DarkGray, Color.Black));
-
-        int midX = Bounds.Width / 2;
-        int midY = Math.Max(0,(Bounds.Height / 2) - (lines.Length/2)) -1;
-
-        for (int y = 0 ; y < lines.Length ; y++)
-        {
-            var line = lines[y].TrimEnd();
-
-            int startFromX = midX - line.Length / 2;
-
-            for (int x = 0; x < line.Length; x++)
-            {
-                AddRune(startFromX + x, midY + y, line[x]);
-            }
         }
     }
 
@@ -879,6 +913,10 @@ Ctrl+Q - Quit
                 Remove(_viewBeingEdited.View);
                 _viewBeingEdited.View.Dispose();
             }
+
+            // remove list view to prevent it stealing keystrokes and jumping back
+            // into input focus 
+            Remove(_rootCommandsListView);
 
             // Load new instance
             _viewBeingEdited = design;
