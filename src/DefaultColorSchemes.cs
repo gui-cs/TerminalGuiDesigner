@@ -14,6 +14,8 @@ namespace TerminalGuiDesigner
         public NamedColorScheme GreenOnBlack;
 
         public NamedColorScheme BlueOnBlack;
+         
+        public NamedColorScheme GrayOnBlack;
 
         public DefaultColorSchemes()
         {
@@ -37,6 +39,14 @@ namespace TerminalGuiDesigner
             this.BlueOnBlack.Scheme.Focus = new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightBlue, Terminal.Gui.Color.BrightYellow);
             this.BlueOnBlack.Scheme.HotFocus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Cyan, Terminal.Gui.Color.BrightYellow);
             this.BlueOnBlack.Scheme.Disabled = new Terminal.Gui.Attribute(Terminal.Gui.Color.Gray, Terminal.Gui.Color.Black);
+
+
+            this.GrayOnBlack = new NamedColorScheme("greyOnBlack");
+            this.GrayOnBlack.Scheme.Normal = new Terminal.Gui.Attribute(Terminal.Gui.Color.DarkGray, Terminal.Gui.Color.Black);
+            this.GrayOnBlack.Scheme.HotNormal = new Terminal.Gui.Attribute(Terminal.Gui.Color.DarkGray, Terminal.Gui.Color.Black);
+            this.GrayOnBlack.Scheme.Focus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.DarkGray);
+            this.GrayOnBlack.Scheme.HotFocus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.DarkGray);
+            this.GrayOnBlack.Scheme.Disabled = new Terminal.Gui.Attribute(Terminal.Gui.Color.DarkGray, Terminal.Gui.Color.Black);
         }
 
         public IEnumerable<NamedColorScheme> GetDefaultSchemes()
@@ -45,6 +55,10 @@ namespace TerminalGuiDesigner
                 .GetFields().Where(f => f.FieldType == typeof(NamedColorScheme))
                 .Select(f=>f.GetValue(this))
                 .Cast<NamedColorScheme>();
+        }
+        public NamedColorScheme GetDefaultScheme(string name)
+        {
+            return GetDefaultSchemes().First(s => s.Name.Equals(name));
         }
     }
 }
