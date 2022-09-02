@@ -21,6 +21,7 @@ public class Editor : Toplevel
 
     KeyboardManager _keyboardManager;
     MouseManager _mouseManager;
+    ListView? _rootCommandsListView;
     private bool _menuOpen;
 
     /// <summary>
@@ -123,7 +124,7 @@ Ctrl+Q - Quit
             rootCommands[i] = PadBoth(rootCommands[i], maxWidth);
         }
 
-        var lv = new ListView(rootCommands)
+        _rootCommandsListView = new ListView(rootCommands)
         {
             X = Pos.Center(),
             Y = Pos.Center(),
@@ -132,13 +133,13 @@ Ctrl+Q - Quit
             ColorScheme = new DefaultColorSchemes().GetDefaultScheme("greyOnBlack").Scheme
         };
 
-        lv.KeyDown += (e) =>
+        _rootCommandsListView.KeyDown += (e) =>
         {
             if (e.KeyEvent.Key == Key.Enter)
             {
                 e.Handled = true;
 
-                switch (lv.SelectedItem)
+                switch (_rootCommandsListView.SelectedItem)
                 {
                     case 0: ShowHelp();
                         break;
@@ -152,7 +153,7 @@ Ctrl+Q - Quit
             }
         };
 
-        Add(lv);
+        Add(_rootCommandsListView);
     }
     public string PadBoth(string source, int length)
     {
@@ -912,6 +913,10 @@ Ctrl+Q - Quit
                 Remove(_viewBeingEdited.View);
                 _viewBeingEdited.View.Dispose();
             }
+
+            // remove list view to prevent it stealing keystrokes and jumping back
+            // into input focus 
+            Remove(_rootCommandsListView);
 
             // Load new instance
             _viewBeingEdited = design;
