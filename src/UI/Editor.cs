@@ -104,20 +104,34 @@ Ctrl+Q - Quit
 
     private void BuildRootMenu()
     {
+        // setup views for when we are not editing a
+        // view (nothing is loaded) so show the generic
+        // help (open, new etc) in the center of the
+        // screen
+
         var rootCommands = new List<string>
         {
             $"{_keyMap.ShowHelp} - Show Help",
             $"{_keyMap.New} - New Window/Class",
             $"{_keyMap.Open} - Open a .Designer.cs file"
         };
+
+        // center all the commands
+        int maxWidth = rootCommands.Max(v => v.Length);
+        for(int i=0;i<rootCommands.Count; i++)
+        {
+            rootCommands[i] = PadBoth(rootCommands[i], maxWidth);
+        }
+
         var lv = new ListView(rootCommands)
         {
             X = Pos.Center(),
             Y = Pos.Center(),
-            Width = rootCommands[2].Length,
+            Width = maxWidth,
             Height = 3,
             ColorScheme = new DefaultColorSchemes().GetDefaultScheme("greyOnBlack").Scheme
         };
+
         lv.KeyDown += (e) =>
         {
             if (e.KeyEvent.Key == Key.Enter)
@@ -140,7 +154,12 @@ Ctrl+Q - Quit
 
         Add(lv);
     }
-
+    public string PadBoth(string source, int length)
+    {
+        int spaces = length - source.Length;
+        int padLeft = spaces / 2 + source.Length;
+        return source.PadLeft(padLeft).PadRight(length);
+    }
     private void Editor_Closing(ToplevelClosingEventArgs obj)
     {
         if (_viewBeingEdited == null)
