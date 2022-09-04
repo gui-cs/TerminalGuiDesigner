@@ -124,6 +124,13 @@ public class Design
         {
             RegisterCheckboxDesignTimeChanges(cb);
         }
+
+        if(subView is TextView txt)
+        {
+            // prevent control from responding to events
+            txt.MouseClick += (s)=>s.Handled = true;
+            txt.KeyDown += (s)=>s.Handled = true;
+        }
         
         if(subView is TreeView tree)
         {
