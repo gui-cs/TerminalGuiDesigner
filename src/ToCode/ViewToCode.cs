@@ -228,7 +228,7 @@ public class ViewToCode
         // after
 
         // order the controls top left to lower right so that tab order is good
-        foreach (var sub in forView.Subviews.OrderBy(v=>v.Frame.Y).ThenBy(v=>v.Frame.X))
+        foreach (var sub in ViewExtensions.OrderViewsByScreenPosition(forView.Subviews))
         {
             // If the sub child has a Design (and is not an public part of another control,
             // For example Contentview subview of Window
