@@ -262,4 +262,14 @@ public static class ViewExtensions
 
         return (ColorScheme?)explicitColorSchemeField.GetValue(v);
     }
+
+
+    /// <summary>
+    /// Order the passed views from top left to bottom right
+    /// (helps ensure a sensible Tab order)
+    /// </summary>
+    public static IEnumerable<View> OrderViewsByScreenPosition(IEnumerable<View> views)
+    {
+        return views.OrderBy(v=>v.Frame.Y).ThenBy(v=>v.Frame.X);
+    }
 }

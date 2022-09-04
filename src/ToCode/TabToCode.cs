@@ -38,7 +38,7 @@ public class TabToCode : ToCodeBase
         AddPropertyAssignment(args,$"{tabName}.View.Height",new CodeSnippetExpression("Dim.Fill()"));
 
         // for each thing that is shown in the tab
-        foreach(var v in Tab.View.Subviews)
+        foreach(var v in ViewExtensions.OrderViewsByScreenPosition(Tab.View.Subviews))
         {
             // that is designable
             if(v.Data is Design d)
