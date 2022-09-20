@@ -295,7 +295,7 @@ namespace TerminalGuiDesigner.UI
             if(keystroke.Key.HasFlag(Key.CtrlMask))
                 return false;
 
-            var punctuation = "\"\\/'a:;%^&*~`bc!@#.,? ()-";
+            var punctuation = "\"\\/':;%^&*~`!@#.,? ()-+{}<>=_][|";
 
             var ch = (char)keystroke.KeyValue;
 
