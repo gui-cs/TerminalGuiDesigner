@@ -70,6 +70,13 @@ public class Property : ToCodeBase
                     b.Width = s.Length + (b.IsDefault ? 6 : 4);
                 }
             }
+
+            // some views don't like null and only work with "" e.g. TextView
+            // see https://github.com/gui-cs/TerminalGuiDesigner/issues/91
+            if (value == null)
+            {
+                value = ustring.Make("");
+            }   
         }
         if(PropertyInfo.PropertyType == typeof(IListDataSource))
         {
