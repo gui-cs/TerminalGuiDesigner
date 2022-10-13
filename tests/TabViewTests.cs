@@ -223,4 +223,30 @@ class TabViewTests : Tests
 
         Assert.AreEqual(3,tvDesign.GetAllDesigns().Count(),$"Expected only 3 Designs but they were {string.Join(",",tvDesign.GetAllDesigns())}");
     }
+
+    [Test]
+    public void TabView_IsBorderless_DependsOnShowBorder()
+    {
+        var inst = new TabView();
+
+        Assert.IsTrue(inst.Style.ShowBorder);
+        Assert.False(inst.IsBorderlessContainerView());
+
+        inst.Style.ShowBorder = false;
+
+        Assert.True(inst.IsBorderlessContainerView());
+    }
+
+    [Test]
+    public void TabView_IsBorderless_DependsOnTabsOnBottom()
+    {
+        var inst = new TabView();
+
+        Assert.IsFalse(inst.Style.TabsOnBottom);
+        Assert.False(inst.IsBorderlessContainerView());
+
+        inst.Style.TabsOnBottom = true;
+
+        Assert.True(inst.IsBorderlessContainerView());
+    }
 }
