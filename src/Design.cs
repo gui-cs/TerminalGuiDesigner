@@ -27,6 +27,9 @@ public class Design
 
     private readonly List<Property> _designableProperties;
 
+
+    public DesignState State { get; }
+
     private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
     public Property? GetDesignableProperty(string propertyName)
@@ -51,6 +54,7 @@ public class Design
         FieldName = fieldName;
 
         _designableProperties = new List<Property>(LoadDesignableProperties());
+        State = new DesignState(this);
     }
 
     public void CreateSubControlDesigns()
@@ -182,7 +186,7 @@ public class Design
     /// </summary>
     public bool HasKnownColorScheme()
     {
-        var userDefinedColorScheme = SelectionManager.Instance.GetOriginalExplicitColorScheme(this) ?? View.GetExplicitColorScheme();
+        var userDefinedColorScheme = State.OriginalScheme ?? View.GetExplicitColorScheme();
 
         if (userDefinedColorScheme == null)
             return false;

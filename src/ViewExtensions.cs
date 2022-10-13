@@ -191,6 +191,11 @@ public static class ViewExtensions
         if (type == typeof(View) && v.IsBorderless())
             return true;
 
+        if (v is TabView tabView)
+        {
+            return !tabView.Style.ShowBorder || tabView.Style.TabsOnBottom;
+        }
+
         return false;
     }
 

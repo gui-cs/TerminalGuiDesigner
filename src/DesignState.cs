@@ -3,14 +3,15 @@
 namespace TerminalGuiDesigner;
 
 /// <summary>
-/// Describes original <see cref="ColorScheme"/>
+/// Describes state based changes and custom callbacks on a <see cref="Design"/>
+/// e.g. <see cref="OriginalScheme"/>
 /// </summary>
-internal class SelectionState : IDisposable
+public class DesignState : IDisposable
 {
     public ColorScheme? OriginalScheme { get; set; }
 	public Design Design{ get; }
 
-	public SelectionState(Design design)
+	public DesignState(Design design)
 	{
         Design = design;
         OriginalScheme = Design.View.GetExplicitColorScheme();
@@ -27,7 +28,9 @@ internal class SelectionState : IDisposable
 
 	private void DrawBorderlessViewFrame(Rect r)
     {
-        var color = SelectionManager.Instance.Selected.Contains(Design) ?
+        bool isSelected = SelectionManager.Instance.Selected.Contains(Design);
+
+        var color =  isSelected ?
             SelectionManager.Instance.SelectedScheme.Normal :
             Design.View.ColorScheme.Normal;
 
@@ -40,7 +43,7 @@ internal class SelectionState : IDisposable
             {
                 if (y == 0 || y == r.Height - 1 || x == 0 || x == r.Width - 1)
                 {
-                    var rune = (y == r.Height - 1 && x == r.Width - 1) ? '╬' : '.';
+                    var rune = (y == r.Height - 1 && x == r.Width - 1 && isSelected) ? '╬' : '.';
                     v.AddRune(x,y,rune);
                 }
             }
@@ -51,7 +54,7 @@ internal class SelectionState : IDisposable
     /// </summary>
 	public void Dispose()
 	{
-		Design.View.DrawContentComplete -= DrawContentComplete;
+		Design.View.DrawContentComplete -= DrawContentComplete;        
         Design.View.ColorScheme = OriginalScheme;
     }
 }
