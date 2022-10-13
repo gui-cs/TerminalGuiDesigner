@@ -156,7 +156,6 @@ public class Design
         }
 
         var d = new Design(sourceCode, name, subView);
-        subView.Enter += (s => SelectionManager.Instance.SetSelection(d));
         return d;
     }
 

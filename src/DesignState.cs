@@ -6,7 +6,7 @@ namespace TerminalGuiDesigner;
 /// Describes state based changes and custom callbacks on a <see cref="Design"/>
 /// e.g. <see cref="OriginalScheme"/>
 /// </summary>
-public class DesignState : IDisposable
+public class DesignState
 {
     public ColorScheme? OriginalScheme { get; set; }
 	public Design Design{ get; }
@@ -16,9 +16,15 @@ public class DesignState : IDisposable
         Design = design;
         OriginalScheme = Design.View.GetExplicitColorScheme();
         Design.View.DrawContentComplete += DrawContentComplete;
-	}
+        Design.View.Enter += Enter;
+    }
 
-	private void DrawContentComplete(Rect r)
+    private void Enter(View.FocusEventArgs obj)
+    {
+        SelectionManager.Instance.SetSelection(Design);
+    }
+
+    private void DrawContentComplete(Rect r)
 	{ 
         if(Design.View.IsBorderlessContainerView())
         {
@@ -47,14 +53,5 @@ public class DesignState : IDisposable
                     v.AddRune(x,y,rune);
                 }
             }
-    }
-
-    /// <summary>
-    /// Clears draw callbacks and resets <see cref="OriginalScheme"/>
-    /// </summary>
-	public void Dispose()
-	{
-		Design.View.DrawContentComplete -= DrawContentComplete;        
-        Design.View.ColorScheme = OriginalScheme;
     }
 }
