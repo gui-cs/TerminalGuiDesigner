@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System;
 using System.IO;
 using System.Linq;
 using Terminal.Gui;
@@ -8,6 +9,7 @@ using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 
 namespace tests;
+
 
 public class TableViewTests : Tests
 {

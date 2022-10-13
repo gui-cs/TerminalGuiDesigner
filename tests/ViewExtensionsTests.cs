@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 
@@ -45,5 +46,31 @@ public class ViewExtensionsTests : Tests
             Assert.IsNull(result);
         Assert.AreEqual(lowerRight, isLowerRight);
         Assert.AreEqual(border,isBorder);
+    }
+
+    [TestCase(typeof(Label), false)]
+    [TestCase(typeof(TableView), false)]
+    [TestCase(typeof(TabView), true)]
+    [TestCase(typeof(View), true)]
+    [TestCase(typeof(Window), true)]
+    public void TestIsContainerView(Type viewType, bool expectIsContainerView)
+    {
+        var inst = (View?)Activator.CreateInstance(viewType)
+            ?? throw new Exception("CreateInstance returned null!");
+
+        Assert.AreEqual(expectIsContainerView,inst.IsContainerView());
+    }
+
+    [TestCase(typeof(Label), false)]
+    [TestCase(typeof(TableView), false)]
+    [TestCase(typeof(TabView), false)]
+    [TestCase(typeof(Window), false)]
+    [TestCase(typeof(View), true)]
+    public void TestOutOfBox_IsBorderlessContainerView(Type viewType, bool expectResult)
+    {
+        var inst = (View?)Activator.CreateInstance(viewType)
+            ?? throw new Exception("CreateInstance returned null!");
+
+        Assert.AreEqual(expectResult, inst.IsBorderlessContainerView());
     }
 }
