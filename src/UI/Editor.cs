@@ -403,29 +403,6 @@ Ctrl+Q - Quit
                     }
             }
 
-            // draw box around borderless controls
-            // switch to highlight colors (e.g. yellow on bright green)
-            Application.Driver.SetAttribute(SelectionManager.Instance.SelectedScheme.Normal);
-
-            foreach (var selected in SelectionManager.Instance.Selected.Where(v=>v.IsBorderlessContainerView))
-            {
-                var v = selected.View;
-                v.ViewToScreen(0,0,out var x1,out var y1);
-                v.ViewToScreen(v.Frame.Width,v.Frame.Height,out var x2, out var y2);
-
-                for (int x = x1; x < x2; x++)
-                    for (int y = y1; y < y2; y++)
-                    {
-                        if (y == y1 || y == y2 - 1 || x == x1 || x == x2 - 1)
-                        {
-                            var rune = (y == y2 - 1 && x == x2 - 1) ? '╬' : '.';
-
-                            Driver.Move(x, y);
-                            Driver.AddRune(rune);
-                        }       
-                    }
-            }
-
             return;
         }
     }

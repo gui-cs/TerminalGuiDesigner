@@ -17,7 +17,7 @@ public class SelectionManager
     /// </summary>
     public IReadOnlyCollection<Design> Selected => selection.AsReadOnly();
 
-    Dictionary<Design, ColorScheme?> oldSchemes = new();
+    Dictionary<Design, SelectionState> oldSchemes = new();
 
     /// <summary>
     /// Set to true to prevent changes to the current <see cref="Selected"/>
@@ -63,7 +63,7 @@ public class SelectionManager
     public ColorScheme? GetOriginalExplicitColorScheme(Design design)
     {
         if (oldSchemes.ContainsKey(design))
-            return oldSchemes[design];
+            return oldSchemes[design].OriginalScheme;
 
         return null;
     }
@@ -101,7 +101,7 @@ public class SelectionManager
         {
             // record the old color scheme so we can get reset it
             // later when it is no longer selected
-            oldSchemes.Add(d, d.View.GetExplicitColorScheme());
+            oldSchemes.Add(d, new SelectionState(d));
 
             // since the view is selected mark it so
             d.View.ColorScheme = SelectedScheme;
@@ -116,7 +116,7 @@ public class SelectionManager
     {
         if(oldSchemes.ContainsKey(design))
         {
-            oldSchemes[design] = colorScheme;
+            oldSchemes[design].OriginalScheme = colorScheme;
         }
     }
 
@@ -130,7 +130,7 @@ public class SelectionManager
         // reset old color schemes so views don't still look selected
         foreach (var kvp in oldSchemes)
         {
-            kvp.Key.View.ColorScheme = kvp.Value;
+            kvp.Value.Dispose();
         }
         oldSchemes.Clear();
     }
