@@ -17,14 +17,14 @@ public static class ViewExtensions
     /// <returns></returns>
     public static IList<View> GetActualSubviews(this View v)
     {
-        if(v is Window w)
+        if (v is Window w)
         {
             return w.Subviews[0].Subviews;
         }
 
-        if(v is TabView t)
+        if (v is TabView t)
         {
-            return t.Tabs.Select(tab=>tab.View).Where(v=>v!=null).ToList();
+            return t.Tabs.Select(tab => tab.View).Where(v => v != null).ToList();
         }
 
         return v.Subviews;
@@ -115,10 +115,10 @@ public static class ViewExtensions
     /// </summary>
     public static Design? GetNearestDesign(this View view)
     {
-        if(view is null)
+        if (view is null)
             return null;
 
-        if(view.Data is Design d)
+        if (view.Data is Design d)
         {
             return d;
         }
@@ -183,10 +183,33 @@ public static class ViewExtensions
         // TODO: are there any others?
         return v is TabView || v is FrameView || v is Window || type == typeof(View) || type.Name.Equals("ContentView");
     }
-    public static View? HitTest(this View w, MouseEvent m, out bool isBorder,out bool isLowerRight, params View[] ignoring)
+    public static bool IsBorderlessContainerView(this View v)
+    {
+        var type = v.GetType();
+
+        // TODO: are there any others?
+        if (type == typeof(View) && v.IsBorderless())
+            return true;
+
+        return false;
+    }
+
+    public static bool IsBorderless(this View v)
+    {
+        if (v.Border == null)
+            return true;
+
+        if (v.Border.BorderStyle == BorderStyle.None)
+            return true;
+
+        return false;
+    }
+
+
+    public static View? HitTest(this View w, MouseEvent m, out bool isBorder, out bool isLowerRight, params View[] ignoring)
     {
         // hide the views while we perform the hit test
-        foreach(View v in ignoring)
+        foreach (View v in ignoring)
         {
             v.Visible = false;
         }
@@ -195,18 +218,18 @@ public static class ViewExtensions
         var hit = ApplicationExtensions.FindDeepestView(w, m.X, m.Y);
 
         int resizeBoxArea = 2;
-        
+
         if (hit != null)
         {
-            hit.ViewToScreen(hit.Bounds.Right, hit.Bounds.Bottom,out int lowerRightX, out int lowerRightY,true);
-            hit.ViewToScreen(0, 0,out int upperLeftX, out int upperLeftY,true);
+            hit.ViewToScreen(hit.Bounds.Right, hit.Bounds.Bottom, out int lowerRightX, out int lowerRightY, true);
+            hit.ViewToScreen(0, 0, out int upperLeftX, out int upperLeftY, true);
 
             isLowerRight = Math.Abs(lowerRightX - point.X) <= resizeBoxArea && Math.Abs(lowerRightY - point.Y) <= resizeBoxArea;
 
-            isBorder = 
-                m.X == lowerRightX-1 ||
+            isBorder =
+                m.X == lowerRightX - 1 ||
                 m.X == upperLeftX ||
-                m.Y == lowerRightY-1 ||
+                m.Y == lowerRightY - 1 ||
                 m.Y == upperLeftY;
         }
         else
@@ -246,7 +269,7 @@ public static class ViewExtensions
         v.ViewToScreen(0, 0, out var x0, out var y0);
         v.ViewToScreen(v.Bounds.Width, v.Bounds.Height, out var x1, out var y1);
 
-        return Rect.FromLTRB(x0,y0,x1,y1).IntersectsWith(screenRect);
+        return Rect.FromLTRB(x0, y0, x1, y1).IntersectsWith(screenRect);
 
     }
 
@@ -257,7 +280,7 @@ public static class ViewExtensions
     /// <returns></returns>
     public static ColorScheme? GetExplicitColorScheme(this View v)
     {
-        var explicitColorSchemeField = typeof(View).GetField("colorScheme",System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+        var explicitColorSchemeField = typeof(View).GetField("colorScheme", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
             ?? throw new Exception("ColorScheme private backing field no longer exists");
 
         return (ColorScheme?)explicitColorSchemeField.GetValue(v);
@@ -270,6 +293,6 @@ public static class ViewExtensions
     /// </summary>
     public static IEnumerable<View> OrderViewsByScreenPosition(IEnumerable<View> views)
     {
-        return views.OrderBy(v=>v.Frame.Y).ThenBy(v=>v.Frame.X);
+        return views.OrderBy(v => v.Frame.Y).ThenBy(v => v.Frame.X);
     }
 }
