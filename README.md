@@ -203,7 +203,7 @@ The following feature list shows the current capabilities and the roadmap
   - [x] TextView
   - [x] TimeField
   - [x] TreeView
-  - [ ] View
+  - [x] View
 
 ### Class Diagram
 -------------------------------
