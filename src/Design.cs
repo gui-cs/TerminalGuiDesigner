@@ -59,6 +59,23 @@ public class Design
 
     public void CreateSubControlDesigns()
     {
+        // if users Type (e.g. MyView) inherits directly from View then we need to do some work
+        if (View.GetType().BaseType == typeof(View))
+        {
+            // Views alone do not have any explicit colors because they are designed
+            // to inherit from parent (e.g. Window/Dialog).  When creating a new view
+            // we need to use the base one (as if it was already mounted on a Window)
+            View.ColorScheme = Colors.Base;
+
+            // The view base class does not fill over its old stale contents ever
+            View.DrawContent += (r) =>
+            {
+                // manually erase stale content
+                Application.Driver.SetAttribute(View.ColorScheme.Normal);
+                Application.Driver.DrawFrame(View.ViewToScreen(r), 0, true);
+            };
+        }
+
         CreateSubControlDesigns(View);
     }
 
