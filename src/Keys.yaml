@@ -12,6 +12,7 @@ Delete: DeleteChar
 ToggleDragging: F3
 AddView: F2
 ToggleShowFocused: L, CtrlMask
+ToggleShowBorders: B, CtrlMask
 RightClick: Button3Clicked
 Copy: C, CtrlMask
 Paste: V, CtrlMask

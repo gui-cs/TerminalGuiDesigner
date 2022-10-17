@@ -1,4 +1,5 @@
 ﻿using Terminal.Gui;
+using TerminalGuiDesigner.UI;
 
 namespace TerminalGuiDesigner;
 
@@ -26,7 +27,7 @@ public class DesignState
 
     private void DrawContentComplete(Rect r)
 	{ 
-        if(Design.View.IsBorderlessContainerView())
+        if(Design.View.IsBorderlessContainerView() && Editor.ShowBorders)
         {
             DrawBorderlessViewFrame(r);
         }

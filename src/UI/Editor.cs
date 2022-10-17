@@ -14,6 +14,7 @@ public class Editor : Toplevel
     private SourceCodeFile? _currentDesignerFile;
     private bool enableDrag = true;
     private bool enableShowFocused = true;
+    public static bool ShowBorders = true;
 
     bool _editting = false;
 
@@ -37,6 +38,7 @@ public class Editor : Toplevel
     /// </summary>
     private Guid? _lastSavedOperation;
 
+
     private string GetHelpWithEmptyFormLoaded()
     {
         return @$"{_keyMap.AddView} to Add a View";
@@ -54,6 +56,7 @@ public class Editor : Toplevel
 {_keyMap.ShowColorSchemes} - Color Schemes
 {_keyMap.ToggleDragging} - Toggle mouse dragging on/off
 {_keyMap.ToggleShowFocused} - Toggle show focused view field name
+{_keyMap.ToggleShowBorders} - Toggle dotted borders for frameless views
 {_keyMap.EditProperties} - Edit View Properties
 {_keyMap.ViewSpecificOperations} - View Specific Operations
 {_keyMap.EditRootProperties} - Edit Root Properties
@@ -552,6 +555,13 @@ Ctrl+Q - Quit
                 SetNeedsDisplay();
                 return true;
             }
+            if (keyEvent.Key == _keyMap.ToggleShowBorders)
+            {
+                ShowBorders = !ShowBorders;
+                SetNeedsDisplay();
+                return true;
+            }
+
             if (keyEvent.Key == _keyMap.SelectAll)
             {
                 SelectAll();
