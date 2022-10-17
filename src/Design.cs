@@ -59,18 +59,22 @@ public class Design
 
     public void CreateSubControlDesigns()
     {
-        // if users Type (e.g. MyView) inherits directly from View then we need to do some work
-        if (View.GetType().BaseType == typeof(View))
+
+        // Unlike Window/Dialog the View/TopLevel classes do not have an explicit
+        // colors schemes.  When creating a new View or TopLevel we need to use
+        // the Colors.Base and fiddle a bit with coloring/clearing to ensure things render correctly
+
+        var baseType = View.GetType().BaseType;
+
+        if (baseType == typeof(View) || baseType == typeof(Toplevel))
         {
-            // Views alone do not have any explicit colors because they are designed
-            // to inherit from parent (e.g. Window/Dialog).  When creating a new view
-            // we need to use the base one (as if it was already mounted on a Window)
-            if(View.ColorScheme == null)
+            if(View.ColorScheme == null || View.ColorScheme == Colors.TopLevel)
             {
                 View.ColorScheme = Colors.Base;
             }
 
-            // The view base class does not fill over its old stale contents ever
+            // View and TopLevel doe not clear their states regularly during drawing
+            // we have to do that ourselves
             View.DrawContent += (r) =>
             {
                 // manually erase stale content
