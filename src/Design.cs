@@ -70,7 +70,7 @@ public class Design
         {
             if(View.ColorScheme == null || View.ColorScheme == Colors.TopLevel)
             {
-                View.ColorScheme = Colors.Base;
+                State.OriginalScheme = View.ColorScheme = Colors.Base;
             }
 
             // View and TopLevel doe not clear their states regularly during drawing
