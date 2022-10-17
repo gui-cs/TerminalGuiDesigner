@@ -65,7 +65,10 @@ public class Design
             // Views alone do not have any explicit colors because they are designed
             // to inherit from parent (e.g. Window/Dialog).  When creating a new view
             // we need to use the base one (as if it was already mounted on a Window)
-            View.ColorScheme = Colors.Base;
+            if(View.ColorScheme == null)
+            {
+                View.ColorScheme = Colors.Base;
+            }
 
             // The view base class does not fill over its old stale contents ever
             View.DrawContent += (r) =>
