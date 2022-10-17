@@ -75,7 +75,7 @@ public class Design
             {
                 // manually erase stale content
                 Application.Driver.SetAttribute(View.ColorScheme.Normal);
-                Application.Driver.DrawFrame(View.ViewToScreen(r), 0, true);
+                View.Clear();
             };
         }
 

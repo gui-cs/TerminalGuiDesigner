@@ -147,21 +147,6 @@ public static class ViewExtensions
         return GetNearestContainerDesign(d.View.SuperView);
     }
 
-
-    /// <summary>
-    /// Converts the view-relative <paramref name="rect"/> into a screen relative rectangle
-    /// </summary>
-    /// <param name="v"></param>
-    /// <param name="rect"></param>
-    /// <param name="clipped"></param>
-    /// <returns></returns>
-    public static Rect ViewToScreen(this View v, Rect rect, bool clipped = true)
-    {
-        v.ViewToScreen(rect.X, rect.Y, out var x1, out var y1, clipped);
-        v.ViewToScreen(rect.Width, rect.Height, out var x2, out var y2, clipped);
-
-        return new Rect(x1, y1, x2 - x1, y2 - y1);
-    }
     /// <summary>
     /// Converts a view-relative (col,row) position to a screen-relative position (col,row). The values are optionally clamped to the screen dimensions.
     /// </summary>
