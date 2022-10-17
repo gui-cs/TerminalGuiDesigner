@@ -847,7 +847,7 @@ Ctrl+Q - Quit
 
     private Type[] GetSupportedRootViews()
     {
-        return new Type[] { typeof(Window), typeof(Dialog), typeof(View) };
+        return new Type[] { typeof(Window), typeof(Dialog), typeof(View) , typeof(Toplevel)};
     }
 
     private void New(FileInfo toOpen, Type typeToCreate, string? explicitNamespace)

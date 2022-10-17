@@ -118,7 +118,7 @@ The following feature list shows the current capabilities and the roadmap
     - [x] Window
     - [x] Dialog
     - [x] View
-    - [ ] Top level (with statusbar and or menu)
+    - [x] Top level (with statusbar and or menu)
 - [x] Configure root properties (e.g. Window.Width, Title etc)
 - [x] Configure subview properties
     - [x] (Name)
