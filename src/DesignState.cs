@@ -16,7 +16,7 @@ public class DesignState
 	{
         Design = design;
         OriginalScheme = Design.View.GetExplicitColorScheme();
-        Design.View.DrawContentComplete += DrawContentComplete;
+        Design.View.DrawContent += DrawContent;
         Design.View.Enter += Enter;
     }
 
@@ -25,7 +25,7 @@ public class DesignState
         SelectionManager.Instance.SetSelection(Design);
     }
 
-    private void DrawContentComplete(Rect r)
+    private void DrawContent(Rect r)
 	{ 
         if(Design.View.IsBorderlessContainerView() && Editor.ShowBorders)
         {
