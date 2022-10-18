@@ -179,6 +179,17 @@ public static class ViewExtensions
     public static bool IsContainerView(this View v)
     {
         var type = v.GetType();
+        
+        if(v.Data is Design d)
+        {
+            // The root class user is designing (e.g. MyView) could be inheriting from
+            // TopLevel or View in which case we must allow dropping into it
+            if (d.IsRoot)
+            {
+                return true;
+            }   
+        }
+
         // TODO: are there any others?
         return v is TabView || v is FrameView || v is Window || type == typeof(View) || type.Name.Equals("ContentView");
     }
