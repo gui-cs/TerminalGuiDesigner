@@ -52,7 +52,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lblValue = new Terminal.Gui.Label();
             this.lineview1 = new Terminal.Gui.LineView();
             this.rgPosType = new Terminal.Gui.RadioGroup();
-            this.Width = 44;
+            this.Width = 47;
             this.Height = 12;
             this.X = Pos.Center();
             this.Y = Pos.Center();
@@ -77,8 +77,8 @@ namespace TerminalGuiDesigner.UI.Windows {
                     "Center"};
             this.Add(this.rgPosType);
             this.lineview1.Width = 1;
-            this.lineview1.Height = 4;
-            this.lineview1.X = 12;
+            this.lineview1.Height = 5;
+            this.lineview1.X = 14;
             this.lineview1.Y = 1;
             this.lineview1.Data = "lineview1";
             this.lineview1.Text = "";
@@ -88,7 +88,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Add(this.lineview1);
             this.lblValue.Width = 6;
             this.lblValue.Height = 1;
-            this.lblValue.X = 19;
+            this.lblValue.X = 22;
             this.lblValue.Y = 1;
             this.lblValue.Data = "lblValue";
             this.lblValue.Text = "Value:";
@@ -105,7 +105,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Add(this.tbValue);
             this.lblRelativeTo.Width = 12;
             this.lblRelativeTo.Height = 1;
-            this.lblRelativeTo.X = 13;
+            this.lblRelativeTo.X = 16;
             this.lblRelativeTo.Y = 3;
             this.lblRelativeTo.Data = "lblRelativeTo";
             this.lblRelativeTo.Text = "Relative To:";
@@ -121,7 +121,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Add(this.ddRelativeTo);
             this.lblSide.Width = 5;
             this.lblSide.Height = 1;
-            this.lblSide.X = 20;
+            this.lblSide.X = 23;
             this.lblSide.Y = 5;
             this.lblSide.Data = "lblSide";
             this.lblSide.Text = "Side:";
@@ -137,7 +137,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Add(this.ddSide);
             this.lblOffset.Width = 7;
             this.lblOffset.Height = 1;
-            this.lblOffset.X = 18;
+            this.lblOffset.X = 21;
             this.lblOffset.Y = 7;
             this.lblOffset.Data = "lblOffset";
             this.lblOffset.Text = "Offset:";
