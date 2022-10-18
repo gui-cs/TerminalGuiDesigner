@@ -353,6 +353,13 @@ public static class PosExtensions
                     return $"Pos.Center() - {Math.Abs(offset)}";
                 return $"Pos.Center()";
 
+            case PosType.AnchorEnd:
+                if (offset > 0)
+                    return $"Pos.AnchorEnd({(int)val}) + {offset}";
+                if (offset < 0)
+                    return $"Pos.AnchorEnd({(int)val}) - {Math.Abs(offset)}";
+                return $"Pos.AnchorEnd({(int)val})";
+
             default: throw new ArgumentOutOfRangeException(nameof(type));
         }
     }

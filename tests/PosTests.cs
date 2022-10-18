@@ -296,4 +296,76 @@ public class PosTests : Tests
         Assert.IsNotNull(backInRelativeTo);
         Assert.IsInstanceOf<Label>(backInRelativeTo?.View);
     }
+
+    [Test]
+    public void TestRoundTrip_PosAnchorEnd()
+    {
+        var viewToCode = new ViewToCode();
+
+        var file = new FileInfo("TestRoundTrip_PosAnchorEnd.cs");
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window), out var sourceCode);
+
+        designOut.View.Width = 100;
+        designOut.View.Height = 100;
+
+        var factory = new ViewFactory();
+        var lbl = factory.Create(typeof(Label));
+        lbl.X = Pos.AnchorEnd(1);
+        lbl.Y = Pos.AnchorEnd(4); // length of "Heya"
+
+        new AddViewOperation(sourceCode, lbl, designOut, "label1").Do();
+
+        viewToCode.GenerateDesignerCs(designOut, designOut.SourceCode, typeof(Window));
+
+        var codeToView = new CodeToView(sourceCode);
+        var designBackIn = codeToView.CreateInstance();
+
+        var lblIn = designBackIn.View.GetActualSubviews().OfType<Label>().Single();
+
+        lblIn.X.GetPosType(designBackIn.GetAllDesigns().ToList(), out var backInType, out var backInValue, out _, out _, out var backInOffset);
+        Assert.AreEqual(0, backInOffset);
+        Assert.AreEqual(PosType.AnchorEnd, backInType);
+        Assert.AreEqual(1, backInValue);
+
+        lblIn.Y.GetPosType(designBackIn.GetAllDesigns().ToList(), out backInType, out backInValue, out _, out _, out backInOffset);
+        Assert.AreEqual(0, backInOffset);
+        Assert.AreEqual(PosType.AnchorEnd, backInType);
+        Assert.AreEqual(4, backInValue);
+    }
+
+    [Test]
+    public void TestRoundTrip_PosAnchorEnd_WithOffset()
+    {
+        var viewToCode = new ViewToCode();
+
+        var file = new FileInfo("TestRoundTrip_PosAnchorEnd.cs");
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window), out var sourceCode);
+
+        designOut.View.Width = 100;
+        designOut.View.Height = 100;
+
+        var factory = new ViewFactory();
+        var lbl = factory.Create(typeof(Label));
+        lbl.X = Pos.AnchorEnd(1) + 5;
+        lbl.Y = Pos.AnchorEnd(4) - 3; // length of "Heya"
+
+        new AddViewOperation(sourceCode, lbl, designOut, "label1").Do();
+
+        viewToCode.GenerateDesignerCs(designOut, designOut.SourceCode, typeof(Window));
+
+        var codeToView = new CodeToView(sourceCode);
+        var designBackIn = codeToView.CreateInstance();
+
+        var lblIn = designBackIn.View.GetActualSubviews().OfType<Label>().Single();
+
+        lblIn.X.GetPosType(designBackIn.GetAllDesigns().ToList(), out var backInType, out var backInValue, out _, out _, out var backInOffset);
+        Assert.AreEqual(5, backInOffset);
+        Assert.AreEqual(PosType.AnchorEnd, backInType);
+        Assert.AreEqual(1, backInValue);
+
+        lblIn.Y.GetPosType(designBackIn.GetAllDesigns().ToList(), out backInType, out backInValue, out _, out _, out backInOffset);
+        Assert.AreEqual(-3, backInOffset);
+        Assert.AreEqual(PosType.AnchorEnd, backInType);
+        Assert.AreEqual(4, backInValue);
+    }
 }
