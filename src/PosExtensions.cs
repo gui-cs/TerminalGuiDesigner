@@ -36,6 +36,7 @@ public static class PosExtensions
         return false;        
     }
 
+
     public static bool IsPercent(this Pos p)
     {
         if (p == null)
@@ -67,6 +68,34 @@ public static class PosExtensions
         return p.GetType().Name == "PosCenter";
     }
 
+    public static bool IsAnchorEnd(this Pos p)
+    {
+        if (p == null)
+            return TreatNullPosAs0;
+
+        return p.GetType().Name == "PosAnchorEnd";
+    }
+
+    public static bool IsAnchorEnd(this Pos p, out int margin)
+    {
+        if (p.IsAnchorEnd())
+        {
+            if (p == null)
+            {
+                margin = 0;
+                return TreatNullPosAs0;
+            }
+
+            var nField = p.GetType().GetField("n", BindingFlags.NonPublic | BindingFlags.Instance)
+                ?? throw new Exception("Expected private field 'n' of PosAbsolute was missing");
+            margin = (int?)nField.GetValue(p)
+                ?? throw new Exception("Expected private field 'n' of PosAbsolute to be int"); ;
+            return true;
+        }
+
+        margin = 0;
+        return false;
+    }
     public static bool IsRelative(this Pos p, out Pos posView)
     {
         // Terminal.Gui will often use Pos.Combine with RHS of 0 instead of just PosView alone
@@ -155,7 +184,17 @@ public static class PosExtensions
         return false;
     }
 
-
+    /// <summary>
+    /// Determines the <see cref="PosType"/> of an unknown <see cref="Pos"/> instance.
+    /// </summary>
+    /// <param name="p">The <see cref="Pos"/> for which you want to determine type</param>
+    /// <param name="knownDesigns">Designs in the current scope, for populating <paramref name="relativeTo"/> in the case of <see cref="PosType.Relative"/></param>
+    /// <param name="type">The type we determined <paramref name="p"/> to be</param>
+    /// <param name="value">Measure for the Type e.g. for <see cref="PosType.Percent"/> this is the percent value, for <see cref="PosType.Absolute"/> it is the absolute positional value</param>
+    /// <param name="relativeTo">Only populated for <see cref="PosType.Relative"/>, this is the <see cref="Design"/> that <paramref name="p"/> positions itself relative to</param>
+    /// <param name="side">Only populated for <see cref="PosType.Relative"/>, this is the direction of offset from <paramref name="relativeTo"/></param>
+    /// <param name="offset">The offset from the listed position.  Is provided if the input has addition/subtraction e.g. Pos.Center() + 2</param>
+    /// <returns></returns>
     public static bool GetPosType(this Pos p,IList<Design> knownDesigns, out PosType type,out float value,out Design? relativeTo, out Side side, out int offset)
     {
 
@@ -194,7 +233,13 @@ public static class PosExtensions
             return true;
         }
 
-        if(p.IsCombine(out var left, out var right, out var add))
+        if (p.IsAnchorEnd(out var margin))
+        {
+            type = PosType.AnchorEnd;
+            value = margin;
+            return true;
+        }
+        if (p.IsCombine(out var left, out var right, out var add))
         {
             // we only deal in combines if the right is an absolute
             // e.g. Pos.Percent(25) + 5 is supported but Pos.Percent(5) + Pos.Percent(10) is not

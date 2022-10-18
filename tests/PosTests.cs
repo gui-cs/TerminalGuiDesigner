@@ -18,6 +18,7 @@ public class PosTests : Tests
         Assert.IsTrue(Pos.At(50).IsAbsolute());
         Assert.IsFalse(Pos.At(50).IsPercent());
         Assert.IsFalse(Pos.At(50).IsRelative(out _));
+        Assert.IsFalse(Pos.At(50).IsAnchorEnd(out _));
 
         Assert.IsTrue(Pos.At(50).IsAbsolute(out int size));
         Assert.AreEqual(50,size);
@@ -35,6 +36,7 @@ public class PosTests : Tests
         Assert.IsTrue(p.IsAbsolute());
         Assert.IsFalse(p.IsPercent());
         Assert.IsFalse(p.IsRelative(out _));
+        Assert.IsFalse(p.IsAnchorEnd(out _));
 
         Assert.IsTrue(p.IsAbsolute(out int size));
         Assert.AreEqual(50,size);
@@ -51,6 +53,7 @@ public class PosTests : Tests
         Assert.IsFalse(Pos.Percent(24).IsAbsolute());
         Assert.IsTrue(Pos.Percent(24).IsPercent());
         Assert.IsFalse(Pos.Percent(24).IsRelative(out _));
+        Assert.IsFalse(Pos.Percent(24).IsAnchorEnd(out _));
 
         Assert.IsTrue(Pos.Percent(24).IsPercent(out var size));
         Assert.AreEqual(24f,size);
@@ -71,6 +74,7 @@ public class PosTests : Tests
         Assert.IsFalse(Pos.Top(v).IsAbsolute());
         Assert.IsFalse(Pos.Top(v).IsPercent());
         Assert.IsTrue(Pos.Top(v).IsRelative(out _));
+        Assert.IsFalse(Pos.Top(v).IsAnchorEnd(out _));
 
         Assert.IsTrue(Pos.Top(v).IsRelative(new List<Design>{d},out var relativeTo, out var side));
         Assert.AreSame(d,relativeTo);
@@ -80,6 +84,54 @@ public class PosTests : Tests
         Assert.AreEqual(PosType.Relative,type);
         Assert.AreSame(d,relativeTo);
         Assert.AreEqual(Side.Top,side);
+    }
+
+    [Test]
+    public void TestIsAnchorEnd()
+    {
+        Assert.IsFalse(Pos.AnchorEnd().IsAbsolute());
+        Assert.IsFalse(Pos.AnchorEnd().IsPercent());
+        Assert.IsFalse(Pos.AnchorEnd().IsRelative(out _));
+        Assert.IsTrue(Pos.AnchorEnd().IsAnchorEnd(out _));
+
+        Assert.IsTrue(Pos.AnchorEnd().IsAnchorEnd(out var margin));
+        Assert.AreEqual(0, margin);
+
+        Assert.IsTrue(Pos.AnchorEnd().GetPosType(new List<Design>(), out var type, out var val, out var design, out var side, out var offset));
+        Assert.AreEqual(PosType.AnchorEnd, type);
+        Assert.AreEqual(0, val);
+        Assert.AreEqual(0, offset);
+    }
+    [Test]
+    public void TestIsAnchorEnd_WithMargin()
+    {
+        Assert.IsFalse(Pos.AnchorEnd(2).IsAbsolute());
+        Assert.IsFalse(Pos.AnchorEnd(2).IsPercent());
+        Assert.IsFalse(Pos.AnchorEnd(2).IsRelative(out _));
+        Assert.IsTrue(Pos.AnchorEnd(2).IsAnchorEnd(out _));
+
+        Assert.IsTrue(Pos.AnchorEnd(2).IsAnchorEnd(out var margin));
+        Assert.AreEqual(2, margin);
+
+        Assert.IsTrue(Pos.AnchorEnd(2).GetPosType(new List<Design>(), out var type, out var val, out var design, out var side, out var offset));
+        Assert.AreEqual(PosType.AnchorEnd, type);
+        Assert.AreEqual(2, val);
+        Assert.AreEqual(0, offset);
+    }
+
+    [Test]
+    public void TestIsAnchorEnd_WithOffset()
+    {
+        Assert.IsTrue((Pos.AnchorEnd(1) + 2).GetPosType(new List<Design>(), out var type, out var val, out var design, out var side, out var offset));
+        Assert.AreEqual(PosType.AnchorEnd, type);
+        Assert.AreEqual(1, val);
+        Assert.AreEqual(2, offset);
+
+
+        Assert.IsTrue((Pos.AnchorEnd(1) - 2).GetPosType(new List<Design>(), out type, out val, out design, out side, out offset));
+        Assert.AreEqual(PosType.AnchorEnd, type);
+        Assert.AreEqual(1, val);
+        Assert.AreEqual(-2, offset);
     }
 
     [Test]
@@ -242,6 +294,6 @@ public class PosTests : Tests
         Assert.AreEqual(PosType.Relative, backInType);
         Assert.AreEqual(offset, backInOffset);
         Assert.IsNotNull(backInRelativeTo);
-        Assert.IsInstanceOf<Label>(backInRelativeTo.View);
+        Assert.IsInstanceOf<Label>(backInRelativeTo?.View);
     }
 }
