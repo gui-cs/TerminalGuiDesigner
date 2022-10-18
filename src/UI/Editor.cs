@@ -238,13 +238,13 @@ Ctrl+Q - Quit
             }
         };
 
+
         Application.RootMouseEvent += (m) =>
         {
-
             // if another window is showing don't respond to mouse
             if (!IsCurrentTop)
                 return;
-
+            
             if (_editting || !enableDrag || _viewBeingEdited == null)
                 return;
 
@@ -262,7 +262,10 @@ Ctrl+Q - Quit
                     {
                         var d = hit.GetNearestDesign() ?? _viewBeingEdited;
                         if (d != null)
+                        {
                             CreateAndShowContextMenu(m, d);
+                        }
+                            
                     }
                 }
             }

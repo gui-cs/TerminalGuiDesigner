@@ -81,7 +81,9 @@ public class Design
             View.DrawContent += (r) =>
             {
                 // manually erase stale content
-                Application.Driver.SetAttribute(View.ColorScheme.Normal);
+                Application.Driver.SetAttribute(
+                    State.OriginalScheme?.Normal ??
+                    View.ColorScheme.Normal);
                 View.Clear();
             };
         }
@@ -156,10 +158,16 @@ public class Design
         if (subView is TextView txt)
         {
             // prevent control from responding to events
-            txt.MouseClick += (s) => s.Handled = true;
+            txt.MouseClick += SuppressNativeClickEvents;
             txt.KeyDown += (s) => s.Handled = true;
         }
 
+        if (subView is TextField tf)
+        {
+            // prevent control from responding to events
+            tf.MouseClick += SuppressNativeClickEvents;
+            tf.KeyDown += (s) => s.Handled = true;
+        }
         if (subView is TreeView tree)
         {
             tree.AddObject(new TreeNode("Example Branch 1")
@@ -184,6 +192,12 @@ public class Design
 
         var d = new Design(sourceCode, name, subView);
         return d;
+    }
+
+    private void SuppressNativeClickEvents(View.MouseEventArgs obj)
+    {
+        // Suppress everything except single click (selection)
+        obj.Handled = obj.MouseEvent.Flags != MouseFlags.Button1Clicked;
     }
 
     private void RegisterCheckboxDesignTimeChanges(CheckBox cb)
