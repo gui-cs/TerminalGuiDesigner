@@ -189,6 +189,16 @@ namespace TerminalGuiDesigner.UI.Windows
 
         private void BtnOk_Clicked()
         {
+            if(GetPosType() == PosType.AnchorEnd && GetValue(out var value) && value <=0)
+            {
+                var confirm = MessageBox.Query("AnchorAt with no Margin", "Using AnchorEnd without a Margin will result in a Point outside of parent bounds.  Are you sure?", "Yes", "No");
+                
+                if (confirm == 1)
+                {
+                    return;
+                }   
+            }
+
             Cancelled = !BuildPos(out var result);
             Result = result;
             Application.RequestStop();
