@@ -3,9 +3,8 @@ namespace TerminalGuiDesigner;
 public enum PosType
 {
     Absolute,
-    Anchor,
+    AnchorEnd,
     Percent,
     Relative,
-    Center,
-    AnchorEnd
+    Center,    
 }

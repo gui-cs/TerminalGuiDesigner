@@ -63,8 +63,8 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Border.DrawMarginFrame = true;
             this.TextAlignment = Terminal.Gui.TextAlignment.Left;
             this.Title = "";
-            this.rgPosType.Width = 11;
-            this.rgPosType.Height = 4;
+            this.rgPosType.Width = 12;
+            this.rgPosType.Height = 5;
             this.rgPosType.X = 1;
             this.rgPosType.Y = 1;
             this.rgPosType.Data = "rgPosType";
@@ -74,7 +74,8 @@ namespace TerminalGuiDesigner.UI.Windows {
                     "Absolute",
                     "Percent",
                     "Relative",
-                    "Center"};
+                    "Center",
+                    "AnchorEnd"};
             this.Add(this.rgPosType);
             this.lineview1.Width = 1;
             this.lineview1.Height = 4;
