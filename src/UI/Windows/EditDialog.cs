@@ -339,7 +339,7 @@ public class EditDialog : Window
 
     private static bool GetNewColorSchemeValue(Design design, Property property, out object? newValue)
     {
-        const string custom = "Custom...";
+        const string custom = "Edit Color Schemes...";
         List<object> offer = new();
 
         var defaults = new DefaultColorSchemes();
