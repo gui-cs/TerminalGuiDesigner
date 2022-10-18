@@ -73,12 +73,14 @@ public class Design
                 State.OriginalScheme = View.ColorScheme = Colors.Base;
             }
 
+            // TODO: Remove this when https://github.com/gui-cs/Terminal.Gui/issues/2094 is fixed
+            // HACK
+
             // View and TopLevel doe not clear their states regularly during drawing
             // we have to do that ourselves
             View.DrawContent += (r) =>
             {
                 // manually erase stale content
-                Application.Driver.SetAttribute(View.ColorScheme.Normal);
                 View.Clear();
             };
         }
