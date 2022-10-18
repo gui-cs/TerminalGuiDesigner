@@ -66,8 +66,10 @@ namespace TerminalGuiDesigner.UI.Windows
                         ddSide.SelectedItem = (int)side;
                         break;
                     case PosType.Center:
-                        rgPosType.SelectedItem = 3;
-                        
+                        rgPosType.SelectedItem = 3;                        
+                        break;
+                    case PosType.AnchorEnd:
+                        rgPosType.SelectedItem = 4;
                         break;
                 }
 
@@ -102,7 +104,6 @@ namespace TerminalGuiDesigner.UI.Windows
             
             switch(GetPosType())
             {
-                case PosType.Anchor:
                 case PosType.Percent:
                     lblRelativeTo.Visible = false;
                     ddRelativeTo.Visible = false;
@@ -138,6 +139,7 @@ namespace TerminalGuiDesigner.UI.Windows
                     SetNeedsDisplay();
                     break;
                 case PosType.Absolute:
+                case PosType.AnchorEnd:
                     ddRelativeTo.Visible = false;
                     lblRelativeTo.Visible = false;
                     lblSide.Visible = false;
@@ -187,6 +189,16 @@ namespace TerminalGuiDesigner.UI.Windows
 
         private void BtnOk_Clicked()
         {
+            if(GetPosType() == PosType.AnchorEnd && GetValue(out var value) && value <=0)
+            {
+                var confirm = MessageBox.Query("AnchorAt with no Margin", "Using AnchorEnd without a Margin will result in a Point outside of parent bounds.  Are you sure?", "Yes", "No");
+                
+                if (confirm == 1)
+                {
+                    return;
+                }   
+            }
+
             Cancelled = !BuildPos(out var result);
             Result = result;
             Application.RequestStop();
@@ -207,7 +219,8 @@ namespace TerminalGuiDesigner.UI.Windows
                     return BuildPosPercent(out result);
                 case PosType.Center:
                     return BuildPosCenter(out result);
-                case PosType.Anchor: throw new NotImplementedException();
+                case PosType.AnchorEnd:
+                    return BuildPosAnchorEnd(out result);
 
                 default: throw new ArgumentOutOfRangeException();
 
@@ -272,6 +285,18 @@ namespace TerminalGuiDesigner.UI.Windows
             if (GetValue(out int newPos))
             {
                 result = Pos.At(newPos);
+                return true;
+            }
+
+            result = null;
+            return false;
+        }
+
+        private bool BuildPosAnchorEnd(out Pos result)
+        {
+            if (GetValue(out int newPos))
+            {
+                result = Pos.AnchorEnd(newPos);
                 return true;
             }
 
