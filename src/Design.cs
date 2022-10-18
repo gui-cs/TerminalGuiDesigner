@@ -81,6 +81,7 @@ public class Design
             View.DrawContent += (r) =>
             {
                 // manually erase stale content
+                Application.Driver.SetAttribute(View.ColorScheme.Normal);
                 View.Clear();
             };
         }
