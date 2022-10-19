@@ -191,9 +191,7 @@ namespace TerminalGuiDesigner.UI.Windows
         {
             if(GetPosType() == PosType.AnchorEnd && GetValue(out var value) && value <=0)
             {
-                var confirm = MessageBox.Query("AnchorAt with no Margin", "Using AnchorEnd without a Margin will result in a Point outside of parent bounds.  Are you sure?", "Yes", "No");
-                
-                if (confirm == 1)
+                if (!ConfirmDialog.Show("Anchor without Margin", "WARNING: Using AnchorEnd without a margin will result in a point outside of parent bounds.\nAre you sure?"))
                 {
                     return;
                 }   
