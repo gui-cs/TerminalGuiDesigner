@@ -50,7 +50,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Y = Pos.Center();
             this.Modal = true;
             this.Text = "";
-            this.Border.BorderStyle = Terminal.Gui.BorderStyle.Single;
+            this.Border.BorderStyle = Terminal.Gui.BorderStyle.Rounded;
             this.Border.Effect3D = true;
             this.Border.DrawMarginFrame = true;
             this.TextAlignment = Terminal.Gui.TextAlignment.Left;
