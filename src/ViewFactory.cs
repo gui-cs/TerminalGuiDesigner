@@ -2,6 +2,7 @@
 using NStack;
 using Terminal.Gui;
 using Terminal.Gui.TextValidateProviders;
+using TerminalGuiDesigner.Operations;
 using static Terminal.Gui.Border;
 using Attribute = Terminal.Gui.Attribute;
 
@@ -115,7 +116,7 @@ public class ViewFactory
     {
          return new MenuBar (new MenuBarItem [] {
 				new MenuBarItem ("_File (F9)", new MenuItem [] {
-					new MenuItem ("_Do Something", "", () => {})
+					new MenuItem (AddMenuOperation.DefaultMenuItemText, "", () => {})
                 })
          });
     }
