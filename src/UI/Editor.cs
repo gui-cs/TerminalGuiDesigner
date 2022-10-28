@@ -38,6 +38,10 @@ public class Editor : Toplevel
     /// </summary>
     private Guid? _lastSavedOperation;
 
+    /// <summary>
+    /// True to enable experimental features
+    /// </summary>
+    public static bool Experimental { get; internal set; }
 
     private string GetHelpWithEmptyFormLoaded()
     {
@@ -860,7 +864,13 @@ Ctrl+Q - Quit
 
     private Type[] GetSupportedRootViews()
     {
-        return new Type[] { typeof(Window), typeof(Dialog), typeof(View) , typeof(Toplevel)};
+        // TODO: When more robust, remove these from experimental status
+        if(Editor.Experimental)
+        {
+            return new Type[] { typeof(Window), typeof(Dialog), typeof(View) , typeof(Toplevel)};
+        }
+
+        return new Type[] { typeof(Window), typeof(Dialog)};
     }
 
     private void New(FileInfo toOpen, Type typeToCreate, string? explicitNamespace)
