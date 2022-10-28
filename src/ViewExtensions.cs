@@ -21,8 +21,11 @@ public static class ViewExtensions
         {
             return w.Subviews[0].Subviews;
         }
-
-        if(v is TabView t)
+        if (v is ScrollView scroll)
+        {
+            return scroll.Subviews[0].Subviews;
+        }
+        if (v is TabView t)
         {
             return t.Tabs.Select(tab=>tab.View).Where(v=>v!=null).ToList();
         }
@@ -181,7 +184,7 @@ public static class ViewExtensions
     {
         var type = v.GetType();
         // TODO: are there any others?
-        return v is TabView || v is FrameView || v is Window || type == typeof(View) || type.Name.Equals("ContentView");
+        return v is ScrollView || v is TabView || v is FrameView || v is Window || type == typeof(View) || type.Name.Equals("ContentView");
     }
     public static View? HitTest(this View w, MouseEvent m, out bool isBorder,out bool isLowerRight, params View[] ignoring)
     {

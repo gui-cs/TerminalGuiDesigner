@@ -128,7 +128,7 @@ public class EditDialog : Window
 
     public static bool GetNewValue(Design design, Property property, object? oldValue, out object? newValue)
     {
-        if(property.PropertyInfo.PropertyType == typeof(ColorScheme))
+        if (property.PropertyInfo.PropertyType == typeof(ColorScheme))
         {
             return GetNewColorSchemeValue(design, property, out newValue);            
         }
@@ -176,6 +176,27 @@ public class EditDialog : Window
 
             Application.Run(designer);
 
+
+            if (!designer.Cancelled)
+            {
+                newValue = designer.Result;
+                return true;
+            }
+            else
+            {
+                // user cancelled designing the Pos
+                newValue = null;
+                return false;
+            }
+        }
+        else
+        // user is editing a Size
+        if (property.PropertyInfo.PropertyType == typeof(Size))
+        {
+            var oldSize = (Size)(oldValue ?? throw new Exception($"Property {property.PropertyInfo.Name} is of Type Size but it's current value is null"));
+            var designer = new SizeEditor(oldSize);
+
+            Application.Run(designer);
 
             if (!designer.Cancelled)
             {
