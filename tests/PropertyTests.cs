@@ -31,6 +31,22 @@ public class PropertyTests : Tests
     }
 
     [Test]
+    public void TestPropertyOfType_Size()
+    {
+        var d = new Design(new SourceCodeFile(nameof(TestPropertyOfType_Size) + ".cs"), "FFF", new ScrollView());
+        var xProp = d.GetDesignableProperties().Single(p => p.PropertyInfo.Name.Equals(nameof(View.X)));
+
+        xProp.SetValue(Pos.Center());
+
+        var rhs = (CodeSnippetExpression)xProp.GetRhs();
+
+        // The code generated for a Property of Type Pos should be the function call
+        Assert.AreEqual(rhs.Value, "Pos.Center()");
+
+    }
+
+
+    [Test]
     public void TestPropertyOfType_Attribute()
     {
         var d = new Design(new SourceCodeFile(nameof(TestPropertyOfType_Attribute)+".cs"),"FFF",new GraphView());

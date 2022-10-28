@@ -168,6 +168,11 @@ public class Property : ToCodeBase
         {
             return new CodeSnippetExpression(d.ToCode());
         }
+        if(val is Size s)
+        {
+            return new CodeSnippetExpression(s.ToCode());
+        }
+
         if(val is PointF pointf)
         {
             return new CodeObjectCreateExpression(typeof(PointF),

@@ -21,7 +21,10 @@ public static class ViewExtensions
         {
             return w.Subviews[0].Subviews;
         }
-
+        if (v is ScrollView scroll)
+        {
+            return scroll.Subviews[0].Subviews;
+        }
         if (v is TabView t)
         {
             return t.Tabs.Select(tab => tab.View).Where(v => v != null).ToList();
@@ -191,7 +194,7 @@ public static class ViewExtensions
         }
 
         // TODO: are there any others?
-        return v is TabView || v is FrameView || v is Window || type == typeof(View) || type.Name.Equals("ContentView");
+        return v is ScrollView || v is TabView || v is FrameView || v is Window || type == typeof(View) || type.Name.Equals("ContentView");
     }
     public static bool IsBorderlessContainerView(this View v)
     {
