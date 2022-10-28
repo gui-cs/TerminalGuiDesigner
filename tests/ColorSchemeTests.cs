@@ -189,7 +189,7 @@ public class ColorSchemeTests : Tests
         {
             //unselect it so it is rendered with correct scheme
             SelectionManager.Instance.Clear();
-            l.ColorScheme = mgr.Schemes.Single().Scheme;
+            l.ColorScheme = d.State.OriginalScheme = mgr.Schemes.Single().Scheme;
 
             if (multiSelectBeforeSaving)
             {
