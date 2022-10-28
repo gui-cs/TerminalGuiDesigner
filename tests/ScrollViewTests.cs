@@ -11,21 +11,23 @@ class ScrollViewTests : Tests
     [Test]
     public void TestRoundTrip_PreserveContentSize()
     {
-        var scrollViewIn = RoundTrip<ScrollView>((d,s) =>
-                s.ContentSize = new Size(10, 5)
+        var scrollViewIn = RoundTrip<View,ScrollView>((d,s) =>
+                s.ContentSize = new Size(10, 5),
+                out var scrollViewOut
                 );
 
+        Assert.AreNotSame(scrollViewOut, scrollViewIn);
         Assert.AreEqual(10, scrollViewIn.ContentSize.Width);
         Assert.AreEqual(5, scrollViewIn.ContentSize.Height);
     }
     [Test]
     public void TestRoundTrip_PreserveContentViews()
     {
-        var scrollViewIn = RoundTrip<ScrollView>((d, s) =>
+        var scrollViewIn = RoundTrip<View, ScrollView>((d, s) =>
                 {
                     var op = new AddViewOperation(d.SourceCode, new Label("blarggg"), d, "myLbl");
                     op.Do();
-                });
+                }, out _);
 
         var child = scrollViewIn.GetActualSubviews().Single();
         Assert.IsInstanceOf<Label>(child);

@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using NLog.Layouts;
 using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
@@ -180,35 +181,21 @@ public class ColorSchemeTests : Tests
             Focus = new Attribute(Color.Cyan, Color.Black)
         });
 
-        var viewToCode = new ViewToCode();
+        var lblIn = RoundTrip<Dialog, Label>((d, l) =>
+        {
+            //unselect it so it is rendered with correct scheme
+            SelectionManager.Instance.Clear();
+            l.ColorScheme = mgr.Schemes.Single().Scheme;
 
-        var dOut = viewToCode.GenerateNewView(new FileInfo("TestColorScheme_RoundTrip.cs"),"Example",typeof(Dialog),out _);
+            if (multiSelectBeforeSaving)
+            {
+                Assert.AreEqual(mgr.Schemes.Single().Scheme, l.ColorScheme);
+                SelectionManager.Instance.SetSelection((Design)l.Data);
+                Assert.AreNotEqual(mgr.Schemes.Single().Scheme, l.ColorScheme, "Expected multi selecting the view to change its color to the selected color");
+            }
+        }, out _);
 
-        // create label with custom color scheme
-        var lblOut = new Label{
-            ColorScheme = mgr.Schemes.Single().Scheme
-        };
-
-        // add it to view
-        OperationManager.Instance.Do(new AddViewOperation(dOut.SourceCode, lblOut,dOut, "mylbl"));
-        
-        //unselect it so it is rendered with correct scheme
-        SelectionManager.Instance.Clear();
-
-        if (multiSelectBeforeSaving)
-        {            
-            Assert.AreEqual(mgr.Schemes.Single().Scheme, lblOut.ColorScheme);
-            SelectionManager.Instance.SetSelection((Design)lblOut.Data);
-            Assert.AreNotEqual(mgr.Schemes.Single().Scheme, lblOut.ColorScheme,"Expected multi selecting the view to change its color to the selected color");
-        }
-
-        viewToCode.GenerateDesignerCs(dOut,dOut.SourceCode,typeof(Dialog));
-
-        var codeToView = new CodeToView(dOut.SourceCode);
-        var designBackIn = codeToView.CreateInstance();
-
-        var lblDesignIn = designBackIn.GetAllDesigns().Single(d=>d.View is Label);
-
+        var lblDesignIn = (Design)lblIn.Data;
         Assert.IsTrue(lblDesignIn.HasKnownColorScheme());
 
         // clear the selection before we do the comparison
