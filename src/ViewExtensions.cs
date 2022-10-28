@@ -184,7 +184,7 @@ public static class ViewExtensions
     {
         var type = v.GetType();
         // TODO: are there any others?
-        return v is TabView || v is FrameView || v is Window || type == typeof(View) || type.Name.Equals("ContentView");
+        return v is ScrollView || v is TabView || v is FrameView || v is Window || type == typeof(View) || type.Name.Equals("ContentView");
     }
     public static View? HitTest(this View w, MouseEvent m, out bool isBorder,out bool isLowerRight, params View[] ignoring)
     {
