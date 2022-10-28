@@ -21,8 +21,11 @@ public static class ViewExtensions
         {
             return w.Subviews[0].Subviews;
         }
-
-        if(v is TabView t)
+        if (v is ScrollView scroll)
+        {
+            return scroll.Subviews[0].Subviews;
+        }
+        if (v is TabView t)
         {
             return t.Tabs.Select(tab=>tab.View).Where(v=>v!=null).ToList();
         }

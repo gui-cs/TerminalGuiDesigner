@@ -59,7 +59,7 @@ namespace tests
         /// <param name="adjust">Mutator for making pre save changes you want to conform can be read in properly</param>
         /// <param name="caller"></param>
         /// <returns>The read in object state after round trip (generate code file then read that code back in)</returns>
-        protected T RoundTrip<T>(Action<T> adjust, [CallerMemberName] string? caller = null) where T : View
+        protected T RoundTrip<T>(Action<Design,T> adjust, [CallerMemberName] string? caller = null) where T : View
         {
             var viewToCode = new ViewToCode();
 
@@ -68,9 +68,10 @@ namespace tests
 
             var factory = new ViewFactory();
             var viewOut = (T)factory.Create(typeof(T));
-            adjust(viewOut);
 
             OperationManager.Instance.Do(new AddViewOperation(sourceCode, viewOut, designOut, "myViewOut"));
+            adjust((Design)viewOut.Data, viewOut);
+
             viewToCode.GenerateDesignerCs(designOut, sourceCode, typeof(View));
 
             var codeToView = new CodeToView(sourceCode);
