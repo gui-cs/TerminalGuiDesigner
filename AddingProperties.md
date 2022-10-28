@@ -62,4 +62,7 @@ This should make the 'round trip' test (see above) pass.  But you will still nee
 Create a new `Dialog` for the new `Type` in `TerminalGuiDesigner.UI.Windows`.  Use TerminalGuiDesigner to create the form.
 For example see `SizeEditor.Designer.cs` / `SizeEditor.cs`
 
-Update `EditDialog.cs` method `GetNewValue` to call the new editor window.
+Update `EditDialog.cs` method `GetNewValue` to call the new editor window:
+
+
+
