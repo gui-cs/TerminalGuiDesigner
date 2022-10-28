@@ -30,6 +30,8 @@ public void TestRoundTrip_PreserveContentSize()
 
 ## New Type
 
+### To Code
+
 If you need to add support for a new `Type` of Property (e.g. `ContentSize` property is of Type `Size`) then you must do the following:
 
 - Update Property `virtual CodeExpression GetRhs()`:
@@ -53,3 +55,11 @@ public static class SizeExtensions
 }
 ```
 
+This should make the 'round trip' test (see above) pass.  But you will still need to add designer UI support for editing the Type.
+
+### Designer UIs
+
+Create a new `Dialog` for the new `Type` in `TerminalGuiDesigner.UI.Windows`.  Use TerminalGuiDesigner to create the form.
+For example see `SizeEditor.Designer.cs` / `SizeEditor.cs`
+
+Update `EditDialog.cs` method `GetNewValue` to call the new editor window.
