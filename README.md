@@ -112,13 +112,14 @@ You can create a menu separator by typing `---`
 ### Features
 -------------------------------
 
-The following feature list shows the current capabilities and the roadmap
+The following feature list shows the current capabilities and the roadmap.  Features in
+italics are experimental and require passing the `-e` flag when starting application.
 
 - [x] Design classes 
     - [x] Window
     - [x] Dialog
-    - [x] View
-    - [x] Top level (with statusbar and or menu)
+    - [x] _View_
+    - [x] _Top level_
 - [x] Configure root properties (e.g. Window.Width, Title etc)
 - [x] Configure subview properties
     - [x] (Name)
