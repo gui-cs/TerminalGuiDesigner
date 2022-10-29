@@ -37,17 +37,10 @@ public class TabToCode : ToCodeBase
         AddPropertyAssignment(args,$"{tabName}.View.Width",new CodeSnippetExpression("Dim.Fill()"));
         AddPropertyAssignment(args,$"{tabName}.View.Height",new CodeSnippetExpression("Dim.Fill()"));
 
-        // for each thing that is shown in the tab
-        foreach(var v in ViewExtensions.OrderViewsByScreenPosition(Tab.View.Subviews))
-        {
-            // that is designable
-            if(v.Data is Design d)
-            {
-                var toCode = new DesignToCode(d);
-                toCode.ToCode(args,new CodeSnippetExpression($"{tabName}.View"));
-            }
-        }
-
+        // create code statements for everything in the Tab (recursive)
+        var viewToCode = new ViewToCode();
+        viewToCode.AddSubViewsToDesignerCs(Tab.View,args,new CodeSnippetExpression($"{tabName}.View"));
+    
         // add the constructed tab to the TabView
         AddAddTabCall(tabName,args);
     }
