@@ -28,12 +28,16 @@ public class ColorSchemeTests : Tests
         Assert.IsNotNull(d.View.ColorScheme);
         Assert.IsFalse(d.HasKnownColorScheme());
 
-        d.View.ColorScheme = new ColorScheme();
-        
+        var scheme = new ColorScheme();
+        var prop = new SetPropertyOperation(d , d.GetDesignableProperty(nameof(View.ColorScheme))
+            ?? throw new Exception("Expected Property did not exist or was not designable"),null,scheme);
+
+        prop.Do();
+
         // we still don't know about this scheme yet
         Assert.IsFalse(d.HasKnownColorScheme());
 
-        ColorSchemeManager.Instance.AddOrUpdateScheme("fff",d.View.ColorScheme);
+        ColorSchemeManager.Instance.AddOrUpdateScheme("fff", scheme);
 
         if (whenMultiSelected)
         {
@@ -185,7 +189,7 @@ public class ColorSchemeTests : Tests
         {
             //unselect it so it is rendered with correct scheme
             SelectionManager.Instance.Clear();
-            l.ColorScheme = mgr.Schemes.Single().Scheme;
+            l.ColorScheme = d.State.OriginalScheme = mgr.Schemes.Single().Scheme;
 
             if (multiSelectBeforeSaving)
             {

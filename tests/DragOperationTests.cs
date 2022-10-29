@@ -94,12 +94,15 @@ public class DragOperationTests : Tests
             Width = 5,
             Height = 4
         };
+        container1.Data = new Design(d.SourceCode, "v1", container1);
+
         var container2 = new View{
             X=5,
             Y=6,
             Width = 5,
             Height = 4
         };
+        container2.Data = new Design(d.SourceCode, "v2", container2);
 
         d.View.Add(container1);
         d.View.Add(container2);

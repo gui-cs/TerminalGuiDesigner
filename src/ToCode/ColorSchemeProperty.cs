@@ -38,10 +38,7 @@ public class ColorSchemeProperty : Property
     }
     public override object? GetValue()
     {
-        if (SelectionManager.Instance.Selected.Contains(Design))
-            return SelectionManager.Instance.GetOriginalExplicitColorScheme(Design);
-
-        return Design.View.GetExplicitColorScheme();
+        return Design.State.OriginalScheme ?? Design.View.GetExplicitColorScheme();
     }
     protected override string GetHumanReadableValue()
     {
@@ -62,6 +59,6 @@ public class ColorSchemeProperty : Property
     {
         base.SetValue(value);
 
-        SelectionManager.Instance.UpdateKnownScheme(Design,value as ColorScheme);
+        Design.State.OriginalScheme = value as ColorScheme;
     }
 }
