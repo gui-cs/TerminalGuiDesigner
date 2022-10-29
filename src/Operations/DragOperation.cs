@@ -16,14 +16,14 @@ public class DragOperation : Operation
         public Pos OriginalX {get;}
         public Pos OriginalY {get;}
 
-        public View OriginalSuperView {get;}
+        public View? OriginalSuperView {get;}
 
         public DragMemento(Design design)
         {
             Design = design;
             OriginalX = design.View.X;
             OriginalY = design.View.Y;
-            OriginalSuperView = design.View.SuperView;
+            OriginalSuperView = design.View.SuperView?.GetNearestDesign()?.View;
         }
     }
 
@@ -108,7 +108,7 @@ public class DragOperation : Operation
             // if changing to a new container
             if (DropInto != mem.OriginalSuperView && mem.OriginalSuperView != null)
             {
-                mem.OriginalSuperView.Remove(mem.Design.View);
+                mem.Design.View.SuperView.Remove(mem.Design.View);
                 DropInto.Add(mem.Design.View);
             }
         }

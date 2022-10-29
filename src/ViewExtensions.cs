@@ -203,7 +203,7 @@ public static class ViewExtensions
         // TODO: are there any others?
         if (type == typeof(View) && v.IsBorderless())
             return true;
-
+        
         if (v is TabView tabView)
         {
             return !tabView.Style.ShowBorder || tabView.Style.TabsOnBottom;
@@ -236,6 +236,9 @@ public static class ViewExtensions
         var hit = ApplicationExtensions.FindDeepestView(w, m.X, m.Y);
 
         int resizeBoxArea = 2;
+
+        // get nearest Design to the clicked thing (avoids issues with ContentView and other wierd subviews etc)
+        hit = hit?.GetNearestDesign()?.View;
 
         if (hit != null)
         {
