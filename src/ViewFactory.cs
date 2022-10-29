@@ -70,7 +70,14 @@ public class ViewFactory
                 Height = 5,
             };
         }
-
+        if (t == typeof(TextField))
+        {
+            return new TextField
+            {
+                Width = 10,
+                Height = 1,
+            };
+        }
         if (typeof(GraphView).IsAssignableFrom(t))
         {
             return new GraphView
