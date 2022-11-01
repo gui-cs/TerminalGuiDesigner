@@ -2,6 +2,7 @@
 using NStack;
 using Terminal.Gui;
 using Terminal.Gui.TextValidateProviders;
+using TerminalGuiDesigner.Operations;
 using static Terminal.Gui.Border;
 using Attribute = Terminal.Gui.Attribute;
 
@@ -92,7 +93,15 @@ public class ViewFactory
                 Height = 5
             };
         }
-
+        if (t == typeof(ScrollView))
+        {
+            return new ScrollView()
+            {
+                Width = 10,
+                Height = 5,
+                ContentSize = new Size(20, 10)
+            };
+        }
         var instance = (View?)Activator.CreateInstance(t) ?? throw new Exception($"CreateInstance returned null for Type '{t}'");
         instance.SetActualText("Heya");
 
@@ -115,7 +124,7 @@ public class ViewFactory
     {
          return new MenuBar (new MenuBarItem [] {
 				new MenuBarItem ("_File (F9)", new MenuItem [] {
-					new MenuItem ("_Do Something", "", () => {})
+					new MenuItem (AddMenuOperation.DefaultMenuItemText, "", () => {})
                 })
          });
     }
@@ -172,7 +181,6 @@ public class ViewFactory
              typeof(FileDialog),
              typeof(SaveDialog),
              typeof(OpenDialog),
-             typeof(ScrollView),
              typeof(ScrollBarView),
              typeof(TreeView<>)}; // The generic version of TreeView
 

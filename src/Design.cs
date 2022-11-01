@@ -243,6 +243,10 @@ public class Design
         {
             yield return CreateProperty(nameof(TextField.Secret));
         }
+        if(View is ScrollView)
+        {
+            yield return CreateProperty(nameof(ScrollView.ContentSize));
+        }
         if (View is TextView)
         {
             yield return CreateProperty(nameof(TextView.AllowsTab));
