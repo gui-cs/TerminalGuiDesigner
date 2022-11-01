@@ -845,11 +845,8 @@ Ctrl+Q - Quit
 
                 if (sb.Length > 0)
                 {
-                    var chosen = MessageBox.Query("Overwrite Files?", $"The following files will be overwritten:{Environment.NewLine}{sb.ToString().TrimEnd()}", "Ok", "Cancel");
-
-                    // user cancelled
-                    if (chosen != 0)
-                        return;
+                    if(!ConfirmDialog.Show("Overwrite Files?", $"The following files will be overwritten:{Environment.NewLine}{sb.ToString().TrimEnd()}", "Ok", "Cancel"))
+                        return; // user cancelled overwrite
                 }
 
                 New(file, selected, null);
