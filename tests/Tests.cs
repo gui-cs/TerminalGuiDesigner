@@ -51,33 +51,38 @@ namespace tests
         }
 
         /// <summary>
-        /// Creates a new instance of a <see cref="View"/> of type <typeparamref name="T"/>.  Then calls the
+        /// Creates a new instance of <typeparamref name="T2"/> using <see cref="ViewFactory"/>.  Then calls the
         /// provided <paramref name="adjust"/> action before writting out and reading back the code.  Returns
-        /// the read back in instance of your control so you can compare that it matches expectations
+        /// the read back in instance of your <typeparamref name="T2"/> so you can compare that it matches expectations
+        /// (i.e. nothing was lost during serialization/deserialization).
         /// </summary>
-        /// <typeparam name="T">Type of subview to create (e.g. <see cref="Label"/>)</typeparam>
+        /// <typeparam name="T1">Root designer View type to create (e.g. <see cref="Window"/>)</typeparam>
+        /// <typeparam name="T2">Type of subview to create (e.g. <see cref="Label"/>)</typeparam>
         /// <param name="adjust">Mutator for making pre save changes you want to conform can be read in properly</param>
+        /// <param name="viewOut">The view created and passed to <paramref name="adjust"/></param>
         /// <param name="caller"></param>
         /// <returns>The read in object state after round trip (generate code file then read that code back in)</returns>
-        protected T RoundTrip<T>(Action<Design,T> adjust, [CallerMemberName] string? caller = null) where T : View
+        protected T2 RoundTrip<T1, T2>(Action<Design, T2> adjust,out T2 viewOut, [CallerMemberName] string? caller = null) where T2 : View where T1 : View
         {
+            const string fieldName = "myViewOut";
+
             var viewToCode = new ViewToCode();
 
             var file = new FileInfo(caller + ".cs");
-            var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(View), out var sourceCode);
+            var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(T1), out var sourceCode);
 
             var factory = new ViewFactory();
-            var viewOut = (T)factory.Create(typeof(T));
+            viewOut = (T2)factory.Create(typeof(T2));
 
-            OperationManager.Instance.Do(new AddViewOperation(sourceCode, viewOut, designOut, "myViewOut"));
+            OperationManager.Instance.Do(new AddViewOperation(sourceCode, viewOut, designOut, fieldName));
             adjust((Design)viewOut.Data, viewOut);
 
-            viewToCode.GenerateDesignerCs(designOut, sourceCode, typeof(View));
+            viewToCode.GenerateDesignerCs(designOut, sourceCode, typeof(T1));
 
             var codeToView = new CodeToView(sourceCode);
             var designBackIn = codeToView.CreateInstance();
 
-            return designBackIn.View.GetActualSubviews().OfType<T>().Single();
+            return designBackIn.View.GetActualSubviews().OfType<T2>().Where(v=>v.Data is Design d && d.FieldName.Equals(fieldName)).Single();
         }
     }
 }

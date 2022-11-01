@@ -40,9 +40,10 @@ public class ViewFactory
             return CreateMenuBar();
         }
 
-        if(t == typeof(TextValidateField))
+        if (t == typeof(TextValidateField))
         {
-            return new TextValidateField{
+            return new TextValidateField
+            {
 
                 Provider = new TextRegexProvider(".*"),
                 Text = "Heya",
@@ -51,27 +52,46 @@ public class ViewFactory
             };
         }
 
-        if(t == typeof(ProgressBar))
+        if (t == typeof(ProgressBar))
         {
-            return new ProgressBar{
+            return new ProgressBar
+            {
                 Width = 10,
                 Height = 1,
                 Fraction = 1f
             };
         }
 
-        if(typeof(GraphView).IsAssignableFrom(t))
+        if (t == typeof(View))
         {
-            return new GraphView{
+            return new View
+            {
+                Width = 10,
+                Height = 5,
+            };
+        }
+        if (t == typeof(TextField))
+        {
+            return new TextField
+            {
+                Width = 10,
+                Height = 1,
+            };
+        }
+        if (typeof(GraphView).IsAssignableFrom(t))
+        {
+            return new GraphView
+            {
                 Width = 20,
                 Height = 5,
-                GraphColor = Attribute.Make(Color.White,Color.Black)
+                GraphColor = Attribute.Make(Color.White, Color.Black)
             };
         }
 
-        if(typeof(ListView).IsAssignableFrom(t))
+        if (typeof(ListView).IsAssignableFrom(t))
         {
-            var lv = new ListView(new List<string>{"Item1","Item2","Item3"}){
+            var lv = new ListView(new List<string> { "Item1", "Item2", "Item3" })
+            {
                 Width = 20,
                 Height = 3,
             };
@@ -79,16 +99,18 @@ public class ViewFactory
             return lv;
         }
 
-        if(t == typeof(LineView))
+        if (t == typeof(LineView))
         {
-            return new LineView(){
+            return new LineView()
+            {
                 Width = 8,
                 Height = 1
             };
         }
-        if(t == typeof(TreeView))
+        if (t == typeof(TreeView))
         {
-            return new TreeView(){
+            return new TreeView()
+            {
                 Width = 16,
                 Height = 5
             };
@@ -136,7 +158,7 @@ public class ViewFactory
             Width = 10,
             Height = 5,
         };
-        group.RadioLabels = new ustring[]{"Option 1","Option 2"};
+        group.RadioLabels = new ustring[] { "Option 1", "Option 2" };
 
         return group;
     }
@@ -159,14 +181,14 @@ public class ViewFactory
 
     private TabView CreateTabView()
     {
-        var tabView =  new TabView
+        var tabView = new TabView
         {
             Width = 50,
             Height = 5,
         };
 
-        tabView.AddTab(new TabView.Tab("Tab1", new View{Width = Dim.Fill(),Height=Dim.Fill()}),false);
-        tabView.AddTab(new TabView.Tab("Tab2", new View{Width = Dim.Fill(),Height=Dim.Fill()}),false);
+        tabView.AddTab(new TabView.Tab("Tab1", new View { Width = Dim.Fill(), Height = Dim.Fill() }), false);
+        tabView.AddTab(new TabView.Tab("Tab2", new View { Width = Dim.Fill(), Height = Dim.Fill() }), false);
 
         return tabView;
     }
@@ -184,10 +206,10 @@ public class ViewFactory
              typeof(ScrollBarView),
              typeof(TreeView<>)}; // The generic version of TreeView
 
-        return typeof(View).Assembly.DefinedTypes.Where(t => 
-                typeof(View).IsAssignableFrom(t) && 
+        return typeof(View).Assembly.DefinedTypes.Where(t =>
+                typeof(View).IsAssignableFrom(t) &&
                 !t.IsInterface && !t.IsAbstract && t.IsPublic
             ).Except(exclude)
-            .OrderBy(t=>t.Name).ToArray();
+            .OrderBy(t => t.Name).ToArray();
     }
 }
