@@ -114,10 +114,10 @@ public class MouseManager
             if (SelectionStart != null && SelectionBox != null && SelectionContainer != null)
             {
                 SelectionManager.Instance.SetSelection(
-                    SelectionContainer.Subviews
+                    SelectionContainer.GetActualSubviews()
                     .Where(v => v.IntersectsScreenRect(SelectionBox.Value))
                     .Select(v=>v.GetNearestDesign())
-                    .Where(d=>d !=null)
+                    .Where(d=>d !=null && !d.IsRoot)
                     .Cast<Design>()
                     .ToArray()
                     );

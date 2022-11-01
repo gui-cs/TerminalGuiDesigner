@@ -15,25 +15,10 @@ class TabViewTests : Tests
     [Test]
     public void TestRoundTrip_PreserveTabs()
     {
-        var viewToCode = new ViewToCode();
-
-        var file = new FileInfo("TestRoundTrip_PreserveTabs.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace",typeof(Dialog), out var sourceCode);
-
-        var factory = new ViewFactory();
-        var tvOut = factory.Create(typeof(TabView));
-
-        OperationManager.Instance.Do(new AddViewOperation(sourceCode, tvOut, designOut, "myTabview"));
-
-        viewToCode.GenerateDesignerCs(designOut, sourceCode,typeof(Dialog));
-
-        var tabOut = designOut.View.GetActualSubviews().OfType<TabView>().Single();
-
-        var codeToView = new CodeToView(sourceCode);
-        var designBackIn = codeToView.CreateInstance();
-
-        var tabIn = designBackIn.View.GetActualSubviews().OfType<TabView>().Single();
-
+        TabView tabIn = RoundTrip<Dialog, TabView>((d,t) => 
+            Assert.IsNotEmpty(t.Tabs,"Expected default TabView created by ViewFactory to have some placeholder Tabs")
+        ,out TabView tabOut);
+                
         Assert.AreEqual(2,tabIn.Tabs.Count());
 
         Assert.AreEqual("Tab1",tabIn.Tabs.ElementAt(0).Text);
@@ -222,5 +207,31 @@ class TabViewTests : Tests
         Assert.Contains(lbl2,tvDesign.GetAllDesigns().ToArray());
 
         Assert.AreEqual(3,tvDesign.GetAllDesigns().Count(),$"Expected only 3 Designs but they were {string.Join(",",tvDesign.GetAllDesigns())}");
+    }
+
+    [Test]
+    public void TabView_IsBorderless_DependsOnShowBorder()
+    {
+        var inst = new TabView();
+
+        Assert.IsTrue(inst.Style.ShowBorder);
+        Assert.False(inst.IsBorderlessContainerView());
+
+        inst.Style.ShowBorder = false;
+
+        Assert.True(inst.IsBorderlessContainerView());
+    }
+
+    [Test]
+    public void TabView_IsBorderless_DependsOnTabsOnBottom()
+    {
+        var inst = new TabView();
+
+        Assert.IsFalse(inst.Style.TabsOnBottom);
+        Assert.False(inst.IsBorderlessContainerView());
+
+        inst.Style.TabsOnBottom = true;
+
+        Assert.True(inst.IsBorderlessContainerView());
     }
 }

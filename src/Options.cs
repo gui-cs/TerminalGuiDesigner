@@ -21,7 +21,10 @@ namespace TerminalGuiDesigner
 
         [Option( HelpText = "Enables UseSystemConsole, an alternative console display driver")]
         public bool Usc { get;set; }
-        
+
+        [Option( 'e', HelpText = "Enables experimental features")]
+        public bool Experimental { get;set; }
+
         #nullable enable warnings
 
         [Usage(ApplicationAlias = "TerminalGuiDesigner")]

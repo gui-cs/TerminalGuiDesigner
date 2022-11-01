@@ -14,6 +14,7 @@ public partial class Program
                    .WithParsed<Options>(o =>
                    {
                        Application.UseSystemConsole = o.Usc;
+                       Editor.Experimental = o.Experimental;
                        
                        Application.Init();
                        var editor = new Editor();

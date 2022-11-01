@@ -31,22 +31,25 @@ public class ViewToCode
         var csharpCode = GetGenerateNewViewCode(className, namespaceName);
         File.WriteAllText(sourceFile.CsFile.FullName, csharpCode);
 
-        var view = (View)(Activator.CreateInstance(viewType) ?? throw new Exception($"Could not create instance of Type '{viewType}' ('Activator.CreateInstance' returned null)"));
+        var prototype = (View)(Activator.CreateInstance(viewType) ?? throw new Exception($"Could not create instance of Type '{viewType}' ('Activator.CreateInstance' returned null)"));
 
         // Unlike Window and Dialog the default constructor on
         // View will be a size 0 view.  Make it big so it can be 
         // edited
         if(viewType == typeof(View))
         {
-            view.Width = Dim.Fill();
-            view.Height = Dim.Fill();
+            prototype.Width = Dim.Fill();
+            prototype.Height = Dim.Fill();
         }
 
-        var design = new Design(sourceFile, Design.RootDesignName, view);
+        // use the prototype to create a designer cs file
+        var design = new Design(sourceFile, Design.RootDesignName, prototype);
         design.CreateSubControlDesigns();
 
         GenerateDesignerCs(design, sourceFile,viewType);
 
+        // Reload the designer cs file to create a new instance (which is returned).
+        // NOTE: prototype is not the same instance that is returned;
 
         var decompiler = new CodeToView(sourceFile);
         return decompiler.CreateInstance();

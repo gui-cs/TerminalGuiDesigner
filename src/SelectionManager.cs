@@ -17,8 +17,6 @@ public class SelectionManager
     /// </summary>
     public IReadOnlyCollection<Design> Selected => selection.AsReadOnly();
 
-    Dictionary<Design, ColorScheme?> oldSchemes = new();
-
     /// <summary>
     /// Set to true to prevent changes to the current <see cref="Selected"/>
     /// collection (e.g. if running a modal dialog / context menu).
@@ -57,16 +55,8 @@ public class SelectionManager
 
 
     public static SelectionManager Instance = new();
-    private ColorScheme selectedScheme;
+    private ColorScheme? selectedScheme;
 
-
-    public ColorScheme? GetOriginalExplicitColorScheme(Design design)
-    {
-        if (oldSchemes.ContainsKey(design))
-            return oldSchemes[design];
-
-        return null;
-    }
 
     /// <summary>
     /// Changes the selection without respecting <see cref="LockSelection"/>
@@ -99,24 +89,8 @@ public class SelectionManager
 
         foreach (var d in selection)
         {
-            // record the old color scheme so we can get reset it
-            // later when it is no longer selected
-            oldSchemes.Add(d, d.View.GetExplicitColorScheme());
-
             // since the view is selected mark it so
             d.View.ColorScheme = SelectedScheme;
-        }
-    }
-
-    /// <summary>
-    /// Updates the cached known ColorScheme (prior to selection).  Use this method
-    /// if you are making changes to the ColorScheme of an actively selected object
-    /// </summary>
-    public void UpdateKnownScheme(Design design, ColorScheme? colorScheme)
-    {
-        if(oldSchemes.ContainsKey(design))
-        {
-            oldSchemes[design] = colorScheme;
         }
     }
 
@@ -125,14 +99,15 @@ public class SelectionManager
         if (LockSelection && respectLock)
             return;
 
+        var selected = selection.ToArray();
+
         selection.Clear();
 
         // reset old color schemes so views don't still look selected
-        foreach (var kvp in oldSchemes)
+        foreach (var d in selected)
         {
-            kvp.Key.View.ColorScheme = kvp.Value;
+            d.View.ColorScheme = d.State.OriginalScheme;
         }
-        oldSchemes.Clear();
     }
 
     /// <summary>

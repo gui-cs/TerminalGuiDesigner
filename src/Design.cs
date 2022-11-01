@@ -27,11 +27,14 @@ public class Design
 
     private readonly List<Property> _designableProperties;
 
+
+    public DesignState State { get; }
+
     private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
     public Property? GetDesignableProperty(string propertyName)
     {
-        return GetDesignableProperties().SingleOrDefault(p=>p.PropertyInfo.Name.Equals(propertyName));
+        return GetDesignableProperties().SingleOrDefault(p => p.PropertyInfo.Name.Equals(propertyName));
     }
 
 
@@ -40,12 +43,9 @@ public class Design
     /// this instance.  Instead use <see cref="AddDesign(string, Terminal.Gui.View)"/> so that
     /// new child controls are preserved for design time changes
     /// </summary>
-    public View View {get;}
-    public bool IsContainerView { get
-        {
-            return View.IsContainerView();
-        }
-    }
+    public View View { get; }
+    public bool IsContainerView => View.IsContainerView();
+    public bool IsBorderlessContainerView => View.IsBorderlessContainerView();
 
     public Design(SourceCodeFile sourceCode, string fieldName, View view)
     {
@@ -54,10 +54,40 @@ public class Design
         FieldName = fieldName;
 
         _designableProperties = new List<Property>(LoadDesignableProperties());
+        State = new DesignState(this);
     }
 
     public void CreateSubControlDesigns()
     {
+
+        // Unlike Window/Dialog the View/TopLevel classes do not have an explicit
+        // colors schemes.  When creating a new View or TopLevel we need to use
+        // the Colors.Base and fiddle a bit with coloring/clearing to ensure things render correctly
+
+        var baseType = View.GetType().BaseType;
+
+        if (baseType == typeof(View) || baseType == typeof(Toplevel))
+        {
+            if(View.ColorScheme == null || View.ColorScheme == Colors.TopLevel)
+            {
+                State.OriginalScheme = View.ColorScheme = Colors.Base;
+            }
+
+            // TODO: Remove this when https://github.com/gui-cs/Terminal.Gui/issues/2094 is fixed
+            // HACK
+
+            // View and TopLevel doe not clear their states regularly during drawing
+            // we have to do that ourselves
+            View.DrawContent += (r) =>
+            {
+                // manually erase stale content
+                Application.Driver.SetAttribute(
+                    State.OriginalScheme?.Normal ??
+                    View.ColorScheme.Normal);
+                View.Clear();
+            };
+        }
+
         CreateSubControlDesigns(View);
     }
 
@@ -67,11 +97,11 @@ public class Design
         {
             logger.Info($"Found subView of Type '{subView.GetType()}'");
 
-            if(subView.Data is string name)
+            if (subView.Data is string name)
             {
                 subView.Data = CreateSubControlDesign(SourceCode, name, subView);
             }
-            
+
             CreateSubControlDesigns(subView);
         }
     }
@@ -81,7 +111,7 @@ public class Design
         // HACK: if you don't pull the label out first it complains that you cant set Focusable to true
         // on the Label because its super is not focusable :(
         var super = subView.SuperView;
-        if(super != null)
+        if (super != null)
         {
             super.Remove(subView);
         }
@@ -89,7 +119,7 @@ public class Design
         // all views can be focused so that they can be edited
         // or deleted etc
         subView.CanFocus = true;
-                
+
         if (subView is TableView tv && tv.Table != null && tv.Table.Rows.Count == 0)
         {
             // add example rows so that it is easier to design the view
@@ -106,7 +136,7 @@ public class Design
 
         // To make the graph render correctly we need some content
         // either a Series or an Annotation
-        if(subView is GraphView gv && gv.Series.Count == 0 && gv.Annotations.Count == 0)
+        if (subView is GraphView gv && gv.Series.Count == 0 && gv.Annotations.Count == 0)
         {
             // We don't have  either so add one
             gv.Annotations.Add(new TextAnnotation
@@ -115,34 +145,42 @@ public class Design
                 Text = ""
             });
         }
-        if(subView is MenuBar mb)
-        {        
+        if (subView is MenuBar mb)
+        {
             MenuTracker.Instance.Register(mb);
         }
 
-        if(subView is CheckBox cb)
+        if (subView is CheckBox cb)
         {
             RegisterCheckboxDesignTimeChanges(cb);
         }
 
-        if(subView is TextView txt)
+        if (subView is TextView txt)
         {
             // prevent control from responding to events
-            txt.MouseClick += (s)=>s.Handled = true;
-            txt.KeyDown += (s)=>s.Handled = true;
+            txt.MouseClick += SuppressNativeClickEvents;
+            txt.KeyDown += (s) => s.Handled = true;
         }
-        
-        if(subView is TreeView tree)
+
+        if (subView is TextField tf)
         {
-            tree.AddObject(new TreeNode("Example Branch 1"){
-                Children = new []{new TreeNode("Child 1")}
+            // prevent control from responding to events
+            tf.MouseClick += SuppressNativeClickEvents;
+            tf.KeyDown += (s) => s.Handled = true;
+        }
+        if (subView is TreeView tree)
+        {
+            tree.AddObject(new TreeNode("Example Branch 1")
+            {
+                Children = new[] { new TreeNode("Child 1") }
             });
-            tree.AddObject(new TreeNode("Example Branch 2"){
-                Children = new []{
+            tree.AddObject(new TreeNode("Example Branch 2")
+            {
+                Children = new[]{
                     new TreeNode("Child 1"),
                     new TreeNode("Child 2")}
             });
-            
+
             for (int l = 0; l < 20; l++)
                 tree.AddObject(new TreeNode($"Example Leaf {l}"));
         }
@@ -152,9 +190,14 @@ public class Design
             super.Add(subView);
         }
 
-        var d = new Design(sourceCode,name, subView);
-        subView.Enter += (s=>SelectionManager.Instance.SetSelection(d));
+        var d = new Design(sourceCode, name, subView);
         return d;
+    }
+
+    private void SuppressNativeClickEvents(View.MouseEventArgs obj)
+    {
+        // Suppress everything except single click (selection)
+        obj.Handled = obj.MouseEvent.Flags != MouseFlags.Button1Clicked;
     }
 
     private void RegisterCheckboxDesignTimeChanges(CheckBox cb)
@@ -183,19 +226,19 @@ public class Design
     /// </summary>
     public bool HasKnownColorScheme()
     {
-        var userDefinedColorScheme = SelectionManager.Instance.GetOriginalExplicitColorScheme(this) ?? View.GetExplicitColorScheme();
+        var userDefinedColorScheme = State.OriginalScheme ?? View.GetExplicitColorScheme();
 
-        if(userDefinedColorScheme == null)
+        if (userDefinedColorScheme == null)
             return false;
 
         // theres a color scheme defined but we aren't tracking it
         // so report it as inherited since it must have got it from
         // the API somehow
-        if(Colors.ColorSchemes.Values.Contains(userDefinedColorScheme))
+        if (Colors.ColorSchemes.Values.Contains(userDefinedColorScheme))
             return false;
 
         // it has a ColorScheme but not one we are tracking
-        if(ColorSchemeManager.Instance.GetNameForColorScheme(userDefinedColorScheme) == null)
+        if (ColorSchemeManager.Instance.GetNameForColorScheme(userDefinedColorScheme) == null)
             return false;
 
         return true;
@@ -224,7 +267,7 @@ public class Design
     {
         yield return CreateProperty(nameof(View.Width));
 
-        if(AllowChangingHeight())
+        if (AllowChangingHeight())
             yield return CreateProperty(nameof(View.Height));
 
         yield return CreateProperty(nameof(View.X));
@@ -235,13 +278,17 @@ public class Design
 
         // its important that this comes before Text because
         // changing the validator clears the text
-        if(View is TextValidateField)
+        if (View is TextValidateField)
         {
             yield return CreateProperty(nameof(TextValidateField.Provider));
         }
         if (View is TextField)
         {
             yield return CreateProperty(nameof(TextField.Secret));
+        }
+        if(View is ScrollView)
+        {
+            yield return CreateProperty(nameof(ScrollView.ContentSize));
         }
         if (View is TextView)
         {
@@ -250,38 +297,38 @@ public class Design
             yield return CreateProperty(nameof(TextView.WordWrap));
         }
 
-        if(View is Toplevel)
+        if (View is Toplevel)
         {
             yield return CreateProperty(nameof(Toplevel.Modal));
         }
 
         // Allow changing the FieldName on anything but root where 
         // such an action would break things badly
-        if(!this.IsRoot)
+        if (!this.IsRoot)
             yield return new NameProperty(this);
 
-        yield return new Property(this,View.GetActualTextProperty());
+        yield return new Property(this, View.GetActualTextProperty());
 
         // Border properties - Most views dont have a border so Border is
-        if(View.Border != null)
+        if (View.Border != null)
         {
-            yield return CreateSubProperty(nameof(Border.BorderStyle),nameof(View.Border),View.Border);
-            yield return CreateSubProperty(nameof(Border.Effect3D),nameof(View.Border),View.Border);
+            yield return CreateSubProperty(nameof(Border.BorderStyle), nameof(View.Border), View.Border);
+            yield return CreateSubProperty(nameof(Border.Effect3D), nameof(View.Border), View.Border);
             yield return CreateSubProperty(nameof(Border.DrawMarginFrame), nameof(View.Border), View.Border);
         }
-        
+
         yield return CreateProperty(nameof(View.TextAlignment));
 
         if (View is Button)
         {
             yield return CreateProperty(nameof(Button.IsDefault));
         }
-        if(View is LineView)
+        if (View is LineView)
         {
             yield return CreateProperty(nameof(LineView.LineRune));
             yield return CreateProperty(nameof(LineView.Orientation));
         }
-        if(View is ProgressBar)
+        if (View is ProgressBar)
         {
             yield return CreateProperty(nameof(ProgressBar.Fraction));
             yield return CreateProperty(nameof(ProgressBar.BidirectionalMarquee));
@@ -298,7 +345,7 @@ public class Design
         {
             yield return CreateProperty(nameof(ListView.Source));
         }
-        if(View is GraphView gv)
+        if (View is GraphView gv)
         {
             yield return CreateProperty(nameof(GraphView.GraphColor));
             yield return CreateProperty(nameof(GraphView.ScrollOffset));
@@ -306,16 +353,16 @@ public class Design
             yield return CreateProperty(nameof(GraphView.MarginBottom));
             yield return CreateProperty(nameof(GraphView.CellSize));
 
-            yield return CreateSubProperty(nameof(HorizontalAxis.Visible),nameof(GraphView.AxisX),gv.AxisX);
-            yield return CreateSubProperty(nameof(HorizontalAxis.Increment),nameof(GraphView.AxisX),gv.AxisX);
-            yield return CreateSubProperty(nameof(HorizontalAxis.ShowLabelsEvery),nameof(GraphView.AxisX),gv.AxisX);
-            yield return CreateSubProperty(nameof(HorizontalAxis.Minimum),nameof(GraphView.AxisX),gv.AxisX);
-            yield return CreateSubProperty(nameof(HorizontalAxis.Text),nameof(GraphView.AxisX),gv.AxisX);
-            yield return CreateSubProperty(nameof(VerticalAxis.Visible),nameof(GraphView.AxisY),gv.AxisY);
-            yield return CreateSubProperty(nameof(VerticalAxis.Increment),nameof(GraphView.AxisY),gv.AxisY);
-            yield return CreateSubProperty(nameof(VerticalAxis.ShowLabelsEvery),nameof(GraphView.AxisY),gv.AxisY);
-            yield return CreateSubProperty(nameof(VerticalAxis.Minimum),nameof(GraphView.AxisY),gv.AxisY);
-            yield return CreateSubProperty(nameof(VerticalAxis.Text),nameof(GraphView.AxisY),gv.AxisY);
+            yield return CreateSubProperty(nameof(HorizontalAxis.Visible), nameof(GraphView.AxisX), gv.AxisX);
+            yield return CreateSubProperty(nameof(HorizontalAxis.Increment), nameof(GraphView.AxisX), gv.AxisX);
+            yield return CreateSubProperty(nameof(HorizontalAxis.ShowLabelsEvery), nameof(GraphView.AxisX), gv.AxisX);
+            yield return CreateSubProperty(nameof(HorizontalAxis.Minimum), nameof(GraphView.AxisX), gv.AxisX);
+            yield return CreateSubProperty(nameof(HorizontalAxis.Text), nameof(GraphView.AxisX), gv.AxisX);
+            yield return CreateSubProperty(nameof(VerticalAxis.Visible), nameof(GraphView.AxisY), gv.AxisY);
+            yield return CreateSubProperty(nameof(VerticalAxis.Increment), nameof(GraphView.AxisY), gv.AxisY);
+            yield return CreateSubProperty(nameof(VerticalAxis.ShowLabelsEvery), nameof(GraphView.AxisY), gv.AxisY);
+            yield return CreateSubProperty(nameof(VerticalAxis.Minimum), nameof(GraphView.AxisY), gv.AxisY);
+            yield return CreateSubProperty(nameof(VerticalAxis.Text), nameof(GraphView.AxisY), gv.AxisY);
         }
 
         if (View is Window)
@@ -329,20 +376,20 @@ public class Design
 
         if (View is TreeView tree)
         {
-            yield return CreateSubProperty(nameof(TreeStyle.CollapseableSymbol),nameof(TreeView<ITreeNode>.Style),tree.Style);
-            yield return CreateSubProperty(nameof(TreeStyle.ColorExpandSymbol),nameof(TreeView<ITreeNode>.Style),tree.Style);
-            yield return CreateSubProperty(nameof(TreeStyle.ExpandableSymbol),nameof(TreeView<ITreeNode>.Style),tree.Style);
-            yield return CreateSubProperty(nameof(TreeStyle.InvertExpandSymbolColors),nameof(TreeView<ITreeNode>.Style),tree.Style);
-            yield return CreateSubProperty(nameof(TreeStyle.LeaveLastRow),nameof(TreeView<ITreeNode>.Style),tree.Style);
-            yield return CreateSubProperty(nameof(TreeStyle.ShowBranchLines),nameof(TreeView<ITreeNode>.Style),tree.Style);
+            yield return CreateSubProperty(nameof(TreeStyle.CollapseableSymbol), nameof(TreeView<ITreeNode>.Style), tree.Style);
+            yield return CreateSubProperty(nameof(TreeStyle.ColorExpandSymbol), nameof(TreeView<ITreeNode>.Style), tree.Style);
+            yield return CreateSubProperty(nameof(TreeStyle.ExpandableSymbol), nameof(TreeView<ITreeNode>.Style), tree.Style);
+            yield return CreateSubProperty(nameof(TreeStyle.InvertExpandSymbolColors), nameof(TreeView<ITreeNode>.Style), tree.Style);
+            yield return CreateSubProperty(nameof(TreeStyle.LeaveLastRow), nameof(TreeView<ITreeNode>.Style), tree.Style);
+            yield return CreateSubProperty(nameof(TreeStyle.ShowBranchLines), nameof(TreeView<ITreeNode>.Style), tree.Style);
         }
-        
+
         if (View is TableView tv)
         {
 
             yield return CreateProperty(nameof(TableView.FullRowSelect));
 
-            yield return CreateSubProperty(nameof(TableStyle.AlwaysShowHeaders),nameof(TableView.Style),tv.Style);
+            yield return CreateSubProperty(nameof(TableStyle.AlwaysShowHeaders), nameof(TableView.Style), tv.Style);
             yield return CreateSubProperty(nameof(TableStyle.ExpandLastColumn), nameof(TableView.Style), tv.Style);
             yield return CreateSubProperty(nameof(TableStyle.InvertSelectedCellFirstCharacter), nameof(TableView.Style), tv.Style);
             yield return CreateSubProperty(nameof(TableStyle.ShowHorizontalHeaderOverline), nameof(TableView.Style), tv.Style);
@@ -351,7 +398,7 @@ public class Design
             yield return CreateSubProperty(nameof(TableStyle.ShowVerticalHeaderLines), nameof(TableView.Style), tv.Style);
         }
 
-        
+
         if (View is TabView tabView)
         {
             yield return CreateProperty(nameof(TabView.MaxTabTextWidth));
@@ -361,7 +408,7 @@ public class Design
             yield return CreateSubProperty(nameof(TabStyle.TabsOnBottom), nameof(TabView.Style), tabView.Style);
         }
 
-        if(View is RadioGroup)
+        if (View is RadioGroup)
         {
             yield return CreateProperty(nameof(RadioGroup.RadioLabels));
         }
@@ -370,22 +417,22 @@ public class Design
     private bool AllowChangingHeight()
     {
         // don't support multi line buttons
-        if(View is Button)
+        if (View is Button)
             return false;
 
-        return true; 
+        return true;
     }
 
     private Property CreateSubProperty(string name, string subObjectName, object subObject)
     {
-        return new Property(this,subObject.GetType().GetProperty(name)        
+        return new Property(this, subObject.GetType().GetProperty(name)
             ?? throw new Exception($"Could not find expected Property '{name}' on Sub Object of Type '{subObject.GetType()}'")
-            ,subObjectName,subObject);
+            , subObjectName, subObject);
     }
 
     private Property CreateProperty(string name)
     {
-        return new Property(this,View.GetType().GetProperty(name)
+        return new Property(this, View.GetType().GetProperty(name)
             ?? throw new Exception($"Could not find expected Property '{name}' on View of Type '{View.GetType()}'"));
     }
 
@@ -412,7 +459,7 @@ public class Design
         if (View is TableView tv)
         {
             DataColumn? col = null;
-            if(!pos.IsEmpty)
+            if (!pos.IsEmpty)
             {
                 // TODO: Currently you have to right click in the row (body) of the table
                 // and cannot right click the headers themselves
@@ -426,16 +473,16 @@ public class Design
             yield return new RenameColumnOperation(this, col);
         }
 
-        if(IsContainerView || IsRoot)
+        if (IsContainerView || IsRoot)
         {
-            yield return new AddViewOperation(SourceCode,this);
+            yield return new AddViewOperation(SourceCode, this);
             yield return new PasteOperation(this);
         }
         else
         {
             var nearestContainer = this.View.GetNearestContainerDesign();
-            if(nearestContainer != null)
-                yield return new AddViewOperation(SourceCode,nearestContainer);
+            if (nearestContainer != null)
+                yield return new AddViewOperation(SourceCode, nearestContainer);
         }
 
         yield return new DeleteViewOperation(this.View);
@@ -450,9 +497,9 @@ public class Design
             yield return new MoveTabOperation(this, 1);
         }
 
-        if(View is MenuBar)
+        if (View is MenuBar)
         {
-            yield return new AddMenuOperation(this,null);
+            yield return new AddMenuOperation(this, null);
             yield return new RemoveMenuOperation(this);
         }
     }
@@ -466,19 +513,19 @@ public class Design
     {
         // If there is no parent then we are likely the top rot Design
         // or an orphan.  Either way we have no siblings
-        if(View.SuperView == null)
+        if (View.SuperView == null)
         {
             yield break;
         }
 
-        foreach(var v in View.SuperView.Subviews)
+        foreach (var v in View.SuperView.Subviews)
         {
-            if(v == View)
+            if (v == View)
             {
                 continue;
             }
 
-            if(v.Data is Design d)
+            if (v.Data is Design d)
             {
                 yield return d;
             }
@@ -492,12 +539,12 @@ public class Design
     public IEnumerable<Design> GetAllDesigns()
     {
         var root = GetRootDesign();
-        
+
         // Return the root design
         yield return root;
-        
+
         // And all child designs
-        foreach(var d in GetAllChildDesigns(root.View))
+        foreach (var d in GetAllChildDesigns(root.View))
         {
             yield return d;
         }
@@ -512,13 +559,13 @@ public class Design
         var toReturn = this;
         var v = View;
 
-        while(v.SuperView != null)
+        while (v.SuperView != null)
         {
             v = v.SuperView;
 
-            if(v.Data is Design d)
+            if (v.Data is Design d)
             {
-                if(d.IsRoot)
+                if (d.IsRoot)
                     return d;
 
                 toReturn = d;
@@ -589,10 +636,10 @@ public class Design
 
         // what field names are already taken by other objects?
         var usedFieldNames = allDesigns.Select(d => d.FieldName).ToList();
-        usedFieldNames.AddRange(ColorSchemeManager.Instance.Schemes.Select(k=>k.Name));
+        usedFieldNames.AddRange(ColorSchemeManager.Instance.Schemes.Select(k => k.Name));
 
         // if name is already unique thats great
-        if(!usedFieldNames.Contains(candidate))
+        if (!usedFieldNames.Contains(candidate))
         {
             return candidate;
         }
@@ -615,7 +662,7 @@ public class Design
     public IEnumerable<Design> GetDependantDesigns()
     {
         var everyone = GetAllDesigns().ToArray();
-        return everyone.Where(o=>DependsOnUs(o,everyone));
+        return everyone.Where(o => DependsOnUs(o, everyone));
     }
 
     private bool DependsOnUs(Design other, Design[] everyone)
@@ -625,7 +672,7 @@ public class Design
             return false;
 
         // if their X depends on us
-        if(other.View.X.GetPosType(everyone,out _,out _, out var relativeTo,out _,out _))
+        if (other.View.X.GetPosType(everyone, out _, out _, out var relativeTo, out _, out _))
         {
             if (relativeTo == this)
                 return true;

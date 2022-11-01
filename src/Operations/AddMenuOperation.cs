@@ -1,4 +1,5 @@
-﻿using Terminal.Gui;
+﻿using NStack;
+using Terminal.Gui;
 using TerminalGuiDesigner.UI.Windows;
 
 namespace TerminalGuiDesigner.Operations;
@@ -11,6 +12,7 @@ public class AddMenuOperation: Operation
     public Design Design { get; }
 
     private string? _name;
+    public const string DefaultMenuItemText = "Edit Me";
 
     /// <summary>
     /// Adds a new top level menu to a <see cref="MenuBar"/>. 
@@ -46,7 +48,7 @@ public class AddMenuOperation: Operation
 
 
         var current = _menuBar.Menus.ToList<MenuBarItem>();
-        current.Add(_newItem = new MenuBarItem(_name,new MenuItem[] { new MenuItem { Title = "Edit Me" } }));
+        current.Add(_newItem = new MenuBarItem(_name,new MenuItem[] { new MenuItem { Title = DefaultMenuItemText } }));
         _menuBar.Menus = current.ToArray();
         _menuBar.SetNeedsDisplay();
 
