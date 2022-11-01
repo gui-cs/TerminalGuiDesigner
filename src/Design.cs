@@ -266,9 +266,7 @@ public class Design
     protected virtual IEnumerable<Property> LoadDesignableProperties()
     {
         yield return CreateProperty(nameof(View.Width));
-
-        if (AllowChangingHeight())
-            yield return CreateProperty(nameof(View.Height));
+        yield return CreateProperty(nameof(View.Height));
 
         yield return CreateProperty(nameof(View.X));
         yield return CreateProperty(nameof(View.Y));
@@ -313,7 +311,9 @@ public class Design
         if (View.Border != null)
         {
             yield return CreateSubProperty(nameof(Border.BorderStyle), nameof(View.Border), View.Border);
+            yield return CreateSubProperty(nameof(Border.BorderBrush), nameof(View.Border), View.Border);
             yield return CreateSubProperty(nameof(Border.Effect3D), nameof(View.Border), View.Border);
+            yield return CreateSubProperty(nameof(Border.Effect3DBrush), nameof(View.Border), View.Border);
             yield return CreateSubProperty(nameof(Border.DrawMarginFrame), nameof(View.Border), View.Border);
         }
 
@@ -412,15 +412,6 @@ public class Design
         {
             yield return CreateProperty(nameof(RadioGroup.RadioLabels));
         }
-    }
-
-    private bool AllowChangingHeight()
-    {
-        // don't support multi line buttons
-        if (View is Button)
-            return false;
-
-        return true;
     }
 
     private Property CreateSubProperty(string name, string subObjectName, object subObject)

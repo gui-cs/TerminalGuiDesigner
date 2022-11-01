@@ -13,11 +13,11 @@ namespace TerminalGuiDesigner.UI.Windows {
     using Terminal.Gui;
     
     
-    public partial class ConfirmDialog : Terminal.Gui.Dialog {
+    public partial class ConfirmDialog : Terminal.Gui.Window {
         
-        private Terminal.Gui.ColorScheme greenOnBlack;
+        private Terminal.Gui.ColorScheme dialogBackground;
         
-        private Terminal.Gui.ColorScheme warningScheme;
+        private Terminal.Gui.ColorScheme buttons;
         
         private Terminal.Gui.Label label1;
         
@@ -32,26 +32,29 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnOk = new Terminal.Gui.Button();
             this.buttonPanel = new Terminal.Gui.View();
             this.label1 = new Terminal.Gui.Label();
-            this.greenOnBlack = new Terminal.Gui.ColorScheme();
-            this.greenOnBlack.Normal = new Terminal.Gui.Attribute(Terminal.Gui.Color.Green, Terminal.Gui.Color.Black);
-            this.greenOnBlack.HotNormal = new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightGreen, Terminal.Gui.Color.Black);
-            this.greenOnBlack.Focus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Green, Terminal.Gui.Color.Magenta);
-            this.greenOnBlack.HotFocus = new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightGreen, Terminal.Gui.Color.Magenta);
-            this.greenOnBlack.Disabled = new Terminal.Gui.Attribute(Terminal.Gui.Color.Gray, Terminal.Gui.Color.Black);
-            this.warningScheme = new Terminal.Gui.ColorScheme();
-            this.warningScheme.Normal = new Terminal.Gui.Attribute(Terminal.Gui.Color.Brown, Terminal.Gui.Color.Black);
-            this.warningScheme.HotNormal = new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightYellow, Terminal.Gui.Color.Black);
-            this.warningScheme.Focus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.Brown);
-            this.warningScheme.HotFocus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.BrightYellow);
-            this.warningScheme.Disabled = new Terminal.Gui.Attribute(Terminal.Gui.Color.Brown, Terminal.Gui.Color.Black);
+            this.dialogBackground = new Terminal.Gui.ColorScheme();
+            this.dialogBackground.Normal = new Terminal.Gui.Attribute(Terminal.Gui.Color.White, Terminal.Gui.Color.DarkGray);
+            this.dialogBackground.HotNormal = new Terminal.Gui.Attribute(Terminal.Gui.Color.White, Terminal.Gui.Color.DarkGray);
+            this.dialogBackground.Focus = new Terminal.Gui.Attribute(Terminal.Gui.Color.White, Terminal.Gui.Color.DarkGray);
+            this.dialogBackground.HotFocus = new Terminal.Gui.Attribute(Terminal.Gui.Color.White, Terminal.Gui.Color.DarkGray);
+            this.dialogBackground.Disabled = new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.Black);
+            this.buttons = new Terminal.Gui.ColorScheme();
+            this.buttons.Normal = new Terminal.Gui.Attribute(Terminal.Gui.Color.DarkGray, Terminal.Gui.Color.White);
+            this.buttons.HotNormal = new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.White);
+            this.buttons.Focus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Red, Terminal.Gui.Color.Brown);
+            this.buttons.HotFocus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.Brown);
+            this.buttons.Disabled = new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.Black);
             this.Width = Dim.Percent(85f);
             this.Height = Dim.Percent(85f);
             this.X = Pos.Center();
             this.Y = Pos.Center();
+            this.ColorScheme = this.dialogBackground;
             this.Modal = true;
             this.Text = "";
-            this.Border.BorderStyle = Terminal.Gui.BorderStyle.Rounded;
+            this.Border.BorderStyle = Terminal.Gui.BorderStyle.Double;
+            this.Border.BorderBrush = Terminal.Gui.Color.Blue;
             this.Border.Effect3D = true;
+            this.Border.Effect3DBrush = Terminal.Gui.Attribute.Make(Color.Black,Color.Black);
             this.Border.DrawMarginFrame = true;
             this.TextAlignment = Terminal.Gui.TextAlignment.Left;
             this.Title = "";
@@ -59,31 +62,33 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.label1.Height = Dim.Fill(0);
             this.label1.X = 0;
             this.label1.Y = 0;
-            this.label1.ColorScheme = this.warningScheme;
             this.label1.Data = "label1";
             this.label1.Text = "lblMessage";
             this.label1.TextAlignment = Terminal.Gui.TextAlignment.Centered;
             this.Add(this.label1);
             this.buttonPanel.Width = 30;
-            this.buttonPanel.Height = 1;
+            this.buttonPanel.Height = 2;
             this.buttonPanel.X = Pos.Center();
-            this.buttonPanel.Y = Pos.AnchorEnd(1);
-            this.buttonPanel.ColorScheme = this.warningScheme;
+            this.buttonPanel.Y = Pos.AnchorEnd(2);
             this.buttonPanel.Data = "buttonPanel";
             this.buttonPanel.Text = "";
             this.buttonPanel.TextAlignment = Terminal.Gui.TextAlignment.Left;
             this.Add(this.buttonPanel);
             this.btnOk.Width = 9;
+            this.btnOk.Height = 2;
             this.btnOk.X = 0;
-            this.btnOk.Y = Pos.AnchorEnd(1);
+            this.btnOk.Y = Pos.AnchorEnd(2);
+            this.btnOk.ColorScheme = this.buttons;
             this.btnOk.Data = "btnOk";
             this.btnOk.Text = "btnOk";
             this.btnOk.TextAlignment = Terminal.Gui.TextAlignment.Centered;
             this.btnOk.IsDefault = true;
             this.buttonPanel.Add(this.btnOk);
             this.btnCancel.Width = 13;
+            this.btnCancel.Height = 2;
             this.btnCancel.X = Pos.Right(btnOk) + 1;
-            this.btnCancel.Y = Pos.AnchorEnd(1);
+            this.btnCancel.Y = Pos.AnchorEnd(2);
+            this.btnCancel.ColorScheme = this.buttons;
             this.btnCancel.Data = "btnCancel";
             this.btnCancel.Text = "btnCancel";
             this.btnCancel.TextAlignment = Terminal.Gui.TextAlignment.Centered;
