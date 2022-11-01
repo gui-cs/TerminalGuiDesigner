@@ -61,7 +61,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.label1.Width = Dim.Fill(0);
             this.label1.Height = Dim.Fill(0);
             this.label1.X = 0;
-            this.label1.Y = 0;
+            this.label1.Y = 1;
             this.label1.Data = "label1";
             this.label1.Text = "lblMessage";
             this.label1.TextAlignment = Terminal.Gui.TextAlignment.Centered;

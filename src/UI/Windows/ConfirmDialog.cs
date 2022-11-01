@@ -31,7 +31,6 @@ namespace TerminalGuiDesigner.UI.Windows {
                 Result = true;
                 Application.RequestStop();
                 };
-            btnOk.ColorScheme = Colors.Dialog;
             btnOk.DrawContentComplete += (r)=>PaintShadow(btnOk);
 
 
@@ -41,11 +40,9 @@ namespace TerminalGuiDesigner.UI.Windows {
                 Result = false;
                 Application.RequestStop();
             };
-            btnCancel.ColorScheme = Colors.Dialog;
             btnCancel.DrawContentComplete += (r) => PaintShadow(btnCancel);
 
             _title = title;
-                
             label1.Text = message;
 
             int buttonWidth;
@@ -63,7 +60,7 @@ namespace TerminalGuiDesigner.UI.Windows {
                
 
             int textWidth = Math.Min(TextFormatter.MaxWidth(message, maxWidthLine), Application.Driver.Cols);
-            int textHeight = TextFormatter.MaxLines(message, textWidth) + 1; // message.Count (ustring.Make ('\n')) + 1;
+            int textHeight = TextFormatter.MaxLines(message, textWidth) + 2; // message.Count (ustring.Make ('\n')) + 1;
             int msgboxHeight = Math.Min(Math.Max(1, textHeight) + 4, Application.Driver.Rows); // textHeight + (top + top padding + buttons + bottom)
 
             Width = Math.Min(Math.Max(maxWidthLine, Math.Max(Title.ConsoleWidth, Math.Max(textWidth + 2, buttonWidth))), Application.Driver.Cols);
