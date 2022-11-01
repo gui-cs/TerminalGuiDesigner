@@ -26,7 +26,6 @@ namespace TerminalGuiDesigner.UI.Windows {
 
             // add space for right hand side shadow
             btnOk.Text = okText + " ";
-            btnOk.Width = okText.Length + 4;
             btnOk.Clicked += () => {
                 Result = true;
                 Application.RequestStop();
@@ -35,7 +34,7 @@ namespace TerminalGuiDesigner.UI.Windows {
 
 
             btnCancel.Text = cancelText + " ";
-            btnCancel.Width = okText.Length + 2;
+            btnCancel.Width = cancelText.Length + 1;
             btnCancel.Clicked += () => {
                 Result = false;
                 Application.RequestStop();
@@ -71,7 +70,14 @@ namespace TerminalGuiDesigner.UI.Windows {
         {
             var bounds = btn.Bounds;
 
-            // draw the 'end' button symbol one in
+            if(btn.IsDefault)
+            {
+                var rightDefault = new Rune(Driver != null ? Driver.RightDefaultIndicator : '>');
+
+                // draw the 'end' button symbol one in
+                btn.AddRune(bounds.Width - 3, 0, rightDefault);
+            }
+
             btn.AddRune(bounds.Width - 2, 0, ']');
 
             var backgroundColor = ColorScheme.Normal.Background;
