@@ -142,6 +142,13 @@ namespace TerminalGuiDesigner
             }
         }
 
+        /// <summary>
+        /// Returns the <see cref="NamedColorScheme"/> from <see cref="Schemes"/> where
+        /// <see cref="NamedColorScheme.Name"/> matches <paramref name="name"/>
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        /// <exception cref="KeyNotFoundException">Thrown if the <paramref name="name"/> is not present in <see cref="Schemes"/></exception>
         public NamedColorScheme GetNamedColorScheme(string name)
         {
             return _colorSchemes.FirstOrDefault(c=>c.Name.Equals(name))
