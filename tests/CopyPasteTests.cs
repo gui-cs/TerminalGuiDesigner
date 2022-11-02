@@ -203,7 +203,7 @@ internal class CopyPasteTests : Tests
         var selected = SelectionManager.Instance;
         
         ColorScheme green;
-        ColorSchemeManager.Instance.AddOrUpdateScheme("green", green = new ColorScheme { Normal = new Attribute(Color.Green, Color.Cyan)});
+        ColorSchemeManager.Instance.AddOrUpdateScheme("green", green = new ColorScheme { Normal = new Attribute(Color.Green, Color.Cyan)}, d);
         dtb.GetDesignableProperty(nameof(ColorScheme))?.SetValue(green);
         d.View.ColorScheme = green;
 

@@ -60,6 +60,13 @@ namespace TerminalGuiDesigner
                 _colorSchemes.Remove(match);
         }
 
+        /// <summary>
+        /// Populates <see cref="Schemes"/> based on the private ColorScheme instances declared in the 
+        /// Designer.cs file of the <paramref name="viewBeingEdited"/>.  Does not clear any existing known
+        /// schemes.
+        /// </summary>
+        /// <param name="viewBeingEdited">View to find color schemes in, must be the root design (i.e. <see cref="Design.IsRoot"/>)</param>
+        /// <exception cref="ArgumentException"></exception>
         public void FindDeclaredColorSchemes(Design viewBeingEdited)
         {
             if (!viewBeingEdited.IsRoot)
@@ -91,18 +98,38 @@ namespace TerminalGuiDesigner
             return null;
         }
 
-        public void AddOrUpdateScheme(string name, ColorScheme scheme)
+        /// <summary>
+        /// Updates the named scheme to use the new colors in <paramref name="scheme"/>.  This
+        /// will also update all Views in <paramref name="rootDesign"/> which currently use the
+        /// named scheme.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="scheme"></param>
+        /// <param name="rootDesign"></param>
+        public void AddOrUpdateScheme(string name, ColorScheme scheme, Design rootDesign)
         {
-            var match = _colorSchemes.FirstOrDefault(c=>c.Name.Equals(name));
+            var oldScheme = _colorSchemes.FirstOrDefault(c=>c.Name.Equals(name));
 
-            if(match!=null)
+            // if we don't currently know about this scheme
+            if (oldScheme == null)
             {
-                match.Scheme = scheme;
+                // simply record that we now know about it and exit
+                _colorSchemes.Add(new NamedColorScheme(name, scheme));
+                return;
             }
-            else
+
+            // we know about this color already and people may be using it!
+            foreach(var old in rootDesign.GetAllDesigns())
             {
-                _colorSchemes.Add(new NamedColorScheme(name,scheme));
+                // if view uses the scheme that is being replaced (value not reference equality)
+                if(old.UsesColorScheme(oldScheme.Scheme))
+                {
+                    // use the new one instead (for the presented View in the GUI and the known state)
+                    old.View.ColorScheme = old.State.OriginalScheme = scheme;
+                }
             }
+            
+            oldScheme.Scheme = scheme;
         }
 
         public void RenameScheme(string oldName, string newName)
@@ -113,6 +140,19 @@ namespace TerminalGuiDesigner
             {
                 match.Name = newName;
             }
+        }
+
+        /// <summary>
+        /// Returns the <see cref="NamedColorScheme"/> from <see cref="Schemes"/> where
+        /// <see cref="NamedColorScheme.Name"/> matches <paramref name="name"/>
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        /// <exception cref="KeyNotFoundException">Thrown if the <paramref name="name"/> is not present in <see cref="Schemes"/></exception>
+        public NamedColorScheme GetNamedColorScheme(string name)
+        {
+            return _colorSchemes.FirstOrDefault(c=>c.Name.Equals(name))
+                ?? throw new KeyNotFoundException($"Could not find a named ColorScheme called {name}");
         }
     }
 }

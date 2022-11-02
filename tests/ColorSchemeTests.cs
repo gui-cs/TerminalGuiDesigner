@@ -37,7 +37,7 @@ public class ColorSchemeTests : Tests
         // we still don't know about this scheme yet
         Assert.IsFalse(d.HasKnownColorScheme());
 
-        ColorSchemeManager.Instance.AddOrUpdateScheme("fff", scheme);
+        ColorSchemeManager.Instance.AddOrUpdateScheme("fff", scheme, d);
 
         if (whenMultiSelected)
         {
@@ -98,7 +98,7 @@ public class ColorSchemeTests : Tests
             Focus = new Attribute(Color.Cyan, Color.Black)
         };
 
-        mgr.AddOrUpdateScheme("pink", pink);
+        mgr.AddOrUpdateScheme("pink", pink , v);
 
         p.SetValue(pink);
         Assert.AreEqual("ColorScheme:pink", p.ToString());
@@ -149,7 +149,7 @@ public class ColorSchemeTests : Tests
             Focus = new Attribute(Color.Cyan, Color.Black)
         };
 
-        mgr.AddOrUpdateScheme("pink", pink);
+        mgr.AddOrUpdateScheme("pink", pink, v);
 
         // select it first to make it green
         SelectionManager.Instance.SetSelection(p.Design);
@@ -176,17 +176,17 @@ public class ColorSchemeTests : Tests
     [TestCase(false)]
     public void TestColorScheme_RoundTrip(bool multiSelectBeforeSaving)
     {
-
         var mgr = ColorSchemeManager.Instance;
-        mgr.Clear();
-
-        mgr.AddOrUpdateScheme("pink",new ColorScheme { 
-            Normal = new Attribute(Color.Magenta, Color.Black),
-            Focus = new Attribute(Color.Cyan, Color.Black)
-        });
 
         var lblIn = RoundTrip<Dialog, Label>((d, l) =>
         {
+            mgr.Clear();
+            mgr.AddOrUpdateScheme("pink", new ColorScheme
+            {
+                Normal = new Attribute(Color.Magenta, Color.Black),
+                Focus = new Attribute(Color.Cyan, Color.Black)
+            },d.GetRootDesign());
+
             //unselect it so it is rendered with correct scheme
             SelectionManager.Instance.Clear();
             l.ColorScheme = d.State.OriginalScheme = mgr.Schemes.Single().Scheme;
@@ -218,6 +218,66 @@ public class ColorSchemeTests : Tests
         Assert.Contains(d.GreenOnBlack, d.GetDefaultSchemes().ToArray());
         Assert.Contains(d.RedOnBlack, d.GetDefaultSchemes().ToArray());
         Assert.Contains(d.BlueOnBlack, d.GetDefaultSchemes().ToArray());
+    }
+
+    [TestCase(true)]
+    [TestCase(false)]
+    public void TestEditingSchemeAfterLoad(bool withSelection)
+    {
+        var scheme = new ColorScheme();
+     
+        var lblIn = RoundTrip<Dialog, Label>((d,v) =>
+            {
+                // Clear known default colors
+                ColorSchemeManager.Instance.Clear();
+                Assert.IsEmpty(ColorSchemeManager.Instance.Schemes);
+
+                // Add a new color for our Label
+                ColorSchemeManager.Instance.AddOrUpdateScheme("yarg", scheme, d.GetRootDesign());
+                Assert.AreEqual(1, ColorSchemeManager.Instance.Schemes.Count);
+
+                // Assign the new color to the view 
+                var prop = new SetPropertyOperation(d, new ColorSchemeProperty(d), null, scheme);
+                prop.Do();
+
+                if(withSelection)
+                {
+                    SelectionManager.Instance.ForceSetSelection(d);
+                }
+
+            }, out _);
+        
+        var lblInDesign = (Design)lblIn.Data ?? throw new Exception("Expected Design to exist on the label read in");
+
+
+        if (withSelection)
+        {
+            SelectionManager.Instance.ForceSetSelection(lblInDesign);
+        }
+
+        ColorSchemeManager.Instance.Clear();
+        ColorSchemeManager.Instance.FindDeclaredColorSchemes(lblInDesign.GetRootDesign());
+        Assert.AreEqual(1, ColorSchemeManager.Instance.Schemes.Count, "Reloading the view should find the explicitly declared scheme 'yarg'");
+
+        Assert.AreEqual("yarg",
+
+        ColorSchemeManager.Instance.GetNameForColorScheme(
+            (withSelection ? lblInDesign.State.OriginalScheme : lblIn.GetExplicitColorScheme())
+                ?? throw new Exception("Expected lblIn to have an explicit ColorScheme"))
+        ,"Expected designer to know the name of the labels color scheme");
+
+
+        // make a change to the yarg scheme (e.g. if user opened the color designer and made some changes)
+        ColorSchemeManager.Instance.AddOrUpdateScheme("yarg", new ColorScheme {Normal = new Attribute(Color.Cyan,Color.BrightBlue) }, lblInDesign.GetRootDesign());
+
+        Assert.AreEqual("yarg",
+        ColorSchemeManager.Instance.GetNameForColorScheme(
+            (withSelection ? lblInDesign.State.OriginalScheme : lblIn.GetExplicitColorScheme())
+            ?? throw new Exception("Expected lblIn to have an explicit ColorScheme"))
+        , "Expected designer to still know the name of lblIn ColorScheme");
+
+        Assert.AreEqual(Color.Cyan, lblIn.ColorScheme.Normal.Foreground, "Expected Label to be updated with the new color after being changed in designer");
+        Assert.AreEqual(Color.Cyan, lblInDesign.State.OriginalScheme?.Normal.Foreground, "Expected Label Design to also be updated with the new color");
     }
 
     class TestClass : View
