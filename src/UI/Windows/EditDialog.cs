@@ -398,7 +398,7 @@ public class EditDialog : Window
                 // if it was a default one, tell ColorSchemeManager we are now using it
                 if(!schemes.Contains(ns))
                 {
-                    ColorSchemeManager.Instance.AddOrUpdateScheme(ns.Name, ns.Scheme);
+                    ColorSchemeManager.Instance.AddOrUpdateScheme(ns.Name, ns.Scheme, design.GetRootDesign());
                 }
 
                 return true;

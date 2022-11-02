@@ -9,6 +9,12 @@ namespace TerminalGuiDesigner;
 /// </summary>
 public class DesignState
 {
+    /// <summary>
+    /// The explicitly defined <see cref="ColorScheme"/> that the user wants for their <see cref="View"/>.
+    /// This is what is used when writing to code/showing properties in editor.  This may differ from the
+    /// actual color the <see cref="View"/> currently has within the editor (e.g. if it is selected and
+    /// has a temporary color indicating it is selected - see <see cref="SelectionManager.SelectedScheme"/>)
+    /// </summary>
     public ColorScheme? OriginalScheme { get; set; }
 	public Design Design{ get; }
 

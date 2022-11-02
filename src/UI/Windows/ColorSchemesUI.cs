@@ -125,7 +125,7 @@ namespace TerminalGuiDesigner.UI.Windows {
                 if (edit.Cancelled)
                     return;
                 
-                ColorSchemeManager.Instance.AddOrUpdateScheme(_schemes[val].Name, edit.Result);
+                ColorSchemeManager.Instance.AddOrUpdateScheme(_schemes[val].Name, edit.Result, Design.GetRootDesign());
                 BuildDataTableRows();
             }
 
@@ -144,7 +144,7 @@ namespace TerminalGuiDesigner.UI.Windows {
                 // actually its the [+] button
                 if(val == int.MaxValue)
                 {
-                    ColorSchemeManager.Instance.AddOrUpdateScheme(GetNewColorName(),new ColorScheme());
+                    ColorSchemeManager.Instance.AddOrUpdateScheme(GetNewColorName(),new ColorScheme(), Design.GetRootDesign());
                     BuildDataTableRows();
                     tvColorSchemes.SelectedRow++;
                 }

@@ -7,17 +7,23 @@ public class DeleteColorSchemeOperation : Operation
     public NamedColorScheme ToDelete { get; }
 
     private Design[] _users;
+    private Design _rootDesign;
 
     public DeleteColorSchemeOperation(Design design, NamedColorScheme toDelete)
     {
         ToDelete = toDelete;
         _users = design.GetAllDesigns().Where(d=>d.UsesColorScheme(toDelete.Scheme)).ToArray();
+        _rootDesign = design;
     }
 
     public override bool Do()
     {
         foreach (var u in _users)
         {
+            // we are no longer using a custom scheme
+            u.State.OriginalScheme = null;
+
+            // we use the default (usually thats to inherit from parent)
             u.View.ColorScheme = GetDefaultColorScheme(u);
         }
 
@@ -52,9 +58,11 @@ public class DeleteColorSchemeOperation : Operation
     {
         foreach (var u in _users)
         {
+            // go back to using this explicit scheme before we deleted it
+            u.State.OriginalScheme = ToDelete.Scheme;
             u.View.ColorScheme = ToDelete.Scheme;
         }
 
-        ColorSchemeManager.Instance.AddOrUpdateScheme(ToDelete.Name,ToDelete.Scheme);
+        ColorSchemeManager.Instance.AddOrUpdateScheme(ToDelete.Name,ToDelete.Scheme, _rootDesign);
     }
 }
