@@ -220,8 +220,9 @@ public class ColorSchemeTests : Tests
         Assert.Contains(d.BlueOnBlack, d.GetDefaultSchemes().ToArray());
     }
 
-    [Test]
-    public void TestEditingSchemeAfterLoad()
+    [TestCase(true)]
+    [TestCase(false)]
+    public void TestEditingSchemeAfterLoad(bool withSelection)
     {
         var scheme = new ColorScheme();
      
@@ -239,25 +240,40 @@ public class ColorSchemeTests : Tests
                 var prop = new SetPropertyOperation(d, new ColorSchemeProperty(d), null, scheme);
                 prop.Do();
 
+                if(withSelection)
+                {
+                    SelectionManager.Instance.ForceSetSelection(d);
+                }
+
             }, out _);
         
         var lblInDesign = (Design)lblIn.Data ?? throw new Exception("Expected Design to exist on the label read in");
+
+
+        if (withSelection)
+        {
+            SelectionManager.Instance.ForceSetSelection(lblInDesign);
+        }
 
         ColorSchemeManager.Instance.Clear();
         ColorSchemeManager.Instance.FindDeclaredColorSchemes(lblInDesign.GetRootDesign());
         Assert.AreEqual(1, ColorSchemeManager.Instance.Schemes.Count, "Reloading the view should find the explicitly declared scheme 'yarg'");
 
         Assert.AreEqual("yarg",
+
         ColorSchemeManager.Instance.GetNameForColorScheme(
-            lblIn.GetExplicitColorScheme() ?? throw new Exception("Expected lblIn to have an explicit ColorScheme"))
+            (withSelection ? lblInDesign.State.OriginalScheme : lblIn.GetExplicitColorScheme())
+                ?? throw new Exception("Expected lblIn to have an explicit ColorScheme"))
         ,"Expected designer to know the name of the labels color scheme");
+
 
         // make a change to the yarg scheme (e.g. if user opened the color designer and made some changes)
         ColorSchemeManager.Instance.AddOrUpdateScheme("yarg", new ColorScheme {Normal = new Attribute(Color.Cyan,Color.BrightBlue) }, lblInDesign.GetRootDesign());
 
         Assert.AreEqual("yarg",
         ColorSchemeManager.Instance.GetNameForColorScheme(
-            lblIn.GetExplicitColorScheme() ?? throw new Exception("Expected lblIn to have an explicit ColorScheme"))
+            (withSelection ? lblInDesign.State.OriginalScheme : lblIn.GetExplicitColorScheme())
+            ?? throw new Exception("Expected lblIn to have an explicit ColorScheme"))
         , "Expected designer to still know the name of lblIn ColorScheme");
 
         Assert.AreEqual(Color.Cyan, lblIn.ColorScheme.Normal.Foreground, "Expected Label to be updated with the new color after being changed in designer");

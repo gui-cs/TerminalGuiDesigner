@@ -122,7 +122,7 @@ namespace TerminalGuiDesigner
             foreach(var old in rootDesign.GetAllDesigns())
             {
                 // if view uses the scheme that is being replaced (value not reference equality)
-                if(old.View.ColorScheme.Equals(oldScheme?.Scheme))
+                if(old.UsesColorScheme(oldScheme.Scheme))
                 {
                     // use the new one instead (for the presented View in the GUI and the known state)
                     old.View.ColorScheme = old.State.OriginalScheme = scheme;

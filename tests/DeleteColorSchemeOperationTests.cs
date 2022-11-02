@@ -9,8 +9,9 @@ namespace tests
 {
     internal class DeleteColorSchemeOperationTests:Tests
     {
-        [Test]
-        public void Test_DeleteColorSchemeOperation_DoThenUndo_RoundTrip()
+        [TestCase(true)]
+        [TestCase(false)]
+        public void Test_DeleteColorSchemeOperation_DoThenUndo_RoundTrip(bool withSelected)
         {
             var scheme = new ColorScheme();
 
@@ -37,6 +38,11 @@ namespace tests
             Assert.AreEqual(1, ColorSchemeManager.Instance.Schemes.Count, "Reloading the view should find the explicitly declared scheme 'yarg'");
 
             var rootDesignIn = lblInDesign.GetRootDesign();
+
+            if(withSelected)
+            {
+                SelectionManager.Instance.ForceSetSelection(lblInDesign);
+            }
 
             // now delete the scheme
             var yarg = ColorSchemeManager.Instance.GetNamedColorScheme("yarg");
