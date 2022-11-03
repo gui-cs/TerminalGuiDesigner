@@ -2,7 +2,7 @@
 	<ItemGroup>
 		<AdditionalFiles Include="stylecop.json" />
 	</ItemGroup>
-  <ItemGroup>
+	<ItemGroup>
     <None Include=".\logo.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
@@ -100,6 +100,14 @@
 	 * Fixed mouse dragging/resizing of views in subviews (e.g. TabViews)
 	</PackageReleaseNotes>
   </PropertyGroup>
+	<ItemGroup>
+		<Content Include="NLog.config">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Keys.yaml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
   <ItemGroup>
     <PackageReference Include="Basic.Reference.Assemblies" Version="1.4.0" />
     <PackageReference Include="CommandLineParser" Version="2.9.1" />

@@ -74,8 +74,8 @@ public class DefaultColorSchemes
     public IEnumerable<NamedColorScheme> GetDefaultSchemes()
     {
         return typeof(DefaultColorSchemes)
-            .GetFields().Where(f => f.FieldType == typeof(NamedColorScheme))
-            .Select(f => f.GetValue(this))
+            .GetProperties().Where(p => p.PropertyType == typeof(NamedColorScheme))
+            .Select(p => p.GetValue(this))
             .Cast<NamedColorScheme>();
     }
 
