@@ -23,7 +23,6 @@ internal class DesignToCode : ToCodeBase
             prop.ToCode(args);
         }
 
-
         // if the current component is a TableView we should persist the table too
         if (Design.View is TableView tv && tv.Table != null)
         {

@@ -215,7 +215,6 @@ public class Property : ToCodeBase
             return new CodeSnippetExpression(p.ToCode(Design.GetSiblings().ToList()));
         }
 
-
         if(val is Enum e)
         {
             return new CodeFieldReferenceExpression(
@@ -229,7 +228,6 @@ public class Property : ToCodeBase
         {
             var elementType = type.GetElementType();
 
-            
             var values = ((Array)val).ToList();
             return new CodeArrayCreateExpression(elementType,
                         values.Select(v=>new CodePrimitiveExpression(v.ToPrimitive())).ToArray()
@@ -284,7 +282,6 @@ public class Property : ToCodeBase
         {
             return attribute.ToCode();
         }
-
 
         if(val is Dim d)
         {

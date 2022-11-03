@@ -1,6 +1,5 @@
 ﻿using System.CodeDom;
 using System.CodeDom.Compiler;
-using System.Text.RegularExpressions;
 using Microsoft.CSharp;
 using Terminal.Gui;
 using TerminalGuiDesigner.FromCode;
@@ -198,7 +197,6 @@ public class ViewToCode
         ns.Types.Add(class1);
 
         CSharpCodeProvider provider = new CSharpCodeProvider();
-        
 
         using (var sw = new StringWriter())
         {

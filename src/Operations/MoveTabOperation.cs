@@ -57,7 +57,6 @@ public class MoveTabOperation : TabViewOperation
         if (SelectedTab == null || originalIdx == -1)
             return false;
 
-
         var newIndex = Math.Max(0, Math.Min(View.Tabs.Count - 1, originalIdx + adjustment));
 
         // if we would end up putting it back where it was then abandon this operation

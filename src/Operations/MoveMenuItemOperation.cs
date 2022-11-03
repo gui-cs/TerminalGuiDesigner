@@ -14,7 +14,6 @@ public class MoveMenuItemOperation : MenuItemOperation
     {
         _up = up;
 
-
         if(Parent == null || OperateOn == null)
         {
             IsImpossible = true;
@@ -53,7 +52,6 @@ public class MoveMenuItemOperation : MenuItemOperation
         if(Parent == null || OperateOn == null || _siblings == null)
             return false;
 
-        
         int moveTo = Math.Max(0, (amount) + _currentItemIdx);
 
         // pull it out from wherever it is

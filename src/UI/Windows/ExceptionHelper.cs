@@ -19,7 +19,6 @@ public static class ExceptionHelper
                 if (loaderException != null)
                     message += Environment.NewLine + ExceptionToListOfInnerMessages(loaderException, includeStackTrace);
             }
-                
 
         if (e.InnerException != null)
             message += Environment.NewLine + ExceptionToListOfInnerMessages(e.InnerException, includeStackTrace);

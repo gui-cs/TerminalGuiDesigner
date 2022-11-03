@@ -6,7 +6,6 @@ using Attribute = Terminal.Gui.Attribute;
 
 namespace TerminalGuiDesigner.UI.Windows;
 
-
 public class EditDialog : Window
 {
     private List<Property> _collection;
@@ -176,7 +175,6 @@ public class EditDialog : Window
 
             Application.Run(designer);
 
-
             if (!designer.Cancelled)
             {
                 newValue = designer.Result;
@@ -218,7 +216,6 @@ public class EditDialog : Window
             var designer = new PointEditor(oldPointF.X,oldPointF.Y);
 
             Application.Run(designer);
-
 
             if (!designer.Cancelled)
             {

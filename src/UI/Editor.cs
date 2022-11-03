@@ -242,7 +242,6 @@ Ctrl+Q - Quit
             }
         };
 
-
         Application.RootMouseEvent += (m) =>
         {
             // if another window is showing don't respond to mouse
@@ -255,7 +254,6 @@ Ctrl+Q - Quit
             try
             {
                 _mouseManager.HandleMouse(m, _viewBeingEdited);
-
 
                 //right click
                 if (m.Flags.HasFlag(_keyMap.RightClick))
@@ -377,7 +375,6 @@ Ctrl+Q - Quit
     {
         base.Redraw(bounds);
 
-
         // if we are editing a view
         if (_viewBeingEdited != null)
         {
@@ -452,9 +449,6 @@ Ctrl+Q - Quit
 
         if (_editting)
             return false;
-
-
-
 
         // Give the keyboard manager first shot at consuming
         // this key e.g. for typing into menus / reordering menus
@@ -926,7 +920,6 @@ Ctrl+Q - Quit
 
         }, TaskScheduler.FromCurrentSynchronizationContext());
 
-
         Application.Run(open, ErrorHandler);
     }
 
@@ -1003,7 +996,6 @@ Ctrl+Q - Quit
             new AddViewOperation(_currentDesignerFile, toAddTo)
         );
     }
-
 
     private void ShowEditProperties()
     {

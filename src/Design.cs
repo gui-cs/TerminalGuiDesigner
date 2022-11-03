@@ -1,5 +1,4 @@
 using System.Data;
-using System.Text.RegularExpressions;
 using NLog;
 using Terminal.Gui;
 using Terminal.Gui.Graphs;
@@ -27,7 +26,6 @@ public class Design
 
     private readonly List<Property> _designableProperties;
 
-
     public DesignState State { get; }
 
     private readonly Logger logger = LogManager.GetCurrentClassLogger();
@@ -36,7 +34,6 @@ public class Design
     {
         return GetDesignableProperties().SingleOrDefault(p => p.PropertyInfo.Name.Equals(propertyName));
     }
-
 
     /// <summary>
     /// The view being designed.  Do not use <see cref="View.Add(Terminal.Gui.View)"/> on
@@ -215,8 +212,6 @@ public class Design
         };
     }
 
-
-
     /// <summary>
     /// Returns true if there is an explicit ColorScheme set
     /// on this Design's View or false if it is inherited from
@@ -243,7 +238,6 @@ public class Design
 
         return true;
     }
-
 
     /// <summary>
     /// True if this view EXPLICITLY states that it uses the scheme
@@ -272,7 +266,6 @@ public class Design
 
         yield return CreateProperty(nameof(View.X));
         yield return CreateProperty(nameof(View.Y));
-
 
         yield return new ColorSchemeProperty(this);
 
@@ -400,7 +393,6 @@ public class Design
             yield return CreateSubProperty(nameof(TableStyle.ShowVerticalHeaderLines), nameof(TableView.Style), tv.Style);
         }
 
-
         if (View is TabView tabView)
         {
             yield return CreateProperty(nameof(TabView.MaxTabTextWidth));
@@ -428,7 +420,6 @@ public class Design
         return new Property(this, View.GetType().GetProperty(name)
             ?? throw new Exception($"Could not find expected Property '{name}' on View of Type '{View.GetType()}'"));
     }
-
 
     /// <summary>
     /// Returns all operations not to do with setting properties.  Often these

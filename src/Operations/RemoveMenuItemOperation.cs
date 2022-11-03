@@ -1,5 +1,4 @@
 using Terminal.Gui;
-using TerminalGuiDesigner.Operations;
 
 namespace TerminalGuiDesigner.Operations
 {
@@ -38,7 +37,6 @@ namespace TerminalGuiDesigner.Operations
         public RemoveMenuItemOperation(MenuItem toRemove): base(toRemove)
         {
         }
-        
 
         public override bool Do()
         {

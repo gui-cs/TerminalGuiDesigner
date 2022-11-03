@@ -1,5 +1,4 @@
-﻿using NStack;
-using Terminal.Gui;
+﻿using Terminal.Gui;
 using TerminalGuiDesigner.UI.Windows;
 
 namespace TerminalGuiDesigner.Operations;
@@ -45,7 +44,6 @@ public class AddMenuOperation: Operation
             }
             else
                 return false; //user cancelled naming the new menu
-
 
         var current = _menuBar.Menus.ToList<MenuBarItem>();
         current.Add(_newItem = new MenuBarItem(_name,new MenuItem[] { new MenuItem { Title = DefaultMenuItemText } }));

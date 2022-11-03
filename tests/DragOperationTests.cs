@@ -107,7 +107,6 @@ public class DragOperationTests : Tests
         d.View.Add(container1);
         d.View.Add(container2);
 
-
         var lbl = new Label(1,2,"Hi there buddy");
         var lblDesign = new Design(d.SourceCode,"mylabel",lbl);
         lbl.Data = lblDesign;

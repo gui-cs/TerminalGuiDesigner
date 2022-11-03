@@ -1,5 +1,4 @@
 using System.CodeDom;
-using System.Text.RegularExpressions;
 using static Terminal.Gui.TabView;
 
 namespace TerminalGuiDesigner.ToCode;
@@ -15,7 +14,6 @@ public class TabToCode : ToCodeBase
         Design = design;
         Tab = tab;
     }
-
 
     /// <summary>
     /// Adds code that constructs and initializes a single Tab of a 

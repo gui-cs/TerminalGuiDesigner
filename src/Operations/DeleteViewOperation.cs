@@ -1,5 +1,4 @@
 using Terminal.Gui;
-using System.Linq;
 
 namespace TerminalGuiDesigner.Operations;
 

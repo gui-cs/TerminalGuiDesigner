@@ -23,7 +23,6 @@ public class CodeDomArgs
     /// </summary>
     public HashSet<Design> OutputAlready = new ();
 
-
     /// <summary>
     /// Record of all declared fields / local variable names. Prevents
     /// any duplicate field names being generated.

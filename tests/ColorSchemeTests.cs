@@ -1,11 +1,9 @@
 using System;
 using System.IO;
 using System.Linq;
-using NLog.Layouts;
 using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
-using TerminalGuiDesigner.FromCode;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 using Attribute = Terminal.Gui.Attribute;
@@ -249,7 +247,6 @@ public class ColorSchemeTests : Tests
         
         var lblInDesign = (Design)lblIn.Data ?? throw new Exception("Expected Design to exist on the label read in");
 
-
         if (withSelection)
         {
             SelectionManager.Instance.ForceSetSelection(lblInDesign);
@@ -265,7 +262,6 @@ public class ColorSchemeTests : Tests
             (withSelection ? lblInDesign.State.OriginalScheme : lblIn.GetExplicitColorScheme())
                 ?? throw new Exception("Expected lblIn to have an explicit ColorScheme"))
         ,"Expected designer to know the name of the labels color scheme");
-
 
         // make a change to the yarg scheme (e.g. if user opened the color designer and made some changes)
         ColorSchemeManager.Instance.AddOrUpdateScheme("yarg", new ColorScheme {Normal = new Attribute(Color.Cyan,Color.BrightBlue) }, lblInDesign.GetRootDesign());

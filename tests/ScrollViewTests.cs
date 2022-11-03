@@ -53,8 +53,7 @@ class ScrollViewTests : Tests
                     // Add a Button to the ScrollView
                     new AddViewOperation(d.SourceCode, buttonOut,(Design)scrollOut.Data,"myButton")
                     .Do();
-                    
-                    
+
                 }, out _);
 
         // The ScrollView should contain the Button

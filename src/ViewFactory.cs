@@ -136,7 +136,6 @@ public class ViewFactory
             instance.Width = 10;
         }
 
-
         instance.ColorScheme = Colors.Base;
 
         return instance;

@@ -15,7 +15,6 @@ public class MoveMenuItemRightOperation : MenuItemOperation
     {
     }
 
-
     public override bool Do()
     {
         if(Parent == null || OperateOn == null)
@@ -69,7 +68,6 @@ public class MoveMenuItemRightOperation : MenuItemOperation
 
         new MoveMenuItemLeftOperation(OperateOn).Do();
     }
-
 
     private MenuBarItem ConvertToMenuBarItem(List<MenuItem> children, int idx)
     {

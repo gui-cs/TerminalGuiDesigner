@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -142,7 +141,6 @@ class TabViewTests : Tests
 
         var tabOut = designOut.View.GetActualSubviews().OfType<TabView>().Single();
 
-
         var codeToView = new CodeToView(sourceCode);
         var designBackIn = codeToView.CreateInstance();
 
@@ -153,7 +151,6 @@ class TabViewTests : Tests
         Assert.AreEqual("MyTab",tabIn.Tabs.ElementAt(0).Text.ToString());
         Assert.AreEqual("MyTab",tabIn.Tabs.ElementAt(1).Text.ToString());
     }
-
 
     [Test]
     public void TestAddingSubcontrolToTab()

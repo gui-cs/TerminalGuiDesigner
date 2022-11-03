@@ -8,7 +8,6 @@ public class MouseManager
     DragOperation? dragOperation = null;
     ResizeOperation? resizeOperation = null;
 
-
     /// <summary>
     /// If the user is dragging a selection box then this is the current area
     /// that is being pulled over or null if no multi select is underway.

@@ -40,8 +40,7 @@ public class BigListBox<T>
 
     private TextField? _searchBox;
     private DateTime _lastKeypress = DateTime.Now;
-    
-    
+
     private object _callback;
     private bool _okClicked = false;
 
@@ -68,7 +67,6 @@ public class BigListBox<T>
 
         _publicCollection = collection;
         _addNull = addNull;
-
 
         win = new Window(_prompt)
         {
@@ -144,7 +142,6 @@ public class BigListBox<T>
             btnOk.X = Pos.Center() - 5;
             btnCancel.X = Pos.Center() + 5;
         }
-
 
         win.Add(btnOk);
         win.Add(btnCancel);
@@ -233,8 +230,6 @@ public class BigListBox<T>
         }
     }
 
-
-
     /// <summary>
     /// Last minute method for adding extra stuff to the window (to the right of <paramref name="btnCancel"/>)
     /// </summary>
@@ -294,7 +289,6 @@ public class BigListBox<T>
 
         });
     }
-
 
     private IList<ListViewObject<T>> BuildList(IList<T> listOfT)
     {

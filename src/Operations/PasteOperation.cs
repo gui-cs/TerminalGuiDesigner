@@ -1,5 +1,4 @@
 using System.Data;
-using System.Drawing;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner.Operations;
@@ -14,7 +13,6 @@ public class PasteOperation : Operation
     /// Mapping from old (Key) Views to new cloned Views (Value)
     /// </summary>
     private Dictionary<Design,Design> _clones = new ();
-
 
     public PasteOperation(Design addTo)
     {
@@ -103,7 +101,6 @@ public class PasteOperation : Operation
     {
         foreach(var a in _addOperations)
             a.Undo();
-
 
         SelectionManager.Instance.SetSelection(_oldSelection.ToArray());
     }

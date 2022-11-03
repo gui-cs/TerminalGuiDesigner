@@ -21,7 +21,6 @@ public class DimTests
         Assert.AreEqual(0,offset);
     }
 
-
     [Test]
     public void TestIsAbsolute_FromInt()
     {
@@ -39,7 +38,6 @@ public class DimTests
         Assert.AreEqual(0,offset);
     }
 
-
     [Test]
     public void TestIsPercent()
     {
@@ -55,7 +53,6 @@ public class DimTests
         Assert.AreEqual(24,val);
         Assert.AreEqual(0,offset);
     }
-
 
     [Test]
     public void TestIsFill()
@@ -121,8 +118,6 @@ public class DimTests
         Assert.AreEqual(5,value);
         Assert.AreEqual(-2,offset);
     }
-
-
 
     [Test]
     public void TestGetCode_WithNoOffset()

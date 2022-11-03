@@ -16,7 +16,6 @@ public static class DimExtensions
         return d.GetType().Name == "DimFactor";
     }
 
-
     public static bool IsPercent(this Dim d, out float percent)
     {
         if (d != null && d.IsPercent())
@@ -53,7 +52,6 @@ public static class DimExtensions
         return false;
     }
 
-
     public static bool IsAbsolute(this Dim d)
     {
         if (d == null)
@@ -82,7 +80,6 @@ public static class DimExtensions
         n = 0;
         return false;
     }
-
 
     public static bool IsCombine(this Dim d)
     {

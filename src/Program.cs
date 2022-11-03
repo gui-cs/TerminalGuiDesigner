@@ -4,7 +4,6 @@ using TerminalGuiDesigner.UI;
 
 namespace TerminalGuiDesigner;
 
-
 public partial class Program
 {
     public static void Main(string[] args)

@@ -24,7 +24,6 @@ class ListViewTests : Tests
         var factory = new ViewFactory();
         var lvOut = (ListView)factory.Create(typeof(ListView));
 
-
         Assert.AreEqual(3, lvOut.Source.Count);
 
         OperationManager.Instance.Do(new AddViewOperation(sourceCode, lvOut, designOut, "myList"));

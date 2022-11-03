@@ -96,7 +96,6 @@ internal class CopyPasteTests : Tests
             "Cloned table should be a new table not a reference to the old one");
     }
 
-
     [Test]
     public void CopyPastePosRelative_Simple()
     {

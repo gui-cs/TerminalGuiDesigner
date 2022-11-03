@@ -22,7 +22,6 @@ public class KeyboardManagerTests : Tests
         v.Redraw(v.Bounds = new Rect(0,0,6,1));
     }
 
-
     [Test]
     public void ButtonRename()
     {

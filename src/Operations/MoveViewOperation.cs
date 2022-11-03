@@ -22,7 +22,6 @@ public class MoveViewOperation : Operation
         OriginX = toMove.View.X;
         OriginY = toMove.View.Y;
 
-
         // start out assuming X and Y are PosRelative so cannot be moved
         IsImpossible = true;
         var super = BeingMoved.View.SuperView;

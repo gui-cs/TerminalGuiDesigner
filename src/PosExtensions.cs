@@ -36,7 +36,6 @@ public static class PosExtensions
         return false;        
     }
 
-
     public static bool IsPercent(this Pos p)
     {
         if (p == null)
@@ -255,8 +254,6 @@ public static class PosExtensions
         return false;
     }
 
-
-
     /// <summary>
     /// <para>Returns the primitive value of <paramref name="value"/> or the inputted
     /// value if it is not possible to convert.  Supports:
@@ -397,7 +394,6 @@ public static class PosExtensions
                 break;
             default: throw new ArgumentOutOfRangeException(nameof(side));
         }
-
 
         if (offset != 0)
         {

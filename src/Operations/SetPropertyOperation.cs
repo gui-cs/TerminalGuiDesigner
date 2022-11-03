@@ -1,8 +1,6 @@
-using Terminal.Gui;
 using TerminalGuiDesigner.ToCode;
 
 namespace TerminalGuiDesigner.Operations;
-
 
 /// <summary>
 /// Delegate for providing a new value for a <see cref="Property"/> e.g. by launching a modal dialog
@@ -16,7 +14,6 @@ public class SetPropertyOperation : Operation
 {   
 
     private PropertyValueGetterDelegate? _valueGetter;
-
 
     private class SetPropertyMemento
     {

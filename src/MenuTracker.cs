@@ -10,7 +10,6 @@ public class MenuTracker
 
     HashSet<MenuBar> bars = new ();
 
-
     private MenuTracker()
     {
 
@@ -24,7 +23,6 @@ public class MenuTracker
 
         bars.Add(mb);
     }
-
 
     private void PruneEmptyBars(MenuBarItem parent, MenuBarItem child)
     {
@@ -77,7 +75,6 @@ public class MenuTracker
         return null;
     }
 
-
     /// <summary>
     /// Iterates all menus (e.g. 'File F9', 'View' etc) of a MenuBar and
     /// identifies any entries that have empty submenus (MenuBarItem)
@@ -95,7 +92,6 @@ public class MenuTracker
                     toReturn.Add(converted.Key,converted.Value);
                 }
             }
-                
 
         return toReturn;
     }

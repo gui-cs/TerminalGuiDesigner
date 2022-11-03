@@ -64,7 +64,6 @@ public class PosTests : Tests
         Assert.AreEqual(0,offset);
     }
 
-
     [Test]
     public void TestIsRelativeTo()
     {
@@ -126,7 +125,6 @@ public class PosTests : Tests
         Assert.AreEqual(PosType.AnchorEnd, type);
         Assert.AreEqual(1, val);
         Assert.AreEqual(2, offset);
-
 
         Assert.IsTrue((Pos.AnchorEnd(1) - 2).GetPosType(new List<Design>(), out type, out val, out design, out side, out offset));
         Assert.AreEqual(PosType.AnchorEnd, type);
@@ -212,7 +210,6 @@ public class PosTests : Tests
 
     }
 
-
     [Test]
     public void TestGetCode_WithOffset()
     {
@@ -267,7 +264,6 @@ public class PosTests : Tests
         }
         else
             throw new ArgumentException($"Unknown property for test '{property}'");
-
 
         viewToCode.GenerateDesignerCs(designOut, designOut.SourceCode, typeof(Window));
 

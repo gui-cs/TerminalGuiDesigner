@@ -53,10 +53,8 @@ public class SelectionManager
         }
     }
 
-
     public static SelectionManager Instance = new();
     private ColorScheme? selectedScheme;
-
 
     /// <summary>
     /// Changes the selection without respecting <see cref="LockSelection"/>

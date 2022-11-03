@@ -1,5 +1,4 @@
 ﻿using Terminal.Gui;
-using TerminalGuiDesigner.ToCode;
 
 namespace TerminalGuiDesigner.Operations
 {
@@ -87,7 +86,6 @@ namespace TerminalGuiDesigner.Operations
             {
                 yield return extra;
             }
-
 
             foreach(var prop in d.GetDesignableProperties().OrderBy(p => p.GetHumanReadableName()))
             {

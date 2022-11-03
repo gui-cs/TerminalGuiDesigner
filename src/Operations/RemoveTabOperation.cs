@@ -1,5 +1,4 @@
 using Terminal.Gui;
-using static Terminal.Gui.TabView;
 
 namespace TerminalGuiDesigner.Operations;
 

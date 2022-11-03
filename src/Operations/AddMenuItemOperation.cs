@@ -16,7 +16,6 @@ public class AddMenuItemOperation : MenuItemOperation
         return Add(_added = new MenuItem());
     }
 
-
     public override void Redo()
     {
         if(_added != null)

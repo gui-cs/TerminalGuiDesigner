@@ -48,7 +48,6 @@ public class ResizeOperation : Operation
         // Only support dragging for properties that are exact absolute
         // positions (i.e. not relative positioning - Bottom of other control etc).
 
-
         DestinationX = dest.X;
         SetWidth();
 

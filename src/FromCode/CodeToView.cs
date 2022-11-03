@@ -110,7 +110,6 @@ public class CodeToView
         var dd = typeof(Enumerable).GetTypeInfo().Assembly.Location;
         var coreDir = Directory.GetParent(dd) ?? throw new Exception($"Could not find parent directory of dotnet sdk.  Sdk directory was {dd}");
 
-
         var references = new List<MetadataReference>(ReferenceAssemblies.Net60);
 
         references.Add( MetadataReference.CreateFromFile(typeof(View).Assembly.Location));

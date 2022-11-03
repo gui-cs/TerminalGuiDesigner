@@ -45,7 +45,6 @@ public class PropertyTests : Tests
 
     }
 
-
     [Test]
     public void TestPropertyOfType_Attribute()
     {
@@ -76,7 +75,6 @@ public class PropertyTests : Tests
         Assert.AreEqual(rhs.Parameters.Count,2);
 
     }
-
 
     [Test]
     public void TestPropertyOfType_Rune()
@@ -125,7 +123,6 @@ public class PropertyTests : Tests
         Assert.AreEqual(Application.Driver.HRLine, lv.LineRune);
         Assert.AreEqual(Dim.Fill(), lv.Width);
         Assert.AreEqual(Dim.Sized(1), lv.Height);
-
 
     }
     public static string ExpressionToCode(CodeExpression expression)

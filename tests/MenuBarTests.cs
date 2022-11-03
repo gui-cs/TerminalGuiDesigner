@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -299,7 +298,6 @@ class MenuBarTests : Tests
 
         var mi = bar.Menus[0].Children[0];
         mi.Title = "Head1";
-
 
         bar.Menus[0].Children = new []
         {

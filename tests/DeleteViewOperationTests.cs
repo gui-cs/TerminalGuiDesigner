@@ -68,7 +68,6 @@ namespace tests
             Assert.AreEqual(3,designOut.GetAllDesigns().Count());
         }
 
-
         [TestCase(true)]
         [TestCase(false)]
         public void TestDeleting_ClearsSelection(bool lockSelection)

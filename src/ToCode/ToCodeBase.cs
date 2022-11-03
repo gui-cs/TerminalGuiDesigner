@@ -93,5 +93,4 @@ public abstract class ToCodeBase
         args.InitMethod.Statements.Add(assignStatement);
     }
 
-
 }

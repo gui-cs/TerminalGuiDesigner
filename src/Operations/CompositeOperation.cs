@@ -28,7 +28,6 @@ public class CompositeOperation : Operation
         IsImpossible = operations.Any(o => o.IsImpossible);
     }
 
-
     /// <summary>
     /// Performs the operation and returns true if any of the 
     /// sub operations did anything

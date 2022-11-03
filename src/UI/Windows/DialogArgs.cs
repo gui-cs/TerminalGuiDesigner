@@ -21,7 +21,6 @@ public class DialogArgs
     /// </summary>
     public string? TaskDescription { get; set; }
 
-
     /// <summary>
     /// The final line of text before user entered input e.g. the label on
     /// a text box in which the user must enter the choice

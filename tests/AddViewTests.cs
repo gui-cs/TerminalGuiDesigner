@@ -66,7 +66,6 @@ public class AddViewTests : Tests
 
         Assert.AreEqual(lblOut.Text,lblIn.Text);
     }
-    
 
     /// <summary>
     /// 60 is one of those numbers that can't be modelled exactly in float so ends

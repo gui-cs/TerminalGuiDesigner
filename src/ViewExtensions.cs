@@ -129,8 +129,6 @@ public static class ViewExtensions
         return GetNearestDesign(view.SuperView);
     }
 
-
-
     /// <summary>
     /// Travels up the nested views until it finds one that is
     /// <see cref="Design.IsContainerView"/> or returns null if
@@ -223,7 +221,6 @@ public static class ViewExtensions
         return false;
     }
 
-
     public static View? HitTest(this View w, MouseEvent m, out bool isBorder, out bool isLowerRight, params View[] ignoring)
     {
         // hide the views while we perform the hit test
@@ -306,7 +303,6 @@ public static class ViewExtensions
 
         return (ColorScheme?)explicitColorSchemeField.GetValue(v);
     }
-
 
     /// <summary>
     /// Order the passed views from top left to bottom right
