@@ -224,12 +224,8 @@ public class ViewToCode
         
     }
 
-    private void AddSubViewsToDesignerCs(View forView, CodeDomArgs args)
+    public void AddSubViewsToDesignerCs(View forView, CodeDomArgs args, CodeExpression? parentViewExpression = null)
     {
-        // TODO: we should detect RelativeTo etc here meaning one view depends
-        // on anothers position and therefore the dependant view should be output
-        // after
-
         // order the controls top left to lower right so that tab order is good
         foreach (var sub in ViewExtensions.OrderViewsByScreenPosition(forView.Subviews))
         {
@@ -247,10 +243,15 @@ public class ViewToCode
             
                 // Build the design code 
                 toCode.ToCode(args,
-                    // if our parent is the root then the designed control should be assigned to 'this'
-                    parent == null || parent.IsRoot ? new CodeThisReferenceExpression():
-                    // the view we are adding to is not root but some deeper nested view so reference it by name
-                    new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),parent.FieldName)
+                    // explicit parent field
+                    parentViewExpression ??
+                    (
+                        // if our parent is the root then the designed control should be assigned to 'this'
+                        parent == null || parent.IsRoot ? new CodeThisReferenceExpression():
+                        // the view we are adding to is not root but some deeper nested view so reference it by name
+                        new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),parent.FieldName)
+                    )
+                    
                 );
 
                 // mark that we have now done this Design
