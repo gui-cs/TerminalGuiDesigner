@@ -11,7 +11,6 @@ namespace TerminalGuiDesigner.UI;
 public class Editor : Toplevel
 {
     Design? _viewBeingEdited;
-    private SourceCodeFile? currentDesignerFile;
     private bool enableDrag = true;
     private bool enableShowFocused = true;
     public static bool ShowBorders = true;
@@ -838,7 +837,6 @@ Ctrl+Q - Quit
         Task.Run(() =>
         {
             var decompiler = new CodeToView(new SourceCodeFile(toOpen));
-            this.currentDesignerFile = decompiler.SourceFile;
             instance = decompiler.CreateInstance();
         }).ContinueWith(
             (t, o) =>
@@ -972,7 +970,7 @@ Ctrl+Q - Quit
         Task.Run(() =>
         {
             // Create the view files and compile
-            instance = viewToCode.GenerateNewView(toOpen, ns ?? "YourNamespace", typeToCreate, out this.currentDesignerFile);
+            instance = viewToCode.GenerateNewView(toOpen, ns ?? "YourNamespace", typeToCreate);
         }).ContinueWith(
             (t, o) =>
         {
@@ -1025,7 +1023,7 @@ Ctrl+Q - Quit
 
     private void Save()
     {
-        if (this._viewBeingEdited == null || this.currentDesignerFile == null)
+        if (this._viewBeingEdited == null)
         {
             return;
         }
@@ -1033,7 +1031,7 @@ Ctrl+Q - Quit
         var viewToCode = new ViewToCode();
 
         viewToCode.GenerateDesignerCs(
-            this._viewBeingEdited, this.currentDesignerFile,
+            this._viewBeingEdited,
             this._viewBeingEdited.View.GetType().BaseType ?? throw new Exception("View being edited had no base class"));
 
         this.flashMessage = $"Saved {this._viewBeingEdited.SourceCode.DesignerFile.Name}";
@@ -1061,7 +1059,7 @@ Ctrl+Q - Quit
 
     private void ShowAddViewWindow()
     {
-        if (this._viewBeingEdited == null || this.currentDesignerFile == null)
+        if (this._viewBeingEdited == null)
         {
             return;
         }
@@ -1070,7 +1068,7 @@ Ctrl+Q - Quit
         var toAddTo = SelectionManager.Instance.GetMostSelectedContainerOrNull() ?? this._viewBeingEdited;
 
         OperationManager.Instance.Do(
-            new AddViewOperation(this.currentDesignerFile, toAddTo)
+            new AddViewOperation(toAddTo)
         );
     }
 

@@ -34,12 +34,12 @@ class TabViewTests : Tests
         var viewToCode = new ViewToCode();
 
         var file = new FileInfo("TestGetTabView.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog), out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
         var factory = new ViewFactory();
         var tvOut = factory.Create(typeof(TabView));
 
-        OperationManager.Instance.Do(new AddViewOperation(sourceCode, tvOut, designOut, "myTabview"));
+        OperationManager.Instance.Do(new AddViewOperation(tvOut, designOut, "myTabview"));
 
         return (Design)tvOut.Data;
     }
@@ -129,22 +129,22 @@ class TabViewTests : Tests
         var viewToCode = new ViewToCode();
 
         var file = new FileInfo("TestRoundTrip_DuplicateTabNames.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog), out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
         var factory = new ViewFactory();
         var tvOut = (TabView)factory.Create(typeof(TabView));
 
-        OperationManager.Instance.Do(new AddViewOperation(sourceCode, tvOut, designOut, "myTabview"));
+        OperationManager.Instance.Do(new AddViewOperation(tvOut, designOut, "myTabview"));
 
         // Give both tabs the same name
         tvOut.Tabs.ElementAt(0).Text = "MyTab";
         tvOut.Tabs.ElementAt(1).Text = "MyTab";
 
-        viewToCode.GenerateDesignerCs(designOut, sourceCode, typeof(Dialog));
+        viewToCode.GenerateDesignerCs(designOut, typeof(Dialog));
 
         var tabOut = designOut.View.GetActualSubviews().OfType<TabView>().Single();
 
-        var codeToView = new CodeToView(sourceCode);
+        var codeToView = new CodeToView(designOut.SourceCode);
         var designBackIn = codeToView.CreateInstance();
 
         var tabIn = designBackIn.View.GetActualSubviews().OfType<TabView>().Single();
@@ -161,21 +161,21 @@ class TabViewTests : Tests
         var viewToCode = new ViewToCode();
 
         var file = new FileInfo("TestAddingSubcontrolToTab.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog), out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
         var factory = new ViewFactory();
         var tvOut = (TabView)factory.Create(typeof(TabView));
 
-        OperationManager.Instance.Do(new AddViewOperation(sourceCode, tvOut, designOut, "myTabview"));
+        OperationManager.Instance.Do(new AddViewOperation(tvOut, designOut, "myTabview"));
 
         var label = factory.Create(typeof(Label));
 
-        OperationManager.Instance.Do(new AddViewOperation(sourceCode, label, (Design)tvOut.Data, "myLabel"));
+        OperationManager.Instance.Do(new AddViewOperation(label, (Design)tvOut.Data, "myLabel"));
         Assert.Contains(label, tvOut.SelectedTab.View.Subviews.ToArray(), "Expected currently selected tab to have the new label but it did not");
 
-        viewToCode.GenerateDesignerCs(designOut, sourceCode, typeof(Dialog));
+        viewToCode.GenerateDesignerCs(designOut, typeof(Dialog));
 
-        var codeToView = new CodeToView(sourceCode);
+        var codeToView = new CodeToView(designOut.SourceCode);
         var designBackIn = codeToView.CreateInstance();
 
         var tabIn = designBackIn.View.GetActualSubviews().OfType<TabView>().Single();

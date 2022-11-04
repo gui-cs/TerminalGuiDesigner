@@ -16,17 +16,17 @@
             var viewToCode = new ViewToCode();
 
             var file = new FileInfo("TestDeletingObjectWithDependency_IsImpossible.cs");
-            var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(View), out var sourceCode);
+            var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(View));
 
             var factory = new ViewFactory();
             var lbl1 = (Label)factory.Create(typeof(Label));
             var lbl2 = (Label)factory.Create(typeof(Label));
 
             // add 2 labels
-            new AddViewOperation(sourceCode, lbl1, designOut, "lbl1").Do();
-            new AddViewOperation(sourceCode, lbl2, designOut, "lbl2").Do();
+            new AddViewOperation(lbl1, designOut, "lbl1").Do();
+            new AddViewOperation(lbl2, designOut, "lbl2").Do();
 
-            // not impossible, we could totalyy delete either of these
+            // not impossible, we could totally delete either of these
             Assert.IsFalse(new DeleteViewOperation(lbl1).IsImpossible);
             Assert.IsFalse(new DeleteViewOperation(lbl2).IsImpossible);
 
@@ -42,15 +42,15 @@
             var viewToCode = new ViewToCode();
 
             var file = new FileInfo("TestDeletingObjectWithDependency_IsImpossible.cs");
-            var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(View), out var sourceCode);
+            var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(View));
 
             var factory = new ViewFactory();
             var lbl1 = (Label)factory.Create(typeof(Label));
             var lbl2 = (Label)factory.Create(typeof(Label));
 
             // add 2 labels
-            new AddViewOperation(sourceCode, lbl1, designOut, "lbl1").Do();
-            new AddViewOperation(sourceCode, lbl2, designOut, "lbl2").Do();
+            new AddViewOperation(lbl1, designOut, "lbl1").Do();
+            new AddViewOperation(lbl2, designOut, "lbl2").Do();
 
             // we now have a dependency of lbl2 on lbl1 so deleting lbl1 will go badly
             lbl2.X = Pos.Right(lbl1) + 5;
@@ -75,12 +75,12 @@
             var viewToCode = new ViewToCode();
 
             var file = new FileInfo("TestDeletingObjectWithDependency_IsImpossible.cs");
-            var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(View), out var sourceCode);
+            var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(View));
 
             var factory = new ViewFactory();
             var lbl1 = (Label)factory.Create(typeof(Label));
 
-            new AddViewOperation(sourceCode, lbl1, designOut, "lbl1").Do();
+            new AddViewOperation(lbl1, designOut, "lbl1").Do();
 
             var lbl1Design = (Design)lbl1.Data;
 

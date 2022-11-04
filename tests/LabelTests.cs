@@ -15,9 +15,9 @@ public class LabelTests : Tests
     {
         var file = new FileInfo("Test_ChangingLabelX.cs");
         var viewToCode = new ViewToCode();
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window), out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window));
 
-        var op = new AddViewOperation(new SourceCodeFile(file), new Label("Hello World"), designOut, "myLabel");
+        var op = new AddViewOperation(new Label("Hello World"), designOut, "myLabel");
         op.Do();
 
         // the Hello world label
@@ -41,9 +41,9 @@ public class LabelTests : Tests
     {
         var file = new FileInfo("Test_ChangingLabelX.cs");
         var viewToCode = new ViewToCode();
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window), out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window));
 
-        var op = new AddViewOperation(new SourceCodeFile(file), new Label("Hello World"), designOut, "myLabel");
+        var op = new AddViewOperation(new Label("Hello World"), designOut, "myLabel");
         op.Do();
 
         // the Hello world label

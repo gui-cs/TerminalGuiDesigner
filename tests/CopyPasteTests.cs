@@ -33,7 +33,7 @@ internal class CopyPasteTests : Tests
         var tv = (TableView)new ViewFactory().Create(typeof(TableView));
 
         Assert.IsTrue(
-            new AddViewOperation(d.SourceCode, tv, d, "mytbl").Do()
+            new AddViewOperation(tv, d, "mytbl").Do()
         );
 
         var tvDesign = (Design)tv.Data;
@@ -111,8 +111,8 @@ internal class CopyPasteTests : Tests
             X = Pos.Right(lbl) + 1,
         };
 
-        new AddViewOperation(d.SourceCode, lbl, d, "lbl").Do();
-        new AddViewOperation(d.SourceCode, tb, d, "tb").Do();
+        new AddViewOperation(lbl, d, "lbl").Do();
+        new AddViewOperation(tb, d, "tb").Do();
 
         var selected = SelectionManager.Instance;
         selected.Clear();
@@ -161,8 +161,8 @@ internal class CopyPasteTests : Tests
             X = Pos.Right(lbl) + 1,
         };
 
-        new AddViewOperation(d.SourceCode, lbl, d, "lbl").Do();
-        new AddViewOperation(d.SourceCode, tb, d, "tb").Do();
+        new AddViewOperation(lbl, d, "lbl").Do();
+        new AddViewOperation(tb, d, "tb").Do();
 
         var selected = SelectionManager.Instance;
 
@@ -199,8 +199,8 @@ internal class CopyPasteTests : Tests
         var lbl = new Label("Name:");
         var tb = new TextField();
 
-        new AddViewOperation(d.SourceCode, lbl, d, "lbl").Do();
-        new AddViewOperation(d.SourceCode, tb, d, "tb").Do();
+        new AddViewOperation(lbl, d, "lbl").Do();
+        new AddViewOperation(tb, d, "tb").Do();
 
         var dlbl = d.GetAllDesigns().Single(d => d.FieldName == "lbl");
         var dtb = d.GetAllDesigns().Single(d => d.FieldName == "tb");

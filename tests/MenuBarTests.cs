@@ -17,7 +17,7 @@ class MenuBarTests : Tests
         var viewToCode = new ViewToCode();
 
         var file = new FileInfo($"{nameof(this.TestRoundTrip_PreserveMenuItems)}.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog), out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
         var factory = new ViewFactory();
         var mbOut = (MenuBar)factory.Create(typeof(MenuBar));
@@ -27,11 +27,11 @@ class MenuBarTests : Tests
         // 1 child menu item (e.g. Open)
         Assert.AreEqual(1, mbOut.Menus[0].Children.Length);
 
-        OperationManager.Instance.Do(new AddViewOperation(sourceCode, mbOut, designOut, "myMenuBar"));
+        OperationManager.Instance.Do(new AddViewOperation(mbOut, designOut, "myMenuBar"));
 
-        viewToCode.GenerateDesignerCs(designOut, sourceCode, typeof(Dialog));
+        viewToCode.GenerateDesignerCs(designOut, typeof(Dialog));
 
-        var codeToView = new CodeToView(sourceCode);
+        var codeToView = new CodeToView(designOut.SourceCode);
         var designBackIn = codeToView.CreateInstance();
 
         var mbIn = designBackIn.View.GetActualSubviews().OfType<MenuBar>().Single();
@@ -48,12 +48,12 @@ class MenuBarTests : Tests
         var viewToCode = new ViewToCode();
 
         var file = new FileInfo($"{nameof(this.TestRoundTrip_PreserveMenuItems_EvenSubmenus)}.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog), out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
         var factory = new ViewFactory();
         var mbOut = (MenuBar)factory.Create(typeof(MenuBar));
 
-        OperationManager.Instance.Do(new AddViewOperation(sourceCode, mbOut, designOut, "myMenuBar"));
+        OperationManager.Instance.Do(new AddViewOperation(mbOut, designOut, "myMenuBar"));
 
         // create some more children in the menu
         new AddMenuItemOperation(mbOut.Menus[0].Children[0]).Do();
@@ -71,9 +71,9 @@ class MenuBarTests : Tests
         // should be 1 submenu item (the one we moved)
         Assert.AreEqual(1, ((MenuBarItem)mbOut.Menus[0].Children[0]).Children.Length);
 
-        viewToCode.GenerateDesignerCs(designOut, sourceCode, typeof(Dialog));
+        viewToCode.GenerateDesignerCs(designOut, typeof(Dialog));
 
-        var codeToView = new CodeToView(sourceCode);
+        var codeToView = new CodeToView(designOut.SourceCode);
         var designBackIn = codeToView.CreateInstance();
 
         var mbIn = designBackIn.View.GetActualSubviews().OfType<MenuBar>().Single();
@@ -93,7 +93,7 @@ class MenuBarTests : Tests
         var viewToCode = new ViewToCode();
 
         var file = new FileInfo($"{nameof(this.TestMenuOperations)}.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog), out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
         var factory = new ViewFactory();
         var mbOut = (MenuBar)factory.Create(typeof(MenuBar));
@@ -177,7 +177,7 @@ class MenuBarTests : Tests
         root = this.Get10By10View();
 
         var bar = (MenuBar)new ViewFactory().Create(typeof(MenuBar));
-        var addBarCmd = new AddViewOperation(root.SourceCode, bar, root, "mb");
+        var addBarCmd = new AddViewOperation(bar, root, "mb");
         Assert.IsTrue(addBarCmd.Do());
 
         // Expect ViewFactory to have created a single

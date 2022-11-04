@@ -49,7 +49,7 @@ public class PasteOperation : Operation
         var v = new ViewFactory();
         var clone = v.Create(d.View.GetType());
 
-        var addOperation = new AddViewOperation(this._to.SourceCode, clone, this._to, null);
+        var addOperation = new AddViewOperation(clone, this._to, null);
 
         // couldn't add for some reason
         if (!addOperation.Do())

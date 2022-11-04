@@ -32,7 +32,7 @@ public class TableViewTests : Tests
                 // create a second TableView also on the root
                 var factory = new ViewFactory();
                 var tvOut2 = factory.Create(typeof(TableView));
-                OperationManager.Instance.Do(new AddViewOperation(d.SourceCode, tvOut2, d.GetRootDesign(), "myTable2"));
+                OperationManager.Instance.Do(new AddViewOperation(tvOut2, d.GetRootDesign(), "myTable2"));
             },
         out TableView tableOut);
 

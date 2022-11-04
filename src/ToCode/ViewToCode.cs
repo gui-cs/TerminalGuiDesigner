@@ -17,13 +17,18 @@ public class ViewToCode
     /// </summary>
     /// <param name="csFilePath"></param>
     /// <param name="namespaceName"></param>
-    /// <param name="designerFile">Designer.cs file that will be created along side the <paramref name="csFilePath"/></param>
+    /// <param name="viewType"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
     /// <exception cref="NotImplementedException"></exception>
-    public Design GenerateNewView(FileInfo csFilePath, string namespaceName, Type viewType, out SourceCodeFile sourceFile)
+    public Design GenerateNewView(FileInfo csFilePath, string namespaceName, Type viewType)
     {
-        sourceFile = new SourceCodeFile(csFilePath);
+        if (viewType is null)
+        {
+            throw new ArgumentNullException(nameof(viewType));
+        }
+
+        var sourceFile = new SourceCodeFile(csFilePath);
 
         var className = Path.GetFileNameWithoutExtension(sourceFile.CsFile.Name);
 
@@ -45,7 +50,7 @@ public class ViewToCode
         var design = new Design(sourceFile, Design.RootDesignName, prototype);
         design.CreateSubControlDesigns();
 
-        this.GenerateDesignerCs(design, sourceFile, viewType);
+        this.GenerateDesignerCs(design, viewType);
 
         // Reload the designer cs file to create a new instance (which is returned).
         // NOTE: prototype is not the same instance that is returned;
@@ -159,8 +164,9 @@ public class ViewToCode
         return code.Substring(idx + autoText.Length);
     }
 
-    public void GenerateDesignerCs(Design rootDesign, SourceCodeFile file, Type viewType)
+    public void GenerateDesignerCs(Design rootDesign, Type viewType)
     {
+        var file = rootDesign.SourceCode;
         var rosylyn = new CodeToView(file);
 
         var ns = new CodeNamespace(rosylyn.Namespace);

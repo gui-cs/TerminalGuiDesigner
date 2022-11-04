@@ -4,7 +4,6 @@ using TerminalGuiDesigner.UI.Windows;
 namespace TerminalGuiDesigner.Operations;
 public class AddViewOperation : Operation
 {
-    private readonly SourceCodeFile sourceCode;
     private View? add;
     private string? fieldName;
     private readonly Design to;
@@ -14,13 +13,11 @@ public class AddViewOperation : Operation
     /// When/If run this operation will add <paramref name="add"/> to the <see cref="View"/>
     /// wrapped by <paramref name="to"/> with the provided <paramref name="fieldName"/>.
     /// </summary>
-    /// <param name="sourceCode"></param>
     /// <param name="add"></param>
     /// <param name="to"></param>
     /// <param name="fieldName"></param>
-    public AddViewOperation(SourceCodeFile sourceCode, View add, Design to, string? fieldName)
+    public AddViewOperation(View add, Design to, string? fieldName)
     {
-        this.sourceCode = sourceCode;
         this.add = add;
         this.fieldName = fieldName ?? to.GetUniqueFieldName(add.GetType());
         this.to = to;
@@ -30,9 +27,8 @@ public class AddViewOperation : Operation
     /// Initializes a new instance of the <see cref="AddViewOperation"/> class.
     /// This overload asks users what view type they want at runtime (See <see cref="Do"/>).
     /// </summary>
-    public AddViewOperation(SourceCodeFile sourceCode, Design design)
+    public AddViewOperation(Design design)
     {
-        this.sourceCode = sourceCode;
         this.to = design;
     }
 
@@ -57,7 +53,7 @@ public class AddViewOperation : Operation
         }
 
         Design design;
-        this.add.Data = design = this.to.CreateSubControlDesign(this.sourceCode, this.fieldName, this.add);
+        this.add.Data = design = this.to.CreateSubControlDesign(this.to.SourceCode, this.fieldName, this.add);
 
         var v = this.GetViewToAddTo();
         v.Add(this.add);

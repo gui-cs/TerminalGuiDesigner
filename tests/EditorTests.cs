@@ -20,7 +20,7 @@
 
             // fake a save
             var lastOp = OperationManager.Instance.GetLastAppliedOperation() ?? throw new Exception("Expected DummyOperation to be known as the last performed");
-            var f = typeof(Editor).GetField("_lastSavedOperation", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic) ?? throw new Exception("Missing field");
+            var f = typeof(Editor).GetField("lastSavedOperation", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic) ?? throw new Exception("Missing field");
             f.SetValue(e, lastOp.UniqueIdentifier);
 
             Assert.IsFalse(e.HasUnsavedChanges(), "Now that we have saved there should be no unsaved changes");

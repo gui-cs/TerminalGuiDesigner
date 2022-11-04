@@ -481,7 +481,7 @@ public class Design
 
         if (this.IsContainerView || this.IsRoot)
         {
-            yield return new AddViewOperation(this.SourceCode, this);
+            yield return new AddViewOperation(this);
             yield return new PasteOperation(this);
         }
         else
@@ -489,7 +489,7 @@ public class Design
             var nearestContainer = this.View.GetNearestContainerDesign();
             if (nearestContainer != null)
             {
-                yield return new AddViewOperation(this.SourceCode, nearestContainer);
+                yield return new AddViewOperation(nearestContainer);
             }
         }
 

@@ -69,17 +69,17 @@
             var viewToCode = new ViewToCode();
 
             var file = new FileInfo(caller + ".cs");
-            var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(T1), out var sourceCode);
+            var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(T1));
 
             var factory = new ViewFactory();
             viewOut = (T2)factory.Create(typeof(T2));
 
-            OperationManager.Instance.Do(new AddViewOperation(sourceCode, viewOut, designOut, fieldName));
+            OperationManager.Instance.Do(new AddViewOperation(viewOut, designOut, fieldName));
             adjust((Design)viewOut.Data, viewOut);
 
-            viewToCode.GenerateDesignerCs(designOut, sourceCode, typeof(T1));
+            viewToCode.GenerateDesignerCs(designOut, typeof(T1));
 
-            var codeToView = new CodeToView(sourceCode);
+            var codeToView = new CodeToView(designOut.SourceCode);
             var designBackIn = codeToView.CreateInstance();
 
             return designBackIn.View.GetActualSubviews().OfType<T2>().Where(v => v.Data is Design d && d.FieldName.Equals(fieldName)).Single();

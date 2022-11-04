@@ -19,11 +19,11 @@ public class AddViewTests : Tests
         var viewToCode = new ViewToCode();
 
         var file = new FileInfo("TestAdd_Undo.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog), out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
         var factory = new ViewFactory();
         var lbl = factory.Create(typeof(Label));
-        var op = new AddViewOperation(sourceCode, lbl, designOut, "label1");
+        var op = new AddViewOperation(lbl, designOut, "label1");
 
         OperationManager.Instance.Do(op);
         Assert.AreEqual(1, designOut.View.GetActualSubviews().OfType<Label>().Count());
@@ -31,9 +31,9 @@ public class AddViewTests : Tests
         OperationManager.Instance.Undo();
         Assert.AreEqual(0, designOut.View.GetActualSubviews().OfType<Label>().Count());
 
-        viewToCode.GenerateDesignerCs(designOut, sourceCode, typeof(Dialog));
+        viewToCode.GenerateDesignerCs(designOut, typeof(Dialog));
 
-        var codeToView = new CodeToView(sourceCode);
+        var codeToView = new CodeToView(designOut.SourceCode);
         var designBackIn = codeToView.CreateInstance();
 
         Assert.AreEqual(0, designBackIn.View.GetActualSubviews().OfType<Label>().Count());
@@ -45,21 +45,21 @@ public class AddViewTests : Tests
         var viewToCode = new ViewToCode();
 
         var file = new FileInfo("TestAddUndoRedo_RoundTrip.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog), out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
         var factory = new ViewFactory();
         var lbl = factory.Create(typeof(Label));
-        var op = new AddViewOperation(sourceCode, lbl, designOut, "label1");
+        var op = new AddViewOperation(lbl, designOut, "label1");
 
         OperationManager.Instance.Do(op);
         OperationManager.Instance.Undo();
         OperationManager.Instance.Redo();
 
-        viewToCode.GenerateDesignerCs(designOut, sourceCode, typeof(Dialog));
+        viewToCode.GenerateDesignerCs(designOut, typeof(Dialog));
 
         var lblOut = designOut.View.GetActualSubviews().OfType<Label>().Single();
 
-        var codeToView = new CodeToView(sourceCode);
+        var codeToView = new CodeToView(designOut.SourceCode);
         var designBackIn = codeToView.CreateInstance();
 
         var lblIn = designBackIn.View.GetActualSubviews().OfType<Label>().Single();

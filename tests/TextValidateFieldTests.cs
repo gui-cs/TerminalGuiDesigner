@@ -17,18 +17,18 @@ class TextValidateFieldTests : Tests
         var viewToCode = new ViewToCode();
 
         var file = new FileInfo("TestRoundTrip_PreserveProvider.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window), out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window));
 
         var factory = new ViewFactory();
         var tvfOut = (TextValidateField)factory.Create(typeof(TextValidateField));
 
         Assert.IsNotNull(tvfOut.Provider);
 
-        OperationManager.Instance.Do(new AddViewOperation(sourceCode, tvfOut, designOut, "myfield"));
+        OperationManager.Instance.Do(new AddViewOperation(tvfOut, designOut, "myfield"));
 
-        viewToCode.GenerateDesignerCs(designOut, sourceCode, typeof(Window));
+        viewToCode.GenerateDesignerCs(designOut, typeof(Window));
 
-        var codeToView = new CodeToView(sourceCode);
+        var codeToView = new CodeToView(designOut.SourceCode);
         var designBackIn = codeToView.CreateInstance();
 
         var tvfIn = designBackIn.View.GetActualSubviews().OfType<TextValidateField>().Single();

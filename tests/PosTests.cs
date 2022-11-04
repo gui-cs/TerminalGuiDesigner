@@ -237,7 +237,7 @@ public class PosTests : Tests
         var viewToCode = new ViewToCode();
 
         var file = new FileInfo("TestRoundTrip_PosRelative.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window), out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window));
 
         designOut.View.Width = 100;
         designOut.View.Height = 100;
@@ -249,8 +249,8 @@ public class PosTests : Tests
 
         var btn = factory.Create(typeof(Button));
 
-        new AddViewOperation(sourceCode, lbl, designOut, "label1").Do();
-        new AddViewOperation(sourceCode, btn, designOut, "btn").Do();
+        new AddViewOperation(lbl, designOut, "label1").Do();
+        new AddViewOperation(btn, designOut, "btn").Do();
 
         if (property == "X")
         {
@@ -265,9 +265,9 @@ public class PosTests : Tests
             throw new ArgumentException($"Unknown property for test '{property}'");
         }
 
-        viewToCode.GenerateDesignerCs(designOut, designOut.SourceCode, typeof(Window));
+        viewToCode.GenerateDesignerCs(designOut, typeof(Window));
 
-        var codeToView = new CodeToView(sourceCode);
+        var codeToView = new CodeToView(designOut.SourceCode);
         var designBackIn = codeToView.CreateInstance();
 
         var btnIn = designBackIn.View.GetActualSubviews().OfType<Button>().Single();
@@ -299,7 +299,7 @@ public class PosTests : Tests
         var viewToCode = new ViewToCode();
 
         var file = new FileInfo("TestRoundTrip_PosAnchorEnd.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window), out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window));
 
         designOut.View.Width = 100;
         designOut.View.Height = 100;
@@ -309,11 +309,11 @@ public class PosTests : Tests
         lbl.X = Pos.AnchorEnd(1);
         lbl.Y = Pos.AnchorEnd(4); // length of "Heya"
 
-        new AddViewOperation(sourceCode, lbl, designOut, "label1").Do();
+        new AddViewOperation(lbl, designOut, "label1").Do();
 
-        viewToCode.GenerateDesignerCs(designOut, designOut.SourceCode, typeof(Window));
+        viewToCode.GenerateDesignerCs(designOut, typeof(Window));
 
-        var codeToView = new CodeToView(sourceCode);
+        var codeToView = new CodeToView(designOut.SourceCode);
         var designBackIn = codeToView.CreateInstance();
 
         var lblIn = designBackIn.View.GetActualSubviews().OfType<Label>().Single();
@@ -335,7 +335,7 @@ public class PosTests : Tests
         var viewToCode = new ViewToCode();
 
         var file = new FileInfo("TestRoundTrip_PosAnchorEnd.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window), out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window));
 
         designOut.View.Width = 100;
         designOut.View.Height = 100;
@@ -345,11 +345,11 @@ public class PosTests : Tests
         lbl.X = Pos.AnchorEnd(1) + 5;
         lbl.Y = Pos.AnchorEnd(4) - 3; // length of "Heya"
 
-        new AddViewOperation(sourceCode, lbl, designOut, "label1").Do();
+        new AddViewOperation(lbl, designOut, "label1").Do();
 
-        viewToCode.GenerateDesignerCs(designOut, designOut.SourceCode, typeof(Window));
+        viewToCode.GenerateDesignerCs(designOut, typeof(Window));
 
-        var codeToView = new CodeToView(sourceCode);
+        var codeToView = new CodeToView(designOut.SourceCode);
         var designBackIn = codeToView.CreateInstance();
 
         var lblIn = designBackIn.View.GetActualSubviews().OfType<Label>().Single();

@@ -19,20 +19,20 @@ class ListViewTests : Tests
         var viewToCode = new ViewToCode();
 
         var file = new FileInfo("TestRoundTrip_PreserveList.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window), out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window));
 
         var factory = new ViewFactory();
         var lvOut = (ListView)factory.Create(typeof(ListView));
 
         Assert.AreEqual(3, lvOut.Source.Count);
 
-        OperationManager.Instance.Do(new AddViewOperation(sourceCode, lvOut, designOut, "myList"));
+        OperationManager.Instance.Do(new AddViewOperation(lvOut, designOut, "myList"));
 
-        viewToCode.GenerateDesignerCs(designOut, sourceCode, typeof(Window));
+        viewToCode.GenerateDesignerCs(designOut, typeof(Window));
 
         var listOut = designOut.View.GetActualSubviews().OfType<ListView>().Single();
 
-        var codeToView = new CodeToView(sourceCode);
+        var codeToView = new CodeToView(designOut.SourceCode);
         var designBackIn = codeToView.CreateInstance();
 
         var listIn = designBackIn.View.GetActualSubviews().OfType<ListView>().Single();

@@ -1,5 +1,6 @@
 using System.IO;
 using System.Linq;
+using NStack;
 using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
@@ -9,33 +10,46 @@ using TerminalGuiDesigner.ToCode;
 
 namespace tests;
 
-class RadioGroupTests
+class RadioGroupTests : Tests
 {
     [Test]
     public void TestRoundTrip_PreserveRadioGroups()
     {
-        var viewToCode = new ViewToCode();
 
-        var file = new FileInfo("TestRoundTrip_PreserveRadioGroups.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(View), out var sourceCode);
-
-        var factory = new ViewFactory();
-        var rgOut = factory.Create(typeof(RadioGroup));
-
-        OperationManager.Instance.Do(new AddViewOperation(sourceCode, rgOut, designOut, "myRadioGroup"));
-
-        viewToCode.GenerateDesignerCs(designOut, sourceCode, typeof(View));
-
-        var tabOut = designOut.View.GetActualSubviews().OfType<RadioGroup>().Single();
-
-        var codeToView = new CodeToView(sourceCode);
-        var designBackIn = codeToView.CreateInstance();
-
-        var rgIn = designBackIn.View.GetActualSubviews().OfType<RadioGroup>().Single();
+        var rgIn = this.RoundTrip<Window, RadioGroup>((_, _) => { }, out _);
 
         Assert.AreEqual(2, rgIn.RadioLabels.Length);
 
         Assert.AreEqual("Option 1", rgIn.RadioLabels[0].ToString());
         Assert.AreEqual("Option 2", rgIn.RadioLabels[1].ToString());
+    }
+
+    [Test]
+    public void TestRoundTrip_PreserveRadioGroups_Custom()
+    {
+
+        var rgIn = this.RoundTrip<Window, RadioGroup>(
+            (_, r) =>
+            {
+                r.RadioLabels = new ustring[] { "Fish", "Cat", "Balloon" };
+        }, out _);
+
+        Assert.AreEqual(3, rgIn.RadioLabels.Length);
+
+        Assert.AreEqual("Fish", rgIn.RadioLabels[0].ToString());
+        Assert.AreEqual("Cat", rgIn.RadioLabels[1].ToString());
+        Assert.AreEqual("Balloon", rgIn.RadioLabels[2].ToString());
+    }
+
+    [Test]
+    public void TestRoundTrip_PreserveRadioGroups_Empty()
+    {
+        var rgIn = this.RoundTrip<Window, RadioGroup>(
+            (_, r) =>
+            {
+                r.RadioLabels = new ustring[] { };
+            }, out _);
+
+        Assert.IsEmpty(rgIn.RadioLabels);
     }
 }

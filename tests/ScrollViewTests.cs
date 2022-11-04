@@ -28,7 +28,7 @@ class ScrollViewTests : Tests
         var scrollViewIn = this.RoundTrip<View, ScrollView>(
             (d, s) =>
                 {
-                    var op = new AddViewOperation(d.SourceCode, new Label("blarggg"), d, "myLbl");
+                    var op = new AddViewOperation(new Label("blarggg"), d, "myLbl");
                     op.Do();
                 }, out _);
 
@@ -52,11 +52,11 @@ class ScrollViewTests : Tests
             (d, tab) =>
                 {
                     // Add a ScrollView to the first Tab
-                    new AddViewOperation(d.SourceCode, scrollOut, d, "myTabView")
+                    new AddViewOperation(scrollOut, d, "myTabView")
                     .Do();
 
                     // Add a Button to the ScrollView
-                    new AddViewOperation(d.SourceCode, buttonOut, (Design)scrollOut.Data, "myButton")
+                    new AddViewOperation(buttonOut, (Design)scrollOut.Data, "myButton")
                     .Do();
                 }, out _);
 
