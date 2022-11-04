@@ -4,7 +4,7 @@ namespace TerminalGuiDesigner.UI.Windows;
 
 /// <summary>
 /// Cross UI platform (winforms, console, terminal gui) arguments for describing the theming and text
-/// that should appear in a modal 'select something' style operation in <see cref="IBasicActivateItems"/> 
+/// that should appear in a modal 'select something' style operation in <see cref="IBasicActivateItems"/>
 /// (the user interface abstraction layer)
 /// </summary>
 public class DialogArgs
@@ -37,9 +37,9 @@ public class DialogArgs
     /// <para>
     /// If the user interface component allows filtering/searching then you can provide
     /// a string here which will indicate what the initial search text should be set to
-    /// (if any).  
+    /// (if any).
     /// </para>
-    /// 
+    ///
     /// <para>
     /// This is the value for inside the search text not the caption.
     /// </para>

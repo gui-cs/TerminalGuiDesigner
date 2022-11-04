@@ -24,7 +24,7 @@ public class SelectionManager
     public bool LockSelection { get; set; }
 
     /// <summary>
-    /// The color scheme to assign to controls that have been 
+    /// The color scheme to assign to controls that have been
     /// multi selected
     /// </summary>
     public ColorScheme SelectedScheme

@@ -29,7 +29,7 @@ public class CompositeOperation : Operation
     }
 
     /// <summary>
-    /// Performs the operation and returns true if any of the 
+    /// Performs the operation and returns true if any of the
     /// sub operations did anything
     /// </summary>
     /// <returns></returns>

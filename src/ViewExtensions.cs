@@ -38,7 +38,7 @@ public static class ViewExtensions
     /// <summary>
     /// Returns the Text property.  This deals with some Views (e.g. Button, TextField)
     /// having two Text properties (use of `new` keyword).
-    /// 
+    ///
     /// <para>
     /// See https://github.com/migueldeicaza/gui.cs/issues/1619
     /// </para>
@@ -53,7 +53,7 @@ public static class ViewExtensions
     /// <summary>
     /// Sets the Text property.  This deals with some Views (e.g. Button, TextField)
     /// having two Text properties (use of `new` keyword).
-    /// 
+    ///
     /// <para>
     /// See https://github.com/migueldeicaza/gui.cs/issues/1619
     /// </para>

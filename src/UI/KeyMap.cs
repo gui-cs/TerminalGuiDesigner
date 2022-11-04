@@ -34,7 +34,7 @@ public class KeyMap
 
     /// <summary>
     /// Custom <see cref="ColorScheme"/> to apply to multi selections in designer.
-    /// <remarks>Default color is green, this is useful if you have a heavily 
+    /// <remarks>Default color is green, this is useful if you have a heavily
     /// green theme where it could get confusing what is multi selected and what
     /// just has focus/uses your custom scheme</remarks>
     /// </summary>

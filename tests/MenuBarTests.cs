@@ -60,7 +60,7 @@ class MenuBarTests : Tests
         new AddMenuItemOperation(mbOut.Menus[0].Children[0]).Do();
         new AddMenuItemOperation(mbOut.Menus[0].Children[0]).Do();
 
-        // move the last child to 
+        // move the last child to
         new MoveMenuItemRightOperation(mbOut.Menus[0].Children[1]).Do();
 
         // 1 visible root menu (e.g. File)
@@ -295,7 +295,7 @@ class MenuBarTests : Tests
            File
             Head1
             Head2 -> Child1
-            Head3    Child2 
+            Head3    Child2
         */
 
         var mi = bar.Menus[0].Children[0];
@@ -306,12 +306,12 @@ class MenuBarTests : Tests
             bar.Menus[0].Children[0],
             head2 = new MenuBarItem(new []
             {
-                topChild = new MenuItem("Child1",null,()=>{})
+                topChild = new MenuItem("Child1", null, ()=>{})
                 {
                     Data = "Child1",
                     Shortcut = Key.J | Key.CtrlMask,
                 },
-                new MenuItem("Child2",null,()=>{})
+                new MenuItem("Child2", null, ()=>{})
                 {
                     Data = "Child2",
                     Shortcut = Key.F | Key.CtrlMask
@@ -319,7 +319,7 @@ class MenuBarTests : Tests
             }){
                 Title = "Head2",
             },
-            new MenuItem("Head3",null,()=>{}),
+            new MenuItem("Head3", null, ()=>{}),
         };
 
         return bar;
@@ -440,7 +440,8 @@ class MenuBarTests : Tests
 
         Assert.IsEmpty(bar.Menus, "Expected menu bar header (File) to be removed along with it's last (only) child");
 
-        Assert.IsFalse(root.View.Subviews.Contains(bar),
+        Assert.IsFalse(
+            root.View.Subviews.Contains(bar),
                 "Now that the MenuBar is completely empty it should be automatically removed");
 
         cmd.Undo();

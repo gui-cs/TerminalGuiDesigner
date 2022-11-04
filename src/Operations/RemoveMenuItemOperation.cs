@@ -29,7 +29,7 @@ namespace TerminalGuiDesigner.Operations
         /// <summary>
         /// If the removed MenuItem was a submenu item and it was the last one then
         /// its parent will have been converted from a MenuBarItem (has children)
-        /// to a regular MenuItem (does not have children).  This collection 
+        /// to a regular MenuItem (does not have children).  This collection
         /// stores all such replacements made during carrying out the command
         /// </summary>
         private Dictionary<MenuBarItem, MenuItem>? _convertedMenuBars;
@@ -58,7 +58,7 @@ namespace TerminalGuiDesigner.Operations
                 this._convertedMenuBars = MenuTracker.Instance.ConvertEmptyMenus();
             }
 
-            // if a top level menu now has no children 
+            // if a top level menu now has no children
             if (this.Bar != null)
             {
                 var empty = this.Bar.Menus.Where(bi => bi.Children.Length == 0).ToArray();
@@ -122,7 +122,7 @@ namespace TerminalGuiDesigner.Operations
                 }
             }
 
-            // if we removed any top level empty menus as a 
+            // if we removed any top level empty menus as a
             // side effect of the removal then put them back
             if (this.prunedEmptyTopLevelMenus != null && this.Bar != null)
             {
@@ -142,7 +142,7 @@ namespace TerminalGuiDesigner.Operations
             {
                 this._barRemovedFrom.Add(this.Bar);
 
-                // lets clear this incase the user some 
+                // lets clear this incase the user some
                 // manages to undo this command multiple
                 // times
                 this._barRemovedFrom = null;

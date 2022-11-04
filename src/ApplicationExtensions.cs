@@ -7,7 +7,8 @@ namespace TerminalGuiDesigner
     {
         public static View? FindDeepestView(View start, int x, int y)
         {
-            var method = typeof(Application).GetMethod(nameof(FindDeepestView),
+            var method = typeof(Application).GetMethod(
+                nameof(FindDeepestView),
                 BindingFlags.Static | BindingFlags.NonPublic,
                 new[] { typeof(View), typeof(int), typeof(int), typeof(int).MakeByRefType(), typeof(int).MakeByRefType() });
 

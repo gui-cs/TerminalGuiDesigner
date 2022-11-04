@@ -85,7 +85,7 @@ public class DragOperationTests : Tests
     {
         var d = this.Get10By10View();
 
-        // setup 2 large subviews at diagonals 
+        // setup 2 large subviews at diagonals
         // to one another within the main 10x10 view
         var container1 = new View
         {

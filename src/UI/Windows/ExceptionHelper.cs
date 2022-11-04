@@ -47,7 +47,7 @@ public static class ExceptionHelper
 
     /// <summary>
     /// Returns the first InnerException of type T in the Exception or null.
-    /// 
+    ///
     /// <para>If e is T then e is returned directly</para>
     /// </summary>
     /// <typeparam name="T"></typeparam>

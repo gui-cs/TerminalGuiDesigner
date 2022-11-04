@@ -46,7 +46,8 @@ public class Modals
 
     public static bool GetArray(string windowTitle, string entryLabel, Type arrayElement, Array? initialValue, out Array? result)
     {
-        var dlg = new GetTextDialog(new DialogArgs()
+        var dlg = new GetTextDialog(
+            new DialogArgs()
         {
             WindowTitle = windowTitle,
             EntryLabel = entryLabel,
@@ -82,7 +83,8 @@ public class Modals
 
     public static bool GetString(string windowTitle, string entryLabel, string? initialValue, out string? result, bool multiLine = false)
     {
-        var dlg = new GetTextDialog(new DialogArgs()
+        var dlg = new GetTextDialog(
+            new DialogArgs()
         {
             WindowTitle = windowTitle,
             EntryLabel = entryLabel,

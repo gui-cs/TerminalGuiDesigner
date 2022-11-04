@@ -72,8 +72,8 @@ public class PasteOperation : Operation
 
         this._clones.Add(d, cloneDesign);
 
-        // If pasting a TableView make sure to 
-        // replicate the Table too.  
+        // If pasting a TableView make sure to
+        // replicate the Table too.
         // TODO: think of a way to make this pattern
 
         // sustainable e.g. IPasteExtraBits or something
@@ -135,7 +135,8 @@ public class PasteOperation : Operation
 
     private Pos MigrateIfPosRelative(Pos pos, Design[] allDesigns)
     {
-        pos.GetPosType(allDesigns,
+        pos.GetPosType(
+            allDesigns,
             out var type, out _, out var relativeTo, out var side, out var offset);
 
         // not relative so jump out early, no need to update it

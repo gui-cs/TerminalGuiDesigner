@@ -111,7 +111,7 @@ public class PropertyTests : Tests
         prop?.SetValue(Orientation.Vertical);
         Assert.AreEqual(Application.Driver.VLine, lv.LineRune);
 
-        // now try with a dim fill 
+        // now try with a dim fill
         lv.Height = Dim.Fill();
         lv.Width = 1;
 

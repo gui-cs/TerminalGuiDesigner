@@ -64,7 +64,7 @@ namespace TerminalGuiDesigner
         }
 
         /// <summary>
-        /// Populates <see cref="Schemes"/> based on the private ColorScheme instances declared in the 
+        /// Populates <see cref="Schemes"/> based on the private ColorScheme instances declared in the
         /// Designer.cs file of the <paramref name="viewBeingEdited"/>.  Does not clear any existing known
         /// schemes.
         /// </summary>

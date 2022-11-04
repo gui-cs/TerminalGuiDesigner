@@ -34,9 +34,11 @@ internal class MenuBarItemsToCode : ToCodeBase
             menus.Add(fieldName);
         }
 
-        this.AddPropertyAssignment(args,
+        this.AddPropertyAssignment(
+            args,
             $"this.{this.Design.FieldName}.{nameof(this.MenuBar.Menus)}",
-            new CodeArrayCreateExpression(typeof(MenuBarItem),
+            new CodeArrayCreateExpression(
+                typeof(MenuBarItem),
             menus.Select(c =>
                     new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), c))
                     .ToArray()));
@@ -74,10 +76,12 @@ internal class MenuBarItemsToCode : ToCodeBase
                 this.AddPropertyAssignment(args, $"this.{subFieldName}.{nameof(MenuItem.Title)}", sub.Title);
                 this.AddPropertyAssignment(args, $"this.{subFieldName}.{nameof(MenuItem.Data)}", subFieldName);
 
-                this.AddPropertyAssignment(args, $"this.{subFieldName}.{nameof(MenuItem.Shortcut)}",
+                this.AddPropertyAssignment(
+                    args,
+                    $"this.{subFieldName}.{nameof(MenuItem.Shortcut)}",
                     new CodeCastExpression(
-                        new CodeTypeReference(typeof(Key))
-                        , new CodePrimitiveExpression((uint)sub.Shortcut)));
+                        new CodeTypeReference(typeof(Key)),
+                        new CodePrimitiveExpression((uint)sub.Shortcut)));
 
                 children.Add(subFieldName);
             }
@@ -85,9 +89,11 @@ internal class MenuBarItemsToCode : ToCodeBase
 
         // we have created fields and constructor calls for our menu
         // now set the menu to an array of all those fields
-        this.AddPropertyAssignment(args,
+        this.AddPropertyAssignment(
+            args,
             $"this.{fieldName}.{nameof(MenuBarItem.Children)}",
-            new CodeArrayCreateExpression(typeof(MenuItem),
+            new CodeArrayCreateExpression(
+                typeof(MenuItem),
             children.Select(c =>
 
                     // the array elements have null for separator

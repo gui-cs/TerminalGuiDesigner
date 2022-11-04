@@ -216,8 +216,8 @@ public class MouseManagerTests : Tests
             // passed in the test case
             Assert.AreEqual(
                 expectSelected.Contains(i),
-                selection.Selected.ToList().Contains(labels[i])
-                , $"Expectation wrong for label index {i} (indexes are 0 based)");
+                selection.Selected.ToList().Contains(labels[i]),
+                $"Expectation wrong for label index {i} (indexes are 0 based)");
         }
     }
 }

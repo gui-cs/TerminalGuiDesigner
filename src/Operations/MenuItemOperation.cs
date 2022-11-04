@@ -11,7 +11,7 @@ namespace TerminalGuiDesigner.Operations
         public MenuBar? Bar { get; private set; }
 
         /// <summary>
-        /// The collection that contains the menu item 
+        /// The collection that contains the menu item
         /// being operated on.
         /// </summary>
         public MenuBarItem? Parent { get; private set; }

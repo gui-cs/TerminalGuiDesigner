@@ -79,7 +79,7 @@ public class ColorSchemeTests : Tests
     [TestCase(false)]
     public void TestColorSchemeProperty_ToString(bool testMultiSelectingSeveralTimes)
     {
-        // default when creating a new view is to have no explicit 
+        // default when creating a new view is to have no explicit
         // ColorScheme defined and just inherit from parent
         var v = this.Get10By10View();
         var p = (ColorSchemeProperty)(v.GetDesignableProperty(nameof(View.ColorScheme)) ?? throw new Exception("Expected this not to be null"));
@@ -129,7 +129,7 @@ public class ColorSchemeTests : Tests
     [Test]
     public void TestColorSchemeProperty_ToString_SelectThenSetScheme()
     {
-        // default when creating a new view is to have no explicit 
+        // default when creating a new view is to have no explicit
         // ColorScheme defined and just inherit from parent
         var v = this.Get10By10View();
         var p = (ColorSchemeProperty)(v.GetDesignableProperty(nameof(View.ColorScheme)) ?? throw new Exception("Expected this not to be null"));
@@ -174,7 +174,8 @@ public class ColorSchemeTests : Tests
     {
         var mgr = ColorSchemeManager.Instance;
 
-        var lblIn = this.RoundTrip<Dialog, Label>((d, l) =>
+        var lblIn = this.RoundTrip<Dialog, Label>(
+            (d, l) =>
         {
             mgr.Clear();
             mgr.AddOrUpdateScheme("pink", new ColorScheme
@@ -222,7 +223,8 @@ public class ColorSchemeTests : Tests
     {
         var scheme = new ColorScheme();
 
-        var lblIn = this.RoundTrip<Dialog, Label>((d, v) =>
+        var lblIn = this.RoundTrip<Dialog, Label>(
+            (d, v) =>
             {
                 // Clear known default colors
                 ColorSchemeManager.Instance.Clear();
@@ -232,7 +234,7 @@ public class ColorSchemeTests : Tests
                 ColorSchemeManager.Instance.AddOrUpdateScheme("yarg", scheme, d.GetRootDesign());
                 Assert.AreEqual(1, ColorSchemeManager.Instance.Schemes.Count);
 
-                // Assign the new color to the view 
+                // Assign the new color to the view
                 var prop = new SetPropertyOperation(d, new ColorSchemeProperty(d), null, scheme);
                 prop.Do();
 
@@ -253,21 +255,23 @@ public class ColorSchemeTests : Tests
         ColorSchemeManager.Instance.FindDeclaredColorSchemes(lblInDesign.GetRootDesign());
         Assert.AreEqual(1, ColorSchemeManager.Instance.Schemes.Count, "Reloading the view should find the explicitly declared scheme 'yarg'");
 
-        Assert.AreEqual("yarg",
+        Assert.AreEqual(
+            "yarg",
 
         ColorSchemeManager.Instance.GetNameForColorScheme(
             (withSelection ? lblInDesign.State.OriginalScheme : lblIn.GetExplicitColorScheme())
-                ?? throw new Exception("Expected lblIn to have an explicit ColorScheme"))
-        , "Expected designer to know the name of the labels color scheme");
+                ?? throw new Exception("Expected lblIn to have an explicit ColorScheme")),
+        "Expected designer to know the name of the labels color scheme");
 
         // make a change to the yarg scheme (e.g. if user opened the color designer and made some changes)
         ColorSchemeManager.Instance.AddOrUpdateScheme("yarg", new ColorScheme { Normal = new Attribute(Color.Cyan, Color.BrightBlue) }, lblInDesign.GetRootDesign());
 
-        Assert.AreEqual("yarg",
+        Assert.AreEqual(
+            "yarg",
         ColorSchemeManager.Instance.GetNameForColorScheme(
             (withSelection ? lblInDesign.State.OriginalScheme : lblIn.GetExplicitColorScheme())
-            ?? throw new Exception("Expected lblIn to have an explicit ColorScheme"))
-        , "Expected designer to still know the name of lblIn ColorScheme");
+            ?? throw new Exception("Expected lblIn to have an explicit ColorScheme")),
+        "Expected designer to still know the name of lblIn ColorScheme");
 
         Assert.AreEqual(Color.Cyan, lblIn.ColorScheme.Normal.Foreground, "Expected Label to be updated with the new color after being changed in designer");
         Assert.AreEqual(Color.Cyan, lblInDesign.State.OriginalScheme?.Normal.Foreground, "Expected Label Design to also be updated with the new color");

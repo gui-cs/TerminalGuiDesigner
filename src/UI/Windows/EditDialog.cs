@@ -267,7 +267,7 @@ public class EditDialog : Window
         else
         if (property.PropertyInfo.PropertyType == typeof(IListDataSource))
         {
-            // TODO : Make this work with non strings e.g. 
+            // TODO : Make this work with non strings e.g.
             // if user types a bunch of numbers in or dates
             var oldValueAsArrayOfStrings = oldValue == null ?
                     new string[0] :

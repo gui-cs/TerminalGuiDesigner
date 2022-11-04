@@ -33,7 +33,8 @@ public class ViewExtensionsTests : Tests
         bool isLowerRight;
         bool isBorder;
 
-        var result = v.HitTest(new MouseEvent
+        var result = v.HitTest(
+            new MouseEvent
         {
             X = x,
             Y = y,

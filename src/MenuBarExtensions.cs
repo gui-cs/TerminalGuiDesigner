@@ -7,7 +7,7 @@ namespace TerminalGuiDesigner
     {
         /// <summary>
         /// Gets the top level selected <see cref="MenuBarItem"/> in the <paramref name="menuBar"/>
-        /// or null if it is not open/no selection is set.  Note that a submenu may still be 
+        /// or null if it is not open/no selection is set.  Note that a submenu may still be
         /// present but only the root will be returned
         /// </summary>
         /// <param name="menuBar"></param>

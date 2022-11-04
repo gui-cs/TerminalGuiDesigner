@@ -35,7 +35,7 @@ namespace TerminalGuiDesigner
                 return new List<Example>() {
                     new Example("Run the application", new Options { }),
                     new Example("Open existing MyExistingView.cs", new Options { Path = "../MyProject/MyExistingView.cs"}),
-                    new Example("Create a new Dialog called MyNewView.cs", new Options { Path = "../MyProject/MyNewView.cs",ViewType = "Dialog", Namespace = "MyApp"}),
+                    new Example("Create a new Dialog called MyNewView.cs", new Options { Path = "../MyProject/MyNewView.cs", ViewType = "Dialog", Namespace = "MyApp"}),
                 };
             }
         }

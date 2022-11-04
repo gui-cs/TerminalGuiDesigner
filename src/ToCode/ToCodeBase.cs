@@ -7,7 +7,8 @@ public abstract class ToCodeBase
 {
     protected void AddAddToViewStatement(CodeDomArgs args, Design d, CodeExpression parentView)
     {
-        this.AddMethodCall(args,
+        this.AddMethodCall(
+            args,
             parentView,
             nameof(View.Add),
             new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), d.FieldName)

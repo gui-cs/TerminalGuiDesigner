@@ -33,7 +33,7 @@ public class ViewToCode
         var prototype = (View)(Activator.CreateInstance(viewType) ?? throw new Exception($"Could not create instance of Type '{viewType}' ('Activator.CreateInstance' returned null)"));
 
         // Unlike Window and Dialog the default constructor on
-        // View will be a size 0 view.  Make it big so it can be 
+        // View will be a size 0 view.  Make it big so it can be
         // edited
         if (viewType == typeof(View))
         {
@@ -212,7 +212,8 @@ public class ViewToCode
 
             tw.Close();
 
-            File.WriteAllText(file.DesignerFile.FullName,
+            File.WriteAllText(
+                file.DesignerFile.FullName,
                 TrimHeader(sw.ToString()));
         }
     }
@@ -245,8 +246,10 @@ public class ViewToCode
 
                 var parent = sub.SuperView?.GetNearestDesign();
 
-                // Build the design code 
-                toCode.ToCode(args,
+                // Build the design code
+                toCode.ToCode(
+                    args,
+
                     // explicit parent field
                     parentViewExpression ??
                     (

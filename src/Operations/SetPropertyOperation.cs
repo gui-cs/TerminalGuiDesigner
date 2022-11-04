@@ -67,7 +67,7 @@ public class SetPropertyOperation : Operation
     public SetPropertyOperation(Design design, Property property, object? oldValue, object? newValue)
     {
         this.mementos = new[] {
-            new SetPropertyMemento(design,property,oldValue),
+            new SetPropertyMemento(design, property, oldValue),
         };
 
         this.NewValue = newValue;

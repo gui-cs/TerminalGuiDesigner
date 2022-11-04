@@ -632,19 +632,19 @@ Ctrl+Q - Quit
                 return true;
             }
 
-            if (keyEvent.Key == this._keyMap.MoveDown)
+            if (keyEvent.Key == this.keyMap.MoveDown)
             {
                 this.MoveControl(0, 1);
                 return true;
             }
 
-            if (keyEvent.Key == this._keyMap.MoveLeft)
+            if (keyEvent.Key == this.keyMap.MoveLeft)
             {
                 this.MoveControl(-1, 0);
                 return true;
             }
 
-            if (keyEvent.Key == this._keyMap.MoveRight)
+            if (keyEvent.Key == this.keyMap.MoveRight)
             {
                 this.MoveControl(1, 0);
                 return true;
@@ -840,7 +840,8 @@ Ctrl+Q - Quit
             var decompiler = new CodeToView(new SourceCodeFile(toOpen));
             this.currentDesignerFile = decompiler.SourceFile;
             instance = decompiler.CreateInstance();
-        }).ContinueWith((t, o) =>
+        }).ContinueWith(
+            (t, o) =>
         {
             // no longer loading
             Application.MainLoop.Invoke(() => Application.RequestStop());
@@ -852,7 +853,7 @@ Ctrl+Q - Quit
                 return;
             }
 
-            // if loaded correctly then 
+            // if loaded correctly then
             if (instance != null)
             {
                 this.ReplaceViewBeingEdited(instance);
@@ -972,7 +973,8 @@ Ctrl+Q - Quit
         {
             // Create the view files and compile
             instance = viewToCode.GenerateNewView(toOpen, ns ?? "YourNamespace", typeToCreate, out this.currentDesignerFile);
-        }).ContinueWith((t, o) =>
+        }).ContinueWith(
+            (t, o) =>
         {
             // no longer loading
             Application.MainLoop.Invoke(() => Application.RequestStop());
@@ -984,7 +986,7 @@ Ctrl+Q - Quit
                 return;
             }
 
-            // if loaded correctly then 
+            // if loaded correctly then
             if (instance != null)
             {
                 this.ReplaceViewBeingEdited(instance);
@@ -1007,7 +1009,7 @@ Ctrl+Q - Quit
             }
 
             // remove list view to prevent it stealing keystrokes and jumping back
-            // into input focus 
+            // into input focus
             this.Remove(this.rootCommandsListView);
 
             // Load new instance

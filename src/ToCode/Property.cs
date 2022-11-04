@@ -15,9 +15,9 @@ public class Property : ToCodeBase
     /// <summary>
     /// The code that leads to this property from <see cref="Design.View"/> or null
     /// if <see cref="PropertyInfo"/> is a direct property of the <see cref="Design.View"/>.
-    /// 
+    ///
     /// <para>For example "TableStyle" or "Border"</para>
-    /// 
+    ///
     /// </summary>
     public string? SubProperty { get; }
     public object DeclaringObject { get; set; }
@@ -86,7 +86,7 @@ public class Property : ToCodeBase
         {
             if (value != null && value is Array a)
             {
-                // accept arrays as valid input values 
+                // accept arrays as valid input values
                 // for setting an IListDataSource.  Just
                 // convert them to ListWrappers
                 value = new ListWrapper(a.ToList());
@@ -183,14 +183,16 @@ public class Property : ToCodeBase
 
         if (val is PointF pointf)
         {
-            return new CodeObjectCreateExpression(typeof(PointF),
+            return new CodeObjectCreateExpression(
+                typeof(PointF),
                  new CodePrimitiveExpression(pointf.X),
                  new CodePrimitiveExpression(pointf.Y));
         }
 
         if (val is TextRegexProvider regv)
         {
-            return new CodeObjectCreateExpression(typeof(TextRegexProvider),
+            return new CodeObjectCreateExpression(
+                typeof(TextRegexProvider),
                  new CodePrimitiveExpression(regv.Pattern.ToPrimitive()));
         }
 
@@ -240,7 +242,8 @@ public class Property : ToCodeBase
             var elementType = type.GetElementType();
 
             var values = ((Array)val).ToList();
-            return new CodeArrayCreateExpression(elementType,
+            return new CodeArrayCreateExpression(
+                elementType,
                         values.Select(v => new CodePrimitiveExpression(v.ToPrimitive())).ToArray()
                    );
         }

@@ -9,6 +9,15 @@ public class AddViewOperation : Operation
     private string? fieldName;
     private readonly Design to;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AddViewOperation"/> class.
+    /// When/If run this operation will add <paramref name="add"/> to the <see cref="View"/>
+    /// wrapped by <paramref name="to"/> with the provided <paramref name="fieldName"/>.
+    /// </summary>
+    /// <param name="sourceCode"></param>
+    /// <param name="add"></param>
+    /// <param name="to"></param>
+    /// <param name="fieldName"></param>
     public AddViewOperation(SourceCodeFile sourceCode, View add, Design to, string? fieldName)
     {
         this.sourceCode = sourceCode;
@@ -18,7 +27,8 @@ public class AddViewOperation : Operation
     }
 
     /// <summary>
-    /// Constructor that asks users what view they want at runtime
+    /// Initializes a new instance of the <see cref="AddViewOperation"/> class.
+    /// This overload asks users what view type they want at runtime (See <see cref="Do"/>).
     /// </summary>
     public AddViewOperation(SourceCodeFile sourceCode, Design design)
     {
@@ -40,7 +50,7 @@ public class AddViewOperation : Operation
             }
         }
 
-        // user cancelled picking a type
+        // user canceled picking a type
         if (this.add == null || string.IsNullOrWhiteSpace(this.fieldName))
         {
             return false;
@@ -63,15 +73,6 @@ public class AddViewOperation : Operation
         return true;
     }
 
-    private View GetViewToAddTo()
-    {
-        if (this.to.View is TabView tabView)
-        {
-            return tabView.SelectedTab.View;
-        }
-
-        return this.to.View;
-    }
 
     public override void Redo()
     {
@@ -95,5 +96,15 @@ public class AddViewOperation : Operation
         var v = this.GetViewToAddTo();
         v.Remove(this.add);
         v.SetNeedsDisplay();
+    }
+
+    private View GetViewToAddTo()
+    {
+        if (this.to.View is TabView tabView)
+        {
+            return tabView.SelectedTab.View;
+        }
+
+        return this.to.View;
     }
 }

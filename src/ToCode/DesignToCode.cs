@@ -45,7 +45,8 @@ internal class DesignToCode : ToCodeBase
             }
 
             // add call to ApplyStyleChanges();
-            this.AddMethodCall(args,
+            this.AddMethodCall(
+                args,
                 new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), this.Design.FieldName),
                 nameof(TabView.ApplyStyleChanges));
         }

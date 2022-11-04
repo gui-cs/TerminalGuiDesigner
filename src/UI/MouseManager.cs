@@ -57,7 +57,7 @@ public class MouseManager
                     // in a multi selection.
                     if (multiSelected.Contains(design))
                     {
-                        // drag all the views at once                    
+                        // drag all the views at once
                         this.dragOperation = new DragOperation(design, dest.X, dest.Y,
                             multiSelected.Except(new[] { design }).ToArray());
                     }

@@ -27,7 +27,7 @@ namespace TerminalGuiDesigner.UI
 
             var d = focusedView.GetNearestDesign();
 
-            // if we are no longer focused 
+            // if we are no longer focused
             if (d == null)
             {
                 // if there is another operation underway
@@ -176,7 +176,7 @@ namespace TerminalGuiDesigner.UI
                     }
 
                     // otherwise convert keystroke to up
-                    // so that focus now sits nicely on the 
+                    // so that focus now sits nicely on the
                     // menu item above the deleted one
                     keystroke.Key = Key.CursorUp;
                     return false;

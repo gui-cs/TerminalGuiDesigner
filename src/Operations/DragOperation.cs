@@ -31,12 +31,12 @@ public class DragOperation : Operation
     public Design BeingDragged => this.Mementos.First().Design;
 
     /// <summary>
-    /// When draging from the middle of the control this is the position of the cursor X 
+    /// When draging from the middle of the control this is the position of the cursor X
     /// at the start of the drag
     /// </summary>
     public readonly int OriginalClickX;
     /// <summary>
-    /// When draging from the middle of the control this is the position of the cursor Y 
+    /// When draging from the middle of the control this is the position of the cursor Y
     /// at the start of the drag
     /// </summary>
     public readonly int OriginalClickY;
@@ -142,7 +142,7 @@ public class DragOperation : Operation
     }
 
     /// <summary>
-    /// When dropping into a new container the X/Y of the control change from being relative to 
+    /// When dropping into a new container the X/Y of the control change from being relative to
     /// the one parents client area to another so we need to compensate otherwise when the user
     /// lets go of the mouse the control jumps (often out of the visible area of the control)
     /// </summary>

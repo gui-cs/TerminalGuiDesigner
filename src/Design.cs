@@ -308,7 +308,7 @@ public class Design
             yield return this.CreateProperty(nameof(Toplevel.Modal));
         }
 
-        // Allow changing the FieldName on anything but root where 
+        // Allow changing the FieldName on anything but root where
         // such an action would break things badly
         if (!this.IsRoot)
         {
@@ -430,8 +430,8 @@ public class Design
     private Property CreateSubProperty(string name, string subObjectName, object subObject)
     {
         return new Property(this, subObject.GetType().GetProperty(name)
-            ?? throw new Exception($"Could not find expected Property '{name}' on Sub Object of Type '{subObject.GetType()}'")
-            , subObjectName, subObject);
+            ?? throw new Exception($"Could not find expected Property '{name}' on Sub Object of Type '{subObject.GetType()}'"),
+            subObjectName, subObject);
     }
 
     private Property CreateProperty(string name)

@@ -17,7 +17,8 @@
             tv.Data = d;
             tv.Text = "fff";
 
-            var op = new SetPropertyOperation(d,
+            var op = new SetPropertyOperation(
+                d,
                 d.GetDesignableProperty("Text") ?? throw new System.Exception("Did not find expected designable property"),
                 tv.Text, null);
 

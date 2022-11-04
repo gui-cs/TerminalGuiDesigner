@@ -208,7 +208,7 @@ public class ViewFactory
              typeof(SaveDialog),
              typeof(OpenDialog),
              typeof(ScrollBarView),
-             typeof(TreeView<>),}; // The generic version of TreeView
+             typeof(TreeView<>), }; // The generic version of TreeView
 
         return typeof(View).Assembly.DefinedTypes.Where(t =>
                 typeof(View).IsAssignableFrom(t) &&

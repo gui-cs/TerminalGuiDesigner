@@ -15,7 +15,7 @@ public class TabToCode : ToCodeBase
     }
 
     /// <summary>
-    /// Adds code that constructs and initializes a single Tab of a 
+    /// Adds code that constructs and initializes a single Tab of a
     /// TabView and adds it to the TabView
     /// </summary>
     internal void ToCode(CodeDomArgs args)

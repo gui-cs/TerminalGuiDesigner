@@ -11,7 +11,8 @@ class ScrollViewTests : Tests
     [Test]
     public void TestRoundTrip_PreserveContentSize()
     {
-        var scrollViewIn = this.RoundTrip<View, ScrollView>((d, s) =>
+        var scrollViewIn = this.RoundTrip<View, ScrollView>(
+            (d, s) =>
                 s.ContentSize = new Size(10, 5),
                 out var scrollViewOut
                 );
@@ -24,7 +25,8 @@ class ScrollViewTests : Tests
     [Test]
     public void TestRoundTrip_PreserveContentViews()
     {
-        var scrollViewIn = this.RoundTrip<View, ScrollView>((d, s) =>
+        var scrollViewIn = this.RoundTrip<View, ScrollView>(
+            (d, s) =>
                 {
                     var op = new AddViewOperation(d.SourceCode, new Label("blarggg"), d, "myLbl");
                     op.Do();
@@ -46,7 +48,8 @@ class ScrollViewTests : Tests
         var scrollOut = factory.Create(typeof(ScrollView));
         var buttonOut = factory.Create(typeof(Button));
 
-        var tabIn = this.RoundTrip<View, TabView>((d, tab) =>
+        var tabIn = this.RoundTrip<View, TabView>(
+            (d, tab) =>
                 {
                     // Add a ScrollView to the first Tab
                     new AddViewOperation(d.SourceCode, scrollOut, d, "myTabView")

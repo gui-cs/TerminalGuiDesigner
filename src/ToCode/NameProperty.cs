@@ -4,7 +4,8 @@ namespace TerminalGuiDesigner.ToCode;
 
 public class NameProperty : Property
 {
-    public NameProperty(Design design) : base(design,
+    public NameProperty(Design design) : base(
+        design,
         typeof(Design).GetProperty(nameof(TerminalGuiDesigner.Design.FieldName))
         ?? throw new MissingFieldException("Expected property was missing from Design")
         )
@@ -40,7 +41,7 @@ public class NameProperty : Property
 
     public override string GetLhs()
     {
-        // Set View.Data to the name of the field so that we can 
+        // Set View.Data to the name of the field so that we can
         // determine later on which View instances come from which
         // Fields in the class
 

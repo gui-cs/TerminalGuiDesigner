@@ -15,7 +15,8 @@
         {
             var scheme = new ColorScheme();
 
-            var lblIn = this.RoundTrip<Dialog, Label>((d, v) =>
+            var lblIn = this.RoundTrip<Dialog, Label>(
+                (d, v) =>
             {
                 // Clear known default colors
                 ColorSchemeManager.Instance.Clear();
@@ -25,7 +26,7 @@
                 ColorSchemeManager.Instance.AddOrUpdateScheme("yarg", scheme, d.GetRootDesign());
                 Assert.AreEqual(1, ColorSchemeManager.Instance.Schemes.Count);
 
-                // Assign the new color to the view 
+                // Assign the new color to the view
                 var prop = new SetPropertyOperation(d, new ColorSchemeProperty(d), null, scheme);
                 prop.Do();
             }, out _);
@@ -62,10 +63,11 @@
             // after redoing the operation we should be back to using it again
             deleteOp.Undo();
 
-            Assert.AreEqual("yarg",
+            Assert.AreEqual(
+                "yarg",
             ColorSchemeManager.Instance.GetNameForColorScheme(
-                lblIn.GetExplicitColorScheme() ?? throw new Exception("Expected lblIn to have the scheme again"))
-            , "Expected designer to still know the name of lblIn ColorScheme");
+                lblIn.GetExplicitColorScheme() ?? throw new Exception("Expected lblIn to have the scheme again")),
+            "Expected designer to still know the name of lblIn ColorScheme");
 
             Assert.AreEqual(yarg.Scheme, lblIn.GetExplicitColorScheme() ?? throw new Exception("View was unexpected no longer using our color scheme after Redo"));
             Assert.AreEqual(yarg.Scheme, lblInDesign.State.OriginalScheme ?? throw new Exception("View was unexpected no longer using our color scheme after Redo"));

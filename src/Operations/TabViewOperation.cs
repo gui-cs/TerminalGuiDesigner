@@ -11,7 +11,7 @@ public abstract class TabViewOperation : Operation
 
     /// <summary>
     /// The <see cref="Tab"/> that was selected when the operation
-    /// was constructed.  This should be what you operate on if you 
+    /// was constructed.  This should be what you operate on if you
     /// are removing or reordering etc the tabs
     /// </summary>
     public Tab? SelectedTab { get; }

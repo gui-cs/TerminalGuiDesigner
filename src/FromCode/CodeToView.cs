@@ -50,7 +50,7 @@ public class CodeToView
     }
 
     /// <summary>
-    /// Compiles the source code in <see cref="SourceFile"/> and 
+    /// Compiles the source code in <see cref="SourceFile"/> and
     /// creates an instance of the View in it wrapped in a <see cref="Design"/>
     /// </summary>
     /// <returns></returns>
@@ -122,7 +122,8 @@ public class CodeToView
         var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary);
 
         var compilation
-            = CSharpCompilation.Create(Guid.NewGuid().ToString() + ".dll",
+            = CSharpCompilation.Create(
+                Guid.NewGuid().ToString() + ".dll",
             new CSharpSyntaxTree[] { csTree, designerTree }, references: references, options: options);
 
         using var stream = new MemoryStream();

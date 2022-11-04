@@ -33,7 +33,7 @@ public static class DimExtensions
 
     /// <inheritdoc cref="IsPercent(Dim)"/>
     /// <param name="percent">The 'percentage' value of <paramref name="d"/>.  This is the value that would/could be
-    /// passed to <see cref="Dim.Percent(float, bool)"/> to produce the <paramref name="d"/> or 0 if <paramref name="d"/> is 
+    /// passed to <see cref="Dim.Percent(float, bool)"/> to produce the <paramref name="d"/> or 0 if <paramref name="d"/> is
     /// not DimFactor.</param>
     public static bool IsPercent(this Dim d, out float percent)
     {
@@ -115,7 +115,7 @@ public static class DimExtensions
     }
 
     /// <summary>
-    /// Returns true if <paramref name="d"/> is the product of an addition or subtraction of 
+    /// Returns true if <paramref name="d"/> is the product of an addition or subtraction of
     /// two other dimensions (e.g. Dim.Fill() - 1).
     /// </summary>
     /// <param name="d">The <see cref="Dim"/> to examine.</param>
