@@ -1,6 +1,6 @@
-﻿using NStack;
-using System.CodeDom;
+﻿using System.CodeDom;
 using System.Reflection;
+using NStack;
 using Terminal.Gui;
 using Terminal.Gui.Graphs;
 using Terminal.Gui.TextValidateProviders;
@@ -25,26 +25,26 @@ public class Property : ToCodeBase
     public PropertyInfo PropertyInfo { get; }
     public Property(Design design, PropertyInfo property)
     {
-        Design = design;
-        PropertyInfo = property;
-        DeclaringObject = Design.View;
+        this.Design = design;
+        this.PropertyInfo = property;
+        this.DeclaringObject = this.Design.View;
     }
 
     public Property(Design design, PropertyInfo property, string subProperty, object declaringObject) : this(design, property)
     {
-        SubProperty = subProperty;
-        DeclaringObject = declaringObject;
+        this.SubProperty = subProperty;
+        this.DeclaringObject = declaringObject;
     }
 
     public virtual object? GetValue()
     {
-        return PropertyInfo.GetValue(DeclaringObject);
+        return this.PropertyInfo.GetValue(this.DeclaringObject);
     }
 
     public virtual void SetValue(object? value)
     {
         // handle type conversions
-        if (PropertyInfo.PropertyType == typeof(Rune))
+        if (this.PropertyInfo.PropertyType == typeof(Rune))
         {
             if (value is char ch)
             {
@@ -52,7 +52,7 @@ public class Property : ToCodeBase
             }
         }
 
-        if (PropertyInfo.PropertyType == typeof(Dim))
+        if (this.PropertyInfo.PropertyType == typeof(Dim))
         {
             if (value is int i)
             {
@@ -60,7 +60,7 @@ public class Property : ToCodeBase
             }
         }
 
-        if (PropertyInfo.PropertyType == typeof(ustring))
+        if (this.PropertyInfo.PropertyType == typeof(ustring))
         {
             if (value is string s)
             {
@@ -68,7 +68,7 @@ public class Property : ToCodeBase
 
                 // TODO: This seems like something AutoSize should do automatically
                 // if renaming a button update its size to match
-                if (Design.View is Button b && PropertyInfo.Name.Equals("Text") && b.Width.IsAbsolute())
+                if (this.Design.View is Button b && this.PropertyInfo.Name.Equals("Text") && b.Width.IsAbsolute())
                 {
                     b.Width = s.Length + (b.IsDefault ? 6 : 4);
                 }
@@ -82,7 +82,7 @@ public class Property : ToCodeBase
             }
         }
 
-        if (PropertyInfo.PropertyType == typeof(IListDataSource))
+        if (this.PropertyInfo.PropertyType == typeof(IListDataSource))
         {
             if (value != null && value is Array a)
             {
@@ -95,12 +95,12 @@ public class Property : ToCodeBase
 
         // TODO: This hack gets around an ArgumentException that gets thrown when
         // switching from Computed to Absolute values of Dim/Pos
-        Design.View.IsInitialized = false;
+        this.Design.View.IsInitialized = false;
 
         // if a LineView and changing Orientation then also flip
         // the Height/Width and set appropriate new rune
-        if (PropertyInfo.Name == nameof(LineView.Orientation)
-            && Design.View is LineView v && value is Orientation newOrientation)
+        if (this.PropertyInfo.Name == nameof(LineView.Orientation)
+            && this.Design.View is LineView v && value is Orientation newOrientation)
         {
             switch (newOrientation)
             {
@@ -120,11 +120,11 @@ public class Property : ToCodeBase
             }
         }
 
-        PropertyInfo.SetValue(DeclaringObject, value);
+        this.PropertyInfo.SetValue(this.DeclaringObject, value);
 
-        CallRefreshMethodsIfAny();
+        this.CallRefreshMethodsIfAny();
 
-        Design.View.IsInitialized = true;
+        this.Design.View.IsInitialized = true;
     }
 
     /// <summary>
@@ -133,34 +133,34 @@ public class Property : ToCodeBase
     /// </summary>
     private void CallRefreshMethodsIfAny()
     {
-        if (Design.View is TabView tv)
+        if (this.Design.View is TabView tv)
         {
             tv.ApplyStyleChanges();
         }
 
-        if (Design.View is TableView t)
+        if (this.Design.View is TableView t)
         {
             t.Update();
         }
 
-        Design.View.SetNeedsDisplay();
+        this.Design.View.SetNeedsDisplay();
     }
 
     public virtual void ToCode(CodeDomArgs args)
     {
         try
         {
-            AddPropertyAssignment(args, GetLhs(), GetRhs());
+            this.AddPropertyAssignment(args, this.GetLhs(), this.GetRhs());
         }
         catch (Exception ex)
         {
-            throw new Exception($"Failed to generate ToCode for Property '{PropertyInfo.Name}' of Design '{Design.FieldName}'", ex);
+            throw new Exception($"Failed to generate ToCode for Property '{this.PropertyInfo.Name}' of Design '{this.Design.FieldName}'", ex);
         }
     }
 
     public virtual CodeExpression GetRhs()
     {
-        var val = GetValue();
+        var val = this.GetValue();
         if (val == null)
         {
             return new CodeSnippetExpression("null");
@@ -223,7 +223,7 @@ public class Property : ToCodeBase
         if (val is Pos p)
         {
             // TODO: Get EVERYONE! not just siblings
-            return new CodeSnippetExpression(p.ToCode(Design.GetSiblings().ToList()));
+            return new CodeSnippetExpression(p.ToCode(this.Design.GetSiblings().ToList()));
         }
 
         if (val is Enum e)
@@ -250,15 +250,17 @@ public class Property : ToCodeBase
 
     public virtual string GetLhs()
     {
-        if (Design.IsRoot)
-            return string.IsNullOrWhiteSpace(SubProperty) ?
-                $"this.{PropertyInfo.Name}" :
-                $"this.{SubProperty}.{PropertyInfo.Name}";
+        if (this.Design.IsRoot)
+        {
+            return string.IsNullOrWhiteSpace(this.SubProperty) ?
+                $"this.{this.PropertyInfo.Name}" :
+                $"this.{this.SubProperty}.{this.PropertyInfo.Name}";
+        }
 
         // if the property being designed exists on the View directly e.g. MyView.X
-        return string.IsNullOrWhiteSpace(SubProperty) ?
-            $"this.{Design.FieldName}.{PropertyInfo.Name}" :
-            $"this.{Design.FieldName}.{SubProperty}.{PropertyInfo.Name}";
+        return string.IsNullOrWhiteSpace(this.SubProperty) ?
+            $"this.{this.Design.FieldName}.{this.PropertyInfo.Name}" :
+            $"this.{this.Design.FieldName}.{this.SubProperty}.{this.PropertyInfo.Name}";
     }
 
     /// <summary>
@@ -268,17 +270,17 @@ public class Property : ToCodeBase
     /// <returns></returns>
     public virtual string GetHumanReadableName()
     {
-        return SubProperty != null ? $"{SubProperty}.{PropertyInfo.Name}" : PropertyInfo.Name;
+        return this.SubProperty != null ? $"{this.SubProperty}.{this.PropertyInfo.Name}" : this.PropertyInfo.Name;
     }
 
     public override string ToString()
     {
-        return GetHumanReadableName() + ":" + GetHumanReadableValue();
+        return this.GetHumanReadableName() + ":" + this.GetHumanReadableValue();
     }
 
     protected virtual string GetHumanReadableValue()
     {
-        var val = GetValue();
+        var val = this.GetValue();
 
         if (val == null)
         {
@@ -303,7 +305,7 @@ public class Property : ToCodeBase
         if (val is Pos p)
         {
             // TODO: Get EVERYONE not just siblings
-            return p.ToCode(Design.GetSiblings().ToList()) ?? p.ToString() ?? "";
+            return p.ToCode(this.Design.GetSiblings().ToList()) ?? p.ToString() ?? "";
         }
 
         if (val is Array a)

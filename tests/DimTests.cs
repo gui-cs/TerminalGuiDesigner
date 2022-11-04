@@ -9,7 +9,7 @@ public class DimTests
     public void TestIsAbsolute()
     {
         Assert.IsTrue(Dim.Sized(50).IsAbsolute());
-        Assert.IsFalse(Dim.Sized(50).IsPercent());
+        this.AssertIsNotPercent(Dim.Sized(50));
         Assert.IsFalse(Dim.Sized(50).IsFill());
 
         Assert.IsTrue(Dim.Sized(50).IsAbsolute(out int size));
@@ -20,6 +20,7 @@ public class DimTests
         Assert.AreEqual(50, val);
         Assert.AreEqual(0, offset);
     }
+
 
     [Test]
     public void TestIsAbsolute_FromInt()
@@ -149,5 +150,15 @@ public class DimTests
 
         d = Dim.Fill(5) - 2;
         Assert.AreEqual("Dim.Fill(5) - 2", d.ToCode());
+    }
+
+    private void AssertIsNotPercent(Dim dim)
+    {
+        Assert.IsFalse(dim.IsPercent());
+        Assert.IsFalse(dim.IsPercent(out var percent));
+        Assert.AreEqual(0, percent);
+
+        dim.GetDimType(out DimType type, out _, out _);
+        Assert.AreNotEqual(DimType.Percent, type);
     }
 }

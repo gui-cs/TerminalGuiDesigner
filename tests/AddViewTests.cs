@@ -79,7 +79,7 @@ public class AddViewTests : Tests
     [TestCase(false)]
     public void Test60Percent_RoundTrip(bool? offset)
     {
-        var lblIn = RoundTrip<Dialog, Label>((d, lbl) =>
+        var lblIn = this.RoundTrip<Dialog, Label>((d, lbl) =>
         {
             lbl.Width = offset == null ? Dim.Percent(60) : offset.Value ? Dim.Percent(60) + 1 : Dim.Percent(60) - 1;
             lbl.X = offset == null ? Pos.Percent(60) : offset.Value ? Pos.Percent(60) + 1 : Pos.Percent(60) - 1;

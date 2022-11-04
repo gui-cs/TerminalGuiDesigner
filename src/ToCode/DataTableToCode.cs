@@ -10,32 +10,32 @@ public class DataTableToCode : ToCodeBase
 
     public DataTableToCode(Design design, DataTable table)
     {
-        Design = design;
-        Table = table;
+        this.Design = design;
+        this.Table = table;
     }
 
     internal void ToCode(CodeDomArgs args)
     {
-        var dataTableFieldName = args.GetUniqueFieldName($"{Design.FieldName}Table");
+        var dataTableFieldName = args.GetUniqueFieldName($"{this.Design.FieldName}Table");
 
         // add a field to the class for the Table that is in the view
-        AddLocalFieldToMethod(args, typeof(DataTable), dataTableFieldName);
+        this.AddLocalFieldToMethod(args, typeof(DataTable), dataTableFieldName);
 
-        AddConstructorCall(args, dataTableFieldName, typeof(DataTable));
+        this.AddConstructorCall(args, dataTableFieldName, typeof(DataTable));
 
-        foreach (DataColumn col in Table.Columns)
+        foreach (DataColumn col in this.Table.Columns)
         {
             var colFieldName = args.GetUniqueFieldName(dataTableFieldName + col.ColumnName);
 
-            AddLocalFieldToMethod(args, typeof(DataColumn), colFieldName);
-            AddConstructorCall(args, colFieldName, typeof(DataColumn));
+            this.AddLocalFieldToMethod(args, typeof(DataColumn), colFieldName);
+            this.AddConstructorCall(args, colFieldName, typeof(DataColumn));
 
-            AddPropertyAssignment(args, $"{colFieldName}.{nameof(DataColumn.ColumnName)}", col.ColumnName);
+            this.AddPropertyAssignment(args, $"{colFieldName}.{nameof(DataColumn.ColumnName)}", col.ColumnName);
 
-            AddTableColumnsAddCall(dataTableFieldName, colFieldName, args);
+            this.AddTableColumnsAddCall(dataTableFieldName, colFieldName, args);
         }
 
-        AddSetTableViewTableProperty(args, dataTableFieldName);
+        this.AddSetTableViewTableProperty(args, dataTableFieldName);
     }
 
     private void AddTableColumnsAddCall(string tableFieldName, string columnFieldName, CodeDomArgs args)
@@ -52,7 +52,7 @@ public class DataTableToCode : ToCodeBase
     private void AddSetTableViewTableProperty(CodeDomArgs args, string tableFieldName)
     {
         var setLhs = new CodeFieldReferenceExpression();
-        setLhs.FieldName = $"this.{Design.FieldName}.Table";
+        setLhs.FieldName = $"this.{this.Design.FieldName}.Table";
 
         var setRhs = new CodeFieldReferenceExpression();
         setRhs.FieldName = $"{tableFieldName}";

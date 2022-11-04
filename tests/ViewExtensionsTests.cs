@@ -1,5 +1,5 @@
-using NUnit.Framework;
 using System;
+using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 
@@ -22,7 +22,7 @@ public class ViewExtensionsTests : Tests
     [TestCase(3, 4, true, false, false)]
     public void TestHitTest(int x, int y, bool hit, bool border, bool lowerRight)
     {
-        var v = Get10By10View().View;
+        var v = this.Get10By10View().View;
 
         v.X = 2;
         v.Y = 3;
@@ -36,7 +36,7 @@ public class ViewExtensionsTests : Tests
         var result = v.HitTest(new MouseEvent
         {
             X = x,
-            Y = y
+            Y = y,
         }, out isBorder, out isLowerRight);
 
         // click didn't land in anything

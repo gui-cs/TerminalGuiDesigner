@@ -20,38 +20,39 @@ public class DesignState
 
     public DesignState(Design design)
     {
-        Design = design;
-        OriginalScheme = Design.View.GetExplicitColorScheme();
-        Design.View.DrawContent += DrawContent;
-        Design.View.Enter += Enter;
+        this.Design = design;
+        this.OriginalScheme = this.Design.View.GetExplicitColorScheme();
+        this.Design.View.DrawContent += this.DrawContent;
+        this.Design.View.Enter += this.Enter;
     }
 
     private void Enter(View.FocusEventArgs obj)
     {
-        SelectionManager.Instance.SetSelection(Design);
+        SelectionManager.Instance.SetSelection(this.Design);
     }
 
     private void DrawContent(Rect r)
     {
-        if (Design.View.IsBorderlessContainerView() && Editor.ShowBorders)
+        if (this.Design.View.IsBorderlessContainerView() && Editor.ShowBorders)
         {
-            DrawBorderlessViewFrame(r);
+            this.DrawBorderlessViewFrame(r);
         }
     }
 
     private void DrawBorderlessViewFrame(Rect r)
     {
-        bool isSelected = SelectionManager.Instance.Selected.Contains(Design);
+        bool isSelected = SelectionManager.Instance.Selected.Contains(this.Design);
 
         var color = isSelected ?
             SelectionManager.Instance.SelectedScheme.Normal :
-            Design.View.ColorScheme.Normal;
+            this.Design.View.ColorScheme.Normal;
 
         Application.Driver.SetAttribute(color);
 
-        var v = Design.View;
+        var v = this.Design.View;
 
         for (int x = 0; x < r.Width; x++)
+        {
             for (int y = 0; y < r.Height; y++)
             {
                 if (y == 0 || y == r.Height - 1 || x == 0 || x == r.Width - 1)
@@ -60,5 +61,6 @@ public class DesignState
                     v.AddRune(x, y, rune);
                 }
             }
+        }
     }
 }

@@ -14,7 +14,7 @@ class TabViewTests : Tests
     [Test]
     public void TestRoundTrip_PreserveTabs()
     {
-        TabView tabIn = RoundTrip<Dialog, TabView>((d, t) =>
+        TabView tabIn = this.RoundTrip<Dialog, TabView>((d, t) =>
             Assert.IsNotEmpty(t.Tabs, "Expected default TabView created by ViewFactory to have some placeholder Tabs")
         , out TabView tabOut);
 
@@ -46,7 +46,7 @@ class TabViewTests : Tests
     [Test]
     public void TestChangeTabViewOrder_MoveTabLeft()
     {
-        var d = GetTabView();
+        var d = this.GetTabView();
         var tv = (TabView)d.View;
 
         Assert.AreEqual("Tab1", tv.Tabs.ElementAt(0).Text);
@@ -85,7 +85,7 @@ class TabViewTests : Tests
     [Test]
     public void TestRemoveTabOperation()
     {
-        var d = GetTabView();
+        var d = this.GetTabView();
         var tv = (TabView)d.View;
 
         Assert.AreEqual(2, tv.Tabs.Count);

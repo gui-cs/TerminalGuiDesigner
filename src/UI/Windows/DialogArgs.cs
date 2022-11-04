@@ -52,19 +52,19 @@ public class DialogArgs
     {
         StringBuilder sb = new StringBuilder();
 
-        if (!string.IsNullOrEmpty(WindowTitle))
+        if (!string.IsNullOrEmpty(this.WindowTitle))
         {
-            sb.AppendLine($"Title:{WindowTitle}");
+            sb.AppendLine($"Title:{this.WindowTitle}");
         }
 
-        if (!string.IsNullOrEmpty(TaskDescription))
+        if (!string.IsNullOrEmpty(this.TaskDescription))
         {
-            sb.AppendLine($"Task:{TaskDescription}");
+            sb.AppendLine($"Task:{this.TaskDescription}");
         }
 
-        if (!string.IsNullOrEmpty(EntryLabel))
+        if (!string.IsNullOrEmpty(this.EntryLabel))
         {
-            sb.AppendLine($"Label:{EntryLabel}");
+            sb.AppendLine($"Label:{this.EntryLabel}");
         }
 
         if (sb.Length == 0)

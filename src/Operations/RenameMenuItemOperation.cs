@@ -6,30 +6,30 @@ namespace TerminalGuiDesigner.Operations;
 
 public class RenameMenuItemOperation : MenuItemOperation
 {
-    private string? _originalName;
-    private string? _newName;
+    private string? originalName;
+    private string? newName;
 
     public RenameMenuItemOperation(MenuItem toRename) : base(toRename)
     {
-        _originalName = toRename.Data as string;
+        this.originalName = toRename.Data as string;
     }
 
     public override bool Do()
     {
-        if (OperateOn == null)
+        if (this.OperateOn == null)
         {
             return false;
         }
 
-        if (Modals.GetString("Menu Item Name", "Name", _originalName, out string? newName))
+        if (Modals.GetString("Menu Item Name", "Name", this.originalName, out string? newName))
         {
             if (string.IsNullOrWhiteSpace(newName))
             {
                 return false;
             }
 
-            _newName = CodeDomArgs.MakeValidFieldName(newName);
-            OperateOn.Data = _newName;
+            this.newName = CodeDomArgs.MakeValidFieldName(newName);
+            this.OperateOn.Data = this.newName;
 
             return true;
         }
@@ -39,17 +39,17 @@ public class RenameMenuItemOperation : MenuItemOperation
 
     public override void Redo()
     {
-        if (OperateOn != null)
+        if (this.OperateOn != null)
         {
-            OperateOn.Data = _newName;
+            this.OperateOn.Data = this.newName;
         }
     }
 
     public override void Undo()
     {
-        if (OperateOn != null)
+        if (this.OperateOn != null)
         {
-            OperateOn.Data = _originalName;
+            this.OperateOn.Data = this.originalName;
         }
     }
 }

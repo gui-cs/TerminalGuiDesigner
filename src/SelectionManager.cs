@@ -15,7 +15,7 @@ public class SelectionManager
     /// <summary>
     /// Collection of all the views currently multi selected
     /// </summary>
-    public IReadOnlyCollection<Design> Selected => selection.AsReadOnly();
+    public IReadOnlyCollection<Design> Selected => this.selection.AsReadOnly();
 
     /// <summary>
     /// Set to true to prevent changes to the current <see cref="Selected"/>
@@ -31,9 +31,9 @@ public class SelectionManager
     {
         get
         {
-            if (selectedScheme == null)
+            if (this.selectedScheme == null)
             {
-                return selectedScheme = new ColorScheme()
+                return this.selectedScheme = new ColorScheme()
                 {
                     Normal = new Attribute(Color.BrightGreen, Color.Green),
                     Focus = new Attribute(Color.BrightYellow, Color.Green),
@@ -44,12 +44,12 @@ public class SelectionManager
             }
             else
             {
-                return selectedScheme;
+                return this.selectedScheme;
             }
         }
         set
         {
-            selectedScheme = value;
+            this.selectedScheme = value;
         }
     }
 
@@ -62,7 +62,7 @@ public class SelectionManager
     /// <param name="designs"></param>
     public void ForceSetSelection(params Design[] designs)
     {
-        SetSelection(false, designs);
+        this.SetSelection(false, designs);
     }
 
     /// <summary>
@@ -72,39 +72,39 @@ public class SelectionManager
     /// <param name="designs"></param>
     public void SetSelection(params Design[] designs)
     {
-        SetSelection(true, designs);
+        this.SetSelection(true, designs);
     }
 
     private void SetSelection(bool respectLock, Design[] designs)
     {
-        if (LockSelection && respectLock)
+        if (this.LockSelection && respectLock)
         {
             return;
         }
 
         // reset anything that was previously selected
-        Clear(respectLock);
+        this.Clear(respectLock);
 
         // create a new selection based on these
-        selection = new List<Design>(designs.Distinct());
+        this.selection = new List<Design>(designs.Distinct());
 
-        foreach (var d in selection)
+        foreach (var d in this.selection)
         {
             // since the view is selected mark it so
-            d.View.ColorScheme = SelectedScheme;
+            d.View.ColorScheme = this.SelectedScheme;
         }
     }
 
     public void Clear(bool respectLock = true)
     {
-        if (LockSelection && respectLock)
+        if (this.LockSelection && respectLock)
         {
             return;
         }
 
-        var selected = selection.ToArray();
+        var selected = this.selection.ToArray();
 
-        selection.Clear();
+        this.selection.Clear();
 
         // reset old color schemes so views don't still look selected
         foreach (var d in selected)
@@ -121,9 +121,9 @@ public class SelectionManager
     /// <returns></returns>
     public Design? GetSingleSelectionOrNull()
     {
-        if (selection.Count == 1)
+        if (this.selection.Count == 1)
         {
-            return selection[0];
+            return this.selection[0];
         }
 
         return null;
@@ -135,6 +135,6 @@ public class SelectionManager
     /// <returns></returns>
     public Design? GetMostSelectedContainerOrNull()
     {
-        return GetSingleSelectionOrNull()?.View.GetNearestContainerDesign();
+        return this.GetSingleSelectionOrNull()?.View.GetNearestContainerDesign();
     }
 }

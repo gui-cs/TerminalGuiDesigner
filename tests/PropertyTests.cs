@@ -1,10 +1,10 @@
-using Microsoft.CSharp;
-using NUnit.Framework;
 using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.IO;
 using System.Linq;
+using Microsoft.CSharp;
+using NUnit.Framework;
 using Terminal.Gui;
 using Terminal.Gui.Graphs;
 using TerminalGuiDesigner;
@@ -18,7 +18,7 @@ public class PropertyTests : Tests
     [Test]
     public void TestPropertyOfType_Pos()
     {
-        var d = new Design(new SourceCodeFile(nameof(TestPropertyOfType_Pos) + ".cs"), "FFF", new Label());
+        var d = new Design(new SourceCodeFile(nameof(this.TestPropertyOfType_Pos) + ".cs"), "FFF", new Label());
         var xProp = d.GetDesignableProperties().Single(p => p.PropertyInfo.Name.Equals(nameof(View.X)));
 
         xProp.SetValue(Pos.Center());
@@ -32,7 +32,7 @@ public class PropertyTests : Tests
     [Test]
     public void TestPropertyOfType_Size()
     {
-        var d = new Design(new SourceCodeFile(nameof(TestPropertyOfType_Size) + ".cs"), "FFF", new ScrollView());
+        var d = new Design(new SourceCodeFile(nameof(this.TestPropertyOfType_Size) + ".cs"), "FFF", new ScrollView());
         var xProp = d.GetDesignableProperties().Single(p => p.PropertyInfo.Name.Equals(nameof(View.X)));
 
         xProp.SetValue(Pos.Center());
@@ -46,7 +46,7 @@ public class PropertyTests : Tests
     [Test]
     public void TestPropertyOfType_Attribute()
     {
-        var d = new Design(new SourceCodeFile(nameof(TestPropertyOfType_Attribute) + ".cs"), "FFF", new GraphView());
+        var d = new Design(new SourceCodeFile(nameof(this.TestPropertyOfType_Attribute) + ".cs"), "FFF", new GraphView());
         var colorProp = d.GetDesignableProperties().Single(p => p.PropertyInfo.Name.Equals(nameof(GraphView.GraphColor)));
 
         colorProp.SetValue(null);
@@ -63,7 +63,7 @@ public class PropertyTests : Tests
     [Test]
     public void TestPropertyOfType_PointF()
     {
-        var d = new Design(new SourceCodeFile(nameof(TestPropertyOfType_PointF) + ".cs"), "FFF", new GraphView());
+        var d = new Design(new SourceCodeFile(nameof(this.TestPropertyOfType_PointF) + ".cs"), "FFF", new GraphView());
         var pointProp = d.GetDesignableProperties().Single(p => p.PropertyInfo.Name.Equals(nameof(GraphView.ScrollOffset)));
 
         pointProp.SetValue(new PointF(4.5f, 4.1f));
@@ -96,7 +96,7 @@ public class PropertyTests : Tests
     [Test]
     public void TestChanging_LineViewOrientation()
     {
-        var v = Get10By10View();
+        var v = this.Get10By10View();
         var lv = (LineView)new ViewFactory().Create(typeof(LineView));
         var d = new Design(v.SourceCode, "lv", lv);
 

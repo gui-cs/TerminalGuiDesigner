@@ -23,38 +23,38 @@ public class AddViewOperation : Operation
     public AddViewOperation(SourceCodeFile sourceCode, Design design)
     {
         this.sourceCode = sourceCode;
-        to = design;
+        this.to = design;
     }
 
     public override bool Do()
     {
-        if (add == null)
+        if (this.add == null)
         {
             var factory = new ViewFactory();
             var selectable = factory.GetSupportedViews().ToArray();
 
             if (Modals.Get("Type of Control", "Add", true, selectable, t => t?.Name ?? "Null", false, out var selected) && selected != null)
             {
-                add = factory.Create(selected);
-                fieldName = to.GetUniqueFieldName(selected);
+                this.add = factory.Create(selected);
+                this.fieldName = this.to.GetUniqueFieldName(selected);
             }
         }
 
         // user cancelled picking a type
-        if (add == null || string.IsNullOrWhiteSpace(fieldName))
+        if (this.add == null || string.IsNullOrWhiteSpace(this.fieldName))
         {
             return false;
         }
 
         Design design;
-        add.Data = design = to.CreateSubControlDesign(sourceCode, fieldName, add);
+        this.add.Data = design = this.to.CreateSubControlDesign(this.sourceCode, this.fieldName, this.add);
 
-        var v = GetViewToAddTo();
-        v.Add(add);
+        var v = this.GetViewToAddTo();
+        v.Add(this.add);
 
         if (Application.Driver != null)
         {
-            add.SetFocus();
+            this.add.SetFocus();
         }
 
         SelectionManager.Instance.ForceSetSelection(design);
@@ -65,35 +65,35 @@ public class AddViewOperation : Operation
 
     private View GetViewToAddTo()
     {
-        if (to.View is TabView tabView)
+        if (this.to.View is TabView tabView)
         {
             return tabView.SelectedTab.View;
         }
 
-        return to.View;
+        return this.to.View;
     }
 
     public override void Redo()
     {
-        if (add == null)
+        if (this.add == null)
         {
             return;
         }
 
-        var v = GetViewToAddTo();
-        v.Add(add);
+        var v = this.GetViewToAddTo();
+        v.Add(this.add);
         v.SetNeedsDisplay();
     }
 
     public override void Undo()
     {
-        if (add == null)
+        if (this.add == null)
         {
             return;
         }
 
-        var v = GetViewToAddTo();
-        v.Remove(add);
+        var v = this.GetViewToAddTo();
+        v.Remove(this.add);
         v.SetNeedsDisplay();
     }
 }

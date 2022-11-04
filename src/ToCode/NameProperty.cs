@@ -18,7 +18,7 @@ public class NameProperty : Property
 
     public override string ToString()
     {
-        return $"{GetHumanReadableName()}:{Design.FieldName}";
+        return $"{this.GetHumanReadableName()}:{this.Design.FieldName}";
     }
 
     public override void SetValue(object? value)
@@ -30,12 +30,12 @@ public class NameProperty : Property
             throw new ArgumentException("Not Possible", "You cannot set a View (Name) property to null");
         }
 
-        Design.FieldName = Design.GetUniqueFieldName(chosen);
+        this.Design.FieldName = this.Design.GetUniqueFieldName(chosen);
     }
 
     public override object GetValue()
     {
-        return Design.FieldName;
+        return this.Design.FieldName;
     }
 
     public override string GetLhs()
@@ -44,6 +44,6 @@ public class NameProperty : Property
         // determine later on which View instances come from which
         // Fields in the class
 
-        return $"this.{Design.FieldName}.{nameof(View.Data)}";
+        return $"this.{this.Design.FieldName}.{nameof(View.Data)}";
     }
 }

@@ -4,7 +4,7 @@ namespace TerminalGuiDesigner.Operations
 {
     internal class ConvertMenuItemToSeperatorOperation : MenuItemOperation
     {
-        private int _removedAtIdx;
+        private int removedAtIdx;
 
         public ConvertMenuItemToSeperatorOperation(MenuItem toRemove) : base(toRemove)
         {
@@ -12,39 +12,39 @@ namespace TerminalGuiDesigner.Operations
 
         public override bool Do()
         {
-            if (Parent == null || OperateOn == null)
+            if (this.Parent == null || this.OperateOn == null)
             {
                 return false;
             }
 
-            var children = Parent.Children.ToList<MenuItem?>();
+            var children = this.Parent.Children.ToList<MenuItem?>();
 
-            _removedAtIdx = Math.Max(0, children.IndexOf(OperateOn));
-            children[_removedAtIdx] = null;
+            this.removedAtIdx = Math.Max(0, children.IndexOf(this.OperateOn));
+            children[this.removedAtIdx] = null;
 
-            Parent.Children = children.ToArray();
-            Bar?.SetNeedsDisplay();
+            this.Parent.Children = children.ToArray();
+            this.Bar?.SetNeedsDisplay();
 
             return true;
         }
 
         public override void Redo()
         {
-            Do();
+            this.Do();
         }
 
         public override void Undo()
         {
-            if (Parent == null || OperateOn == null)
+            if (this.Parent == null || this.OperateOn == null)
             {
                 return;
             }
 
-            var children = Parent.Children.ToList<MenuItem>();
+            var children = this.Parent.Children.ToList<MenuItem>();
 
-            children[_removedAtIdx] = OperateOn;
-            Parent.Children = children.ToArray();
-            Bar?.SetNeedsDisplay();
+            children[this.removedAtIdx] = this.OperateOn;
+            this.Parent.Children = children.ToArray();
+            this.Bar?.SetNeedsDisplay();
         }
     }
 }

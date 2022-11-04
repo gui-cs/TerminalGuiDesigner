@@ -9,28 +9,28 @@ public class RemoveTabOperation : TabViewOperation
     public RemoveTabOperation(Design design) : base(design)
     {
         // user has no Tab selected
-        if (SelectedTab == null)
+        if (this.SelectedTab == null)
         {
-            IsImpossible = true;
+            this.IsImpossible = true;
         }
     }
 
     public override string ToString()
     {
-        return $"Remove Tab '{SelectedTab?.Text}'";
+        return $"Remove Tab '{this.SelectedTab?.Text}'";
     }
 
     public override bool Do()
     {
-        if (SelectedTab == null)
+        if (this.SelectedTab == null)
         {
             throw new Exception("No Tab selected");
         }
 
-        if (View.Tabs.Contains(SelectedTab))
+        if (this.View.Tabs.Contains(this.SelectedTab))
         {
-            RemovedAtIdx = View.Tabs.ToList().IndexOf(SelectedTab);
-            View.RemoveTab(SelectedTab);
+            this.RemovedAtIdx = this.View.Tabs.ToList().IndexOf(this.SelectedTab);
+            this.View.RemoveTab(this.SelectedTab);
             return true;
         }
 
@@ -39,19 +39,19 @@ public class RemoveTabOperation : TabViewOperation
 
     public override void Redo()
     {
-        Do();
+        this.Do();
     }
 
     public override void Undo()
     {
-        if (SelectedTab == null)
+        if (this.SelectedTab == null)
         {
             throw new Exception("No Tab selected");
         }
 
-        if (!View.Tabs.Contains(SelectedTab))
+        if (!this.View.Tabs.Contains(this.SelectedTab))
         {
-            View.InsertTab(RemovedAtIdx, SelectedTab);
+            this.View.InsertTab(this.RemovedAtIdx, this.SelectedTab);
         }
     }
 }

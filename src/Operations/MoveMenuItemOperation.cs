@@ -4,68 +4,68 @@ namespace TerminalGuiDesigner.Operations;
 
 public class MoveMenuItemOperation : MenuItemOperation
 {
-    private bool _up;
-    private List<MenuItem>? _siblings;
-    private int _currentItemIdx;
+    private bool up;
+    private List<MenuItem>? siblings;
+    private int currentItemIdx;
 
     public MoveMenuItemOperation(MenuItem toMove, bool up)
         : base(toMove)
     {
-        _up = up;
+        this.up = up;
 
-        if (Parent == null || OperateOn == null)
+        if (this.Parent == null || this.OperateOn == null)
         {
-            IsImpossible = true;
+            this.IsImpossible = true;
             return;
         }
 
-        _siblings = Parent.Children.ToList<MenuItem>();
-        _currentItemIdx = _siblings.IndexOf(OperateOn);
+        this.siblings = this.Parent.Children.ToList<MenuItem>();
+        this.currentItemIdx = this.siblings.IndexOf(this.OperateOn);
 
-        if (_currentItemIdx < 0)
+        if (this.currentItemIdx < 0)
         {
-            IsImpossible = true;
+            this.IsImpossible = true;
         }
         else
         {
-            IsImpossible = up ? _currentItemIdx == 0 : _currentItemIdx == _siblings.Count - 1;
+            this.IsImpossible = up ? this.currentItemIdx == 0 : this.currentItemIdx == this.siblings.Count - 1;
         }
     }
 
     public override bool Do()
     {
-        return Move(_up ? -1 : 1);
+        return this.Move(this.up ? -1 : 1);
     }
 
     public override void Redo()
     {
-        Do();
+        this.Do();
     }
 
     public override void Undo()
     {
-        Move(_up ? 1 : -1);
+        this.Move(this.up ? 1 : -1);
     }
 
     private bool Move(int amount)
     {
-        if (Parent == null || OperateOn == null || _siblings == null)
+        if (this.Parent == null || this.OperateOn == null || this.siblings == null)
         {
             return false;
         }
 
-        int moveTo = Math.Max(0, amount + _currentItemIdx);
+        int moveTo = Math.Max(0, amount + this.currentItemIdx);
 
         // pull it out from wherever it is
-        _siblings.Remove(OperateOn);
+        this.siblings.Remove(this.OperateOn);
 
-        moveTo = Math.Min(moveTo, _siblings.Count);
+        moveTo = Math.Min(moveTo, this.siblings.Count);
 
         // push it in at the destination
-        _siblings.Insert(moveTo, OperateOn);
-        Parent.Children = _siblings.ToArray();
+        this.siblings.Insert(moveTo, this.OperateOn);
+        this.Parent.Children = this.siblings.ToArray();
 
-        Bar?.SetNeedsDisplay();
+        this.Bar?.SetNeedsDisplay();
 
         return true;
     }

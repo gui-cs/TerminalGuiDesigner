@@ -1,13 +1,13 @@
-﻿using NUnit.Framework;
-using System.IO;
-using System.Linq;
-using Terminal.Gui;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.Operations;
-using TerminalGuiDesigner.ToCode;
-
-namespace tests
+﻿namespace tests
 {
+    using System.IO;
+    using System.Linq;
+    using NUnit.Framework;
+    using Terminal.Gui;
+    using TerminalGuiDesigner;
+    using TerminalGuiDesigner.Operations;
+    using TerminalGuiDesigner.ToCode;
+
     internal class DeleteViewOperationTests : Tests
     {
         [Test]

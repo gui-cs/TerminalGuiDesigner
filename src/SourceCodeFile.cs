@@ -21,13 +21,13 @@ public class SourceCodeFile
     {
         if (file.Name.EndsWith(ExpectedExtension))
         {
-            CsFile = GetCsFile(file);
-            DesignerFile = file;
+            this.CsFile = this.GetCsFile(file);
+            this.DesignerFile = file;
         }
         else
         {
-            CsFile = file;
-            DesignerFile = GetDesignerFile(file);
+            this.CsFile = file;
+            this.DesignerFile = this.GetDesignerFile(file);
         }
     }
 

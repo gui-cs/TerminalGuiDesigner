@@ -8,15 +8,15 @@ namespace TerminalGuiDesigner.UI.Windows;
 
 public class EditDialog : Window
 {
-    private List<Property> _collection;
-    private ListView _list;
+    private List<Property> collection;
+    private ListView list;
 
     public Design Design { get; }
 
     public EditDialog(Design design)
     {
-        Design = design;
-        _collection = Design.GetDesignableProperties()
+        this.Design = design;
+        this.collection = this.Design.GetDesignableProperties()
             .OrderByDescending(p => p is NameProperty)
             .ThenBy(p => p.ToString())
             .ToList();
@@ -25,47 +25,47 @@ public class EditDialog : Window
         // See `const string RootDesignName`
         if (design.IsRoot)
         {
-            _collection = _collection.Where(p => p is not NameProperty).ToList();
+            this.collection = this.collection.Where(p => p is not NameProperty).ToList();
         }
 
-        _list = new ListView(_collection)
+        this.list = new ListView(this.collection)
         {
             X = 0,
             Y = 0,
             Width = Dim.Fill(2),
-            Height = Dim.Fill(2)
+            Height = Dim.Fill(2),
         };
-        _list.KeyPress += List_KeyPress;
+        this.list.KeyPress += this.List_KeyPress;
 
         var btnSet = new Button("Set")
         {
             X = 0,
-            Y = Pos.Bottom(_list),
-            IsDefault = true
+            Y = Pos.Bottom(this.list),
+            IsDefault = true,
         };
 
         btnSet.Clicked += () =>
         {
-            SetProperty(false);
+            this.SetProperty(false);
         };
 
         var btnClose = new Button("Close")
         {
             X = Pos.Right(btnSet),
-            Y = Pos.Bottom(_list)
+            Y = Pos.Bottom(this.list),
         };
         btnClose.Clicked += () => Application.RequestStop();
 
-        Add(_list);
-        Add(btnSet);
-        Add(btnClose);
+        this.Add(this.list);
+        this.Add(btnSet);
+        this.Add(btnClose);
     }
 
     public override bool ProcessHotKey(KeyEvent keyEvent)
     {
-        if (keyEvent.Key == Key.Enter && _list.HasFocus)
+        if (keyEvent.Key == Key.Enter && this.list.HasFocus)
         {
-            SetProperty(false);
+            this.SetProperty(false);
             return true;
         }
 
@@ -74,33 +74,33 @@ public class EditDialog : Window
 
     private void SetProperty(bool setNull)
     {
-        if (_list.SelectedItem != -1)
+        if (this.list.SelectedItem != -1)
         {
             try
             {
-                var p = _collection[_list.SelectedItem];
+                var p = this.collection[this.list.SelectedItem];
                 var oldValue = p.GetValue();
 
                 if (setNull)
                 {
                     // user wants to set this property to null/default
                     OperationManager.Instance.Do(
-                        new SetPropertyOperation(Design, p, oldValue, null)
+                        new SetPropertyOperation(this.Design, p, oldValue, null)
                     );
                 }
                 else
                 {
-                    if (!SetPropertyToNewValue(Design, p, oldValue))
+                    if (!SetPropertyToNewValue(this.Design, p, oldValue))
                     {
                         // user cancelled editing the value
                         return;
                     }
                 }
 
-                var oldSelected = _list.SelectedItem;
-                _list.SetSource(_collection = _collection.ToList());
-                _list.SelectedItem = oldSelected;
-                _list.EnsureSelectedItemVisible();
+                var oldSelected = this.list.SelectedItem;
+                this.list.SetSource(this.collection = this.collection.ToList());
+                this.list.SelectedItem = oldSelected;
+                this.list.EnsureSelectedItemVisible();
             }
             catch (Exception e)
             {
@@ -432,7 +432,7 @@ public class EditDialog : Window
 
             if (rly == 0)
             {
-                SetProperty(true);
+                this.SetProperty(true);
             }
         }
     }

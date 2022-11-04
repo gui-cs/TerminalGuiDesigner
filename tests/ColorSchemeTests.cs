@@ -67,7 +67,7 @@ public class ColorSchemeTests : Tests
         var found = mgr.GetNameForColorScheme(new ColorScheme
         {
             Normal = new Attribute(Color.Magenta, Color.Black),
-            Focus = new Attribute(Color.Cyan, Color.Black)
+            Focus = new Attribute(Color.Cyan, Color.Black),
         });
 
         Assert.IsNotNull(found);
@@ -81,7 +81,7 @@ public class ColorSchemeTests : Tests
     {
         // default when creating a new view is to have no explicit 
         // ColorScheme defined and just inherit from parent
-        var v = Get10By10View();
+        var v = this.Get10By10View();
         var p = (ColorSchemeProperty)(v.GetDesignableProperty(nameof(View.ColorScheme)) ?? throw new Exception("Expected this not to be null"));
 
         Assert.AreEqual("ColorScheme:(Inherited)", p.ToString());
@@ -93,7 +93,7 @@ public class ColorSchemeTests : Tests
         var pink = new ColorScheme
         {
             Normal = new Attribute(Color.Magenta, Color.Black),
-            Focus = new Attribute(Color.Cyan, Color.Black)
+            Focus = new Attribute(Color.Cyan, Color.Black),
         };
 
         mgr.AddOrUpdateScheme("pink", pink, v);
@@ -131,7 +131,7 @@ public class ColorSchemeTests : Tests
     {
         // default when creating a new view is to have no explicit 
         // ColorScheme defined and just inherit from parent
-        var v = Get10By10View();
+        var v = this.Get10By10View();
         var p = (ColorSchemeProperty)(v.GetDesignableProperty(nameof(View.ColorScheme)) ?? throw new Exception("Expected this not to be null"));
 
         Assert.AreEqual("ColorScheme:(Inherited)", p.ToString());
@@ -143,7 +143,7 @@ public class ColorSchemeTests : Tests
         var pink = new ColorScheme
         {
             Normal = new Attribute(Color.Magenta, Color.Black),
-            Focus = new Attribute(Color.Cyan, Color.Black)
+            Focus = new Attribute(Color.Cyan, Color.Black),
         };
 
         mgr.AddOrUpdateScheme("pink", pink, v);
@@ -174,16 +174,16 @@ public class ColorSchemeTests : Tests
     {
         var mgr = ColorSchemeManager.Instance;
 
-        var lblIn = RoundTrip<Dialog, Label>((d, l) =>
+        var lblIn = this.RoundTrip<Dialog, Label>((d, l) =>
         {
             mgr.Clear();
             mgr.AddOrUpdateScheme("pink", new ColorScheme
             {
                 Normal = new Attribute(Color.Magenta, Color.Black),
-                Focus = new Attribute(Color.Cyan, Color.Black)
+                Focus = new Attribute(Color.Cyan, Color.Black),
             }, d.GetRootDesign());
 
-            //unselect it so it is rendered with correct scheme
+            // unselect it so it is rendered with correct scheme
             SelectionManager.Instance.Clear();
             l.ColorScheme = d.State.OriginalScheme = mgr.Schemes.Single().Scheme;
 
@@ -222,7 +222,7 @@ public class ColorSchemeTests : Tests
     {
         var scheme = new ColorScheme();
 
-        var lblIn = RoundTrip<Dialog, Label>((d, v) =>
+        var lblIn = this.RoundTrip<Dialog, Label>((d, v) =>
             {
                 // Clear known default colors
                 ColorSchemeManager.Instance.Clear();
@@ -278,12 +278,12 @@ public class ColorSchemeTests : Tests
         private ColorScheme aaa = new ColorScheme
         {
             Normal = new Attribute(Color.Magenta, Color.Black),
-            Focus = new Attribute(Color.Cyan, Color.Black)
+            Focus = new Attribute(Color.Cyan, Color.Black),
         };
         private ColorScheme bbb = new ColorScheme
         {
             Normal = new Attribute(Color.Green, Color.Black),
-            Focus = new Attribute(Color.Cyan, Color.Black)
+            Focus = new Attribute(Color.Cyan, Color.Black),
         };
         private int ccc;
     }

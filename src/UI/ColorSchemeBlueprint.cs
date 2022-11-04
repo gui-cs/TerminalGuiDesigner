@@ -20,11 +20,11 @@ namespace TerminalGuiDesigner.UI
         [YamlIgnore]
         public ColorScheme Scheme => new ColorScheme
         {
-            Normal = new Attribute(NormalForeground, NormalBackground),
-            HotNormal = new Attribute(HotNormalForeground, HotNormalBackground),
-            Focus = new Attribute(FocusForeground, FocusBackground),
-            HotFocus = new Attribute(HotFocusForeground, HotFocusBackground),
-            Disabled = new Attribute(DisabledForeground, DisabledBackground),
+            Normal = new Attribute(this.NormalForeground, this.NormalBackground),
+            HotNormal = new Attribute(this.HotNormalForeground, this.HotNormalBackground),
+            Focus = new Attribute(this.FocusForeground, this.FocusBackground),
+            HotFocus = new Attribute(this.HotFocusForeground, this.HotFocusBackground),
+            Disabled = new Attribute(this.DisabledForeground, this.DisabledBackground),
         };
     }
 }

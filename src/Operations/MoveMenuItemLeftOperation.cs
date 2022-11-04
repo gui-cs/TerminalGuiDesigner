@@ -9,14 +9,14 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
     /// its parents submenu so that if we undo we can reinstate
     /// its previous position
     /// </summary>
-    private int? _pulledFromIndex;
+    private int? pulledFromIndex;
 
     public MoveMenuItemLeftOperation(MenuItem toMove)
         : base(toMove)
     {
-        if (Parent != null)
+        if (this.Parent != null)
         {
-            _pulledFromIndex = Array.IndexOf(Parent.Children, OperateOn);
+            this.pulledFromIndex = Array.IndexOf(this.Parent.Children, this.OperateOn);
         }
 
         // TODO prevent this if a root menu item
@@ -24,12 +24,12 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
 
     public override bool Do()
     {
-        if (Parent == null || OperateOn == null)
+        if (this.Parent == null || this.OperateOn == null)
         {
             return false;
         }
 
-        var parentsParent = MenuTracker.Instance.GetParent(Parent, out var bar);
+        var parentsParent = MenuTracker.Instance.GetParent(this.Parent, out var bar);
 
         if (parentsParent == null)
         {
@@ -40,10 +40,10 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
         // after we remove ourselves from its sublist it might
         // turn into a MenuItem (i.e. we loose the reference).
         var children = parentsParent.Children.ToList<MenuItem>();
-        var parentsIdx = children.IndexOf(Parent);
+        var parentsIdx = children.IndexOf(this.Parent);
 
         // remove us
-        if (new RemoveMenuItemOperation(OperateOn).Do())
+        if (new RemoveMenuItemOperation(this.OperateOn).Do())
         {
             // We are the parent but parents children don't contain
             // us.  Thats bad. TODO: log this
@@ -54,12 +54,12 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
 
             int insertAt = Math.Max(0, parentsIdx + 1);
 
-            children.Insert(insertAt, OperateOn);
+            children.Insert(insertAt, this.OperateOn);
             parentsParent.Children = children.ToArray();
 
             MenuTracker.Instance.ConvertEmptyMenus();
 
-            Bar?.SetNeedsDisplay();
+            this.Bar?.SetNeedsDisplay();
 
             return true;
         }
@@ -69,19 +69,19 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
 
     public override void Redo()
     {
-        Do();
+        this.Do();
     }
 
     public override void Undo()
     {
-        if (OperateOn == null)
+        if (this.OperateOn == null)
         {
             return;
         }
 
-        new MoveMenuItemRightOperation(OperateOn)
+        new MoveMenuItemRightOperation(this.OperateOn)
         {
-            InsertionIndex = _pulledFromIndex
+            InsertionIndex = this.pulledFromIndex,
         }
         .Do();
     }

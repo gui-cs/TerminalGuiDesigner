@@ -1,6 +1,6 @@
-﻿using NUnit.Framework;
-using System;
+﻿using System;
 using System.Linq;
+using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
@@ -14,7 +14,7 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CannotCopyRoot()
     {
-        var d = Get10By10View();
+        var d = this.Get10By10View();
 
         var top = new Toplevel();
         top.Add(d.View);
@@ -28,7 +28,7 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPasteTableView()
     {
-        var d = Get10By10View();
+        var d = this.Get10By10View();
 
         var tv = (TableView)new ViewFactory().Create(typeof(TableView));
 
@@ -99,13 +99,13 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPastePosRelative_Simple()
     {
-        var d = Get10By10View();
+        var d = this.Get10By10View();
 
         var lbl = new Label("Name:");
         var tb = new TextField
         {
             Width = 10,
-            X = Pos.Right(lbl) + 1
+            X = Pos.Right(lbl) + 1,
         };
 
         new AddViewOperation(d.SourceCode, lbl, d, "lbl").Do();
@@ -148,13 +148,13 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPastePosRelative_CopyOnlyDepender()
     {
-        var d = Get10By10View();
+        var d = this.Get10By10View();
 
         var lbl = new Label("Name:");
         var tb = new TextField
         {
             Width = 10,
-            X = Pos.Right(lbl) + 1
+            X = Pos.Right(lbl) + 1,
         };
 
         new AddViewOperation(d.SourceCode, lbl, d, "lbl").Do();
@@ -189,7 +189,7 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPasteColorScheme()
     {
-        var d = Get10By10View();
+        var d = this.Get10By10View();
 
         var lbl = new Label("Name:");
         var tb = new TextField();
@@ -234,7 +234,7 @@ internal class CopyPasteTests : Tests
 
         Assert.AreEqual(dlbl2.View.ColorScheme, green, "The newly pasted label should also inherit color scheme from the parent");
 
-        //but be known to inherit
+        // but be known to inherit
         Assert.AreEqual("ColorScheme:(Inherited)",
             dlbl2.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
             "Expected ColorScheme to be known to be inherited");

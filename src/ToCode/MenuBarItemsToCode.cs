@@ -28,14 +28,14 @@ internal class MenuBarItemsToCode : ToCodeBase
 
         // TODO: Let user name these
         List<string> menus = new();
-        foreach (var child in MenuBar.Menus)
+        foreach (var child in this.MenuBar.Menus)
         {
-            ToCode(args, child, out string fieldName);
+            this.ToCode(args, child, out string fieldName);
             menus.Add(fieldName);
         }
 
-        AddPropertyAssignment(args,
-            $"this.{Design.FieldName}.{nameof(MenuBar.Menus)}",
+        this.AddPropertyAssignment(args,
+            $"this.{this.Design.FieldName}.{nameof(this.MenuBar.Menus)}",
             new CodeArrayCreateExpression(typeof(MenuBarItem),
             menus.Select(c =>
                     new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), c))
@@ -44,10 +44,10 @@ internal class MenuBarItemsToCode : ToCodeBase
 
     private void ToCode(CodeDomArgs args, MenuBarItem child, out string fieldName)
     {
-        fieldName = GetUniqueFieldName(args, child);
-        AddFieldToClass(args, child.GetType(), fieldName);
-        AddConstructorCall(args, $"this.{fieldName}", child.GetType());
-        AddPropertyAssignment(args, $"this.{fieldName}.{nameof(MenuItem.Title)}", child.Title);
+        fieldName = this.GetUniqueFieldName(args, child);
+        this.AddFieldToClass(args, child.GetType(), fieldName);
+        this.AddConstructorCall(args, $"this.{fieldName}", child.GetType());
+        this.AddPropertyAssignment(args, $"this.{fieldName}.{nameof(MenuItem.Title)}", child.Title);
 
         List<string?> children = new();
 
@@ -57,7 +57,7 @@ internal class MenuBarItemsToCode : ToCodeBase
         {
             if (sub is MenuBarItem bar)
             {
-                ToCode(args, bar, out string f);
+                this.ToCode(args, bar, out string f);
                 children.Add(f);
             }
             else
@@ -68,13 +68,13 @@ internal class MenuBarItemsToCode : ToCodeBase
             }
             else
             {
-                string subFieldName = GetUniqueFieldName(args, sub);
-                AddFieldToClass(args, sub.GetType(), subFieldName);
-                AddConstructorCall(args, $"this.{subFieldName}", sub.GetType());
-                AddPropertyAssignment(args, $"this.{subFieldName}.{nameof(MenuItem.Title)}", sub.Title);
-                AddPropertyAssignment(args, $"this.{subFieldName}.{nameof(MenuItem.Data)}", subFieldName);
+                string subFieldName = this.GetUniqueFieldName(args, sub);
+                this.AddFieldToClass(args, sub.GetType(), subFieldName);
+                this.AddConstructorCall(args, $"this.{subFieldName}", sub.GetType());
+                this.AddPropertyAssignment(args, $"this.{subFieldName}.{nameof(MenuItem.Title)}", sub.Title);
+                this.AddPropertyAssignment(args, $"this.{subFieldName}.{nameof(MenuItem.Data)}", subFieldName);
 
-                AddPropertyAssignment(args, $"this.{subFieldName}.{nameof(MenuItem.Shortcut)}",
+                this.AddPropertyAssignment(args, $"this.{subFieldName}.{nameof(MenuItem.Shortcut)}",
                     new CodeCastExpression(
                         new CodeTypeReference(typeof(Key))
                         , new CodePrimitiveExpression((uint)sub.Shortcut)));
@@ -85,7 +85,7 @@ internal class MenuBarItemsToCode : ToCodeBase
 
         // we have created fields and constructor calls for our menu
         // now set the menu to an array of all those fields
-        AddPropertyAssignment(args,
+        this.AddPropertyAssignment(args,
             $"this.{fieldName}.{nameof(MenuBarItem.Children)}",
             new CodeArrayCreateExpression(typeof(MenuItem),
             children.Select(c =>

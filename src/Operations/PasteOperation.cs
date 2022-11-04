@@ -6,7 +6,7 @@ namespace TerminalGuiDesigner.Operations;
 public class PasteOperation : Operation
 {
     private Design _to;
-    private IReadOnlyCollection<Design> _oldSelection;
+    private IReadOnlyCollection<Design> oldSelection;
     private List<AddViewOperation> _addOperations = new();
 
     /// <summary>
@@ -16,9 +16,9 @@ public class PasteOperation : Operation
 
     public PasteOperation(Design addTo)
     {
-        IsImpossible = CopyOperation.LastCopiedDesign == null;
-        _to = addTo;
-        _oldSelection = SelectionManager.Instance.Selected;
+        this.IsImpossible = CopyOperation.LastCopiedDesign == null;
+        this._to = addTo;
+        this.oldSelection = SelectionManager.Instance.Selected;
     }
 
     public override bool Do()
@@ -26,7 +26,7 @@ public class PasteOperation : Operation
         var toCopy = CopyOperation.LastCopiedDesign;
 
         // if nothing to copy or calling Do() multiple times
-        if (toCopy == null || _addOperations.Any())
+        if (toCopy == null || this._addOperations.Any())
         {
             return false;
         }
@@ -35,12 +35,12 @@ public class PasteOperation : Operation
 
         foreach (var d in toCopy)
         {
-            didAny = Paste(d) || didAny;
+            didAny = this.Paste(d) || didAny;
         }
 
-        MigratePosRelatives();
+        this.MigratePosRelatives();
 
-        SelectionManager.Instance.ForceSetSelection(_clones.Values.ToArray());
+        SelectionManager.Instance.ForceSetSelection(this._clones.Values.ToArray());
         return didAny;
     }
 
@@ -49,7 +49,7 @@ public class PasteOperation : Operation
         var v = new ViewFactory();
         var clone = v.Create(d.View.GetType());
 
-        var addOperation = new AddViewOperation(_to.SourceCode, clone, _to, null);
+        var addOperation = new AddViewOperation(this._to.SourceCode, clone, this._to, null);
 
         // couldn't add for some reason
         if (!addOperation.Do())
@@ -57,7 +57,7 @@ public class PasteOperation : Operation
             return false;
         }
 
-        _addOperations.Add(addOperation);
+        this._addOperations.Add(addOperation);
 
         var cloneDesign = clone.Data as Design ?? throw new Exception($"AddViewOperation did not result in View of type {clone.GetType()} having a Design");
 
@@ -70,7 +70,7 @@ public class PasteOperation : Operation
             cloneProp.SetValue(copyProp.GetValue());
         }
 
-        _clones.Add(d, cloneDesign);
+        this._clones.Add(d, cloneDesign);
 
         // If pasting a TableView make sure to 
         // replicate the Table too.  
@@ -79,7 +79,7 @@ public class PasteOperation : Operation
         // sustainable e.g. IPasteExtraBits or something
         if (d.View is TableView copyTv)
         {
-            CloneTableView(copyTv, (TableView)cloneDesign.View);
+            this.CloneTableView(copyTv, (TableView)cloneDesign.View);
         }
 
         // TODO: adjust X/Y etc to make clone more visible
@@ -102,34 +102,34 @@ public class PasteOperation : Operation
 
     public override void Undo()
     {
-        foreach (var a in _addOperations)
+        foreach (var a in this._addOperations)
         {
             a.Undo();
         }
 
-        SelectionManager.Instance.SetSelection(_oldSelection.ToArray());
+        SelectionManager.Instance.SetSelection(this.oldSelection.ToArray());
     }
 
     public override void Redo()
     {
-        foreach (var a in _addOperations)
+        foreach (var a in this._addOperations)
         {
             a.Redo();
         }
 
-        SelectionManager.Instance.SetSelection(_clones.Values.ToArray());
+        SelectionManager.Instance.SetSelection(this._clones.Values.ToArray());
     }
 
     private void MigratePosRelatives()
     {
-        var everyone = _to.GetAllDesigns().ToArray();
+        var everyone = this._to.GetAllDesigns().ToArray();
 
-        foreach (var kvp in _clones)
+        foreach (var kvp in this._clones)
         {
             var pasted = kvp.Value;
 
-            pasted.View.X = MigrateIfPosRelative(pasted.View.X, everyone);
-            pasted.View.Y = MigrateIfPosRelative(pasted.View.Y, everyone);
+            pasted.View.X = this.MigrateIfPosRelative(pasted.View.X, everyone);
+            pasted.View.Y = this.MigrateIfPosRelative(pasted.View.Y, everyone);
         }
     }
 
@@ -147,13 +147,13 @@ public class PasteOperation : Operation
         // we are copy/pasting a relative Pos but copied selection
         // does not include the relativeTo so we cannot update
         // to the new instance
-        if (!_clones.ContainsKey(relativeTo))
+        if (!this._clones.ContainsKey(relativeTo))
         {
             return pos;
         }
 
         // create a new PosRelative that is pointed at the pasted clone
         // instead of the original
-        return PosExtensions.CreatePosRelative(_clones[relativeTo], side, offset);
+        return PosExtensions.CreatePosRelative(this._clones[relativeTo], side, offset);
     }
 }

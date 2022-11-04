@@ -13,7 +13,7 @@ public class MouseManagerTests : Tests
     [Test]
     public void TestDragLabel()
     {
-        var d = Get10By10View();
+        var d = this.Get10By10View();
 
         var lbl = new Label(0, 0, "Hi there buddy");
         var lblDesign = new Design(d.SourceCode, "mylabel", lbl);
@@ -31,7 +31,7 @@ public class MouseManagerTests : Tests
         {
             X = 1,
             Y = 0,
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.Button1Pressed,
         };
 
         mgr.HandleMouse(e, d);
@@ -46,7 +46,7 @@ public class MouseManagerTests : Tests
         {
             X = 1,
             Y = 1,
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.Button1Pressed,
         };
         mgr.HandleMouse(e, d);
 
@@ -75,7 +75,7 @@ public class MouseManagerTests : Tests
     [TestCase(typeof(View))]
     public void TestDragResizeView(Type t)
     {
-        var d = Get10By10View();
+        var d = this.Get10By10View();
 
         var view = new ViewFactory().Create(t);
         view.Width = 8;
@@ -100,7 +100,7 @@ public class MouseManagerTests : Tests
         {
             X = 6,
             Y = 0,
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.Button1Pressed,
         };
 
         mgr.HandleMouse(e, d);
@@ -115,7 +115,7 @@ public class MouseManagerTests : Tests
         {
             X = 9,
             Y = 0,
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.Button1Pressed,
         };
         mgr.HandleMouse(e, d);
 
@@ -148,7 +148,7 @@ public class MouseManagerTests : Tests
     [TestCase(1, 1, 10, 10, new[] { 0, 1, 2 })] // drag over all
     public void TestDragSelectionBox(int xStart, int yStart, int xEnd, int yEnd, int[] expectSelected)
     {
-        var d = Get10By10View();
+        var d = this.Get10By10View();
 
         /*
           Hi
@@ -183,7 +183,7 @@ public class MouseManagerTests : Tests
         {
             X = xStart,
             Y = yStart,
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.Button1Pressed,
         };
 
         mgr.HandleMouse(e, d);
@@ -193,7 +193,7 @@ public class MouseManagerTests : Tests
         {
             X = xEnd,
             Y = yEnd,
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.Button1Pressed,
         };
         mgr.HandleMouse(e, d);
 

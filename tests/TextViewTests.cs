@@ -1,11 +1,11 @@
-﻿using NStack;
-using NUnit.Framework;
-using Terminal.Gui;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.Operations;
-
-namespace tests
+﻿namespace tests
 {
+    using NStack;
+    using NUnit.Framework;
+    using Terminal.Gui;
+    using TerminalGuiDesigner;
+    using TerminalGuiDesigner.Operations;
+
     internal class TextViewTests : Tests
     {
         [Test]

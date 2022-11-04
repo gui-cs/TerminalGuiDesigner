@@ -1,37 +1,37 @@
-﻿using NUnit.Framework;
-using System;
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using Terminal.Gui;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.FromCode;
-using TerminalGuiDesigner.Operations;
-using TerminalGuiDesigner.ToCode;
-
-namespace tests
+﻿namespace tests
 {
+    using System;
+    using System.IO;
+    using System.Linq;
+    using System.Runtime.CompilerServices;
+    using NUnit.Framework;
+    using Terminal.Gui;
+    using TerminalGuiDesigner;
+    using TerminalGuiDesigner.FromCode;
+    using TerminalGuiDesigner.Operations;
+    using TerminalGuiDesigner.ToCode;
+
     public class Tests
     {
-        static bool _init = false;
+        static bool init = false;
 
         [SetUp]
         public virtual void SetUp()
         {
-            if (_init)
+            if (init)
             {
                 throw new InvalidOperationException("After did not run.");
             }
 
             Application.Init(new FakeDriver(), new FakeMainLoop(() => FakeConsole.ReadKey(true)));
-            _init = true;
+            init = true;
         }
 
         [TearDown]
         public virtual void TearDown()
         {
             Application.Shutdown();
-            _init = false;
+            init = false;
 
             SelectionManager.Instance.LockSelection = false;
             SelectionManager.Instance.Clear();

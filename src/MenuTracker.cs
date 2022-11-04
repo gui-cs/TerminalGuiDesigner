@@ -16,11 +16,11 @@ public class MenuTracker
 
     public void Register(MenuBar mb)
     {
-        mb.MenuAllClosed += MenuAllClosed;
-        mb.MenuOpened += MenuOpened;
-        mb.MenuClosing += MenuClosing;
+        mb.MenuAllClosed += this.MenuAllClosed;
+        mb.MenuOpened += this.MenuOpened;
+        mb.MenuClosing += this.MenuClosing;
 
-        bars.Add(mb);
+        this.bars.Add(mb);
     }
 
     private void PruneEmptyBars(MenuBarItem parent, MenuBarItem child)
@@ -36,18 +36,18 @@ public class MenuTracker
 
     private void MenuClosing(MenuClosingEventArgs obj)
     {
-        CurrentlyOpenMenuItem = null;
+        this.CurrentlyOpenMenuItem = null;
     }
 
     private void MenuOpened(MenuItem obj)
     {
-        CurrentlyOpenMenuItem = obj;
-        ConvertEmptyMenus();
+        this.CurrentlyOpenMenuItem = obj;
+        this.ConvertEmptyMenus();
     }
 
     private void MenuAllClosed()
     {
-        CurrentlyOpenMenuItem = null;
+        this.CurrentlyOpenMenuItem = null;
     }
 
     /// <summary>
@@ -56,11 +56,11 @@ public class MenuTracker
     /// </summary>
     public MenuBarItem? GetParent(MenuItem item, out MenuBar? hostBar)
     {
-        foreach (var bar in bars)
+        foreach (var bar in this.bars)
         {
             foreach (var sub in bar.Menus)
             {
-                var candidate = GetParent(item, sub);
+                var candidate = this.GetParent(item, sub);
 
                 if (candidate != null)
                 {
@@ -83,14 +83,16 @@ public class MenuTracker
     {
         var toReturn = new Dictionary<MenuBarItem, MenuItem>();
 
-        foreach (var b in bars)
+        foreach (var b in this.bars)
+        {
             foreach (var bi in b.Menus)
             {
-                foreach (var converted in ConvertEmptyMenus(b, bi))
+                foreach (var converted in this.ConvertEmptyMenus(b, bi))
                 {
                     toReturn.Add(converted.Key, converted.Value);
                 }
             }
+        }
 
         return toReturn;
     }
@@ -106,8 +108,8 @@ public class MenuTracker
 
         foreach (var c in mbi.Children.OfType<MenuBarItem>())
         {
-            ConvertEmptyMenus(bar, c);
-            if (ConvertMenuBarItemToRegularItemIfEmpty(c, out var added))
+            this.ConvertEmptyMenus(bar, c);
+            if (this.ConvertMenuBarItemToRegularItemIfEmpty(c, out var added))
             {
                 if (added != null)
                 {
@@ -171,7 +173,7 @@ public class MenuTracker
         // recursively check dropdowns
         foreach (var dropdown in sub.Children.OfType<MenuBarItem>())
         {
-            var candidate = GetParent(item, dropdown);
+            var candidate = this.GetParent(item, dropdown);
 
             if (candidate != null)
             {

@@ -5,9 +5,9 @@ namespace TerminalGuiDesigner.Operations;
 
 public class CompositeOperation : Operation
 {
-    private Operation[] _operations;
+    private Operation[] operations;
 
-    public IReadOnlyCollection<Operation> Operations => new ReadOnlyCollection<Operation>(_operations);
+    public IReadOnlyCollection<Operation> Operations => new ReadOnlyCollection<Operation>(this.operations);
 
     /// <summary>
     /// <para>
@@ -22,10 +22,10 @@ public class CompositeOperation : Operation
     /// <param name="operations"></param>
     public CompositeOperation(params Operation[] operations)
     {
-        _operations = operations;
+        this.operations = operations;
 
         // If we cann't do one of them then we cannot do any
-        IsImpossible = operations.Any(o => o.IsImpossible);
+        this.IsImpossible = operations.Any(o => o.IsImpossible);
     }
 
     /// <summary>
@@ -37,7 +37,7 @@ public class CompositeOperation : Operation
     {
         bool did = false;
 
-        foreach (var op in _operations)
+        foreach (var op in this.operations)
         {
             // if any operation worked
             if (op.Do())
@@ -52,7 +52,7 @@ public class CompositeOperation : Operation
 
     public override void Redo()
     {
-        foreach (var op in _operations)
+        foreach (var op in this.operations)
         {
             op.Redo();
         }
@@ -60,7 +60,7 @@ public class CompositeOperation : Operation
 
     public override void Undo()
     {
-        foreach (var op in _operations)
+        foreach (var op in this.operations)
         {
             op.Undo();
         }

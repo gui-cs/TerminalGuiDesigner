@@ -7,12 +7,12 @@ namespace TerminalGuiDesigner.UI
 {
     public class KeyboardManager
     {
-        private SetPropertyOperation? _currentOperation;
+        private SetPropertyOperation? currentOperation;
         private KeyMap _keyMap;
 
         public KeyboardManager(KeyMap keyMap)
         {
-            _keyMap = keyMap;
+            this._keyMap = keyMap;
         }
 
         public bool HandleKey(View focusedView, KeyEvent keystroke)
@@ -22,7 +22,7 @@ namespace TerminalGuiDesigner.UI
             // if we are in a menu
             if (menuItem != null)
             {
-                return HandleKeyPressInMenu(focusedView, menuItem, keystroke);
+                return this.HandleKeyPressInMenu(focusedView, menuItem, keystroke);
             }
 
             var d = focusedView.GetNearestDesign();
@@ -31,9 +31,9 @@ namespace TerminalGuiDesigner.UI
             if (d == null)
             {
                 // if there is another operation underway
-                if (_currentOperation != null)
+                if (this.currentOperation != null)
                 {
-                    FinishOperation();
+                    this.FinishOperation();
                 }
 
                 // do not swallow this keystroke
@@ -41,12 +41,12 @@ namespace TerminalGuiDesigner.UI
             }
 
             // if we have changed focus
-            if (_currentOperation != null && d != _currentOperation.Design)
+            if (this.currentOperation != null && d != this.currentOperation.Design)
             {
-                FinishOperation();
+                this.FinishOperation();
             }
 
-            if (keystroke.Key == _keyMap.Rename)
+            if (keystroke.Key == this._keyMap.Rename)
             {
                 var nameProp = d.GetDesignableProperties().OfType<NameProperty>().FirstOrDefault();
                 if (nameProp != null)
@@ -56,27 +56,27 @@ namespace TerminalGuiDesigner.UI
                 }
             }
 
-            if (!IsActionableKey(keystroke))
+            if (!this.IsActionableKey(keystroke))
             {
                 // we can't do anything with this keystroke
                 return false;
             }
 
             // if we are not currently doing anything
-            if (_currentOperation == null)
+            if (this.currentOperation == null)
             {
                 // start a new operation
-                StartOperation(d);
+                this.StartOperation(d);
             }
 
-            ApplyKeystrokeToTextProperty(keystroke);
+            this.ApplyKeystrokeToTextProperty(keystroke);
 
             return false;
         }
 
         private bool HandleKeyPressInMenu(View focusedView, MenuItem menuItem, KeyEvent keystroke)
         {
-            if (keystroke.Key == _keyMap.Rename)
+            if (keystroke.Key == this._keyMap.Rename)
             {
                 OperationManager.Instance.Do(
                         new RenameMenuItemOperation(menuItem)
@@ -94,7 +94,7 @@ namespace TerminalGuiDesigner.UI
                 return false;
             }
 
-            if (keystroke.Key == _keyMap.SetShortcut)
+            if (keystroke.Key == this._keyMap.SetShortcut)
             {
                 Key key = 0;
 
@@ -112,7 +112,7 @@ namespace TerminalGuiDesigner.UI
                 return false;
             }
 
-            if (keystroke.Key == _keyMap.MoveRight)
+            if (keystroke.Key == this._keyMap.MoveRight)
             {
                 OperationManager.Instance.Do(
                     new MoveMenuItemRightOperation(menuItem)
@@ -122,7 +122,7 @@ namespace TerminalGuiDesigner.UI
                 return true;
             }
 
-            if (keystroke.Key == _keyMap.MoveLeft)
+            if (keystroke.Key == this._keyMap.MoveLeft)
             {
                 OperationManager.Instance.Do(
                     new MoveMenuItemLeftOperation(menuItem)
@@ -132,7 +132,7 @@ namespace TerminalGuiDesigner.UI
                 return false;
             }
 
-            if (keystroke.Key == _keyMap.MoveUp)
+            if (keystroke.Key == this._keyMap.MoveUp)
             {
                 OperationManager.Instance.Do(
                     new MoveMenuItemOperation(menuItem, true)
@@ -141,7 +141,7 @@ namespace TerminalGuiDesigner.UI
                 return false;
             }
 
-            if (keystroke.Key == _keyMap.MoveDown)
+            if (keystroke.Key == this._keyMap.MoveDown)
             {
                 OperationManager.Instance.Do(
                     new MoveMenuItemOperation(menuItem, false)
@@ -184,7 +184,7 @@ namespace TerminalGuiDesigner.UI
             }
 
             // Allow typing but also Enter to create a new subitem
-            if (!IsActionableKey(keystroke))
+            if (!this.IsActionableKey(keystroke))
             {
                 return false;
             }
@@ -193,7 +193,7 @@ namespace TerminalGuiDesigner.UI
 
             // TODO once https://github.com/migueldeicaza/gui.cs/pull/1689 is merged and published
             // we can integrate this into the Design undo/redo systems
-            if (ApplyKeystrokeToString(menuItem.Title.ToString() ?? "", keystroke, out var newValue))
+            if (this.ApplyKeystrokeToString(menuItem.Title.ToString() ?? "", keystroke, out var newValue))
             {
                 // convert to a separator by typing three hyphens
                 if (newValue.Equals("---"))
@@ -231,39 +231,39 @@ namespace TerminalGuiDesigner.UI
 
             if (textProp != null)
             {
-                _currentOperation = new SetPropertyOperation(d, textProp, d.View.Text, d.View.Text);
+                this.currentOperation = new SetPropertyOperation(d, textProp, d.View.Text, d.View.Text);
             }
         }
 
         private void FinishOperation()
         {
-            if (_currentOperation == null)
+            if (this.currentOperation == null)
             {
                 return;
             }
 
             // finish it and clear it
-            OperationManager.Instance.Do(_currentOperation);
-            _currentOperation = null;
+            OperationManager.Instance.Do(this.currentOperation);
+            this.currentOperation = null;
         }
 
         private bool ApplyKeystrokeToTextProperty(KeyEvent keystroke)
         {
-            if (_currentOperation == null)
+            if (this.currentOperation == null)
             {
                 return false;
             }
 
-            var str = _currentOperation.Design.View.GetActualText();
+            var str = this.currentOperation.Design.View.GetActualText();
 
-            if (!ApplyKeystrokeToString(str, keystroke, out var newStr)) // not a keystroke we can act upon
+            if (!this.ApplyKeystrokeToString(str, keystroke, out var newStr)) // not a keystroke we can act upon
             {
                 return false;
             }
 
-            _currentOperation.Design.View.SetActualText(newStr);
-            _currentOperation.Design.View.SetNeedsDisplay();
-            _currentOperation.NewValue = newStr;
+            this.currentOperation.Design.View.SetActualText(newStr);
+            this.currentOperation.Design.View.SetNeedsDisplay();
+            this.currentOperation.NewValue = newStr;
 
             return true;
         }

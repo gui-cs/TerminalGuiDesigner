@@ -6,28 +6,28 @@ public class DeleteColorSchemeOperation : Operation
 {
     public NamedColorScheme ToDelete { get; }
 
-    private Design[] _users;
-    private Design _rootDesign;
+    private Design[] users;
+    private Design rootDesign;
 
     public DeleteColorSchemeOperation(Design design, NamedColorScheme toDelete)
     {
-        ToDelete = toDelete;
-        _users = design.GetAllDesigns().Where(d => d.UsesColorScheme(toDelete.Scheme)).ToArray();
-        _rootDesign = design;
+        this.ToDelete = toDelete;
+        this.users = design.GetAllDesigns().Where(d => d.UsesColorScheme(toDelete.Scheme)).ToArray();
+        this.rootDesign = design;
     }
 
     public override bool Do()
     {
-        foreach (var u in _users)
+        foreach (var u in this.users)
         {
             // we are no longer using a custom scheme
             u.State.OriginalScheme = null;
 
             // we use the default (usually thats to inherit from parent)
-            u.View.ColorScheme = GetDefaultColorScheme(u);
+            u.View.ColorScheme = this.GetDefaultColorScheme(u);
         }
 
-        ColorSchemeManager.Instance.Remove(ToDelete);
+        ColorSchemeManager.Instance.Remove(this.ToDelete);
         return true;
     }
 
@@ -53,18 +53,18 @@ public class DeleteColorSchemeOperation : Operation
 
     public override void Redo()
     {
-        Do();
+        this.Do();
     }
 
     public override void Undo()
     {
-        foreach (var u in _users)
+        foreach (var u in this.users)
         {
             // go back to using this explicit scheme before we deleted it
-            u.State.OriginalScheme = ToDelete.Scheme;
-            u.View.ColorScheme = ToDelete.Scheme;
+            u.State.OriginalScheme = this.ToDelete.Scheme;
+            u.View.ColorScheme = this.ToDelete.Scheme;
         }
 
-        ColorSchemeManager.Instance.AddOrUpdateScheme(ToDelete.Name, ToDelete.Scheme, _rootDesign);
+        ColorSchemeManager.Instance.AddOrUpdateScheme(this.ToDelete.Name, this.ToDelete.Scheme, this.rootDesign);
     }
 }

@@ -1,6 +1,6 @@
-﻿using NUnit.Framework;
-using System.Data;
+﻿using System.Data;
 using System.Linq;
+using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
@@ -12,7 +12,7 @@ public class TableViewTests : Tests
     [Test]
     public void TestRoundTrip_PreserveColumns()
     {
-        TableView tableIn = RoundTrip<Window, TableView>(
+        TableView tableIn = this.RoundTrip<Window, TableView>(
             (d, v) => Assert.IsNotEmpty(v.Table.Columns, "Default ViewFactory should create some columns for new TableViews"),
             out TableView tableOut);
 
@@ -26,7 +26,7 @@ public class TableViewTests : Tests
     public void TestRoundTrip_TwoTablesWithDuplicatedColumns()
     {
         // Create a TableView
-        TableView tableIn = RoundTrip<Window, TableView>(
+        TableView tableIn = this.RoundTrip<Window, TableView>(
             (d, v) =>
             {
                 // create a second TableView also on the root

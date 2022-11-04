@@ -11,7 +11,7 @@ public class DragOperationTests : Tests
     [Test]
     public void TestSimpleDrag_Down3Rows()
     {
-        var d = Get10By10View();
+        var d = this.Get10By10View();
 
         var lbl = new Label(0, 0, "Hi there buddy");
         var lblDesign = new Design(d.SourceCode, "mylabel", lbl);
@@ -40,7 +40,7 @@ public class DragOperationTests : Tests
     [Test]
     public void TestMultiDrag_Down3Rows()
     {
-        var d = Get10By10View();
+        var d = this.Get10By10View();
 
         var lbl1 = new Label(0, 0, "Hi there buddy");
         var lbl2 = new Label(1, 1, "Hi there buddy");
@@ -83,7 +83,7 @@ public class DragOperationTests : Tests
     [Test]
     public void TestSimpleDrag_IntoAnotherView()
     {
-        var d = Get10By10View();
+        var d = this.Get10By10View();
 
         // setup 2 large subviews at diagonals 
         // to one another within the main 10x10 view
@@ -92,7 +92,7 @@ public class DragOperationTests : Tests
             X = 0,
             Y = 1,
             Width = 5,
-            Height = 4
+            Height = 4,
         };
         container1.Data = new Design(d.SourceCode, "v1", container1);
 
@@ -101,7 +101,7 @@ public class DragOperationTests : Tests
             X = 5,
             Y = 6,
             Width = 5,
-            Height = 4
+            Height = 4,
         };
         container2.Data = new Design(d.SourceCode, "v2", container2);
 

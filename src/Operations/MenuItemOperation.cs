@@ -26,7 +26,7 @@ namespace TerminalGuiDesigner.Operations
 
             if (parent == null)
             {
-                IsImpossible = true;
+                this.IsImpossible = true;
                 return;
             }
 

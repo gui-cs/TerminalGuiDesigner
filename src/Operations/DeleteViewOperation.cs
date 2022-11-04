@@ -6,14 +6,14 @@ public class DeleteViewOperation : Operation
 {
     private readonly View[] delete;
     private readonly View[] from;
-    private readonly Design[] _originalSelection;
+    private readonly Design[] originalSelection;
 
     public DeleteViewOperation(params View[] delete)
     {
         this.delete = delete;
         this.from = delete.Select(d => d.SuperView).ToArray();
 
-        _originalSelection = SelectionManager.Instance.Selected.ToArray();
+        this.originalSelection = SelectionManager.Instance.Selected.ToArray();
 
         foreach (var del in delete)
         {
@@ -22,7 +22,7 @@ public class DeleteViewOperation : Operation
                 // don't delete the root view!
                 if (design.IsRoot)
                 {
-                    IsImpossible = true;
+                    this.IsImpossible = true;
                 }
 
                 // there are view(s) that depend on us (e.g. for positioning)
@@ -31,7 +31,7 @@ public class DeleteViewOperation : Operation
                         // unless we are also deleting those too in which case its fine
                         .Any(dep => !delete.Contains(dep.View)))
                 {
-                    IsImpossible = true;
+                    this.IsImpossible = true;
                 }
             }
         }
@@ -41,36 +41,36 @@ public class DeleteViewOperation : Operation
     {
         bool removedAny = false;
 
-        for (int i = 0; i < delete.Length; i++)
+        for (int i = 0; i < this.delete.Length; i++)
         {
-            if (from[i] != null)
+            if (this.from[i] != null)
             {
-                from[i].Remove(delete[i]);
+                this.from[i].Remove(this.delete[i]);
                 removedAny = true;
             }
         }
 
-        ForceSelectionClear();
+        this.ForceSelectionClear();
 
         return removedAny;
     }
 
     public override void Redo()
     {
-        Do();
+        this.Do();
     }
 
     public override void Undo()
     {
-        for (int i = 0; i < delete.Length; i++)
+        for (int i = 0; i < this.delete.Length; i++)
         {
-            if (from[i] != null)
+            if (this.from[i] != null)
             {
-                from[i].Add(delete[i]);
+                this.from[i].Add(this.delete[i]);
             }
         }
 
-        ForceSelection(_originalSelection);
+        this.ForceSelection(this.originalSelection);
     }
 
     public override string ToString()

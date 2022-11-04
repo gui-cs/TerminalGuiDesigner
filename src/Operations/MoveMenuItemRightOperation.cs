@@ -16,14 +16,14 @@ public class MoveMenuItemRightOperation : MenuItemOperation
 
     public override bool Do()
     {
-        if (Parent == null || OperateOn == null)
+        if (this.Parent == null || this.OperateOn == null)
         {
             return false;
         }
 
         // When user hits shift right
-        var children = Parent.Children.ToList<MenuItem>();
-        var currentItemIdx = children.IndexOf(OperateOn);
+        var children = this.Parent.Children.ToList<MenuItem>();
+        var currentItemIdx = children.IndexOf(this.OperateOn);
         var aboveIdx = currentItemIdx - 1;
 
         // and there is an item above
@@ -32,29 +32,29 @@ public class MoveMenuItemRightOperation : MenuItemOperation
             return false;
         }
 
-        var addTo = ConvertToMenuBarItem(children, aboveIdx);
+        var addTo = this.ConvertToMenuBarItem(children, aboveIdx);
 
         // pull us out
-        children.Remove(OperateOn);
+        children.Remove(this.OperateOn);
 
         // add us to the submenu
         var submenuChildren = addTo.Children.ToList<MenuItem>();
 
-        if (InsertionIndex != null)
+        if (this.InsertionIndex != null)
         {
-            submenuChildren.Insert(InsertionIndex.Value, OperateOn);
+            submenuChildren.Insert(this.InsertionIndex.Value, this.OperateOn);
         }
         else
         {
-            submenuChildren.Add(OperateOn);
+            submenuChildren.Add(this.OperateOn);
         }
 
         // update the main menu
-        Parent.Children = children.ToArray();
+        this.Parent.Children = children.ToArray();
         // update the submenu
         addTo.Children = submenuChildren.ToArray();
 
-        Bar?.SetNeedsDisplay();
+        this.Bar?.SetNeedsDisplay();
 
         return true;
     }
@@ -66,12 +66,12 @@ public class MoveMenuItemRightOperation : MenuItemOperation
 
     public override void Undo()
     {
-        if (Parent == null || OperateOn == null)
+        if (this.Parent == null || this.OperateOn == null)
         {
             return;
         }
 
-        new MoveMenuItemLeftOperation(OperateOn).Do();
+        new MoveMenuItemLeftOperation(this.OperateOn).Do();
     }
 
     private MenuBarItem ConvertToMenuBarItem(List<MenuItem> children, int idx)

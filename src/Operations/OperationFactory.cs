@@ -4,11 +4,11 @@ namespace TerminalGuiDesigner.Operations
 {
     public class OperationFactory
     {
-        private PropertyValueGetterDelegate _valueGetter;
+        private PropertyValueGetterDelegate valueGetter;
 
         public OperationFactory(PropertyValueGetterDelegate valueGetter)
         {
-            _valueGetter = valueGetter;
+            this.valueGetter = valueGetter;
         }
 
         public IEnumerable<IOperation> CreateOperations(Design[] selected, MouseEvent? m, Design? rightClicked, out string name)
@@ -20,7 +20,7 @@ namespace TerminalGuiDesigner.Operations
             {
                 // give them options for the thing they right clicked
                 name = rightClicked.FieldName;
-                foreach (var op in CreateOperations(m, rightClicked))
+                foreach (var op in this.CreateOperations(m, rightClicked))
                 {
                     toReturn.Add(op);
                 }
@@ -29,7 +29,7 @@ namespace TerminalGuiDesigner.Operations
             if (selected.Length == 1)
             {
                 name = selected[0].FieldName;
-                foreach (var op in CreateOperations(m, selected[0]))
+                foreach (var op in this.CreateOperations(m, selected[0]))
                 {
                     toReturn.Add(op);
                 }
@@ -56,7 +56,7 @@ namespace TerminalGuiDesigner.Operations
                     if (all.Count == selected.Length)
                     {
                         // create an operation to change them all at once
-                        props.Add(new SetPropertyOperation(all.Select(v => v.Design).ToArray(), propertyName, _valueGetter));
+                        props.Add(new SetPropertyOperation(all.Select(v => v.Design).ToArray(), propertyName, this.valueGetter));
                     }
                 }
 
@@ -92,7 +92,7 @@ namespace TerminalGuiDesigner.Operations
 
             foreach (var prop in d.GetDesignableProperties().OrderBy(p => p.GetHumanReadableName()))
             {
-                yield return new SetPropertyOperation(d, prop, _valueGetter);
+                yield return new SetPropertyOperation(d, prop, this.valueGetter);
             }
         }
     }

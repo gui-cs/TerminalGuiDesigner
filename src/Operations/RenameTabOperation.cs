@@ -8,53 +8,53 @@ namespace TerminalGuiDesigner;
 
 internal class RenameTabOperation : Operation
 {
-    private readonly TabView _tabView;
-    private Tab? _tab;
-    private readonly ustring? _originalName;
-    private string? _newTabName;
+    private readonly TabView tabView;
+    private Tab? tab;
+    private readonly ustring? originalName;
+    private string? newTabName;
 
     public Design Design { get; }
 
     public RenameTabOperation(Design design)
     {
-        Design = design;
+        this.Design = design;
 
         // somehow user ran this command for a non tabview
-        if (Design.View is not TabView)
+        if (this.Design.View is not TabView)
         {
             throw new ArgumentException($"Design must be for a {nameof(TabView)} to support {nameof(AddTabOperation)}");
         }
 
-        _tabView = (TabView)Design.View;
+        this.tabView = (TabView)this.Design.View;
 
-        _tab = _tabView.SelectedTab;
+        this.tab = this.tabView.SelectedTab;
 
         // user has no Tab selected
-        if (_tab == null)
+        if (this.tab == null)
         {
-            IsImpossible = true;
+            this.IsImpossible = true;
         }
 
-        _originalName = _tab?.Text;
+        this.originalName = this.tab?.Text;
     }
 
     public override string ToString()
     {
-        return $"Rename Tab '{_originalName}'";
+        return $"Rename Tab '{this.originalName}'";
     }
 
     public override bool Do()
     {
-        if (_tab == null)
+        if (this.tab == null)
         {
             throw new Exception("No tab was selected so command cannot be run");
         }
 
-        if (Modals.GetString("Rename Tab", "Tab Name", _originalName?.ToString(), out string? newTabName) && newTabName != null)
+        if (Modals.GetString("Rename Tab", "Tab Name", this.originalName?.ToString(), out string? newTabName) && newTabName != null)
         {
-            _newTabName = newTabName;
-            _tab.Text = newTabName;
-            _tabView.SetNeedsDisplay();
+            this.newTabName = newTabName;
+            this.tab.Text = newTabName;
+            this.tabView.SetNeedsDisplay();
             return true;
         }
 
@@ -63,19 +63,19 @@ internal class RenameTabOperation : Operation
 
     public override void Redo()
     {
-        if (_tab != null)
+        if (this.tab != null)
         {
-            _tab.Text = _newTabName;
-            _tabView.SetNeedsDisplay();
+            this.tab.Text = this.newTabName;
+            this.tabView.SetNeedsDisplay();
         }
     }
 
     public override void Undo()
     {
-        if (_tab != null)
+        if (this.tab != null)
         {
-            _tab.Text = _originalName;
-            _tabView.SetNeedsDisplay();
+            this.tab.Text = this.originalName;
+            this.tabView.SetNeedsDisplay();
         }
     }
 }

@@ -18,16 +18,16 @@ public abstract class TabViewOperation : Operation
 
     public TabViewOperation(Design design)
     {
-        Design = design;
+        this.Design = design;
 
         // somehow user ran this command for a non tab view
-        if (Design.View is not TabView)
+        if (this.Design.View is not TabView)
         {
             throw new ArgumentException($"Design must be for a {nameof(TabView)} to support this Operation");
         }
 
-        View = (TabView)Design.View;
+        this.View = (TabView)this.Design.View;
 
-        SelectedTab = View.SelectedTab;
+        this.SelectedTab = this.View.SelectedTab;
     }
 }

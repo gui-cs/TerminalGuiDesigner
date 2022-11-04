@@ -55,22 +55,22 @@ public class CodeDomArgs
     {
         name = MakeValidFieldName(name);
 
-        if (!FieldNamesUsed.Contains(name))
+        if (!this.FieldNamesUsed.Contains(name))
         {
-            FieldNamesUsed.Add(name);
+            this.FieldNamesUsed.Add(name);
             return name;
         }
 
         // name is already used, add a number
         int number = 2;
-        while (FieldNamesUsed.Contains(name + number))
+        while (this.FieldNamesUsed.Contains(name + number))
         {
             // menu2 is taken, try menu3 etc
             number++;
         }
 
         // found a unique one
-        FieldNamesUsed.Add(name + number);
+        this.FieldNamesUsed.Add(name + number);
         return name + number;
     }
 }

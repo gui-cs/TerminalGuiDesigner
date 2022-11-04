@@ -20,14 +20,14 @@ public class MouseManager
     {
     }
 
-    public Rect? SelectionBox => RectExtensions.FromBetweenPoints(SelectionStart, SelectionEnd);
+    public Rect? SelectionBox => RectExtensions.FromBetweenPoints(this.SelectionStart, this.SelectionEnd);
     public View? SelectionContainer { get; private set; }
 
     public void HandleMouse(MouseEvent m, Design viewBeingEdited)
     {
         // start dragging
         if (m.Flags.HasFlag(MouseFlags.Button1Pressed)
-            && resizeOperation == null && dragOperation == null && SelectionStart == null)
+            && this.resizeOperation == null && this.dragOperation == null && this.SelectionStart == null)
         {
             var drag = viewBeingEdited.View.HitTest(m, out bool isBorder, out bool isLowerRight);
 
@@ -35,19 +35,19 @@ public class MouseManager
             if (drag != null && drag.IsContainerView() && !isLowerRight && !isBorder)
             {
                 // start dragging a selection box
-                SelectionContainer = drag;
-                SelectionStart = new Point(m.X, m.Y);
+                this.SelectionContainer = drag;
+                this.SelectionStart = new Point(m.X, m.Y);
             }
 
             // if nothing is going on yet
             if (drag != null && drag.Data is Design design
-             && resizeOperation == null && dragOperation == null && SelectionStart == null)
+             && this.resizeOperation == null && this.dragOperation == null && this.SelectionStart == null)
             {
                 var dest = viewBeingEdited.View.ScreenToClient(m.X, m.Y);
 
                 if (isLowerRight)
                 {
-                    resizeOperation = new ResizeOperation(design, dest.X, dest.Y);
+                    this.resizeOperation = new ResizeOperation(design, dest.X, dest.Y);
                 }
                 else
                 {
@@ -58,51 +58,51 @@ public class MouseManager
                     if (multiSelected.Contains(design))
                     {
                         // drag all the views at once                    
-                        dragOperation = new DragOperation(design, dest.X, dest.Y,
+                        this.dragOperation = new DragOperation(design, dest.X, dest.Y,
                             multiSelected.Except(new[] { design }).ToArray());
                     }
                     else
                     {
                         // else drag only the non selected one
-                        dragOperation = new DragOperation(design, dest.X, dest.Y, new Design[0]);
+                        this.dragOperation = new DragOperation(design, dest.X, dest.Y, new Design[0]);
                     }
 
                     // don't begin an impossible drag!
-                    if (dragOperation.IsImpossible)
+                    if (this.dragOperation.IsImpossible)
                     {
-                        dragOperation = null;
+                        this.dragOperation = null;
                     }
                 }
             }
         }
 
         // continue dragging a selection box
-        if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && SelectionStart != null)
+        if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && this.SelectionStart != null)
         {
             // move selection box to new mouse position
-            SelectionEnd = new Point(m.X, m.Y);
+            this.SelectionEnd = new Point(m.X, m.Y);
             viewBeingEdited.View.SetNeedsDisplay();
             Application.DoEvents();
             return;
         }
 
         // continue dragging a view
-        if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && dragOperation != null)
+        if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && this.dragOperation != null)
         {
             var dest = viewBeingEdited.View.ScreenToClient(m.X, m.Y);
 
-            dragOperation.ContinueDrag(dest);
+            this.dragOperation.ContinueDrag(dest);
 
             viewBeingEdited.View.SetNeedsDisplay();
             Application.DoEvents();
         }
 
         // continue resizing
-        if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && resizeOperation != null)
+        if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && this.resizeOperation != null)
         {
             var dest = viewBeingEdited.View.ScreenToClient(m.X, m.Y);
 
-            resizeOperation.ContinueResize(dest);
+            this.resizeOperation.ContinueResize(dest);
 
             viewBeingEdited.View.SetNeedsDisplay();
             Application.DoEvents();
@@ -112,44 +112,44 @@ public class MouseManager
         if (!m.Flags.HasFlag(MouseFlags.Button1Pressed))
         {
             // end selection box
-            if (SelectionStart != null && SelectionBox != null && SelectionContainer != null)
+            if (this.SelectionStart != null && this.SelectionBox != null && this.SelectionContainer != null)
             {
                 SelectionManager.Instance.SetSelection(
-                    SelectionContainer.GetActualSubviews()
-                    .Where(v => v.IntersectsScreenRect(SelectionBox.Value))
+                    this.SelectionContainer.GetActualSubviews()
+                    .Where(v => v.IntersectsScreenRect(this.SelectionBox.Value))
                     .Select(v => v.GetNearestDesign())
                     .Where(d => d != null && !d.IsRoot)
                     .Cast<Design>()
                     .ToArray()
                     );
 
-                SelectionStart = null;
-                SelectionEnd = null;
-                SelectionContainer = null;
+                this.SelectionStart = null;
+                this.SelectionEnd = null;
+                this.SelectionContainer = null;
                 viewBeingEdited.View.SetNeedsDisplay();
                 Application.DoEvents();
             }
 
-            //end dragging
-            if (dragOperation != null)
+            // end dragging
+            if (this.dragOperation != null)
             {
                 // see if we are dragging into a new container
-                var dropInto = viewBeingEdited.View.HitTest(m, out _, out _, dragOperation.BeingDragged.View);
+                var dropInto = viewBeingEdited.View.HitTest(m, out _, out _, this.dragOperation.BeingDragged.View);
 
                 // we are dragging into a new container
-                dragOperation.DropInto = dropInto;
+                this.dragOperation.DropInto = dropInto;
 
                 // end drag
-                OperationManager.Instance.Do(dragOperation);
-                dragOperation = null;
+                OperationManager.Instance.Do(this.dragOperation);
+                this.dragOperation = null;
             }
 
             // end resize
-            if (resizeOperation != null)
+            if (this.resizeOperation != null)
             {
                 // end resize
-                OperationManager.Instance.Do(resizeOperation);
-                resizeOperation = null;
+                OperationManager.Instance.Do(this.resizeOperation);
+                this.resizeOperation = null;
             }
         }
     }

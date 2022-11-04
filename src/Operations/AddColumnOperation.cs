@@ -6,35 +6,35 @@ namespace TerminalGuiDesigner.Operations;
 
 internal class AddColumnOperation : Operation
 {
-    private DataColumn? _column;
-    private TableView _tableView;
+    private DataColumn? column;
+    private TableView tableView;
 
     public Design Design { get; }
 
     public AddColumnOperation(Design design)
     {
-        Design = design;
+        this.Design = design;
 
         // somehow user ran this command for a non table view
-        if (Design.View is not TableView)
+        if (this.Design.View is not TableView)
         {
             throw new ArgumentException($"Design must be for a {nameof(TableView)} to support {nameof(AddColumnOperation)}");
         }
 
-        _tableView = (TableView)Design.View;
+        this.tableView = (TableView)this.Design.View;
     }
 
     public override bool Do()
     {
-        if (_column != null)
+        if (this.column != null)
         {
             throw new Exception("This command has already been performed once.  Use Redo instead of Do");
         }
 
         if (Modals.GetString("Add Column", "Column Name", "MyCol", out var newColumnName))
         {
-            _column = _tableView.Table.Columns.Add(newColumnName);
-            _tableView.Update();
+            this.column = this.tableView.Table.Columns.Add(newColumnName);
+            this.tableView.Update();
         }
 
         return true;
@@ -43,24 +43,24 @@ internal class AddColumnOperation : Operation
     public override void Redo()
     {
         // cannot redo (maybe user hit redo twice thats fine)
-        if (_column == null || _tableView.Table.Columns.Contains(_column.ColumnName))
+        if (this.column == null || this.tableView.Table.Columns.Contains(this.column.ColumnName))
         {
             return;
         }
 
-        _tableView.Table.Columns.Add(_column);
-        _tableView.Update();
+        this.tableView.Table.Columns.Add(this.column);
+        this.tableView.Update();
     }
 
     public override void Undo()
     {
         // cannot undo
-        if (_column == null || !_tableView.Table.Columns.Contains(_column.ColumnName))
+        if (this.column == null || !this.tableView.Table.Columns.Contains(this.column.ColumnName))
         {
             return;
         }
 
-        _tableView.Table.Columns.Remove(_column);
-        _tableView.Update();
+        this.tableView.Table.Columns.Remove(this.column);
+        this.tableView.Update();
     }
 }

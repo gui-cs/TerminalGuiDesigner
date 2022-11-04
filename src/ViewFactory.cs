@@ -23,22 +23,22 @@ public class ViewFactory
     {
         if (typeof(TableView).IsAssignableFrom(t))
         {
-            return CreateTableView();
+            return this.CreateTableView();
         }
 
         if (typeof(TabView).IsAssignableFrom(t))
         {
-            return CreateTabView();
+            return this.CreateTabView();
         }
 
         if (typeof(RadioGroup).IsAssignableFrom(t))
         {
-            return CreateRadioGroup();
+            return this.CreateRadioGroup();
         }
 
         if (typeof(MenuBar).IsAssignableFrom(t))
         {
-            return CreateMenuBar();
+            return this.CreateMenuBar();
         }
 
         if (t == typeof(TextValidateField))
@@ -58,7 +58,7 @@ public class ViewFactory
             {
                 Width = 10,
                 Height = 1,
-                Fraction = 1f
+                Fraction = 1f,
             };
         }
 
@@ -86,7 +86,7 @@ public class ViewFactory
             {
                 Width = 20,
                 Height = 5,
-                GraphColor = Attribute.Make(Color.White, Color.Black)
+                GraphColor = Attribute.Make(Color.White, Color.Black),
             };
         }
 
@@ -106,7 +106,7 @@ public class ViewFactory
             return new LineView()
             {
                 Width = 8,
-                Height = 1
+                Height = 1,
             };
         }
 
@@ -115,7 +115,7 @@ public class ViewFactory
             return new TreeView()
             {
                 Width = 16,
-                Height = 5
+                Height = 5,
             };
         }
 
@@ -125,7 +125,7 @@ public class ViewFactory
             {
                 Width = 10,
                 Height = 5,
-                ContentSize = new Size(20, 10)
+                ContentSize = new Size(20, 10),
             };
         }
 
@@ -151,7 +151,7 @@ public class ViewFactory
         return new MenuBar(new MenuBarItem[] {
                 new MenuBarItem ("_File (F9)", new MenuItem [] {
                     new MenuItem (AddMenuOperation.DefaultMenuItemText, "", () => {})
-                })
+                }),
          });
     }
 
@@ -179,7 +179,7 @@ public class ViewFactory
         {
             Width = 50,
             Height = 5,
-            Table = dt
+            Table = dt,
         };
     }
 
@@ -208,7 +208,7 @@ public class ViewFactory
              typeof(SaveDialog),
              typeof(OpenDialog),
              typeof(ScrollBarView),
-             typeof(TreeView<>)}; // The generic version of TreeView
+             typeof(TreeView<>),}; // The generic version of TreeView
 
         return typeof(View).Assembly.DefinedTypes.Where(t =>
                 typeof(View).IsAssignableFrom(t) &&

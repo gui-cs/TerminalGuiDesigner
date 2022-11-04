@@ -16,7 +16,7 @@ class MenuBarTests : Tests
     {
         var viewToCode = new ViewToCode();
 
-        var file = new FileInfo($"{nameof(TestRoundTrip_PreserveMenuItems)}.cs");
+        var file = new FileInfo($"{nameof(this.TestRoundTrip_PreserveMenuItems)}.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog), out var sourceCode);
 
         var factory = new ViewFactory();
@@ -47,7 +47,7 @@ class MenuBarTests : Tests
     {
         var viewToCode = new ViewToCode();
 
-        var file = new FileInfo($"{nameof(TestRoundTrip_PreserveMenuItems_EvenSubmenus)}.cs");
+        var file = new FileInfo($"{nameof(this.TestRoundTrip_PreserveMenuItems_EvenSubmenus)}.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog), out var sourceCode);
 
         var factory = new ViewFactory();
@@ -92,7 +92,7 @@ class MenuBarTests : Tests
     {
         var viewToCode = new ViewToCode();
 
-        var file = new FileInfo($"{nameof(TestMenuOperations)}.cs");
+        var file = new FileInfo($"{nameof(this.TestMenuOperations)}.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog), out var sourceCode);
 
         var factory = new ViewFactory();
@@ -169,12 +169,12 @@ class MenuBarTests : Tests
 
     private MenuBar GetMenuBar()
     {
-        return GetMenuBar(out _);
+        return this.GetMenuBar(out _);
     }
 
     private MenuBar GetMenuBar(out Design root)
     {
-        root = Get10By10View();
+        root = this.Get10By10View();
 
         var bar = (MenuBar)new ViewFactory().Create(typeof(MenuBar));
         var addBarCmd = new AddViewOperation(root.SourceCode, bar, root, "mb");
@@ -196,7 +196,7 @@ class MenuBarTests : Tests
     [Test]
     public void TestRemoveFinalMenuItemOnBar()
     {
-        var bar = GetMenuBar();
+        var bar = this.GetMenuBar();
 
         var fileMenu = bar.Menus[0];
         var placeholderMenuItem = fileMenu.Children[0];
@@ -222,7 +222,7 @@ class MenuBarTests : Tests
     [Test]
     public void TestMoveMenuItemRight_CannotMoveLast()
     {
-        var bar = GetMenuBar();
+        var bar = this.GetMenuBar();
 
         var mi = bar.Menus[0].Children[0];
         var cmd = new MoveMenuItemRightOperation(mi);
@@ -232,7 +232,7 @@ class MenuBarTests : Tests
     [Test]
     public void TestMoveMenuItemRight_CannotMoveElementZero()
     {
-        var bar = GetMenuBar();
+        var bar = this.GetMenuBar();
 
         var mi = bar.Menus[0].Children[0];
         mi.Data = "yarg";
@@ -276,7 +276,7 @@ class MenuBarTests : Tests
     [Test]
     public void TestMoveMenuItemLeft_CannotMoveRootItems()
     {
-        var bar = GetMenuBar();
+        var bar = this.GetMenuBar();
 
         var mi = bar.Menus[0].Children[0];
 
@@ -288,7 +288,7 @@ class MenuBarTests : Tests
 
     private MenuBar GetMenuBarWithSubmenuItems(out MenuBarItem head2, out MenuItem topChild)
     {
-        var bar = GetMenuBar();
+        var bar = this.GetMenuBar();
         // Set up a menu like:
 
         /*
@@ -309,17 +309,17 @@ class MenuBarTests : Tests
                 topChild = new MenuItem("Child1",null,()=>{})
                 {
                     Data = "Child1",
-                    Shortcut = Key.J | Key.CtrlMask
+                    Shortcut = Key.J | Key.CtrlMask,
                 },
                 new MenuItem("Child2",null,()=>{})
                 {
                     Data = "Child2",
                     Shortcut = Key.F | Key.CtrlMask
-                }
+                },
             }){
-                Title = "Head2"
+                Title = "Head2",
             },
-            new MenuItem("Head3",null,()=>{})
+            new MenuItem("Head3",null,()=>{}),
         };
 
         return bar;
@@ -328,7 +328,7 @@ class MenuBarTests : Tests
     [Test]
     public void TestMoveMenuItemLeft_MoveTopChild()
     {
-        var bar = GetMenuBarWithSubmenuItems(out var head2, out var topChild);
+        var bar = this.GetMenuBarWithSubmenuItems(out var head2, out var topChild);
 
         Assert.AreEqual(3, bar.Menus[0].Children.Length);
         Assert.AreEqual(2, head2.Children.Length);
@@ -365,7 +365,7 @@ class MenuBarTests : Tests
     [Test]
     public void TestDeletingMenuItemFromSubmenu_TopChild()
     {
-        var bar = GetMenuBarWithSubmenuItems(out var head2, out var topChild);
+        var bar = this.GetMenuBarWithSubmenuItems(out var head2, out var topChild);
 
         Assert.AreEqual(3, bar.Menus[0].Children.Length);
         Assert.AreEqual(2, head2.Children.Length);
@@ -390,7 +390,7 @@ class MenuBarTests : Tests
     [Test]
     public void TestDeletingMenuItemFromSubmenu_AllSubmenChild()
     {
-        var bar = GetMenuBarWithSubmenuItems(out var head2, out var topChild);
+        var bar = this.GetMenuBarWithSubmenuItems(out var head2, out var topChild);
         var bottomChild = head2.Children[1];
 
         Assert.AreEqual(3, bar.Menus[0].Children.Length);
@@ -428,7 +428,7 @@ class MenuBarTests : Tests
     [Test]
     public void TestDeletingLastMenuItem_ShouldRemoveWholeBar()
     {
-        var bar = GetMenuBar(out Design root);
+        var bar = this.GetMenuBar(out Design root);
 
         var mi = bar.Menus[0].Children[0];
 

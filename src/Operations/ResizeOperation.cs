@@ -18,30 +18,30 @@ public class ResizeOperation : Operation
 
     public ResizeOperation(Design beingResized, int destX, int destY)
     {
-        BeingResized = beingResized;
-        OriginalWidth = beingResized.View.Width;
-        OriginalHeight = beingResized.View.Height;
-        DestinationX = destX;
-        DestinationY = destY;
+        this.BeingResized = beingResized;
+        this.OriginalWidth = beingResized.View.Width;
+        this.OriginalHeight = beingResized.View.Height;
+        this.DestinationX = destX;
+        this.DestinationY = destY;
     }
 
     public override bool Do()
     {
-        SetWidth();
-        SetHeight();
+        this.SetWidth();
+        this.SetHeight();
 
         return true;
     }
 
     public override void Undo()
     {
-        BeingResized.GetDesignableProperty("Width")?.SetValue(OriginalWidth);
-        BeingResized.GetDesignableProperty("Height")?.SetValue(OriginalHeight);
+        this.BeingResized.GetDesignableProperty("Width")?.SetValue(this.OriginalWidth);
+        this.BeingResized.GetDesignableProperty("Height")?.SetValue(this.OriginalHeight);
     }
 
     public override void Redo()
     {
-        Do();
+        this.Do();
     }
 
     public void ContinueResize(Point dest)
@@ -49,11 +49,11 @@ public class ResizeOperation : Operation
         // Only support dragging for properties that are exact absolute
         // positions (i.e. not relative positioning - Bottom of other control etc).
 
-        DestinationX = dest.X;
-        SetWidth();
+        this.DestinationX = dest.X;
+        this.SetWidth();
 
-        DestinationY = dest.Y;
-        SetHeight();
+        this.DestinationY = dest.Y;
+        this.SetHeight();
     }
 
     private void SetHeight()
@@ -61,17 +61,17 @@ public class ResizeOperation : Operation
         // update width, the +1 comes because we want to include the cursor location in the Width.
         // e.g. resize bounds 0,0 to 1,1 means we want a width/height of 2
 
-        if (BeingResized.View.Y.IsAbsolute(out var y))
+        if (this.BeingResized.View.Y.IsAbsolute(out var y))
         {
-            BeingResized.GetDesignableProperty("Height")?.SetValue(Math.Max(1, DestinationY + 1 - y));
+            this.BeingResized.GetDesignableProperty("Height")?.SetValue(Math.Max(1, this.DestinationY + 1 - y));
         }
     }
 
     private void SetWidth()
     {
-        if (BeingResized.View.X.IsAbsolute(out var x))
+        if (this.BeingResized.View.X.IsAbsolute(out var x))
         {
-            BeingResized.GetDesignableProperty("Width")?.SetValue(Math.Max(1, DestinationX + 1 - x));
+            this.BeingResized.GetDesignableProperty("Width")?.SetValue(Math.Max(1, this.DestinationX + 1 - x));
         }
     }
 }

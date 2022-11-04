@@ -1,10 +1,10 @@
-﻿using NUnit.Framework;
-using System;
-using TerminalGuiDesigner.Operations;
-using TerminalGuiDesigner.UI;
-
-namespace tests
+﻿namespace tests
 {
+    using System;
+    using NUnit.Framework;
+    using TerminalGuiDesigner.Operations;
+    using TerminalGuiDesigner.UI;
+
     internal class EditorTests : Tests
     {
         [Test]

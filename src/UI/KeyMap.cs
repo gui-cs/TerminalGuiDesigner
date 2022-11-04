@@ -50,6 +50,6 @@ public class KeyMap
         HotFocusForeground = Color.BrightYellow,
         HotFocusBackground = Color.Green,
         DisabledForeground = Color.BrightGreen,
-        DisabledBackground = Color.Green
+        DisabledBackground = Color.Green,
     };
 }

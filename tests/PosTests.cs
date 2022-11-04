@@ -1,8 +1,8 @@
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.FromCode;
@@ -261,7 +261,9 @@ public class PosTests : Tests
             btn.Y = PosExtensions.CreatePosRelative((Design)lbl.Data, side, offset);
         }
         else
+        {
             throw new ArgumentException($"Unknown property for test '{property}'");
+        }
 
         viewToCode.GenerateDesignerCs(designOut, designOut.SourceCode, typeof(Window));
 

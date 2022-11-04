@@ -16,6 +16,7 @@ public static class ExceptionHelper
         }
 
         if (e is ReflectionTypeLoadException)
+        {
             foreach (Exception? loaderException in ((ReflectionTypeLoadException)e).LoaderExceptions)
             {
                 if (loaderException != null)
@@ -23,6 +24,7 @@ public static class ExceptionHelper
                     message += Environment.NewLine + ExceptionToListOfInnerMessages(loaderException, includeStackTrace);
                 }
             }
+        }
 
         if (e.InnerException != null)
         {

@@ -1,12 +1,12 @@
-﻿using NUnit.Framework;
-using System;
-using Terminal.Gui;
-using TerminalGuiDesigner.Operations;
-using TerminalGuiDesigner.ToCode;
-using TerminalGuiDesigner;
-
-namespace tests
+﻿namespace tests
 {
+    using System;
+    using NUnit.Framework;
+    using Terminal.Gui;
+    using TerminalGuiDesigner;
+    using TerminalGuiDesigner.Operations;
+    using TerminalGuiDesigner.ToCode;
+
     internal class DeleteColorSchemeOperationTests : Tests
     {
         [TestCase(true)]
@@ -15,7 +15,7 @@ namespace tests
         {
             var scheme = new ColorScheme();
 
-            var lblIn = RoundTrip<Dialog, Label>((d, v) =>
+            var lblIn = this.RoundTrip<Dialog, Label>((d, v) =>
             {
                 // Clear known default colors
                 ColorSchemeManager.Instance.Clear();

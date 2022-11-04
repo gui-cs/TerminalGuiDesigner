@@ -3,10 +3,24 @@ using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
 
+/// <summary>
+/// <para>Extension methods for the <see cref="Dim"/> class.  Adds discovery of what the underlying type
+/// is (e.g. DimCombine, DimFactor) as well as 'to code' methods.
+/// </para>
+/// <para>
+/// Methods in this class make heavy use of <see cref="System.Reflection"/> and so may be brittle if changes
+/// are made to the main Terminal.Gui private API.
+/// </para>
+/// </summary>
 public static class DimExtensions
 {
-    private static bool TreatNullDimAs0 = true;
+    private const bool TreatNullDimAs0 = true;
 
+    /// <summary>
+    /// Returns true if the <paramref name="d"/> is a DimFactor (i.e. created by <see cref="Dim.Percent(float, bool)"/>).
+    /// </summary>
+    /// <param name="d">Dimension to determine Type.</param>
+    /// <returns>true if <paramref name="d"/> is DimFactor.</returns>
     public static bool IsPercent(this Dim d)
     {
         if (d == null)
@@ -17,6 +31,10 @@ public static class DimExtensions
         return d.GetType().Name == "DimFactor";
     }
 
+    /// <inheritdoc cref="IsPercent(Dim)"/>
+    /// <param name="percent">The 'percentage' value of <paramref name="d"/>.  This is the value that would/could be
+    /// passed to <see cref="Dim.Percent(float, bool)"/> to produce the <paramref name="d"/> or 0 if <paramref name="d"/> is 
+    /// not DimFactor.</param>
     public static bool IsPercent(this Dim d, out float percent)
     {
         if (d != null && d.IsPercent())
@@ -96,6 +114,16 @@ public static class DimExtensions
         return d.GetType().Name == "DimCombine";
     }
 
+    /// <summary>
+    /// Returns true if <paramref name="d"/> is the product of an addition or subtraction of 
+    /// two other dimensions (e.g. Dim.Fill() - 1).
+    /// </summary>
+    /// <param name="d">The <see cref="Dim"/> to examine.</param>
+    /// <param name="left">The left hand side of the addition/subtraction calculation.  May itself be another DimCombine.  Or 0 if <paramref name="d"/> is not a DimCombine.</param>
+    /// <param name="right">The right hand side of the addition/subtraction calculation.  May itself be another DimCombine.  Or 0 if <paramref name="d"/> is not a DimCombine.</param>
+    /// <param name="add">True if <paramref name="d"/> is a DimCombine and the calculation is left+right.  False if calculation is subtraction or <paramref name="d"/> is not a DimCombine.</param>
+    /// <returns>True if <paramref name="d"/> is a summation or subtraction of two other <see cref="Dim"/></returns>
+    /// <exception cref="Exception">Thrown if private Terminal.Gui API changes have taken place and this implementation is therefore broken.</exception>
     public static bool IsCombine(this Dim d, out Dim left, out Dim right, out bool add)
     {
         if (d.IsCombine())

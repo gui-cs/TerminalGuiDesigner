@@ -20,11 +20,11 @@ public class Design
     /// </summary>
     public string FieldName { get; set; }
 
-    public bool IsRoot => FieldName.Equals(RootDesignName);
+    public bool IsRoot => this.FieldName.Equals(RootDesignName);
 
     public const string RootDesignName = "root";
 
-    private readonly List<Property> _designableProperties;
+    private readonly List<Property> designableProperties;
 
     public DesignState State { get; }
 
@@ -32,7 +32,7 @@ public class Design
 
     public Property? GetDesignableProperty(string propertyName)
     {
-        return GetDesignableProperties().SingleOrDefault(p => p.PropertyInfo.Name.Equals(propertyName));
+        return this.GetDesignableProperties().SingleOrDefault(p => p.PropertyInfo.Name.Equals(propertyName));
     }
 
     /// <summary>
@@ -41,17 +41,17 @@ public class Design
     /// new child controls are preserved for design time changes
     /// </summary>
     public View View { get; }
-    public bool IsContainerView => View.IsContainerView();
-    public bool IsBorderlessContainerView => View.IsBorderlessContainerView();
+    public bool IsContainerView => this.View.IsContainerView();
+    public bool IsBorderlessContainerView => this.View.IsBorderlessContainerView();
 
     public Design(SourceCodeFile sourceCode, string fieldName, View view)
     {
-        View = view;
-        SourceCode = sourceCode;
-        FieldName = fieldName;
+        this.View = view;
+        this.SourceCode = sourceCode;
+        this.FieldName = fieldName;
 
-        _designableProperties = new List<Property>(LoadDesignableProperties());
-        State = new DesignState(this);
+        this.designableProperties = new List<Property>(this.LoadDesignableProperties());
+        this.State = new DesignState(this);
     }
 
     public void CreateSubControlDesigns()
@@ -60,13 +60,13 @@ public class Design
         // colors schemes.  When creating a new View or TopLevel we need to use
         // the Colors.Base and fiddle a bit with coloring/clearing to ensure things render correctly
 
-        var baseType = View.GetType().BaseType;
+        var baseType = this.View.GetType().BaseType;
 
         if (baseType == typeof(View) || baseType == typeof(Toplevel))
         {
-            if (View.ColorScheme == null || View.ColorScheme == Colors.TopLevel)
+            if (this.View.ColorScheme == null || this.View.ColorScheme == Colors.TopLevel)
             {
-                State.OriginalScheme = View.ColorScheme = Colors.Base;
+                this.State.OriginalScheme = this.View.ColorScheme = Colors.Base;
             }
 
             // TODO: Remove this when https://github.com/gui-cs/Terminal.Gui/issues/2094 is fixed
@@ -74,31 +74,31 @@ public class Design
 
             // View and TopLevel doe not clear their states regularly during drawing
             // we have to do that ourselves
-            View.DrawContent += (r) =>
+            this.View.DrawContent += (r) =>
             {
                 // manually erase stale content
                 Application.Driver.SetAttribute(
-                    State.OriginalScheme?.Normal ??
-                    View.ColorScheme.Normal);
-                View.Clear();
+                    this.State.OriginalScheme?.Normal ??
+                    this.View.ColorScheme.Normal);
+                this.View.Clear();
             };
         }
 
-        CreateSubControlDesigns(View);
+        this.CreateSubControlDesigns(this.View);
     }
 
     private void CreateSubControlDesigns(View view)
     {
         foreach (var subView in view.GetActualSubviews().ToArray())
         {
-            logger.Info($"Found subView of Type '{subView.GetType()}'");
+            this.logger.Info($"Found subView of Type '{subView.GetType()}'");
 
             if (subView.Data is string name)
             {
-                subView.Data = CreateSubControlDesign(SourceCode, name, subView);
+                subView.Data = this.CreateSubControlDesign(this.SourceCode, name, subView);
             }
 
-            CreateSubControlDesigns(subView);
+            this.CreateSubControlDesigns(subView);
         }
     }
 
@@ -139,7 +139,7 @@ public class Design
             gv.Annotations.Add(new TextAnnotation
             {
                 ScreenPosition = new Point(1, 1),
-                Text = ""
+                Text = "",
             });
         }
 
@@ -150,20 +150,20 @@ public class Design
 
         if (subView is CheckBox cb)
         {
-            RegisterCheckboxDesignTimeChanges(cb);
+            this.RegisterCheckboxDesignTimeChanges(cb);
         }
 
         if (subView is TextView txt)
         {
             // prevent control from responding to events
-            txt.MouseClick += SuppressNativeClickEvents;
+            txt.MouseClick += this.SuppressNativeClickEvents;
             txt.KeyDown += (s) => s.Handled = true;
         }
 
         if (subView is TextField tf)
         {
             // prevent control from responding to events
-            tf.MouseClick += SuppressNativeClickEvents;
+            tf.MouseClick += this.SuppressNativeClickEvents;
             tf.KeyDown += (s) => s.Handled = true;
         }
 
@@ -171,13 +171,13 @@ public class Design
         {
             tree.AddObject(new TreeNode("Example Branch 1")
             {
-                Children = new[] { new TreeNode("Child 1") }
+                Children = new[] { new TreeNode("Child 1") },
             });
             tree.AddObject(new TreeNode("Example Branch 2")
             {
                 Children = new[]{
                     new TreeNode("Child 1"),
-                    new TreeNode("Child 2")}
+                    new TreeNode("Child 2")},
             });
 
             for (int l = 0; l < 20; l++)
@@ -225,7 +225,7 @@ public class Design
     /// </summary>
     public bool HasKnownColorScheme()
     {
-        var userDefinedColorScheme = State.OriginalScheme ?? View.GetExplicitColorScheme();
+        var userDefinedColorScheme = this.State.OriginalScheme ?? this.View.GetExplicitColorScheme();
 
         if (userDefinedColorScheme == null)
         {
@@ -257,8 +257,8 @@ public class Design
     public bool UsesColorScheme(ColorScheme scheme)
     {
         // we use this scheme if it is a known scheme
-        return HasKnownColorScheme() &&
-            (View.ColorScheme.AreEqual(scheme) || (State.OriginalScheme?.AreEqual(scheme) ?? false));
+        return this.HasKnownColorScheme() &&
+            (this.View.ColorScheme.AreEqual(scheme) || (this.State.OriginalScheme?.AreEqual(scheme) ?? false));
     }
 
     /// <summary>
@@ -266,46 +266,46 @@ public class Design
     /// </summary>
     public IEnumerable<Property> GetDesignableProperties()
     {
-        return _designableProperties;
+        return this.designableProperties;
     }
 
     protected virtual IEnumerable<Property> LoadDesignableProperties()
     {
-        yield return CreateProperty(nameof(View.Width));
-        yield return CreateProperty(nameof(View.Height));
+        yield return this.CreateProperty(nameof(this.View.Width));
+        yield return this.CreateProperty(nameof(this.View.Height));
 
-        yield return CreateProperty(nameof(View.X));
-        yield return CreateProperty(nameof(View.Y));
+        yield return this.CreateProperty(nameof(this.View.X));
+        yield return this.CreateProperty(nameof(this.View.Y));
 
         yield return new ColorSchemeProperty(this);
 
         // its important that this comes before Text because
         // changing the validator clears the text
-        if (View is TextValidateField)
+        if (this.View is TextValidateField)
         {
-            yield return CreateProperty(nameof(TextValidateField.Provider));
+            yield return this.CreateProperty(nameof(TextValidateField.Provider));
         }
 
-        if (View is TextField)
+        if (this.View is TextField)
         {
-            yield return CreateProperty(nameof(TextField.Secret));
+            yield return this.CreateProperty(nameof(TextField.Secret));
         }
 
-        if (View is ScrollView)
+        if (this.View is ScrollView)
         {
-            yield return CreateProperty(nameof(ScrollView.ContentSize));
+            yield return this.CreateProperty(nameof(ScrollView.ContentSize));
         }
 
-        if (View is TextView)
+        if (this.View is TextView)
         {
-            yield return CreateProperty(nameof(TextView.AllowsTab));
-            yield return CreateProperty(nameof(TextView.AllowsReturn));
-            yield return CreateProperty(nameof(TextView.WordWrap));
+            yield return this.CreateProperty(nameof(TextView.AllowsTab));
+            yield return this.CreateProperty(nameof(TextView.AllowsReturn));
+            yield return this.CreateProperty(nameof(TextView.WordWrap));
         }
 
-        if (View is Toplevel)
+        if (this.View is Toplevel)
         {
-            yield return CreateProperty(nameof(Toplevel.Modal));
+            yield return this.CreateProperty(nameof(Toplevel.Modal));
         }
 
         // Allow changing the FieldName on anything but root where 
@@ -315,115 +315,115 @@ public class Design
             yield return new NameProperty(this);
         }
 
-        yield return new Property(this, View.GetActualTextProperty());
+        yield return new Property(this, this.View.GetActualTextProperty());
 
         // Border properties - Most views dont have a border so Border is
-        if (View.Border != null)
+        if (this.View.Border != null)
         {
-            yield return CreateSubProperty(nameof(Border.BorderStyle), nameof(View.Border), View.Border);
-            yield return CreateSubProperty(nameof(Border.BorderBrush), nameof(View.Border), View.Border);
-            yield return CreateSubProperty(nameof(Border.Effect3D), nameof(View.Border), View.Border);
-            yield return CreateSubProperty(nameof(Border.Effect3DBrush), nameof(View.Border), View.Border);
-            yield return CreateSubProperty(nameof(Border.DrawMarginFrame), nameof(View.Border), View.Border);
+            yield return this.CreateSubProperty(nameof(Border.BorderStyle), nameof(this.View.Border), this.View.Border);
+            yield return this.CreateSubProperty(nameof(Border.BorderBrush), nameof(this.View.Border), this.View.Border);
+            yield return this.CreateSubProperty(nameof(Border.Effect3D), nameof(this.View.Border), this.View.Border);
+            yield return this.CreateSubProperty(nameof(Border.Effect3DBrush), nameof(this.View.Border), this.View.Border);
+            yield return this.CreateSubProperty(nameof(Border.DrawMarginFrame), nameof(this.View.Border), this.View.Border);
         }
 
-        yield return CreateProperty(nameof(View.TextAlignment));
+        yield return this.CreateProperty(nameof(this.View.TextAlignment));
 
-        if (View is Button)
+        if (this.View is Button)
         {
-            yield return CreateProperty(nameof(Button.IsDefault));
+            yield return this.CreateProperty(nameof(Button.IsDefault));
         }
 
-        if (View is LineView)
+        if (this.View is LineView)
         {
-            yield return CreateProperty(nameof(LineView.LineRune));
-            yield return CreateProperty(nameof(LineView.Orientation));
+            yield return this.CreateProperty(nameof(LineView.LineRune));
+            yield return this.CreateProperty(nameof(LineView.Orientation));
         }
 
-        if (View is ProgressBar)
+        if (this.View is ProgressBar)
         {
-            yield return CreateProperty(nameof(ProgressBar.Fraction));
-            yield return CreateProperty(nameof(ProgressBar.BidirectionalMarquee));
-            yield return CreateProperty(nameof(ProgressBar.ProgressBarStyle));
-            yield return CreateProperty(nameof(ProgressBar.ProgressBarFormat));
-            yield return CreateProperty(nameof(ProgressBar.SegmentCharacter));
+            yield return this.CreateProperty(nameof(ProgressBar.Fraction));
+            yield return this.CreateProperty(nameof(ProgressBar.BidirectionalMarquee));
+            yield return this.CreateProperty(nameof(ProgressBar.ProgressBarStyle));
+            yield return this.CreateProperty(nameof(ProgressBar.ProgressBarFormat));
+            yield return this.CreateProperty(nameof(ProgressBar.SegmentCharacter));
         }
 
-        if (View is CheckBox)
+        if (this.View is CheckBox)
         {
-            yield return CreateProperty(nameof(CheckBox.Checked));
+            yield return this.CreateProperty(nameof(CheckBox.Checked));
         }
 
-        if (View is ListView lv)
+        if (this.View is ListView lv)
         {
-            yield return CreateProperty(nameof(ListView.Source));
+            yield return this.CreateProperty(nameof(ListView.Source));
         }
 
-        if (View is GraphView gv)
+        if (this.View is GraphView gv)
         {
-            yield return CreateProperty(nameof(GraphView.GraphColor));
-            yield return CreateProperty(nameof(GraphView.ScrollOffset));
-            yield return CreateProperty(nameof(GraphView.MarginLeft));
-            yield return CreateProperty(nameof(GraphView.MarginBottom));
-            yield return CreateProperty(nameof(GraphView.CellSize));
+            yield return this.CreateProperty(nameof(GraphView.GraphColor));
+            yield return this.CreateProperty(nameof(GraphView.ScrollOffset));
+            yield return this.CreateProperty(nameof(GraphView.MarginLeft));
+            yield return this.CreateProperty(nameof(GraphView.MarginBottom));
+            yield return this.CreateProperty(nameof(GraphView.CellSize));
 
-            yield return CreateSubProperty(nameof(HorizontalAxis.Visible), nameof(GraphView.AxisX), gv.AxisX);
-            yield return CreateSubProperty(nameof(HorizontalAxis.Increment), nameof(GraphView.AxisX), gv.AxisX);
-            yield return CreateSubProperty(nameof(HorizontalAxis.ShowLabelsEvery), nameof(GraphView.AxisX), gv.AxisX);
-            yield return CreateSubProperty(nameof(HorizontalAxis.Minimum), nameof(GraphView.AxisX), gv.AxisX);
-            yield return CreateSubProperty(nameof(HorizontalAxis.Text), nameof(GraphView.AxisX), gv.AxisX);
-            yield return CreateSubProperty(nameof(VerticalAxis.Visible), nameof(GraphView.AxisY), gv.AxisY);
-            yield return CreateSubProperty(nameof(VerticalAxis.Increment), nameof(GraphView.AxisY), gv.AxisY);
-            yield return CreateSubProperty(nameof(VerticalAxis.ShowLabelsEvery), nameof(GraphView.AxisY), gv.AxisY);
-            yield return CreateSubProperty(nameof(VerticalAxis.Minimum), nameof(GraphView.AxisY), gv.AxisY);
-            yield return CreateSubProperty(nameof(VerticalAxis.Text), nameof(GraphView.AxisY), gv.AxisY);
+            yield return this.CreateSubProperty(nameof(HorizontalAxis.Visible), nameof(GraphView.AxisX), gv.AxisX);
+            yield return this.CreateSubProperty(nameof(HorizontalAxis.Increment), nameof(GraphView.AxisX), gv.AxisX);
+            yield return this.CreateSubProperty(nameof(HorizontalAxis.ShowLabelsEvery), nameof(GraphView.AxisX), gv.AxisX);
+            yield return this.CreateSubProperty(nameof(HorizontalAxis.Minimum), nameof(GraphView.AxisX), gv.AxisX);
+            yield return this.CreateSubProperty(nameof(HorizontalAxis.Text), nameof(GraphView.AxisX), gv.AxisX);
+            yield return this.CreateSubProperty(nameof(VerticalAxis.Visible), nameof(GraphView.AxisY), gv.AxisY);
+            yield return this.CreateSubProperty(nameof(VerticalAxis.Increment), nameof(GraphView.AxisY), gv.AxisY);
+            yield return this.CreateSubProperty(nameof(VerticalAxis.ShowLabelsEvery), nameof(GraphView.AxisY), gv.AxisY);
+            yield return this.CreateSubProperty(nameof(VerticalAxis.Minimum), nameof(GraphView.AxisY), gv.AxisY);
+            yield return this.CreateSubProperty(nameof(VerticalAxis.Text), nameof(GraphView.AxisY), gv.AxisY);
         }
 
-        if (View is Window)
+        if (this.View is Window)
         {
-            yield return CreateProperty(nameof(Window.Title));
+            yield return this.CreateProperty(nameof(Window.Title));
         }
 
-        if (View is FrameView)
+        if (this.View is FrameView)
         {
-            yield return CreateProperty(nameof(FrameView.Title));
+            yield return this.CreateProperty(nameof(FrameView.Title));
         }
 
-        if (View is TreeView tree)
+        if (this.View is TreeView tree)
         {
-            yield return CreateSubProperty(nameof(TreeStyle.CollapseableSymbol), nameof(TreeView<ITreeNode>.Style), tree.Style);
-            yield return CreateSubProperty(nameof(TreeStyle.ColorExpandSymbol), nameof(TreeView<ITreeNode>.Style), tree.Style);
-            yield return CreateSubProperty(nameof(TreeStyle.ExpandableSymbol), nameof(TreeView<ITreeNode>.Style), tree.Style);
-            yield return CreateSubProperty(nameof(TreeStyle.InvertExpandSymbolColors), nameof(TreeView<ITreeNode>.Style), tree.Style);
-            yield return CreateSubProperty(nameof(TreeStyle.LeaveLastRow), nameof(TreeView<ITreeNode>.Style), tree.Style);
-            yield return CreateSubProperty(nameof(TreeStyle.ShowBranchLines), nameof(TreeView<ITreeNode>.Style), tree.Style);
+            yield return this.CreateSubProperty(nameof(TreeStyle.CollapseableSymbol), nameof(TreeView<ITreeNode>.Style), tree.Style);
+            yield return this.CreateSubProperty(nameof(TreeStyle.ColorExpandSymbol), nameof(TreeView<ITreeNode>.Style), tree.Style);
+            yield return this.CreateSubProperty(nameof(TreeStyle.ExpandableSymbol), nameof(TreeView<ITreeNode>.Style), tree.Style);
+            yield return this.CreateSubProperty(nameof(TreeStyle.InvertExpandSymbolColors), nameof(TreeView<ITreeNode>.Style), tree.Style);
+            yield return this.CreateSubProperty(nameof(TreeStyle.LeaveLastRow), nameof(TreeView<ITreeNode>.Style), tree.Style);
+            yield return this.CreateSubProperty(nameof(TreeStyle.ShowBranchLines), nameof(TreeView<ITreeNode>.Style), tree.Style);
         }
 
-        if (View is TableView tv)
+        if (this.View is TableView tv)
         {
-            yield return CreateProperty(nameof(TableView.FullRowSelect));
+            yield return this.CreateProperty(nameof(TableView.FullRowSelect));
 
-            yield return CreateSubProperty(nameof(TableStyle.AlwaysShowHeaders), nameof(TableView.Style), tv.Style);
-            yield return CreateSubProperty(nameof(TableStyle.ExpandLastColumn), nameof(TableView.Style), tv.Style);
-            yield return CreateSubProperty(nameof(TableStyle.InvertSelectedCellFirstCharacter), nameof(TableView.Style), tv.Style);
-            yield return CreateSubProperty(nameof(TableStyle.ShowHorizontalHeaderOverline), nameof(TableView.Style), tv.Style);
-            yield return CreateSubProperty(nameof(TableStyle.ShowHorizontalHeaderUnderline), nameof(TableView.Style), tv.Style);
-            yield return CreateSubProperty(nameof(TableStyle.ShowVerticalCellLines), nameof(TableView.Style), tv.Style);
-            yield return CreateSubProperty(nameof(TableStyle.ShowVerticalHeaderLines), nameof(TableView.Style), tv.Style);
+            yield return this.CreateSubProperty(nameof(TableStyle.AlwaysShowHeaders), nameof(TableView.Style), tv.Style);
+            yield return this.CreateSubProperty(nameof(TableStyle.ExpandLastColumn), nameof(TableView.Style), tv.Style);
+            yield return this.CreateSubProperty(nameof(TableStyle.InvertSelectedCellFirstCharacter), nameof(TableView.Style), tv.Style);
+            yield return this.CreateSubProperty(nameof(TableStyle.ShowHorizontalHeaderOverline), nameof(TableView.Style), tv.Style);
+            yield return this.CreateSubProperty(nameof(TableStyle.ShowHorizontalHeaderUnderline), nameof(TableView.Style), tv.Style);
+            yield return this.CreateSubProperty(nameof(TableStyle.ShowVerticalCellLines), nameof(TableView.Style), tv.Style);
+            yield return this.CreateSubProperty(nameof(TableStyle.ShowVerticalHeaderLines), nameof(TableView.Style), tv.Style);
         }
 
-        if (View is TabView tabView)
+        if (this.View is TabView tabView)
         {
-            yield return CreateProperty(nameof(TabView.MaxTabTextWidth));
+            yield return this.CreateProperty(nameof(TabView.MaxTabTextWidth));
 
-            yield return CreateSubProperty(nameof(TabStyle.ShowBorder), nameof(TabView.Style), tabView.Style);
-            yield return CreateSubProperty(nameof(TabStyle.ShowTopLine), nameof(TabView.Style), tabView.Style);
-            yield return CreateSubProperty(nameof(TabStyle.TabsOnBottom), nameof(TabView.Style), tabView.Style);
+            yield return this.CreateSubProperty(nameof(TabStyle.ShowBorder), nameof(TabView.Style), tabView.Style);
+            yield return this.CreateSubProperty(nameof(TabStyle.ShowTopLine), nameof(TabView.Style), tabView.Style);
+            yield return this.CreateSubProperty(nameof(TabStyle.TabsOnBottom), nameof(TabView.Style), tabView.Style);
         }
 
-        if (View is RadioGroup)
+        if (this.View is RadioGroup)
         {
-            yield return CreateProperty(nameof(RadioGroup.RadioLabels));
+            yield return this.CreateProperty(nameof(RadioGroup.RadioLabels));
         }
     }
 
@@ -436,8 +436,8 @@ public class Design
 
     private Property CreateProperty(string name)
     {
-        return new Property(this, View.GetType().GetProperty(name)
-            ?? throw new Exception($"Could not find expected Property '{name}' on View of Type '{View.GetType()}'"));
+        return new Property(this, this.View.GetType().GetProperty(name)
+            ?? throw new Exception($"Could not find expected Property '{name}' on View of Type '{this.View.GetType()}'"));
     }
 
     /// <summary>
@@ -447,7 +447,7 @@ public class Design
     /// <returns></returns>
     public IEnumerable<IOperation> GetExtraOperations()
     {
-        return GetExtraOperations(Point.Empty);
+        return this.GetExtraOperations(Point.Empty);
     }
 
     /// <summary>
@@ -460,7 +460,7 @@ public class Design
     /// <exception cref="NotImplementedException"></exception>
     internal IEnumerable<IOperation> GetExtraOperations(Point pos)
     {
-        if (View is TableView tv)
+        if (this.View is TableView tv)
         {
             DataColumn? col = null;
             if (!pos.IsEmpty)
@@ -479,9 +479,9 @@ public class Design
             yield return new RenameColumnOperation(this, col);
         }
 
-        if (IsContainerView || IsRoot)
+        if (this.IsContainerView || this.IsRoot)
         {
-            yield return new AddViewOperation(SourceCode, this);
+            yield return new AddViewOperation(this.SourceCode, this);
             yield return new PasteOperation(this);
         }
         else
@@ -489,13 +489,13 @@ public class Design
             var nearestContainer = this.View.GetNearestContainerDesign();
             if (nearestContainer != null)
             {
-                yield return new AddViewOperation(SourceCode, nearestContainer);
+                yield return new AddViewOperation(this.SourceCode, nearestContainer);
             }
         }
 
         yield return new DeleteViewOperation(this.View);
 
-        if (View is TabView)
+        if (this.View is TabView)
         {
             yield return new AddTabOperation(this);
             yield return new RemoveTabOperation(this);
@@ -505,7 +505,7 @@ public class Design
             yield return new MoveTabOperation(this, 1);
         }
 
-        if (View is MenuBar)
+        if (this.View is MenuBar)
         {
             yield return new AddMenuOperation(this, null);
             yield return new RemoveMenuOperation(this);
@@ -521,14 +521,14 @@ public class Design
     {
         // If there is no parent then we are likely the top rot Design
         // or an orphan.  Either way we have no siblings
-        if (View.SuperView == null)
+        if (this.View.SuperView == null)
         {
             yield break;
         }
 
-        foreach (var v in View.SuperView.Subviews)
+        foreach (var v in this.View.SuperView.Subviews)
         {
-            if (v == View)
+            if (v == this.View)
             {
                 continue;
             }
@@ -546,13 +546,13 @@ public class Design
     /// </summary>
     public IEnumerable<Design> GetAllDesigns()
     {
-        var root = GetRootDesign();
+        var root = this.GetRootDesign();
 
         // Return the root design
         yield return root;
 
         // And all child designs
-        foreach (var d in GetAllChildDesigns(root.View))
+        foreach (var d in this.GetAllChildDesigns(root.View))
         {
             yield return d;
         }
@@ -565,7 +565,7 @@ public class Design
     public Design GetRootDesign()
     {
         var toReturn = this;
-        var v = View;
+        var v = this.View;
 
         while (v.SuperView != null)
         {
@@ -598,7 +598,7 @@ public class Design
 
             // even if this subview isn't designable there might be designable ones further down
             // e.g. a ContentView of a Window
-            toReturn.AddRange(GetAllChildDesigns(subView));
+            toReturn.AddRange(this.GetAllChildDesigns(subView));
         }
 
         return toReturn;
@@ -606,7 +606,7 @@ public class Design
 
     public override string ToString()
     {
-        return FieldName;
+        return this.FieldName;
     }
 
     /// <summary>
@@ -618,7 +618,7 @@ public class Design
     /// <exception cref="NotImplementedException"></exception>
     public string GetUniqueFieldName(Type viewType)
     {
-        var root = GetRootDesign();
+        var root = this.GetRootDesign();
 
         var allDesigns = root.GetAllDesigns();
 
@@ -636,7 +636,7 @@ public class Design
 
     public string GetUniqueFieldName(string candidate)
     {
-        var root = GetRootDesign();
+        var root = this.GetRootDesign();
 
         // remove problematic characters
         candidate = CodeDomArgs.MakeValidFieldName(candidate);
@@ -671,8 +671,8 @@ public class Design
     /// </summary>
     public IEnumerable<Design> GetDependantDesigns()
     {
-        var everyone = GetAllDesigns().ToArray();
-        return everyone.Where(o => DependsOnUs(o, everyone));
+        var everyone = this.GetAllDesigns().ToArray();
+        return everyone.Where(o => this.DependsOnUs(o, everyone));
     }
 
     private bool DependsOnUs(Design other, Design[] everyone)

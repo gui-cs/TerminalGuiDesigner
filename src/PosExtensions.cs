@@ -1,5 +1,5 @@
-﻿using NStack;
-using System.Reflection;
+﻿using System.Reflection;
+using NStack;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
@@ -309,7 +309,9 @@ public static class PosExtensions
                 return n;
             }
             else
+            {
                 throw new NotImplementedException("Only absolute positions are supported at the moment");
+            }
         }
         else if (value is Dim d)
         {
@@ -321,7 +323,9 @@ public static class PosExtensions
                 return n;
             }
             else
+            {
                 throw new NotImplementedException("Only absolute dimensions are supported at the moment");
+            }
         }
         else
         {
