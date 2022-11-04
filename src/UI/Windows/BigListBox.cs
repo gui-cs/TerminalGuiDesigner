@@ -119,7 +119,7 @@ public class BigListBox<T>
 
             this.win.Add(searchLabel);
 
-            this.searchBox = new TextField("")
+            this.searchBox = new TextField(string.Empty)
             {
                 X = Pos.Right(searchLabel),
                 Y = Pos.Bottom(this.listView),
@@ -176,9 +176,11 @@ public class BigListBox<T>
         }
     }
 
-    private class ListViewObject<T2> where T2 : T
+    private class ListViewObject<T2>
+        where T2 : T
     {
         private readonly Func<T2?, string> displayFunc;
+
         public T2? Object { get; }
 
         public ListViewObject(T2? o, Func<T2?, string> displayFunc)

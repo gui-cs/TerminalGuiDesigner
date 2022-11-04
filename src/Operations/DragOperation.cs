@@ -12,7 +12,9 @@ public class DragOperation : Operation
     private class DragMemento
     {
         public Design Design { get; set; }
+
         public Pos OriginalX { get; }
+
         public Pos OriginalY { get; }
 
         public View? OriginalSuperView { get; }
@@ -26,7 +28,7 @@ public class DragOperation : Operation
         }
     }
 
-    private List<DragMemento> Mementos = new();
+    private List<DragMemento> Mementos = new ();
 
     public Design BeingDragged => this.Mementos.First().Design;
 
@@ -42,6 +44,7 @@ public class DragOperation : Operation
     public readonly int OriginalClickY;
 
     public int DestinationX { get; set; }
+
     public int DestinationY { get; set; }
 
     /// <summary>
@@ -54,6 +57,7 @@ public class DragOperation : Operation
         {
             return this.dropInto;
         }
+
         set
         {
             // Don't let them attempt to drop a view into itself!
@@ -73,6 +77,7 @@ public class DragOperation : Operation
     }
 
     private View? dropInto;
+
     public DragOperation(Design beingDragged, int destX, int destY, Design[]? alsoDrag)
     {
         // don't let the user drag the root view anywhere

@@ -15,7 +15,9 @@ namespace TerminalGuiDesigner.FromCode;
 public class CodeToView
 {
     public string Namespace { get; }
+
     public string ClassName { get; }
+
     public SourceCodeFile SourceFile { get; }
 
     readonly ILogger logger = LogManager.GetCurrentClassLogger();
@@ -124,7 +126,7 @@ public class CodeToView
         var compilation
             = CSharpCompilation.Create(
                 Guid.NewGuid().ToString() + ".dll",
-            new CSharpSyntaxTree[] { csTree, designerTree }, references: references, options: options);
+                new CSharpSyntaxTree[] { csTree, designerTree }, references: references, options: options);
 
         using var stream = new MemoryStream();
         EmitResult result = compilation.Emit(stream);

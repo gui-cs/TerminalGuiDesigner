@@ -31,7 +31,7 @@ public static class PosExtensions
             var nField = p.GetType().GetField("n", BindingFlags.NonPublic | BindingFlags.Instance)
                 ?? throw new Exception("Expected private field 'n' of PosAbsolute was missing");
             n = (int?)nField.GetValue(p)
-                ?? throw new Exception("Expected private field 'n' of PosAbsolute to be int"); ;
+                ?? throw new Exception("Expected private field 'n' of PosAbsolute to be int");
             return true;
         }
 
@@ -98,7 +98,7 @@ public static class PosExtensions
             var nField = p.GetType().GetField("n", BindingFlags.NonPublic | BindingFlags.Instance)
                 ?? throw new Exception("Expected private field 'n' of PosAbsolute was missing");
             margin = (int?)nField.GetValue(p)
-                ?? throw new Exception("Expected private field 'n' of PosAbsolute to be int"); ;
+                ?? throw new Exception("Expected private field 'n' of PosAbsolute to be int");
             return true;
         }
 
@@ -155,7 +155,7 @@ public static class PosExtensions
                 return false;
             }
 
-            var fSide = posView.GetType().GetField("side", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("PosView was missing expected field 'side'"); ;
+            var fSide = posView.GetType().GetField("side", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("PosView was missing expected field 'side'");
             var iSide = (int?)fSide.GetValue(posView)
                 ?? throw new Exception("Expected PosView property 'side' to be of Type int");
 

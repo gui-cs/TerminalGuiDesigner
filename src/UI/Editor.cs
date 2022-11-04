@@ -366,7 +366,7 @@ Ctrl+Q - Quit
 
     private MenuItem ToMenuItem(IOperation operation)
     {
-        return new MenuItem(operation.ToString(), "", () => this.Try(() => OperationManager.Instance.Do(operation)));
+        return new MenuItem(operation.ToString(), string.Empty, () => this.Try(() => OperationManager.Instance.Do(operation)));
     }
 
     private void Try(Action action)
@@ -785,8 +785,7 @@ Ctrl+Q - Quit
                 }
 
                 OperationManager.Instance.Do(
-                    operationFuc(viewDesign)
-                );
+                    operationFuc(viewDesign));
             }
         }
     }
@@ -1068,8 +1067,7 @@ Ctrl+Q - Quit
         var toAddTo = SelectionManager.Instance.GetMostSelectedContainerOrNull() ?? this._viewBeingEdited;
 
         OperationManager.Instance.Do(
-            new AddViewOperation(toAddTo)
-        );
+            new AddViewOperation(toAddTo));
     }
 
     private void ShowEditProperties()

@@ -6,6 +6,7 @@ namespace TerminalGuiDesigner.ToCode;
 public class DataTableToCode : ToCodeBase
 {
     public Design Design { get; }
+
     public DataTable Table { get; }
 
     public DataTableToCode(Design design, DataTable table)
@@ -44,7 +45,7 @@ public class DataTableToCode : ToCodeBase
         var addColumnToTableStatement = new CodeMethodInvokeExpression(
             new CodeMethodReferenceExpression(
                 new CodeSnippetExpression($"{tableFieldName}.Columns"), "Add"),
-                new CodeSnippetExpression(columnFieldName));
+            new CodeSnippetExpression(columnFieldName));
 
         args.InitMethod.Statements.Add(addColumnToTableStatement);
     }

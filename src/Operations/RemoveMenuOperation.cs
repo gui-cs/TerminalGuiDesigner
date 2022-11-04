@@ -9,6 +9,7 @@ public class RemoveMenuOperation : Operation
     private int idx;
 
     public Design Design { get; }
+
     public RemoveMenuOperation(Design design)
     {
         this.Design = design;

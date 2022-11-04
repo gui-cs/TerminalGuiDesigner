@@ -5,10 +5,10 @@ namespace TerminalGuiDesigner.ToCode;
 
 public class ColorSchemeProperty : Property
 {
-    public ColorSchemeProperty(Design design) : base(
-        design,
-        design.View.GetType().GetProperty(nameof(View.ColorScheme))
-        ?? throw new Exception("ColorScheme property has changed name!"))
+    public ColorSchemeProperty(Design design)
+        : base(
+            design,
+            design.View.GetType().GetProperty(nameof(View.ColorScheme)) ?? throw new Exception("ColorScheme property has changed name!"))
     {
     }
 

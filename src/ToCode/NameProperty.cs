@@ -4,11 +4,10 @@ namespace TerminalGuiDesigner.ToCode;
 
 public class NameProperty : Property
 {
-    public NameProperty(Design design) : base(
+    public NameProperty(Design design)
+        : base(
         design,
-        typeof(Design).GetProperty(nameof(TerminalGuiDesigner.Design.FieldName))
-        ?? throw new MissingFieldException("Expected property was missing from Design")
-        )
+        typeof(Design).GetProperty(nameof(TerminalGuiDesigner.Design.FieldName)) ?? throw new MissingFieldException("Expected property was missing from Design"))
     {
     }
 

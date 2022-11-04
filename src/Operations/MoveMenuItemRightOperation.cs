@@ -10,7 +10,8 @@ public class MoveMenuItemRightOperation : MenuItemOperation
     /// </summary>
     public int? InsertionIndex { get; internal set; }
 
-    public MoveMenuItemRightOperation(MenuItem toMove) : base(toMove)
+    public MoveMenuItemRightOperation(MenuItem toMove)
+        : base(toMove)
     {
     }
 

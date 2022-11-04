@@ -108,8 +108,7 @@ class MenuBarTests : Tests
         var orig = mbOut.Menus[0].Children[0];
 
         OperationManager.Instance.Do(
-            new AddMenuItemOperation(mbOut.Menus[0].Children[0])
-        );
+            new AddMenuItemOperation(mbOut.Menus[0].Children[0]));
 
         // Now 2 child menu item
         Assert.AreEqual(2, mbOut.Menus[0].Children.Length);
@@ -247,12 +246,11 @@ class MenuBarTests : Tests
 
         // cannot move element 0
         Assert.IsFalse(new MoveMenuItemRightOperation(
-            bar.Menus[0].Children[0]
-        ).Do());
+            bar.Menus[0].Children[0])
+        .Do());
 
         var cmd = new MoveMenuItemRightOperation(
-                    bar.Menus[0].Children[1]
-                );
+                    bar.Menus[0].Children[1]);
 
         // can move element 1
         Assert.IsTrue(cmd.Do());
@@ -282,8 +280,8 @@ class MenuBarTests : Tests
 
         // cannot move a root item
         Assert.IsFalse(new MoveMenuItemLeftOperation(
-            bar.Menus[0].Children[0]
-        ).Do());
+            bar.Menus[0].Children[0])
+        .Do());
     }
 
     private MenuBar GetMenuBarWithSubmenuItems(out MenuBarItem head2, out MenuItem topChild)
@@ -306,20 +304,21 @@ class MenuBarTests : Tests
             bar.Menus[0].Children[0],
             head2 = new MenuBarItem(new []
             {
-                topChild = new MenuItem("Child1", null, ()=>{})
+                topChild = new MenuItem("Child1", null, () => { })
                 {
                     Data = "Child1",
                     Shortcut = Key.J | Key.CtrlMask,
                 },
-                new MenuItem("Child2", null, ()=>{})
+                new MenuItem("Child2", null, () => { })
                 {
                     Data = "Child2",
-                    Shortcut = Key.F | Key.CtrlMask
+                    Shortcut = Key.F | Key.CtrlMask,
                 },
-            }){
+            })
+            {
                 Title = "Head2",
             },
-            new MenuItem("Head3", null, ()=>{}),
+            new MenuItem("Head3", null, () => { }),
         };
 
         return bar;
@@ -442,7 +441,7 @@ class MenuBarTests : Tests
 
         Assert.IsFalse(
             root.View.Subviews.Contains(bar),
-                "Now that the MenuBar is completely empty it should be automatically removed");
+            "Now that the MenuBar is completely empty it should be automatically removed");
 
         cmd.Undo();
 

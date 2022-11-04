@@ -10,9 +10,13 @@ namespace TerminalGuiDesigner.Operations;
 public class MoveViewOperation : Operation
 {
     public Design BeingMoved { get; }
+
     public Pos OriginX { get; }
+
     public Pos OriginY { get; }
+
     public int DestinationY { get; }
+
     public int DestinationX { get; }
 
     public MoveViewOperation(Design toMove, int deltaX, int deltaY)

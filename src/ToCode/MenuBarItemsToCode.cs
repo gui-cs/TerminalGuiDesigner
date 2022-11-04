@@ -6,6 +6,7 @@ namespace TerminalGuiDesigner.ToCode;
 internal class MenuBarItemsToCode : ToCodeBase
 {
     public Design Design { get; }
+
     public MenuBar MenuBar { get; }
 
     public MenuBarItemsToCode(Design design, MenuBar mb)
@@ -27,7 +28,7 @@ internal class MenuBarItemsToCode : ToCodeBase
         */
 
         // TODO: Let user name these
-        List<string> menus = new();
+        List<string> menus = new ();
         foreach (var child in this.MenuBar.Menus)
         {
             this.ToCode(args, child, out string fieldName);
@@ -39,7 +40,7 @@ internal class MenuBarItemsToCode : ToCodeBase
             $"this.{this.Design.FieldName}.{nameof(this.MenuBar.Menus)}",
             new CodeArrayCreateExpression(
                 typeof(MenuBarItem),
-            menus.Select(c =>
+                menus.Select(c =>
                     new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), c))
                     .ToArray()));
     }
@@ -51,7 +52,7 @@ internal class MenuBarItemsToCode : ToCodeBase
         this.AddConstructorCall(args, $"this.{fieldName}", child.GetType());
         this.AddPropertyAssignment(args, $"this.{fieldName}.{nameof(MenuItem.Title)}", child.Title);
 
-        List<string?> children = new();
+        List<string?> children = new ();
 
         // TODO: Make recursive for more children
         // plus again let user name these
@@ -94,7 +95,7 @@ internal class MenuBarItemsToCode : ToCodeBase
             $"this.{fieldName}.{nameof(MenuBarItem.Children)}",
             new CodeArrayCreateExpression(
                 typeof(MenuItem),
-            children.Select(c =>
+                children.Select(c =>
 
                     // the array elements have null for separator
                     c is null ? new CodePrimitiveExpression(null) :

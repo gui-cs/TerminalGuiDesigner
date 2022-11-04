@@ -148,11 +148,12 @@ public class ViewFactory
 
     private MenuBar CreateMenuBar()
     {
-        return new MenuBar(new MenuBarItem[] {
-                new MenuBarItem ("_File (F9)", new MenuItem [] {
-                    new MenuItem (AddMenuOperation.DefaultMenuItemText, "", () => {})
-                }),
-         });
+        return new MenuBar(new MenuBarItem[]
+        {
+                new MenuBarItem(
+                    "_File (F9)",
+                    new MenuItem[] { new MenuItem(AddMenuOperation.DefaultMenuItemText, string.Empty, () => { }) }),
+        });
     }
 
     private View CreateRadioGroup()
@@ -199,21 +200,23 @@ public class ViewFactory
 
     internal IEnumerable<Type> GetSupportedViews()
     {
-        Type[] exclude = new Type[]{
+        Type[] exclude = new Type[]
+        {
             typeof(Toplevel),
-             typeof(Window),
-             typeof(ToplevelContainer),
-             typeof(Dialog),
-             typeof(FileDialog),
-             typeof(SaveDialog),
-             typeof(OpenDialog),
-             typeof(ScrollBarView),
-             typeof(TreeView<>), }; // The generic version of TreeView
+            typeof(Window),
+            typeof(ToplevelContainer),
+            typeof(Dialog),
+            typeof(FileDialog),
+            typeof(SaveDialog),
+            typeof(OpenDialog),
+            typeof(ScrollBarView),
+            typeof(TreeView<>),
+        }; // The generic version of TreeView
 
         return typeof(View).Assembly.DefinedTypes.Where(t =>
                 typeof(View).IsAssignableFrom(t) &&
-                !t.IsInterface && !t.IsAbstract && t.IsPublic
-            ).Except(exclude)
+                !t.IsInterface && !t.IsAbstract && t.IsPublic)
+            .Except(exclude)
             .OrderBy(t => t.Name).ToArray();
     }
 }

@@ -8,7 +8,8 @@ public class AddTabOperation : TabViewOperation
 {
     private Tab? tab;
 
-    public AddTabOperation(Design design) : base(design)
+    public AddTabOperation(Design design)
+        : base(design)
     {
     }
 

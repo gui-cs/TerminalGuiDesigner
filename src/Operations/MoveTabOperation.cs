@@ -12,7 +12,8 @@ public class MoveTabOperation : TabViewOperation
     /// </summary>
     /// <param name="design"></param>
     /// <param name="adjustment">Negative to move tab left, positive to move tab right</param>
-    public MoveTabOperation(Design design, int adjustment) : base(design)
+    public MoveTabOperation(Design design, int adjustment)
+        : base(design)
     {
         if (this.SelectedTab == null)
         {

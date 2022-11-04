@@ -124,7 +124,7 @@ public class PropertyTests : Tests
 
     public static string ExpressionToCode(CodeExpression expression)
     {
-        CSharpCodeProvider provider = new();
+        CSharpCodeProvider provider = new ();
 
         using (var sw = new StringWriter())
         {

@@ -34,7 +34,8 @@ namespace TerminalGuiDesigner.Operations
         /// </summary>
         private Dictionary<MenuBarItem, MenuItem>? _convertedMenuBars;
 
-        public RemoveMenuItemOperation(MenuItem toRemove) : base(toRemove)
+        public RemoveMenuItemOperation(MenuItem toRemove)
+            : base(toRemove)
         {
         }
 

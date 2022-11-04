@@ -96,21 +96,21 @@ public static class ViewExtensions
     {
         if (view is TextField f)
         {
-            return f.Text?.ToString() ?? "";
+            return f.Text?.ToString() ?? string.Empty;
         }
         else
         if (view is Button b)
         {
-            return b.Text?.ToString() ?? "";
+            return b.Text?.ToString() ?? string.Empty;
         }
         else
         if (view is CheckBox cb)
         {
-            return cb.Text?.ToString() ?? "";
+            return cb.Text?.ToString() ?? string.Empty;
         }
         else
         {
-            return view.Text?.ToString() ?? "";
+            return view.Text?.ToString() ?? string.Empty;
         }
     }
 

@@ -20,7 +20,6 @@ public static class RectExtensions
             Math.Min(p1.Value.X, p2.Value.X),
             Math.Min(p1.Value.Y, p2.Value.Y),
             Math.Max(p1.Value.X, p2.Value.X),
-            Math.Max(p1.Value.Y, p2.Value.Y)
-            );
+            Math.Max(p1.Value.Y, p2.Value.Y));
     }
 }

@@ -10,7 +10,7 @@ namespace TerminalGuiDesigner;
 /// </summary>
 public class SelectionManager
 {
-    List<Design> selection = new();
+    List<Design> selection = new ();
 
     /// <summary>
     /// Collection of all the views currently multi selected
@@ -47,13 +47,14 @@ public class SelectionManager
                 return this.selectedScheme;
             }
         }
+
         set
         {
             this.selectedScheme = value;
         }
     }
 
-    public static SelectionManager Instance = new();
+    public static SelectionManager Instance = new ();
     private ColorScheme? selectedScheme;
 
     /// <summary>

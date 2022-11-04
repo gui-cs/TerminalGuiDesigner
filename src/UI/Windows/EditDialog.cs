@@ -85,8 +85,7 @@ public class EditDialog : Window
                 {
                     // user wants to set this property to null/default
                     OperationManager.Instance.Do(
-                        new SetPropertyOperation(this.Design, p, oldValue, null)
-                    );
+                        new SetPropertyOperation(this.Design, p, oldValue, null));
                 }
                 else
                 {
@@ -115,8 +114,7 @@ public class EditDialog : Window
         if (GetNewValue(design, p, p.GetValue(), out object? newValue))
         {
             OperationManager.Instance.Do(
-                new SetPropertyOperation(design, p, oldValue, newValue)
-            );
+                new SetPropertyOperation(design, p, oldValue, newValue));
 
             return true;
         }
@@ -258,7 +256,7 @@ public class EditDialog : Window
         {
             if (Modals.GetArray(property.PropertyInfo.Name, "New Array Value",
                 property.PropertyInfo.PropertyType.GetElementType() ?? throw new Exception("Property was an Array but GetElementType returned null"),
-                 (Array?)oldValue, out Array? resultArray))
+                (Array?)oldValue, out Array? resultArray))
             {
                 newValue = resultArray;
                 return true;
@@ -320,8 +318,7 @@ public class EditDialog : Window
         }
         else
         if (property.PropertyInfo.PropertyType == typeof(char?)
-            || property.PropertyInfo.PropertyType == typeof(char)
-            )
+            || property.PropertyInfo.PropertyType == typeof(char))
         {
             if (Modals.GetChar(property.PropertyInfo.Name, "New Single Character", oldValue is null ? null : (char?)oldValue.ToPrimitive() ?? null, out var resultChar))
             {
@@ -331,8 +328,7 @@ public class EditDialog : Window
         }
         else
         if (property.PropertyInfo.PropertyType == typeof(Rune)
-            || property.PropertyInfo.PropertyType == typeof(Rune?)
-            )
+            || property.PropertyInfo.PropertyType == typeof(Rune?))
         {
             if (Modals.GetChar(property.PropertyInfo.Name, "New Single Character", oldValue is null ? null : (char?)oldValue.ToPrimitive() ?? null, out var resultChar))
             {
@@ -354,7 +350,7 @@ public class EditDialog : Window
     private static bool GetNewColorSchemeValue(Design design, Property property, out object? newValue)
     {
         const string custom = "Edit Color Schemes...";
-        List<object> offer = new();
+        List<object> offer = new ();
 
         var defaults = new DefaultColorSchemes();
         var schemes = ColorSchemeManager.Instance.Schemes.ToList();

@@ -19,6 +19,7 @@ public class SetPropertyOperation : Operation
         public Design Design { get; }
 
         public Property Property { get; }
+
         public object? OldValue { get; }
 
         public SetPropertyMemento(Design design, Property property, object? oldValue)
@@ -66,7 +67,8 @@ public class SetPropertyOperation : Operation
     /// <param name="newValue"></param>
     public SetPropertyOperation(Design design, Property property, object? oldValue, object? newValue)
     {
-        this.mementos = new[] {
+        this.mementos = new[]
+        {
             new SetPropertyMemento(design, property, oldValue),
         };
 

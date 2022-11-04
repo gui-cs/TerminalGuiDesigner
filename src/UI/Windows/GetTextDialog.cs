@@ -25,7 +25,7 @@ class GetTextDialog
 
         var description = new Label
         {
-            Text = this.args.TaskDescription ?? "",
+            Text = this.args.TaskDescription ?? string.Empty,
             Y = 0,
         };
 
@@ -33,7 +33,7 @@ class GetTextDialog
 
         var entryLabel = new Label
         {
-            Text = this.args.EntryLabel ?? "",
+            Text = this.args.EntryLabel ?? string.Empty,
             Y = Pos.Bottom(description),
         };
 
@@ -45,7 +45,7 @@ class GetTextDialog
             Y = Pos.Bottom(entryLabel),
             Height = Dim.Fill(2),
             Width = Dim.Fill(2),
-            Text = this.initialValue ?? "",
+            Text = this.initialValue ?? string.Empty,
             AllowsTab = false,
         };
         this.textField.KeyPress += this.TextField_KeyPress;
@@ -86,7 +86,7 @@ class GetTextDialog
         };
         btnClear.Clicked += () =>
         {
-            this.textField.Text = "";
+            this.textField.Text = string.Empty;
         };
 
         this.win.Add(btnOk);

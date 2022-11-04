@@ -28,11 +28,13 @@ namespace TerminalGuiDesigner.ToCode
 
         private void AddColorSchemeField(CodeDomArgs args, Attribute color, string colorSchemeSubfield)
         {
-            this.AddPropertyAssignment(args, $"this.{this.scheme.Name}.{colorSchemeSubfield}",
+            this.AddPropertyAssignment(
+                args,
+                $"this.{this.scheme.Name}.{colorSchemeSubfield}",
                 new CodeObjectCreateExpression(
                     new CodeTypeReference(typeof(Attribute)),
-                        this.GetEnumExpression(color.Foreground),
-                        this.GetEnumExpression(color.Background)));
+                    this.GetEnumExpression(color.Foreground),
+                    this.GetEnumExpression(color.Background)));
         }
 
         private CodeExpression GetEnumExpression(Color color)

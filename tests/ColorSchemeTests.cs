@@ -258,20 +258,20 @@ public class ColorSchemeTests : Tests
         Assert.AreEqual(
             "yarg",
 
-        ColorSchemeManager.Instance.GetNameForColorScheme(
+            ColorSchemeManager.Instance.GetNameForColorScheme(
             (withSelection ? lblInDesign.State.OriginalScheme : lblIn.GetExplicitColorScheme())
                 ?? throw new Exception("Expected lblIn to have an explicit ColorScheme")),
-        "Expected designer to know the name of the labels color scheme");
+            "Expected designer to know the name of the labels color scheme");
 
         // make a change to the yarg scheme (e.g. if user opened the color designer and made some changes)
         ColorSchemeManager.Instance.AddOrUpdateScheme("yarg", new ColorScheme { Normal = new Attribute(Color.Cyan, Color.BrightBlue) }, lblInDesign.GetRootDesign());
 
         Assert.AreEqual(
             "yarg",
-        ColorSchemeManager.Instance.GetNameForColorScheme(
+            ColorSchemeManager.Instance.GetNameForColorScheme(
             (withSelection ? lblInDesign.State.OriginalScheme : lblIn.GetExplicitColorScheme())
             ?? throw new Exception("Expected lblIn to have an explicit ColorScheme")),
-        "Expected designer to still know the name of lblIn ColorScheme");
+            "Expected designer to still know the name of lblIn ColorScheme");
 
         Assert.AreEqual(Color.Cyan, lblIn.ColorScheme.Normal.Foreground, "Expected Label to be updated with the new color after being changed in designer");
         Assert.AreEqual(Color.Cyan, lblInDesign.State.OriginalScheme?.Normal.Foreground, "Expected Label Design to also be updated with the new color");
@@ -284,11 +284,13 @@ public class ColorSchemeTests : Tests
             Normal = new Attribute(Color.Magenta, Color.Black),
             Focus = new Attribute(Color.Cyan, Color.Black),
         };
+
         private ColorScheme bbb = new ColorScheme
         {
             Normal = new Attribute(Color.Green, Color.Black),
             Focus = new Attribute(Color.Cyan, Color.Black),
         };
+
         private int ccc;
     }
 }

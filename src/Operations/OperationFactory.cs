@@ -13,7 +13,7 @@ namespace TerminalGuiDesigner.Operations
 
         public IEnumerable<IOperation> CreateOperations(Design[] selected, MouseEvent? m, Design? rightClicked, out string name)
         {
-            List<IOperation> toReturn = new();
+            List<IOperation> toReturn = new ();
 
             // user right clicked something that isn't part of the current multiselection
             if (rightClicked != null && !selected.Contains(rightClicked))
@@ -64,7 +64,7 @@ namespace TerminalGuiDesigner.Operations
             }
             else
             {
-                name = "";
+                name = string.Empty;
             }
 
             if (SelectionManager.Instance.Selected.Any())

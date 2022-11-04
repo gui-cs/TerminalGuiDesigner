@@ -41,7 +41,9 @@ public class Design
     /// new child controls are preserved for design time changes
     /// </summary>
     public View View { get; }
+
     public bool IsContainerView => this.View.IsContainerView();
+
     public bool IsBorderlessContainerView => this.View.IsBorderlessContainerView();
 
     public Design(SourceCodeFile sourceCode, string fieldName, View view)
@@ -139,7 +141,7 @@ public class Design
             gv.Annotations.Add(new TextAnnotation
             {
                 ScreenPosition = new Point(1, 1),
-                Text = "",
+                Text = string.Empty,
             });
         }
 
@@ -175,9 +177,11 @@ public class Design
             });
             tree.AddObject(new TreeNode("Example Branch 2")
             {
-                Children = new[]{
+                Children = new[]
+                {
                     new TreeNode("Child 1"),
-                    new TreeNode("Child 2")},
+                    new TreeNode("Child 2"),
+                },
             });
 
             for (int l = 0; l < 20; l++)

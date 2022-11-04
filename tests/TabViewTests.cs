@@ -17,7 +17,7 @@ class TabViewTests : Tests
         TabView tabIn = this.RoundTrip<Dialog, TabView>(
             (d, t) =>
             Assert.IsNotEmpty(t.Tabs, "Expected default TabView created by ViewFactory to have some placeholder Tabs"),
-        out TabView tabOut);
+            out TabView tabOut);
 
         Assert.AreEqual(2, tabIn.Tabs.Count());
 

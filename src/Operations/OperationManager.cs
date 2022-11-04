@@ -2,13 +2,14 @@ namespace TerminalGuiDesigner.Operations;
 
 public class OperationManager
 {
-    Stack<IOperation> undoStack = new();
-    Stack<IOperation> redoStack = new();
+    Stack<IOperation> undoStack = new ();
+    Stack<IOperation> redoStack = new ();
 
     public int UndoStackSize => this.undoStack.Count;
+
     public int RedoStackSize => this.redoStack.Count;
 
-    public static OperationManager Instance = new();
+    public static OperationManager Instance = new ();
 
     private OperationManager()
     {

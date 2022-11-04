@@ -65,9 +65,9 @@
 
             Assert.AreEqual(
                 "yarg",
-            ColorSchemeManager.Instance.GetNameForColorScheme(
+                ColorSchemeManager.Instance.GetNameForColorScheme(
                 lblIn.GetExplicitColorScheme() ?? throw new Exception("Expected lblIn to have the scheme again")),
-            "Expected designer to still know the name of lblIn ColorScheme");
+                "Expected designer to still know the name of lblIn ColorScheme");
 
             Assert.AreEqual(yarg.Scheme, lblIn.GetExplicitColorScheme() ?? throw new Exception("View was unexpected no longer using our color scheme after Redo"));
             Assert.AreEqual(yarg.Scheme, lblInDesign.State.OriginalScheme ?? throw new Exception("View was unexpected no longer using our color scheme after Redo"));

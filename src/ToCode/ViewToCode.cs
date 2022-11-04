@@ -213,7 +213,9 @@ public class ViewToCode
             IndentedTextWriter tw = new IndentedTextWriter(sw, "    ");
 
             // Generate source code using the code provider.
-            provider.GenerateCodeFromCompileUnit(compileUnit, tw,
+            provider.GenerateCodeFromCompileUnit(
+                compileUnit,
+                tw,
                 new CodeGeneratorOptions());
 
             tw.Close();
@@ -252,24 +254,17 @@ public class ViewToCode
 
                 var parent = sub.SuperView?.GetNearestDesign();
 
+                // if we did not get a specific parentViewExpression passed in then work out what to we are adding to
+                // if our parent is the root then we are adding to 'this' otherwise reference it by parents FieldName
+                parentViewExpression ??= parent == null || parent.IsRoot ? new CodeThisReferenceExpression() :
+                        new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), parent.FieldName);
+
                 // Build the design code
-                toCode.ToCode(
-                    args,
-
-                    // explicit parent field
-                    parentViewExpression ??
-                    (
-                        // if our parent is the root then the designed control should be assigned to 'this'
-                        parent == null || parent.IsRoot ? new CodeThisReferenceExpression() :
-                        // the view we are adding to is not root but some deeper nested view so reference it by name
-                        new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), parent.FieldName)
-                    )
-
-                );
+                toCode.ToCode(args, parentViewExpression);
 
                 // mark that we have now done this Design
                 // so don't output it again even if there is some
-                // wierd loop
+                // weird loop
                 args.OutputAlready.Add(d);
 
                 // TabToCode handles children so don't handle them

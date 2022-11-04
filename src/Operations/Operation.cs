@@ -43,7 +43,9 @@ public abstract class Operation : IOperation
     }
 
     public abstract bool Do();
+
     public abstract void Undo();
+
     public abstract void Redo();
 
     /// <summary>

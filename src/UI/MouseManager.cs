@@ -21,6 +21,7 @@ public class MouseManager
     }
 
     public Rect? SelectionBox => RectExtensions.FromBetweenPoints(this.SelectionStart, this.SelectionEnd);
+
     public View? SelectionContainer { get; private set; }
 
     public void HandleMouse(MouseEvent m, Design viewBeingEdited)
@@ -120,8 +121,7 @@ public class MouseManager
                     .Select(v => v.GetNearestDesign())
                     .Where(d => d != null && !d.IsRoot)
                     .Cast<Design>()
-                    .ToArray()
-                    );
+                    .ToArray());
 
                 this.SelectionStart = null;
                 this.SelectionEnd = null;

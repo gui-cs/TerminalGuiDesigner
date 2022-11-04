@@ -6,7 +6,8 @@ public class AddMenuItemOperation : MenuItemOperation
 {
     private MenuItem? added;
 
-    public AddMenuItemOperation(MenuItem adjacentTo) : base(adjacentTo)
+    public AddMenuItemOperation(MenuItem adjacentTo)
+        : base(adjacentTo)
     {
     }
 

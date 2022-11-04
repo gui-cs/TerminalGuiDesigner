@@ -33,8 +33,7 @@ internal class CopyPasteTests : Tests
         var tv = (TableView)new ViewFactory().Create(typeof(TableView));
 
         Assert.IsTrue(
-            new AddViewOperation(tv, d, "mytbl").Do()
-        );
+            new AddViewOperation(tv, d, "mytbl").Do());
 
         var tvDesign = (Design)tv.Data;
 

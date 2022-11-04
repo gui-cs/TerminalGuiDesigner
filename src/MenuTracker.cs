@@ -4,11 +4,11 @@ namespace TerminalGuiDesigner;
 
 public class MenuTracker
 {
-    public static MenuTracker Instance = new();
+    public static MenuTracker Instance = new ();
 
     public MenuItem? CurrentlyOpenMenuItem { get; private set; }
 
-    HashSet<MenuBar> bars = new();
+    HashSet<MenuBar> bars = new ();
 
     private MenuTracker()
     {

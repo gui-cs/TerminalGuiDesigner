@@ -40,7 +40,8 @@ public static class ExceptionHelper
     /// <typeparam name="T"></typeparam>
     /// <param name="e"></param>
     /// <returns></returns>
-    public static T? GetExceptionIfExists<T>(this AggregateException e) where T : Exception
+    public static T? GetExceptionIfExists<T>(this AggregateException e)
+        where T : Exception
     {
         return e.Flatten().InnerExceptions.OfType<T>().FirstOrDefault();
     }
@@ -53,7 +54,8 @@ public static class ExceptionHelper
     /// <typeparam name="T"></typeparam>
     /// <param name="e"></param>
     /// <returns></returns>
-    public static T? GetExceptionIfExists<T>(this Exception e) where T : Exception
+    public static T? GetExceptionIfExists<T>(this Exception e)
+        where T : Exception
     {
         if (e is T)
         {

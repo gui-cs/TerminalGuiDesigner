@@ -10,10 +10,13 @@ namespace TerminalGuiDesigner.Operations;
 public class ResizeOperation : Operation
 {
     public Design BeingResized { get; }
+
     public Dim OriginalWidth { get; }
+
     public Dim OriginalHeight { get; }
 
     public int DestinationX { get; set; }
+
     public int DestinationY { get; set; }
 
     public ResizeOperation(Design beingResized, int destX, int destY)

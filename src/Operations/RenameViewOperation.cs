@@ -3,7 +3,9 @@
 public class RenameViewOperation : Operation
 {
     public Design Design { get; }
+
     public string OldName { get; }
+
     public string NewName { get; }
 
     public RenameViewOperation(Design design, string oldName, string newName)

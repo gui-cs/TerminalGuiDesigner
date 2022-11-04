@@ -3,6 +3,7 @@
 public class SourceCodeFile
 {
     public FileInfo CsFile { get; }
+
     public FileInfo DesignerFile { get; }
 
     /// <summary>
@@ -36,7 +37,8 @@ public class SourceCodeFile
     /// may or may not both exist yet
     /// </summary>
     /// <param name="file">Either source file of the pair (e.g. either MyClass.cs or MyClass.Designer.cs)</param>
-    public SourceCodeFile(string path) : this(new FileInfo(path))
+    public SourceCodeFile(string path)
+        : this(new FileInfo(path))
     {
     }
 

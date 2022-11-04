@@ -13,7 +13,9 @@ namespace TerminalGuiDesigner
     public class NamedColorScheme
     {
         public string Name { get; set; }
+
         public ColorScheme Scheme { get; set; }
+
         public NamedColorScheme(string name, ColorScheme scheme)
         {
             this.Name = name;
@@ -34,14 +36,14 @@ namespace TerminalGuiDesigner
 
     public class ColorSchemeManager
     {
-        List<NamedColorScheme> colorSchemes = new();
+        List<NamedColorScheme> colorSchemes = new ();
 
         /// <summary>
         /// All known color schemes defined by name
         /// </summary>
         public ReadOnlyCollection<NamedColorScheme> Schemes => this.colorSchemes.ToList().AsReadOnly();
 
-        public static ColorSchemeManager Instance = new();
+        public static ColorSchemeManager Instance = new ();
 
         private ColorSchemeManager()
         {
@@ -49,7 +51,7 @@ namespace TerminalGuiDesigner
 
         public void Clear()
         {
-            this.colorSchemes = new();
+            this.colorSchemes = new ();
         }
 
         public void Remove(NamedColorScheme toDelete)

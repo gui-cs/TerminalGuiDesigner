@@ -20,9 +20,11 @@ public class Property : ToCodeBase
     ///
     /// </summary>
     public string? SubProperty { get; }
+
     public object DeclaringObject { get; set; }
 
     public PropertyInfo PropertyInfo { get; }
+
     public Property(Design design, PropertyInfo property)
     {
         this.Design = design;
@@ -30,7 +32,8 @@ public class Property : ToCodeBase
         this.DeclaringObject = this.Design.View;
     }
 
-    public Property(Design design, PropertyInfo property, string subProperty, object declaringObject) : this(design, property)
+    public Property(Design design, PropertyInfo property, string subProperty, object declaringObject)
+        : this(design, property)
     {
         this.SubProperty = subProperty;
         this.DeclaringObject = declaringObject;
@@ -78,7 +81,7 @@ public class Property : ToCodeBase
             // see https://github.com/gui-cs/TerminalGuiDesigner/issues/91
             if (value == null)
             {
-                value = ustring.Make("");
+                value = ustring.Make(string.Empty);
             }
         }
 
@@ -185,15 +188,15 @@ public class Property : ToCodeBase
         {
             return new CodeObjectCreateExpression(
                 typeof(PointF),
-                 new CodePrimitiveExpression(pointf.X),
-                 new CodePrimitiveExpression(pointf.Y));
+                new CodePrimitiveExpression(pointf.X),
+                new CodePrimitiveExpression(pointf.Y));
         }
 
         if (val is TextRegexProvider regv)
         {
             return new CodeObjectCreateExpression(
                 typeof(TextRegexProvider),
-                 new CodePrimitiveExpression(regv.Pattern.ToPrimitive()));
+                new CodePrimitiveExpression(regv.Pattern.ToPrimitive()));
         }
 
         if (val is ListWrapper w)
@@ -244,8 +247,7 @@ public class Property : ToCodeBase
             var values = ((Array)val).ToList();
             return new CodeArrayCreateExpression(
                 elementType,
-                        values.Select(v => new CodePrimitiveExpression(v.ToPrimitive())).ToArray()
-                   );
+                values.Select(v => new CodePrimitiveExpression(v.ToPrimitive())).ToArray());
         }
 
         return new CodePrimitiveExpression(val.ToPrimitive());
@@ -302,20 +304,20 @@ public class Property : ToCodeBase
 
         if (val is Dim d)
         {
-            return d.ToCode() ?? d.ToString() ?? "";
+            return d.ToCode() ?? d.ToString() ?? string.Empty;
         }
 
         if (val is Pos p)
         {
             // TODO: Get EVERYONE not just siblings
-            return p.ToCode(this.Design.GetSiblings().ToList()) ?? p.ToString() ?? "";
+            return p.ToCode(this.Design.GetSiblings().ToList()) ?? p.ToString() ?? string.Empty;
         }
 
         if (val is Array a)
         {
-            return String.Join(",", a.ToList());
+            return string.Join(",", a.ToList());
         }
 
-        return val.ToString() ?? "";
+        return val.ToString() ?? string.Empty;
     }
 }

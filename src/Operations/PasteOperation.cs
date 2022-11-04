@@ -7,12 +7,12 @@ public class PasteOperation : Operation
 {
     private Design _to;
     private IReadOnlyCollection<Design> oldSelection;
-    private List<AddViewOperation> _addOperations = new();
+    private List<AddViewOperation> _addOperations = new ();
 
     /// <summary>
     /// Mapping from old (Key) Views to new cloned Views (Value)
     /// </summary>
-    private Dictionary<Design, Design> _clones = new();
+    private Dictionary<Design, Design> _clones = new ();
 
     public PasteOperation(Design addTo)
     {
@@ -137,7 +137,11 @@ public class PasteOperation : Operation
     {
         pos.GetPosType(
             allDesigns,
-            out var type, out _, out var relativeTo, out var side, out var offset);
+            out var type,
+            out _,
+            out var relativeTo,
+            out var side,
+            out var offset);
 
         // not relative so jump out early, no need to update it
         if (type != PosType.Relative || relativeTo == null)

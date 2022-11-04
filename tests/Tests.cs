@@ -62,7 +62,9 @@
         /// <param name="viewOut">The view created and passed to <paramref name="adjust"/></param>
         /// <param name="caller"></param>
         /// <returns>The read in object state after round trip (generate code file then read that code back in)</returns>
-        protected T2 RoundTrip<T1, T2>(Action<Design, T2> adjust, out T2 viewOut, [CallerMemberName] string? caller = null) where T2 : View where T1 : View
+        protected T2 RoundTrip<T1, T2>(Action<Design, T2> adjust, out T2 viewOut, [CallerMemberName] string? caller = null)
+            where T2 : View
+            where T1 : View
         {
             const string fieldName = "myViewOut";
 

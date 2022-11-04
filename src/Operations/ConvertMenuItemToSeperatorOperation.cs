@@ -6,7 +6,8 @@ namespace TerminalGuiDesigner.Operations
     {
         private int removedAtIdx;
 
-        public ConvertMenuItemToSeperatorOperation(MenuItem toRemove) : base(toRemove)
+        public ConvertMenuItemToSeperatorOperation(MenuItem toRemove)
+            : base(toRemove)
         {
         }
 

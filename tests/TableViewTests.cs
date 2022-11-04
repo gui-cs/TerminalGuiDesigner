@@ -34,7 +34,7 @@ public class TableViewTests : Tests
                 var tvOut2 = factory.Create(typeof(TableView));
                 OperationManager.Instance.Do(new AddViewOperation(tvOut2, d.GetRootDesign(), "myTable2"));
             },
-        out TableView tableOut);
+            out TableView tableOut);
 
         // Views should collide on column name but still compile
         var designBackIn = ((Design)tableIn.Data).GetRootDesign();

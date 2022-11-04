@@ -9,7 +9,8 @@ public class RenameMenuItemOperation : MenuItemOperation
     private string? originalName;
     private string? newName;
 
-    public RenameMenuItemOperation(MenuItem toRename) : base(toRename)
+    public RenameMenuItemOperation(MenuItem toRename)
+        : base(toRename)
     {
         this.originalName = toRename.Data as string;
     }

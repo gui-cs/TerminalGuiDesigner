@@ -5,19 +5,18 @@ namespace TerminalGuiDesigner;
 
 /// <summary>
 /// Describes state based changes and custom callbacks on a <see cref="Design"/>
-/// e.g. <see cref="OriginalScheme"/>
+/// e.g. <see cref="OriginalScheme"/>.
 /// </summary>
 public class DesignState
 {
     /// <summary>
-    /// The explicitly defined <see cref="ColorScheme"/> that the user wants for their <see cref="View"/>.
-    /// This is what is used when writing to code/showing properties in editor.  This may differ from the
-    /// actual color the <see cref="View"/> currently has within the editor (e.g. if it is selected and
-    /// has a temporary color indicating it is selected - see <see cref="SelectionManager.SelectedScheme"/>)
+    /// Initializes a new instance of the <see cref="DesignState"/> class. Registers
+    /// events on the <see cref="Design.View"/> that track entering, redrawing etc
+    /// as well as capturing initial state e.g. <see cref="OriginalScheme"/>.
     /// </summary>
-    public ColorScheme? OriginalScheme { get; set; }
-    public Design Design { get; }
-
+    /// <param name="design">The parent that this class will hold state for.  You
+    /// should set it's <see cref="Design.State"/> property to the new instance.
+    /// </param>
     public DesignState(Design design)
     {
         this.Design = design;
@@ -25,6 +24,19 @@ public class DesignState
         this.Design.View.DrawContent += this.DrawContent;
         this.Design.View.Enter += this.Enter;
     }
+
+    /// <summary>
+    /// Gets or Sets the explicitly defined <see cref="ColorScheme"/> that the user wants for their <see cref="View"/>.
+    /// This is what is used when writing to code/showing properties in editor.  This may differ from the
+    /// actual color the <see cref="View"/> currently has within the editor (e.g. if it is selected and
+    /// has a temporary color indicating it is selected - see <see cref="SelectionManager.SelectedScheme"/>).
+    /// </summary>
+    public ColorScheme? OriginalScheme { get; set; }
+
+    /// <summary>
+    /// Gets the parent <see cref="Design"/> that this class stores state for.
+    /// </summary>
+    public Design Design { get; }
 
     private void Enter(View.FocusEventArgs obj)
     {

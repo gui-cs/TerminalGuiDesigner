@@ -6,7 +6,8 @@ public class RemoveTabOperation : TabViewOperation
 {
     public int RemovedAtIdx { get; private set; }
 
-    public RemoveTabOperation(Design design) : base(design)
+    public RemoveTabOperation(Design design)
+        : base(design)
     {
         // user has no Tab selected
         if (this.SelectedTab == null)

@@ -27,7 +27,7 @@ public class DragOperationTests : Tests
         Assert.AreEqual(Pos.At(3), lbl.Y);
 
         // finalise the operation
-        drag.Do(); ;
+        drag.Do();
         Assert.AreEqual(Pos.At(0), lbl.X);
         Assert.AreEqual(Pos.At(3), lbl.Y);
 
@@ -65,8 +65,8 @@ public class DragOperationTests : Tests
         Assert.AreEqual(Pos.At(1), lbl2.X);
         Assert.AreEqual(Pos.At(4), lbl2.Y);
 
-        // finalise the operation
-        drag.Do(); ;
+        // finalize the operation
+        drag.Do();
         Assert.AreEqual(Pos.At(0), lbl1.X);
         Assert.AreEqual(Pos.At(3), lbl1.Y);
         Assert.AreEqual(Pos.At(1), lbl2.X);

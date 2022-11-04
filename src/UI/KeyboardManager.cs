@@ -79,16 +79,14 @@ namespace TerminalGuiDesigner.UI
             if (keystroke.Key == this._keyMap.Rename)
             {
                 OperationManager.Instance.Do(
-                        new RenameMenuItemOperation(menuItem)
-                    );
+                        new RenameMenuItemOperation(menuItem));
                 return true;
             }
 
             if (keystroke.Key == Key.Enter)
             {
                 OperationManager.Instance.Do(
-                        new AddMenuItemOperation(menuItem)
-                    );
+                        new AddMenuItemOperation(menuItem));
 
                 keystroke.Key = Key.CursorDown;
                 return false;
@@ -115,8 +113,7 @@ namespace TerminalGuiDesigner.UI
             if (keystroke.Key == this._keyMap.MoveRight)
             {
                 OperationManager.Instance.Do(
-                    new MoveMenuItemRightOperation(menuItem)
-                );
+                    new MoveMenuItemRightOperation(menuItem));
 
                 keystroke.Key = Key.CursorUp;
                 return true;
@@ -125,8 +122,7 @@ namespace TerminalGuiDesigner.UI
             if (keystroke.Key == this._keyMap.MoveLeft)
             {
                 OperationManager.Instance.Do(
-                    new MoveMenuItemLeftOperation(menuItem)
-                );
+                    new MoveMenuItemLeftOperation(menuItem));
 
                 keystroke.Key = Key.CursorDown;
                 return false;
@@ -135,8 +131,7 @@ namespace TerminalGuiDesigner.UI
             if (keystroke.Key == this._keyMap.MoveUp)
             {
                 OperationManager.Instance.Do(
-                    new MoveMenuItemOperation(menuItem, true)
-                );
+                    new MoveMenuItemOperation(menuItem, true));
                 keystroke.Key = Key.CursorUp;
                 return false;
             }
@@ -144,8 +139,7 @@ namespace TerminalGuiDesigner.UI
             if (keystroke.Key == this._keyMap.MoveDown)
             {
                 OperationManager.Instance.Do(
-                    new MoveMenuItemOperation(menuItem, false)
-                );
+                    new MoveMenuItemOperation(menuItem, false));
                 keystroke.Key = Key.CursorDown;
                 return false;
             }
@@ -193,14 +187,13 @@ namespace TerminalGuiDesigner.UI
 
             // TODO once https://github.com/migueldeicaza/gui.cs/pull/1689 is merged and published
             // we can integrate this into the Design undo/redo systems
-            if (this.ApplyKeystrokeToString(menuItem.Title.ToString() ?? "", keystroke, out var newValue))
+            if (this.ApplyKeystrokeToString(menuItem.Title.ToString() ?? string.Empty, keystroke, out var newValue))
             {
                 // convert to a separator by typing three hyphens
                 if (newValue.Equals("---"))
                 {
                     if (OperationManager.Instance.Do(
-                            new ConvertMenuItemToSeperatorOperation(menuItem)
-                        ))
+                            new ConvertMenuItemToSeperatorOperation(menuItem)))
                     {
                         return true;
                     }
@@ -256,8 +249,9 @@ namespace TerminalGuiDesigner.UI
 
             var str = this.currentOperation.Design.View.GetActualText();
 
-            if (!this.ApplyKeystrokeToString(str, keystroke, out var newStr)) // not a keystroke we can act upon
+            if (!this.ApplyKeystrokeToString(str, keystroke, out var newStr))
             {
+                // not a keystroke we can act upon
                 return false;
             }
 
@@ -281,7 +275,7 @@ namespace TerminalGuiDesigner.UI
                 }
 
                 // chop off a letter
-                newString = str.Length == 1 ? "" : str.Substring(0, str.Length - 1);
+                newString = str.Length == 1 ? string.Empty : str.Substring(0, str.Length - 1);
                 return true;
             }
             else

@@ -11,8 +11,7 @@ public abstract class ToCodeBase
             args,
             parentView,
             nameof(View.Add),
-            new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), d.FieldName)
-            );
+            new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), d.FieldName));
     }
 
     protected void AddMethodCall(CodeDomArgs args, CodeExpression caller, string methodName, params CodeExpression[] methodArguments)

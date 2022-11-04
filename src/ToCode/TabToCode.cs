@@ -6,6 +6,7 @@ namespace TerminalGuiDesigner.ToCode;
 public class TabToCode : ToCodeBase
 {
     public Design Design { get; }
+
     public Tab Tab { get; }
 
     public TabToCode(Design design, Tab tab)
@@ -26,7 +27,10 @@ public class TabToCode : ToCodeBase
         this.AddLocalFieldToMethod(args, typeof(Tab), tabName);
 
         // initialize the field by calling its constructor in InitializeComponent
-        this.AddConstructorCall(args, tabName, typeof(Tab),
+        this.AddConstructorCall(
+            args,
+            tabName,
+            typeof(Tab),
             new CodePrimitiveExpression(this.Tab.Text.ToPrimitive()),
             new CodeSnippetExpression("new View()"));
 
@@ -59,8 +63,8 @@ public class TabToCode : ToCodeBase
         var addColumnToTableStatement = new CodeMethodInvokeExpression(
             new CodeMethodReferenceExpression(
                 new CodeSnippetExpression($"{this.Design.FieldName}"), "AddTab"),
-                new CodeSnippetExpression(tabFieldName),
-                new CodeSnippetExpression("false"));
+            new CodeSnippetExpression(tabFieldName),
+            new CodeSnippetExpression("false"));
 
         args.InitMethod.Statements.Add(addColumnToTableStatement);
     }

@@ -14,8 +14,7 @@ class ScrollViewTests : Tests
         var scrollViewIn = this.RoundTrip<View, ScrollView>(
             (d, s) =>
                 s.ContentSize = new Size(10, 5),
-                out var scrollViewOut
-                );
+            out var scrollViewOut);
 
         Assert.AreNotSame(scrollViewOut, scrollViewIn);
         Assert.AreEqual(10, scrollViewIn.ContentSize.Width);

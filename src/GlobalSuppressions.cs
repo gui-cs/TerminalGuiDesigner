@@ -6,3 +6,4 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1633:File should have header", Justification = "No header needed its open source!")]
+[assembly: SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1200:Using directive should appear within a namespace declaration", Justification = "I like using before namespace")]

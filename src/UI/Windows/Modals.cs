@@ -52,7 +52,7 @@ public class Modals
             WindowTitle = windowTitle,
             EntryLabel = entryLabel,
             MultiLine = true,
-        }, initialValue == null ? "" : string.Join('\n', initialValue.ToList().Select(v => v?.ToString() ?? "")));
+        }, initialValue == null ? string.Empty : string.Join('\n', initialValue.ToList().Select(v => v?.ToString() ?? string.Empty)));
 
         if (dlg.ShowDialog())
         {
@@ -121,7 +121,7 @@ public class Modals
 
     internal static bool GetChar(string windowTitle, string entryLabel, char? oldValue, out char? resultChar)
     {
-        if (GetString(windowTitle, entryLabel, oldValue?.ToString() ?? "", out var result))
+        if (GetString(windowTitle, entryLabel, oldValue?.ToString() ?? string.Empty, out var result))
         {
             if (result == null || result.Length == 0)
             {
