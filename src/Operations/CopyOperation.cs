@@ -2,7 +2,7 @@ namespace TerminalGuiDesigner.Operations;
 
 public class CopyOperation : Operation
 {
-    public static Design[]? LastCopiedDesign { get; private set; }
+    public static Design[] ? LastCopiedDesign { get; private set; }
 
     private Design[] toCopy;
 

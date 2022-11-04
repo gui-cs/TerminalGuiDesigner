@@ -2,6 +2,11 @@ using Terminal.Gui;
 using TerminalGuiDesigner.UI.Windows;
 
 namespace TerminalGuiDesigner.Operations;
+
+/// <summary>
+/// <see cref="Operation"/> for adding a new <see cref="View"/> to a <see cref="Design"/>.
+/// Supports adding to the root or any container view (e.g. <see cref="TabView"/>).
+/// </summary>
 public class AddViewOperation : Operation
 {
     private View? add;
@@ -32,6 +37,7 @@ public class AddViewOperation : Operation
         this.to = design;
     }
 
+    /// <inheritdoc/>
     public override bool Do()
     {
         if (this.add == null)
@@ -69,7 +75,7 @@ public class AddViewOperation : Operation
         return true;
     }
 
-
+    /// <inheritdoc/>
     public override void Redo()
     {
         if (this.add == null)
@@ -82,6 +88,7 @@ public class AddViewOperation : Operation
         v.SetNeedsDisplay();
     }
 
+    /// <inheritdoc/>
     public override void Undo()
     {
         if (this.add == null)

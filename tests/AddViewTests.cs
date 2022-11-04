@@ -11,6 +11,10 @@ using TerminalGuiDesigner.ToCode;
 
 namespace UnitTests;
 
+
+/// <summary>
+/// Tests for adding Views to other Views either with <see cref="AddViewOperation"/> or directly.
+/// </summary>
 public class AddViewTests : Tests
 {
     [Test]
@@ -68,7 +72,7 @@ public class AddViewTests : Tests
     }
 
     /// <summary>
-    /// 60 is one of those numbers that can't be modelled exactly in float so ends
+    /// 60 is one of those numbers that can't be modeled exactly in float so ends
     /// up with many decimal places.  This needs to be rounded in the code generated
     /// and has to have the suffix 'f' to ensure that the value is treated as a float
     /// and not a double (which won't compile)

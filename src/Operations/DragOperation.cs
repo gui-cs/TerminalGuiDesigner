@@ -33,7 +33,7 @@ public class DragOperation : Operation
     public Design BeingDragged => this.Mementos.First().Design;
 
     /// <summary>
-    /// When draging from the middle of the control this is the position of the cursor X
+    /// When dragging from the middle of the control this is the position of the cursor X
     /// at the start of the drag
     /// </summary>
     public readonly int OriginalClickX;
@@ -154,7 +154,7 @@ public class DragOperation : Operation
     /// <returns>The original point adjusted to the client area of the control you dropped into (if any).</returns>
     private Point OffsetByDropInto(DragMemento mem, Point p)
     {
-        if (mem.OriginalSuperView == this.DropInto || this.DropInto == null)
+        if (mem.OriginalSuperView == null || mem.OriginalSuperView == this.DropInto || this.DropInto == null)
         {
             return p;
         }

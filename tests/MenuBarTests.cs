@@ -302,7 +302,7 @@ class MenuBarTests : Tests
         bar.Menus[0].Children = new[]
         {
             bar.Menus[0].Children[0],
-            head2 = new MenuBarItem(new []
+            head2 = new MenuBarItem(new[]
             {
                 topChild = new MenuItem("Child1", null, () => { })
                 {
