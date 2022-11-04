@@ -17,14 +17,14 @@ class RadioGroupTests
         var viewToCode = new ViewToCode();
 
         var file = new FileInfo("TestRoundTrip_PreserveRadioGroups.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace",typeof(View), out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(View), out var sourceCode);
 
         var factory = new ViewFactory();
         var rgOut = factory.Create(typeof(RadioGroup));
 
         OperationManager.Instance.Do(new AddViewOperation(sourceCode, rgOut, designOut, "myRadioGroup"));
 
-        viewToCode.GenerateDesignerCs(designOut, sourceCode,typeof(View));
+        viewToCode.GenerateDesignerCs(designOut, sourceCode, typeof(View));
 
         var tabOut = designOut.View.GetActualSubviews().OfType<RadioGroup>().Single();
 
@@ -33,9 +33,9 @@ class RadioGroupTests
 
         var rgIn = designBackIn.View.GetActualSubviews().OfType<RadioGroup>().Single();
 
-        Assert.AreEqual(2,rgIn.RadioLabels.Length);
+        Assert.AreEqual(2, rgIn.RadioLabels.Length);
 
-        Assert.AreEqual("Option 1",rgIn.RadioLabels[0].ToString());
-        Assert.AreEqual("Option 2",rgIn.RadioLabels[1].ToString());
+        Assert.AreEqual("Option 1", rgIn.RadioLabels[0].ToString());
+        Assert.AreEqual("Option 2", rgIn.RadioLabels[1].ToString());
     }
 }

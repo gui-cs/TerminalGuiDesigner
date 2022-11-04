@@ -22,7 +22,9 @@ public abstract class TabViewOperation : Operation
 
         // somehow user ran this command for a non tab view
         if (Design.View is not TabView)
+        {
             throw new ArgumentException($"Design must be for a {nameof(TabView)} to support this Operation");
+        }
 
         View = (TabView)Design.View;
 

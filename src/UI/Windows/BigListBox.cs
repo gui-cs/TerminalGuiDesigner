@@ -63,7 +63,9 @@ public class BigListBox<T>
         AspectGetter = displayMember ?? (arg => arg?.ToString() ?? string.Empty);
 
         if (collection == null)
+        {
             throw new ArgumentNullException("collection");
+        }
 
         _publicCollection = collection;
         _addNull = addNull;
@@ -156,7 +158,9 @@ public class BigListBox<T>
     private void Accept()
     {
         if (_listView.SelectedItem >= _collection.Count)
+        {
             return;
+        }
 
         _okClicked = true;
         Application.RequestStop();
@@ -165,11 +169,11 @@ public class BigListBox<T>
 
     private void _listView_MouseClick(View.MouseEventArgs obj)
     {
-        if(obj.MouseEvent.Flags.HasFlag(MouseFlags.Button1DoubleClicked))
+        if (obj.MouseEvent.Flags.HasFlag(MouseFlags.Button1DoubleClicked))
         {
             obj.Handled = true;
             Accept();
-        }   
+        }
     }
 
     private class ListViewObject<T2> where T2 : T
@@ -190,8 +194,10 @@ public class BigListBox<T>
 
         public override int GetHashCode()
         {
-            if(Object == null)
+            if (Object == null)
+            {
                 return 0;
+            }
 
             return Object.GetHashCode();
         }
@@ -199,7 +205,9 @@ public class BigListBox<T>
         public override bool Equals(object? obj)
         {
             if (obj is ListViewObject<T2> other)
+            {
                 return Object?.Equals(other.Object) ?? false;
+            }
 
             return false;
         }
@@ -222,7 +230,7 @@ public class BigListBox<T>
     {
         // if user types in some text change the focus to the text box to enable searching
         var c = (char)obj.KeyEvent.KeyValue;
-            
+
         //backspace or letter/numbers
         if (obj.KeyEvent.Key == Key.Backspace || char.IsLetterOrDigit(c))
         {
@@ -248,7 +256,9 @@ public class BigListBox<T>
                 _listView.SetSource(_collection.ToList());
 
                 if (oldSelected < _collection.Count)
+                {
                     _listView.SelectedItem = oldSelected;
+                }
 
                 _changes = false;
                 return true;
@@ -257,6 +267,7 @@ public class BigListBox<T>
 
         return true;
     }
+
     protected void RestartFiltering()
     {
         RestartFiltering(_searchBox?.Text.ToString());
@@ -264,12 +275,13 @@ public class BigListBox<T>
 
     protected void RestartFiltering(string? searchTerm)
     {
-
         lock (_taskCancellationLock)
         {
             //cancel any previous searches
             foreach (var c in _cancelFiltering)
+            {
                 c.Cancel();
+            }
 
             _cancelFiltering.Clear();
         }
@@ -286,7 +298,6 @@ public class BigListBox<T>
                 _collection = result;
                 _changes = true;
             }
-
         });
     }
 
@@ -295,7 +306,9 @@ public class BigListBox<T>
         var toReturn = listOfT.Select(o => new ListViewObject<T>(o, AspectGetter)).ToList();
 
         if (_addNull)
+        {
             toReturn.Add(new ListViewObject<T>(default, (o) => "Null"));
+        }
 
         return toReturn;
     }
@@ -303,9 +316,11 @@ public class BigListBox<T>
     protected virtual IList<T> GetListAfterSearch(string? searchString, CancellationToken token)
     {
         if (_publicCollection == null)
+        {
             throw new InvalidOperationException("When using the protected constructor derived classes must override this method ");
+        }
 
-        if(string.IsNullOrEmpty(searchString))
+        if (string.IsNullOrEmpty(searchString))
         {
             return _publicCollection.ToList();
         }
@@ -318,7 +333,9 @@ public class BigListBox<T>
     protected virtual IList<T> GetInitialSource()
     {
         if (_publicCollection == null)
+        {
             throw new InvalidOperationException("When using the protected constructor derived classes must override this method ");
+        }
 
         return _publicCollection;
     }

@@ -22,13 +22,13 @@ public class ColorSchemeTests : Tests
 
         var state = Application.Begin(window);
 
-        Assert.AreSame(Colors.Base,d.View.ColorScheme);
+        Assert.AreSame(Colors.Base, d.View.ColorScheme);
         Assert.IsNotNull(d.View.ColorScheme);
         Assert.IsFalse(d.HasKnownColorScheme());
 
         var scheme = new ColorScheme();
-        var prop = new SetPropertyOperation(d , d.GetDesignableProperty(nameof(View.ColorScheme))
-            ?? throw new Exception("Expected Property did not exist or was not designable"),null,scheme);
+        var prop = new SetPropertyOperation(d, d.GetDesignableProperty(nameof(View.ColorScheme))
+            ?? throw new Exception("Expected Property did not exist or was not designable"), null, scheme);
 
         prop.Do();
 
@@ -82,7 +82,7 @@ public class ColorSchemeTests : Tests
         // default when creating a new view is to have no explicit 
         // ColorScheme defined and just inherit from parent
         var v = Get10By10View();
-        var p = (ColorSchemeProperty)(v.GetDesignableProperty(nameof(View.ColorScheme))?? throw new Exception("Expected this not to be null"));
+        var p = (ColorSchemeProperty)(v.GetDesignableProperty(nameof(View.ColorScheme)) ?? throw new Exception("Expected this not to be null"));
 
         Assert.AreEqual("ColorScheme:(Inherited)", p.ToString());
 
@@ -96,7 +96,7 @@ public class ColorSchemeTests : Tests
             Focus = new Attribute(Color.Cyan, Color.Black)
         };
 
-        mgr.AddOrUpdateScheme("pink", pink , v);
+        mgr.AddOrUpdateScheme("pink", pink, v);
 
         p.SetValue(pink);
         Assert.AreEqual("ColorScheme:pink", p.ToString());
@@ -106,7 +106,7 @@ public class ColorSchemeTests : Tests
         // of the actual color scheme the user set
         var selection = SelectionManager.Instance;
 
-        if(testMultiSelectingSeveralTimes)
+        if (testMultiSelectingSeveralTimes)
         {
             selection.SetSelection(p.Design);
             selection.Clear();
@@ -115,25 +115,24 @@ public class ColorSchemeTests : Tests
             selection.SetSelection(p.Design);
             selection.Clear();
 
-            Assert.AreEqual(pink,p.Design.View.ColorScheme);
+            Assert.AreEqual(pink, p.Design.View.ColorScheme);
         }
 
         selection.SetSelection(p.Design);
-        Assert.AreNotEqual(pink,p.Design.View.ColorScheme, "Expected view to be selected so be green not pink");
+        Assert.AreNotEqual(pink, p.Design.View.ColorScheme, "Expected view to be selected so be green not pink");
         Assert.AreEqual("ColorScheme:pink", p.ToString(), "Expected us to know it was pink under the hood even while selected");
         selection.Clear();
 
-        Assert.AreEqual(pink,p.Design.View.ColorScheme);
-
+        Assert.AreEqual(pink, p.Design.View.ColorScheme);
     }
-    
+
     [Test]
     public void TestColorSchemeProperty_ToString_SelectThenSetScheme()
     {
         // default when creating a new view is to have no explicit 
         // ColorScheme defined and just inherit from parent
         var v = Get10By10View();
-        var p = (ColorSchemeProperty)(v.GetDesignableProperty(nameof(View.ColorScheme))?? throw new Exception("Expected this not to be null"));
+        var p = (ColorSchemeProperty)(v.GetDesignableProperty(nameof(View.ColorScheme)) ?? throw new Exception("Expected this not to be null"));
 
         Assert.AreEqual("ColorScheme:(Inherited)", p.ToString());
 
@@ -157,7 +156,6 @@ public class ColorSchemeTests : Tests
 
         SelectionManager.Instance.Clear();
         Assert.AreEqual("ColorScheme:pink", p.ToString(), "Expected clearing selection not to reset an old scheme");
-
     }
 
     /// <summary>
@@ -183,7 +181,7 @@ public class ColorSchemeTests : Tests
             {
                 Normal = new Attribute(Color.Magenta, Color.Black),
                 Focus = new Attribute(Color.Cyan, Color.Black)
-            },d.GetRootDesign());
+            }, d.GetRootDesign());
 
             //unselect it so it is rendered with correct scheme
             SelectionManager.Instance.Clear();
@@ -203,7 +201,7 @@ public class ColorSchemeTests : Tests
         // clear the selection before we do the comparison
         SelectionManager.Instance.Clear();
 
-        Assert.AreEqual("pink",mgr.GetNameForColorScheme(lblDesignIn.View.ColorScheme));
+        Assert.AreEqual("pink", mgr.GetNameForColorScheme(lblDesignIn.View.ColorScheme));
 
         mgr.Clear();
     }
@@ -223,8 +221,8 @@ public class ColorSchemeTests : Tests
     public void TestEditingSchemeAfterLoad(bool withSelection)
     {
         var scheme = new ColorScheme();
-     
-        var lblIn = RoundTrip<Dialog, Label>((d,v) =>
+
+        var lblIn = RoundTrip<Dialog, Label>((d, v) =>
             {
                 // Clear known default colors
                 ColorSchemeManager.Instance.Clear();
@@ -238,13 +236,12 @@ public class ColorSchemeTests : Tests
                 var prop = new SetPropertyOperation(d, new ColorSchemeProperty(d), null, scheme);
                 prop.Do();
 
-                if(withSelection)
+                if (withSelection)
                 {
                     SelectionManager.Instance.ForceSetSelection(d);
                 }
-
             }, out _);
-        
+
         var lblInDesign = (Design)lblIn.Data ?? throw new Exception("Expected Design to exist on the label read in");
 
         if (withSelection)
@@ -261,10 +258,10 @@ public class ColorSchemeTests : Tests
         ColorSchemeManager.Instance.GetNameForColorScheme(
             (withSelection ? lblInDesign.State.OriginalScheme : lblIn.GetExplicitColorScheme())
                 ?? throw new Exception("Expected lblIn to have an explicit ColorScheme"))
-        ,"Expected designer to know the name of the labels color scheme");
+        , "Expected designer to know the name of the labels color scheme");
 
         // make a change to the yarg scheme (e.g. if user opened the color designer and made some changes)
-        ColorSchemeManager.Instance.AddOrUpdateScheme("yarg", new ColorScheme {Normal = new Attribute(Color.Cyan,Color.BrightBlue) }, lblInDesign.GetRootDesign());
+        ColorSchemeManager.Instance.AddOrUpdateScheme("yarg", new ColorScheme { Normal = new Attribute(Color.Cyan, Color.BrightBlue) }, lblInDesign.GetRootDesign());
 
         Assert.AreEqual("yarg",
         ColorSchemeManager.Instance.GetNameForColorScheme(
@@ -278,11 +275,14 @@ public class ColorSchemeTests : Tests
 
     class TestClass : View
     {
-        private ColorScheme aaa = new ColorScheme { 
+        private ColorScheme aaa = new ColorScheme
+        {
             Normal = new Attribute(Color.Magenta, Color.Black),
             Focus = new Attribute(Color.Cyan, Color.Black)
         };
-        private ColorScheme bbb = new ColorScheme {Normal = new Attribute(Color.Green,Color.Black),
+        private ColorScheme bbb = new ColorScheme
+        {
+            Normal = new Attribute(Color.Green, Color.Black),
             Focus = new Attribute(Color.Cyan, Color.Black)
         };
         private int ccc;

@@ -9,14 +9,13 @@ namespace TerminalGuiDesigner.Operations;
 /// </summary>
 public class DragOperation : Operation
 {
-
     private class DragMemento
     {
-        public Design Design {get;set;}
-        public Pos OriginalX {get;}
-        public Pos OriginalY {get;}
+        public Design Design { get; set; }
+        public Pos OriginalX { get; }
+        public Pos OriginalY { get; }
 
-        public View? OriginalSuperView {get;}
+        public View? OriginalSuperView { get; }
 
         public DragMemento(Design design)
         {
@@ -44,26 +43,31 @@ public class DragOperation : Operation
 
     public int DestinationX { get; set; }
     public int DestinationY { get; set; }
-    
+
     /// <summary>
     /// A <see cref="Design.IsContainerView"/> into which to move the control in addition
     /// to moving it.  Allows users to drag views into other container views (e.g. tabs etc)
     /// </summary>
-    public View? DropInto {
+    public View? DropInto
+    {
         get
         {
             return dropInto;
-        } 
+        }
         set
         {
             // Don't let them attempt to drop a view into itself!
-            if (Mementos.Any(m=>m.Design.View == value))
+            if (Mementos.Any(m => m.Design.View == value))
+            {
                 return;
+            }
 
             // don't let user drop stuff into labels or tables etc
             if (value != null && !value.IsContainerView())
+            {
                 return;
-            
+            }
+
             dropInto = value;
         }
     }
@@ -72,32 +76,37 @@ public class DragOperation : Operation
     public DragOperation(Design beingDragged, int destX, int destY, Design[]? alsoDrag)
     {
         // don't let the user drag the root view anywhere
-        if(beingDragged.IsRoot || (alsoDrag?.Any(d=>d.IsRoot) ?? false))
+        if (beingDragged.IsRoot || (alsoDrag?.Any(d => d.IsRoot) ?? false))
         {
             IsImpossible = true;
             return;
         }
+
         Mementos.Add(new DragMemento(beingDragged));
 
         DestinationX = destX;
         DestinationY = destY;
 
-        foreach(var d in alsoDrag ?? new Design[0])
+        foreach (var d in alsoDrag ?? new Design[0])
         {
-            if(!Mementos.Any(m=>m.Design == d))
+            if (!Mementos.Any(m => m.Design == d))
+            {
                 Mementos.Add(new DragMemento(d));
+            }
         }
 
         OriginalClickX = destX;
         OriginalClickY = destY;
     }
+
     public override bool Do()
     {
         bool didAny = false;
-        foreach(var mem in Mementos)
+        foreach (var mem in Mementos)
         {
             didAny = Do(mem) || didAny;
         }
+
         return didAny;
     }
 
@@ -113,17 +122,17 @@ public class DragOperation : Operation
             }
         }
 
-        var offsetP = OffsetByDropInto(mem,new Point(OriginalClickX,OriginalClickY));
+        var offsetP = OffsetByDropInto(mem, new Point(OriginalClickX, OriginalClickY));
         var dx = offsetP.X;
         var dy = offsetP.Y;
 
-        if (mem.Design.View.X.IsAbsolute() && 
+        if (mem.Design.View.X.IsAbsolute() &&
             mem.OriginalX.IsAbsolute(out var originX))
         {
             mem.Design.GetDesignableProperty("X")?.SetValue(Pos.At(originX + (DestinationX - dx)));
         }
 
-        if (mem.Design.View.Y.IsAbsolute() && 
+        if (mem.Design.View.Y.IsAbsolute() &&
             mem.OriginalY.IsAbsolute(out var originY))
         {
             mem.Design.GetDesignableProperty("Y")?.SetValue(Pos.At(originY + (DestinationY - dy)));
@@ -138,10 +147,12 @@ public class DragOperation : Operation
     /// lets go of the mouse the control jumps (often out of the visible area of the control)
     /// </summary>
     /// <returns>The original point adjusted to the client area of the control you dropped into (if any).</returns>
-    private Point OffsetByDropInto(DragMemento mem,Point p)
+    private Point OffsetByDropInto(DragMemento mem, Point p)
     {
-        if(mem.OriginalSuperView == DropInto || DropInto  == null)
+        if (mem.OriginalSuperView == DropInto || DropInto == null)
+        {
             return p;
+        }
 
         mem.OriginalSuperView.ViewToScreen(0, 0, out var originalSuperX, out var originalSuperY, false);
         DropInto.ViewToScreen(0, 0, out var newSuperX, out var newSuperY, false);
@@ -152,7 +163,7 @@ public class DragOperation : Operation
 
     public override void Undo()
     {
-        foreach(var mem in Mementos)
+        foreach (var mem in Mementos)
         {
             Undo(mem);
         }
@@ -188,9 +199,9 @@ public class DragOperation : Operation
 
     public void ContinueDrag(Point dest)
     {
-        foreach(var mem in Mementos)
+        foreach (var mem in Mementos)
         {
-            ContinueDrag(mem,dest);
+            ContinueDrag(mem, dest);
         }
     }
 
@@ -200,14 +211,17 @@ public class DragOperation : Operation
         // positions (i.e. not relative positioning - Bottom of other control etc).
 
         if (mem.Design.View.X.IsAbsolute() && mem.OriginalX.IsAbsolute(out var originX))
+        {
             mem.Design.View.X = originX + (dest.X - OriginalClickX);
+        }
 
         DestinationX = dest.X;
 
         if (mem.Design.View.Y.IsAbsolute() && mem.OriginalY.IsAbsolute(out var originY))
+        {
             mem.Design.View.Y = originY + (dest.Y - OriginalClickY);
+        }
 
         DestinationY = dest.Y;
-
     }
 }

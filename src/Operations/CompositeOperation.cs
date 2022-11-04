@@ -37,10 +37,10 @@ public class CompositeOperation : Operation
     {
         bool did = false;
 
-        foreach(var op in _operations)
+        foreach (var op in _operations)
         {
             // if any operation worked
-            if(op.Do())
+            if (op.Do())
             {
                 did = true;
             }

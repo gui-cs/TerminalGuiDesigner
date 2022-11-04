@@ -72,7 +72,6 @@ public class CodeToView
 
         if (instances.Length > 1)
         {
-
             throw new Exception($"Found {instances.Length} Types called {expectedClassName} in compiled assembly");
         }
 
@@ -102,7 +101,7 @@ public class CodeToView
     {
         // All the changes we really care about that are on disk in the users csproj file
         var designerTree = (CSharpSyntaxTree)CSharpSyntaxTree.ParseText(File.ReadAllText(SourceFile.DesignerFile.FullName));
-                
+
         // the user could have put all kinds of stuff into their MyWindow.cs including references to other Types and
         // other things so lets just get what it would be if we had outputted it fresh out of the oven.
         var csTree = (CSharpSyntaxTree)CSharpSyntaxTree.ParseText(ViewToCode.GetGenerateNewViewCode(ClassName, Namespace));
@@ -112,13 +111,13 @@ public class CodeToView
 
         var references = new List<MetadataReference>(ReferenceAssemblies.Net60);
 
-        references.Add( MetadataReference.CreateFromFile(typeof(View).Assembly.Location));
-        references.Add( MetadataReference.CreateFromFile(typeof(ustring).Assembly.Location));
-        references.Add( MetadataReference.CreateFromFile(typeof(System.Data.DataTable).Assembly.Location));
-        references.Add( MetadataReference.CreateFromFile(typeof(object).Assembly.Location));
-        references.Add( MetadataReference.CreateFromFile(typeof(MarshalByValueComponent).Assembly.Location));
-        references.Add( MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "mscorlib.dll"));
-        references.Add( MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "System.Runtime.dll"));
+        references.Add(MetadataReference.CreateFromFile(typeof(View).Assembly.Location));
+        references.Add(MetadataReference.CreateFromFile(typeof(ustring).Assembly.Location));
+        references.Add(MetadataReference.CreateFromFile(typeof(System.Data.DataTable).Assembly.Location));
+        references.Add(MetadataReference.CreateFromFile(typeof(object).Assembly.Location));
+        references.Add(MetadataReference.CreateFromFile(typeof(MarshalByValueComponent).Assembly.Location));
+        references.Add(MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "mscorlib.dll"));
+        references.Add(MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "System.Runtime.dll"));
 
         var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary);
 
@@ -136,5 +135,4 @@ public class CodeToView
 
         throw new Exception($"Could not compile {SourceFile.DesignerFile}:" + Environment.NewLine + string.Join(Environment.NewLine, result.Diagnostics));
     }
-
 }

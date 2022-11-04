@@ -8,7 +8,6 @@ namespace tests
 {
     internal class TextViewTests : Tests
     {
-
         [Test]
         public void TestSettingToNull()
         {
@@ -20,12 +19,11 @@ namespace tests
 
             var op = new SetPropertyOperation(d,
                 d.GetDesignableProperty("Text") ?? throw new System.Exception("Did not find expected designable property"),
-                tv.Text,null);
+                tv.Text, null);
 
             op.Do();
 
             Assert.IsTrue(ustring.IsNullOrEmpty(tv.Text));
         }
-
     }
 }

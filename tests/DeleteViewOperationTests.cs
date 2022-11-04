@@ -23,7 +23,7 @@ namespace tests
             var lbl2 = (Label)factory.Create(typeof(Label));
 
             // add 2 labels
-            new AddViewOperation(sourceCode,lbl1,designOut,"lbl1").Do();
+            new AddViewOperation(sourceCode, lbl1, designOut, "lbl1").Do();
             new AddViewOperation(sourceCode, lbl2, designOut, "lbl2").Do();
 
             // not impossible, we could totalyy delete either of these
@@ -49,23 +49,23 @@ namespace tests
             var lbl2 = (Label)factory.Create(typeof(Label));
 
             // add 2 labels
-            new AddViewOperation(sourceCode,lbl1,designOut,"lbl1").Do();
+            new AddViewOperation(sourceCode, lbl1, designOut, "lbl1").Do();
             new AddViewOperation(sourceCode, lbl2, designOut, "lbl2").Do();
 
             // we now have a dependency of lbl2 on lbl1 so deleting lbl1 will go badly
             lbl2.X = Pos.Right(lbl1) + 5;
 
             // Deleting both at once should be possible since there are no hanging references
-            Assert.IsFalse(new DeleteViewOperation(lbl1,lbl2).IsImpossible);
-            Assert.IsFalse(new DeleteViewOperation(lbl2,lbl1).IsImpossible);
+            Assert.IsFalse(new DeleteViewOperation(lbl1, lbl2).IsImpossible);
+            Assert.IsFalse(new DeleteViewOperation(lbl2, lbl1).IsImpossible);
 
-            Assert.AreEqual(3,designOut.GetAllDesigns().Count());
-            var cmd = new DeleteViewOperation(lbl2,lbl1);
+            Assert.AreEqual(3, designOut.GetAllDesigns().Count());
+            var cmd = new DeleteViewOperation(lbl2, lbl1);
             Assert.IsTrue(cmd.Do());
-            Assert.AreEqual(1,designOut.GetAllDesigns().Count());
+            Assert.AreEqual(1, designOut.GetAllDesigns().Count());
 
             cmd.Undo();
-            Assert.AreEqual(3,designOut.GetAllDesigns().Count());
+            Assert.AreEqual(3, designOut.GetAllDesigns().Count());
         }
 
         [TestCase(true)]
@@ -81,7 +81,7 @@ namespace tests
             var lbl1 = (Label)factory.Create(typeof(Label));
 
             new AddViewOperation(sourceCode, lbl1, designOut, "lbl1").Do();
-            
+
             var lbl1Design = (Design)lbl1.Data;
 
             SelectionManager.Instance.SetSelection(lbl1Design);
@@ -94,16 +94,16 @@ namespace tests
             Assert.AreEqual(2, designOut.GetAllDesigns().Count());
             var cmd = new DeleteViewOperation(lbl1);
 
-            Assert.Contains(lbl1Design,SelectionManager.Instance.Selected.ToArray());
+            Assert.Contains(lbl1Design, SelectionManager.Instance.Selected.ToArray());
 
             Assert.IsTrue(cmd.Do());
             Assert.AreEqual(1, designOut.GetAllDesigns().Count());
 
-            Assert.IsEmpty(SelectionManager.Instance.Selected.ToArray(),"Deleting the view should remove it from the active selection");
+            Assert.IsEmpty(SelectionManager.Instance.Selected.ToArray(), "Deleting the view should remove it from the active selection");
 
             cmd.Undo();
             Assert.AreEqual(2, designOut.GetAllDesigns().Count());
-            Assert.Contains(lbl1Design, SelectionManager.Instance.Selected.ToArray(),"Undoing a delete operation should restore the previous selection");
+            Assert.Contains(lbl1Design, SelectionManager.Instance.Selected.ToArray(), "Undoing a delete operation should restore the previous selection");
         }
     }
 }

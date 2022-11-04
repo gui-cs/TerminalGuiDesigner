@@ -9,14 +9,13 @@ namespace TerminalGuiDesigner.Operations;
 /// </summary>
 public class MoveViewOperation : Operation
 {
-
     public Design BeingMoved { get; }
     public Pos OriginX { get; }
     public Pos OriginY { get; }
     public int DestinationY { get; }
     public int DestinationX { get; }
 
-    public MoveViewOperation(Design toMove, int deltaX,int deltaY)
+    public MoveViewOperation(Design toMove, int deltaX, int deltaY)
     {
         BeingMoved = toMove;
         OriginX = toMove.View.X;
@@ -35,21 +34,24 @@ public class MoveViewOperation : Operation
             DestinationX = Math.Min(Math.Max(x + deltaX, 0), maxWidth);
 
             // if it moves it somewhere then command isn't impossible
-            if(DestinationX != x)
+            if (DestinationX != x)
+            {
                 IsImpossible = false;
+            }
         }
 
-        if(BeingMoved.View.Y.IsAbsolute(out var y))
+        if (BeingMoved.View.Y.IsAbsolute(out var y))
         {
             // y is absolute so record where this operation
             // moves to
             DestinationY = Math.Min(Math.Max(y + deltaY, 0), maxHeight);
-        
-            // if it moves it somewhere then command isn't impossible
-            if(DestinationY != y)
-                IsImpossible = false;
-        }
 
+            // if it moves it somewhere then command isn't impossible
+            if (DestinationY != y)
+            {
+                IsImpossible = false;
+            }
+        }
     }
 
     public override bool Do()

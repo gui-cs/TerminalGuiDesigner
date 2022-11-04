@@ -12,7 +12,7 @@ public class DeleteColorSchemeOperation : Operation
     public DeleteColorSchemeOperation(Design design, NamedColorScheme toDelete)
     {
         ToDelete = toDelete;
-        _users = design.GetAllDesigns().Where(d=>d.UsesColorScheme(toDelete.Scheme)).ToArray();
+        _users = design.GetAllDesigns().Where(d => d.UsesColorScheme(toDelete.Scheme)).ToArray();
         _rootDesign = design;
     }
 
@@ -43,8 +43,10 @@ public class DeleteColorSchemeOperation : Operation
             }
         }
 
-        if(d.View is MenuBar)
+        if (d.View is MenuBar)
+        {
             return Colors.Menu;
+        }
 
         return null;
     }
@@ -63,6 +65,6 @@ public class DeleteColorSchemeOperation : Operation
             u.View.ColorScheme = ToDelete.Scheme;
         }
 
-        ColorSchemeManager.Instance.AddOrUpdateScheme(ToDelete.Name,ToDelete.Scheme, _rootDesign);
+        ColorSchemeManager.Instance.AddOrUpdateScheme(ToDelete.Name, ToDelete.Scheme, _rootDesign);
     }
 }

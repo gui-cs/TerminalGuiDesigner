@@ -10,12 +10,16 @@ public class RemoveTabOperation : TabViewOperation
     {
         // user has no Tab selected
         if (SelectedTab == null)
+        {
             IsImpossible = true;
+        }
     }
+
     public override string ToString()
     {
         return $"Remove Tab '{SelectedTab?.Text}'";
     }
+
     public override bool Do()
     {
         if (SelectedTab == null)
@@ -47,7 +51,7 @@ public class RemoveTabOperation : TabViewOperation
 
         if (!View.Tabs.Contains(SelectedTab))
         {
-            View.InsertTab(RemovedAtIdx,SelectedTab);
+            View.InsertTab(RemovedAtIdx, SelectedTab);
         }
     }
 }

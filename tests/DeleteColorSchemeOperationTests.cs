@@ -7,7 +7,7 @@ using TerminalGuiDesigner;
 
 namespace tests
 {
-    internal class DeleteColorSchemeOperationTests:Tests
+    internal class DeleteColorSchemeOperationTests : Tests
     {
         [TestCase(true)]
         [TestCase(false)]
@@ -28,7 +28,6 @@ namespace tests
                 // Assign the new color to the view 
                 var prop = new SetPropertyOperation(d, new ColorSchemeProperty(d), null, scheme);
                 prop.Do();
-
             }, out _);
 
             var lblInDesign = (Design)lblIn.Data ?? throw new Exception("Expected Design to exist on the label read in");
@@ -39,7 +38,7 @@ namespace tests
 
             var rootDesignIn = lblInDesign.GetRootDesign();
 
-            if(withSelected)
+            if (withSelected)
             {
                 SelectionManager.Instance.ForceSetSelection(lblInDesign);
             }
@@ -47,7 +46,7 @@ namespace tests
             // now delete the scheme
             var yarg = ColorSchemeManager.Instance.GetNamedColorScheme("yarg");
             var deleteOp = new DeleteColorSchemeOperation(rootDesignIn, yarg);
-            
+
             Assert.IsTrue(deleteOp.Do());
 
             // after deleting the color scheme nobody should be using it
@@ -68,9 +67,8 @@ namespace tests
                 lblIn.GetExplicitColorScheme() ?? throw new Exception("Expected lblIn to have the scheme again"))
             , "Expected designer to still know the name of lblIn ColorScheme");
 
-            Assert.AreEqual(yarg.Scheme,lblIn.GetExplicitColorScheme() ?? throw new Exception("View was unexpected no longer using our color scheme after Redo"));
+            Assert.AreEqual(yarg.Scheme, lblIn.GetExplicitColorScheme() ?? throw new Exception("View was unexpected no longer using our color scheme after Redo"));
             Assert.AreEqual(yarg.Scheme, lblInDesign.State.OriginalScheme ?? throw new Exception("View was unexpected no longer using our color scheme after Redo"));
-
         }
     }
 }

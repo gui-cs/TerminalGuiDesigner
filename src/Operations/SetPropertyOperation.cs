@@ -11,8 +11,7 @@ namespace TerminalGuiDesigner.Operations;
 public delegate object? PropertyValueGetterDelegate(Property property, object? currentValue);
 
 public class SetPropertyOperation : Operation
-{   
-
+{
     private PropertyValueGetterDelegate? _valueGetter;
 
     private class SetPropertyMemento
@@ -52,8 +51,8 @@ public class SetPropertyOperation : Operation
     /// <param name="design"></param>
     /// <param name="property"></param>
     /// <param name="valueGetter"></param>
-    public SetPropertyOperation(Design design,Property property, PropertyValueGetterDelegate valueGetter)
-        :this(design, property, property.GetValue(), null)
+    public SetPropertyOperation(Design design, Property property, PropertyValueGetterDelegate valueGetter)
+        : this(design, property, property.GetValue(), null)
     {
         _valueGetter = valueGetter;
     }
@@ -65,7 +64,7 @@ public class SetPropertyOperation : Operation
     /// <param name="property"></param>
     /// <param name="oldValue"></param>
     /// <param name="newValue"></param>
-    public SetPropertyOperation(Design design,Property property, object? oldValue, object? newValue)
+    public SetPropertyOperation(Design design, Property property, object? oldValue, object? newValue)
     {
         _mementos = new[] {
             new SetPropertyMemento(design,property,oldValue)
@@ -74,8 +73,10 @@ public class SetPropertyOperation : Operation
         this.NewValue = newValue;
 
         // don't let user rename the root
-        if(property is NameProperty && design.IsRoot)
+        if (property is NameProperty && design.IsRoot)
+        {
             IsImpossible = true;
+        }
     }
 
     /// <summary>
@@ -94,23 +95,24 @@ public class SetPropertyOperation : Operation
         foreach (var d in designs)
         {
             var p = d.GetDesignableProperty(propertyName);
-            if(p != null)
+            if (p != null)
             {
                 mementos.Add(new SetPropertyMemento(d, p, p.GetValue()));
             }
         }
 
         _mementos = mementos.ToArray();
-        
-        if(mementos.Count == 0)
+
+        if (mementos.Count == 0)
+        {
             throw new ArgumentException($"Could not find designable Property called '{propertyName}' on {designs.Length} Design instances");
+        }
     }
 
     public override bool Do()
     {
-        if(_valueGetter != null)
+        if (_valueGetter != null)
         {
-
             // theres nothing to set!
             if (_mementos.Length == 0)
             {
@@ -127,7 +129,7 @@ public class SetPropertyOperation : Operation
                     // yes
                     _valueGetter(_mementos[0].Property, currentVals[0]) :
                     // we are setting multiple at once and the current values are different so just tell the user theres no value
-                    _valueGetter(_mementos[0].Property, null); 
+                    _valueGetter(_mementos[0].Property, null);
             }
             catch (OperationCanceledException)
             {
@@ -135,16 +137,16 @@ public class SetPropertyOperation : Operation
             }
         }
 
-        foreach(var m in _mementos)
+        foreach (var m in _mementos)
         {
             m.Property.SetValue(NewValue);
         }
+
         return true;
     }
 
     public override void Undo()
     {
-
         foreach (var m in _mementos)
         {
             m.Property.SetValue(m.OldValue);

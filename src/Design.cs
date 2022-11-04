@@ -56,7 +56,6 @@ public class Design
 
     public void CreateSubControlDesigns()
     {
-
         // Unlike Window/Dialog the View/TopLevel classes do not have an explicit
         // colors schemes.  When creating a new View or TopLevel we need to use
         // the Colors.Base and fiddle a bit with coloring/clearing to ensure things render correctly
@@ -65,7 +64,7 @@ public class Design
 
         if (baseType == typeof(View) || baseType == typeof(Toplevel))
         {
-            if(View.ColorScheme == null || View.ColorScheme == Colors.TopLevel)
+            if (View.ColorScheme == null || View.ColorScheme == Colors.TopLevel)
             {
                 State.OriginalScheme = View.ColorScheme = Colors.Base;
             }
@@ -127,6 +126,7 @@ public class Design
                 {
                     row[c] = DBNull.Value;
                 }
+
                 tv.Table.Rows.Add(row);
             }
         }
@@ -142,6 +142,7 @@ public class Design
                 Text = ""
             });
         }
+
         if (subView is MenuBar mb)
         {
             MenuTracker.Instance.Register(mb);
@@ -165,6 +166,7 @@ public class Design
             tf.MouseClick += SuppressNativeClickEvents;
             tf.KeyDown += (s) => s.Handled = true;
         }
+
         if (subView is TreeView tree)
         {
             tree.AddObject(new TreeNode("Example Branch 1")
@@ -179,7 +181,9 @@ public class Design
             });
 
             for (int l = 0; l < 20; l++)
+            {
                 tree.AddObject(new TreeNode($"Example Leaf {l}"));
+            }
         }
 
         if (super != null)
@@ -224,17 +228,23 @@ public class Design
         var userDefinedColorScheme = State.OriginalScheme ?? View.GetExplicitColorScheme();
 
         if (userDefinedColorScheme == null)
+        {
             return false;
+        }
 
         // theres a color scheme defined but we aren't tracking it
         // so report it as inherited since it must have got it from
         // the API somehow
         if (Colors.ColorSchemes.Values.Contains(userDefinedColorScheme))
+        {
             return false;
+        }
 
         // it has a ColorScheme but not one we are tracking
         if (ColorSchemeManager.Instance.GetNameForColorScheme(userDefinedColorScheme) == null)
+        {
             return false;
+        }
 
         return true;
     }
@@ -247,7 +257,7 @@ public class Design
     public bool UsesColorScheme(ColorScheme scheme)
     {
         // we use this scheme if it is a known scheme
-        return HasKnownColorScheme() && 
+        return HasKnownColorScheme() &&
             (View.ColorScheme.AreEqual(scheme) || (State.OriginalScheme?.AreEqual(scheme) ?? false));
     }
 
@@ -275,14 +285,17 @@ public class Design
         {
             yield return CreateProperty(nameof(TextValidateField.Provider));
         }
+
         if (View is TextField)
         {
             yield return CreateProperty(nameof(TextField.Secret));
         }
-        if(View is ScrollView)
+
+        if (View is ScrollView)
         {
             yield return CreateProperty(nameof(ScrollView.ContentSize));
         }
+
         if (View is TextView)
         {
             yield return CreateProperty(nameof(TextView.AllowsTab));
@@ -298,7 +311,9 @@ public class Design
         // Allow changing the FieldName on anything but root where 
         // such an action would break things badly
         if (!this.IsRoot)
+        {
             yield return new NameProperty(this);
+        }
 
         yield return new Property(this, View.GetActualTextProperty());
 
@@ -318,11 +333,13 @@ public class Design
         {
             yield return CreateProperty(nameof(Button.IsDefault));
         }
+
         if (View is LineView)
         {
             yield return CreateProperty(nameof(LineView.LineRune));
             yield return CreateProperty(nameof(LineView.Orientation));
         }
+
         if (View is ProgressBar)
         {
             yield return CreateProperty(nameof(ProgressBar.Fraction));
@@ -331,6 +348,7 @@ public class Design
             yield return CreateProperty(nameof(ProgressBar.ProgressBarFormat));
             yield return CreateProperty(nameof(ProgressBar.SegmentCharacter));
         }
+
         if (View is CheckBox)
         {
             yield return CreateProperty(nameof(CheckBox.Checked));
@@ -340,6 +358,7 @@ public class Design
         {
             yield return CreateProperty(nameof(ListView.Source));
         }
+
         if (View is GraphView gv)
         {
             yield return CreateProperty(nameof(GraphView.GraphColor));
@@ -364,6 +383,7 @@ public class Design
         {
             yield return CreateProperty(nameof(Window.Title));
         }
+
         if (View is FrameView)
         {
             yield return CreateProperty(nameof(FrameView.Title));
@@ -381,7 +401,6 @@ public class Design
 
         if (View is TableView tv)
         {
-
             yield return CreateProperty(nameof(TableView.FullRowSelect));
 
             yield return CreateSubProperty(nameof(TableStyle.AlwaysShowHeaders), nameof(TableView.Style), tv.Style);
@@ -430,6 +449,7 @@ public class Design
     {
         return GetExtraOperations(Point.Empty);
     }
+
     /// <summary>
     /// Returns one off atomic activities that can be performed on the view e.g. 'add a column'.
     /// </summary>
@@ -449,7 +469,9 @@ public class Design
                 // and cannot right click the headers themselves
                 var cell = tv.ScreenToCell(pos.X, pos.Y);
                 if (cell != null)
+                {
                     col = tv.Table.Columns[cell.Value.X];
+                }
             }
 
             yield return new AddColumnOperation(this);
@@ -466,7 +488,9 @@ public class Design
         {
             var nearestContainer = this.View.GetNearestContainerDesign();
             if (nearestContainer != null)
+            {
                 yield return new AddViewOperation(SourceCode, nearestContainer);
+            }
         }
 
         yield return new DeleteViewOperation(this.View);
@@ -550,7 +574,9 @@ public class Design
             if (v.Data is Design d)
             {
                 if (d.IsRoot)
+                {
                     return d;
+                }
 
                 toReturn = d;
             }
@@ -653,20 +679,26 @@ public class Design
     {
         // obviously we cannot depend on ourselves
         if (other == this)
+        {
             return false;
+        }
 
         // if their X depends on us
         if (other.View.X.GetPosType(everyone, out _, out _, out var relativeTo, out _, out _))
         {
             if (relativeTo == this)
+            {
                 return true;
+            }
         }
 
         // if their Y depends on us
         if (other.View.Y.GetPosType(everyone, out _, out _, out relativeTo, out _, out _))
         {
             if (relativeTo == this)
+            {
                 return true;
+            }
         }
 
         return false;

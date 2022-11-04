@@ -6,7 +6,7 @@ public abstract class Operation : IOperation
 {
     public bool IsImpossible { get; protected set; }
 
-    public bool SupportsUndo {get; protected set;} = true;
+    public bool SupportsUndo { get; protected set; } = true;
 
     public Guid UniqueIdentifier { get; } = Guid.NewGuid();
 

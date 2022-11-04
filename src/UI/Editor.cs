@@ -47,9 +47,9 @@ public class Editor : Toplevel
     {
         return @$"{_keyMap.AddView} to Add a View";
     }
+
     private string GetHelp()
     {
-
         return @$"
 {_keyMap.ShowHelp} - Show Help
 {_keyMap.New} - New Window/Class
@@ -70,7 +70,6 @@ Ctrl+Cursor - Move focused View quickly
 Ctrl+Q - Quit
 {_keyMap.Undo} - Undo
 {_keyMap.Redo} - Redo";
-
     }
 
     public Editor()
@@ -163,16 +162,20 @@ Ctrl+Q - Quit
 
         Add(_rootCommandsListView);
     }
+
     public string PadBoth(string source, int length)
     {
         int spaces = length - source.Length;
         int padLeft = spaces / 2 + source.Length;
         return source.PadLeft(padLeft).PadRight(length);
     }
+
     private void Editor_Closing(ToplevelClosingEventArgs obj)
     {
         if (_viewBeingEdited == null)
+        {
             return;
+        }
 
         if (HasUnsavedChanges())
         {
@@ -229,7 +232,9 @@ Ctrl+Q - Quit
         Application.RootKeyEvent += (k) =>
         {
             if (_editting)
+            {
                 return false;
+            }
 
             try
             {
@@ -246,10 +251,14 @@ Ctrl+Q - Quit
         {
             // if another window is showing don't respond to mouse
             if (!IsCurrentTop)
+            {
                 return;
-            
+            }
+
             if (_editting || !enableDrag || _viewBeingEdited == null)
+            {
                 return;
+            }
 
             try
             {
@@ -267,7 +276,6 @@ Ctrl+Q - Quit
                         {
                             CreateAndShowContextMenu(m, d);
                         }
-                            
                     }
                 }
             }
@@ -284,7 +292,9 @@ Ctrl+Q - Quit
     private void CreateAndShowContextMenu(MouseEvent? m, Design? rightClicked)
     {
         if (_viewBeingEdited == null)
+        {
             return;
+        }
 
         var selected = SelectionManager.Instance.Selected.ToArray();
 
@@ -315,7 +325,9 @@ Ctrl+Q - Quit
                 Action = () =>
                 {
                     if (selected.Length == 1 || rightClicked != null)
+                    {
                         ShowEditProperties(rightClicked ?? selected[0]);
+                    }
                 }
             });
 
@@ -323,7 +335,9 @@ Ctrl+Q - Quit
 
         // theres nothing we can do
         if (all.Count == 0)
+        {
             return;
+        }
 
         var menu = new ContextMenu();
         menu.MenuItems = new MenuBarItem(all.ToArray());
@@ -406,7 +420,9 @@ Ctrl+Q - Quit
                     for (int y = 0; y < box.Height; y++)
                     {
                         if (y == 0 || y == box.Height - 1 || x == 0 || x == box.Width - 1)
+                        {
                             AddRune(box.X + x, box.Y + y, '.');
+                        }
                     }
             }
 
@@ -416,7 +432,6 @@ Ctrl+Q - Quit
 
     private string? GetLowerRightTextIfAny()
     {
-
         if (_flashMessage != null)
         {
             var m = _flashMessage;
@@ -445,17 +460,23 @@ Ctrl+Q - Quit
     {
         // if another window is showing don't respond to hotkeys
         if (!IsCurrentTop)
+        {
             return false;
+        }
 
         if (_editting)
+        {
             return false;
+        }
 
         // Give the keyboard manager first shot at consuming
         // this key e.g. for typing into menus / reordering menus
         // etc
         if (_keyboardManager.HandleKey(
             SelectionManager.Instance.GetSingleSelectionOrNull()?.View ?? this, keyEvent))
+        {
             return true;
+        }
 
         try
         {
@@ -501,61 +522,75 @@ Ctrl+Q - Quit
             if (keyEvent.Key == _keyMap.EditRootProperties)
             {
                 if (_viewBeingEdited == null)
+                {
                     return false;
+                }
+
                 ShowEditProperties(_viewBeingEdited);
                 return true;
             }
+
             if (keyEvent.Key == _keyMap.Open)
             {
                 Open();
                 return true;
             }
+
             if (keyEvent.Key == _keyMap.Save)
             {
                 Save();
                 return true;
             }
+
             if (keyEvent.Key == _keyMap.New)
             {
                 New();
                 return true;
             }
+
             if (keyEvent.Key == _keyMap.ShowHelp)
             {
                 ShowHelp();
                 return true;
             }
+
             if (keyEvent.Key == _keyMap.AddView)
             {
                 ShowAddViewWindow();
                 return true;
             }
+
             if (keyEvent.Key == _keyMap.ToggleDragging)
             {
                 enableDrag = !enableDrag;
                 return true;
             }
+
             if (keyEvent.Key == _keyMap.Undo)
             {
                 OperationManager.Instance.Undo();
                 return true;
             }
+
             if (keyEvent.Key == _keyMap.Redo)
             {
                 OperationManager.Instance.Redo();
                 return true;
             }
+
             if (keyEvent.Key == _keyMap.Delete)
             {
                 Delete();
                 return true;
             }
+
             if (keyEvent.Key == _keyMap.ToggleShowFocused)
             {
                 enableShowFocused = !enableShowFocused;
                 SetNeedsDisplay();
                 return true;
             }
+
             if (keyEvent.Key == _keyMap.ToggleShowBorders)
             {
                 ShowBorders = !ShowBorders;
@@ -574,16 +609,19 @@ Ctrl+Q - Quit
                 MoveControl(0, -1);
                 return true;
             }
+
             if (keyEvent.Key == _keyMap.MoveDown)
             {
                 MoveControl(0, 1);
                 return true;
             }
+
             if (keyEvent.Key == _keyMap.MoveLeft)
             {
                 MoveControl(-1, 0);
                 return true;
             }
+
             if (keyEvent.Key == _keyMap.MoveRight)
             {
                 MoveControl(1, 0);
@@ -623,7 +661,9 @@ Ctrl+Q - Quit
     private void SelectAll()
     {
         if (_viewBeingEdited == null)
+        {
             return;
+        }
 
         var everyone = _viewBeingEdited.GetAllDesigns()
             .Where(d => !d.IsRoot)
@@ -641,7 +681,9 @@ Ctrl+Q - Quit
             var paste = new PasteOperation(d);
 
             if (paste.IsImpossible)
+            {
                 return;
+            }
 
             OperationManager.Instance.Do(paste);
         }
@@ -681,20 +723,23 @@ Ctrl+Q - Quit
     private void Delete()
     {
         if (_viewBeingEdited == null)
+        {
             return;
+        }
 
         if (SelectionManager.Instance.Selected.Any())
         {
             var cmd = new DeleteViewOperation(SelectionManager.Instance.Selected.Select(d => d.View).ToArray());
             OperationManager.Instance.Do(cmd);
         }
-
     }
 
     private void DoForSelectedViews(Func<Design, Operation> operationFuc, bool allowOnRoot = false)
     {
         if (_viewBeingEdited == null)
+        {
             return;
+        }
 
         var selected = SelectionManager.Instance.Selected.ToArray();
 
@@ -714,7 +759,9 @@ Ctrl+Q - Quit
             if (viewDesign != null)
             {
                 if (viewDesign.IsRoot && !allowOnRoot)
+                {
                     return;
+                }
 
                 OperationManager.Instance.Do(
                     operationFuc(viewDesign)
@@ -737,7 +784,9 @@ Ctrl+Q - Quit
                 var path = ofd.FilePath.ToString();
 
                 if (string.IsNullOrEmpty(path))
+                {
                     return;
+                }
 
                 Open(new FileInfo(path));
             }
@@ -766,14 +815,11 @@ Ctrl+Q - Quit
 
         Task.Run(() =>
         {
-
             var decompiler = new CodeToView(new SourceCodeFile(toOpen));
             _currentDesignerFile = decompiler.SourceFile;
             instance = decompiler.CreateInstance();
-
         }).ContinueWith((t, o) =>
         {
-
             // no longer loading
             Application.MainLoop.Invoke(() => Application.RequestStop());
 
@@ -786,8 +832,9 @@ Ctrl+Q - Quit
 
             // if loaded correctly then 
             if (instance != null)
+            {
                 ReplaceViewBeingEdited(instance);
-
+            }
         }, TaskScheduler.FromCurrentSynchronizationContext());
 
         Application.Run(open, ErrorHandler);
@@ -795,7 +842,6 @@ Ctrl+Q - Quit
 
     private void New()
     {
-
         if (!Modals.Get("Create New View", "Ok", GetSupportedRootViews(), out var selected))
         {
             return;
@@ -819,7 +865,9 @@ Ctrl+Q - Quit
                 var path = ofd.FilePath.ToString();
 
                 if (string.IsNullOrWhiteSpace(path) || selected == null)
+                {
                     return;
+                }
 
                 var file = new FileInfo(path);
 
@@ -832,6 +880,7 @@ Ctrl+Q - Quit
                 {
                     sb.AppendLine(files.CsFile.Name);
                 }
+
                 if (files.DesignerFile.Exists)
                 {
                     sb.AppendLine(files.DesignerFile.Name);
@@ -839,8 +888,10 @@ Ctrl+Q - Quit
 
                 if (sb.Length > 0)
                 {
-                    if(!ConfirmDialog.Show("Overwrite Files?", $"The following files will be overwritten:{Environment.NewLine}{sb.ToString().TrimEnd()}", "Ok", "Cancel"))
+                    if (!ConfirmDialog.Show("Overwrite Files?", $"The following files will be overwritten:{Environment.NewLine}{sb.ToString().TrimEnd()}", "Ok", "Cancel"))
+                    {
                         return; // user cancelled overwrite
+                    }
                 }
 
                 New(file, selected, null);
@@ -856,12 +907,12 @@ Ctrl+Q - Quit
     private Type[] GetSupportedRootViews()
     {
         // TODO: When more robust, remove these from experimental status
-        if(Editor.Experimental)
+        if (Editor.Experimental)
         {
-            return new Type[] { typeof(Window), typeof(Dialog), typeof(View) , typeof(Toplevel)};
+            return new Type[] { typeof(Window), typeof(Dialog), typeof(View), typeof(Toplevel) };
         }
 
-        return new Type[] { typeof(Window), typeof(Dialog)};
+        return new Type[] { typeof(Window), typeof(Dialog) };
     }
 
     private void New(FileInfo toOpen, Type typeToCreate, string? explicitNamespace)
@@ -897,13 +948,10 @@ Ctrl+Q - Quit
 
         Task.Run(() =>
         {
-
             // Create the view files and compile
             instance = viewToCode.GenerateNewView(toOpen, ns ?? "YourNamespace", typeToCreate, out _currentDesignerFile);
-
         }).ContinueWith((t, o) =>
         {
-
             // no longer loading
             Application.MainLoop.Invoke(() => Application.RequestStop());
 
@@ -916,8 +964,9 @@ Ctrl+Q - Quit
 
             // if loaded correctly then 
             if (instance != null)
+            {
                 ReplaceViewBeingEdited(instance);
-
+            }
         }, TaskScheduler.FromCurrentSynchronizationContext());
 
         Application.Run(open, ErrorHandler);
@@ -949,10 +998,13 @@ Ctrl+Q - Quit
             Add(_viewBeingEdited.View);
         });
     }
+
     private void Save()
     {
         if (_viewBeingEdited == null || _currentDesignerFile == null)
+        {
             return;
+        }
 
         var viewToCode = new ViewToCode();
 
@@ -982,6 +1034,7 @@ Ctrl+Q - Quit
         // this lets us save, perform action, undo action and then still consider us saved
         return savedOp != currentOp;
     }
+
     private void ShowAddViewWindow()
     {
         if (_viewBeingEdited == null || _currentDesignerFile == null)
@@ -1015,7 +1068,9 @@ Ctrl+Q - Quit
     private void ShowColorSchemes()
     {
         if (_viewBeingEdited == null)
+        {
             return;
+        }
 
         var schemes = new ColorSchemesUI(_viewBeingEdited);
         Application.Run(schemes);

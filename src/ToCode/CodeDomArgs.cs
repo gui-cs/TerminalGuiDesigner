@@ -21,13 +21,13 @@ public class CodeDomArgs
     /// The members that have already been outputted.  Prevents
     /// any possibility of duplicate adding to the .Designer.cs
     /// </summary>
-    public HashSet<Design> OutputAlready = new ();
+    public HashSet<Design> OutputAlready = new();
 
     /// <summary>
     /// Record of all declared fields / local variable names. Prevents
     /// any duplicate field names being generated.
     /// </summary>
-    public HashSet<string> FieldNamesUsed = new ();
+    public HashSet<string> FieldNamesUsed = new();
 
     public CodeDomArgs(CodeTypeDeclaration rootClass, CodeMemberMethod initMethod)
     {
@@ -38,10 +38,10 @@ public class CodeDomArgs
     public static string MakeValidFieldName(string? name)
     {
         name = string.IsNullOrWhiteSpace(name) ? "empty" : name;
-        name = Regex.Replace(name,"\\W","");
+        name = Regex.Replace(name, "\\W", "");
 
         // remove leading digits
-        name = Regex.Replace(name,"^\\d+","");
+        name = Regex.Replace(name, "^\\d+", "");
 
         return name;
     }
@@ -52,10 +52,10 @@ public class CodeDomArgs
     /// suffix if name collides with an existing field
     /// </summary>
     public string GetUniqueFieldName(string? name)
-    {        
+    {
         name = MakeValidFieldName(name);
 
-        if(!FieldNamesUsed.Contains(name))
+        if (!FieldNamesUsed.Contains(name))
         {
             FieldNamesUsed.Add(name);
             return name;

@@ -93,6 +93,7 @@ class GetTextDialog
         win.Add(btnCancel);
         win.Add(btnClear);
     }
+
     public bool ShowDialog()
     {
         Application.Run(win);

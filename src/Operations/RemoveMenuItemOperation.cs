@@ -12,7 +12,7 @@ namespace TerminalGuiDesigner.Operations
         /// empty). Track indexes here so we can undo if necessary
         /// </summary>
         private Dictionary<int, MenuBarItem>? prunedEmptyTopLevelMenus;
-        
+
         /// <summary>
         /// True if as a result of removing a this menu item any
         /// top level menu items were also removed (for being empty)
@@ -34,19 +34,21 @@ namespace TerminalGuiDesigner.Operations
         /// </summary>
         private Dictionary<MenuBarItem, MenuItem>? _convertedMenuBars;
 
-        public RemoveMenuItemOperation(MenuItem toRemove): base(toRemove)
+        public RemoveMenuItemOperation(MenuItem toRemove) : base(toRemove)
         {
         }
 
         public override bool Do()
         {
-            if(Parent == null || OperateOn == null)
+            if (Parent == null || OperateOn == null)
+            {
                 return false;
+            }
 
             var children = Parent.Children.ToList<MenuItem>();
-                
-            _removedAtIdx = Math.Max(0,children.IndexOf(OperateOn));
-            
+
+            _removedAtIdx = Math.Max(0, children.IndexOf(OperateOn));
+
             children.Remove(OperateOn);
             Parent.Children = children.ToArray();
             Bar?.SetNeedsDisplay();
@@ -57,13 +59,13 @@ namespace TerminalGuiDesigner.Operations
             }
 
             // if a top level menu now has no children 
-            if(Bar != null)
+            if (Bar != null)
             {
                 var empty = Bar.Menus.Where(bi => bi.Children.Length == 0).ToArray();
-                if(empty.Any())
+                if (empty.Any())
                 {
                     // remember where they were
-                    prunedEmptyTopLevelMenus = empty.ToDictionary(e=>Array.IndexOf(Bar.Menus,e),v=>v);
+                    prunedEmptyTopLevelMenus = empty.ToDictionary(e => Array.IndexOf(Bar.Menus, e), v => v);
                     // and remove them
                     Bar.Menus = Bar.Menus.Except(prunedEmptyTopLevelMenus.Values).ToArray();
                 }
@@ -77,8 +79,8 @@ namespace TerminalGuiDesigner.Operations
                     _barRemovedFrom = Bar.SuperView;
                     _barRemovedFrom.Remove(Bar);
                 }
-            }        
-                
+            }
+
             return true;
         }
 
@@ -89,11 +91,13 @@ namespace TerminalGuiDesigner.Operations
 
         public override void Undo()
         {
-            if(Parent == null || OperateOn == null)
+            if (Parent == null || OperateOn == null)
+            {
                 return;
+            }
 
             var children = Parent.Children.ToList<MenuItem>();
-                
+
             children.Insert(_removedAtIdx, OperateOn);
             Parent.Children = children.ToArray();
             Bar?.SetNeedsDisplay();
@@ -101,18 +105,18 @@ namespace TerminalGuiDesigner.Operations
             // if any MenuBarItem were converted to vanilla MenuItem
             // because we were removed from a submenu then convert
             // it back
-            if(_convertedMenuBars != null)
+            if (_convertedMenuBars != null)
             {
-                foreach(var converted in _convertedMenuBars)
+                foreach (var converted in _convertedMenuBars)
                 {
                     var grandparent = MenuTracker.Instance.GetParent(converted.Value, out _);
-                    if(grandparent != null)
+                    if (grandparent != null)
                     {
-                        var popIdx = Array.IndexOf(grandparent.Children,converted.Value);
+                        var popIdx = Array.IndexOf(grandparent.Children, converted.Value);
                         var newParents = grandparent.Children.ToList<MenuItem>();
                         newParents.RemoveAt(popIdx);
-                        newParents.Insert(popIdx,converted.Key);
-                        
+                        newParents.Insert(popIdx, converted.Key);
+
                         grandparent.Children = newParents.ToArray();
                     }
                 }
@@ -120,24 +124,24 @@ namespace TerminalGuiDesigner.Operations
 
             // if we removed any top level empty menus as a 
             // side effect of the removal then put them back
-            if(prunedEmptyTopLevelMenus != null && Bar != null)
+            if (prunedEmptyTopLevelMenus != null && Bar != null)
             {
                 var l = Bar.Menus.ToList<MenuBarItem>();
 
                 // for each index they used to be at
-                foreach(var kvp in prunedEmptyTopLevelMenus.OrderBy(k=>k))
+                foreach (var kvp in prunedEmptyTopLevelMenus.OrderBy(k => k))
                 {
                     // put them back
-                    l.Insert(kvp.Key,kvp.Value);
+                    l.Insert(kvp.Key, kvp.Value);
                 }
 
                 Bar.Menus = l.ToArray();
             }
 
-            if(Bar != null && _barRemovedFrom != null)
+            if (Bar != null && _barRemovedFrom != null)
             {
                 _barRemovedFrom.Add(Bar);
-                
+
                 // lets clear this incase the user some 
                 // manages to undo this command multiple
                 // times

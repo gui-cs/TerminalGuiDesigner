@@ -51,7 +51,6 @@ public class DataTableToCode : ToCodeBase
 
     private void AddSetTableViewTableProperty(CodeDomArgs args, string tableFieldName)
     {
-
         var setLhs = new CodeFieldReferenceExpression();
         setLhs.FieldName = $"this.{Design.FieldName}.Table";
 

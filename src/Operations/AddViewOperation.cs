@@ -9,7 +9,7 @@ public class AddViewOperation : Operation
     private string? fieldName;
     private readonly Design to;
 
-    public AddViewOperation(SourceCodeFile sourceCode,View add, Design to,string? fieldName)
+    public AddViewOperation(SourceCodeFile sourceCode, View add, Design to, string? fieldName)
     {
         this.sourceCode = sourceCode;
         this.add = add;
@@ -28,31 +28,35 @@ public class AddViewOperation : Operation
 
     public override bool Do()
     {
-        if(add == null)
-        {                
+        if (add == null)
+        {
             var factory = new ViewFactory();
             var selectable = factory.GetSupportedViews().ToArray();
-            
+
             if (Modals.Get("Type of Control", "Add", true, selectable, t => t?.Name ?? "Null", false, out var selected) && selected != null)
             {
                 add = factory.Create(selected);
                 fieldName = to.GetUniqueFieldName(selected);
-            }   
+            }
         }
 
         // user cancelled picking a type
-        if(add == null || string.IsNullOrWhiteSpace(fieldName))
+        if (add == null || string.IsNullOrWhiteSpace(fieldName))
+        {
             return false;
+        }
 
         Design design;
-        add.Data = design = to.CreateSubControlDesign(sourceCode,fieldName, add);
+        add.Data = design = to.CreateSubControlDesign(sourceCode, fieldName, add);
 
         var v = GetViewToAddTo();
         v.Add(add);
 
-        if(Application.Driver != null){
+        if (Application.Driver != null)
+        {
             add.SetFocus();
         }
+
         SelectionManager.Instance.ForceSetSelection(design);
 
         v.SetNeedsDisplay();
@@ -61,7 +65,7 @@ public class AddViewOperation : Operation
 
     private View GetViewToAddTo()
     {
-        if(to.View is TabView tabView)
+        if (to.View is TabView tabView)
         {
             return tabView.SelectedTab.View;
         }
@@ -71,7 +75,7 @@ public class AddViewOperation : Operation
 
     public override void Redo()
     {
-        if(add == null)
+        if (add == null)
         {
             return;
         }
@@ -83,10 +87,11 @@ public class AddViewOperation : Operation
 
     public override void Undo()
     {
-        if(add == null)
+        if (add == null)
         {
             return;
         }
+
         var v = GetViewToAddTo();
         v.Remove(add);
         v.SetNeedsDisplay();

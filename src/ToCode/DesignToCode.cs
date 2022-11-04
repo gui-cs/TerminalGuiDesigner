@@ -15,7 +15,7 @@ internal class DesignToCode : ToCodeBase
     internal void ToCode(CodeDomArgs args, CodeExpression parentView)
     {
         AddFieldToClass(args, Design);
-        var constructorCall = GetConstructorCall($"this.{Design.FieldName}",Design.View.GetType());
+        var constructorCall = GetConstructorCall($"this.{Design.FieldName}", Design.View.GetType());
         args.InitMethod.Statements.Insert(0, constructorCall);
 
         foreach (var prop in Design.GetDesignableProperties())
@@ -30,22 +30,22 @@ internal class DesignToCode : ToCodeBase
             designTable.ToCode(args);
         }
 
-        if(Design.View is MenuBar mb)
+        if (Design.View is MenuBar mb)
         {
-            var designItems = new MenuBarItemsToCode(Design,mb);
+            var designItems = new MenuBarItemsToCode(Design, mb);
             designItems.ToCode(args);
         }
 
-        if(Design.View is TabView tabView)
+        if (Design.View is TabView tabView)
         {
-            foreach(var tab in tabView.Tabs)
+            foreach (var tab in tabView.Tabs)
             {
-                var designTab = new TabToCode(Design,tab);
+                var designTab = new TabToCode(Design, tab);
                 designTab.ToCode(args);
             }
 
             // add call to ApplyStyleChanges();
-            AddMethodCall(args,        
+            AddMethodCall(args,
                 new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), Design.FieldName),
                 nameof(TabView.ApplyStyleChanges));
         }

@@ -8,11 +8,10 @@ public class MenuTracker
 
     public MenuItem? CurrentlyOpenMenuItem { get; private set; }
 
-    HashSet<MenuBar> bars = new ();
+    HashSet<MenuBar> bars = new();
 
     private MenuTracker()
     {
-
     }
 
     public void Register(MenuBar mb)
@@ -26,7 +25,7 @@ public class MenuTracker
 
     private void PruneEmptyBars(MenuBarItem parent, MenuBarItem child)
     {
-        if(!child.Children.Any())
+        if (!child.Children.Any())
         {
             var newChildren = parent.Children.ToList<MenuItem>();
             newChildren.Remove(child);
@@ -57,20 +56,20 @@ public class MenuTracker
     /// </summary>
     public MenuBarItem? GetParent(MenuItem item, out MenuBar? hostBar)
     {
-        foreach(var bar in bars)
+        foreach (var bar in bars)
         {
-            foreach(var sub in bar.Menus)
+            foreach (var sub in bar.Menus)
             {
-                var candidate = GetParent(item,sub);
+                var candidate = GetParent(item, sub);
 
-                if(candidate != null)
+                if (candidate != null)
                 {
                     hostBar = bar;
                     return candidate;
                 }
             }
         }
-    
+
         hostBar = null;
         return null;
     }
@@ -80,16 +79,16 @@ public class MenuTracker
     /// identifies any entries that have empty submenus (MenuBarItem)
     /// .  Each of those are converted to 'no submenu' Type node MenuItem
     /// </summary>
-    public Dictionary<MenuBarItem,MenuItem> ConvertEmptyMenus()
+    public Dictionary<MenuBarItem, MenuItem> ConvertEmptyMenus()
     {
-        var toReturn = new Dictionary<MenuBarItem,MenuItem>();
+        var toReturn = new Dictionary<MenuBarItem, MenuItem>();
 
-        foreach(var b in bars)
-            foreach(var bi in b.Menus)
+        foreach (var b in bars)
+            foreach (var bi in b.Menus)
             {
-                foreach(var converted in ConvertEmptyMenus(b,bi))
+                foreach (var converted in ConvertEmptyMenus(b, bi))
                 {
-                    toReturn.Add(converted.Key,converted.Value);
+                    toReturn.Add(converted.Key, converted.Value);
                 }
             }
 
@@ -101,18 +100,18 @@ public class MenuTracker
     /// identifies any entries that have empty submenus (MenuBarItem)
     /// .  Each of those are converted to 'no submenu' Type node MenuItem
     /// </summary>
-    public Dictionary<MenuBarItem,MenuItem> ConvertEmptyMenus(MenuBar bar, MenuBarItem mbi)
+    public Dictionary<MenuBarItem, MenuItem> ConvertEmptyMenus(MenuBar bar, MenuBarItem mbi)
     {
-        var toReturn = new Dictionary<MenuBarItem,MenuItem>();
+        var toReturn = new Dictionary<MenuBarItem, MenuItem>();
 
-        foreach(var c in mbi.Children.OfType<MenuBarItem>())
+        foreach (var c in mbi.Children.OfType<MenuBarItem>())
         {
             ConvertEmptyMenus(bar, c);
-            if(ConvertMenuBarItemToRegularItemIfEmpty(c,out var added))
+            if (ConvertMenuBarItemToRegularItemIfEmpty(c, out var added))
             {
-                if(added != null)
+                if (added != null)
                 {
-                    toReturn.Add(c,added);
+                    toReturn.Add(c, added);
                 }
 
                 bar.CloseMenu();
@@ -122,34 +121,41 @@ public class MenuTracker
 
         return toReturn;
     }
-    public bool ConvertMenuBarItemToRegularItemIfEmpty(MenuBarItem bar,out MenuItem? added)
+
+    public bool ConvertMenuBarItemToRegularItemIfEmpty(MenuBarItem bar, out MenuItem? added)
     {
         added = null;
         // bar still has more children so don't convert
-        if(bar.Children.Any())
+        if (bar.Children.Any())
+        {
             return false;
+        }
 
-        var parent = MenuTracker.Instance.GetParent(bar,out _);
+        var parent = MenuTracker.Instance.GetParent(bar, out _);
 
-        if(parent == null)
+        if (parent == null)
+        {
             return false;
+        }
 
         var children = parent.Children.ToList<MenuItem>();
         var idx = children.IndexOf(bar);
 
-        if(idx < 0)
+        if (idx < 0)
+        {
             return false;
-        
+        }
+
         // bar has no children so convert to MenuItem
-        added = new MenuItem {Title = bar.Title};
+        added = new MenuItem { Title = bar.Title };
         added.Data = bar.Data;
         added.Shortcut = bar.Shortcut;
 
         children.RemoveAt(idx);
-        children.Insert(idx,added);
+        children.Insert(idx, added);
 
         parent.Children = children.ToArray();
-        
+
         return true;
     }
 
@@ -157,17 +163,17 @@ public class MenuTracker
     {
         // if we have a reference to the item then
         // it means that we are the parent (we contain it)
-        if(sub.Children.Contains(item))
+        if (sub.Children.Contains(item))
         {
             return sub;
         }
 
         // recursively check dropdowns
-        foreach(var dropdown in sub.Children.OfType<MenuBarItem>())
+        foreach (var dropdown in sub.Children.OfType<MenuBarItem>())
         {
-            var candidate = GetParent(item,dropdown);
+            var candidate = GetParent(item, dropdown);
 
-            if(candidate != null)
+            if (candidate != null)
             {
                 return candidate;
             }

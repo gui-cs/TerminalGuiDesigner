@@ -35,6 +35,7 @@ public class ViewFactory
         {
             return CreateRadioGroup();
         }
+
         if (typeof(MenuBar).IsAssignableFrom(t))
         {
             return CreateMenuBar();
@@ -44,7 +45,6 @@ public class ViewFactory
         {
             return new TextValidateField
             {
-
                 Provider = new TextRegexProvider(".*"),
                 Text = "Heya",
                 Width = 5,
@@ -70,6 +70,7 @@ public class ViewFactory
                 Height = 5,
             };
         }
+
         if (t == typeof(TextField))
         {
             return new TextField
@@ -78,6 +79,7 @@ public class ViewFactory
                 Height = 1,
             };
         }
+
         if (typeof(GraphView).IsAssignableFrom(t))
         {
             return new GraphView
@@ -107,6 +109,7 @@ public class ViewFactory
                 Height = 1
             };
         }
+
         if (t == typeof(TreeView))
         {
             return new TreeView()
@@ -115,6 +118,7 @@ public class ViewFactory
                 Height = 5
             };
         }
+
         if (t == typeof(ScrollView))
         {
             return new ScrollView()
@@ -124,6 +128,7 @@ public class ViewFactory
                 ContentSize = new Size(20, 10)
             };
         }
+
         var instance = (View?)Activator.CreateInstance(t) ?? throw new Exception($"CreateInstance returned null for Type '{t}'");
         instance.SetActualText("Heya");
 
@@ -143,9 +148,9 @@ public class ViewFactory
 
     private MenuBar CreateMenuBar()
     {
-         return new MenuBar (new MenuBarItem [] {
-				new MenuBarItem ("_File (F9)", new MenuItem [] {
-					new MenuItem (AddMenuOperation.DefaultMenuItemText, "", () => {})
+        return new MenuBar(new MenuBarItem[] {
+                new MenuBarItem ("_File (F9)", new MenuItem [] {
+                    new MenuItem (AddMenuOperation.DefaultMenuItemText, "", () => {})
                 })
          });
     }

@@ -12,21 +12,20 @@ public class OperationManager
 
     private OperationManager()
     {
-
     }
 
-    public bool Do(IOperation op){
-        
+    public bool Do(IOperation op)
+    {
         // If operation completes successfully
-        if(!op.IsImpossible && op.Do())
+        if (!op.IsImpossible && op.Do())
         {
-            if(op.SupportsUndo)
+            if (op.SupportsUndo)
             {
                 // We can no longer redo
                 redoStack.Clear();
                 undoStack.Push(op);
             }
-            
+
             return true;
         }
 

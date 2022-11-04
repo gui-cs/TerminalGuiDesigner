@@ -19,24 +19,24 @@ public class AddViewTests : Tests
         var viewToCode = new ViewToCode();
 
         var file = new FileInfo("TestAdd_Undo.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace",typeof(Dialog), out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog), out var sourceCode);
 
         var factory = new ViewFactory();
         var lbl = factory.Create(typeof(Label));
         var op = new AddViewOperation(sourceCode, lbl, designOut, "label1");
 
         OperationManager.Instance.Do(op);
-        Assert.AreEqual(1,designOut.View.GetActualSubviews().OfType<Label>().Count());
+        Assert.AreEqual(1, designOut.View.GetActualSubviews().OfType<Label>().Count());
 
         OperationManager.Instance.Undo();
-        Assert.AreEqual(0,designOut.View.GetActualSubviews().OfType<Label>().Count());
+        Assert.AreEqual(0, designOut.View.GetActualSubviews().OfType<Label>().Count());
 
-        viewToCode.GenerateDesignerCs(designOut, sourceCode,typeof(Dialog));
+        viewToCode.GenerateDesignerCs(designOut, sourceCode, typeof(Dialog));
 
         var codeToView = new CodeToView(sourceCode);
         var designBackIn = codeToView.CreateInstance();
 
-        Assert.AreEqual(0,designBackIn.View.GetActualSubviews().OfType<Label>().Count());
+        Assert.AreEqual(0, designBackIn.View.GetActualSubviews().OfType<Label>().Count());
     }
 
     [Test]
@@ -45,7 +45,7 @@ public class AddViewTests : Tests
         var viewToCode = new ViewToCode();
 
         var file = new FileInfo("TestAddUndoRedo_RoundTrip.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace",typeof(Dialog), out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog), out var sourceCode);
 
         var factory = new ViewFactory();
         var lbl = factory.Create(typeof(Label));
@@ -55,7 +55,7 @@ public class AddViewTests : Tests
         OperationManager.Instance.Undo();
         OperationManager.Instance.Redo();
 
-        viewToCode.GenerateDesignerCs(designOut, sourceCode,typeof(Dialog));
+        viewToCode.GenerateDesignerCs(designOut, sourceCode, typeof(Dialog));
 
         var lblOut = designOut.View.GetActualSubviews().OfType<Label>().Single();
 
@@ -64,7 +64,7 @@ public class AddViewTests : Tests
 
         var lblIn = designBackIn.View.GetActualSubviews().OfType<Label>().Single();
 
-        Assert.AreEqual(lblOut.Text,lblIn.Text);
+        Assert.AreEqual(lblOut.Text, lblIn.Text);
     }
 
     /// <summary>
@@ -88,10 +88,10 @@ public class AddViewTests : Tests
         Assert.AreEqual(lblOut.Text, lblIn.Text);
 
         lblIn.Width.GetDimType(out var outDimType, out var outDimValue, out var outDimOffset);
-        lblIn.X.GetPosType(new List<Design>(),out var outPosType, out var outPosValue, out var outPosOffset,out _, out _);
+        lblIn.X.GetPosType(new List<Design>(), out var outPosType, out var outPosValue, out var outPosOffset, out _, out _);
 
-        Assert.AreEqual(DimType.Percent,outDimType);
-        Assert.Less(Math.Abs(60f - outDimValue) , 0.0001);
+        Assert.AreEqual(DimType.Percent, outDimType);
+        Assert.Less(Math.Abs(60f - outDimValue), 0.0001);
 
         Assert.AreEqual(PosType.Percent, outPosType);
         Assert.Less(Math.Abs(60f - outPosValue), 0.0001);

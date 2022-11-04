@@ -46,20 +46,26 @@ public class DialogArgs
     /// </summary>
     public string? InitialSearchText { get; set; }
 
-    public bool MultiLine {get;set;}
+    public bool MultiLine { get; set; }
 
     public override string ToString()
     {
         StringBuilder sb = new StringBuilder();
 
         if (!string.IsNullOrEmpty(WindowTitle))
+        {
             sb.AppendLine($"Title:{WindowTitle}");
+        }
 
         if (!string.IsNullOrEmpty(TaskDescription))
+        {
             sb.AppendLine($"Task:{TaskDescription}");
+        }
 
         if (!string.IsNullOrEmpty(EntryLabel))
+        {
             sb.AppendLine($"Label:{EntryLabel}");
+        }
 
         if (sb.Length == 0)
         {

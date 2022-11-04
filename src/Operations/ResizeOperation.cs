@@ -24,11 +24,12 @@ public class ResizeOperation : Operation
         DestinationX = destX;
         DestinationY = destY;
     }
+
     public override bool Do()
     {
         SetWidth();
         SetHeight();
-        
+
         return true;
     }
 
@@ -61,12 +62,16 @@ public class ResizeOperation : Operation
         // e.g. resize bounds 0,0 to 1,1 means we want a width/height of 2
 
         if (BeingResized.View.Y.IsAbsolute(out var y))
+        {
             BeingResized.GetDesignableProperty("Height")?.SetValue(Math.Max(1, DestinationY + 1 - y));
+        }
     }
 
     private void SetWidth()
     {
         if (BeingResized.View.X.IsAbsolute(out var x))
+        {
             BeingResized.GetDesignableProperty("Width")?.SetValue(Math.Max(1, DestinationX + 1 - x));
+        }
     }
 }

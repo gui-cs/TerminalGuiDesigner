@@ -17,7 +17,7 @@ class TextValidateFieldTests : Tests
         var viewToCode = new ViewToCode();
 
         var file = new FileInfo("TestRoundTrip_PreserveProvider.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace",typeof(Window), out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window), out var sourceCode);
 
         var factory = new ViewFactory();
         var tvfOut = (TextValidateField)factory.Create(typeof(TextValidateField));
@@ -26,8 +26,8 @@ class TextValidateFieldTests : Tests
 
         OperationManager.Instance.Do(new AddViewOperation(sourceCode, tvfOut, designOut, "myfield"));
 
-        viewToCode.GenerateDesignerCs(designOut, sourceCode,typeof(Window));
-        
+        viewToCode.GenerateDesignerCs(designOut, sourceCode, typeof(Window));
+
         var codeToView = new CodeToView(sourceCode);
         var designBackIn = codeToView.CreateInstance();
 
@@ -36,4 +36,3 @@ class TextValidateFieldTests : Tests
         Assert.IsNotNull(tvfIn.Provider);
     }
 }
-    

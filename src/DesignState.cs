@@ -16,10 +16,10 @@ public class DesignState
     /// has a temporary color indicating it is selected - see <see cref="SelectionManager.SelectedScheme"/>)
     /// </summary>
     public ColorScheme? OriginalScheme { get; set; }
-	public Design Design{ get; }
+    public Design Design { get; }
 
-	public DesignState(Design design)
-	{
+    public DesignState(Design design)
+    {
         Design = design;
         OriginalScheme = Design.View.GetExplicitColorScheme();
         Design.View.DrawContent += DrawContent;
@@ -32,18 +32,18 @@ public class DesignState
     }
 
     private void DrawContent(Rect r)
-	{ 
-        if(Design.View.IsBorderlessContainerView() && Editor.ShowBorders)
+    {
+        if (Design.View.IsBorderlessContainerView() && Editor.ShowBorders)
         {
             DrawBorderlessViewFrame(r);
         }
     }
 
-	private void DrawBorderlessViewFrame(Rect r)
+    private void DrawBorderlessViewFrame(Rect r)
     {
         bool isSelected = SelectionManager.Instance.Selected.Contains(Design);
 
-        var color =  isSelected ?
+        var color = isSelected ?
             SelectionManager.Instance.SelectedScheme.Normal :
             Design.View.ColorScheme.Normal;
 
@@ -51,13 +51,13 @@ public class DesignState
 
         var v = Design.View;
 
-        for (int x = 0; x < r.Width ; x++)
+        for (int x = 0; x < r.Width; x++)
             for (int y = 0; y < r.Height; y++)
             {
                 if (y == 0 || y == r.Height - 1 || x == 0 || x == r.Width - 1)
                 {
                     var rune = (y == r.Height - 1 && x == r.Width - 1 && isSelected) ? '╬' : '.';
-                    v.AddRune(x,y,rune);
+                    v.AddRune(x, y, rune);
                 }
             }
     }

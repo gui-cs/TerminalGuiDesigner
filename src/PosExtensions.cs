@@ -11,15 +11,18 @@ public static class PosExtensions
     public static bool IsAbsolute(this Pos p)
     {
         if (p == null)
+        {
             return TreatNullPosAs0;
+        }
 
         return p.GetType().Name == "PosAbsolute";
     }
+
     public static bool IsAbsolute(this Pos p, out int n)
     {
-        if(p.IsAbsolute())
+        if (p.IsAbsolute())
         {
-            if(p == null)
+            if (p == null)
             {
                 n = 0;
                 return TreatNullPosAs0;
@@ -33,13 +36,15 @@ public static class PosExtensions
         }
 
         n = 0;
-        return false;        
+        return false;
     }
 
     public static bool IsPercent(this Pos p)
     {
         if (p == null)
+        {
             return false;
+        }
 
         return p.GetType().Name == "PosFactor";
     }
@@ -50,19 +55,22 @@ public static class PosExtensions
         {
             var nField = p.GetType().GetField("factor", BindingFlags.NonPublic | BindingFlags.Instance)
                 ?? throw new Exception("Expected private field 'factor' was missing from PosFactor");
-            percent = ((float?)nField.GetValue(p) 
+            percent = ((float?)nField.GetValue(p)
                 ?? throw new Exception("Expected private field 'factor' of PosFactor to be float"))
-                *100f;
+                * 100f;
             return true;
         }
 
         percent = 0;
         return false;
     }
+
     public static bool IsCenter(this Pos p)
     {
         if (p == null)
+        {
             return false;
+        }
 
         return p.GetType().Name == "PosCenter";
     }
@@ -70,7 +78,9 @@ public static class PosExtensions
     public static bool IsAnchorEnd(this Pos p)
     {
         if (p == null)
+        {
             return TreatNullPosAs0;
+        }
 
         return p.GetType().Name == "PosAnchorEnd";
     }
@@ -95,18 +105,19 @@ public static class PosExtensions
         margin = 0;
         return false;
     }
+
     public static bool IsRelative(this Pos p, out Pos posView)
     {
         // Terminal.Gui will often use Pos.Combine with RHS of 0 instead of just PosView alone
-        if(p != null && p.IsCombine(out var left, out var right, out _))
+        if (p != null && p.IsCombine(out var left, out var right, out _))
         {
-            if(right.IsAbsolute(out int n) && n == 0)
+            if (right.IsAbsolute(out int n) && n == 0)
             {
                 return left.IsRelative(out posView);
             }
-        }        
-        
-        if(p != null && p.GetType().Name == "PosView")
+        }
+
+        if (p != null && p.GetType().Name == "PosView")
         {
             posView = p;
             return true;
@@ -116,17 +127,17 @@ public static class PosExtensions
         return false;
     }
 
-    public static bool IsRelative(this Pos p,IList<Design> knownDesigns, out Design? relativeTo, out Side side)
+    public static bool IsRelative(this Pos p, IList<Design> knownDesigns, out Design? relativeTo, out Side side)
     {
         relativeTo = null;
         side = default;
 
         // Terminal.Gui will often use Pos.Combine with RHS of 0 instead of just PosView alone
-        if(p.IsCombine(out var left, out var right, out _))
+        if (p.IsCombine(out var left, out var right, out _))
         {
-            if(right.IsAbsolute(out var n) && n == 0)
+            if (right.IsAbsolute(out var n) && n == 0)
             {
-                return IsRelative(left,knownDesigns,out relativeTo,out side);
+                return IsRelative(left, knownDesigns, out relativeTo, out side);
             }
         }
 
@@ -135,15 +146,17 @@ public static class PosExtensions
             var fTarget = posView.GetType().GetField("Target") ?? throw new Exception("PosView was missing expected field 'Target'");
             View view = (View?)fTarget.GetValue(posView) ?? throw new Exception("PosView had a null 'Target' view");
 
-            relativeTo = knownDesigns.FirstOrDefault(d=>d.View == view);
+            relativeTo = knownDesigns.FirstOrDefault(d => d.View == view);
 
             // We are relative to a view that we don't have a Design for
             // sad times guess we can't describe it
-            if(relativeTo == null)
+            if (relativeTo == null)
+            {
                 return false;
+            }
 
             var fSide = posView.GetType().GetField("side", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("PosView was missing expected field 'side'"); ;
-            var iSide = (int?)fSide.GetValue(posView) 
+            var iSide = (int?)fSide.GetValue(posView)
                 ?? throw new Exception("Expected PosView property 'side' to be of Type int");
 
             side = (Side)iSide;
@@ -156,12 +169,14 @@ public static class PosExtensions
     public static bool IsCombine(this Pos p)
     {
         if (p == null)
+        {
             return false;
+        }
 
         return p.GetType().Name == "PosCombine";
     }
 
-    public static bool IsCombine(this Pos p, out Pos left,out Pos right, out bool add)
+    public static bool IsCombine(this Pos p, out Pos left, out Pos right, out bool add)
     {
         if (p.IsCombine())
         {
@@ -170,10 +185,10 @@ public static class PosExtensions
 
             var fRight = p.GetType().GetField("right", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field missing from PosCombine");
             right = fRight.GetValue(p) as Pos ?? throw new Exception("Expected field 'right' of PosCombine to be a Pos");
-           
+
             var fAdd = p.GetType().GetField("add", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field missing from PosCombine");
             add = fAdd.GetValue(p) as bool? ?? throw new Exception("Expected field 'add' of PosCombine to be a bool");
-            
+
             return true;
         }
 
@@ -194,29 +209,28 @@ public static class PosExtensions
     /// <param name="side">Only populated for <see cref="PosType.Relative"/>, this is the direction of offset from <paramref name="relativeTo"/></param>
     /// <param name="offset">The offset from the listed position.  Is provided if the input has addition/subtraction e.g. Pos.Center() + 2</param>
     /// <returns></returns>
-    public static bool GetPosType(this Pos p,IList<Design> knownDesigns, out PosType type,out float value,out Design? relativeTo, out Side side, out int offset)
+    public static bool GetPosType(this Pos p, IList<Design> knownDesigns, out PosType type, out float value, out Design? relativeTo, out Side side, out int offset)
     {
-
         type = default;
         relativeTo = null;
         side = default;
         value = 0;
         offset = 0;
 
-        if(p.IsAbsolute(out var n))
+        if (p.IsAbsolute(out var n))
         {
             type = PosType.Absolute;
             value = n;
             return true;
         }
 
-        if(p.IsRelative(knownDesigns,out relativeTo, out side))
+        if (p.IsRelative(knownDesigns, out relativeTo, out side))
         {
             type = PosType.Relative;
             return true;
         }
 
-        if(p.IsPercent(out var percent))
+        if (p.IsPercent(out var percent))
         {
             type = PosType.Percent;
             value = percent;
@@ -224,7 +238,7 @@ public static class PosExtensions
             return true;
         }
 
-        if(p.IsCenter())
+        if (p.IsCenter())
         {
             type = PosType.Center;
             value = 0;
@@ -238,14 +252,15 @@ public static class PosExtensions
             value = margin;
             return true;
         }
+
         if (p.IsCombine(out var left, out var right, out var add))
         {
             // we only deal in combines if the right is an absolute
             // e.g. Pos.Percent(25) + 5 is supported but Pos.Percent(5) + Pos.Percent(10) is not
-            if(right.IsAbsolute(out int rhsVal))
+            if (right.IsAbsolute(out int rhsVal))
             {
                 offset = add ? rhsVal : -rhsVal;
-                GetPosType(left,knownDesigns,out type,out value,out relativeTo, out side, out _);
+                GetPosType(left, knownDesigns, out type, out value, out relativeTo, out side, out _);
                 return true;
             }
         }
@@ -269,8 +284,10 @@ public static class PosExtensions
     /// <exception cref="NotImplementedException"></exception>
     public static object? ToPrimitive(this object? value)
     {
-        if(value == null)
+        if (value == null)
+        {
             return null;
+        }
 
         if (value is ustring u)
         {
@@ -315,7 +332,7 @@ public static class PosExtensions
 
     public static string? ToCode(this Pos d, List<Design> knownDesigns)
     {
-        if(!d.GetPosType(knownDesigns,out var type, out var val,out var relativeTo, out var side, out var offset))
+        if (!d.GetPosType(knownDesigns, out var type, out var val, out var relativeTo, out var side, out var offset))
         {
             // could not determine the type
             return null;
@@ -323,38 +340,64 @@ public static class PosExtensions
 
         switch (type)
         {
-            case PosType.Absolute : 
-                    return val.ToString();
+            case PosType.Absolute:
+                return val.ToString();
             case PosType.Relative:
 
                 if (relativeTo == null)
+                {
                     throw new Exception("Pos was Relative but 'relativeTo' was null.  What is the Pos relative to?!");
+                }
 
-                if(offset > 0)
+                if (offset > 0)
+                {
                     return $"Pos.{GetMethodNameFor(side)}({relativeTo.FieldName}) + {offset}";
-                if(offset < 0)
+                }
+
+                if (offset < 0)
+                {
                     return $"Pos.{GetMethodNameFor(side)}({relativeTo.FieldName}) - {Math.Abs(offset)}";
+                }
+
                 return $"Pos.{GetMethodNameFor(side)}({relativeTo.FieldName})";
 
             case PosType.Percent:
-                if(offset > 0)
+                if (offset > 0)
+                {
                     return $"Pos.Percent({val:G5}f) + {offset}";
-                if(offset < 0)
+                }
+
+                if (offset < 0)
+                {
                     return $"Pos.Percent({val:G5}f) - {Math.Abs(offset)}";
+                }
+
                 return $"Pos.Percent({val:G5}f)";
-         
+
             case PosType.Center:
-                if(offset > 0)
+                if (offset > 0)
+                {
                     return $"Pos.Center() + {offset}";
-                if(offset < 0)
+                }
+
+                if (offset < 0)
+                {
                     return $"Pos.Center() - {Math.Abs(offset)}";
+                }
+
                 return $"Pos.Center()";
 
             case PosType.AnchorEnd:
                 if (offset > 0)
+                {
                     return $"Pos.AnchorEnd({(int)val}) + {offset}";
+                }
+
                 if (offset < 0)
+                {
                     return $"Pos.AnchorEnd({(int)val}) - {Math.Abs(offset)}";
+                }
+
                 return $"Pos.AnchorEnd({(int)val})";
 
             default: throw new ArgumentOutOfRangeException(nameof(type));

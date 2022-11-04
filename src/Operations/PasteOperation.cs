@@ -7,12 +7,12 @@ public class PasteOperation : Operation
 {
     private Design _to;
     private IReadOnlyCollection<Design> _oldSelection;
-    private List<AddViewOperation> _addOperations = new ();
+    private List<AddViewOperation> _addOperations = new();
 
     /// <summary>
     /// Mapping from old (Key) Views to new cloned Views (Value)
     /// </summary>
-    private Dictionary<Design,Design> _clones = new ();
+    private Dictionary<Design, Design> _clones = new();
 
     public PasteOperation(Design addTo)
     {
@@ -26,12 +26,14 @@ public class PasteOperation : Operation
         var toCopy = CopyOperation.LastCopiedDesign;
 
         // if nothing to copy or calling Do() multiple times
-        if(toCopy == null || _addOperations.Any())
+        if (toCopy == null || _addOperations.Any())
+        {
             return false;
+        }
 
         bool didAny = false;
 
-        foreach(var d in toCopy)
+        foreach (var d in toCopy)
         {
             didAny = Paste(d) || didAny;
         }
@@ -44,30 +46,31 @@ public class PasteOperation : Operation
 
     private bool Paste(Design d)
     {
-        
         var v = new ViewFactory();
         var clone = v.Create(d.View.GetType());
 
-        var addOperation = new AddViewOperation(_to.SourceCode,clone,_to,null);
-        
+        var addOperation = new AddViewOperation(_to.SourceCode, clone, _to, null);
+
         // couldn't add for some reason
-        if(!addOperation.Do())
+        if (!addOperation.Do())
+        {
             return false;
+        }
 
         _addOperations.Add(addOperation);
-        
+
         var cloneDesign = clone.Data as Design ?? throw new Exception($"AddViewOperation did not result in View of type {clone.GetType()} having a Design");
 
         var cloneProps = cloneDesign.GetDesignableProperties();
         var copyProps = d.GetDesignableProperties();
 
-        foreach(var copyProp in copyProps)
+        foreach (var copyProp in copyProps)
         {
-            var cloneProp = cloneProps.Single(p=>p.PropertyInfo == copyProp.PropertyInfo);
-            cloneProp.SetValue(copyProp.GetValue());          
+            var cloneProp = cloneProps.Single(p => p.PropertyInfo == copyProp.PropertyInfo);
+            cloneProp.SetValue(copyProp.GetValue());
         }
 
-        _clones.Add(d,cloneDesign);
+        _clones.Add(d, cloneDesign);
 
         // If pasting a TableView make sure to 
         // replicate the Table too.  
@@ -78,40 +81,45 @@ public class PasteOperation : Operation
         {
             CloneTableView(copyTv, (TableView)cloneDesign.View);
         }
-                
+
         // TODO: adjust X/Y etc to make clone more visible
 
         // TODO: Clone child designs too e.g. copy and paste a TabView
         return true;
-
     }
 
     private void CloneTableView(TableView copy, TableView pasted)
     {
         pasted.Table = copy.Table.Clone();
 
-        foreach(DataRow row in copy.Table.Rows)
+        foreach (DataRow row in copy.Table.Rows)
         {
             pasted.Table.Rows.Add(row.ItemArray);
         }
+
         pasted.Update();
     }
 
     public override void Undo()
     {
-        foreach(var a in _addOperations)
+        foreach (var a in _addOperations)
+        {
             a.Undo();
+        }
 
         SelectionManager.Instance.SetSelection(_oldSelection.ToArray());
     }
 
     public override void Redo()
     {
-        foreach(var a in _addOperations)
+        foreach (var a in _addOperations)
+        {
             a.Redo();
+        }
 
         SelectionManager.Instance.SetSelection(_clones.Values.ToArray());
     }
+
     private void MigratePosRelatives()
     {
         var everyone = _to.GetAllDesigns().ToArray();
@@ -135,11 +143,11 @@ public class PasteOperation : Operation
         {
             return pos;
         }
-        
+
         // we are copy/pasting a relative Pos but copied selection
         // does not include the relativeTo so we cannot update
         // to the new instance
-        if(!_clones.ContainsKey(relativeTo))
+        if (!_clones.ContainsKey(relativeTo))
         {
             return pos;
         }

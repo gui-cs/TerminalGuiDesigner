@@ -62,7 +62,7 @@ public class SelectionManager
     /// <param name="designs"></param>
     public void ForceSetSelection(params Design[] designs)
     {
-        SetSelection(false,designs);
+        SetSelection(false, designs);
     }
 
     /// <summary>
@@ -74,10 +74,13 @@ public class SelectionManager
     {
         SetSelection(true, designs);
     }
+
     private void SetSelection(bool respectLock, Design[] designs)
     {
         if (LockSelection && respectLock)
+        {
             return;
+        }
 
         // reset anything that was previously selected
         Clear(respectLock);
@@ -95,7 +98,9 @@ public class SelectionManager
     public void Clear(bool respectLock = true)
     {
         if (LockSelection && respectLock)
+        {
             return;
+        }
 
         var selected = selection.ToArray();
 
@@ -116,9 +121,11 @@ public class SelectionManager
     /// <returns></returns>
     public Design? GetSingleSelectionOrNull()
     {
-        if(selection.Count == 1)
+        if (selection.Count == 1)
+        {
             return selection[0];
-        
+        }
+
         return null;
     }
 

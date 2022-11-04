@@ -5,7 +5,6 @@ namespace TerminalGuiDesigner.ToCode;
 
 public class TabToCode : ToCodeBase
 {
-
     public Design Design { get; }
     public Tab Tab { get; }
 
@@ -32,21 +31,21 @@ public class TabToCode : ToCodeBase
             new CodeSnippetExpression("new View()"));
 
         // make the Tab.View Dim.Fill
-        AddPropertyAssignment(args,$"{tabName}.View.Width",new CodeSnippetExpression("Dim.Fill()"));
-        AddPropertyAssignment(args,$"{tabName}.View.Height",new CodeSnippetExpression("Dim.Fill()"));
+        AddPropertyAssignment(args, $"{tabName}.View.Width", new CodeSnippetExpression("Dim.Fill()"));
+        AddPropertyAssignment(args, $"{tabName}.View.Height", new CodeSnippetExpression("Dim.Fill()"));
 
         // create code statements for everything in the Tab (recursive)
         var viewToCode = new ViewToCode();
-        viewToCode.AddSubViewsToDesignerCs(Tab.View,args,new CodeSnippetExpression($"{tabName}.View"));
-    
+        viewToCode.AddSubViewsToDesignerCs(Tab.View, args, new CodeSnippetExpression($"{tabName}.View"));
+
         // add the constructed tab to the TabView
-        AddAddTabCall(tabName,args);
+        AddAddTabCall(tabName, args);
     }
 
     private string GetTabFieldName(CodeDomArgs args)
     {
         var tabname = Tab.Text?.ToString();
-        if(string.IsNullOrWhiteSpace(tabname))
+        if (string.IsNullOrWhiteSpace(tabname))
         {
             throw new Exception("Could not generate Tab variable name because its Text was blank or null");
         }

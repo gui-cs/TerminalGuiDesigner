@@ -20,13 +20,13 @@ public class MouseManager
     {
     }
 
-    public Rect? SelectionBox => RectExtensions.FromBetweenPoints(SelectionStart,SelectionEnd);
+    public Rect? SelectionBox => RectExtensions.FromBetweenPoints(SelectionStart, SelectionEnd);
     public View? SelectionContainer { get; private set; }
 
     public void HandleMouse(MouseEvent m, Design viewBeingEdited)
     {
         // start dragging
-        if (m.Flags.HasFlag(MouseFlags.Button1Pressed) 
+        if (m.Flags.HasFlag(MouseFlags.Button1Pressed)
             && resizeOperation == null && dragOperation == null && SelectionStart == null)
         {
             var drag = viewBeingEdited.View.HitTest(m, out bool isBorder, out bool isLowerRight);
@@ -36,7 +36,7 @@ public class MouseManager
             {
                 // start dragging a selection box
                 SelectionContainer = drag;
-                SelectionStart = new Point(m.X,m.Y);
+                SelectionStart = new Point(m.X, m.Y);
             }
 
             // if nothing is going on yet
@@ -44,7 +44,7 @@ public class MouseManager
              && resizeOperation == null && dragOperation == null && SelectionStart == null)
             {
                 var dest = viewBeingEdited.View.ScreenToClient(m.X, m.Y);
-                
+
                 if (isLowerRight)
                 {
                     resizeOperation = new ResizeOperation(design, dest.X, dest.Y);
@@ -52,24 +52,26 @@ public class MouseManager
                 else
                 {
                     var multiSelected = SelectionManager.Instance.Selected.ToArray();
-                    
+
                     // if user is click and drag moving a single view
                     // in a multi selection.
-                    if(multiSelected.Contains(design))
+                    if (multiSelected.Contains(design))
                     {
                         // drag all the views at once                    
                         dragOperation = new DragOperation(design, dest.X, dest.Y,
-                            multiSelected.Except(new []{design}).ToArray());
+                            multiSelected.Except(new[] { design }).ToArray());
                     }
                     else
                     {
                         // else drag only the non selected one
-                        dragOperation = new DragOperation(design, dest.X, dest.Y,new Design[0]);
+                        dragOperation = new DragOperation(design, dest.X, dest.Y, new Design[0]);
                     }
 
                     // don't begin an impossible drag!
                     if (dragOperation.IsImpossible)
+                    {
                         dragOperation = null;
+                    }
                 }
             }
         }
@@ -78,7 +80,7 @@ public class MouseManager
         if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && SelectionStart != null)
         {
             // move selection box to new mouse position
-            SelectionEnd = new Point(m.X,m.Y);
+            SelectionEnd = new Point(m.X, m.Y);
             viewBeingEdited.View.SetNeedsDisplay();
             Application.DoEvents();
             return;
@@ -115,8 +117,8 @@ public class MouseManager
                 SelectionManager.Instance.SetSelection(
                     SelectionContainer.GetActualSubviews()
                     .Where(v => v.IntersectsScreenRect(SelectionBox.Value))
-                    .Select(v=>v.GetNearestDesign())
-                    .Where(d=>d !=null && !d.IsRoot)
+                    .Select(v => v.GetNearestDesign())
+                    .Where(d => d != null && !d.IsRoot)
                     .Cast<Design>()
                     .ToArray()
                     );
@@ -129,7 +131,7 @@ public class MouseManager
             }
 
             //end dragging
-            if ( dragOperation != null)
+            if (dragOperation != null)
             {
                 // see if we are dragging into a new container
                 var dropInto = viewBeingEdited.View.HitTest(m, out _, out _, dragOperation.BeingDragged.View);
@@ -149,7 +151,6 @@ public class MouseManager
                 OperationManager.Instance.Do(resizeOperation);
                 resizeOperation = null;
             }
-
         }
     }
 }

@@ -11,17 +11,23 @@ public static class ExceptionHelper
     {
         string message = e.Message;
         if (includeStackTrace)
+        {
             message += Environment.NewLine + e.StackTrace;
+        }
 
         if (e is ReflectionTypeLoadException)
             foreach (Exception? loaderException in ((ReflectionTypeLoadException)e).LoaderExceptions)
             {
                 if (loaderException != null)
+                {
                     message += Environment.NewLine + ExceptionToListOfInnerMessages(loaderException, includeStackTrace);
+                }
             }
 
         if (e.InnerException != null)
+        {
             message += Environment.NewLine + ExceptionToListOfInnerMessages(e.InnerException, includeStackTrace);
+        }
 
         return message;
     }
@@ -48,10 +54,14 @@ public static class ExceptionHelper
     public static T? GetExceptionIfExists<T>(this Exception e) where T : Exception
     {
         if (e is T)
+        {
             return (T)e;
+        }
 
         if (e.InnerException != null)
+        {
             return GetExceptionIfExists<T>(e.InnerException);
+        }
 
         return null;
     }

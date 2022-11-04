@@ -21,10 +21,12 @@ public static class ViewExtensions
         {
             return w.Subviews[0].Subviews;
         }
+
         if (v is ScrollView scroll)
         {
             return scroll.Subviews[0].Subviews;
         }
+
         if (v is TabView t)
         {
             return t.Tabs.Select(tab => tab.View).Where(v => v != null).ToList();
@@ -89,6 +91,7 @@ public static class ViewExtensions
             view.Text = text;
         }
     }
+
     public static string GetActualText(this View view)
     {
         if (view is TextField f)
@@ -119,7 +122,9 @@ public static class ViewExtensions
     public static Design? GetNearestDesign(this View view)
     {
         if (view is null)
+        {
             return null;
+        }
 
         if (view.Data is Design d)
         {
@@ -140,10 +145,14 @@ public static class ViewExtensions
         var d = GetNearestDesign(v);
 
         if (d == null)
+        {
             return null;
+        }
 
         if (d.IsContainerView)
+        {
             return d;
+        }
 
         return GetNearestContainerDesign(d.View.SuperView);
     }
@@ -180,28 +189,31 @@ public static class ViewExtensions
     public static bool IsContainerView(this View v)
     {
         var type = v.GetType();
-        
-        if(v.Data is Design d)
+
+        if (v.Data is Design d)
         {
             // The root class user is designing (e.g. MyView) could be inheriting from
             // TopLevel or View in which case we must allow dropping into it
             if (d.IsRoot)
             {
                 return true;
-            }   
+            }
         }
 
         // TODO: are there any others?
         return v is ScrollView || v is TabView || v is FrameView || v is Window || type == typeof(View) || type.Name.Equals("ContentView");
     }
+
     public static bool IsBorderlessContainerView(this View v)
     {
         var type = v.GetType();
 
         // TODO: are there any others?
         if (type == typeof(View) && v.IsBorderless())
+        {
             return true;
-        
+        }
+
         if (v is TabView tabView)
         {
             return !tabView.Style.ShowBorder || tabView.Style.TabsOnBottom;
@@ -213,10 +225,14 @@ public static class ViewExtensions
     public static bool IsBorderless(this View v)
     {
         if (v.Border == null)
+        {
             return true;
+        }
 
         if (v.Border.BorderStyle == BorderStyle.None)
+        {
             return true;
+        }
 
         return false;
     }
@@ -261,6 +277,7 @@ public static class ViewExtensions
         {
             v.Visible = true;
         }
+
         return hit;
     }
 
@@ -288,7 +305,6 @@ public static class ViewExtensions
         v.ViewToScreen(v.Bounds.Width, v.Bounds.Height, out var x1, out var y1);
 
         return Rect.FromLTRB(x0, y0, x1, y1).IntersectsWith(screenRect);
-
     }
 
     /// <summary>

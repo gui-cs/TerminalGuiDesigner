@@ -19,11 +19,13 @@ namespace TerminalGuiDesigner
             Name = name;
             Scheme = scheme;
         }
+
         public NamedColorScheme(string name)
         {
             Name = name;
             Scheme = new ColorScheme();
         }
+
         public override string ToString()
         {
             return Name;
@@ -32,7 +34,6 @@ namespace TerminalGuiDesigner
 
     public class ColorSchemeManager
     {
-        
         List<NamedColorScheme> _colorSchemes = new();
 
         /// <summary>
@@ -44,8 +45,8 @@ namespace TerminalGuiDesigner
 
         private ColorSchemeManager()
         {
-
         }
+
         public void Clear()
         {
             _colorSchemes = new();
@@ -54,10 +55,12 @@ namespace TerminalGuiDesigner
         public void Remove(NamedColorScheme toDelete)
         {
             // match on name as instances may change e.g. due to Undo/Redo etc
-            var match = _colorSchemes.FirstOrDefault(s=>s.Name.Equals(toDelete.Name));
-            
-            if(match != null)
+            var match = _colorSchemes.FirstOrDefault(s => s.Name.Equals(toDelete.Name));
+
+            if (match != null)
+            {
                 _colorSchemes.Remove(match);
+            }
         }
 
         /// <summary>
@@ -70,7 +73,9 @@ namespace TerminalGuiDesigner
         public void FindDeclaredColorSchemes(Design viewBeingEdited)
         {
             if (!viewBeingEdited.IsRoot)
+            {
                 throw new ArgumentException("Expected to only be passed the root view");
+            }
 
             var view = viewBeingEdited.View;
 
@@ -82,8 +87,10 @@ namespace TerminalGuiDesigner
             {
                 var val = f.GetValue(view) as ColorScheme;
 
-                if (val != null && !_colorSchemes.Any(s=>s.Name.Equals(f.Name)))
+                if (val != null && !_colorSchemes.Any(s => s.Name.Equals(f.Name)))
+                {
                     _colorSchemes.Add(new NamedColorScheme(f.Name, val));
+                }
             }
         }
 
@@ -92,7 +99,9 @@ namespace TerminalGuiDesigner
             var match = _colorSchemes.Where(kvp => s.AreEqual(kvp.Scheme)).ToArray();
 
             if (match.Length > 0)
+            {
                 return match[0].Name;
+            }
 
             // no match
             return null;
@@ -108,7 +117,7 @@ namespace TerminalGuiDesigner
         /// <param name="rootDesign"></param>
         public void AddOrUpdateScheme(string name, ColorScheme scheme, Design rootDesign)
         {
-            var oldScheme = _colorSchemes.FirstOrDefault(c=>c.Name.Equals(name));
+            var oldScheme = _colorSchemes.FirstOrDefault(c => c.Name.Equals(name));
 
             // if we don't currently know about this scheme
             if (oldScheme == null)
@@ -119,24 +128,24 @@ namespace TerminalGuiDesigner
             }
 
             // we know about this color already and people may be using it!
-            foreach(var old in rootDesign.GetAllDesigns())
+            foreach (var old in rootDesign.GetAllDesigns())
             {
                 // if view uses the scheme that is being replaced (value not reference equality)
-                if(old.UsesColorScheme(oldScheme.Scheme))
+                if (old.UsesColorScheme(oldScheme.Scheme))
                 {
                     // use the new one instead (for the presented View in the GUI and the known state)
                     old.View.ColorScheme = old.State.OriginalScheme = scheme;
                 }
             }
-            
+
             oldScheme.Scheme = scheme;
         }
 
         public void RenameScheme(string oldName, string newName)
         {
-            var match = _colorSchemes.FirstOrDefault(c=>c.Name.Equals(oldName));
+            var match = _colorSchemes.FirstOrDefault(c => c.Name.Equals(oldName));
 
-            if(match!=null)
+            if (match != null)
             {
                 match.Name = newName;
             }
@@ -151,7 +160,7 @@ namespace TerminalGuiDesigner
         /// <exception cref="KeyNotFoundException">Thrown if the <paramref name="name"/> is not present in <see cref="Schemes"/></exception>
         public NamedColorScheme GetNamedColorScheme(string name)
         {
-            return _colorSchemes.FirstOrDefault(c=>c.Name.Equals(name))
+            return _colorSchemes.FirstOrDefault(c => c.Name.Equals(name))
                 ?? throw new KeyNotFoundException($"Could not find a named ColorScheme called {name}");
         }
     }

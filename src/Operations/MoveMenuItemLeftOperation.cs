@@ -14,9 +14,9 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
     public MoveMenuItemLeftOperation(MenuItem toMove)
         : base(toMove)
     {
-        if(Parent != null)
+        if (Parent != null)
         {
-            _pulledFromIndex = Array.IndexOf(Parent.Children,OperateOn);
+            _pulledFromIndex = Array.IndexOf(Parent.Children, OperateOn);
         }
 
         // TODO prevent this if a root menu item
@@ -24,14 +24,17 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
 
     public override bool Do()
     {
-
-        if(Parent == null || OperateOn == null)
+        if (Parent == null || OperateOn == null)
+        {
             return false;
+        }
 
         var parentsParent = MenuTracker.Instance.GetParent(Parent, out var bar);
-        
-        if(parentsParent == null)
+
+        if (parentsParent == null)
+        {
             return false;
+        }
 
         // Figure out where the parent MenuBarItem was in the list because
         // after we remove ourselves from its sublist it might
@@ -44,10 +47,12 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
         {
             // We are the parent but parents children don't contain
             // us.  Thats bad. TODO: log this
-            if(parentsIdx == -1)
+            if (parentsIdx == -1)
+            {
                 return false;
+            }
 
-            int insertAt = Math.Max(0,parentsIdx + 1);
+            int insertAt = Math.Max(0, parentsIdx + 1);
 
             children.Insert(insertAt, OperateOn);
             parentsParent.Children = children.ToArray();
@@ -55,12 +60,11 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
             MenuTracker.Instance.ConvertEmptyMenus();
 
             Bar?.SetNeedsDisplay();
-            
+
             return true;
         }
 
         return false;
-        
     }
 
     public override void Redo()
@@ -70,14 +74,15 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
 
     public override void Undo()
     {
-        if(OperateOn == null)
+        if (OperateOn == null)
+        {
             return;
-            
+        }
+
         new MoveMenuItemRightOperation(OperateOn)
         {
             InsertionIndex = _pulledFromIndex
         }
         .Do();
     }
-
 }

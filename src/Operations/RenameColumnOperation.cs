@@ -20,7 +20,9 @@ internal class RenameColumnOperation : Operation
 
         // somehow user ran this command for a non table view
         if (Design.View is not TableView)
+        {
             throw new ArgumentException($"Design must be for a {nameof(TableView)} to support {nameof(AddColumnOperation)}");
+        }
 
         _tableView = (TableView)Design.View;
 
@@ -30,7 +32,9 @@ internal class RenameColumnOperation : Operation
 
         // user has no column selected
         if (_column == null)
+        {
             IsImpossible = true;
+        }
 
         _originalName = _column?.ColumnName;
     }
@@ -39,6 +43,7 @@ internal class RenameColumnOperation : Operation
     {
         return $"Rename Column '{_originalName}'";
     }
+
     public override bool Do()
     {
         if (_column == null)
@@ -53,6 +58,7 @@ internal class RenameColumnOperation : Operation
             _tableView.Update();
             return true;
         }
+
         return false;
     }
 

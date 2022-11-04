@@ -11,17 +11,19 @@ public class DeleteViewOperation : Operation
     public DeleteViewOperation(params View[] delete)
     {
         this.delete = delete;
-        this.from = delete.Select(d=>d.SuperView).ToArray();
+        this.from = delete.Select(d => d.SuperView).ToArray();
 
         _originalSelection = SelectionManager.Instance.Selected.ToArray();
 
-        foreach(var del in delete)
+        foreach (var del in delete)
         {
             if (del.Data is Design design)
             {
                 // don't delete the root view!
                 if (design.IsRoot)
+                {
                     IsImpossible = true;
+                }
 
                 // there are view(s) that depend on us (e.g. for positioning)
                 // deleting us would go very badly
@@ -33,16 +35,15 @@ public class DeleteViewOperation : Operation
                 }
             }
         }
-        
     }
 
     public override bool Do()
     {
         bool removedAny = false;
 
-        for(int i=0;i<delete.Length;i++)
+        for (int i = 0; i < delete.Length; i++)
         {
-            if(from[i] != null)
+            if (from[i] != null)
             {
                 from[i].Remove(delete[i]);
                 removedAny = true;
@@ -61,9 +62,9 @@ public class DeleteViewOperation : Operation
 
     public override void Undo()
     {
-        for(int i=0;i<delete.Length;i++)
+        for (int i = 0; i < delete.Length; i++)
         {
-            if(from[i] != null)
+            if (from[i] != null)
             {
                 from[i].Add(delete[i]);
             }

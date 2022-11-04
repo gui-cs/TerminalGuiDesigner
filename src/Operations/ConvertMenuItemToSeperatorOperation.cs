@@ -13,7 +13,9 @@ namespace TerminalGuiDesigner.Operations
         public override bool Do()
         {
             if (Parent == null || OperateOn == null)
+            {
                 return false;
+            }
 
             var children = Parent.Children.ToList<MenuItem?>();
 
@@ -34,7 +36,9 @@ namespace TerminalGuiDesigner.Operations
         public override void Undo()
         {
             if (Parent == null || OperateOn == null)
+            {
                 return;
+            }
 
             var children = Parent.Children.ToList<MenuItem>();
 

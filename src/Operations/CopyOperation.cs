@@ -2,7 +2,7 @@ namespace TerminalGuiDesigner.Operations;
 
 public class CopyOperation : Operation
 {
-    public static Design[]? LastCopiedDesign {get; private set;}
+    public static Design[]? LastCopiedDesign { get; private set; }
     private Design[] _toCopy;
 
     public CopyOperation(params Design[] toCopy)
@@ -21,14 +21,18 @@ public class CopyOperation : Operation
         SupportsUndo = false;
 
         // cannot copy a view if it is orphaned or root
-        if(_toCopy.Any(c=>c.View.SuperView == null || c.IsRoot))
+        if (_toCopy.Any(c => c.View.SuperView == null || c.IsRoot))
+        {
             IsImpossible = true;
+        }
     }
 
     public override string ToString()
     {
-        if(_toCopy.Length > 1)
+        if (_toCopy.Length > 1)
+        {
             return $"Copy {_toCopy.Length} Items";
+        }
 
         return _toCopy.Length > 0 ? $"Copy {_toCopy[0]}" : "Copy";
     }
@@ -38,10 +42,12 @@ public class CopyOperation : Operation
         LastCopiedDesign = _toCopy;
         return true;
     }
+
     public override void Undo()
     {
         throw new NotSupportedException();
     }
+
     public override void Redo()
     {
         throw new NotSupportedException();

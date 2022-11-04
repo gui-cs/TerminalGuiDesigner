@@ -16,7 +16,9 @@ internal class RemoveColumnOperation : Operation
 
         // somehow user ran this command for a non table view
         if (Design.View is not TableView)
+        {
             throw new ArgumentException($"Design must be for a {nameof(TableView)} to support {nameof(RemoveColumnOperation)}");
+        }
 
         _tableView = (TableView)Design.View;
 
@@ -26,17 +28,23 @@ internal class RemoveColumnOperation : Operation
 
         // user has no column selected
         if (_column == null)
+        {
             IsImpossible = true;
+        }
 
         // TODO: currently this crashes TableView in its ReDraw (calculate viewport) metho
         // don't let them remove the last column
         if (_tableView.Table.Columns.Count == 1)
+        {
             IsImpossible = true;
+        }
     }
+
     public override string ToString()
     {
         return $"Remove Column '{_column}'";
     }
+
     public override bool Do()
     {
         if (_column == null)

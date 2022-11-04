@@ -16,9 +16,11 @@ namespace TerminalGuiDesigner
         public static MenuBarItem? GetSelectedMenuItem(this MenuBar menuBar)
         {
             var selected = (int)GetNonNullPrivateFieldValue("selected", menuBar, typeof(MenuBar));
-            
+
             if (selected < 0 || selected >= menuBar.Menus.Length)
+            {
                 return null;
+            }
 
             return menuBar.Menus[selected];
         }
@@ -27,8 +29,8 @@ namespace TerminalGuiDesigner
         {
             var selectedField = type.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance)
                 ?? throw new Exception($"Expected private field {fieldName} was not present on {type.Name}");
-            return (selectedField.GetValue(item)
-                ?? throw new Exception($"Private field {fieldName} was unexpectedly null on {type.Name}"));
+            return selectedField.GetValue(item)
+                ?? throw new Exception($"Private field {fieldName} was unexpectedly null on {type.Name}");
         }
 
         /// <summary>
@@ -49,7 +51,9 @@ namespace TerminalGuiDesigner
             var current = (int)GetNonNullPrivateFieldValue("current", menu, menuClass);
 
             if (current < 0 || current >= barItems.Children.Length)
+            {
                 return null;
+            }
 
             return barItems.Children[current];
         }

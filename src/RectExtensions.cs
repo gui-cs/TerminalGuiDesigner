@@ -17,10 +17,10 @@ public static class RectExtensions
         }
 
         return Rect.FromLTRB(
-            Math.Min(p1.Value.X,p2.Value.X),
-            Math.Min(p1.Value.Y,p2.Value.Y),
-            Math.Max(p1.Value.X,p2.Value.X),
-            Math.Max(p1.Value.Y,p2.Value.Y)
+            Math.Min(p1.Value.X, p2.Value.X),
+            Math.Min(p1.Value.Y, p2.Value.Y),
+            Math.Max(p1.Value.X, p2.Value.X),
+            Math.Max(p1.Value.Y, p2.Value.Y)
             );
     }
 }

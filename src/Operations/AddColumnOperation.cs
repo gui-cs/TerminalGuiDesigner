@@ -17,7 +17,9 @@ internal class AddColumnOperation : Operation
 
         // somehow user ran this command for a non table view
         if (Design.View is not TableView)
+        {
             throw new ArgumentException($"Design must be for a {nameof(TableView)} to support {nameof(AddColumnOperation)}");
+        }
 
         _tableView = (TableView)Design.View;
     }
@@ -34,7 +36,7 @@ internal class AddColumnOperation : Operation
             _column = _tableView.Table.Columns.Add(newColumnName);
             _tableView.Update();
         }
-        
+
         return true;
     }
 
@@ -48,7 +50,6 @@ internal class AddColumnOperation : Operation
 
         _tableView.Table.Columns.Add(_column);
         _tableView.Update();
-
     }
 
     public override void Undo()

@@ -15,12 +15,12 @@ namespace tests
             Assert.IsFalse(e.HasUnsavedChanges(), "With nothing open there should not be any unsaved changes");
 
             OperationManager.Instance.Do(new DummyOperation());
-            
+
             Assert.IsTrue(e.HasUnsavedChanges(), "We have performed an operation and not yet saved");
 
             // fake a save
             var lastOp = OperationManager.Instance.GetLastAppliedOperation() ?? throw new Exception("Expected DummyOperation to be known as the last performed");
-            var f = typeof(Editor).GetField("_lastSavedOperation",System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic) ?? throw new Exception("Missing field");
+            var f = typeof(Editor).GetField("_lastSavedOperation", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic) ?? throw new Exception("Missing field");
             f.SetValue(e, lastOp.UniqueIdentifier);
 
             Assert.IsFalse(e.HasUnsavedChanges(), "Now that we have saved there should be no unsaved changes");
@@ -41,12 +41,10 @@ namespace tests
 
             public override void Redo()
             {
-                
             }
 
             public override void Undo()
             {
-                
             }
         }
     }

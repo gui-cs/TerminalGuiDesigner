@@ -12,7 +12,9 @@ namespace TerminalGuiDesigner
                 new[] { typeof(View), typeof(int), typeof(int), typeof(int).MakeByRefType(), typeof(int).MakeByRefType() });
 
             if (method == null)
+            {
                 throw new Exception("Static method FindDeepestView not found on Application class");
+            }
 
             int resx = 0;
             int resy = 0;

@@ -21,7 +21,9 @@ internal class RenameTabOperation : Operation
 
         // somehow user ran this command for a non tabview
         if (Design.View is not TabView)
+        {
             throw new ArgumentException($"Design must be for a {nameof(TabView)} to support {nameof(AddTabOperation)}");
+        }
 
         _tabView = (TabView)Design.View;
 
@@ -29,7 +31,9 @@ internal class RenameTabOperation : Operation
 
         // user has no Tab selected
         if (_tab == null)
+        {
             IsImpossible = true;
+        }
 
         _originalName = _tab?.Text;
     }
@@ -38,6 +42,7 @@ internal class RenameTabOperation : Operation
     {
         return $"Rename Tab '{_originalName}'";
     }
+
     public override bool Do()
     {
         if (_tab == null)
@@ -52,6 +57,7 @@ internal class RenameTabOperation : Operation
             _tabView.SetNeedsDisplay();
             return true;
         }
+
         return false;
     }
 
