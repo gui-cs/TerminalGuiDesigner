@@ -6,7 +6,7 @@ using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 
-namespace tests;
+namespace UnitTests;
 
 public class LabelTests : Tests
 {

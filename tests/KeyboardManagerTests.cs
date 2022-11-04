@@ -4,7 +4,7 @@ using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.UI;
 
-namespace tests;
+namespace UnitTests;
 
 public class KeyboardManagerTests : Tests
 {

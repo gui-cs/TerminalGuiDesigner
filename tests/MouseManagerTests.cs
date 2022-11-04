@@ -6,7 +6,7 @@ using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.UI;
 
-namespace tests;
+namespace UnitTests;
 
 public class MouseManagerTests : Tests
 {

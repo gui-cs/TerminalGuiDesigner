@@ -5,7 +5,7 @@ using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
 
-namespace tests;
+namespace UnitTests;
 
 public class TableViewTests : Tests
 {

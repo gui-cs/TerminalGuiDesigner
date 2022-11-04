@@ -4,7 +4,7 @@ using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
 
-namespace tests;
+namespace UnitTests;
 
 class ScrollViewTests : Tests
 {

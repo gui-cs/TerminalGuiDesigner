@@ -7,7 +7,7 @@ using TerminalGuiDesigner.FromCode;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 
-namespace tests;
+namespace UnitTests;
 
 class TabViewTests : Tests
 {

@@ -8,7 +8,7 @@ using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 using Attribute = Terminal.Gui.Attribute;
 
-namespace tests;
+namespace UnitTests;
 
 public class ColorSchemeTests : Tests
 {

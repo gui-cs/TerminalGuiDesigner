@@ -3,7 +3,7 @@ using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 
-namespace tests;
+namespace UnitTests;
 
 public class ViewExtensionsTests : Tests
 {

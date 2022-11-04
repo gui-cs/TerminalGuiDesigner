@@ -3,7 +3,7 @@ using NUnit.Framework;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.UI;
 
-namespace tests;
+namespace UnitTests;
 
 internal class EditorTests : Tests
 {

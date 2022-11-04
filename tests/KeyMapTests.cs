@@ -4,7 +4,7 @@ using NUnit.Framework;
 using TerminalGuiDesigner.UI;
 using YamlDotNet.Serialization;
 
-namespace tests;
+namespace UnitTests;
 
 public class KeyMapTests : Tests
 {
