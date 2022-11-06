@@ -23,7 +23,6 @@ public class CodeDomArgs
     /// </summary>
     public HashSet<Design> OutputAlready = new ();
 
-
     /// <summary>
     /// Record of all declared fields / local variable names. Prevents
     /// any duplicate field names being generated.
@@ -39,10 +38,10 @@ public class CodeDomArgs
     public static string MakeValidFieldName(string? name)
     {
         name = string.IsNullOrWhiteSpace(name) ? "empty" : name;
-        name = Regex.Replace(name,"\\W","");
+        name = Regex.Replace(name, "\\W", string.Empty);
 
         // remove leading digits
-        name = Regex.Replace(name,"^\\d+","");
+        name = Regex.Replace(name, "^\\d+", string.Empty);
 
         return name;
     }
@@ -53,25 +52,25 @@ public class CodeDomArgs
     /// suffix if name collides with an existing field
     /// </summary>
     public string GetUniqueFieldName(string? name)
-    {        
+    {
         name = MakeValidFieldName(name);
 
-        if(!FieldNamesUsed.Contains(name))
+        if (!this.FieldNamesUsed.Contains(name))
         {
-            FieldNamesUsed.Add(name);
+            this.FieldNamesUsed.Add(name);
             return name;
         }
 
         // name is already used, add a number
         int number = 2;
-        while (FieldNamesUsed.Contains(name + number))
+        while (this.FieldNamesUsed.Contains(name + number))
         {
             // menu2 is taken, try menu3 etc
             number++;
         }
 
         // found a unique one
-        FieldNamesUsed.Add(name + number);
+        this.FieldNamesUsed.Add(name + number);
         return name + number;
     }
 }

@@ -1,42 +1,41 @@
-﻿using Terminal.Gui;
-using TerminalGuiDesigner.Operations;
-using TerminalGuiDesigner.UI.Windows;
+﻿using System.Text;
+using Terminal.Gui;
 using TerminalGuiDesigner.FromCode;
+using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
+using TerminalGuiDesigner.UI.Windows;
 using YamlDotNet.Serialization;
-using System.Text;
 
 namespace TerminalGuiDesigner.UI;
 
 public class Editor : Toplevel
 {
     Design? _viewBeingEdited;
-    private SourceCodeFile? _currentDesignerFile;
     private bool enableDrag = true;
     private bool enableShowFocused = true;
     public static bool ShowBorders = true;
 
-    bool _editting = false;
+    bool editting = false;
 
-    readonly KeyMap _keyMap;
+    readonly KeyMap keyMap;
 
-    KeyboardManager _keyboardManager;
-    MouseManager _mouseManager;
-    ListView? _rootCommandsListView;
-    private bool _menuOpen;
+    KeyboardManager keyboardManager;
+    MouseManager mouseManager;
+    ListView? rootCommandsListView;
+    private bool menuOpen;
 
     /// <summary>
     /// Set this to have a short duration message appear in lower right
     /// (see <see cref="GetLowerRightTextIfAny"/>)
     /// </summary>
-    private string? _flashMessage = null;
+    private string? flashMessage = null;
 
     /// <summary>
     /// The <see cref="IOperation.UniqueIdentifier"/> of the last undertaken
     /// operation at the time of the last save or null if no save or last save
     /// was before applying any operations.
     /// </summary>
-    private Guid? _lastSavedOperation;
+    private Guid? lastSavedOperation;
 
     /// <summary>
     /// True to enable experimental features
@@ -45,37 +44,36 @@ public class Editor : Toplevel
 
     private string GetHelpWithEmptyFormLoaded()
     {
-        return @$"{_keyMap.AddView} to Add a View";
+        return @$"{this.keyMap.AddView} to Add a View";
     }
+
     private string GetHelp()
     {
-
         return @$"
-{_keyMap.ShowHelp} - Show Help
-{_keyMap.New} - New Window/Class
-{_keyMap.Open} - Open a .Designer.cs file
-{_keyMap.Save} - Save an opened .Designer.cs file
-{_keyMap.ShowContextMenu} - Show right click context menu;
-{_keyMap.AddView} - Add View
-{_keyMap.ShowColorSchemes} - Color Schemes
-{_keyMap.ToggleDragging} - Toggle mouse dragging on/off
-{_keyMap.ToggleShowFocused} - Toggle show focused view field name
-{_keyMap.ToggleShowBorders} - Toggle dotted borders for frameless views
-{_keyMap.EditProperties} - Edit View Properties
-{_keyMap.ViewSpecificOperations} - View Specific Operations
-{_keyMap.EditRootProperties} - Edit Root Properties
-{_keyMap.Delete} - Delete selected View
+{this.keyMap.ShowHelp} - Show Help
+{this.keyMap.New} - New Window/Class
+{this.keyMap.Open} - Open a .Designer.cs file
+{this.keyMap.Save} - Save an opened .Designer.cs file
+{this.keyMap.ShowContextMenu} - Show right click context menu;
+{this.keyMap.AddView} - Add View
+{this.keyMap.ShowColorSchemes} - Color Schemes
+{this.keyMap.ToggleDragging} - Toggle mouse dragging on/off
+{this.keyMap.ToggleShowFocused} - Toggle show focused view field name
+{this.keyMap.ToggleShowBorders} - Toggle dotted borders for frameless views
+{this.keyMap.EditProperties} - Edit View Properties
+{this.keyMap.ViewSpecificOperations} - View Specific Operations
+{this.keyMap.EditRootProperties} - Edit Root Properties
+{this.keyMap.Delete} - Delete selected View
 Shift+Cursor - Move focused View
 Ctrl+Cursor - Move focused View quickly
 Ctrl+Q - Quit
-{_keyMap.Undo} - Undo
-{_keyMap.Redo} - Redo";
-
+{this.keyMap.Undo} - Undo
+{this.keyMap.Redo} - Redo";
     }
 
     public Editor()
     {
-        CanFocus = true;
+        this.CanFocus = true;
 
         // If there are custom keybindings read those
         if (File.Exists("Keys.yaml"))
@@ -83,31 +81,31 @@ Ctrl+Q - Quit
             var d = new Deserializer();
             try
             {
-                _keyMap = d.Deserialize<KeyMap>(File.ReadAllText("Keys.yaml"));
+                this.keyMap = d.Deserialize<KeyMap>(File.ReadAllText("Keys.yaml"));
 
-                if (_keyMap.SelectionColor != null)
+                if (this.keyMap.SelectionColor != null)
                 {
-                    SelectionManager.Instance.SelectedScheme = _keyMap.SelectionColor.Scheme;
+                    SelectionManager.Instance.SelectedScheme = this.keyMap.SelectionColor.Scheme;
                 }
             }
             catch (Exception ex)
             {
                 // if there is bad yaml use the defaults
                 ExceptionViewer.ShowException("Failed to read keybindings", ex);
-                _keyMap = new KeyMap();
+                this.keyMap = new KeyMap();
             }
         }
         else
         {
             // otherwise use the defaults
-            _keyMap = new KeyMap();
+            this.keyMap = new KeyMap();
         }
 
-        _keyboardManager = new KeyboardManager(_keyMap);
-        _mouseManager = new MouseManager();
-        Closing += Editor_Closing;
+        this.keyboardManager = new KeyboardManager(this.keyMap);
+        this.mouseManager = new MouseManager();
+        this.Closing += this.Editor_Closing;
 
-        BuildRootMenu();
+        this.BuildRootMenu();
     }
 
     private void BuildRootMenu()
@@ -119,68 +117,72 @@ Ctrl+Q - Quit
 
         var rootCommands = new List<string>
         {
-            $"{_keyMap.ShowHelp} - Show Help",
-            $"{_keyMap.New} - New Window/Class",
-            $"{_keyMap.Open} - Open a .Designer.cs file"
+            $"{this.keyMap.ShowHelp} - Show Help",
+            $"{this.keyMap.New} - New Window/Class",
+            $"{this.keyMap.Open} - Open a .Designer.cs file",
         };
 
         // center all the commands
         int maxWidth = rootCommands.Max(v => v.Length);
         for (int i = 0; i < rootCommands.Count; i++)
         {
-            rootCommands[i] = PadBoth(rootCommands[i], maxWidth);
+            rootCommands[i] = this.PadBoth(rootCommands[i], maxWidth);
         }
 
-        _rootCommandsListView = new ListView(rootCommands)
+        this.rootCommandsListView = new ListView(rootCommands)
         {
             X = Pos.Center(),
             Y = Pos.Center(),
             Width = maxWidth,
             Height = 3,
-            ColorScheme = new DefaultColorSchemes().GetDefaultScheme("greyOnBlack").Scheme
+            ColorScheme = new DefaultColorSchemes().GetDefaultScheme("greyOnBlack").Scheme,
         };
 
-        _rootCommandsListView.KeyDown += (e) =>
+        this.rootCommandsListView.KeyDown += (e) =>
         {
             if (e.KeyEvent.Key == Key.Enter)
             {
                 e.Handled = true;
 
-                switch (_rootCommandsListView.SelectedItem)
+                switch (this.rootCommandsListView.SelectedItem)
                 {
                     case 0:
-                        ShowHelp();
+                        this.ShowHelp();
                         break;
                     case 1:
-                        New();
+                        this.New();
                         break;
                     case 2:
-                        Open();
+                        this.Open();
                         break;
                 }
             }
         };
 
-        Add(_rootCommandsListView);
+        this.Add(this.rootCommandsListView);
     }
+
     public string PadBoth(string source, int length)
     {
         int spaces = length - source.Length;
         int padLeft = spaces / 2 + source.Length;
         return source.PadLeft(padLeft).PadRight(length);
     }
+
     private void Editor_Closing(ToplevelClosingEventArgs obj)
     {
-        if (_viewBeingEdited == null)
-            return;
-
-        if (HasUnsavedChanges())
+        if (this._viewBeingEdited == null)
         {
-            int answer = MessageBox.Query("Unsaved Changes", $"You have unsaved changes to {_viewBeingEdited.SourceCode.DesignerFile.Name}", "Save", "Don't Save", "Cancel");
+            return;
+        }
+
+        if (this.HasUnsavedChanges())
+        {
+            int answer = MessageBox.Query("Unsaved Changes", $"You have unsaved changes to {this._viewBeingEdited.SourceCode.DesignerFile.Name}", "Save", "Don't Save", "Cancel");
 
             if (answer == 0)
             {
-                Save();
+                this.Save();
             }
             else
             if (answer == 1)
@@ -204,7 +206,7 @@ Ctrl+Q - Quit
 
                 if (toLoadOrCreate.Exists)
                 {
-                    Open(toLoadOrCreate);
+                    this.Open(toLoadOrCreate);
                 }
                 else
                 {
@@ -212,10 +214,10 @@ Ctrl+Q - Quit
 
                     if (!string.IsNullOrWhiteSpace(options.ViewType))
                     {
-                        toCreate = GetSupportedRootViews().FirstOrDefault(v => v.Name.Equals(options.ViewType)) ?? toCreate;
+                        toCreate = this.GetSupportedRootViews().FirstOrDefault(v => v.Name.Equals(options.ViewType)) ?? toCreate;
                     }
 
-                    New(toLoadOrCreate, toCreate, options.Namespace);
+                    this.New(toLoadOrCreate, toCreate, options.Namespace);
                 }
             }
             catch (Exception ex)
@@ -228,12 +230,14 @@ Ctrl+Q - Quit
 
         Application.RootKeyEvent += (k) =>
         {
-            if (_editting)
+            if (this.editting)
+            {
                 return false;
+            }
 
             try
             {
-                return HandleKey(k);
+                return this.HandleKey(k);
             }
             catch (System.Exception ex)
             {
@@ -242,34 +246,35 @@ Ctrl+Q - Quit
             }
         };
 
-
         Application.RootMouseEvent += (m) =>
         {
             // if another window is showing don't respond to mouse
-            if (!IsCurrentTop)
+            if (!this.IsCurrentTop)
+            {
                 return;
-            
-            if (_editting || !enableDrag || _viewBeingEdited == null)
+            }
+
+            if (this.editting || !this.enableDrag || this._viewBeingEdited == null)
+            {
                 return;
+            }
 
             try
             {
-                _mouseManager.HandleMouse(m, _viewBeingEdited);
+                this.mouseManager.HandleMouse(m, this._viewBeingEdited);
 
-
-                //right click
-                if (m.Flags.HasFlag(_keyMap.RightClick))
+                // right click
+                if (m.Flags.HasFlag(this.keyMap.RightClick))
                 {
-                    var hit = _viewBeingEdited.View.HitTest(m, out _, out _);
+                    var hit = this._viewBeingEdited.View.HitTest(m, out _, out _);
 
                     if (hit != null)
                     {
-                        var d = hit.GetNearestDesign() ?? _viewBeingEdited;
+                        var d = hit.GetNearestDesign() ?? this._viewBeingEdited;
                         if (d != null)
                         {
-                            CreateAndShowContextMenu(m, d);
+                            this.CreateAndShowContextMenu(m, d);
                         }
-                            
                     }
                 }
             }
@@ -279,14 +284,16 @@ Ctrl+Q - Quit
             }
         };
 
-        Application.Run(this, ErrorHandler);
+        Application.Run(this, this.ErrorHandler);
         Application.Shutdown();
     }
 
     private void CreateAndShowContextMenu(MouseEvent? m, Design? rightClicked)
     {
-        if (_viewBeingEdited == null)
+        if (this._viewBeingEdited == null)
+        {
             return;
+        }
 
         var selected = SelectionManager.Instance.Selected.ToArray();
 
@@ -305,27 +312,33 @@ Ctrl+Q - Quit
         var setProps = operations.OfType<SetPropertyOperation>();
         var others = operations.Except(setProps);
 
-        var setPropsItems = setProps.Select(ToMenuItem);
-        var othersItems = others.Select(ToMenuItem);
+        var setPropsItems = setProps.Select(this.ToMenuItem);
+        var othersItems = others.Select(this.ToMenuItem);
 
         var all = new List<MenuItem>();
 
         // only add the set properties category if there are some
         if (setPropsItems.Any())
+        {
             all.Add(new MenuBarItem(name, setPropsItems.ToArray())
             {
                 Action = () =>
                 {
                     if (selected.Length == 1 || rightClicked != null)
-                        ShowEditProperties(rightClicked ?? selected[0]);
-                }
+                    {
+                        this.ShowEditProperties(rightClicked ?? selected[0]);
+                    }
+                },
             });
+        }
 
         all.AddRange(othersItems.ToArray());
 
         // theres nothing we can do
         if (all.Count == 0)
+        {
             return;
+        }
 
         var menu = new ContextMenu();
         menu.MenuItems = new MenuBarItem(all.ToArray());
@@ -336,24 +349,24 @@ Ctrl+Q - Quit
         }
         else
         {
-            var d = SelectionManager.Instance.Selected.FirstOrDefault() ?? _viewBeingEdited;
+            var d = SelectionManager.Instance.Selected.FirstOrDefault() ?? this._viewBeingEdited;
             d.View.ViewToScreen(0, 0, out var x, out var y);
             menu.Position = new Point(x, y);
         }
 
-        _menuOpen = true;
+        this.menuOpen = true;
         SelectionManager.Instance.LockSelection = true;
         menu.Show();
         menu.MenuBar.MenuAllClosed += () =>
         {
-            _menuOpen = false;
+            this.menuOpen = false;
             SelectionManager.Instance.LockSelection = false;
         };
     }
 
     private MenuItem ToMenuItem(IOperation operation)
     {
-        return new MenuItem(operation.ToString(), "", () => Try(() => OperationManager.Instance.Do(operation)));
+        return new MenuItem(operation.ToString(), string.Empty, () => this.Try(() => OperationManager.Instance.Do(operation)));
     }
 
     private void Try(Action action)
@@ -377,40 +390,43 @@ Ctrl+Q - Quit
     {
         base.Redraw(bounds);
 
-
         // if we are editing a view
-        if (_viewBeingEdited != null)
+        if (this._viewBeingEdited != null)
         {
-            if (enableShowFocused)
+            if (this.enableShowFocused)
             {
-                Application.Driver.SetAttribute(_viewBeingEdited.View.ColorScheme.Normal);
+                Application.Driver.SetAttribute(this._viewBeingEdited.View.ColorScheme.Normal);
 
-                string? toDisplay = GetLowerRightTextIfAny();
+                string? toDisplay = this.GetLowerRightTextIfAny();
 
                 // and have a designable view focused
                 if (toDisplay != null)
                 {
                     // write its name in the lower right
-                    int y = Bounds.Height - 1;
+                    int y = this.Bounds.Height - 1;
                     int right = bounds.Width - 1;
                     var len = toDisplay.Length;
 
                     for (int i = 0; i < len; i++)
                     {
-                        AddRune(right - len + i, y, toDisplay[i]);
+                        this.AddRune(right - len + i, y, toDisplay[i]);
                     }
                 }
             }
 
-            if (_mouseManager.SelectionBox != null)
+            if (this.mouseManager.SelectionBox != null)
             {
-                var box = _mouseManager.SelectionBox.Value;
+                var box = this.mouseManager.SelectionBox.Value;
                 for (int x = 0; x < box.Width; x++)
+                {
                     for (int y = 0; y < box.Height; y++)
                     {
                         if (y == 0 || y == box.Height - 1 || x == 0 || x == box.Width - 1)
-                            AddRune(box.X + x, box.Y + y, '.');
+                        {
+                            this.AddRune(box.X + x, box.Y + y, '.');
+                        }
                     }
+                }
             }
 
             return;
@@ -419,11 +435,10 @@ Ctrl+Q - Quit
 
     private string? GetLowerRightTextIfAny()
     {
-
-        if (_flashMessage != null)
+        if (this.flashMessage != null)
         {
-            var m = _flashMessage;
-            _flashMessage = null;
+            var m = this.flashMessage;
+            this.flashMessage = null;
             return m;
         }
 
@@ -438,161 +453,199 @@ Ctrl+Q - Quit
 
         if (selected.Any())
         {
-            return $"Selected: {name} ({_keyMap.EditProperties} to Edit, {_keyMap.ShowHelp} for Help)";
+            return $"Selected: {name} ({this.keyMap.EditProperties} to Edit, {this.keyMap.ShowHelp} for Help)";
         }
 
-        return GetHelpWithEmptyFormLoaded();
+        return this.GetHelpWithEmptyFormLoaded();
     }
 
     public bool HandleKey(KeyEvent keyEvent)
     {
         // if another window is showing don't respond to hotkeys
-        if (!IsCurrentTop)
+        if (!this.IsCurrentTop)
+        {
             return false;
+        }
 
-        if (_editting)
+        if (this.editting)
+        {
             return false;
-
-
-
+        }
 
         // Give the keyboard manager first shot at consuming
         // this key e.g. for typing into menus / reordering menus
         // etc
-        if (_keyboardManager.HandleKey(
+        if (this.keyboardManager.HandleKey(
             SelectionManager.Instance.GetSingleSelectionOrNull()?.View ?? this, keyEvent))
+        {
             return true;
+        }
 
         try
         {
-            _editting = true;
+            this.editting = true;
             SelectionManager.Instance.LockSelection = true;
 
-            if (keyEvent.Key == _keyMap.ShowContextMenu && !_menuOpen)
+            if (keyEvent.Key == this.keyMap.ShowContextMenu && !this.menuOpen)
             {
-                CreateAndShowContextMenu(null, null);
+                this.CreateAndShowContextMenu(null, null);
                 return true;
             }
 
-            if (keyEvent.Key == _keyMap.EditProperties)
+            if (keyEvent.Key == this.keyMap.EditProperties)
             {
-                ShowEditProperties();
+                this.ShowEditProperties();
                 return true;
             }
 
-            if (keyEvent.Key == _keyMap.ShowColorSchemes)
+            if (keyEvent.Key == this.keyMap.ShowColorSchemes)
             {
-                ShowColorSchemes();
+                this.ShowColorSchemes();
                 return true;
             }
 
-            if (keyEvent.Key == _keyMap.Copy)
+            if (keyEvent.Key == this.keyMap.Copy)
             {
-                Copy();
+                this.Copy();
                 return true;
             }
 
-            if (keyEvent.Key == _keyMap.Paste)
+            if (keyEvent.Key == this.keyMap.Paste)
             {
-                Paste();
+                this.Paste();
                 return true;
             }
 
-            if (keyEvent.Key == _keyMap.ViewSpecificOperations)
+            if (keyEvent.Key == this.keyMap.ViewSpecificOperations)
             {
-                ShowViewSpecificOperations();
+                this.ShowViewSpecificOperations();
                 return true;
             }
 
-            if (keyEvent.Key == _keyMap.EditRootProperties)
+            if (keyEvent.Key == this.keyMap.EditRootProperties)
             {
-                if (_viewBeingEdited == null)
+                if (this._viewBeingEdited == null)
+                {
                     return false;
-                ShowEditProperties(_viewBeingEdited);
+                }
+
+                this.ShowEditProperties(this._viewBeingEdited);
                 return true;
             }
-            if (keyEvent.Key == _keyMap.Open)
+
+            if (keyEvent.Key == this.keyMap.Open)
             {
-                Open();
+                this.Open();
                 return true;
             }
-            if (keyEvent.Key == _keyMap.Save)
+
+            if (keyEvent.Key == this.keyMap.Save)
             {
-                Save();
+                this.Save();
                 return true;
             }
-            if (keyEvent.Key == _keyMap.New)
+
+            if (keyEvent.Key == this.keyMap.New)
             {
-                New();
+                this.New();
                 return true;
             }
-            if (keyEvent.Key == _keyMap.ShowHelp)
+
+            if (keyEvent.Key == this.keyMap.ShowHelp)
             {
-                ShowHelp();
+                this.ShowHelp();
                 return true;
             }
-            if (keyEvent.Key == _keyMap.AddView)
+
+            if (keyEvent.Key == this.keyMap.AddView)
             {
-                ShowAddViewWindow();
+                this.ShowAddViewWindow();
                 return true;
             }
-            if (keyEvent.Key == _keyMap.ToggleDragging)
+
+            if (keyEvent.Key == this.keyMap.ToggleDragging)
             {
-                enableDrag = !enableDrag;
+                this.enableDrag = !this.enableDrag;
                 return true;
             }
-            if (keyEvent.Key == _keyMap.Undo)
+
+            if (keyEvent.Key == this.keyMap.Undo)
             {
                 OperationManager.Instance.Undo();
                 return true;
             }
-            if (keyEvent.Key == _keyMap.Redo)
+
+            if (keyEvent.Key == this.keyMap.Redo)
             {
                 OperationManager.Instance.Redo();
                 return true;
             }
-            if (keyEvent.Key == _keyMap.Delete)
+
+            if (keyEvent.Key == this.keyMap.Delete)
             {
-                Delete();
+                this.Delete();
                 return true;
             }
-            if (keyEvent.Key == _keyMap.ToggleShowFocused)
+
+            if (keyEvent.Key == this.keyMap.ToggleShowFocused)
             {
-                enableShowFocused = !enableShowFocused;
-                SetNeedsDisplay();
+                this.enableShowFocused = !this.enableShowFocused;
+                this.SetNeedsDisplay();
                 return true;
             }
-            if (keyEvent.Key == _keyMap.ToggleShowBorders)
+
+            if (keyEvent.Key == this.keyMap.ToggleShowBorders)
             {
                 ShowBorders = !ShowBorders;
-                SetNeedsDisplay();
+                this.SetNeedsDisplay();
                 return true;
             }
 
-            if (keyEvent.Key == _keyMap.SelectAll)
+            if (keyEvent.Key == this.keyMap.SelectAll)
             {
-                SelectAll();
+                this.SelectAll();
                 return true;
             }
 
-            if (keyEvent.Key == _keyMap.MoveUp)
+            if (keyEvent.Key == this.keyMap.MoveUp)
             {
-                MoveControl(0, -1);
+                this.MoveControl(0, -1);
                 return true;
             }
-            if (keyEvent.Key == _keyMap.MoveDown)
+
+            if (keyEvent.Key == this.keyMap.MoveDown)
             {
-                MoveControl(0, 1);
+                this.MoveControl(0, 1);
                 return true;
             }
-            if (keyEvent.Key == _keyMap.MoveLeft)
+
+            if (keyEvent.Key == this.keyMap.MoveLeft)
             {
-                MoveControl(-1, 0);
+                this.MoveControl(-1, 0);
                 return true;
             }
-            if (keyEvent.Key == _keyMap.MoveRight)
+
+            if (keyEvent.Key == this.keyMap.MoveRight)
             {
-                MoveControl(1, 0);
+                this.MoveControl(0, -1);
+                return true;
+            }
+
+            if (keyEvent.Key == this.keyMap.MoveDown)
+            {
+                this.MoveControl(0, 1);
+                return true;
+            }
+
+            if (keyEvent.Key == this.keyMap.MoveLeft)
+            {
+                this.MoveControl(-1, 0);
+                return true;
+            }
+
+            if (keyEvent.Key == this.keyMap.MoveRight)
+            {
+                this.MoveControl(1, 0);
                 return true;
             }
 
@@ -600,16 +653,16 @@ Ctrl+Q - Quit
             switch (keyEvent.Key)
             {
                 case Key.CursorUp | Key.CtrlMask:
-                    MoveControl(0, -3);
+                    this.MoveControl(0, -3);
                     return true;
                 case Key.CursorDown | Key.CtrlMask:
-                    MoveControl(0, 3);
+                    this.MoveControl(0, 3);
                     return true;
                 case Key.CursorLeft | Key.CtrlMask:
-                    MoveControl(-5, 0);
+                    this.MoveControl(-5, 0);
                     return true;
                 case Key.CursorRight | Key.CtrlMask:
-                    MoveControl(5, 0);
+                    this.MoveControl(5, 0);
                     return true;
             }
         }
@@ -620,7 +673,7 @@ Ctrl+Q - Quit
         finally
         {
             SelectionManager.Instance.LockSelection = false;
-            _editting = false;
+            this.editting = false;
         }
 
         return false;
@@ -628,10 +681,12 @@ Ctrl+Q - Quit
 
     private void SelectAll()
     {
-        if (_viewBeingEdited == null)
+        if (this._viewBeingEdited == null)
+        {
             return;
+        }
 
-        var everyone = _viewBeingEdited.GetAllDesigns()
+        var everyone = this._viewBeingEdited.GetAllDesigns()
             .Where(d => !d.IsRoot)
             .ToArray();
 
@@ -640,14 +695,16 @@ Ctrl+Q - Quit
 
     private void Paste()
     {
-        var d = SelectionManager.Instance.GetMostSelectedContainerOrNull() ?? _viewBeingEdited;
+        var d = SelectionManager.Instance.GetMostSelectedContainerOrNull() ?? this._viewBeingEdited;
 
         if (d != null)
         {
             var paste = new PasteOperation(d);
 
             if (paste.IsImpossible)
+            {
                 return;
+            }
 
             OperationManager.Instance.Do(paste);
         }
@@ -676,31 +733,34 @@ Ctrl+Q - Quit
 
     private void ShowHelp()
     {
-        MessageBox.Query("Help", GetHelp(), "Ok");
+        MessageBox.Query("Help", this.GetHelp(), "Ok");
     }
 
     private void MoveControl(int deltaX, int deltaY)
     {
-        DoForSelectedViews((d) => new MoveViewOperation(d, deltaX, deltaY));
+        this.DoForSelectedViews((d) => new MoveViewOperation(d, deltaX, deltaY));
     }
 
     private void Delete()
     {
-        if (_viewBeingEdited == null)
+        if (this._viewBeingEdited == null)
+        {
             return;
+        }
 
         if (SelectionManager.Instance.Selected.Any())
         {
             var cmd = new DeleteViewOperation(SelectionManager.Instance.Selected.Select(d => d.View).ToArray());
             OperationManager.Instance.Do(cmd);
         }
-
     }
 
     private void DoForSelectedViews(Func<Design, Operation> operationFuc, bool allowOnRoot = false)
     {
-        if (_viewBeingEdited == null)
+        if (this._viewBeingEdited == null)
+        {
             return;
+        }
 
         var selected = SelectionManager.Instance.Selected.ToArray();
 
@@ -720,11 +780,12 @@ Ctrl+Q - Quit
             if (viewDesign != null)
             {
                 if (viewDesign.IsRoot && !allowOnRoot)
+                {
                     return;
+                }
 
                 OperationManager.Instance.Do(
-                    operationFuc(viewDesign)
-                );
+                    operationFuc(viewDesign));
             }
         }
     }
@@ -734,7 +795,7 @@ Ctrl+Q - Quit
         var ofd = new OpenDialog("Open", $"Select {SourceCodeFile.ExpectedExtension} file",
             new List<string>(new[] { SourceCodeFile.ExpectedExtension }));
 
-        Application.Run(ofd, ErrorHandler);
+        Application.Run(ofd, this.ErrorHandler);
 
         if (!ofd.Canceled)
         {
@@ -743,9 +804,11 @@ Ctrl+Q - Quit
                 var path = ofd.FilePath.ToString();
 
                 if (string.IsNullOrEmpty(path))
+                {
                     return;
+                }
 
-                Open(new FileInfo(path));
+                this.Open(new FileInfo(path));
             }
             catch (Exception ex)
             {
@@ -772,14 +835,11 @@ Ctrl+Q - Quit
 
         Task.Run(() =>
         {
-
             var decompiler = new CodeToView(new SourceCodeFile(toOpen));
-            _currentDesignerFile = decompiler.SourceFile;
             instance = decompiler.CreateInstance();
-
-        }).ContinueWith((t, o) =>
+        }).ContinueWith(
+            (t, o) =>
         {
-
             // no longer loading
             Application.MainLoop.Invoke(() => Application.RequestStop());
 
@@ -790,19 +850,19 @@ Ctrl+Q - Quit
                 return;
             }
 
-            // if loaded correctly then 
+            // if loaded correctly then
             if (instance != null)
-                ReplaceViewBeingEdited(instance);
-
+            {
+                this.ReplaceViewBeingEdited(instance);
+            }
         }, TaskScheduler.FromCurrentSynchronizationContext());
 
-        Application.Run(open, ErrorHandler);
+        Application.Run(open, this.ErrorHandler);
     }
 
     private void New()
     {
-
-        if (!Modals.Get("Create New View", "Ok", GetSupportedRootViews(), out var selected))
+        if (!Modals.Get("Create New View", "Ok", this.GetSupportedRootViews(), out var selected))
         {
             return;
         }
@@ -825,7 +885,9 @@ Ctrl+Q - Quit
                 var path = ofd.FilePath.ToString();
 
                 if (string.IsNullOrWhiteSpace(path) || selected == null)
+                {
                     return;
+                }
 
                 var file = new FileInfo(path);
 
@@ -838,6 +900,7 @@ Ctrl+Q - Quit
                 {
                     sb.AppendLine(files.CsFile.Name);
                 }
+
                 if (files.DesignerFile.Exists)
                 {
                     sb.AppendLine(files.DesignerFile.Name);
@@ -845,11 +908,13 @@ Ctrl+Q - Quit
 
                 if (sb.Length > 0)
                 {
-                    if(!ConfirmDialog.Show("Overwrite Files?", $"The following files will be overwritten:{Environment.NewLine}{sb.ToString().TrimEnd()}", "Ok", "Cancel"))
+                    if (!ConfirmDialog.Show("Overwrite Files?", $"The following files will be overwritten:{Environment.NewLine}{sb.ToString().TrimEnd()}", "Ok", "Cancel"))
+                    {
                         return; // user cancelled overwrite
+                    }
                 }
 
-                New(file, selected, null);
+                this.New(file, selected, null);
             }
             catch (Exception ex)
             {
@@ -862,12 +927,12 @@ Ctrl+Q - Quit
     private Type[] GetSupportedRootViews()
     {
         // TODO: When more robust, remove these from experimental status
-        if(Editor.Experimental)
+        if (Editor.Experimental)
         {
-            return new Type[] { typeof(Window), typeof(Dialog), typeof(View) , typeof(Toplevel)};
+            return new Type[] { typeof(Window), typeof(Dialog), typeof(View), typeof(Toplevel) };
         }
 
-        return new Type[] { typeof(Window), typeof(Dialog)};
+        return new Type[] { typeof(Window), typeof(Dialog) };
     }
 
     private void New(FileInfo toOpen, Type typeToCreate, string? explicitNamespace)
@@ -881,12 +946,12 @@ Ctrl+Q - Quit
             // prompt user for namespace
             if (!Modals.GetString("Namespace", "Enter the namespace for your class", "YourNamespace", out ns))
             {
-                //user cancelled typing a namespace
+                // user cancelled typing a namespace
                 return;
             }
         }
 
-        //Validate the namespace
+        // Validate the namespace
         if (string.IsNullOrWhiteSpace(ns) || ns.Contains(" ") || char.IsDigit(ns.First()))
         {
             MessageBox.ErrorQuery("Invalid Namespace", "Namespace must not contain spaces, be empty or begin with a number", "Ok");
@@ -903,13 +968,11 @@ Ctrl+Q - Quit
 
         Task.Run(() =>
         {
-
             // Create the view files and compile
-            instance = viewToCode.GenerateNewView(toOpen, ns ?? "YourNamespace", typeToCreate, out _currentDesignerFile);
-
-        }).ContinueWith((t, o) =>
+            instance = viewToCode.GenerateNewView(toOpen, ns ?? "YourNamespace", typeToCreate);
+        }).ContinueWith(
+            (t, o) =>
         {
-
             // no longer loading
             Application.MainLoop.Invoke(() => Application.RequestStop());
 
@@ -920,14 +983,14 @@ Ctrl+Q - Quit
                 return;
             }
 
-            // if loaded correctly then 
+            // if loaded correctly then
             if (instance != null)
-                ReplaceViewBeingEdited(instance);
-
+            {
+                this.ReplaceViewBeingEdited(instance);
+            }
         }, TaskScheduler.FromCurrentSynchronizationContext());
 
-
-        Application.Run(open, ErrorHandler);
+        Application.Run(open, this.ErrorHandler);
     }
 
     private void ReplaceViewBeingEdited(Design design)
@@ -935,47 +998,50 @@ Ctrl+Q - Quit
         Application.MainLoop.Invoke(() =>
         {
             // remove the old view
-            if (_viewBeingEdited != null)
+            if (this._viewBeingEdited != null)
             {
                 // and dispose it
-                Remove(_viewBeingEdited.View);
-                _viewBeingEdited.View.Dispose();
+                this.Remove(this._viewBeingEdited.View);
+                this._viewBeingEdited.View.Dispose();
             }
 
             // remove list view to prevent it stealing keystrokes and jumping back
-            // into input focus 
-            Remove(_rootCommandsListView);
+            // into input focus
+            this.Remove(this.rootCommandsListView);
 
             // Load new instance
-            _viewBeingEdited = design;
+            this._viewBeingEdited = design;
 
             // TODO: Find a better place for this
-            ColorSchemeManager.Instance.FindDeclaredColorSchemes(_viewBeingEdited);
+            ColorSchemeManager.Instance.FindDeclaredColorSchemes(this._viewBeingEdited);
 
             // And add it to the editing window
-            Add(_viewBeingEdited.View);
+            this.Add(this._viewBeingEdited.View);
         });
     }
+
     private void Save()
     {
-        if (_viewBeingEdited == null || _currentDesignerFile == null)
+        if (this._viewBeingEdited == null)
+        {
             return;
+        }
 
         var viewToCode = new ViewToCode();
 
         viewToCode.GenerateDesignerCs(
-            _viewBeingEdited, _currentDesignerFile,
-            _viewBeingEdited.View.GetType().BaseType ?? throw new Exception("View being edited had no base class"));
+            this._viewBeingEdited,
+            this._viewBeingEdited.View.GetType().BaseType ?? throw new Exception("View being edited had no base class"));
 
-        _flashMessage = $"Saved {_viewBeingEdited.SourceCode.DesignerFile.Name}";
-        SetNeedsDisplay();
+        this.flashMessage = $"Saved {this._viewBeingEdited.SourceCode.DesignerFile.Name}";
+        this.SetNeedsDisplay();
 
-        _lastSavedOperation = OperationManager.Instance.GetLastAppliedOperation()?.UniqueIdentifier;
+        this.lastSavedOperation = OperationManager.Instance.GetLastAppliedOperation()?.UniqueIdentifier;
     }
 
     public bool HasUnsavedChanges()
     {
-        var savedOp = _lastSavedOperation;
+        var savedOp = this.lastSavedOperation;
         var currentOp = OperationManager.Instance.GetLastAppliedOperation()?.UniqueIdentifier;
 
         // if we have nothing saved
@@ -989,43 +1055,44 @@ Ctrl+Q - Quit
         // this lets us save, perform action, undo action and then still consider us saved
         return savedOp != currentOp;
     }
+
     private void ShowAddViewWindow()
     {
-        if (_viewBeingEdited == null || _currentDesignerFile == null)
+        if (this._viewBeingEdited == null)
         {
             return;
         }
 
         // what is the currently selected design
-        var toAddTo = SelectionManager.Instance.GetMostSelectedContainerOrNull() ?? _viewBeingEdited;
+        var toAddTo = SelectionManager.Instance.GetMostSelectedContainerOrNull() ?? this._viewBeingEdited;
 
         OperationManager.Instance.Do(
-            new AddViewOperation(_currentDesignerFile, toAddTo)
-        );
+            new AddViewOperation(toAddTo));
     }
-
 
     private void ShowEditProperties()
     {
         var d = SelectionManager.Instance.GetSingleSelectionOrNull();
         if (d != null)
         {
-            ShowEditProperties(d);
+            this.ShowEditProperties(d);
         }
     }
 
     private void ShowEditProperties(Design d)
     {
         var edit = new EditDialog(d);
-        Application.Run(edit, ErrorHandler);
+        Application.Run(edit, this.ErrorHandler);
     }
 
     private void ShowColorSchemes()
     {
-        if (_viewBeingEdited == null)
+        if (this._viewBeingEdited == null)
+        {
             return;
+        }
 
-        var schemes = new ColorSchemesUI(_viewBeingEdited);
+        var schemes = new ColorSchemesUI(this._viewBeingEdited);
         Application.Run(schemes);
     }
 }

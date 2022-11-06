@@ -6,5 +6,5 @@ public enum PosType
     AnchorEnd,
     Percent,
     Relative,
-    Center,    
+    Center,
 }

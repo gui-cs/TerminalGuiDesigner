@@ -1,56 +1,84 @@
-﻿using NStack;
-using Terminal.Gui;
+﻿using Terminal.Gui;
 using TerminalGuiDesigner.UI.Windows;
 
 namespace TerminalGuiDesigner.Operations;
 
-public class AddMenuOperation: Operation
+public class AddMenuOperation : Operation
 {
-    private MenuBar _menuBar;
-    private MenuBarItem? _newItem;
-
-    public Design Design { get; }
-
-    private string? _name;
+    /// <summary>
+    /// <para>
+    /// <see cref="AddMenuOperation"/> adds a new top level menu (e.g. File, Edit etc).  In the designer
+    /// all menus must have at least 1 <see cref="MenuItem"/> under them so it will be
+    /// created with a single <see cref="MenuItem"/> in it already.  That item will
+    /// bear this text.
+    /// </para>
+    /// <para>
+    /// This string should be used by any other areas of code that want to create new <see cref="MenuItem"/> under
+    /// a top/sub menu (e.g. <see cref="ViewFactory"/>).
+    /// </para>
+    /// </summary>
     public const string DefaultMenuItemText = "Edit Me";
 
+    private MenuBar menuBar;
+    private MenuBarItem? newItem;
+    private string? name;
+
     /// <summary>
-    /// Adds a new top level menu to a <see cref="MenuBar"/>. 
+    /// Initializes a new instance of the <see cref="AddMenuOperation"/> class.
+    /// Calling <see cref="Do"/> will add a new top level menu to the <see cref="MenuBar"/>
+    /// wrapped by <paramref name="design"/>.
     /// </summary>
-    /// <param name="design"></param>
-    /// <param name="name">Optional explicit name to add with or null to prompt user interactively</param>
-    /// <exception cref="ArgumentException"></exception>
+    /// <param name="design"><see cref="Design"/> wrapper for a view of Type <see cref="MenuBar"/>.</param>
+    /// <param name="name">Optional explicit name to add with or null to prompt user interactively.</param>
+    /// <exception cref="ArgumentException">Thrown if the <paramref name="design"/> is not wrapping a <see cref="MenuBar"/>.</exception>
     public AddMenuOperation(Design design, string? name)
     {
-        Design = design;
-        _name = name;
+        this.Design = design;
+        this.name = name;
 
         // somehow user ran this command for a non tab view
-        if (Design.View is not MenuBar)
+        if (this.Design.View is not MenuBar)
+        {
             throw new ArgumentException($"Design must be for a {nameof(MenuBar)} to support {nameof(AddMenuOperation)}");
+        }
 
-        _menuBar = (MenuBar)Design.View;
-
+        this.menuBar = (MenuBar)this.Design.View;
     }
 
+    /// <summary>
+    /// Gets the <see cref="Design"/> which will be operated on by this operation.  The
+    /// <see cref="Design.View"/> will be a <see cref="MenuBar"/>.
+    /// </summary>
+    public Design Design { get; }
+
+    /// <summary>
+    /// Performs the operation.  Adding a new top level menu.
+    /// </summary>
+    /// <remarks>Calling this method multiple times will not result in more new menus.</remarks>
+    /// <returns>True if the menu was added.  False if making repeated calls or user cancels naming the new menu etc.</returns>
     public override bool Do()
     {
-        if (_newItem != null)
+        if (this.newItem != null)
+        {
             return false;
+        }
 
-        if (_name == null)
+        if (this.name == null)
+        {
             if (Modals.GetString("Name", "Name", "MyMenu", out string? newName) && !string.IsNullOrWhiteSpace(newName))
             {
-                _name = newName;
+                this.name = newName;
             }
             else
-                return false; //user cancelled naming the new menu
+            {
+                return false; // user canceled naming the new menu
+            }
+        }
 
-
-        var current = _menuBar.Menus.ToList<MenuBarItem>();
-        current.Add(_newItem = new MenuBarItem(_name,new MenuItem[] { new MenuItem { Title = DefaultMenuItemText } }));
-        _menuBar.Menus = current.ToArray();
-        _menuBar.SetNeedsDisplay();
+        var current = this.menuBar.Menus.ToList<MenuBarItem>();
+        current.Add(this.newItem = new MenuBarItem(this.name, new MenuItem[] { new MenuItem { Title = DefaultMenuItemText } }));
+        this.menuBar.Menus = current.ToArray();
+        this.menuBar.SetNeedsDisplay();
 
         return true;
     }
@@ -58,24 +86,28 @@ public class AddMenuOperation: Operation
     public override void Undo()
     {
         // its not there anyways
-        if (_newItem == null || !_menuBar.Menus.Contains(_newItem))
+        if (this.newItem == null || !this.menuBar.Menus.Contains(this.newItem))
+        {
             return;
+        }
 
-        var current = _menuBar.Menus.ToList<MenuBarItem>();
-        current.Remove(_newItem);
-        _menuBar.Menus = current.ToArray();
-        _menuBar.SetNeedsDisplay();
+        var current = this.menuBar.Menus.ToList<MenuBarItem>();
+        current.Remove(this.newItem);
+        this.menuBar.Menus = current.ToArray();
+        this.menuBar.SetNeedsDisplay();
     }
 
     public override void Redo()
     {
         // its already there
-        if (_newItem == null || _menuBar.Menus.Contains(_newItem))
+        if (this.newItem == null || this.menuBar.Menus.Contains(this.newItem))
+        {
             return;
+        }
 
-        var current = _menuBar.Menus.ToList<MenuBarItem>();
-        current.Add(_newItem);
-        _menuBar.Menus = current.ToArray();
-        _menuBar.SetNeedsDisplay();
+        var current = this.menuBar.Menus.ToList<MenuBarItem>();
+        current.Add(this.newItem);
+        this.menuBar.Menus = current.ToArray();
+        this.menuBar.SetNeedsDisplay();
     }
 }

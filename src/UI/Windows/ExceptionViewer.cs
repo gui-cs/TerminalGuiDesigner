@@ -1,5 +1,5 @@
-﻿using NStack;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
+using NStack;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner.UI.Windows;
@@ -18,7 +18,7 @@ public class ExceptionViewer
             Width = Dim.Fill(),
             Height = Dim.Fill() - 2,
             ReadOnly = true,
-            AllowsTab = false
+            AllowsTab = false,
         };
 
         bool toggleStack = true;
@@ -28,7 +28,7 @@ public class ExceptionViewer
         var btnStack = new Button("Stack");
         btnStack.Clicked += () =>
         {
-            //flip between stack / no stack
+            // flip between stack / no stack
             textView.Text = GetExceptionText(errorText, exception, toggleStack);
             textView.SetNeedsDisplay();
             toggleStack = !toggleStack;
@@ -39,7 +39,7 @@ public class ExceptionViewer
             X = Pos.Percent(10),
             Y = Pos.Percent(10),
             Width = Dim.Percent(80),
-            Height = Dim.Percent(80)
+            Height = Dim.Percent(80),
         };
         dlg.Add(textView);
 

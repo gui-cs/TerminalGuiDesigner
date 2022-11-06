@@ -2,12 +2,11 @@
 
 public class Modals
 {
-
     public static bool GetInt(string windowTitle, string entryLabel, int? initialValue, out int? result)
     {
         if (GetString(windowTitle, entryLabel, initialValue.ToString(), out var newValue))
         {
-            if(string.IsNullOrWhiteSpace(newValue))
+            if (string.IsNullOrWhiteSpace(newValue))
             {
                 result = null;
                 return true;
@@ -28,7 +27,7 @@ public class Modals
     {
         if (GetString(windowTitle, entryLabel, initialValue.ToString(), out var newValue))
         {
-            if(string.IsNullOrWhiteSpace(newValue))
+            if (string.IsNullOrWhiteSpace(newValue))
             {
                 result = null;
                 return true;
@@ -47,18 +46,19 @@ public class Modals
 
     public static bool GetArray(string windowTitle, string entryLabel, Type arrayElement, Array? initialValue, out Array? result)
     {
-        var dlg = new GetTextDialog(new DialogArgs()
+        var dlg = new GetTextDialog(
+            new DialogArgs()
         {
             WindowTitle = windowTitle,
             EntryLabel = entryLabel,
             MultiLine = true,
-        }, initialValue == null ? "" : string.Join('\n',initialValue.ToList().Select(v=>v?.ToString() ?? "")));
+        }, initialValue == null ? string.Empty : string.Join('\n', initialValue.ToList().Select(v => v?.ToString() ?? string.Empty)));
 
         if (dlg.ShowDialog())
         {
             var resultText = dlg.ResultText;
 
-            if(string.IsNullOrWhiteSpace(resultText))
+            if (string.IsNullOrWhiteSpace(resultText))
             {
                 result = result = Array.CreateInstance(arrayElement, 0);
                 return true;
@@ -67,10 +67,12 @@ public class Modals
             resultText = resultText.Replace("\r\n", "\n");
             var newValues = resultText.Split('\n');
 
-            result = Array.CreateInstance(arrayElement,newValues.Length);
+            result = Array.CreateInstance(arrayElement, newValues.Length);
 
-            for(int i=0;i<newValues.Length;i++)
-                result.SetValue(newValues[i].CastToReflected(arrayElement),i);
+            for (int i = 0; i < newValues.Length; i++)
+            {
+                result.SetValue(newValues[i].CastToReflected(arrayElement), i);
+            }
 
             return true;
         }
@@ -78,9 +80,11 @@ public class Modals
         result = null;
         return false;
     }
+
     public static bool GetString(string windowTitle, string entryLabel, string? initialValue, out string? result, bool multiLine = false)
     {
-        var dlg = new GetTextDialog(new DialogArgs()
+        var dlg = new GetTextDialog(
+            new DialogArgs()
         {
             WindowTitle = windowTitle,
             EntryLabel = entryLabel,
@@ -111,15 +115,15 @@ public class Modals
     }
 
     internal static bool GetEnum(string prompt, string okText, Type enumType, out Enum? result)
-    {       
-        return Get(prompt,okText,true,Enum.GetValues(enumType).Cast<Enum>().ToArray(),o=>o?.ToString() ?? "Null",false,out result);
+    {
+        return Get(prompt, okText, true, Enum.GetValues(enumType).Cast<Enum>().ToArray(), o => o?.ToString() ?? "Null", false, out result);
     }
 
     internal static bool GetChar(string windowTitle, string entryLabel, char? oldValue, out char? resultChar)
     {
-        if(GetString(windowTitle,entryLabel,oldValue?.ToString() ?? "",out var result))
+        if (GetString(windowTitle, entryLabel, oldValue?.ToString() ?? string.Empty, out var result))
         {
-            if(result == null || result.Length == 0)
+            if (result == null || result.Length == 0)
             {
                 resultChar = null;
                 return true;

@@ -9,60 +9,65 @@ namespace TerminalGuiDesigner.Operations;
 /// </summary>
 public class MoveViewOperation : Operation
 {
-
     public Design BeingMoved { get; }
+
     public Pos OriginX { get; }
+
     public Pos OriginY { get; }
+
     public int DestinationY { get; }
+
     public int DestinationX { get; }
 
-    public MoveViewOperation(Design toMove, int deltaX,int deltaY)
+    public MoveViewOperation(Design toMove, int deltaX, int deltaY)
     {
-        BeingMoved = toMove;
-        OriginX = toMove.View.X;
-        OriginY = toMove.View.Y;
-
+        this.BeingMoved = toMove;
+        this.OriginX = toMove.View.X;
+        this.OriginY = toMove.View.Y;
 
         // start out assuming X and Y are PosRelative so cannot be moved
-        IsImpossible = true;
-        var super = BeingMoved.View.SuperView;
+        this.IsImpossible = true;
+        var super = this.BeingMoved.View.SuperView;
         int maxWidth = (super?.Bounds.Width ?? int.MaxValue) - 1;
         int maxHeight = (super?.Bounds.Height ?? int.MaxValue) - 1;
 
-        if (BeingMoved.View.X.IsAbsolute(out var x))
+        if (this.BeingMoved.View.X.IsAbsolute(out var x))
         {
             // x is absolute so record where this operation
             // moves to
-            DestinationX = Math.Min(Math.Max(x + deltaX, 0), maxWidth);
+            this.DestinationX = Math.Min(Math.Max(x + deltaX, 0), maxWidth);
 
             // if it moves it somewhere then command isn't impossible
-            if(DestinationX != x)
-                IsImpossible = false;
+            if (this.DestinationX != x)
+            {
+                this.IsImpossible = false;
+            }
         }
 
-        if(BeingMoved.View.Y.IsAbsolute(out var y))
+        if (this.BeingMoved.View.Y.IsAbsolute(out var y))
         {
             // y is absolute so record where this operation
             // moves to
-            DestinationY = Math.Min(Math.Max(y + deltaY, 0), maxHeight);
-        
-            // if it moves it somewhere then command isn't impossible
-            if(DestinationY != y)
-                IsImpossible = false;
-        }
+            this.DestinationY = Math.Min(Math.Max(y + deltaY, 0), maxHeight);
 
+            // if it moves it somewhere then command isn't impossible
+            if (this.DestinationY != y)
+            {
+                this.IsImpossible = false;
+            }
+        }
     }
 
     public override bool Do()
     {
-        if (BeingMoved.View.X.IsAbsolute())
+        if (this.BeingMoved.View.X.IsAbsolute())
         {
-            BeingMoved.View.X = DestinationX;
+            this.BeingMoved.View.X = this.DestinationX;
         }
 
-        if (BeingMoved.View.Y.IsAbsolute())
+        if (this.BeingMoved.View.Y.IsAbsolute())
         {
-            BeingMoved.View.Y = DestinationY;
+            this.BeingMoved.View.Y = this.DestinationY;
         }
 
         return true;
@@ -70,19 +75,19 @@ public class MoveViewOperation : Operation
 
     public override void Redo()
     {
-        Do();
+        this.Do();
     }
 
     public override void Undo()
     {
-        if (BeingMoved.View.X.IsAbsolute())
+        if (this.BeingMoved.View.X.IsAbsolute())
         {
-            BeingMoved.View.X = OriginX;
+            this.BeingMoved.View.X = this.OriginX;
         }
 
-        if (BeingMoved.View.Y.IsAbsolute())
+        if (this.BeingMoved.View.Y.IsAbsolute())
         {
-            BeingMoved.View.Y = OriginY;
+            this.BeingMoved.View.Y = this.OriginY;
         }
     }
 }

@@ -1,95 +1,113 @@
 using Terminal.Gui;
-using TerminalGuiDesigner.UI;
 using TerminalGuiDesigner.UI.Windows;
 
 namespace TerminalGuiDesigner.Operations;
+
+/// <summary>
+/// <see cref="Operation"/> for adding a new <see cref="View"/> to a <see cref="Design"/>.
+/// Supports adding to the root or any container view (e.g. <see cref="TabView"/>).
+/// </summary>
 public class AddViewOperation : Operation
 {
-    private readonly SourceCodeFile sourceCode;
     private View? add;
     private string? fieldName;
     private readonly Design to;
 
-    public AddViewOperation(SourceCodeFile sourceCode,View add, Design to,string? fieldName)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AddViewOperation"/> class.
+    /// When/If run this operation will add <paramref name="add"/> to the <see cref="View"/>
+    /// wrapped by <paramref name="to"/> with the provided <paramref name="fieldName"/>.
+    /// </summary>
+    /// <param name="add"></param>
+    /// <param name="to"></param>
+    /// <param name="fieldName"></param>
+    public AddViewOperation(View add, Design to, string? fieldName)
     {
-        this.sourceCode = sourceCode;
         this.add = add;
         this.fieldName = fieldName ?? to.GetUniqueFieldName(add.GetType());
         this.to = to;
     }
 
     /// <summary>
-    /// Constructor that asks users what view they want at runtime
+    /// Initializes a new instance of the <see cref="AddViewOperation"/> class.
+    /// This overload asks users what view type they want at runtime (See <see cref="Do"/>).
     /// </summary>
-    public AddViewOperation(SourceCodeFile sourceCode, Design design)
+    public AddViewOperation(Design design)
     {
-        this.sourceCode = sourceCode;
-        to = design;
+        this.to = design;
     }
 
+    /// <inheritdoc/>
     public override bool Do()
     {
-        if(add == null)
-        {                
+        if (this.add == null)
+        {
             var factory = new ViewFactory();
             var selectable = factory.GetSupportedViews().ToArray();
-            
+
             if (Modals.Get("Type of Control", "Add", true, selectable, t => t?.Name ?? "Null", false, out var selected) && selected != null)
             {
-                add = factory.Create(selected);
-                fieldName = to.GetUniqueFieldName(selected);
-            }   
+                this.add = factory.Create(selected);
+                this.fieldName = this.to.GetUniqueFieldName(selected);
+            }
         }
 
-        // user cancelled picking a type
-        if(add == null || string.IsNullOrWhiteSpace(fieldName))
+        // user canceled picking a type
+        if (this.add == null || string.IsNullOrWhiteSpace(this.fieldName))
+        {
             return false;
+        }
 
         Design design;
-        add.Data = design = to.CreateSubControlDesign(sourceCode,fieldName, add);
+        this.add.Data = design = this.to.CreateSubControlDesign(this.to.SourceCode, this.fieldName, this.add);
 
-        var v = GetViewToAddTo();
-        v.Add(add);
+        var v = this.GetViewToAddTo();
+        v.Add(this.add);
 
-        if(Application.Driver != null){
-            add.SetFocus();
+        if (Application.Driver != null)
+        {
+            this.add.SetFocus();
         }
+
         SelectionManager.Instance.ForceSetSelection(design);
 
         v.SetNeedsDisplay();
         return true;
     }
 
+    /// <inheritdoc/>
+    public override void Redo()
+    {
+        if (this.add == null)
+        {
+            return;
+        }
+
+        var v = this.GetViewToAddTo();
+        v.Add(this.add);
+        v.SetNeedsDisplay();
+    }
+
+    /// <inheritdoc/>
+    public override void Undo()
+    {
+        if (this.add == null)
+        {
+            return;
+        }
+
+        var v = this.GetViewToAddTo();
+        v.Remove(this.add);
+        v.SetNeedsDisplay();
+    }
+
     private View GetViewToAddTo()
     {
-        if(to.View is TabView tabView)
+        if (this.to.View is TabView tabView)
         {
             return tabView.SelectedTab.View;
         }
 
-        return to.View;
-    }
-
-    public override void Redo()
-    {
-        if(add == null)
-        {
-            return;
-        }
-
-        var v = GetViewToAddTo();
-        v.Add(add);
-        v.SetNeedsDisplay();
-    }
-
-    public override void Undo()
-    {
-        if(add == null)
-        {
-            return;
-        }
-        var v = GetViewToAddTo();
-        v.Remove(add);
-        v.SetNeedsDisplay();
+        return this.to.View;
     }
 }

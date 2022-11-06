@@ -6,103 +6,100 @@ using Attribute = Terminal.Gui.Attribute;
 
 namespace TerminalGuiDesigner.UI.Windows;
 
-
 public class EditDialog : Window
 {
-    private List<Property> _collection;
-    private ListView _list;
+    private List<Property> collection;
+    private ListView list;
 
     public Design Design { get; }
 
     public EditDialog(Design design)
     {
-        Design = design;
-        _collection = Design.GetDesignableProperties()
-            .OrderByDescending(p=>p is NameProperty)
-            .ThenBy(p=>p.ToString())
+        this.Design = design;
+        this.collection = this.Design.GetDesignableProperties()
+            .OrderByDescending(p => p is NameProperty)
+            .ThenBy(p => p.ToString())
             .ToList();
 
         // Don't let them rename the root view that would go badly
         // See `const string RootDesignName`
-        if(design.IsRoot)
+        if (design.IsRoot)
         {
-            _collection = _collection.Where(p=>p is not NameProperty).ToList();
+            this.collection = this.collection.Where(p => p is not NameProperty).ToList();
         }
 
-        _list = new ListView(_collection)
+        this.list = new ListView(this.collection)
         {
             X = 0,
             Y = 0,
             Width = Dim.Fill(2),
-            Height = Dim.Fill(2)
+            Height = Dim.Fill(2),
         };
-        _list.KeyPress += List_KeyPress;
+        this.list.KeyPress += this.List_KeyPress;
 
         var btnSet = new Button("Set")
         {
             X = 0,
-            Y = Pos.Bottom(_list),
-            IsDefault = true
+            Y = Pos.Bottom(this.list),
+            IsDefault = true,
         };
 
         btnSet.Clicked += () =>
         {
-            SetProperty(false);
+            this.SetProperty(false);
         };
 
         var btnClose = new Button("Close")
         {
             X = Pos.Right(btnSet),
-            Y = Pos.Bottom(_list)
+            Y = Pos.Bottom(this.list),
         };
         btnClose.Clicked += () => Application.RequestStop();
 
-        Add(_list);
-        Add(btnSet);
-        Add(btnClose);
+        this.Add(this.list);
+        this.Add(btnSet);
+        this.Add(btnClose);
     }
 
     public override bool ProcessHotKey(KeyEvent keyEvent)
     {
-        if(keyEvent.Key == Key.Enter && _list.HasFocus)
+        if (keyEvent.Key == Key.Enter && this.list.HasFocus)
         {
-            SetProperty(false);
+            this.SetProperty(false);
             return true;
-        }    
+        }
 
         return base.ProcessHotKey(keyEvent);
     }
 
     private void SetProperty(bool setNull)
     {
-        if (_list.SelectedItem != -1)
+        if (this.list.SelectedItem != -1)
         {
             try
             {
-                var p = _collection[_list.SelectedItem];
+                var p = this.collection[this.list.SelectedItem];
                 var oldValue = p.GetValue();
 
                 if (setNull)
                 {
                     // user wants to set this property to null/default
                     OperationManager.Instance.Do(
-                        new SetPropertyOperation(Design, p, oldValue, null)
-                    );
+                        new SetPropertyOperation(this.Design, p, oldValue, null));
                 }
                 else
                 {
-                    if(!SetPropertyToNewValue(Design, p, oldValue))
+                    if (!SetPropertyToNewValue(this.Design, p, oldValue))
                     {
                         // user cancelled editing the value
                         return;
                     }
                 }
 
-                var oldSelected = _list.SelectedItem;
-                _list.SetSource(_collection = _collection.ToList());
-                _list.SelectedItem = oldSelected;
-                _list.EnsureSelectedItemVisible();
-
+                var oldSelected = this.list.SelectedItem;
+                this.list.SetSource(this.collection = this.collection.ToList());
+                this.list.SelectedItem = oldSelected;
+                this.list.EnsureSelectedItemVisible();
             }
             catch (Exception e)
             {
@@ -117,8 +114,7 @@ public class EditDialog : Window
         if (GetNewValue(design, p, p.GetValue(), out object? newValue))
         {
             OperationManager.Instance.Do(
-                new SetPropertyOperation(design, p, oldValue, newValue)
-            );
+                new SetPropertyOperation(design, p, oldValue, newValue));
 
             return true;
         }
@@ -130,10 +126,10 @@ public class EditDialog : Window
     {
         if (property.PropertyInfo.PropertyType == typeof(ColorScheme))
         {
-            return GetNewColorSchemeValue(design, property, out newValue);            
+            return GetNewColorSchemeValue(design, property, out newValue);
         }
         else
-        if(property.PropertyInfo.PropertyType == typeof(Attribute) ||
+        if (property.PropertyInfo.PropertyType == typeof(Attribute) ||
             property.PropertyInfo.PropertyType == typeof(Attribute?))
         {
             // if its an Attribute or nullableAttribute
@@ -153,12 +149,11 @@ public class EditDialog : Window
             }
         }
         else
-        if(property.PropertyInfo.PropertyType == typeof(ITextValidateProvider))
+        if (property.PropertyInfo.PropertyType == typeof(ITextValidateProvider))
         {
             string? oldPattern = oldValue is TextRegexProvider r ? (string?)r.Pattern.ToPrimitive() : null;
-            if(Modals.GetString("New Validation Pattern","Regex Pattern",oldPattern,out var newPattern))
+            if (Modals.GetString("New Validation Pattern", "Regex Pattern", oldPattern, out var newPattern))
             {
-
                 newValue = string.IsNullOrWhiteSpace(newPattern) ? null : new TextRegexProvider(newPattern);
                 return true;
             }
@@ -166,7 +161,6 @@ public class EditDialog : Window
             // user cancelled entering a pattern
             newValue = null;
             return false;
-
         }
         else
         // user is editing a Pos
@@ -175,7 +169,6 @@ public class EditDialog : Window
             var designer = new PosEditor(design, property);
 
             Application.Run(designer);
-
 
             if (!designer.Cancelled)
             {
@@ -215,14 +208,13 @@ public class EditDialog : Window
         if (property.PropertyInfo.PropertyType == typeof(PointF))
         {
             var oldPointF = (PointF)(oldValue ?? throw new Exception($"Property {property.PropertyInfo.Name} is of Type PointF but it's current value is null"));
-            var designer = new PointEditor(oldPointF.X,oldPointF.Y);
+            var designer = new PointEditor(oldPointF.X, oldPointF.Y);
 
             Application.Run(designer);
 
-
             if (!designer.Cancelled)
             {
-                newValue = new PointF(designer.ResultX,designer.ResultY);
+                newValue = new PointF(designer.ResultX, designer.ResultY);
                 return true;
             }
             else
@@ -250,40 +242,39 @@ public class EditDialog : Window
                 newValue = null;
                 return false;
             }
-                
         }
         else
         if (property.PropertyInfo.PropertyType == typeof(bool))
         {
             int answer = MessageBox.Query(property.PropertyInfo.Name, $"New value for {property.PropertyInfo.PropertyType}", "Yes", "No");
 
-            newValue = answer ==0 ? true : false;
+            newValue = answer == 0 ? true : false;
             return answer != -1;
         }
         else
-        if(property.PropertyInfo.PropertyType.IsArray)
+        if (property.PropertyInfo.PropertyType.IsArray)
         {
-            if(Modals.GetArray(property.PropertyInfo.Name, "New Array Value",
+            if (Modals.GetArray(property.PropertyInfo.Name, "New Array Value",
                 property.PropertyInfo.PropertyType.GetElementType() ?? throw new Exception("Property was an Array but GetElementType returned null"),
-                 (Array?)oldValue, out Array? resultArray))
+                (Array?)oldValue, out Array? resultArray))
             {
                 newValue = resultArray;
                 return true;
             }
         }
         else
-        if(property.PropertyInfo.PropertyType == typeof(IListDataSource))
+        if (property.PropertyInfo.PropertyType == typeof(IListDataSource))
         {
-            // TODO : Make this work with non strings e.g. 
+            // TODO : Make this work with non strings e.g.
             // if user types a bunch of numbers in or dates
             var oldValueAsArrayOfStrings = oldValue == null ?
                     new string[0] :
                     ((IListDataSource)oldValue).ToList()
                                                .Cast<object>()
-                                               .Select(o=>o?.ToString())
+                                               .Select(o => o?.ToString())
                                                .ToArray();
 
-            if(Modals.GetArray(property.PropertyInfo.Name, "New List Value",typeof(string),
+            if (Modals.GetArray(property.PropertyInfo.Name, "New List Value", typeof(string),
                  oldValueAsArrayOfStrings ?? new string[0], out Array? resultArray))
             {
                 newValue = resultArray;
@@ -291,64 +282,62 @@ public class EditDialog : Window
             }
         }
         else
-        if(property.PropertyInfo.PropertyType.IsEnum)
+        if (property.PropertyInfo.PropertyType.IsEnum)
         {
-            if(Modals.GetEnum(property.PropertyInfo.Name, "New Enum Value", property.PropertyInfo.PropertyType, out var resultEnum))
+            if (Modals.GetEnum(property.PropertyInfo.Name, "New Enum Value", property.PropertyInfo.PropertyType, out var resultEnum))
             {
                 newValue = resultEnum;
                 return true;
             }
         }
         else
-        if(property.PropertyInfo.PropertyType == typeof(int) 
+        if (property.PropertyInfo.PropertyType == typeof(int)
             || property.PropertyInfo.PropertyType == typeof(int?)
-            || property.PropertyInfo.PropertyType == typeof(uint) 
+            || property.PropertyInfo.PropertyType == typeof(uint)
             || property.PropertyInfo.PropertyType == typeof(uint?))
         {
             // deals with null, int and uint
             var v = oldValue == null ? null : (int?)Convert.ToInt32(oldValue);
 
-            if(Modals.GetInt(property.PropertyInfo.Name, "New Int Value", v, out var resultInt))
+            if (Modals.GetInt(property.PropertyInfo.Name, "New Int Value", v, out var resultInt))
             {
                 // change back to uint/int/null
-                newValue = resultInt == null ? null : Convert.ChangeType(resultInt,property.PropertyInfo.PropertyType);
+                newValue = resultInt == null ? null : Convert.ChangeType(resultInt, property.PropertyInfo.PropertyType);
                 return true;
             }
         }
         else
-        if(property.PropertyInfo.PropertyType == typeof(float) 
+        if (property.PropertyInfo.PropertyType == typeof(float)
             || property.PropertyInfo.PropertyType == typeof(float?))
         {
-            if(Modals.GetFloat(property.PropertyInfo.Name, "New Float Value", (float?)oldValue, out var resultInt))
+            if (Modals.GetFloat(property.PropertyInfo.Name, "New Float Value", (float?)oldValue, out var resultInt))
             {
                 newValue = resultInt;
                 return true;
             }
         }
         else
-        if(property.PropertyInfo.PropertyType == typeof(char?)
-            || property.PropertyInfo.PropertyType == typeof(char) 
-            )
+        if (property.PropertyInfo.PropertyType == typeof(char?)
+            || property.PropertyInfo.PropertyType == typeof(char))
         {
-            if(Modals.GetChar(property.PropertyInfo.Name, "New Single Character", oldValue is null ? null : (char?)oldValue.ToPrimitive() ?? null, out var resultChar))
+            if (Modals.GetChar(property.PropertyInfo.Name, "New Single Character", oldValue is null ? null : (char?)oldValue.ToPrimitive() ?? null, out var resultChar))
             {
                 newValue = resultChar;
                 return true;
             }
         }
         else
-        if(property.PropertyInfo.PropertyType == typeof(Rune) 
-            || property.PropertyInfo.PropertyType == typeof(Rune?)
-            )
+        if (property.PropertyInfo.PropertyType == typeof(Rune)
+            || property.PropertyInfo.PropertyType == typeof(Rune?))
         {
-            if(Modals.GetChar(property.PropertyInfo.Name, "New Single Character", oldValue is null ? null : (char?)oldValue.ToPrimitive() ?? null, out var resultChar))
+            if (Modals.GetChar(property.PropertyInfo.Name, "New Single Character", oldValue is null ? null : (char?)oldValue.ToPrimitive() ?? null, out var resultChar))
             {
                 newValue = resultChar == null ? null : (Rune)resultChar;
                 return true;
             }
         }
         else
-        if (Modals.GetString(property.PropertyInfo.Name, "New String Value", oldValue?.ToString(), out var result,AllowMultiLine(property)))
+        if (Modals.GetString(property.PropertyInfo.Name, "New String Value", oldValue?.ToString(), out var result, AllowMultiLine(property)))
         {
             newValue = result;
             return true;
@@ -361,7 +350,7 @@ public class EditDialog : Window
     private static bool GetNewColorSchemeValue(Design design, Property property, out object? newValue)
     {
         const string custom = "Edit Color Schemes...";
-        List<object> offer = new();
+        List<object> offer = new ();
 
         var defaults = new DefaultColorSchemes();
         var schemes = ColorSchemeManager.Instance.Schemes.ToList();
@@ -372,7 +361,9 @@ public class EditDialog : Window
         {
             // user is already explicitly using this default and may even have modified it
             if (offer.OfType<NamedColorScheme>().Any(s => s.Name.Equals(d.Name)))
+            {
                 continue;
+            }
 
             offer.Add(d);
         }
@@ -391,12 +382,13 @@ public class EditDialog : Window
                 newValue = null;
                 return false;
             }
-            if(selected is NamedColorScheme ns)
+
+            if (selected is NamedColorScheme ns)
             {
                 newValue = ns.Scheme;
-                
+
                 // if it was a default one, tell ColorSchemeManager we are now using it
-                if(!schemes.Contains(ns))
+                if (!schemes.Contains(ns))
                 {
                     ColorSchemeManager.Instance.AddOrUpdateScheme(ns.Name, ns.Scheme, design.GetRootDesign());
                 }
@@ -418,7 +410,7 @@ public class EditDialog : Window
     private static bool AllowMultiLine(Property property)
     {
         // for the text editor control let them put multiple lines in
-        if(property.PropertyInfo.Name.Equals("Text") && property.Design.View is TextView tv && tv.Multiline)
+        if (property.PropertyInfo.Name.Equals("Text") && property.Design.View is TextView tv && tv.Multiline)
         {
             return true;
         }
@@ -436,7 +428,7 @@ public class EditDialog : Window
 
             if (rly == 0)
             {
-                SetProperty(true);
+                this.SetProperty(true);
             }
         }
     }

@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -8,21 +7,22 @@ using TerminalGuiDesigner.FromCode;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 
-namespace tests;
+namespace UnitTests;
 
 class TabViewTests : Tests
 {
     [Test]
     public void TestRoundTrip_PreserveTabs()
     {
-        TabView tabIn = RoundTrip<Dialog, TabView>((d,t) => 
-            Assert.IsNotEmpty(t.Tabs,"Expected default TabView created by ViewFactory to have some placeholder Tabs")
-        ,out TabView tabOut);
-                
-        Assert.AreEqual(2,tabIn.Tabs.Count());
+        TabView tabIn = this.RoundTrip<Dialog, TabView>(
+            (d, t) =>
+            Assert.IsNotEmpty(t.Tabs, "Expected default TabView created by ViewFactory to have some placeholder Tabs"),
+            out TabView tabOut);
 
-        Assert.AreEqual("Tab1",tabIn.Tabs.ElementAt(0).Text);
-        Assert.AreEqual("Tab2",tabIn.Tabs.ElementAt(1).Text);
+        Assert.AreEqual(2, tabIn.Tabs.Count());
+
+        Assert.AreEqual("Tab1", tabIn.Tabs.ElementAt(0).Text);
+        Assert.AreEqual("Tab2", tabIn.Tabs.ElementAt(1).Text);
     }
 
     /// <summary>
@@ -34,19 +34,20 @@ class TabViewTests : Tests
         var viewToCode = new ViewToCode();
 
         var file = new FileInfo("TestGetTabView.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog), out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
         var factory = new ViewFactory();
         var tvOut = factory.Create(typeof(TabView));
 
-        OperationManager.Instance.Do(new AddViewOperation(sourceCode, tvOut, designOut, "myTabview"));
+        OperationManager.Instance.Do(new AddViewOperation(tvOut, designOut, "myTabview"));
 
         return (Design)tvOut.Data;
     }
+
     [Test]
     public void TestChangeTabViewOrder_MoveTabLeft()
     {
-        var d = GetTabView();
+        var d = this.GetTabView();
         var tv = (TabView)d.View;
 
         Assert.AreEqual("Tab1", tv.Tabs.ElementAt(0).Text);
@@ -62,7 +63,7 @@ class TabViewTests : Tests
         // Select Tab2
         tv.SelectedTab = tv.Tabs.Last();
 
-        Assert.AreEqual(tv.SelectedTab.Text, "Tab2","Tab2 should be selected before operation is applied");
+        Assert.AreEqual(tv.SelectedTab.Text, "Tab2", "Tab2 should be selected before operation is applied");
 
         // try to move tab 2 left
         cmd = new MoveTabOperation(d, -1);
@@ -81,10 +82,11 @@ class TabViewTests : Tests
         Assert.AreEqual("Tab1", tv.Tabs.ElementAt(0).Text);
         Assert.AreEqual("Tab2", tv.Tabs.ElementAt(1).Text);
     }
+
     [Test]
     public void TestRemoveTabOperation()
     {
-        var d = GetTabView();
+        var d = this.GetTabView();
         var tv = (TabView)d.View;
 
         Assert.AreEqual(2, tv.Tabs.Count);
@@ -127,33 +129,31 @@ class TabViewTests : Tests
         var viewToCode = new ViewToCode();
 
         var file = new FileInfo("TestRoundTrip_DuplicateTabNames.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace",typeof(Dialog), out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
         var factory = new ViewFactory();
         var tvOut = (TabView)factory.Create(typeof(TabView));
 
-        OperationManager.Instance.Do(new AddViewOperation(sourceCode, tvOut, designOut, "myTabview"));
+        OperationManager.Instance.Do(new AddViewOperation(tvOut, designOut, "myTabview"));
 
         // Give both tabs the same name
         tvOut.Tabs.ElementAt(0).Text = "MyTab";
         tvOut.Tabs.ElementAt(1).Text = "MyTab";
 
-        viewToCode.GenerateDesignerCs(designOut, sourceCode,typeof(Dialog));
+        viewToCode.GenerateDesignerCs(designOut, typeof(Dialog));
 
         var tabOut = designOut.View.GetActualSubviews().OfType<TabView>().Single();
 
-
-        var codeToView = new CodeToView(sourceCode);
+        var codeToView = new CodeToView(designOut.SourceCode);
         var designBackIn = codeToView.CreateInstance();
 
         var tabIn = designBackIn.View.GetActualSubviews().OfType<TabView>().Single();
 
-        Assert.AreEqual(2,tabIn.Tabs.Count());
+        Assert.AreEqual(2, tabIn.Tabs.Count());
 
-        Assert.AreEqual("MyTab",tabIn.Tabs.ElementAt(0).Text.ToString());
-        Assert.AreEqual("MyTab",tabIn.Tabs.ElementAt(1).Text.ToString());
+        Assert.AreEqual("MyTab", tabIn.Tabs.ElementAt(0).Text.ToString());
+        Assert.AreEqual("MyTab", tabIn.Tabs.ElementAt(1).Text.ToString());
     }
-
 
     [Test]
     public void TestAddingSubcontrolToTab()
@@ -161,27 +161,27 @@ class TabViewTests : Tests
         var viewToCode = new ViewToCode();
 
         var file = new FileInfo("TestAddingSubcontrolToTab.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace",typeof(Dialog), out var sourceCode);
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
         var factory = new ViewFactory();
         var tvOut = (TabView)factory.Create(typeof(TabView));
 
-        OperationManager.Instance.Do(new AddViewOperation(sourceCode, tvOut, designOut, "myTabview"));
+        OperationManager.Instance.Do(new AddViewOperation(tvOut, designOut, "myTabview"));
 
         var label = factory.Create(typeof(Label));
 
-        OperationManager.Instance.Do(new AddViewOperation(sourceCode, label, (Design)tvOut.Data, "myLabel"));
-        Assert.Contains(label, tvOut.SelectedTab.View.Subviews.ToArray(),"Expected currently selected tab to have the new label but it did not");
+        OperationManager.Instance.Do(new AddViewOperation(label, (Design)tvOut.Data, "myLabel"));
+        Assert.Contains(label, tvOut.SelectedTab.View.Subviews.ToArray(), "Expected currently selected tab to have the new label but it did not");
 
-        viewToCode.GenerateDesignerCs(designOut, sourceCode,typeof(Dialog));
+        viewToCode.GenerateDesignerCs(designOut, typeof(Dialog));
 
-        var codeToView = new CodeToView(sourceCode);
+        var codeToView = new CodeToView(designOut.SourceCode);
         var designBackIn = codeToView.CreateInstance();
 
         var tabIn = designBackIn.View.GetActualSubviews().OfType<TabView>().Single();
         var tabInLabel = tabIn.SelectedTab.View.Subviews.Single();
 
-        Assert.AreEqual(label.Text,tabInLabel.Text);
+        Assert.AreEqual(label.Text, tabInLabel.Text);
     }
 
     [Test]
@@ -191,22 +191,22 @@ class TabViewTests : Tests
 
         var source = new SourceCodeFile(new FileInfo("yarg.cs"));
 
-        var lbl1 = new Design(source,"lbl1",new Label("fff"));
+        var lbl1 = new Design(source, "lbl1", new Label("fff"));
         lbl1.View.Data = lbl1;
 
-        var lbl2 = new Design(source,"lbl2",new Label("ddd"));
+        var lbl2 = new Design(source, "lbl2", new Label("ddd"));
         lbl2.View.Data = lbl2;
 
-        tv.AddTab(new TabView.Tab("Yay",lbl1.View),true);
-        tv.AddTab(new TabView.Tab("Yay",lbl2.View),false);
-    
-        var tvDesign = new Design(source,"tv",tv);
+        tv.AddTab(new TabView.Tab("Yay", lbl1.View), true);
+        tv.AddTab(new TabView.Tab("Yay", lbl2.View), false);
 
-        Assert.Contains(tvDesign,tvDesign.GetAllDesigns().ToArray());
-        Assert.Contains(lbl1,tvDesign.GetAllDesigns().ToArray());
-        Assert.Contains(lbl2,tvDesign.GetAllDesigns().ToArray());
+        var tvDesign = new Design(source, "tv", tv);
 
-        Assert.AreEqual(3,tvDesign.GetAllDesigns().Count(),$"Expected only 3 Designs but they were {string.Join(",",tvDesign.GetAllDesigns())}");
+        Assert.Contains(tvDesign, tvDesign.GetAllDesigns().ToArray());
+        Assert.Contains(lbl1, tvDesign.GetAllDesigns().ToArray());
+        Assert.Contains(lbl2, tvDesign.GetAllDesigns().ToArray());
+
+        Assert.AreEqual(3, tvDesign.GetAllDesigns().Count(), $"Expected only 3 Designs but they were {string.Join(",", tvDesign.GetAllDesigns())}");
     }
 
     [Test]

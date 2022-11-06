@@ -2,37 +2,42 @@
 
 namespace TerminalGuiDesigner.Operations;
 
-public class RemoveMenuOperation: Operation
+public class RemoveMenuOperation : Operation
 {
-    private MenuBar _menuBar;
-    private MenuBarItem? _toRemove;
+    private MenuBar menuBar;
+    private MenuBarItem? toRemove;
     private int idx;
 
     public Design Design { get; }
+
     public RemoveMenuOperation(Design design)
     {
-        Design = design;
+        this.Design = design;
 
         // somehow user ran this command for a non tab view
-        if (Design.View is not MenuBar)
+        if (this.Design.View is not MenuBar)
+        {
             throw new ArgumentException($"Design must be for a {nameof(MenuBar)} to support {nameof(AddMenuOperation)}");
+        }
 
-        _menuBar = (MenuBar)Design.View;
-        _toRemove = _menuBar.GetSelectedMenuItem();
+        this.menuBar = (MenuBar)this.Design.View;
+        this.toRemove = this.menuBar.GetSelectedMenuItem();
 
-        IsImpossible = _toRemove == null;
+        this.IsImpossible = this.toRemove == null;
     }
 
     public override bool Do()
     {
-        if (_toRemove == null || !_menuBar.Menus.Contains(_toRemove))
+        if (this.toRemove == null || !this.menuBar.Menus.Contains(this.toRemove))
+        {
             return false;
+        }
 
-        var current = _menuBar.Menus.ToList<MenuBarItem>();
-        idx = current.IndexOf(_toRemove);
-        current.Remove(_toRemove);
-        _menuBar.Menus = current.ToArray();
-        _menuBar.SetNeedsDisplay();
+        var current = this.menuBar.Menus.ToList<MenuBarItem>();
+        this.idx = current.IndexOf(this.toRemove);
+        current.Remove(this.toRemove);
+        this.menuBar.Menus = current.ToArray();
+        this.menuBar.SetNeedsDisplay();
 
         return true;
     }
@@ -40,21 +45,24 @@ public class RemoveMenuOperation: Operation
     public override void Undo()
     {
         // its not there anyways
-        if (_toRemove == null)
+        if (this.toRemove == null)
+        {
             return;
+        }
 
-        var current = _menuBar.Menus.ToList<MenuBarItem>();
-        current.Insert(idx,_toRemove);
-        _menuBar.Menus = current.ToArray();
-        _menuBar.SetNeedsDisplay();
+        var current = this.menuBar.Menus.ToList<MenuBarItem>();
+        current.Insert(this.idx, this.toRemove);
+        this.menuBar.Menus = current.ToArray();
+        this.menuBar.SetNeedsDisplay();
     }
 
     public override void Redo()
     {
-        Do();
+        this.Do();
     }
+
     public override string ToString()
     {
-        return $"Remove Menu '{_toRemove?.Title}'";
+        return $"Remove Menu '{this.toRemove?.Title}'";
     }
 }

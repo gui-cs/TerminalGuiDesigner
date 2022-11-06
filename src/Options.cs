@@ -9,7 +9,7 @@ namespace TerminalGuiDesigner
     /// </summary>
     public class Options
     {
-        #nullable disable warnings
+#nullable disable warnings
         [Value(0, MetaName = "path", HelpText = "New to create or existing file to open.")]
         public string Path { get; set; }
 
@@ -19,23 +19,24 @@ namespace TerminalGuiDesigner
         [Option('n', HelpText = "The C# namespace to be used for the View code generated")]
         public string Namespace { get; set; }
 
-        [Option( HelpText = "Enables UseSystemConsole, an alternative console display driver")]
-        public bool Usc { get;set; }
+        [Option(HelpText = "Enables UseSystemConsole, an alternative console display driver")]
+        public bool Usc { get; set; }
 
-        [Option( 'e', HelpText = "Enables experimental features")]
-        public bool Experimental { get;set; }
+        [Option('e', HelpText = "Enables experimental features")]
+        public bool Experimental { get; set; }
 
-        #nullable enable warnings
+#nullable enable warnings
 
         [Usage(ApplicationAlias = "TerminalGuiDesigner")]
         public static IEnumerable<Example> Examples
         {
             get
             {
-                return new List<Example>() {
+                return new List<Example>()
+                {
                     new Example("Run the application", new Options { }),
-                    new Example("Open existing MyExistingView.cs", new Options { Path = "../MyProject/MyExistingView.cs"}),
-                    new Example("Create a new Dialog called MyNewView.cs", new Options { Path = "../MyProject/MyNewView.cs",ViewType = "Dialog", Namespace = "MyApp"})
+                    new Example("Open existing MyExistingView.cs", new Options { Path = "../MyProject/MyExistingView.cs" }),
+                    new Example("Create a new Dialog called MyNewView.cs", new Options { Path = "../MyProject/MyNewView.cs", ViewType = "Dialog", Namespace = "MyApp" }),
                 };
             }
         }

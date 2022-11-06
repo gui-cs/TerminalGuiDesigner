@@ -1,29 +1,28 @@
-using NUnit.Framework;
 using System;
+using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 
-namespace tests;
+namespace UnitTests;
 
 public class ViewExtensionsTests : Tests
 {
-
     // upper left corner tests
-    [TestCase(1,1,false,false,false)]
-    [TestCase(2,3,true,true,false)]
-    [TestCase(2,4,true,true,false)]
-    [TestCase(3,3,true,true,false)]
-    [TestCase(3,4,true,false,false)]
+    [TestCase(1, 1, false, false, false)]
+    [TestCase(2, 3, true, true, false)]
+    [TestCase(2, 4, true, true, false)]
+    [TestCase(3, 3, true, true, false)]
+    [TestCase(3, 4, true, false, false)]
 
     // lower left corner tests
-    [TestCase(1,6,false,false,false)]
-    [TestCase(2,5,true,true,false)]
-    [TestCase(2,3,true,true,false)]
-    [TestCase(3,5,true,true,false)]
-    [TestCase(3,4,true,false,false)]
-    public void TestHitTest(int x, int y, bool hit,  bool border, bool lowerRight)
+    [TestCase(1, 6, false, false, false)]
+    [TestCase(2, 5, true, true, false)]
+    [TestCase(2, 3, true, true, false)]
+    [TestCase(3, 5, true, true, false)]
+    [TestCase(3, 4, true, false, false)]
+    public void TestHitTest(int x, int y, bool hit, bool border, bool lowerRight)
     {
-        var v = Get10By10View().View;
+        var v = this.Get10By10View().View;
 
         v.X = 2;
         v.Y = 3;
@@ -34,18 +33,25 @@ public class ViewExtensionsTests : Tests
         bool isLowerRight;
         bool isBorder;
 
-        var result = v.HitTest(new MouseEvent{
+        var result = v.HitTest(
+            new MouseEvent
+        {
             X = x,
-            Y = y
+            Y = y,
         }, out isBorder, out isLowerRight);
 
         // click didn't land in anything
-        if(hit)
-            Assert.AreSame(v,result);
+        if (hit)
+        {
+            Assert.AreSame(v, result);
+        }
         else
+        {
             Assert.IsNull(result);
+        }
+
         Assert.AreEqual(lowerRight, isLowerRight);
-        Assert.AreEqual(border,isBorder);
+        Assert.AreEqual(border, isBorder);
     }
 
     [TestCase(typeof(Label), false)]
@@ -58,7 +64,7 @@ public class ViewExtensionsTests : Tests
         var inst = (View?)Activator.CreateInstance(viewType)
             ?? throw new Exception("CreateInstance returned null!");
 
-        Assert.AreEqual(expectIsContainerView,inst.IsContainerView());
+        Assert.AreEqual(expectIsContainerView, inst.IsContainerView());
     }
 
     [TestCase(typeof(Label), false)]

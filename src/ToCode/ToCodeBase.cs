@@ -7,11 +7,11 @@ public abstract class ToCodeBase
 {
     protected void AddAddToViewStatement(CodeDomArgs args, Design d, CodeExpression parentView)
     {
-        AddMethodCall(args,
+        this.AddMethodCall(
+            args,
             parentView,
             nameof(View.Add),
-            new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), d.FieldName)
-            );
+            new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), d.FieldName));
     }
 
     protected void AddMethodCall(CodeDomArgs args, CodeExpression caller, string methodName, params CodeExpression[] methodArguments)
@@ -27,12 +27,13 @@ public abstract class ToCodeBase
 
     protected CodeMemberField AddFieldToClass(CodeDomArgs args, Design d)
     {
-        return AddFieldToClass(args, d.View.GetType(), d.FieldName);
+        return this.AddFieldToClass(args, d.View.GetType(), d.FieldName);
     }
+
     protected CodeMemberField AddFieldToClass(CodeDomArgs args, Type type, string fieldName)
     {
         // Create a private field for it
-        var field = new CodeMemberField(type,fieldName);
+        var field = new CodeMemberField(type, fieldName);
         args.Class.Members.Add(field);
 
         return field;
@@ -46,13 +47,15 @@ public abstract class ToCodeBase
 
     protected void AddConstructorCall(CodeDomArgs args, Design d, params CodeExpression[] parameters)
     {
-        AddConstructorCall(args, $"this.{d.FieldName}", d.View.GetType(), parameters);
+        this.AddConstructorCall(args, $"this.{d.FieldName}", d.View.GetType(), parameters);
     }
-    protected void AddConstructorCall(CodeDomArgs args, string fullySpecifiedFieldName,Type typeToConstruct, params CodeExpression[] parameters)
+
+    protected void AddConstructorCall(CodeDomArgs args, string fullySpecifiedFieldName, Type typeToConstruct, params CodeExpression[] parameters)
     {
-        var constructAssign = GetConstructorCall(fullySpecifiedFieldName,typeToConstruct,parameters);
+        var constructAssign = this.GetConstructorCall(fullySpecifiedFieldName, typeToConstruct, parameters);
         args.InitMethod.Statements.Add(constructAssign);
     }
+
     protected CodeAssignStatement GetConstructorCall(string fullySpecifiedFieldName, Type typeToConstruct, params CodeExpression[] parameters)
     {
         // Construct it
@@ -74,15 +77,16 @@ public abstract class ToCodeBase
     /// <param name="primativeValue">The new value that should be assigned.  Must be a primitive.</param>
     protected void AddPropertyAssignment(CodeDomArgs args, string lhs, object primativeValue)
     {
-        AddPropertyAssignment(args, lhs, new CodePrimitiveExpression(primativeValue.ToPrimitive()));
+        this.AddPropertyAssignment(args, lhs, new CodePrimitiveExpression(primativeValue.ToPrimitive()));
     }
+
     /// <summary>
     /// Adds a line "this.someField.Text = "Heya"
     /// </summary>
     /// <param name="args"></param>
     /// <param name="fullySpecifiedFieldName">The field or local variable upon which you want to set the <paramref name="propertyName"/></param>
     /// <param name="propertyName">Field or property to change</param>
-    protected void AddPropertyAssignment(CodeDomArgs args,string lhs, CodeExpression rhs)
+    protected void AddPropertyAssignment(CodeDomArgs args, string lhs, CodeExpression rhs)
     {
         var setLhs = new CodeFieldReferenceExpression();
         setLhs.FieldName = lhs;
@@ -92,6 +96,4 @@ public abstract class ToCodeBase
         assignStatement.Right = rhs;
         args.InitMethod.Statements.Add(assignStatement);
     }
-
-
 }

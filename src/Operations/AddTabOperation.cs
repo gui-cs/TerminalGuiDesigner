@@ -6,23 +6,24 @@ namespace TerminalGuiDesigner.Operations;
 
 public class AddTabOperation : TabViewOperation
 {
-    private Tab? _tab;
+    private Tab? tab;
 
-    public AddTabOperation(Design design) : base(design)
+    public AddTabOperation(Design design)
+        : base(design)
     {
     }
 
     public override bool Do()
     {
-        if (_tab != null)
+        if (this.tab != null)
         {
             throw new Exception("This command has already been performed once.  Use Redo instead of Do");
         }
 
         if (Modals.GetString("Add Tab", "Tab Name", "MyTab", out string? newTabName))
         {
-            View.AddTab(_tab = new Tab(newTabName ?? "Unamed Tab", new View { Width = Dim.Fill(), Height = Dim.Fill() }), true);
-            View.SetNeedsDisplay();
+            this.View.AddTab(this.tab = new Tab(newTabName ?? "Unamed Tab", new View { Width = Dim.Fill(), Height = Dim.Fill() }), true);
+            this.View.SetNeedsDisplay();
         }
 
         return true;
@@ -31,24 +32,24 @@ public class AddTabOperation : TabViewOperation
     public override void Redo()
     {
         // cannot redo (maybe user hit redo twice thats fine)
-        if (_tab == null || View.Tabs.Contains(_tab))
+        if (this.tab == null || this.View.Tabs.Contains(this.tab))
         {
             return;
         }
 
-        View.AddTab(_tab, true);
-        View.SetNeedsDisplay();
+        this.View.AddTab(this.tab, true);
+        this.View.SetNeedsDisplay();
     }
 
     public override void Undo()
     {
         // cannot undo
-        if (_tab == null || !View.Tabs.Contains(_tab))
+        if (this.tab == null || !this.View.Tabs.Contains(this.tab))
         {
             return;
         }
 
-        View.RemoveTab(_tab);
-        View.SetNeedsDisplay();
+        this.View.RemoveTab(this.tab);
+        this.View.SetNeedsDisplay();
     }
 }

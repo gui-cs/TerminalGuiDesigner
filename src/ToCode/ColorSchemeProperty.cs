@@ -5,11 +5,11 @@ namespace TerminalGuiDesigner.ToCode;
 
 public class ColorSchemeProperty : Property
 {
-    public ColorSchemeProperty(Design design):base(design,
-        design.View.GetType().GetProperty(nameof(View.ColorScheme))
-        ?? throw new Exception("ColorScheme property has changed name!"))
+    public ColorSchemeProperty(Design design)
+        : base(
+            design,
+            design.View.GetType().GetProperty(nameof(View.ColorScheme)) ?? throw new Exception("ColorScheme property has changed name!"))
     {
-        
     }
 
     public override void ToCode(CodeDomArgs args)
@@ -17,8 +17,10 @@ public class ColorSchemeProperty : Property
         // if no explicit color scheme defined
         // then we don't output any code (view's
         // scheme is inherited)
-        if(!Design.HasKnownColorScheme() )
+        if (!this.Design.HasKnownColorScheme())
+        {
             return;
+        }
 
         // Note that this branch calls GetRhs()
         base.ToCode(args);
@@ -26,31 +28,39 @@ public class ColorSchemeProperty : Property
 
     public override CodeExpression GetRhs()
     {
-        var s  = GetValue() as ColorScheme;
+        var s = this.GetValue() as ColorScheme;
 
-        var name = ColorSchemeManager.Instance.GetNameForColorScheme(s 
+        var name = ColorSchemeManager.Instance.GetNameForColorScheme(s
             ?? throw new Exception("GetRhs is only valid when there is a known ColorScheme"));
 
-        if(string.IsNullOrWhiteSpace(name))
+        if (string.IsNullOrWhiteSpace(name))
+        {
             throw new Exception("GetRhs is only valid when there is a known ColorScheme");
+        }
 
-        return new CodeFieldReferenceExpression(new CodeThisReferenceExpression(),name);
+        return new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), name);
     }
+
     public override object? GetValue()
     {
-        return Design.State.OriginalScheme ?? Design.View.GetExplicitColorScheme();
+        return this.Design.State.OriginalScheme ?? this.Design.View.GetExplicitColorScheme();
     }
+
     protected override string GetHumanReadableValue()
     {
-        const string inherited =  "(Inherited)";
+        const string inherited = "(Inherited)";
 
-        if(!Design.HasKnownColorScheme())
+        if (!this.Design.HasKnownColorScheme())
+        {
             return inherited;
+        }
 
-        var s  = GetValue() as ColorScheme;
+        var s = this.GetValue() as ColorScheme;
 
-        if(s == null)
+        if (s == null)
+        {
             return inherited;
+        }
 
         return ColorSchemeManager.Instance.GetNameForColorScheme(s) ?? "Unknown ColorScheme";
     }
@@ -59,6 +69,6 @@ public class ColorSchemeProperty : Property
     {
         base.SetValue(value);
 
-        Design.State.OriginalScheme = value as ColorScheme;
+        this.Design.State.OriginalScheme = value as ColorScheme;
     }
 }

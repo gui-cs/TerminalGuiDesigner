@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner
@@ -12,7 +7,7 @@ namespace TerminalGuiDesigner
     {
         /// <summary>
         /// Gets the top level selected <see cref="MenuBarItem"/> in the <paramref name="menuBar"/>
-        /// or null if it is not open/no selection is set.  Note that a submenu may still be 
+        /// or null if it is not open/no selection is set.  Note that a submenu may still be
         /// present but only the root will be returned
         /// </summary>
         /// <param name="menuBar"></param>
@@ -21,9 +16,11 @@ namespace TerminalGuiDesigner
         public static MenuBarItem? GetSelectedMenuItem(this MenuBar menuBar)
         {
             var selected = (int)GetNonNullPrivateFieldValue("selected", menuBar, typeof(MenuBar));
-            
+
             if (selected < 0 || selected >= menuBar.Menus.Length)
+            {
                 return null;
+            }
 
             return menuBar.Menus[selected];
         }
@@ -32,8 +29,8 @@ namespace TerminalGuiDesigner
         {
             var selectedField = type.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance)
                 ?? throw new Exception($"Expected private field {fieldName} was not present on {type.Name}");
-            return (selectedField.GetValue(item)
-                ?? throw new Exception($"Private field {fieldName} was unexpectedly null on {type.Name}"));
+            return selectedField.GetValue(item)
+                ?? throw new Exception($"Private field {fieldName} was unexpectedly null on {type.Name}");
         }
 
         /// <summary>
@@ -54,7 +51,9 @@ namespace TerminalGuiDesigner
             var current = (int)GetNonNullPrivateFieldValue("current", menu, menuClass);
 
             if (current < 0 || current >= barItems.Children.Length)
+            {
                 return null;
+            }
 
             return barItems.Children[current];
         }

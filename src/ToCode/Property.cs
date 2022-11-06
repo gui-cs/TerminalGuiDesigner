@@ -1,6 +1,6 @@
-﻿using NStack;
-using System.CodeDom;
+﻿using System.CodeDom;
 using System.Reflection;
+using NStack;
 using Terminal.Gui;
 using Terminal.Gui.Graphs;
 using Terminal.Gui.TextValidateProviders;
@@ -15,49 +15,55 @@ public class Property : ToCodeBase
     /// <summary>
     /// The code that leads to this property from <see cref="Design.View"/> or null
     /// if <see cref="PropertyInfo"/> is a direct property of the <see cref="Design.View"/>.
-    /// 
+    ///
     /// <para>For example "TableStyle" or "Border"</para>
-    /// 
+    ///
     /// </summary>
     public string? SubProperty { get; }
+
     public object DeclaringObject { get; set; }
 
     public PropertyInfo PropertyInfo { get; }
+
     public Property(Design design, PropertyInfo property)
     {
-        Design = design;
-        PropertyInfo = property;
-        DeclaringObject = Design.View;
+        this.Design = design;
+        this.PropertyInfo = property;
+        this.DeclaringObject = this.Design.View;
     }
-    public Property(Design design, PropertyInfo property, string subProperty, object declaringObject) : this(design, property)
+
+    public Property(Design design, PropertyInfo property, string subProperty, object declaringObject)
+        : this(design, property)
     {
-        SubProperty = subProperty;
-        DeclaringObject = declaringObject;
+        this.SubProperty = subProperty;
+        this.DeclaringObject = declaringObject;
     }
 
     public virtual object? GetValue()
     {
-        return PropertyInfo.GetValue(DeclaringObject);
+        return this.PropertyInfo.GetValue(this.DeclaringObject);
     }
 
     public virtual void SetValue(object? value)
     {
         // handle type conversions
-        if (PropertyInfo.PropertyType == typeof(Rune))
+        if (this.PropertyInfo.PropertyType == typeof(Rune))
         {
             if (value is char ch)
             {
                 value = new Rune(ch);
             }
         }
-        if (PropertyInfo.PropertyType == typeof(Dim))
+
+        if (this.PropertyInfo.PropertyType == typeof(Dim))
         {
             if (value is int i)
             {
                 value = Dim.Sized(i);
             }
         }
-        if (PropertyInfo.PropertyType == typeof(ustring))
+
+        if (this.PropertyInfo.PropertyType == typeof(ustring))
         {
             if (value is string s)
             {
@@ -65,7 +71,7 @@ public class Property : ToCodeBase
 
                 // TODO: This seems like something AutoSize should do automatically
                 // if renaming a button update its size to match
-                if(Design.View is Button b && PropertyInfo.Name.Equals("Text") && b.Width.IsAbsolute())
+                if (this.Design.View is Button b && this.PropertyInfo.Name.Equals("Text") && b.Width.IsAbsolute())
                 {
                     b.Width = s.Length + (b.IsDefault ? 6 : 4);
                 }
@@ -75,14 +81,15 @@ public class Property : ToCodeBase
             // see https://github.com/gui-cs/TerminalGuiDesigner/issues/91
             if (value == null)
             {
-                value = ustring.Make("");
-            }   
+                value = ustring.Make(string.Empty);
+            }
         }
-        if(PropertyInfo.PropertyType == typeof(IListDataSource))
+
+        if (this.PropertyInfo.PropertyType == typeof(IListDataSource))
         {
-            if(value != null && value is Array a)
+            if (value != null && value is Array a)
             {
-                // accept arrays as valid input values 
+                // accept arrays as valid input values
                 // for setting an IListDataSource.  Just
                 // convert them to ListWrappers
                 value = new ListWrapper(a.ToList());
@@ -91,12 +98,12 @@ public class Property : ToCodeBase
 
         // TODO: This hack gets around an ArgumentException that gets thrown when
         // switching from Computed to Absolute values of Dim/Pos
-        Design.View.IsInitialized = false;
+        this.Design.View.IsInitialized = false;
 
         // if a LineView and changing Orientation then also flip
         // the Height/Width and set appropriate new rune
-        if (PropertyInfo.Name == nameof(LineView.Orientation) 
-            && Design.View is LineView v && value is Orientation newOrientation)
+        if (this.PropertyInfo.Name == nameof(LineView.Orientation)
+            && this.Design.View is LineView v && value is Orientation newOrientation)
         {
             switch (newOrientation)
             {
@@ -116,11 +123,11 @@ public class Property : ToCodeBase
             }
         }
 
-        PropertyInfo.SetValue(DeclaringObject, value);
+        this.PropertyInfo.SetValue(this.DeclaringObject, value);
 
-        CallRefreshMethodsIfAny();
+        this.CallRefreshMethodsIfAny();
 
-        Design.View.IsInitialized = true;
+        this.Design.View.IsInitialized = true;
     }
 
     /// <summary>
@@ -129,62 +136,70 @@ public class Property : ToCodeBase
     /// </summary>
     private void CallRefreshMethodsIfAny()
     {
-        if(Design.View is TabView tv)
+        if (this.Design.View is TabView tv)
         {
             tv.ApplyStyleChanges();
         }
-        if(Design.View is TableView t)
+
+        if (this.Design.View is TableView t)
         {
             t.Update();
         }
-        
-        Design.View.SetNeedsDisplay();
+
+        this.Design.View.SetNeedsDisplay();
     }
 
     public virtual void ToCode(CodeDomArgs args)
     {
         try
         {
-            AddPropertyAssignment(args, GetLhs(), GetRhs());   
+            this.AddPropertyAssignment(args, this.GetLhs(), this.GetRhs());
         }
         catch (Exception ex)
         {
-            throw new Exception($"Failed to generate ToCode for Property '{PropertyInfo.Name}' of Design '{Design.FieldName}'",ex);
+            throw new Exception($"Failed to generate ToCode for Property '{this.PropertyInfo.Name}' of Design '{this.Design.FieldName}'", ex);
         }
     }
 
     public virtual CodeExpression GetRhs()
     {
-        var val = GetValue();
-        if(val == null)
+        var val = this.GetValue();
+        if (val == null)
         {
             return new CodeSnippetExpression("null");
         }
-        if(val is Attribute attribute)
+
+        if (val is Attribute attribute)
         {
             return new CodeSnippetExpression(attribute.ToCode());
         }
-        if(val is Dim d)
+
+        if (val is Dim d)
         {
             return new CodeSnippetExpression(d.ToCode());
         }
-        if(val is Size s)
+
+        if (val is Size s)
         {
             return new CodeSnippetExpression(s.ToCode());
         }
 
-        if(val is PointF pointf)
+        if (val is PointF pointf)
         {
-            return new CodeObjectCreateExpression(typeof(PointF),
-                 new CodePrimitiveExpression(pointf.X),
-                 new CodePrimitiveExpression(pointf.Y));
+            return new CodeObjectCreateExpression(
+                typeof(PointF),
+                new CodePrimitiveExpression(pointf.X),
+                new CodePrimitiveExpression(pointf.Y));
         }
-        if(val is TextRegexProvider regv)
+
+        if (val is TextRegexProvider regv)
         {
-            return new CodeObjectCreateExpression(typeof(TextRegexProvider),
-                 new CodePrimitiveExpression(regv.Pattern.ToPrimitive()));
+            return new CodeObjectCreateExpression(
+                typeof(TextRegexProvider),
+                new CodePrimitiveExpression(regv.Pattern.ToPrimitive()));
         }
-        if(val is ListWrapper w)
+
+        if (val is ListWrapper w)
         {
             // Create an Expression like:
             // new ListWrapper(new string[]{"bob","frank"})
@@ -192,31 +207,31 @@ public class Property : ToCodeBase
             var a = new CodeArrayCreateExpression();
             Type? listType = null;
 
-            foreach(var v in w.ToList())
+            foreach (var v in w.ToList())
             {
-                if(v != null && listType == null)
+                if (v != null && listType == null)
                 {
                     listType = v.GetType();
                 }
-                
+
                 CodeExpression element = v == null ? new CodeDefaultValueExpression() : new CodePrimitiveExpression(v);
 
                 a.Initializers.Add(element);
             }
-            a.CreateType = new CodeTypeReference(listType ?? typeof(string)); 
-            var ctor = new CodeObjectCreateExpression(typeof(ListWrapper),a);
+
+            a.CreateType = new CodeTypeReference(listType ?? typeof(string));
+            var ctor = new CodeObjectCreateExpression(typeof(ListWrapper), a);
 
             return ctor;
         }
 
-        if(val is Pos p)
+        if (val is Pos p)
         {
             // TODO: Get EVERYONE! not just siblings
-            return new CodeSnippetExpression(p.ToCode(Design.GetSiblings().ToList()));
+            return new CodeSnippetExpression(p.ToCode(this.Design.GetSiblings().ToList()));
         }
 
-
-        if(val is Enum e)
+        if (val is Enum e)
         {
             return new CodeFieldReferenceExpression(
                     new CodeTypeReferenceExpression(e.GetType()),
@@ -225,15 +240,14 @@ public class Property : ToCodeBase
 
         var type = val.GetType();
 
-        if(type.IsArray)
+        if (type.IsArray)
         {
             var elementType = type.GetElementType();
 
-            
             var values = ((Array)val).ToList();
-            return new CodeArrayCreateExpression(elementType,
-                        values.Select(v=>new CodePrimitiveExpression(v.ToPrimitive())).ToArray()
-                   );
+            return new CodeArrayCreateExpression(
+                elementType,
+                values.Select(v => new CodePrimitiveExpression(v.ToPrimitive())).ToArray());
         }
 
         return new CodePrimitiveExpression(val.ToPrimitive());
@@ -241,15 +255,17 @@ public class Property : ToCodeBase
 
     public virtual string GetLhs()
     {
-        if(Design.IsRoot)
-            return string.IsNullOrWhiteSpace(SubProperty) ? 
-                $"this.{PropertyInfo.Name}" :
-                $"this.{SubProperty}.{PropertyInfo.Name}";
+        if (this.Design.IsRoot)
+        {
+            return string.IsNullOrWhiteSpace(this.SubProperty) ?
+                $"this.{this.PropertyInfo.Name}" :
+                $"this.{this.SubProperty}.{this.PropertyInfo.Name}";
+        }
 
         // if the property being designed exists on the View directly e.g. MyView.X
-        return string.IsNullOrWhiteSpace(SubProperty) ?
-            $"this.{Design.FieldName}.{PropertyInfo.Name}" :
-            $"this.{Design.FieldName}.{SubProperty}.{PropertyInfo.Name}";
+        return string.IsNullOrWhiteSpace(this.SubProperty) ?
+            $"this.{this.Design.FieldName}.{this.PropertyInfo.Name}" :
+            $"this.{this.Design.FieldName}.{this.SubProperty}.{this.PropertyInfo.Name}";
     }
 
     /// <summary>
@@ -259,48 +275,49 @@ public class Property : ToCodeBase
     /// <returns></returns>
     public virtual string GetHumanReadableName()
     {
-        return SubProperty != null ? $"{SubProperty}.{PropertyInfo.Name}" : PropertyInfo.Name;
+        return this.SubProperty != null ? $"{this.SubProperty}.{this.PropertyInfo.Name}" : this.PropertyInfo.Name;
     }
+
     public override string ToString()
     {
-        return GetHumanReadableName() + ":" + GetHumanReadableValue();
+        return this.GetHumanReadableName() + ":" + this.GetHumanReadableValue();
     }
 
     protected virtual string GetHumanReadableValue()
     {
-        var val = GetValue();
+        var val = this.GetValue();
 
-        if(val == null)
+        if (val == null)
         {
             return "null";
         }
 
-        if(val is bool b)
+        if (val is bool b)
         {
             return b ? "Yes" : "No";
         }
 
-        if(val is Attribute attribute)
+        if (val is Attribute attribute)
         {
             return attribute.ToCode();
         }
 
-
-        if(val is Dim d)
+        if (val is Dim d)
         {
-            return d.ToCode() ?? d.ToString() ?? "";
+            return d.ToCode() ?? d.ToString() ?? string.Empty;
         }
-        if(val is Pos p)
+
+        if (val is Pos p)
         {
             // TODO: Get EVERYONE not just siblings
-            return p.ToCode(Design.GetSiblings().ToList()) ?? p.ToString() ?? "";
+            return p.ToCode(this.Design.GetSiblings().ToList()) ?? p.ToString() ?? string.Empty;
         }
 
-        if(val is Array a)
+        if (val is Array a)
         {
-            return String.Join(",",a.ToList());
+            return string.Join(",", a.ToList());
         }
 
-        return val.ToString() ?? "";
+        return val.ToString() ?? string.Empty;
     }
 }

@@ -1,5 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
+	<ItemGroup>
+		<AdditionalFiles Include="stylecop.json" />
+	</ItemGroup>
+	<ItemGroup>
     <None Include=".\logo.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
@@ -11,6 +14,7 @@
   </ItemGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>TerminalGuiDesigner</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
@@ -97,19 +101,20 @@
 	 * Fixed mouse dragging/resizing of views in subviews (e.g. TabViews)
 	</PackageReleaseNotes>
   </PropertyGroup>
-  <ItemGroup>
-    <Content Include="NLog.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Keys.yaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="NLog.config">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Keys.yaml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
   <ItemGroup>
     <PackageReference Include="Basic.Reference.Assemblies" Version="1.4.0" />
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.1" />
     <PackageReference Include="nlog" Version="5.0.5" />
+    <PackageReference Include="StyleCop.Analyzers " Version="1.1.118" />
     <PackageReference Include="System.CodeDom" Version="6.0.0" />
     <PackageReference Include="Terminal.gui" Version="1.8.2" />
     <PackageReference Include="YamlDotNet" Version="12.0.2" />

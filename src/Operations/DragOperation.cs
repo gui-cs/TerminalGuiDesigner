@@ -1,5 +1,4 @@
-﻿
-using Terminal.Gui;
+﻿using Terminal.Gui;
 
 namespace TerminalGuiDesigner.Operations;
 
@@ -7,207 +6,244 @@ namespace TerminalGuiDesigner.Operations;
 /// Allows the user to use the mouse to reposition views by
 /// dragging them around the place.
 /// </summary>
-public class DragOperation : Operation
+public partial class DragOperation : Operation
 {
+    private readonly List<DragMemento> mementos = new ();
 
-    private class DragMemento
+    private View? dropInto;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DragOperation"/> class.
+    /// Begins a drag operation in which <paramref name="beingDragged"/> is moved.
+    /// </summary>
+    /// <param name="beingDragged">The primary design being moved.  Cannot be the root design (see <see cref="Design.IsRoot"/>).</param>
+    /// <param name="originalX">The client X coordinate position of the mouse when dragging began.  Final location is calculated as an offset from this point.
+    /// <remarks>This is not necessarily the X/Y of <paramref name="beingDragged"/> (e.g. if mouse click drag starts in from middle of View area)</remarks></param>
+    /// <param name="originalY">The client Y coordinate position of the mouse when dragging began.  Final location is calculated as an offset from this point.
+    /// <remarks>This is not necessarily the X/Y of <paramref name="beingDragged"/> (e.g. if mouse click drag starts in from middle of View area)</remarks></param>
+    /// <param name="alsoDrag">Other Designs that are also multi selected and should be dragged at the same time.</param>
+    public DragOperation(Design beingDragged, int originalX, int originalY, Design[]? alsoDrag)
     {
-        public Design Design {get;set;}
-        public Pos OriginalX {get;}
-        public Pos OriginalY {get;}
+        // TODO: how does this respond when alsoDrag has some that are not in
+        // same view as beingDragged - write unit test
 
-        public View? OriginalSuperView {get;}
-
-        public DragMemento(Design design)
+        // don't let the user drag the root view anywhere
+        if (beingDragged.IsRoot || (alsoDrag?.Any(d => d.IsRoot) ?? false))
         {
-            Design = design;
-            OriginalX = design.View.X;
-            OriginalY = design.View.Y;
-            OriginalSuperView = design.View.SuperView?.GetNearestDesign()?.View;
+            this.IsImpossible = true;
+            return;
         }
+
+        this.mementos.Add(new DragMemento(beingDragged));
+
+        this.DestinationX = originalX;
+        this.DestinationY = originalY;
+
+        foreach (var d in alsoDrag ?? new Design[0])
+        {
+            if (!this.mementos.Any(m => m.Design == d))
+            {
+                this.mementos.Add(new DragMemento(d));
+            }
+        }
+
+        this.OriginalClickX = originalX;
+        this.OriginalClickY = originalY;
     }
 
-    private List<DragMemento> Mementos = new();
-
-    public Design BeingDragged => Mementos.First().Design;
+    /// <summary>
+    /// Gets the Design (wrapper) for the View that is being dragged around.
+    /// </summary>
+    public Design BeingDragged => this.mementos.First().Design;
 
     /// <summary>
-    /// When draging from the middle of the control this is the position of the cursor X 
-    /// at the start of the drag
+    /// Gets the position of the cursor within the area of <see cref="BeingDragged"/> when mouse was
+    /// pressed down.  This is expressed in Client Coordinates (not screen coordinates) of the
+    /// <see cref="BeingDragged"/> parent.
+    /// <para>
+    /// For example if a Label "Hey" is at X=1 and Y=1 of it's parent container and user clicks midway
+    /// along the button then this could be X=3.
+    /// </para>
     /// </summary>
-    public readonly int OriginalClickX;
-    /// <summary>
-    /// When draging from the middle of the control this is the position of the cursor Y 
-    /// at the start of the drag
-    /// </summary>
-    public readonly int OriginalClickY;
+    public int OriginalClickX { get; }
 
-    public int DestinationX { get; set; }
-    public int DestinationY { get; set; }
-    
     /// <summary>
-    /// A <see cref="Design.IsContainerView"/> into which to move the control in addition
-    /// to moving it.  Allows users to drag views into other container views (e.g. tabs etc)
+    /// Gets the position of the cursor within the area of <see cref="BeingDragged"/> when mouse was
+    /// pressed down.  This is expressed in Client Coordinates (not screen coordinates) of the
+    /// <see cref="BeingDragged"/> parent.
     /// </summary>
-    public View? DropInto {
+    public int OriginalClickY { get; }
+
+    // TODO: Think this might be client coordinates not screen coordinates
+
+    /// <summary>
+    /// <para>
+    /// Gets the client coordinates that the View will be moved to if the operation
+    /// were to complete.  These are regularly updated during dragging.  They are expressed
+    /// in client coordinates of the original View that contains <see cref="BeingDragged"/>.
+    /// </para>
+    /// <remarks>
+    /// To change this use <see cref="ContinueDrag(Point)"/>.
+    /// </remarks>
+    /// </summary>
+    public int DestinationX { get; private set; }
+
+    /// <inheritdoc cref="DestinationX"/>
+    public int DestinationY { get; private set; }
+
+    /// <summary>
+    /// <para>
+    /// Gets or Sets a <see cref="Design.IsContainerView"/> into which to move the control in addition
+    /// to moving it.  Allows users to drag views into other container views (e.g. tabs etc).
+    /// </para>
+    /// <para>To calculate this, map <see cref="DestinationX"/>/<see cref="DestinationY"/> into screen
+    /// coordinates (based on current parent container) and then performing a hit test at that
+    /// point.</para>
+    /// <para>
+    /// Attempts to set this to a non-container view will be ignored.
+    /// </para>
+    /// </summary>
+    public View? DropInto
+    {
         get
         {
-            return dropInto;
-        } 
+            return this.dropInto;
+        }
+
         set
         {
             // Don't let them attempt to drop a view into itself!
-            if (Mementos.Any(m=>m.Design.View == value))
+            if (this.mementos.Any(m => m.Design.View == value))
+            {
                 return;
+            }
 
             // don't let user drop stuff into labels or tables etc
             if (value != null && !value.IsContainerView())
+            {
                 return;
-            
-            dropInto = value;
+            }
+
+            this.dropInto = value;
         }
     }
 
-    private View? dropInto;
-    public DragOperation(Design beingDragged, int destX, int destY, Design[]? alsoDrag)
-    {
-        // don't let the user drag the root view anywhere
-        if(beingDragged.IsRoot || (alsoDrag?.Any(d=>d.IsRoot) ?? false))
-        {
-            IsImpossible = true;
-            return;
-        }
-        Mementos.Add(new DragMemento(beingDragged));
-
-        DestinationX = destX;
-        DestinationY = destY;
-
-        foreach(var d in alsoDrag ?? new Design[0])
-        {
-            if(!Mementos.Any(m=>m.Design == d))
-                Mementos.Add(new DragMemento(d));
-        }
-
-        OriginalClickX = destX;
-        OriginalClickY = destY;
-    }
+    /// <inheritdoc/>
     public override bool Do()
     {
         bool didAny = false;
-        foreach(var mem in Mementos)
+        foreach (var mem in this.mementos)
         {
-            didAny = Do(mem) || didAny;
+            didAny = this.Do(mem) || didAny;
         }
+
         return didAny;
+    }
+
+    /// <summary>
+    /// Moves all dragged views back to original positions.
+    /// </summary>
+    public override void Undo()
+    {
+        foreach (var mem in this.mementos)
+        {
+            mem.Undo();
+        }
+    }
+
+    /// <inheritdoc/>
+    public override void Redo()
+    {
+        this.Do();
+    }
+
+    /// <summary>
+    /// Updates the drag and the current positions of all Views being dragged
+    /// to the new client coordinates.
+    /// </summary>
+    /// <param name="dest">Client coordinates to update to.  All dragged
+    /// views must have same parent and this coordinate must be in that parents
+    /// coordinate system (client area) although it can exceed the bounds (e.g.
+    /// to drag out of current container and drop into another).
+    /// </param>
+    public void ContinueDrag(Point dest)
+    {
+        foreach (var mem in this.mementos)
+        {
+            this.ContinueDrag(mem, dest);
+        }
     }
 
     private bool Do(DragMemento mem)
     {
-        if (DropInto != null)
+        if (this.DropInto != null)
         {
             // if changing to a new container
-            if (DropInto != mem.OriginalSuperView && mem.OriginalSuperView != null)
+            if (this.DropInto != mem.OriginalSuperView && mem.OriginalSuperView != null)
             {
                 mem.Design.View.SuperView.Remove(mem.Design.View);
-                DropInto.Add(mem.Design.View);
+                this.DropInto.Add(mem.Design.View);
             }
         }
 
-        var offsetP = OffsetByDropInto(mem,new Point(OriginalClickX,OriginalClickY));
+        var offsetP = this.OffsetByDropInto(mem, new Point(this.OriginalClickX, this.OriginalClickY));
         var dx = offsetP.X;
         var dy = offsetP.Y;
 
-        if (mem.Design.View.X.IsAbsolute() && 
+        if (mem.Design.View.X.IsAbsolute() &&
             mem.OriginalX.IsAbsolute(out var originX))
         {
-            mem.Design.GetDesignableProperty("X")?.SetValue(Pos.At(originX + (DestinationX - dx)));
+            mem.Design.GetDesignableProperty("X")?.SetValue(Pos.At(originX + (this.DestinationX - dx)));
         }
 
-        if (mem.Design.View.Y.IsAbsolute() && 
+        if (mem.Design.View.Y.IsAbsolute() &&
             mem.OriginalY.IsAbsolute(out var originY))
         {
-            mem.Design.GetDesignableProperty("Y")?.SetValue(Pos.At(originY + (DestinationY - dy)));
+            mem.Design.GetDesignableProperty("Y")?.SetValue(Pos.At(originY + (this.DestinationY - dy)));
         }
 
         return true;
     }
 
     /// <summary>
-    /// When dropping into a new container the X/Y of the control change from being relative to 
+    /// When dropping into a new container the X/Y of the control change from being relative to
     /// the one parents client area to another so we need to compensate otherwise when the user
-    /// lets go of the mouse the control jumps (often out of the visible area of the control)
+    /// lets go of the mouse the control jumps (often out of the visible area of the control).
     /// </summary>
     /// <returns>The original point adjusted to the client area of the control you dropped into (if any).</returns>
-    private Point OffsetByDropInto(DragMemento mem,Point p)
+    private Point OffsetByDropInto(DragMemento mem, Point p)
     {
-        if(mem.OriginalSuperView == DropInto || DropInto  == null)
+        if (mem.OriginalSuperView == null || mem.OriginalSuperView == this.DropInto || this.DropInto == null)
+        {
             return p;
+        }
 
         mem.OriginalSuperView.ViewToScreen(0, 0, out var originalSuperX, out var originalSuperY, false);
-        DropInto.ViewToScreen(0, 0, out var newSuperX, out var newSuperY, false);
+        this.DropInto.ViewToScreen(0, 0, out var newSuperX, out var newSuperY, false);
 
         p.Offset(newSuperX - originalSuperX, newSuperY - originalSuperY);
         return p;
     }
 
-    public override void Undo()
-    {
-        foreach(var mem in Mementos)
-        {
-            Undo(mem);
-        }
-    }
-
-    private void Undo(DragMemento mem)
-    {
-        // if we changed the parent of the object (e.g. by dragging it into another view)
-        if (mem.OriginalSuperView != null && mem.Design.View.SuperView != mem.OriginalSuperView)
-        {
-            // change back to the original container
-            mem.Design.View.SuperView?.Remove(mem.Design.View);
-            mem.OriginalSuperView.Add(mem.Design.View);
-        }
-
-        if (mem.Design.View.X.IsAbsolute())
-        {
-            mem.Design.GetDesignableProperty("X")
-                ?.SetValue(mem.OriginalX);
-        }
-
-        if (mem.Design.View.Y.IsAbsolute())
-        {
-            mem.Design.GetDesignableProperty("Y")
-                ?.SetValue(mem.OriginalY);
-        }
-    }
-
-    public override void Redo()
-    {
-        Do();
-    }
-
-    public void ContinueDrag(Point dest)
-    {
-        foreach(var mem in Mementos)
-        {
-            ContinueDrag(mem,dest);
-        }
-    }
-
     private void ContinueDrag(DragMemento mem, Point dest)
     {
-        // Only support dragging for properties that are exact absolute
-        // positions (i.e. not relative positioning - Bottom of other control etc).
+        /*
+         * Only support dragging for properties that are exact absolute
+         * positions (i.e. not relative positioning - Bottom of other control etc).
+         */
 
         if (mem.Design.View.X.IsAbsolute() && mem.OriginalX.IsAbsolute(out var originX))
-            mem.Design.View.X = originX + (dest.X - OriginalClickX);
+        {
+            mem.Design.View.X = originX + (dest.X - this.OriginalClickX);
+        }
 
-        DestinationX = dest.X;
+        this.DestinationX = dest.X;
 
         if (mem.Design.View.Y.IsAbsolute() && mem.OriginalY.IsAbsolute(out var originY))
-            mem.Design.View.Y = originY + (dest.Y - OriginalClickY);
+        {
+            mem.Design.View.Y = originY + (dest.Y - this.OriginalClickY);
+        }
 
-        DestinationY = dest.Y;
-
+        this.DestinationY = dest.Y;
     }
 }

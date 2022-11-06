@@ -4,8 +4,8 @@ namespace TerminalGuiDesigner.UI.Windows;
 
 class GetTextDialog
 {
-    private readonly DialogArgs _args;
-    private readonly string? _initialValue;
+    private readonly DialogArgs args;
+    private readonly string? initialValue;
     private readonly Window win;
     public string? ResultText;
     private readonly TextView textField;
@@ -13,10 +13,10 @@ class GetTextDialog
 
     public GetTextDialog(DialogArgs args, string? initialValue)
     {
-        _args = args;
-        _initialValue = initialValue;
+        this.args = args;
+        this.initialValue = initialValue;
 
-        win = new Window(_args.WindowTitle)
+        this.win = new Window(this.args.WindowTitle)
         {
             X = 0,
             Y = 0,
@@ -25,93 +25,94 @@ class GetTextDialog
 
         var description = new Label
         {
-            Text = _args.TaskDescription ?? "",
+            Text = this.args.TaskDescription ?? string.Empty,
             Y = 0,
         };
 
-        win.Add(description);
+        this.win.Add(description);
 
         var entryLabel = new Label
         {
-            Text = _args.EntryLabel ?? "",
+            Text = this.args.EntryLabel ?? string.Empty,
             Y = Pos.Bottom(description),
         };
 
-        win.Add(entryLabel);
+        this.win.Add(entryLabel);
 
-        textField = new TextView()
+        this.textField = new TextView()
         {
             X = 1,
             Y = Pos.Bottom(entryLabel),
             Height = Dim.Fill(2),
             Width = Dim.Fill(2),
-            Text = _initialValue ?? "",
+            Text = this.initialValue ?? string.Empty,
             AllowsTab = false,
         };
-        textField.KeyPress += TextField_KeyPress;
+        this.textField.KeyPress += this.TextField_KeyPress;
 
         // make it easier for user to replace this text with something else
         // by directly selecting it all so next keypress replaces text
-        textField.SelectAll();
+        this.textField.SelectAll();
 
-        win.Add(textField);
+        this.win.Add(this.textField);
 
         var btnOk = new Button("Ok", true)
         {
             X = 0,
-            Y = Pos.Bottom(textField),
-            IsDefault = !_args.MultiLine
+            Y = Pos.Bottom(this.textField),
+            IsDefault = !this.args.MultiLine,
         };
         btnOk.Clicked += () =>
         {
-            Accept();
+            this.Accept();
         };
 
         var btnCancel = new Button("Cancel")
         {
             X = Pos.Right(btnOk),
-            Y = Pos.Bottom(textField),
-            IsDefault = false
+            Y = Pos.Bottom(this.textField),
+            IsDefault = false,
         };
         btnCancel.Clicked += () =>
         {
-            okClicked = false;
+            this.okClicked = false;
             Application.RequestStop();
         };
 
         var btnClear = new Button("Clear")
         {
             X = Pos.Right(btnCancel),
-            Y = Pos.Bottom(textField)
+            Y = Pos.Bottom(this.textField),
         };
         btnClear.Clicked += () =>
         {
-            textField.Text = "";
+            this.textField.Text = string.Empty;
         };
 
-        win.Add(btnOk);
-        win.Add(btnCancel);
-        win.Add(btnClear);
+        this.win.Add(btnOk);
+        this.win.Add(btnCancel);
+        this.win.Add(btnClear);
     }
+
     public bool ShowDialog()
     {
-        Application.Run(win);
+        Application.Run(this.win);
 
-        return okClicked;
+        return this.okClicked;
     }
 
     private void Accept()
     {
-        okClicked = true;
-        ResultText = textField.Text.ToString();
+        this.okClicked = true;
+        this.ResultText = this.textField.Text.ToString();
         Application.RequestStop();
     }
 
     private void TextField_KeyPress(View.KeyEventEventArgs obj)
     {
-        if (obj.KeyEvent.Key == Key.Enter && !_args.MultiLine)
+        if (obj.KeyEvent.Key == Key.Enter && !this.args.MultiLine)
         {
-            Accept();
+            this.Accept();
             obj.Handled = true;
         }
     }

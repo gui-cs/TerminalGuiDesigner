@@ -4,5 +4,5 @@ public enum DimType
 {
     Absolute,
     Percent,
-    Fill
+    Fill,
 }

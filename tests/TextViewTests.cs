@@ -4,28 +4,26 @@ using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
 
-namespace tests
+namespace UnitTests;
+
+internal class TextViewTests : Tests
 {
-    internal class TextViewTests : Tests
+    [Test]
+    public void TestSettingToNull()
     {
+        var tv = new TextView();
 
-        [Test]
-        public void TestSettingToNull()
-        {
-            var tv = new TextView();
+        var d = new Design(new SourceCodeFile("Blah.cs"), "mytv", tv);
+        tv.Data = d;
+        tv.Text = "fff";
 
-            var d = new Design(new SourceCodeFile("Blah.cs"), "mytv", tv);
-            tv.Data = d;
-            tv.Text = "fff";
+        var op = new SetPropertyOperation(
+            d,
+            d.GetDesignableProperty("Text") ?? throw new System.Exception("Did not find expected designable property"),
+            tv.Text, null);
 
-            var op = new SetPropertyOperation(d,
-                d.GetDesignableProperty("Text") ?? throw new System.Exception("Did not find expected designable property"),
-                tv.Text,null);
+        op.Do();
 
-            op.Do();
-
-            Assert.IsTrue(ustring.IsNullOrEmpty(tv.Text));
-        }
-
+        Assert.IsTrue(ustring.IsNullOrEmpty(tv.Text));
     }
 }

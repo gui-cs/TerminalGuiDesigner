@@ -1,20 +1,20 @@
-﻿using NUnit.Framework;
-using System;
+﻿using System;
 using System.Linq;
+using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 using Attribute = Terminal.Gui.Attribute;
 
-namespace tests;
+namespace UnitTests;
 
 internal class CopyPasteTests : Tests
 {
     [Test]
     public void CannotCopyRoot()
     {
-        var d = Get10By10View();
+        var d = this.Get10By10View();
 
         var top = new Toplevel();
         top.Add(d.View);
@@ -28,20 +28,21 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPasteTableView()
     {
-        var d = Get10By10View();
+        var d = this.Get10By10View();
 
         var tv = (TableView)new ViewFactory().Create(typeof(TableView));
 
         Assert.IsTrue(
-            new AddViewOperation(d.SourceCode, tv, d, "mytbl").Do()
-        );
+            new AddViewOperation(tv, d, "mytbl").Do());
 
         var tvDesign = (Design)tv.Data;
 
-        Assert.IsFalse(tv.Style.InvertSelectedCellFirstCharacter,
+        Assert.IsFalse(
+            tv.Style.InvertSelectedCellFirstCharacter,
             "Expected default state for this flag to be false");
 
-        Assert.IsFalse(tv.FullRowSelect,
+        Assert.IsFalse(
+            tv.FullRowSelect,
             "Expected default state for this flag to be false");
 
         tv.Table.Rows.Clear();
@@ -65,7 +66,7 @@ internal class CopyPasteTests : Tests
             "Since you cannot Undo a Copy we expected undo stack to be empty");
 
         selectionManager.Clear();
-        
+
         Assert.IsEmpty(selectionManager.Selected);
 
         var paste = new PasteOperation(d);
@@ -74,7 +75,8 @@ internal class CopyPasteTests : Tests
         Assert.AreEqual(1, OperationManager.Instance.UndoStackSize,
             "Undo stack should contain the paste operation");
 
-        Assert.IsNotEmpty(selectionManager.Selected,
+        Assert.IsNotEmpty(
+            selectionManager.Selected,
             "After pasting, the new clone should be selected");
 
         var tv2Design = selectionManager.Selected.Single();
@@ -96,20 +98,20 @@ internal class CopyPasteTests : Tests
             "Cloned table should be a new table not a reference to the old one");
     }
 
-
     [Test]
     public void CopyPastePosRelative_Simple()
     {
-        var d = Get10By10View();
+        var d = this.Get10By10View();
 
         var lbl = new Label("Name:");
-        var tb = new TextField {
+        var tb = new TextField
+        {
             Width = 10,
-            X = Pos.Right(lbl) + 1
+            X = Pos.Right(lbl) + 1,
         };
 
-        new AddViewOperation(d.SourceCode, lbl, d, "lbl").Do();
-        new AddViewOperation(d.SourceCode, tb, d, "tb").Do();
+        new AddViewOperation(lbl, d, "lbl").Do();
+        new AddViewOperation(tb, d, "tb").Do();
 
         var selected = SelectionManager.Instance;
         selected.Clear();
@@ -117,7 +119,7 @@ internal class CopyPasteTests : Tests
 
         new CopyOperation(SelectionManager.Instance.Selected.ToArray()).Do();
         var cmd = new PasteOperation(d);
-        
+
         Assert.IsFalse(cmd.IsImpossible);
         OperationManager.Instance.Do(cmd);
 
@@ -130,41 +132,42 @@ internal class CopyPasteTests : Tests
         Assert.IsInstanceOf(typeof(Label), cloneLabelDesign.View);
         Assert.IsInstanceOf(typeof(TextField), cloneTextFieldDesign.View);
 
-        cloneTextFieldDesign.View.X.GetPosType(d.GetAllDesigns().ToArray(),
+        cloneTextFieldDesign.View.X.GetPosType(
+            d.GetAllDesigns().ToArray(),
             out var posType, out _, out var relativeTo, out var side, out var offset);
 
         Assert.AreEqual(PosType.Relative, posType);
-        Assert.AreEqual(1,offset);
-        Assert.AreEqual(Side.Right,side);
+        Assert.AreEqual(1, offset);
+        Assert.AreEqual(Side.Right, side);
 
-        Assert.AreSame(cloneLabelDesign, relativeTo,"Pasted clone should be relative to the also pasted label");
+        Assert.AreSame(cloneLabelDesign, relativeTo, "Pasted clone should be relative to the also pasted label");
     }
 
     /// <summary>
     /// Tests copying a TextField that has <see cref="PosType.Relative"/> on another View
-    /// but that View is not also being copy/pasted.  In this case we should leave the 
+    /// but that View is not also being copy/pasted.  In this case we should leave the
     /// Pos how it is (pointing at the original View).
     /// </summary>
     [Test]
     public void CopyPastePosRelative_CopyOnlyDepender()
     {
-        var d = Get10By10View();
+        var d = this.Get10By10View();
 
         var lbl = new Label("Name:");
         var tb = new TextField
         {
             Width = 10,
-            X = Pos.Right(lbl) + 1
+            X = Pos.Right(lbl) + 1,
         };
 
-        new AddViewOperation(d.SourceCode, lbl, d, "lbl").Do();
-        new AddViewOperation(d.SourceCode, tb, d, "tb").Do();
+        new AddViewOperation(lbl, d, "lbl").Do();
+        new AddViewOperation(tb, d, "tb").Do();
 
         var selected = SelectionManager.Instance;
 
         // Copy only the TextField and not the View it's Pos points to
         new CopyOperation((Design)tb.Data).Do();
-        
+
         var cmd = new PasteOperation(d);
 
         Assert.IsFalse(cmd.IsImpossible);
@@ -176,7 +179,8 @@ internal class CopyPasteTests : Tests
         var cloneTextFieldDesign = selected.Selected.ElementAt(0);
         Assert.IsInstanceOf(typeof(TextField), cloneTextFieldDesign.View);
 
-        cloneTextFieldDesign.View.X.GetPosType(d.GetAllDesigns().ToArray(),
+        cloneTextFieldDesign.View.X.GetPosType(
+            d.GetAllDesigns().ToArray(),
             out var posType, out _, out var relativeTo, out var side, out var offset);
 
         Assert.AreEqual(PosType.Relative, posType);
@@ -189,31 +193,33 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPasteColorScheme()
     {
-        var d = Get10By10View();
+        var d = this.Get10By10View();
 
         var lbl = new Label("Name:");
         var tb = new TextField();
 
-        new AddViewOperation(d.SourceCode, lbl, d, "lbl").Do();
-        new AddViewOperation(d.SourceCode, tb, d, "tb").Do();
+        new AddViewOperation(lbl, d, "lbl").Do();
+        new AddViewOperation(tb, d, "tb").Do();
 
         var dlbl = d.GetAllDesigns().Single(d => d.FieldName == "lbl");
         var dtb = d.GetAllDesigns().Single(d => d.FieldName == "tb");
 
         var selected = SelectionManager.Instance;
-        
+
         ColorScheme green;
-        ColorSchemeManager.Instance.AddOrUpdateScheme("green", green = new ColorScheme { Normal = new Attribute(Color.Green, Color.Cyan)}, d);
+        ColorSchemeManager.Instance.AddOrUpdateScheme("green", green = new ColorScheme { Normal = new Attribute(Color.Green, Color.Cyan) }, d);
         dtb.GetDesignableProperty(nameof(ColorScheme))?.SetValue(green);
         d.View.ColorScheme = green;
 
         Assert.AreEqual(lbl.ColorScheme, green, "The label should inherit color scheme from the parent");
 
-        Assert.AreEqual("ColorScheme:(Inherited)",
+        Assert.AreEqual(
+            "ColorScheme:(Inherited)",
             dlbl.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
             "Expected ColorScheme to be known to be inherited");
-        
-        Assert.AreEqual("ColorScheme:green",
+
+        Assert.AreEqual(
+            "ColorScheme:green",
             dtb.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
             "TextBox inherits but also is explicitly marked as green");
 
@@ -228,18 +234,20 @@ internal class CopyPasteTests : Tests
 
         var dlbl2 = d.GetAllDesigns().Single(d => d.FieldName == "lbl2");
         var dtb2 = d.GetAllDesigns().Single(d => d.FieldName == "tb2");
-        
+
         // clear whatever the current selection is (probably the pasted views)
         SelectionManager.Instance.Clear();
 
         Assert.AreEqual(dlbl2.View.ColorScheme, green, "The newly pasted label should also inherit color scheme from the parent");
 
-        //but be known to inherit
-        Assert.AreEqual("ColorScheme:(Inherited)",
+        // but be known to inherit
+        Assert.AreEqual(
+            "ColorScheme:(Inherited)",
             dlbl2.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
             "Expected ColorScheme to be known to be inherited");
 
-        Assert.AreEqual("ColorScheme:green",
+        Assert.AreEqual(
+            "ColorScheme:green",
             dtb2.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
             "TextBox2 should have its copy pasted explicitly marked green");
     }

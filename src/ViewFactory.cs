@@ -23,28 +23,28 @@ public class ViewFactory
     {
         if (typeof(TableView).IsAssignableFrom(t))
         {
-            return CreateTableView();
+            return this.CreateTableView();
         }
 
         if (typeof(TabView).IsAssignableFrom(t))
         {
-            return CreateTabView();
+            return this.CreateTabView();
         }
 
         if (typeof(RadioGroup).IsAssignableFrom(t))
         {
-            return CreateRadioGroup();
+            return this.CreateRadioGroup();
         }
+
         if (typeof(MenuBar).IsAssignableFrom(t))
         {
-            return CreateMenuBar();
+            return this.CreateMenuBar();
         }
 
         if (t == typeof(TextValidateField))
         {
             return new TextValidateField
             {
-
                 Provider = new TextRegexProvider(".*"),
                 Text = "Heya",
                 Width = 5,
@@ -58,7 +58,7 @@ public class ViewFactory
             {
                 Width = 10,
                 Height = 1,
-                Fraction = 1f
+                Fraction = 1f,
             };
         }
 
@@ -70,6 +70,7 @@ public class ViewFactory
                 Height = 5,
             };
         }
+
         if (t == typeof(TextField))
         {
             return new TextField
@@ -78,13 +79,14 @@ public class ViewFactory
                 Height = 1,
             };
         }
+
         if (typeof(GraphView).IsAssignableFrom(t))
         {
             return new GraphView
             {
                 Width = 20,
                 Height = 5,
-                GraphColor = Attribute.Make(Color.White, Color.Black)
+                GraphColor = Attribute.Make(Color.White, Color.Black),
             };
         }
 
@@ -104,26 +106,29 @@ public class ViewFactory
             return new LineView()
             {
                 Width = 8,
-                Height = 1
+                Height = 1,
             };
         }
+
         if (t == typeof(TreeView))
         {
             return new TreeView()
             {
                 Width = 16,
-                Height = 5
+                Height = 5,
             };
         }
+
         if (t == typeof(ScrollView))
         {
             return new ScrollView()
             {
                 Width = 10,
                 Height = 5,
-                ContentSize = new Size(20, 10)
+                ContentSize = new Size(20, 10),
             };
         }
+
         var instance = (View?)Activator.CreateInstance(t) ?? throw new Exception($"CreateInstance returned null for Type '{t}'");
         instance.SetActualText("Heya");
 
@@ -136,7 +141,6 @@ public class ViewFactory
             instance.Width = 10;
         }
 
-
         instance.ColorScheme = Colors.Base;
 
         return instance;
@@ -144,11 +148,12 @@ public class ViewFactory
 
     private MenuBar CreateMenuBar()
     {
-         return new MenuBar (new MenuBarItem [] {
-				new MenuBarItem ("_File (F9)", new MenuItem [] {
-					new MenuItem (AddMenuOperation.DefaultMenuItemText, "", () => {})
-                })
-         });
+        return new MenuBar(new MenuBarItem[]
+        {
+                new MenuBarItem(
+                    "_File (F9)",
+                    new MenuItem[] { new MenuItem(AddMenuOperation.DefaultMenuItemText, string.Empty, () => { }) }),
+        });
     }
 
     private View CreateRadioGroup()
@@ -175,7 +180,7 @@ public class ViewFactory
         {
             Width = 50,
             Height = 5,
-            Table = dt
+            Table = dt,
         };
     }
 
@@ -195,21 +200,23 @@ public class ViewFactory
 
     internal IEnumerable<Type> GetSupportedViews()
     {
-        Type[] exclude = new Type[]{
+        Type[] exclude = new Type[]
+        {
             typeof(Toplevel),
-             typeof(Window),
-             typeof(ToplevelContainer),
-             typeof(Dialog),
-             typeof(FileDialog),
-             typeof(SaveDialog),
-             typeof(OpenDialog),
-             typeof(ScrollBarView),
-             typeof(TreeView<>)}; // The generic version of TreeView
+            typeof(Window),
+            typeof(ToplevelContainer),
+            typeof(Dialog),
+            typeof(FileDialog),
+            typeof(SaveDialog),
+            typeof(OpenDialog),
+            typeof(ScrollBarView),
+            typeof(TreeView<>),
+        }; // The generic version of TreeView
 
         return typeof(View).Assembly.DefinedTypes.Where(t =>
                 typeof(View).IsAssignableFrom(t) &&
-                !t.IsInterface && !t.IsAbstract && t.IsPublic
-            ).Except(exclude)
+                !t.IsInterface && !t.IsAbstract && t.IsPublic)
+            .Except(exclude)
             .OrderBy(t => t.Name).ToArray();
     }
 }

@@ -4,12 +4,11 @@ namespace TerminalGuiDesigner.ToCode;
 
 public class NameProperty : Property
 {
-    public NameProperty(Design design) : base(design, 
-        typeof(Design).GetProperty(nameof(TerminalGuiDesigner.Design.FieldName))
-        ?? throw new MissingFieldException("Expected property was missing from Design")
-        )
+    public NameProperty(Design design)
+        : base(
+        design,
+        typeof(Design).GetProperty(nameof(TerminalGuiDesigner.Design.FieldName)) ?? throw new MissingFieldException("Expected property was missing from Design"))
     {
-
     }
 
     public override string GetHumanReadableName()
@@ -19,31 +18,32 @@ public class NameProperty : Property
 
     public override string ToString()
     {
-        return $"{GetHumanReadableName()}:{Design.FieldName}";
+        return $"{this.GetHumanReadableName()}:{this.Design.FieldName}";
     }
+
     public override void SetValue(object? value)
     {
-
         var chosen = value?.ToString();
 
         if (string.IsNullOrWhiteSpace(chosen))
         {
             throw new ArgumentException("Not Possible", "You cannot set a View (Name) property to null");
         }
-                
-        Design.FieldName = Design.GetUniqueFieldName(chosen);
+
+        this.Design.FieldName = this.Design.GetUniqueFieldName(chosen);
     }
 
     public override object GetValue()
     {
-        return Design.FieldName;
+        return this.Design.FieldName;
     }
+
     public override string GetLhs()
     {
-        // Set View.Data to the name of the field so that we can 
+        // Set View.Data to the name of the field so that we can
         // determine later on which View instances come from which
         // Fields in the class
 
-        return $"this.{Design.FieldName}.{nameof(View.Data)}";
+        return $"this.{this.Design.FieldName}.{nameof(View.Data)}";
     }
 }

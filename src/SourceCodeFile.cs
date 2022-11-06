@@ -3,6 +3,7 @@
 public class SourceCodeFile
 {
     public FileInfo CsFile { get; }
+
     public FileInfo DesignerFile { get; }
 
     /// <summary>
@@ -21,13 +22,13 @@ public class SourceCodeFile
     {
         if (file.Name.EndsWith(ExpectedExtension))
         {
-            CsFile = GetCsFile(file);
-            DesignerFile = file;
+            this.CsFile = this.GetCsFile(file);
+            this.DesignerFile = file;
         }
         else
         {
-            CsFile = file;
-            DesignerFile = GetDesignerFile(file);
+            this.CsFile = file;
+            this.DesignerFile = this.GetDesignerFile(file);
         }
     }
 
@@ -36,10 +37,11 @@ public class SourceCodeFile
     /// may or may not both exist yet
     /// </summary>
     /// <param name="file">Either source file of the pair (e.g. either MyClass.cs or MyClass.Designer.cs)</param>
-    public SourceCodeFile(string path) : this(new FileInfo(path))
+    public SourceCodeFile(string path)
+        : this(new FileInfo(path))
     {
-
     }
+
     /// <summary>
     /// Returns the .Designer.cs file for the given class file.
     /// Returns a reference even if that file does not exist
@@ -50,7 +52,9 @@ public class SourceCodeFile
         const string expectedCsExtension = ".cs";
 
         if (!csFile.Name.EndsWith(expectedCsExtension))
+        {
             throw new ArgumentException($"Expected file {csFile.FullName} to have {expectedCsExtension} extension");
+        }
 
         string name = csFile.FullName;
         var designerfile = name.Substring(0, name.Length - expectedCsExtension.Length) + ExpectedExtension;
@@ -66,7 +70,9 @@ public class SourceCodeFile
     public FileInfo GetCsFile(FileInfo designerFile)
     {
         if (!designerFile.Name.EndsWith(ExpectedExtension))
+        {
             throw new ArgumentException($"Expected {designerFile} to end with {ExpectedExtension}");
+        }
 
         // chop off the .Designer.cs bit
         var filename = designerFile.FullName;
@@ -74,6 +80,5 @@ public class SourceCodeFile
         filename += ".cs";
 
         return new FileInfo(filename);
-
     }
 }

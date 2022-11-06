@@ -4,7 +4,7 @@ namespace TerminalGuiDesigner.UI.Windows;
 
 /// <summary>
 /// Cross UI platform (winforms, console, terminal gui) arguments for describing the theming and text
-/// that should appear in a modal 'select something' style operation in <see cref="IBasicActivateItems"/> 
+/// that should appear in a modal 'select something' style operation in <see cref="IBasicActivateItems"/>
 /// (the user interface abstraction layer)
 /// </summary>
 public class DialogArgs
@@ -20,7 +20,6 @@ public class DialogArgs
     /// remind them what is going on)
     /// </summary>
     public string? TaskDescription { get; set; }
-
 
     /// <summary>
     /// The final line of text before user entered input e.g. the label on
@@ -38,29 +37,35 @@ public class DialogArgs
     /// <para>
     /// If the user interface component allows filtering/searching then you can provide
     /// a string here which will indicate what the initial search text should be set to
-    /// (if any).  
+    /// (if any).
     /// </para>
-    /// 
+    ///
     /// <para>
     /// This is the value for inside the search text not the caption.
     /// </para>
     /// </summary>
     public string? InitialSearchText { get; set; }
 
-    public bool MultiLine {get;set;}
+    public bool MultiLine { get; set; }
 
     public override string ToString()
     {
         StringBuilder sb = new StringBuilder();
 
-        if (!string.IsNullOrEmpty(WindowTitle))
-            sb.AppendLine($"Title:{WindowTitle}");
+        if (!string.IsNullOrEmpty(this.WindowTitle))
+        {
+            sb.AppendLine($"Title:{this.WindowTitle}");
+        }
 
-        if (!string.IsNullOrEmpty(TaskDescription))
-            sb.AppendLine($"Task:{TaskDescription}");
+        if (!string.IsNullOrEmpty(this.TaskDescription))
+        {
+            sb.AppendLine($"Task:{this.TaskDescription}");
+        }
 
-        if (!string.IsNullOrEmpty(EntryLabel))
-            sb.AppendLine($"Label:{EntryLabel}");
+        if (!string.IsNullOrEmpty(this.EntryLabel))
+        {
+            sb.AppendLine($"Label:{this.EntryLabel}");
+        }
 
         if (sb.Length == 0)
         {
