@@ -518,7 +518,7 @@ public class Design
 
     /// <summary>
     /// Returns all designable controls that are in the same container as this
-    /// Does not include subcontainer controls etc.
+    /// Does not include sub container controls etc.
     /// </summary>
     /// <returns></returns>
     public IEnumerable<Design> GetSiblings()
@@ -566,6 +566,7 @@ public class Design
     /// Returns the topmost view above this which has an associated
     /// Design or this if there are no Design above this.
     /// <summary/>
+    /// <returns>The topmost design that is being edited.</returns>
     public Design GetRootDesign()
     {
         var toReturn = this;

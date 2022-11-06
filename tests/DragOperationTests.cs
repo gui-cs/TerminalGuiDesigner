@@ -80,9 +80,8 @@ public class DragOperationTests : Tests
         Assert.AreEqual(Pos.At(1), lbl2.Y);
     }
 
-    [TestCase(true)]
-    [TestCase(false)]
-    public void TestDragCoordinateSystem(bool continueDrag)
+    [Test]
+    public void TestDragCoordinateSystem()
     {
         var d = this.Get10By10View();
         var container1 = new View
@@ -100,19 +99,24 @@ public class DragOperationTests : Tests
         container1.Add(lbl);
 
         // Label is at 3,4 on the screen
-        var drag = new DragOperation(lblDesign,2,3,null);
+
+        // user clicks mouse down at top left of the label
+        var drag = new DragOperation(lblDesign, 1, 2, null);
         drag.Do();
 
-        if(continueDrag){
-            drag.ContinueDrag(new Point(2,3));
-        }
-            
-        Assert.AreEqual(2,drag.DestinationX);
-        Assert.AreEqual(3,drag.DestinationY);
+        // In client coordinate system of container1 we have not moved the mouse
+        // anywhere so the drag will not take the View to anywhere
+        Assert.AreEqual(1, drag.DestinationX);
+        Assert.AreEqual(2, drag.DestinationY);
+
+        drag.ContinueDrag(new Point(2, 3));
+
+        Assert.AreEqual(2, drag.DestinationX);
+        Assert.AreEqual(3, drag.DestinationY);
         drag.Do();
 
-        Assert.AreEqual(Pos.At(2),lbl.X);
-        Assert.AreEqual(Pos.At(3),lbl.Y);
+        Assert.AreEqual(Pos.At(2), lbl.X);
+        Assert.AreEqual(Pos.At(3), lbl.Y);
     }
 
     [Test]

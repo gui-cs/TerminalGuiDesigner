@@ -11,7 +11,6 @@ using TerminalGuiDesigner.ToCode;
 
 namespace UnitTests;
 
-
 /// <summary>
 /// Tests for adding Views to other Views either with <see cref="AddViewOperation"/> or directly.
 /// </summary>

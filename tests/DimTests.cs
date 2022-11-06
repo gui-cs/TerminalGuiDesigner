@@ -21,7 +21,6 @@ public class DimTests
         Assert.AreEqual(0, offset);
     }
 
-
     [Test]
     public void TestIsAbsolute_FromInt()
     {
