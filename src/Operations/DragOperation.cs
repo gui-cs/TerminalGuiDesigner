@@ -24,12 +24,19 @@ public class DragOperation : Operation
             this.Design = design;
             this.OriginalX = design.View.X;
             this.OriginalY = design.View.Y;
+            
+            // TODO: BUG BUG: This should probably not be looking at GetNearestDesign
+            // Or we should record both the SuperView and the nearest design both.  One for
+            // undo and one for detecting drags into other views
             this.OriginalSuperView = design.View.SuperView?.GetNearestDesign()?.View;
         }
     }
 
     private List<DragMemento> Mementos = new ();
 
+    /// <summary>
+    /// Gets the Design (wrapper) for the View that is being dragged around.
+    /// </summary>
     public Design BeingDragged => this.Mementos.First().Design;
 
     /// <summary>
@@ -43,8 +50,19 @@ public class DragOperation : Operation
     /// </summary>
     public readonly int OriginalClickY;
 
+    // TODO: Think this might be client coordinates not screen coordinates
+
+    /// <summary>
+    ///
+    /// Gets or Sets the screen coordinates of that the View will be left if the operation
+    /// were to complete.  These are regularly updated during dragging
+    /// </summary>
     public int DestinationX { get; set; }
 
+    /// <summary>
+    /// Gets or Sets the screen coordinates of that the View will be left if the operation
+    /// were to complete.  These are regularly updated during dragging
+    /// </summary>
     public int DestinationY { get; set; }
 
     /// <summary>
@@ -78,8 +96,14 @@ public class DragOperation : Operation
 
     private View? dropInto;
 
+    /// <summary>
+    /// Begins a drag operation in which <paramref name="beingDragged"/> is moved
+    /// </summary>
     public DragOperation(Design beingDragged, int destX, int destY, Design[]? alsoDrag)
     {
+        // TODO: how does this respond when alsoDrag has some that are not in
+        // same view as beingDragged - write unit test
+
         // don't let the user drag the root view anywhere
         if (beingDragged.IsRoot || (alsoDrag?.Any(d => d.IsRoot) ?? false))
         {
@@ -103,6 +127,7 @@ public class DragOperation : Operation
         this.OriginalClickX = destX;
         this.OriginalClickY = destY;
     }
+    /// <inheritdoc/>
 
     public override bool Do()
     {
@@ -166,6 +191,9 @@ public class DragOperation : Operation
         return p;
     }
 
+    /// <summary>
+    /// Moves all dragged views back to original positions.
+    /// </summary>
     public override void Undo()
     {
         foreach (var mem in this.Mementos)
@@ -202,6 +230,15 @@ public class DragOperation : Operation
         this.Do();
     }
 
+    /// <summary>
+    /// Updates the drag and the current positions of all Views being dragged
+    /// to the new client coordinates.
+    /// </summary>
+    /// <param name="dest">Client coordinates to update to.  All dragged 
+    /// views must have same parent and this coordinate must be in that parents
+    /// coordinate system (client area) although it can exceed the bounds (e.g.
+    /// to drag out of current container and drop into another).
+    /// </param>
     public void ContinueDrag(Point dest)
     {
         foreach (var mem in this.Mementos)

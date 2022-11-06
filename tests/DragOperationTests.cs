@@ -80,6 +80,41 @@ public class DragOperationTests : Tests
         Assert.AreEqual(Pos.At(1), lbl2.Y);
     }
 
+    [TestCase(true)]
+    [TestCase(false)]
+    public void TestDragCoordinateSystem(bool continueDrag)
+    {
+        var d = this.Get10By10View();
+        var container1 = new View
+        {
+            X = 2,
+            Y = 2,
+            Width = 8,
+            Height = 8,
+        };
+        d.View.Add(container1);
+
+        var lbl = new Label(1, 2, "Hi there buddy");
+        var lblDesign = new Design(d.SourceCode, "mylabel", lbl);
+        lbl.Data = lblDesign;
+        container1.Add(lbl);
+
+        // Label is at 3,4 on the screen
+        var drag = new DragOperation(lblDesign,2,3,null);
+        drag.Do();
+
+        if(continueDrag){
+            drag.ContinueDrag(new Point(2,3));
+        }
+            
+        Assert.AreEqual(2,drag.DestinationX);
+        Assert.AreEqual(3,drag.DestinationY);
+        drag.Do();
+
+        Assert.AreEqual(Pos.At(2),lbl.X);
+        Assert.AreEqual(Pos.At(3),lbl.Y);
+    }
+
     [Test]
     public void TestSimpleDrag_IntoAnotherView()
     {
