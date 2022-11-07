@@ -158,15 +158,26 @@ public static class ViewExtensions
     }
 
     /// <summary>
+    /// <para>
     /// Converts a view-relative (col,row) position to a screen-relative position (col,row). The values are optionally clamped to the screen dimensions.
+    /// </para>
+    /// <para>This method differs from the private method in Terminal.Gui because it will unwrap private views e.g. <see cref="Window"/> such that the real
+    /// client coordinates of children are returned (e.g. see <see cref="GetActualSubviews(View)"/>).</para>
     /// </summary>
+    /// <param name="v">The view that you want to translate client coordinates for.</param>
     /// <param name="col">View-relative column.</param>
     /// <param name="row">View-relative row.</param>
     /// <param name="rcol">Absolute column; screen-relative.</param>
     /// <param name="rrow">Absolute row; screen-relative.</param>
     /// <param name="clipped">Whether to clip the result of the ViewToScreen method, if set to <c>true</c>, the rcol, rrow values are clamped to the screen (terminal) dimensions (0..TerminalDim-1).</param>
-    public static void ViewToScreen(this View v, int col, int row, out int rcol, out int rrow, bool clipped = true)
+    public static void ViewToScreenActual(this View v, int col, int row, out int rcol, out int rrow, bool clipped = true)
     {
+        if (v is Window || v is FrameView)
+        {
+            v.Subviews[0].ViewToScreenActual(col, row, out rcol, out rrow, clipped);
+            return;
+        }
+
         // Computes the real row, col relative to the screen.
         rrow = row + v.Frame.Y;
         rcol = col + v.Frame.X;
@@ -255,8 +266,8 @@ public static class ViewExtensions
 
         if (hit != null)
         {
-            hit.ViewToScreen(hit.Bounds.Right, hit.Bounds.Bottom, out int lowerRightX, out int lowerRightY, true);
-            hit.ViewToScreen(0, 0, out int upperLeftX, out int upperLeftY, true);
+            hit.ViewToScreenActual(hit.Bounds.Right, hit.Bounds.Bottom, out int lowerRightX, out int lowerRightY, true);
+            hit.ViewToScreenActual(0, 0, out int upperLeftX, out int upperLeftY, true);
 
             isLowerRight = Math.Abs(lowerRightX - point.X) <= resizeBoxArea && Math.Abs(lowerRightY - point.Y) <= resizeBoxArea;
 
@@ -301,8 +312,8 @@ public static class ViewExtensions
     /// <returns></returns>
     public static bool IntersectsScreenRect(this View v, Rect screenRect)
     {
-        v.ViewToScreen(0, 0, out var x0, out var y0);
-        v.ViewToScreen(v.Bounds.Width, v.Bounds.Height, out var x1, out var y1);
+        v.ViewToScreenActual(0, 0, out var x0, out var y0);
+        v.ViewToScreenActual(v.Bounds.Width, v.Bounds.Height, out var x1, out var y1);
 
         return Rect.FromLTRB(x0, y0, x1, y1).IntersectsWith(screenRect);
     }
