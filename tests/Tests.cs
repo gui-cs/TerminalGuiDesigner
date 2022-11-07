@@ -50,6 +50,20 @@ public class Tests
         return d;
     }
 
+    protected Design Get100By100<T>([CallerMemberName] string? caller = null)
+    {
+        // start with blank slate
+        OperationManager.Instance.ClearUndoRedo();
+
+        var viewToCode = new ViewToCode();
+
+        var file = new FileInfo($"{caller}.cs");
+        var rootDesign = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window));
+        rootDesign.View.X = 100;
+        rootDesign.View.Y = 100;
+
+        return rootDesign;
+    }
     /// <summary>
     /// Creates a new instance of <typeparamref name="T2"/> using <see cref="ViewFactory"/>.  Then calls the
     /// provided <paramref name="adjust"/> action before writting out and reading back the code.  Returns

@@ -93,7 +93,7 @@ public partial class DragOperation : Operation
 
     /// <summary>
     /// <para>
-    /// Gets or Sets a <see cref="Design.IsContainerView"/> into which to move the control in addition
+    /// Gets or Sets a <see cref="Design.IsContainerView"/> into which to move the view in addition
     /// to moving it.  Allows users to drag views into other container views (e.g. tabs etc).
     /// </para>
     /// <para>To calculate this, map <see cref="DestinationX"/>/<see cref="DestinationY"/> into screen
@@ -179,7 +179,7 @@ public partial class DragOperation : Operation
         if (this.DropInto != null)
         {
             // if changing to a new container
-            if (this.DropInto != mem.OriginalSuperView && mem.OriginalSuperView != null)
+            if (this.DropInto != mem.OriginalSuperView)
             {
                 mem.Design.View.SuperView.Remove(mem.Design.View);
                 this.DropInto.Add(mem.Design.View);
@@ -206,21 +206,24 @@ public partial class DragOperation : Operation
     }
 
     /// <summary>
-    /// When dropping into a new container the X/Y of the control change from being relative to
+    /// When dropping into a new container the X/Y of the view change from being relative to
     /// the one parents client area to another so we need to compensate otherwise when the user
-    /// lets go of the mouse the control jumps (often out of the visible area of the control).
+    /// lets go of the mouse the view jumps (often out of the visible area of the view).
     /// </summary>
-    /// <returns>The original point adjusted to the client area of the control you dropped into (if any).</returns>
+    /// <returns>The original point adjusted to the client area of the view you dropped into (if any).</returns>
     private Point OffsetByDropInto(DragMemento mem, Point p)
     {
-        if (mem.OriginalSuperView == null || mem.OriginalSuperView == this.DropInto || this.DropInto == null)
+        // if not changing container then point is unchanged.
+        if (mem.OriginalSuperView == this.DropInto || this.DropInto == null)
         {
             return p;
         }
 
+        // Calculate screen coordinates of 0,0 in each of the views (from and to)
         mem.OriginalSuperView.ViewToScreen(0, 0, out var originalSuperX, out var originalSuperY, false);
         this.DropInto.ViewToScreen(0, 0, out var newSuperX, out var newSuperY, false);
 
+        // Offset the point by the difference in screen space between 0,0 on each view
         p.Offset(newSuperX - originalSuperX, newSuperY - originalSuperY);
         return p;
     }
@@ -229,7 +232,7 @@ public partial class DragOperation : Operation
     {
         /*
          * Only support dragging for properties that are exact absolute
-         * positions (i.e. not relative positioning - Bottom of other control etc).
+         * positions (i.e. not relative positioning - Bottom of other view etc).
          */
 
         if (mem.Design.View.X.IsAbsolute() && mem.OriginalX.IsAbsolute(out var originX))
