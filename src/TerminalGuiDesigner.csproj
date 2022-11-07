@@ -114,7 +114,10 @@
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.1" />
     <PackageReference Include="nlog" Version="5.0.5" />
-    <PackageReference Include="StyleCop.Analyzers " Version="1.1.118" />
+    <PackageReference Include="StyleCop.Analyzers.Unstable" Version="1.2.0.435">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="System.CodeDom" Version="6.0.0" />
     <PackageReference Include="Terminal.gui" Version="1.8.2" />
     <PackageReference Include="YamlDotNet" Version="12.0.2" />

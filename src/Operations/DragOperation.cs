@@ -8,7 +8,7 @@ namespace TerminalGuiDesigner.Operations;
 /// </summary>
 public partial class DragOperation : Operation
 {
-    private readonly List<DragMemento> mementos = new ();
+    private readonly List<DragMemento> mementos = new();
 
     private View? dropInto;
 
