@@ -5,7 +5,7 @@ namespace TerminalGuiDesigner.Operations;
 
 public abstract class TabViewOperation : Operation
 {
-    protected readonly TabView View;
+    protected TabView View { get; }
 
     public Design Design { get; }
 

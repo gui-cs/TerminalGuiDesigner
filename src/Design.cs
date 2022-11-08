@@ -478,7 +478,7 @@ public class Design
                 }
             }
 
-            yield return new AddColumnOperation(this);
+            yield return new AddColumnOperation(this, null);
             yield return new RemoveColumnOperation(this, col);
             yield return new RenameColumnOperation(this, col);
         }
@@ -501,7 +501,7 @@ public class Design
 
         if (this.View is TabView)
         {
-            yield return new AddTabOperation(this);
+            yield return new AddTabOperation(this,null);
             yield return new RemoveTabOperation(this);
             yield return new RenameTabOperation(this);
 

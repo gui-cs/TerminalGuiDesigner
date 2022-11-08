@@ -11,7 +11,7 @@ namespace UnitTests
         public void TestAddColumn_BadViewType()
         {
             var d = Get10By10View();
-            var ex = Assert.Throws<ArgumentException>(() => new AddColumnOperation(d));
+            var ex = Assert.Throws<ArgumentException>(() => new AddColumnOperation(d, null));
 
             Assert.AreEqual("Design must be for a TableView to support AddColumnOperation", ex?.Message);
         }
