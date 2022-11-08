@@ -12,16 +12,23 @@ using TerminalGuiDesigner.ToCode;
 
 namespace TerminalGuiDesigner.FromCode;
 
+/// <summary>
+/// Converts a <see cref="SourceCodeFile"/> into a running instance of a <see cref="View"/>
+/// by compiling it into an in memory <see cref="Assembly"/> (see <see cref="CSharpCompilation"/>).
+/// </summary>
+/// <remarks>
+/// Compiling requires having the correct assembly references for dependencies.  This is handled
+/// by <see cref="CompileAssembly"/>.  Most references come from <see cref="ReferenceAssemblies.Net60"/>
+/// but also <see cref="Terminal.Gui"/>.
+/// </remarks>
 public class CodeToView
 {
-    public string Namespace { get; }
-
-    public string ClassName { get; }
-
-    public SourceCodeFile SourceFile { get; }
-
-    readonly ILogger logger = LogManager.GetCurrentClassLogger();
-
+    /// <summary>
+    /// Initializes a new instance of the <see cref="CodeToView"/> class.  Opens the provided <paramref name="sourceFile"/>
+    /// and extracts <see cref="Namespace"/>, <see cref="ClassName"/> etc.
+    /// </summary>
+    /// <param name="sourceFile">Files on disk that will be read by this class (e.g. MyView.cs and MyView.Designer.cs).</param>
+    /// <exception cref="Exception">Thrown if file cannot be parsed, does not exist or has multiple class files in it.</exception>
     public CodeToView(SourceCodeFile sourceFile)
     {
         this.SourceFile = sourceFile;
@@ -52,14 +59,32 @@ public class CodeToView
     }
 
     /// <summary>
-    /// Compiles the source code in <see cref="SourceFile"/> and
-    /// creates an instance of the View in it wrapped in a <see cref="Design"/>
+    /// Gets the C# namespace found in <see cref="SourceFile"/>.
     /// </summary>
-    /// <returns></returns>
-    /// <exception cref="Exception"></exception>
+    public string Namespace { get; }
+
+    /// <summary>
+    /// Gets the C# class found in <see cref="SourceFile"/>.
+    /// </summary>
+    public string ClassName { get; }
+
+    /// <summary>
+    /// Gets the source files this instance is working with.  This is a pair of C#
+    /// files (e.g. MyView.cs and MyView.Designer.cs).
+    /// </summary>
+    public SourceCodeFile SourceFile { get; }
+
+    /// <summary>
+    /// Compiles the source code in <see cref="SourceFile"/> and
+    /// creates an instance of the View in it wrapped in a <see cref="Design"/>.
+    /// </summary>
+    /// <returns>Root <see cref="Design"/> (wrapper for <see cref="View"/>) that is constructed when compiling
+    /// the contents of the users .Designer.cs file.</returns>
+    /// <exception cref="Exception">Thrown if <see cref="SourceCodeFile"/> could not be compiled or it contains multiple class etc.</exception>
     public Design CreateInstance()
     {
-        this.logger.Info($"About to compile {this.SourceFile.DesignerFile}");
+        var logger = LogManager.GetCurrentClassLogger();
+        logger.Info($"About to compile {this.SourceFile.DesignerFile}");
 
         var assembly = this.CompileAssembly();
 
@@ -99,6 +124,17 @@ public class CodeToView
         return toReturn;
     }
 
+    /// <summary>
+    /// <para>Compiles the .Designer.cs file in <see cref="SourceCodeFile"/> into an <see cref="Assembly"/>
+    /// so that an instance of the <see cref="View"/> it contains can be presented in the designer.
+    /// </para>
+    /// <para>
+    /// Only the <see cref="SourceCodeFile.DesignerFile"/> file is used for compilation, any code in <see cref="SourceCodeFile.CsFile"/>
+    /// (e.g. MyView.cs) is ignored (event handlers, constructor arguments etc).
+    /// </para>
+    /// </summary>
+    /// <returns>An 'in memory' <see cref="Assembly"/>.</returns>
+    /// <exception cref="Exception">Thrown if code in <see cref="SourceCodeFile.DesignerFile"/> does not compile.</exception>
     public Assembly CompileAssembly()
     {
         // All the changes we really care about that are on disk in the users csproj file
@@ -123,10 +159,11 @@ public class CodeToView
 
         var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary);
 
-        var compilation
-            = CSharpCompilation.Create(
+        var compilation = CSharpCompilation.Create(
                 Guid.NewGuid().ToString() + ".dll",
-                new CSharpSyntaxTree[] { csTree, designerTree }, references: references, options: options);
+                new CSharpSyntaxTree[] { csTree, designerTree },
+                references,
+                options);
 
         using var stream = new MemoryStream();
         EmitResult result = compilation.Emit(stream);

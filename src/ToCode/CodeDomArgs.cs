@@ -49,28 +49,16 @@ public class CodeDomArgs
     /// <summary>
     /// Returns a unique field name based on the passed value.
     /// Removes non word characters and applies a numerical
-    /// suffix if name collides with an existing field
+    /// suffix if name collides with an existing field.
     /// </summary>
     public string GetUniqueFieldName(string? name)
     {
         name = MakeValidFieldName(name);
 
-        if (!this.FieldNamesUsed.Contains(name))
-        {
-            this.FieldNamesUsed.Add(name);
-            return name;
-        }
+        name = name.MakeUnique(this.FieldNamesUsed);
 
-        // name is already used, add a number
-        int number = 2;
-        while (this.FieldNamesUsed.Contains(name + number))
-        {
-            // menu2 is taken, try menu3 etc
-            number++;
-        }
+        this.FieldNamesUsed.Add(name);
 
-        // found a unique one
-        this.FieldNamesUsed.Add(name + number);
-        return name + number;
+        return name;
     }
 }
