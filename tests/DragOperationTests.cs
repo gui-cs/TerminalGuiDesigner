@@ -3,11 +3,20 @@ using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
+using TerminalGuiDesigner.UI;
 
 namespace UnitTests;
 
+/// <summary>
+/// Tests for the <see cref="DragOperation"/> class and <see cref="MouseManager"/> areas
+/// that are to do with triggering drag operations.
+/// </summary>
 public class DragOperationTests : Tests
 {
+    /// <summary>
+    /// Tests dragging a <see cref="Label"/> down in a single root container
+    /// using <see cref="DragOperation"/> explicitly (i.e. not mouse)
+    /// </summary>
     [Test]
     public void TestSimpleDrag_Down3Rows()
     {
@@ -36,6 +45,37 @@ public class DragOperationTests : Tests
         Assert.AreEqual(Pos.At(0), lbl.X);
         Assert.AreEqual(Pos.At(0), lbl.Y);
     }
+
+    /// <summary>
+    /// Tests dragging a <see cref="Label"/> down in a single root container
+    /// using the Mouse
+    /// </summary>
+    [Test]
+    public void TestSimpleDrag_Down3Rows_WithMouse()
+    {
+        var d = this.Get10By10View();
+
+        var lbl = new Label(0, 0, "Hi there buddy");
+        var lblDesign = new Design(d.SourceCode, "mylabel", lbl);
+        lbl.Data = lblDesign;
+        d.View.Add(lbl);
+
+        Application.Top.Add(d.View);
+        Application.Top.LayoutSubviews();
+
+        MouseDrag(d, 2, 0, 2, 3);
+
+        // finalize the operation
+        Assert.AreEqual(Pos.At(0), lbl.X);
+        Assert.AreEqual(Pos.At(3), lbl.Y);
+
+        // now test undoing it
+        OperationManager.Instance.Undo();
+        Assert.AreEqual(Pos.At(0), lbl.X);
+        Assert.AreEqual(Pos.At(0), lbl.Y);
+    }
+
+    
 
     [Test]
     public void TestMultiDrag_Down3Rows()
@@ -175,5 +215,101 @@ public class DragOperationTests : Tests
         Assert.AreEqual(Pos.At(1), lbl.X);
         Assert.AreEqual(Pos.At(2), lbl.Y);
         Assert.Contains(lbl, container1.Subviews.ToArray(), "Expected undo to return view to its original parent");
+    }
+
+    [Test]
+    public void TestSimpleDrag_OutOfFrameView_IntoRootWindow()
+    {
+        var rootDesign = Get100By100<Window>();
+        rootDesign.View.X = 0;
+        rootDesign.View.Y = 0;
+
+        rootDesign.View.ViewToScreenActual(0, 0, out var screenX, out var screenY);
+
+        // A window is positioned at 0,0 but its client area (to which controls are added) is 1,1 due to border
+        Assert.AreEqual(1, screenX);
+        Assert.AreEqual(1, screenY);
+
+        var frameView = new ViewFactory().Create(typeof(FrameView));
+        frameView.X = 10;
+        frameView.Y = 10;
+        var op = new AddViewOperation(frameView, rootDesign, "frame");
+        op.Do();
+
+        // Window has an invisible sub-view that forces everything in by 1 to make border
+        // for window.  So does FrameView.
+
+        /*Window client area starts at (1,1) + (10,10 X/Y) + (1,1) for border of FrameView*/
+
+        frameView.ViewToScreenActual(0, 0, out screenX, out screenY);
+        Assert.AreEqual(12, screenX);
+        Assert.AreEqual(12, screenY);
+
+        var lbl = new Label(1, 2, "Hi there buddy");
+        var lblDesign = new Design(rootDesign.SourceCode, "mylabel", lbl);
+        lbl.Data = lblDesign;
+        frameView.Add(lbl);
+
+        Application.Top.Add(rootDesign.View);
+        Application.Top.LayoutSubviews();
+
+        // check screen coordinates are as expected
+        lblDesign.View.ViewToScreenActual(0, 0, out screenX, out screenY);
+        Assert.AreEqual(13, screenX, "Expected label X screen to be at its parents 0,0 (11,11) + 1");
+        Assert.AreEqual(14, screenY, "Expected label Y screen to be at its parents 0,0 (11,11) + 2");
+                        
+        // press down at 0,0 of the label
+        Assert.AreEqual(lbl, rootDesign.View.HitTest(new MouseEvent { X = 13, Y = 14 }, out _, out _)
+            ,"We just asked ViewToScreen for these same coordinates, how can they fail HitTest now?");
+
+        // Drag up 4 so it is no longer in its parents container.
+        // Label is at 1,2.  Up 2 brings it to 0 (just inside scroll)
+        // Up 3 brings it onto the Frame border
+        // Up 4 brings it into the root view
+        MouseDrag(rootDesign, 13, 14, 13, 10);
+
+
+        Assert.False(frameView.GetActualSubviews().Contains(lbl), "Expected label to no longer be in the scroll view");
+        Assert.Contains(lblDesign.View, rootDesign.View.GetActualSubviews().ToArray(), "Expected label to have moved to the parent Window");
+    }
+
+    /// <summary>
+    /// Performs a mouse drag from the first coordinates to the second (in screen space)
+    /// </summary>
+    /// <param name="root">The root Design.  Make sure you have added it to <see cref="Application.Top"/> and run <see cref="View.LayoutSubviews"/></param>
+    /// <param name="x1">X coordinate to start drag at</param>
+    /// <param name="y1">Y coordinate to start drag at</param>
+    /// <param name="x2">X coordinate to end drag at</param>
+    /// <param name="y2">Y coordinate to end drag at</param>
+    private void MouseDrag(Design root, int x1, int y1, int x2, int y2)
+    {
+        var mm = new MouseManager();
+
+        mm.HandleMouse(
+            new MouseEvent
+            {
+                X = x1,
+                Y = y1,
+                Flags = MouseFlags.Button1Pressed,
+            }, root);
+
+        // press down at 0,0 of the label
+        mm.HandleMouse(
+            new MouseEvent
+            {
+                X = x2,
+                Y = y2,
+                Flags = MouseFlags.Button1Pressed,
+            }, root);
+
+
+        // release in parent
+        mm.HandleMouse(
+            new MouseEvent
+            {
+                X = x2,
+                Y = y2,
+                Flags = MouseFlags.Button1Released,
+            }, root);
     }
 }

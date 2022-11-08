@@ -83,7 +83,7 @@ namespace TerminalGuiDesigner.Operations
         {
             var ops = m == null ?
                 d.GetExtraOperations() :
-                d.GetExtraOperations(d.View.ScreenToClient(m.Value.X, m.Value.Y));
+                d.GetExtraOperations(d.View.ScreenToView(m.Value.X, m.Value.Y));
 
             foreach (var extra in ops.Where(c => !c.IsImpossible))
             {

@@ -61,7 +61,7 @@ public class Tests
         var rootDesign = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window));
         rootDesign.View.X = 100;
         rootDesign.View.Y = 100;
-
+        
         return rootDesign;
     }
     /// <summary>

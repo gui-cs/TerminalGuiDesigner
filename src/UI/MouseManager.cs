@@ -44,7 +44,7 @@ public class MouseManager
             if (drag != null && drag.Data is Design design
              && this.resizeOperation == null && this.dragOperation == null && this.SelectionStart == null)
             {
-                var dest = viewBeingEdited.View.ScreenToClient(m.X, m.Y);
+                var dest = viewBeingEdited.View.ScreenToView(m.X, m.Y);
 
                 if (isLowerRight)
                 {
@@ -90,7 +90,7 @@ public class MouseManager
         // continue dragging a view
         if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && this.dragOperation != null)
         {
-            var dest = viewBeingEdited.View.ScreenToClient(m.X, m.Y);
+            var dest = viewBeingEdited.View.ScreenToView(m.X, m.Y);
 
             this.dragOperation.ContinueDrag(dest);
 
@@ -101,7 +101,7 @@ public class MouseManager
         // continue resizing
         if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && this.resizeOperation != null)
         {
-            var dest = viewBeingEdited.View.ScreenToClient(m.X, m.Y);
+            var dest = viewBeingEdited.View.ScreenToView(m.X, m.Y);
 
             this.resizeOperation.ContinueResize(dest);
 

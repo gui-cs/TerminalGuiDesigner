@@ -255,8 +255,7 @@ public static class ViewExtensions
         {
             v.Visible = false;
         }
-
-        var point = ScreenToClient(w, m.X, m.Y);
+        var point = w.ScreenToView(m.X, m.Y);
         var hit = ApplicationExtensions.FindDeepestView(w, m.X, m.Y);
 
         int resizeBoxArea = 2;
@@ -292,16 +291,6 @@ public static class ViewExtensions
         return hit;
     }
 
-    public static Point ScreenToClient(this View view, int x, int y)
-    {
-        if (view is Window w)
-        {
-            // has invisible ContentView pane
-            return w.Subviews[0].ScreenToView(x, y);
-        }
-
-        return view.ScreenToView(x, y);
-    }
 
     /// <summary>
     /// Returns true if the current screen bounds of <paramref name="v"/> intersect
