@@ -2,20 +2,41 @@ using Terminal.Gui;
 
 namespace TerminalGuiDesigner.Operations;
 
+/// <summary>
+/// <para>
+/// Adds a new item on a menu.  These are sub items (e.g. Copy, Open)
+/// not top level menus (File, Edit etc).  For top level menus see
+/// <see cref="AddMenuOperation"/> instead.
+/// </para>
+/// <para>
+/// Item added may to be a sub-menu drop down (e.g. File=>New=>ADDHERE).
+/// </para>
+/// </summary>
 public class AddMenuItemOperation : MenuItemOperation
 {
     private MenuItem? added;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AddMenuItemOperation"/> class. When
+    /// performed the operation will add a new <see cref="MenuItem"/> below <paramref name="adjacentTo"/>.
+    /// </summary>
+    /// <param name="adjacentTo">An existing <see cref="MenuItem"/> to add the new one below.  Must be a
+    /// sub-menu (e.g. Open, Copy) not a top level menu (e.g. File, Edit).</param>
     public AddMenuItemOperation(MenuItem adjacentTo)
         : base(adjacentTo)
     {
     }
 
+    /// <summary>
+    /// Adds a new blank <see cref="MenuItem"/> to the menu.
+    /// </summary>
+    /// <returns>True if a new <see cref="MenuItem"/> was successfully added.</returns>
     public override bool Do()
     {
         return this.Add(this.added = new MenuItem());
     }
 
+    /// <inheritdoc/>
     public override void Redo()
     {
         if (this.added != null)
@@ -24,6 +45,7 @@ public class AddMenuItemOperation : MenuItemOperation
         }
     }
 
+    /// <inheritdoc/>
     public override void Undo()
     {
         if (this.added == null)
