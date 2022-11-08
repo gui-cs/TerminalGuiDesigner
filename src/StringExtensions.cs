@@ -1,4 +1,6 @@
-﻿namespace TerminalGuiDesigner
+﻿using System.Text.RegularExpressions;
+
+namespace TerminalGuiDesigner
 {
     /// <summary>
     /// Extension methods for <see cref="string"/>.
@@ -17,6 +19,8 @@
         {
             comparer ??= StringComparer.InvariantCulture;
 
+            name = string.IsNullOrWhiteSpace(name) ? "blank" : name;
+
             // in case it is single iteration
             var set = new HashSet<string>(inScope, comparer);
 
@@ -27,6 +31,17 @@
 
             // name is already used, add a number
             int number = 2;
+
+            // but wait! what if it already ends with a number?
+            var endsWithNumber = Regex.Match(name, "([0-8]+)$");
+
+            if (endsWithNumber.Success)
+            {
+                // start incrementing from that number instead
+                // i.e. Fish2 becomes Fish3
+                number = int.Parse(endsWithNumber.Groups[1].Value);
+                name = name.Substring(0, endsWithNumber.Index);
+            }
 
             while (set.Contains(name + number, comparer))
             {
