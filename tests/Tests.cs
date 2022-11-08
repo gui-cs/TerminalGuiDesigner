@@ -25,6 +25,8 @@ public class Tests
 
         Application.Init(new FakeDriver(), new FakeMainLoop(() => FakeConsole.ReadKey(true)));
         init = true;
+
+        OperationManager.Instance.ClearUndoRedo();
     }
 
     [TearDown]
