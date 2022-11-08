@@ -3,7 +3,7 @@ using Terminal.Gui;
 using TerminalGuiDesigner;
 
 namespace UnitTests;
-public class DimTests
+internal class DimTests
 {
     [Test]
     public void TestIsAbsolute()

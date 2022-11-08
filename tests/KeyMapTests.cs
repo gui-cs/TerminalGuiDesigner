@@ -6,7 +6,7 @@ using YamlDotNet.Serialization;
 
 namespace UnitTests;
 
-public class KeyMapTests : Tests
+internal class KeyMapTests : Tests
 {
     [Test]
     public void TestSerializingKeyMap()

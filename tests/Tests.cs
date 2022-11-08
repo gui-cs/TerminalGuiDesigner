@@ -11,7 +11,7 @@ using TerminalGuiDesigner.ToCode;
 
 namespace UnitTests;
 
-public class Tests
+internal class Tests
 {
     static bool init = false;
 

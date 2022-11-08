@@ -10,7 +10,7 @@ using Attribute = Terminal.Gui.Attribute;
 
 namespace UnitTests;
 
-public class ColorSchemeTests : Tests
+internal class ColorSchemeTests : Tests
 {
     [TestCase(true)]
     [TestCase(false)]

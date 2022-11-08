@@ -14,7 +14,7 @@ namespace UnitTests;
 /// <summary>
 /// Tests for adding Views to other Views either with <see cref="AddViewOperation"/> or directly.
 /// </summary>
-public class AddViewTests : Tests
+internal class AddViewTests : Tests
 {
     [Test]
     public void TestAdd_Undo()

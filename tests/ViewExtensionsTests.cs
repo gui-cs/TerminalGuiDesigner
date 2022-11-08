@@ -5,7 +5,7 @@ using TerminalGuiDesigner;
 
 namespace UnitTests;
 
-public class ViewExtensionsTests : Tests
+internal class ViewExtensionsTests : Tests
 {
     // upper left corner tests
     [TestCase(1, 1, false, false, false)]

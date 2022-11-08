@@ -8,7 +8,7 @@ using TerminalGuiDesigner.ToCode;
 
 namespace UnitTests;
 
-public class LabelTests : Tests
+internal class LabelTests : Tests
 {
     [Test]
     public void Test_ChangingLabelX()

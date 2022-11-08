@@ -10,7 +10,7 @@ using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 
 namespace UnitTests;
-public class PosTests : Tests
+internal class PosTests : Tests
 {
     [Test]
     public void TestIsAbsolute()

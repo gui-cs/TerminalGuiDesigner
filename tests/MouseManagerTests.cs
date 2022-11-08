@@ -8,7 +8,7 @@ using TerminalGuiDesigner.UI;
 
 namespace UnitTests;
 
-public class MouseManagerTests : Tests
+internal class MouseManagerTests : Tests
 {
     [Test]
     public void TestDragLabel()

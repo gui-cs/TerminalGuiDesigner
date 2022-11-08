@@ -11,7 +11,7 @@ namespace UnitTests;
 /// Tests for the <see cref="DragOperation"/> class and <see cref="MouseManager"/> areas
 /// that are to do with triggering drag operations.
 /// </summary>
-public class DragOperationTests : Tests
+internal class DragOperationTests : Tests
 {
     /// <summary>
     /// Tests dragging a <see cref="Label"/> down in a single root container

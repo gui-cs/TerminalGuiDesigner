@@ -6,7 +6,7 @@ using TerminalGuiDesigner.UI;
 
 namespace UnitTests;
 
-public class KeyboardManagerTests : Tests
+internal class KeyboardManagerTests : Tests
 {
     [Test]
     public void Backspace_WithDateFieldSelected()

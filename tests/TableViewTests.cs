@@ -7,7 +7,7 @@ using TerminalGuiDesigner.Operations;
 
 namespace UnitTests;
 
-public class TableViewTests : Tests
+internal class TableViewTests : Tests
 {
     [Test]
     public void TestRoundTrip_PreserveColumns()

@@ -13,7 +13,7 @@ using Attribute = Terminal.Gui.Attribute;
 
 namespace UnitTests;
 
-public class PropertyTests : Tests
+internal class PropertyTests : Tests
 {
     [Test]
     public void TestPropertyOfType_Pos()
