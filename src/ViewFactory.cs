@@ -15,10 +15,47 @@ namespace TerminalGuiDesigner;
 /// </summary>
 public class ViewFactory
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ViewFactory"/> class.
+    /// </summary>
     public ViewFactory()
     {
     }
 
+    /// <summary>
+    /// Returns all <see cref="View"/> Types that are supported by <see cref="ViewFactory"/>.
+    /// </summary>
+    /// <returns>All supported types.</returns>
+    public static IEnumerable<Type> GetSupportedViews()
+    {
+        Type[] exclude = new Type[]
+        {
+            typeof(Toplevel),
+            typeof(Window),
+            typeof(ToplevelContainer),
+            typeof(Dialog),
+            typeof(FileDialog),
+            typeof(SaveDialog),
+            typeof(OpenDialog),
+            typeof(ScrollBarView),
+            typeof(TreeView<>),
+        }; // The generic version of TreeView
+
+        return typeof(View).Assembly.DefinedTypes.Where(t =>
+                typeof(View).IsAssignableFrom(t) &&
+                !t.IsInterface && !t.IsAbstract && t.IsPublic)
+            .Except(exclude)
+            .OrderBy(t => t.Name).ToArray();
+    }
+
+    /// <summary>
+    /// Creates a new instance of <see cref="View"/> of Type <paramref name="t"/> with
+    /// size/placeholder values that make it easy to see and design in the editor.
+    /// </summary>
+    /// <param name="t">A Type of <see cref="View"/>.  See <see cref="GetSupportedViews"/> for the
+    /// full list of allowed Types.</param>
+    /// <returns>A new instance of Type <paramref name="t"/>.</returns>
+    /// <exception cref="Exception">Thrown if Type is not a subclass of <see cref="View"/>.</exception>
     public View Create(Type t)
     {
         if (typeof(TableView).IsAssignableFrom(t))
@@ -129,7 +166,7 @@ public class ViewFactory
             };
         }
 
-        var instance = (View?)Activator.CreateInstance(t) ?? throw new Exception($"CreateInstance returned null for Type '{t}'");
+        var instance = Activator.CreateInstance(t) as View ?? throw new Exception($"CreateInstance returned null for Type '{t}'");
         instance.SetActualText("Heya");
 
         instance.Width = Math.Max(instance.Bounds.Width, 4);
@@ -196,27 +233,5 @@ public class ViewFactory
         tabView.AddTab(new TabView.Tab("Tab2", new View { Width = Dim.Fill(), Height = Dim.Fill() }), false);
 
         return tabView;
-    }
-
-    internal IEnumerable<Type> GetSupportedViews()
-    {
-        Type[] exclude = new Type[]
-        {
-            typeof(Toplevel),
-            typeof(Window),
-            typeof(ToplevelContainer),
-            typeof(Dialog),
-            typeof(FileDialog),
-            typeof(SaveDialog),
-            typeof(OpenDialog),
-            typeof(ScrollBarView),
-            typeof(TreeView<>),
-        }; // The generic version of TreeView
-
-        return typeof(View).Assembly.DefinedTypes.Where(t =>
-                typeof(View).IsAssignableFrom(t) &&
-                !t.IsInterface && !t.IsAbstract && t.IsPublic)
-            .Except(exclude)
-            .OrderBy(t => t.Name).ToArray();
     }
 }

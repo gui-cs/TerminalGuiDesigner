@@ -18,13 +18,19 @@ public class AddViewOperation : Operation
     /// When/If run this operation will add <paramref name="add"/> to the <see cref="View"/>
     /// wrapped by <paramref name="to"/> with the provided <paramref name="fieldName"/>.
     /// </summary>
-    /// <param name="add"></param>
-    /// <param name="to"></param>
-    /// <param name="fieldName"></param>
+    /// <param name="add">A <see cref="View"/> instance to add.  If you want to pick at runtime then
+    /// use <see cref="AddViewOperation(Design)"/> overload instead.</param>
+    /// <param name="to">A <see cref="Design"/> (which should be <see cref="Design.IsContainerView"/>)
+    /// to add the <paramref name="add"/> to.</param>
+    /// <param name="fieldName">Field name to assign to <paramref name="add"/> when wrapping it as a
+    /// <see cref="Design"/>.  This determines the private field name that it will have in the .Designer.cs
+    /// file.</param>
     public AddViewOperation(View add, Design to, string? fieldName)
     {
         this.add = add;
-        this.fieldName = fieldName ?? to.GetUniqueFieldName(add.GetType());
+        this.fieldName = fieldName == null
+            ? to.GetUniqueFieldName(add.GetType())
+            : to.GetUniqueFieldName(fieldName);
         this.to = to;
     }
 
@@ -32,6 +38,8 @@ public class AddViewOperation : Operation
     /// Initializes a new instance of the <see cref="AddViewOperation"/> class.
     /// This overload asks users what view type they want at runtime (See <see cref="Do"/>).
     /// </summary>
+    /// <param name="design">A <see cref="Design"/> (which should be <see cref="Design.IsContainerView"/>)
+    /// to add any newly created <see cref="View"/> to.</param>
     public AddViewOperation(Design design)
     {
         this.to = design;
@@ -43,7 +51,7 @@ public class AddViewOperation : Operation
         if (this.add == null)
         {
             var factory = new ViewFactory();
-            var selectable = factory.GetSupportedViews().ToArray();
+            var selectable = ViewFactory.GetSupportedViews().ToArray();
 
             if (Modals.Get("Type of Control", "Add", true, selectable, t => t?.Name ?? "Null", false, out var selected) && selected != null)
             {

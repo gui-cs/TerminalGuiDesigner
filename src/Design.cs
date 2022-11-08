@@ -627,16 +627,8 @@ public class Design
 
         var allDesigns = root.GetAllDesigns();
 
-        // consider label1
-        int number = 1;
-        while (allDesigns.Any(d => d.FieldName.Equals($"{viewType.Name.ToLower()}{number}")))
-        {
-            // label1 is taken, try label2 etc
-            number++;
-        }
-
-        // found a unique one
-        return $"{viewType.Name.ToLower()}{number}";
+        var name = CodeDomArgs.MakeValidFieldName($"{viewType.Name.ToLower()}");
+        return name.MakeUnique(allDesigns.Select(d => d.FieldName));
     }
 
     public string GetUniqueFieldName(string candidate)
@@ -653,22 +645,7 @@ public class Design
         var usedFieldNames = allDesigns.Select(d => d.FieldName).ToList();
         usedFieldNames.AddRange(ColorSchemeManager.Instance.Schemes.Select(k => k.Name));
 
-        // if name is already unique thats great
-        if (!usedFieldNames.Contains(candidate))
-        {
-            return candidate;
-        }
-
-        // name collides with something else
-        int number = 2;
-        while (usedFieldNames.Contains($"{candidate}{number}"))
-        {
-            // bob is taken, try bob2 etc
-            number++;
-        }
-
-        // found a unique one
-        return $"{candidate}{number}";
+        return candidate.MakeUnique(usedFieldNames);
     }
 
     /// <summary>
