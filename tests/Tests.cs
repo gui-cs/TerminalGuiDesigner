@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -99,6 +100,13 @@ internal class Tests
 
         var codeToView = new CodeToView(designOut.SourceCode);
         var designBackIn = codeToView.CreateInstance();
+
+        // Cleanup temp files unless user is trying to debug failing unit tests
+        if (!Debugger.IsAttached)
+        {
+            codeToView.SourceFile.CsFile.Delete();
+            codeToView.SourceFile.DesignerFile.Delete();
+        }
 
         return designBackIn.View.GetActualSubviews().OfType<T2>().Where(v => v.Data is Design d && d.FieldName.Equals(fieldName)).Single();
     }

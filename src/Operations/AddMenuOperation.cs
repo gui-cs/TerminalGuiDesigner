@@ -3,6 +3,9 @@ using TerminalGuiDesigner.UI.Windows;
 
 namespace TerminalGuiDesigner.Operations;
 
+/// <summary>
+/// <see cref="Operation"/> for adding a new top level menu to a <see cref="MenuBar"/> (e.g. File, Edit).
+/// </summary>
 public class AddMenuOperation : Operation
 {
     /// <summary>
@@ -83,6 +86,7 @@ public class AddMenuOperation : Operation
         return true;
     }
 
+    /// <inheritdoc/>
     public override void Undo()
     {
         // its not there anyways
@@ -97,6 +101,7 @@ public class AddMenuOperation : Operation
         this.menuBar.SetNeedsDisplay();
     }
 
+    /// <inheritdoc/>
     public override void Redo()
     {
         // its already there

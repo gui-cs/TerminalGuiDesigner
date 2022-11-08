@@ -13,7 +13,7 @@ namespace UnitTests
             // when the first MenuBar was added by ViewFactory
             string? firstMenuItemName = null;
 
-            RoundTrip<View, MenuBar>((d, v) =>
+            var viewIn = RoundTrip<View, MenuBar>((d, v) =>
             {
                 Assert.IsNotNull(v.Menus[0].Children[0], "Expected a new MenuBar added in Designer to have a placeholder MenuItem entry");
                 Assert.AreEqual(1, v.Menus[0].Children.Length);
@@ -30,11 +30,11 @@ namespace UnitTests
                 Assert.AreEqual(2, v.Menus[0].Children.Length);
                 Assert.AreSame(first, v.Menus[0].Children[0], "Expected new item to be below the original (unchanged) item");
                 Assert.AreEqual("", v.Menus[0].Children[1].Title.ToString(),"Expected new menu items to have no text initially (user Types to enter them)");
-            }, out var viewOut);
+            }, out _);
 
-            Assert.AreEqual(2, viewOut.Menus[0].Children.Length);
-            Assert.AreEqual(firstMenuItemName, viewOut.Menus[0].Children[0].Title.ToString(), "Expected save/reload to have no effect on menu names");
-            Assert.AreEqual("", viewOut.Menus[0].Children[1].Title.ToString());
+            Assert.AreEqual(2, viewIn.Menus[0].Children.Length);
+            Assert.AreEqual(firstMenuItemName, viewIn.Menus[0].Children[0].Title.ToString(), "Expected save/reload to have no effect on menu names");
+            Assert.AreEqual("", viewIn.Menus[0].Children[1].Title.ToString());
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace UnitTests
             // when the first MenuBar was added by ViewFactory
             string? firstMenuItemName = null;
 
-            RoundTrip<View, MenuBar>((d, v) =>
+            var viewIn = RoundTrip<View, MenuBar>((d, v) =>
             {
                 Assert.IsNotNull(v.Menus[0].Children[0], "Expected a new MenuBar added in Designer to have a placeholder MenuItem entry");
                 Assert.AreEqual(1, v.Menus[0].Children.Length);
@@ -79,10 +79,10 @@ namespace UnitTests
                 Assert.AreEqual(1, v.Menus[0].Children.Length);
                 Assert.AreSame(first, v.Menus[0].Children[0], "Expected new item to be below the original (unchanged) item");
 
-            }, out var viewOut);
+            }, out _);
 
-            Assert.AreEqual(1, viewOut.Menus[0].Children.Length);
-            Assert.AreEqual(firstMenuItemName, viewOut.Menus[0].Children[0].Title.ToString(), "Expected save/reload to have no effect on menu names");
+            Assert.AreEqual(1, viewIn.Menus[0].Children.Length);
+            Assert.AreEqual(firstMenuItemName, viewIn.Menus[0].Children[0].Title.ToString(), "Expected save/reload to have no effect on menu names");
         }
     }
 }
