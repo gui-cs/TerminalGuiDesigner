@@ -1,4 +1,5 @@
-﻿using Terminal.Gui;
+﻿using System.Data;
+using Terminal.Gui;
 using TerminalGuiDesigner.UI.Windows;
 
 namespace TerminalGuiDesigner.Operations;
@@ -61,25 +62,30 @@ public class AddMenuOperation : Operation
     /// <returns>True if the menu was added.  False if making repeated calls or user cancels naming the new menu etc.</returns>
     public override bool Do()
     {
+        // if we have already run this operation
         if (this.newItem != null)
         {
             return false;
         }
 
-        if (this.name == null)
+        string? uniqueName = this.name;
+
+        if (uniqueName == null)
         {
-            if (Modals.GetString("Name", "Name", "MyMenu", out string? newName) && !string.IsNullOrWhiteSpace(newName))
+            if (!Modals.GetString("Name", "Name", "MyMenu", out uniqueName))
             {
-                this.name = newName;
-            }
-            else
-            {
-                return false; // user canceled naming the new menu
+                // user canceled adding
+                return false;
             }
         }
 
+        uniqueName = uniqueName?.MakeUnique(
+                this.menuBar.Menus.Select(c => c.Title.ToString())
+                .Where(t => t != null)
+                .Cast<string>());
+
         var current = this.menuBar.Menus.ToList<MenuBarItem>();
-        current.Add(this.newItem = new MenuBarItem(this.name, new MenuItem[] { new MenuItem { Title = DefaultMenuItemText } }));
+        current.Add(this.newItem = new MenuBarItem(uniqueName, new MenuItem[] { new MenuItem { Title = DefaultMenuItemText } }));
         this.menuBar.Menus = current.ToArray();
         this.menuBar.SetNeedsDisplay();
 
