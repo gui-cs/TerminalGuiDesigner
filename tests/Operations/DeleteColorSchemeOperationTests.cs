@@ -5,7 +5,7 @@ using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 
-namespace UnitTests;
+namespace UnitTests.Operations;
 
 internal class DeleteColorSchemeOperationTests : Tests
 {
@@ -15,7 +15,7 @@ internal class DeleteColorSchemeOperationTests : Tests
     {
         var scheme = new ColorScheme();
 
-        var lblIn = this.RoundTrip<Dialog, Label>(
+        var lblIn = RoundTrip<Dialog, Label>(
             (d, v) =>
         {
             // Clear known default colors

@@ -5,7 +5,7 @@ using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.UI;
 
-namespace UnitTests;
+namespace UnitTests.Operations;
 
 /// <summary>
 /// Tests for the <see cref="DragOperation"/> class and <see cref="MouseManager"/> areas
@@ -20,7 +20,7 @@ internal class DragOperationTests : Tests
     [Test]
     public void TestSimpleDrag_Down3Rows()
     {
-        var d = this.Get10By10View();
+        var d = Get10By10View();
 
         var lbl = new Label(0, 0, "Hi there buddy");
         var lblDesign = new Design(d.SourceCode, "mylabel", lbl);
@@ -53,7 +53,7 @@ internal class DragOperationTests : Tests
     [Test]
     public void TestSimpleDrag_Down3Rows_WithMouse()
     {
-        var d = this.Get10By10View();
+        var d = Get10By10View();
 
         var lbl = new Label(0, 0, "Hi there buddy");
         var lblDesign = new Design(d.SourceCode, "mylabel", lbl);
@@ -75,12 +75,12 @@ internal class DragOperationTests : Tests
         Assert.AreEqual(Pos.At(0), lbl.Y);
     }
 
-    
+
 
     [Test]
     public void TestMultiDrag_Down3Rows()
     {
-        var d = this.Get10By10View();
+        var d = Get10By10View();
 
         var lbl1 = new Label(0, 0, "Hi there buddy");
         var lbl2 = new Label(1, 1, "Hi there buddy");
@@ -123,7 +123,7 @@ internal class DragOperationTests : Tests
     [Test]
     public void TestDragCoordinateSystem()
     {
-        var d = this.Get10By10View();
+        var d = Get10By10View();
         var container1 = new View
         {
             X = 2,
@@ -162,7 +162,7 @@ internal class DragOperationTests : Tests
     [Test]
     public void TestSimpleDrag_IntoAnotherView()
     {
-        var d = this.Get10By10View();
+        var d = Get10By10View();
 
         // setup 2 large subviews at diagonals
         // to one another within the main 10x10 view
@@ -257,10 +257,10 @@ internal class DragOperationTests : Tests
         lblDesign.View.ViewToScreenActual(0, 0, out screenX, out screenY);
         Assert.AreEqual(13, screenX, "Expected label X screen to be at its parents 0,0 (11,11) + 1");
         Assert.AreEqual(14, screenY, "Expected label Y screen to be at its parents 0,0 (11,11) + 2");
-                        
+
         // press down at 0,0 of the label
         Assert.AreEqual(lbl, rootDesign.View.HitTest(new MouseEvent { X = 13, Y = 14 }, out _, out _)
-            ,"We just asked ViewToScreen for these same coordinates, how can they fail HitTest now?");
+            , "We just asked ViewToScreen for these same coordinates, how can they fail HitTest now?");
 
         // Drag up 4 so it is no longer in its parents container.
         // Label is at 1,2.  Up 2 brings it to 0 (just inside scroll)

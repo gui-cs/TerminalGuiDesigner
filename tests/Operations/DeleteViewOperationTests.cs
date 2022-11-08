@@ -6,7 +6,7 @@ using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 
-namespace UnitTests;
+namespace UnitTests.Operations;
 
 internal class DeleteViewOperationTests : Tests
 {

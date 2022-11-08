@@ -4,7 +4,7 @@ using System.Linq;
 using Terminal.Gui;
 using TerminalGuiDesigner.Operations;
 
-namespace UnitTests
+namespace UnitTests.Operations
 {
     internal class AddTabOperationTests : Tests
     {
@@ -12,7 +12,7 @@ namespace UnitTests
         public void TestAddTab_WrongViewType()
         {
             var d = Get10By10View();
-            var ex = Assert.Throws<ArgumentException>(() => new AddTabOperation(d,null));
+            var ex = Assert.Throws<ArgumentException>(() => new AddTabOperation(d, null));
             Assert.AreEqual("Design must be for a TabView to support this Operation", ex?.Message);
         }
 
@@ -39,7 +39,7 @@ namespace UnitTests
                     Assert.AreEqual(tab1Name, v.Tabs.ElementAt(0).Text);
                     Assert.AreEqual(tab2Name, v.Tabs.ElementAt(1).Text);
                     Assert.AreEqual("Blarg", v.Tabs.ElementAt(2).Text);
-                },out _);
+                }, out _);
 
             Assert.AreEqual(3, tabIn.Tabs.Count);
             Assert.AreEqual(tab1Name, tabIn.Tabs.ElementAt(0).Text);
@@ -69,7 +69,7 @@ namespace UnitTests
                 (d, v) =>
                 {
                     var op = new AddTabOperation(d, "Blah");
-                    op.Do(); 
+                    op.Do();
                     op = new AddTabOperation(d, "Blah");
                     op.Do();
                     Assert.AreEqual(4, v.Tabs.Count);

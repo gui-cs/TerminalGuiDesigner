@@ -3,7 +3,7 @@ using System;
 using Terminal.Gui;
 using TerminalGuiDesigner.Operations;
 
-namespace UnitTests
+namespace UnitTests.Operations
 {
     internal class AddColumnOperationTests : Tests
     {

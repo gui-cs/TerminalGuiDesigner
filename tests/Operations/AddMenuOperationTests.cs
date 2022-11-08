@@ -3,7 +3,7 @@ using System;
 using Terminal.Gui;
 using TerminalGuiDesigner.Operations;
 
-namespace UnitTests
+namespace UnitTests.Operations
 {
     internal class AddMenuOperationTests : Tests
     {
@@ -11,7 +11,7 @@ namespace UnitTests
         public void TestAddMenu_InvalidViewType()
         {
             var d = Get10By10View();
-            var ex = Assert.Throws<ArgumentException>(() => new AddMenuOperation(d,"haha!"));
+            var ex = Assert.Throws<ArgumentException>(() => new AddMenuOperation(d, "haha!"));
             Assert.AreEqual("Design must be for a MenuBar to support AddMenuOperation", ex?.Message);
         }
 
@@ -26,12 +26,12 @@ namespace UnitTests
                 Assert.AreEqual(1, v.Menus.Length, "Expected 1 placeholder example Menu");
                 var first = v.Menus[0];
 
-                var add = new AddMenuOperation(d,"Blarg");
+                var add = new AddMenuOperation(d, "Blarg");
                 Assert.AreEqual(1, v.Menus.Length, "Expected no changes until we actually run the operation");
 
                 add.Do();
 
-                Assert.AreEqual(2, v.Menus.Length,"Expected a new top level menu to be added");
+                Assert.AreEqual(2, v.Menus.Length, "Expected a new top level menu to be added");
                 Assert.AreSame(first, v.Menus[0], "Expected new item to be right of the original");
                 Assert.AreEqual("Blarg", v.Menus[1].Title.ToString());
 
