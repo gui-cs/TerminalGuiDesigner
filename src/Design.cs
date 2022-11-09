@@ -565,7 +565,7 @@ public class Design
     /// <summary>
     /// Returns the topmost view above this which has an associated
     /// Design or this if there are no Design above this.
-    /// <summary/>
+    /// </summary>
     /// <returns>The topmost design that is being edited.</returns>
     public Design GetRootDesign()
     {

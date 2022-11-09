@@ -1,38 +1,47 @@
-﻿
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 
 namespace TerminalGuiDesigner.Operations;
 
+/// <summary>
+/// Single <see cref="Operation"/> with a collection of sub <see cref="Operation"/>
+/// that are all Done or Undone at the same time. Use for tasks where you want to apply
+/// same effect (E.g. move) to multiple objects at once but want a single Undo entry in
+/// <see cref="OperationManager"/>.
+/// </summary>
 public class CompositeOperation : Operation
 {
     private Operation[] operations;
 
-    public IReadOnlyCollection<Operation> Operations => new ReadOnlyCollection<Operation>(this.operations);
-
     /// <summary>
+    /// Initializes a new instance of the <see cref="CompositeOperation"/> class.
     /// <para>
     /// Combines multiple operations into a single operation.  That operation
     /// can be applied or undone in one go by <see cref="OperationManager"/>.
     /// </para>
     /// <para>
     /// Note that <see cref="Operation.IsImpossible"/> is true if any of the passed
-    /// <paramref name="operations"/> are impossible
+    /// <paramref name="operations"/> are impossible.
     /// </para>
     /// </summary>
-    /// <param name="operations"></param>
+    /// <param name="operations">All operations to perform in <see cref="Do"/>.</param>
     public CompositeOperation(params Operation[] operations)
     {
         this.operations = operations;
 
-        // If we cann't do one of them then we cannot do any
+        // If we can't do one of them then we cannot do any
         this.IsImpossible = operations.Any(o => o.IsImpossible);
     }
 
     /// <summary>
-    /// Performs the operation and returns true if any of the
-    /// sub operations did anything
+    /// Gets the collection of sub operations performed on <see cref="Do"/> / <see cref="Undo"/>.
     /// </summary>
-    /// <returns></returns>
+    public IReadOnlyCollection<Operation> Operations => new ReadOnlyCollection<Operation>(this.operations);
+
+    /// <summary>
+    /// Performs the operation and returns true if any of the
+    /// sub operations did anything.
+    /// </summary>
+    /// <returns>True if any of the <see cref="Operation"/> did anything.</returns>
     public override bool Do()
     {
         bool did = false;
@@ -50,6 +59,7 @@ public class CompositeOperation : Operation
         return did;
     }
 
+    /// <inheritdoc/>
     public override void Redo()
     {
         foreach (var op in this.operations)
@@ -58,6 +68,7 @@ public class CompositeOperation : Operation
         }
     }
 
+    /// <inheritdoc/>
     public override void Undo()
     {
         foreach (var op in this.operations)
