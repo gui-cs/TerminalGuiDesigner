@@ -750,7 +750,7 @@ Ctrl+Q - Quit
 
         if (SelectionManager.Instance.Selected.Any())
         {
-            var cmd = new DeleteViewOperation(SelectionManager.Instance.Selected.Select(d => d.View).ToArray());
+            var cmd = new DeleteViewOperation(SelectionManager.Instance.Selected.ToArray());
             OperationManager.Instance.Do(cmd);
         }
     }

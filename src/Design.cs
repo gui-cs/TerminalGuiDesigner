@@ -497,7 +497,7 @@ public class Design
             }
         }
 
-        yield return new DeleteViewOperation(this.View);
+        yield return new DeleteViewOperation(this);
 
         if (this.View is TabView)
         {

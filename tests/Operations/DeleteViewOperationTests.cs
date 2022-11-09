@@ -27,13 +27,13 @@ internal class DeleteViewOperationTests : Tests
         new AddViewOperation(lbl2, designOut, "lbl2").Do();
 
         // not impossible, we could totally delete either of these
-        Assert.IsFalse(new DeleteViewOperation(lbl1).IsImpossible);
-        Assert.IsFalse(new DeleteViewOperation(lbl2).IsImpossible);
+        Assert.IsFalse(new DeleteViewOperation((Design)lbl1.Data).IsImpossible);
+        Assert.IsFalse(new DeleteViewOperation((Design)lbl2.Data).IsImpossible);
 
         // we now have a dependency of lbl2 on lbl1 so deleting lbl1 will go badly
         lbl2.X = Pos.Right(lbl1) + 5;
 
-        Assert.IsTrue(new DeleteViewOperation(lbl1).IsImpossible);
+        Assert.IsTrue(new DeleteViewOperation((Design)lbl1.Data).IsImpossible);
     }
 
     [Test]
@@ -56,11 +56,11 @@ internal class DeleteViewOperationTests : Tests
         lbl2.X = Pos.Right(lbl1) + 5;
 
         // Deleting both at once should be possible since there are no hanging references
-        Assert.IsFalse(new DeleteViewOperation(lbl1, lbl2).IsImpossible);
-        Assert.IsFalse(new DeleteViewOperation(lbl2, lbl1).IsImpossible);
+        Assert.IsFalse(new DeleteViewOperation((Design)lbl1.Data, (Design)lbl2.Data).IsImpossible);
+        Assert.IsFalse(new DeleteViewOperation((Design)lbl2.Data, (Design)lbl1.Data).IsImpossible);
 
         Assert.AreEqual(3, designOut.GetAllDesigns().Count());
-        var cmd = new DeleteViewOperation(lbl2, lbl1);
+        var cmd = new DeleteViewOperation((Design)lbl2.Data, (Design)lbl1.Data);
         Assert.IsTrue(cmd.Do());
         Assert.AreEqual(1, designOut.GetAllDesigns().Count());
 
@@ -89,10 +89,10 @@ internal class DeleteViewOperationTests : Tests
         // normally commands are run with locked selection, lets run this test with both cases to be sure
         SelectionManager.Instance.LockSelection = lockSelection;
 
-        Assert.IsFalse(new DeleteViewOperation(lbl1).IsImpossible);
+        Assert.IsFalse(new DeleteViewOperation(lbl1Design).IsImpossible);
 
         Assert.AreEqual(2, designOut.GetAllDesigns().Count());
-        var cmd = new DeleteViewOperation(lbl1);
+        var cmd = new DeleteViewOperation(lbl1Design);
 
         Assert.Contains(lbl1Design, SelectionManager.Instance.Selected.ToArray());
 
