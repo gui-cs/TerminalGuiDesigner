@@ -44,7 +44,7 @@ internal class RenameColumnOperation : Operation
         return $"Rename Column '{this.originalName}'";
     }
 
-    public override bool Do()
+    protected override bool DoImpl()
     {
         if (this.column == null)
         {

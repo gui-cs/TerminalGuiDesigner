@@ -54,7 +54,7 @@ public class CopyOperation : Operation
     }
 
     /// <inheritdoc/>
-    public override bool Do()
+    protected override bool DoImpl()
     {
         LastCopiedDesign = this.toCopy;
         return true;

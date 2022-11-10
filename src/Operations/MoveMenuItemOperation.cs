@@ -13,7 +13,8 @@ public class MoveMenuItemOperation : MenuItemOperation
     {
         this.up = up;
 
-        if (this.Parent == null || this.OperateOn == null)
+        // command is invalid
+        if (this.IsImpossible || this.Parent == null || this.OperateOn == null)
         {
             this.IsImpossible = true;
             return;
@@ -32,7 +33,7 @@ public class MoveMenuItemOperation : MenuItemOperation
         }
     }
 
-    public override bool Do()
+    protected override bool DoImpl()
     {
         return this.Move(this.up ? -1 : 1);
     }

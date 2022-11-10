@@ -15,7 +15,7 @@ public class RenameViewOperation : Operation
         this.NewName = newName;
     }
 
-    public override bool Do()
+    protected override bool DoImpl()
     {
         this.Design.FieldName = this.NewName;
         return true;

@@ -43,7 +43,7 @@ internal class RenameTabOperation : Operation
         return $"Rename Tab '{this.originalName}'";
     }
 
-    public override bool Do()
+    protected override bool DoImpl()
     {
         if (this.tab == null)
         {

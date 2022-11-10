@@ -42,7 +42,18 @@ public abstract class Operation : IOperation
         return pascalCaseString;
     }
 
-    public abstract bool Do();
+    public bool Do()
+    {
+        if (this.IsImpossible)
+        {
+            return false;
+        }
+
+        return DoImpl();
+    }
+
+    /// <inheritdoc cref="IOperation.Do"/>
+    protected abstract bool DoImpl();
 
     public abstract void Undo();
 

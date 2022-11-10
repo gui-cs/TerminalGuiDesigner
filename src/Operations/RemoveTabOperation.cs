@@ -21,7 +21,7 @@ public class RemoveTabOperation : TabViewOperation
         return $"Remove Tab '{this.SelectedTab?.Text}'";
     }
 
-    public override bool Do()
+    protected override bool DoImpl()
     {
         if (this.SelectedTab == null)
         {

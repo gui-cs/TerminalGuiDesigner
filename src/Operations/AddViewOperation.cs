@@ -46,7 +46,7 @@ public class AddViewOperation : Operation
     }
 
     /// <inheritdoc/>
-    public override bool Do()
+    protected override bool DoImpl()
     {
         if (this.add == null)
         {

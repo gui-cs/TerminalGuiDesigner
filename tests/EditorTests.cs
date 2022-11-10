@@ -34,7 +34,7 @@ internal class EditorTests : Tests
 
     class DummyOperation : Operation
     {
-        public override bool Do()
+        protected override bool DoImpl()
         {
             return true;
         }

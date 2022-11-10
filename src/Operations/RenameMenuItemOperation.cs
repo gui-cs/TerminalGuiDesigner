@@ -15,7 +15,7 @@ public class RenameMenuItemOperation : MenuItemOperation
         this.originalName = toRename.Data as string;
     }
 
-    public override bool Do()
+    protected override bool DoImpl()
     {
         if (this.OperateOn == null)
         {

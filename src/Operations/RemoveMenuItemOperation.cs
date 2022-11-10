@@ -39,7 +39,7 @@ namespace TerminalGuiDesigner.Operations
         {
         }
 
-        public override bool Do()
+        protected override bool DoImpl()
         {
             if (this.Parent == null || this.OperateOn == null)
             {

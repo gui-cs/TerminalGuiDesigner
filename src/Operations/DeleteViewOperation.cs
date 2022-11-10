@@ -42,7 +42,7 @@ public class DeleteViewOperation : Operation
     }
 
     /// <inheritdoc/>
-    public override bool Do()
+    protected override bool DoImpl()
     {
         bool removedAny = false;
 

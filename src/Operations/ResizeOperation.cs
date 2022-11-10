@@ -28,7 +28,7 @@ public class ResizeOperation : Operation
         this.DestinationY = destY;
     }
 
-    public override bool Do()
+    protected override bool DoImpl()
     {
         this.SetWidth();
         this.SetHeight();

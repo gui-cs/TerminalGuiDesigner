@@ -39,7 +39,7 @@ public class AddColumnOperation : Operation
     public Design Design { get; }
 
     /// <inheritdoc/>
-    public override bool Do()
+    protected override bool DoImpl()
     {
         if (this.column != null)
         {

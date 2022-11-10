@@ -31,7 +31,7 @@ public class AddMenuItemOperation : MenuItemOperation
     /// Adds a new blank <see cref="MenuItem"/> to the menu.
     /// </summary>
     /// <returns>True if a new <see cref="MenuItem"/> was successfully added.</returns>
-    public override bool Do()
+    protected override bool DoImpl()
     {
         return this.Add(this.added = new MenuItem());
     }

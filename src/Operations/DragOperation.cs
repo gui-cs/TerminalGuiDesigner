@@ -129,7 +129,7 @@ public partial class DragOperation : Operation
     }
 
     /// <inheritdoc/>
-    public override bool Do()
+    protected override bool DoImpl()
     {
         bool didAny = false;
         foreach (var mem in this.mementos)

@@ -21,7 +21,7 @@ public class PasteOperation : Operation
         this.oldSelection = SelectionManager.Instance.Selected;
     }
 
-    public override bool Do()
+    protected override bool DoImpl()
     {
         var toCopy = CopyOperation.LastCopiedDesign;
 

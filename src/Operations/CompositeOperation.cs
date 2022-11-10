@@ -42,7 +42,7 @@ public class CompositeOperation : Operation
     /// sub operations did anything.
     /// </summary>
     /// <returns>True if any of the <see cref="Operation"/> did anything.</returns>
-    public override bool Do()
+    protected override bool DoImpl()
     {
         bool did = false;
 

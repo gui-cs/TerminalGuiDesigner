@@ -45,7 +45,7 @@ internal class RemoveColumnOperation : Operation
         return $"Remove Column '{this.column}'";
     }
 
-    public override bool Do()
+    protected override bool DoImpl()
     {
         if (this.column == null)
         {

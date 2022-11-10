@@ -58,7 +58,7 @@ public class MoveViewOperation : Operation
         }
     }
 
-    public override bool Do()
+    protected override bool DoImpl()
     {
         if (this.BeingMoved.View.X.IsAbsolute())
         {

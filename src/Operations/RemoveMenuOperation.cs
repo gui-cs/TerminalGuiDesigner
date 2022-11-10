@@ -26,7 +26,7 @@ public class RemoveMenuOperation : Operation
         this.IsImpossible = this.toRemove == null;
     }
 
-    public override bool Do()
+    protected override bool DoImpl()
     {
         if (this.toRemove == null || !this.menuBar.Menus.Contains(this.toRemove))
         {

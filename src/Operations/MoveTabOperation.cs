@@ -49,7 +49,7 @@ public class MoveTabOperation : TabViewOperation
         return base.ToString();
     }
 
-    public override bool Do()
+    protected override bool DoImpl()
     {
         return this.ApplyAdjustment(this.Adjustment);
     }

@@ -111,7 +111,7 @@ public class SetPropertyOperation : Operation
         }
     }
 
-    public override bool Do()
+    protected override bool DoImpl()
     {
         if (this._valueGetter != null)
         {

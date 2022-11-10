@@ -15,7 +15,7 @@ public class MoveMenuItemRightOperation : MenuItemOperation
     {
     }
 
-    public override bool Do()
+    protected override bool DoImpl()
     {
         if (this.Parent == null || this.OperateOn == null)
         {

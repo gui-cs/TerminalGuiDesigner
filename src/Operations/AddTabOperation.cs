@@ -24,7 +24,7 @@ public class AddTabOperation : TabViewOperation
     }
 
     /// <inheritdoc/>
-    public override bool Do()
+    protected override bool DoImpl()
     {
         if (this.tab != null)
         {

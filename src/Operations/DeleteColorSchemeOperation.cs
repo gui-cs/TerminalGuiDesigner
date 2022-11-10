@@ -36,7 +36,7 @@ public class DeleteColorSchemeOperation : Operation
     public NamedColorScheme ToDelete { get; }
 
     /// <inheritdoc/>
-    public override bool Do()
+    protected override bool DoImpl()
     {
         foreach (var u in this.users)
         {

@@ -60,7 +60,7 @@ public class AddMenuOperation : Operation
     /// </summary>
     /// <remarks>Calling this method multiple times will not result in more new menus.</remarks>
     /// <returns>True if the menu was added.  False if making repeated calls or user cancels naming the new menu etc.</returns>
-    public override bool Do()
+    protected override bool DoImpl()
     {
         // if we have already run this operation
         if (this.newItem != null)
