@@ -22,25 +22,6 @@ namespace TerminalGuiDesigner.Operations
         }
 
         /// <inheritdoc/>
-        protected override bool DoImpl()
-        {
-            if (this.Parent == null || this.OperateOn == null)
-            {
-                return false;
-            }
-
-            var children = this.Parent.Children.ToList<MenuItem?>();
-
-            this.removedAtIdx = Math.Max(0, children.IndexOf(this.OperateOn));
-            children[this.removedAtIdx] = null;
-
-            this.Parent.Children = children.ToArray();
-            this.Bar?.SetNeedsDisplay();
-
-            return true;
-        }
-
-        /// <inheritdoc/>
         public override void Redo()
         {
             this.Do();
@@ -59,6 +40,25 @@ namespace TerminalGuiDesigner.Operations
             children[this.removedAtIdx] = this.OperateOn;
             this.Parent.Children = children.ToArray();
             this.Bar?.SetNeedsDisplay();
+        }
+
+        /// <inheritdoc/>
+        protected override bool DoImpl()
+        {
+            if (this.Parent == null || this.OperateOn == null)
+            {
+                return false;
+            }
+
+            var children = this.Parent.Children.ToList<MenuItem?>();
+
+            this.removedAtIdx = Math.Max(0, children.IndexOf(this.OperateOn));
+            children[this.removedAtIdx] = null;
+
+            this.Parent.Children = children.ToArray();
+            this.Bar?.SetNeedsDisplay();
+
+            return true;
         }
     }
 }

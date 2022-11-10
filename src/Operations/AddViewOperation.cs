@@ -46,6 +46,42 @@ public class AddViewOperation : Operation
     }
 
     /// <inheritdoc/>
+    public override void Redo()
+    {
+        if (this.add == null)
+        {
+            return;
+        }
+
+        var v = this.GetViewToAddTo();
+        v.Add(this.add);
+        v.SetNeedsDisplay();
+    }
+
+    /// <inheritdoc/>
+    public override void Undo()
+    {
+        if (this.add == null)
+        {
+            return;
+        }
+
+        var v = this.GetViewToAddTo();
+        v.Remove(this.add);
+        v.SetNeedsDisplay();
+    }
+
+    private View GetViewToAddTo()
+    {
+        if (this.to.View is TabView tabView)
+        {
+            return tabView.SelectedTab.View;
+        }
+
+        return this.to.View;
+    }
+
+    /// <inheritdoc/>
     protected override bool DoImpl()
     {
         if (this.add == null)
@@ -81,41 +117,5 @@ public class AddViewOperation : Operation
 
         v.SetNeedsDisplay();
         return true;
-    }
-
-    /// <inheritdoc/>
-    public override void Redo()
-    {
-        if (this.add == null)
-        {
-            return;
-        }
-
-        var v = this.GetViewToAddTo();
-        v.Add(this.add);
-        v.SetNeedsDisplay();
-    }
-
-    /// <inheritdoc/>
-    public override void Undo()
-    {
-        if (this.add == null)
-        {
-            return;
-        }
-
-        var v = this.GetViewToAddTo();
-        v.Remove(this.add);
-        v.SetNeedsDisplay();
-    }
-
-    private View GetViewToAddTo()
-    {
-        if (this.to.View is TabView tabView)
-        {
-            return tabView.SelectedTab.View;
-        }
-
-        return this.to.View;
     }
 }

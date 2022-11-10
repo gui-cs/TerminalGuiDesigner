@@ -36,22 +36,6 @@ public class DeleteColorSchemeOperation : Operation
     public NamedColorScheme ToDelete { get; }
 
     /// <inheritdoc/>
-    protected override bool DoImpl()
-    {
-        foreach (var u in this.users)
-        {
-            // we are no longer using a custom scheme
-            u.State.OriginalScheme = null;
-
-            // we use the default (usually thats to inherit from parent)
-            u.View.ColorScheme = this.GetDefaultColorScheme(u);
-        }
-
-        ColorSchemeManager.Instance.Remove(this.ToDelete);
-        return true;
-    }
-
-    /// <inheritdoc/>
     public override void Redo()
     {
         this.Do();
@@ -88,5 +72,21 @@ public class DeleteColorSchemeOperation : Operation
         }
 
         return null;
+    }
+
+    /// <inheritdoc/>
+    protected override bool DoImpl()
+    {
+        foreach (var u in this.users)
+        {
+            // we are no longer using a custom scheme
+            u.State.OriginalScheme = null;
+
+            // we use the default (usually thats to inherit from parent)
+            u.View.ColorScheme = this.GetDefaultColorScheme(u);
+        }
+
+        ColorSchemeManager.Instance.Remove(this.ToDelete);
+        return true;
     }
 }

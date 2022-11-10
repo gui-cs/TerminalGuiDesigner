@@ -42,25 +42,6 @@ public class DeleteViewOperation : Operation
     }
 
     /// <inheritdoc/>
-    protected override bool DoImpl()
-    {
-        bool removedAny = false;
-
-        for (int i = 0; i < this.delete.Length; i++)
-        {
-            if (this.from[i] != null)
-            {
-                this.from[i].Remove(this.delete[i].View);
-                removedAny = true;
-            }
-        }
-
-        this.ForceSelectionClear();
-
-        return removedAny;
-    }
-
-    /// <inheritdoc/>
     public override void Redo()
     {
         this.Do();
@@ -84,5 +65,24 @@ public class DeleteViewOperation : Operation
     public override string ToString()
     {
         return "Delete";
+    }
+
+    /// <inheritdoc/>
+    protected override bool DoImpl()
+    {
+        bool removedAny = false;
+
+        for (int i = 0; i < this.delete.Length; i++)
+        {
+            if (this.from[i] != null)
+            {
+                this.from[i].Remove(this.delete[i].View);
+                removedAny = true;
+            }
+        }
+
+        this.ForceSelectionClear();
+
+        return removedAny;
     }
 }

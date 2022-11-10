@@ -27,15 +27,6 @@ public class AddMenuItemOperation : MenuItemOperation
     {
     }
 
-    /// <summary>
-    /// Adds a new blank <see cref="MenuItem"/> to the menu.
-    /// </summary>
-    /// <returns>True if a new <see cref="MenuItem"/> was successfully added.</returns>
-    protected override bool DoImpl()
-    {
-        return this.Add(this.added = new MenuItem());
-    }
-
     /// <inheritdoc/>
     public override void Redo()
     {
@@ -55,6 +46,15 @@ public class AddMenuItemOperation : MenuItemOperation
 
         var remove = new RemoveMenuItemOperation(this.added);
         remove.Do();
+    }
+
+    /// <summary>
+    /// Adds a new blank <see cref="MenuItem"/> to the menu.
+    /// </summary>
+    /// <returns>True if a new <see cref="MenuItem"/> was successfully added.</returns>
+    protected override bool DoImpl()
+    {
+        return this.Add(this.added = new MenuItem());
     }
 
     private bool Add(MenuItem menuItem)

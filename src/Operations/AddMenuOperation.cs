@@ -55,6 +55,36 @@ public class AddMenuOperation : Operation
     /// </summary>
     public Design Design { get; }
 
+    /// <inheritdoc/>
+    public override void Undo()
+    {
+        // its not there anyways
+        if (this.newItem == null || !this.menuBar.Menus.Contains(this.newItem))
+        {
+            return;
+        }
+
+        var current = this.menuBar.Menus.ToList<MenuBarItem>();
+        current.Remove(this.newItem);
+        this.menuBar.Menus = current.ToArray();
+        this.menuBar.SetNeedsDisplay();
+    }
+
+    /// <inheritdoc/>
+    public override void Redo()
+    {
+        // its already there
+        if (this.newItem == null || this.menuBar.Menus.Contains(this.newItem))
+        {
+            return;
+        }
+
+        var current = this.menuBar.Menus.ToList<MenuBarItem>();
+        current.Add(this.newItem);
+        this.menuBar.Menus = current.ToArray();
+        this.menuBar.SetNeedsDisplay();
+    }
+
     /// <summary>
     /// Performs the operation.  Adding a new top level menu.
     /// </summary>
@@ -90,35 +120,5 @@ public class AddMenuOperation : Operation
         this.menuBar.SetNeedsDisplay();
 
         return true;
-    }
-
-    /// <inheritdoc/>
-    public override void Undo()
-    {
-        // its not there anyways
-        if (this.newItem == null || !this.menuBar.Menus.Contains(this.newItem))
-        {
-            return;
-        }
-
-        var current = this.menuBar.Menus.ToList<MenuBarItem>();
-        current.Remove(this.newItem);
-        this.menuBar.Menus = current.ToArray();
-        this.menuBar.SetNeedsDisplay();
-    }
-
-    /// <inheritdoc/>
-    public override void Redo()
-    {
-        // its already there
-        if (this.newItem == null || this.menuBar.Menus.Contains(this.newItem))
-        {
-            return;
-        }
-
-        var current = this.menuBar.Menus.ToList<MenuBarItem>();
-        current.Add(this.newItem);
-        this.menuBar.Menus = current.ToArray();
-        this.menuBar.SetNeedsDisplay();
     }
 }

@@ -37,6 +37,24 @@ public class CompositeOperation : Operation
     /// </summary>
     public IReadOnlyCollection<Operation> Operations => new ReadOnlyCollection<Operation>(this.operations);
 
+    /// <inheritdoc/>
+    public override void Redo()
+    {
+        foreach (var op in this.operations)
+        {
+            op.Redo();
+        }
+    }
+
+    /// <inheritdoc/>
+    public override void Undo()
+    {
+        foreach (var op in this.operations)
+        {
+            op.Undo();
+        }
+    }
+
     /// <summary>
     /// Performs the operation and returns true if any of the
     /// sub operations did anything.
@@ -57,23 +75,5 @@ public class CompositeOperation : Operation
 
         // we report true
         return did;
-    }
-
-    /// <inheritdoc/>
-    public override void Redo()
-    {
-        foreach (var op in this.operations)
-        {
-            op.Redo();
-        }
-    }
-
-    /// <inheritdoc/>
-    public override void Undo()
-    {
-        foreach (var op in this.operations)
-        {
-            op.Undo();
-        }
     }
 }

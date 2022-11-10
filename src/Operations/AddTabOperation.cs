@@ -24,6 +24,32 @@ public class AddTabOperation : TabViewOperation
     }
 
     /// <inheritdoc/>
+    public override void Redo()
+    {
+        // cannot redo (maybe user hit redo twice thats fine)
+        if (this.tab == null || this.View.Tabs.Contains(this.tab))
+        {
+            return;
+        }
+
+        this.View.AddTab(this.tab, true);
+        this.View.SetNeedsDisplay();
+    }
+
+    /// <inheritdoc/>
+    public override void Undo()
+    {
+        // cannot undo if operation hasn't been performed
+        if (this.tab == null || !this.View.Tabs.Contains(this.tab))
+        {
+            return;
+        }
+
+        this.View.RemoveTab(this.tab);
+        this.View.SetNeedsDisplay();
+    }
+
+    /// <inheritdoc/>
     protected override bool DoImpl()
     {
         if (this.tab != null)
@@ -55,31 +81,5 @@ public class AddTabOperation : TabViewOperation
         this.View.SetNeedsDisplay();
 
         return true;
-    }
-
-    /// <inheritdoc/>
-    public override void Redo()
-    {
-        // cannot redo (maybe user hit redo twice thats fine)
-        if (this.tab == null || this.View.Tabs.Contains(this.tab))
-        {
-            return;
-        }
-
-        this.View.AddTab(this.tab, true);
-        this.View.SetNeedsDisplay();
-    }
-
-    /// <inheritdoc/>
-    public override void Undo()
-    {
-        // cannot undo if operation hasn't been performed
-        if (this.tab == null || !this.View.Tabs.Contains(this.tab))
-        {
-            return;
-        }
-
-        this.View.RemoveTab(this.tab);
-        this.View.SetNeedsDisplay();
     }
 }

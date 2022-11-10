@@ -53,13 +53,6 @@ public class CopyOperation : Operation
         return this.toCopy.Length > 0 ? $"Copy {this.toCopy[0]}" : "Copy";
     }
 
-    /// <inheritdoc/>
-    protected override bool DoImpl()
-    {
-        LastCopiedDesign = this.toCopy;
-        return true;
-    }
-
     /// <summary>
     /// Throws <see cref="NotSupportedException"/> as you cannot undo a copy.
     /// </summary>
@@ -76,5 +69,12 @@ public class CopyOperation : Operation
     public override void Redo()
     {
         throw new NotSupportedException();
+    }
+
+    /// <inheritdoc/>
+    protected override bool DoImpl()
+    {
+        LastCopiedDesign = this.toCopy;
+        return true;
     }
 }

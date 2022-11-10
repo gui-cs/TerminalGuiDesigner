@@ -39,6 +39,32 @@ public class AddColumnOperation : Operation
     public Design Design { get; }
 
     /// <inheritdoc/>
+    public override void Redo()
+    {
+        // cannot redo (maybe user hit redo twice thats fine)
+        if (this.column == null || this.tableView.Table.Columns.Contains(this.column.ColumnName))
+        {
+            return;
+        }
+
+        this.tableView.Table.Columns.Add(this.column);
+        this.tableView.Update();
+    }
+
+    /// <inheritdoc/>
+    public override void Undo()
+    {
+        // cannot undo
+        if (this.column == null || !this.tableView.Table.Columns.Contains(this.column.ColumnName))
+        {
+            return;
+        }
+
+        this.tableView.Table.Columns.Remove(this.column);
+        this.tableView.Update();
+    }
+
+    /// <inheritdoc/>
     protected override bool DoImpl()
     {
         if (this.column != null)
@@ -70,31 +96,5 @@ public class AddColumnOperation : Operation
         this.tableView.Update();
 
         return true;
-    }
-
-    /// <inheritdoc/>
-    public override void Redo()
-    {
-        // cannot redo (maybe user hit redo twice thats fine)
-        if (this.column == null || this.tableView.Table.Columns.Contains(this.column.ColumnName))
-        {
-            return;
-        }
-
-        this.tableView.Table.Columns.Add(this.column);
-        this.tableView.Update();
-    }
-
-    /// <inheritdoc/>
-    public override void Undo()
-    {
-        // cannot undo
-        if (this.column == null || !this.tableView.Table.Columns.Contains(this.column.ColumnName))
-        {
-            return;
-        }
-
-        this.tableView.Table.Columns.Remove(this.column);
-        this.tableView.Update();
     }
 }

@@ -128,18 +128,6 @@ public partial class DragOperation : Operation
         }
     }
 
-    /// <inheritdoc/>
-    protected override bool DoImpl()
-    {
-        bool didAny = false;
-        foreach (var mem in this.mementos)
-        {
-            didAny = this.Do(mem) || didAny;
-        }
-
-        return didAny;
-    }
-
     /// <summary>
     /// Moves all dragged views back to original positions.
     /// </summary>
@@ -172,6 +160,18 @@ public partial class DragOperation : Operation
         {
             this.ContinueDrag(mem, dest);
         }
+    }
+
+    /// <inheritdoc/>
+    protected override bool DoImpl()
+    {
+        bool didAny = false;
+        foreach (var mem in this.mementos)
+        {
+            didAny = this.Do(mem) || didAny;
+        }
+
+        return didAny;
     }
 
     private bool Do(DragMemento mem)
