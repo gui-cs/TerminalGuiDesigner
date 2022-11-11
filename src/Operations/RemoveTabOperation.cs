@@ -26,11 +26,6 @@ public class RemoveTabOperation : TabViewOperation
         {
             this.IsImpossible = true;
         }
-
-        if (design.View is not TabView)
-        {
-            throw new ArgumentException(nameof(design), $"Only Designs that wrap {nameof(TabView)} can be used with this Operation");
-        }
     }
 
     /// <inheritdoc/>

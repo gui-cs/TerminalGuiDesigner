@@ -5,16 +5,26 @@ namespace TerminalGuiDesigner.Operations;
 
 /// <summary>
 /// Allows the user to resize a control by dragging from the bottom left corner
-/// to a new location
+/// to a new location.
 /// </summary>
 public class ResizeOperation : Operation
 {
+    /// <summary>
+    /// Gets the <see cref="Design"/> that is being resized.
+    /// </summary>
     public Design BeingResized { get; }
 
+    /// <summary>
+    /// Gets the original <see cref="View.Width"/> of the <see cref="Design"/>.
+    /// </summary>
     public Dim OriginalWidth { get; }
 
+    /// <summary>
+    /// Gets the original <see cref="View.Height"/> of the <see cref="Design"/>.
+    /// </summary>
     public Dim OriginalHeight { get; }
 
+    // TODO is this screen or client area coords?
     public int DestinationX { get; set; }
 
     public int DestinationY { get; set; }
@@ -63,7 +73,6 @@ public class ResizeOperation : Operation
     {
         // update width, the +1 comes because we want to include the cursor location in the Width.
         // e.g. resize bounds 0,0 to 1,1 means we want a width/height of 2
-
         if (this.BeingResized.View.Y.IsAbsolute(out var y))
         {
             this.BeingResized.GetDesignableProperty("Height")?.SetValue(Math.Max(1, this.DestinationY + 1 - y));
