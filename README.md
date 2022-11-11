@@ -188,7 +188,6 @@ italics are experimental and require passing the `-e` flag when starting applica
   - [x] ListView
   - [x] MenuBar
     - [ ] Copy/Paste preserve menu entries
-  - [ ] PanelView
   - [x] ProgressBar
   - [x] RadioGroup
   - [ ] StatusBar

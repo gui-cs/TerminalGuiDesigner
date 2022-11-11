@@ -212,35 +212,22 @@ public static class ViewExtensions
         }
 
         // TODO: are there any others?
-        return v is ScrollView || v is TabView || v is FrameView || v is Window || type == typeof(View) || type.Name.Equals("ContentView");
+        return
+            v is ScrollView ||
+            v is TabView ||
+            v is FrameView ||
+            v is Window ||
+            type == typeof(View) || type.Name.Equals("ContentView");
     }
 
     public static bool IsBorderlessContainerView(this View v)
     {
-        var type = v.GetType();
-
-        // TODO: are there any others?
-        if (type == typeof(View) && v.IsBorderless())
-        {
-            return true;
-        }
-
         if (v is TabView tabView)
         {
             return !tabView.Style.ShowBorder || tabView.Style.TabsOnBottom;
         }
 
-        return false;
-    }
-
-    public static bool IsBorderless(this View v)
-    {
-        if (v.Border == null)
-        {
-            return true;
-        }
-
-        if (v.Border.BorderStyle == BorderStyle.None)
+        if (v.IsContainerView() && v.HasNoBorderProperty())
         {
             return true;
         }
@@ -327,5 +314,20 @@ public static class ViewExtensions
     public static IEnumerable<View> OrderViewsByScreenPosition(IEnumerable<View> views)
     {
         return views.OrderBy(v => v.Frame.Y).ThenBy(v => v.Frame.X);
+    }
+
+    private static bool HasNoBorderProperty(this View v)
+    {
+        if (v.Border == null)
+        {
+            return true;
+        }
+
+        if (v.Border.BorderStyle == BorderStyle.None)
+        {
+            return true;
+        }
+
+        return false;
     }
 }

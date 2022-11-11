@@ -39,6 +39,7 @@ public class ViewFactory
             typeof(OpenDialog),
             typeof(ScrollBarView),
             typeof(TreeView<>),
+            typeof(PanelView),
         }; // The generic version of TreeView
 
         return typeof(View).Assembly.DefinedTypes.Where(t =>
