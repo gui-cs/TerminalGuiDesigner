@@ -13,7 +13,7 @@ namespace TerminalGuiDesigner.UI.Windows {
     using Terminal.Gui;
     
     
-    public partial class ConfirmDialog : Terminal.Gui.Window {
+    public partial class ChoicesDialog : Terminal.Gui.Window {
         
         private Terminal.Gui.ColorScheme dialogBackground;
         
@@ -23,13 +23,19 @@ namespace TerminalGuiDesigner.UI.Windows {
         
         private Terminal.Gui.View buttonPanel;
         
-        private Terminal.Gui.Button btnOk;
+        private Terminal.Gui.Button btn1;
         
-        private Terminal.Gui.Button btnCancel;
+        private Terminal.Gui.Button btn2;
+        
+        private Terminal.Gui.Button btn3;
+        
+        private Terminal.Gui.Button btn4;
         
         private void InitializeComponent() {
-            this.btnCancel = new Terminal.Gui.Button();
-            this.btnOk = new Terminal.Gui.Button();
+            this.btn4 = new Terminal.Gui.Button();
+            this.btn3 = new Terminal.Gui.Button();
+            this.btn2 = new Terminal.Gui.Button();
+            this.btn1 = new Terminal.Gui.Button();
             this.buttonPanel = new Terminal.Gui.View();
             this.label1 = new Terminal.Gui.Label();
             this.dialogBackground = new Terminal.Gui.ColorScheme();
@@ -66,7 +72,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.label1.Text = "lblMessage";
             this.label1.TextAlignment = Terminal.Gui.TextAlignment.Centered;
             this.Add(this.label1);
-            this.buttonPanel.Width = 30;
+            this.buttonPanel.Width = 50;
             this.buttonPanel.Height = 2;
             this.buttonPanel.X = Pos.Center();
             this.buttonPanel.Y = Pos.AnchorEnd(2);
@@ -74,26 +80,46 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.buttonPanel.Text = "";
             this.buttonPanel.TextAlignment = Terminal.Gui.TextAlignment.Left;
             this.Add(this.buttonPanel);
-            this.btnOk.Width = 9;
-            this.btnOk.Height = 2;
-            this.btnOk.X = 0;
-            this.btnOk.Y = Pos.AnchorEnd(2);
-            this.btnOk.ColorScheme = this.buttons;
-            this.btnOk.Data = "btnOk";
-            this.btnOk.Text = "btnOk";
-            this.btnOk.TextAlignment = Terminal.Gui.TextAlignment.Centered;
-            this.btnOk.IsDefault = true;
-            this.buttonPanel.Add(this.btnOk);
-            this.btnCancel.Width = 13;
-            this.btnCancel.Height = 2;
-            this.btnCancel.X = Pos.Right(btnOk) + 1;
-            this.btnCancel.Y = Pos.AnchorEnd(2);
-            this.btnCancel.ColorScheme = this.buttons;
-            this.btnCancel.Data = "btnCancel";
-            this.btnCancel.Text = "btnCancel";
-            this.btnCancel.TextAlignment = Terminal.Gui.TextAlignment.Centered;
-            this.btnCancel.IsDefault = false;
-            this.buttonPanel.Add(this.btnCancel);
+            this.btn1.Width = 10;
+            this.btn1.Height = 2;
+            this.btn1.X = 0;
+            this.btn1.Y = Pos.AnchorEnd(2);
+            this.btn1.ColorScheme = this.buttons;
+            this.btn1.Data = "btn1";
+            this.btn1.Text = "btn1";
+            this.btn1.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+            this.btn1.IsDefault = true;
+            this.buttonPanel.Add(this.btn1);
+            this.btn2.Width = 9;
+            this.btn2.Height = 2;
+            this.btn2.X = Pos.Right(btn1) + 1;
+            this.btn2.Y = Pos.AnchorEnd(2);
+            this.btn2.ColorScheme = this.buttons;
+            this.btn2.Data = "btn2";
+            this.btn2.Text = "btn2";
+            this.btn2.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+            this.btn2.IsDefault = false;
+            this.buttonPanel.Add(this.btn2);
+            this.btn3.Width = 8;
+            this.btn3.Height = 2;
+            this.btn3.X = Pos.Right(btn2) + 1;
+            this.btn3.Y = Pos.AnchorEnd(2);
+            this.btn3.ColorScheme = this.buttons;
+            this.btn3.Data = "btn3";
+            this.btn3.Text = "btn3";
+            this.btn3.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+            this.btn3.IsDefault = false;
+            this.buttonPanel.Add(this.btn3);
+            this.btn4.Width = 8;
+            this.btn4.Height = 2;
+            this.btn4.X = Pos.Right(btn3) + 1;
+            this.btn4.Y = Pos.AnchorEnd(2);
+            this.btn4.ColorScheme = this.buttons;
+            this.btn4.Data = "btn4";
+            this.btn4.Text = "btn4";
+            this.btn4.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+            this.btn4.IsDefault = false;
+            this.buttonPanel.Add(this.btn4);
         }
     }
 }

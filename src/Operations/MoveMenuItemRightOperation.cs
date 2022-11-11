@@ -38,7 +38,7 @@ public class MoveMenuItemRightOperation : MenuItemOperation
         // pull us out
         children.Remove(this.OperateOn);
 
-        // add us to the submenu
+        // add us to the sub-menu
         var submenuChildren = addTo.Children.ToList<MenuItem>();
 
         if (this.InsertionIndex != null)
@@ -54,7 +54,7 @@ public class MoveMenuItemRightOperation : MenuItemOperation
 
         // update the main menu
         this.Parent.Children = children.ToArray();
-        // update the submenu
+        // update the sub-menu
         addTo.Children = submenuChildren.ToArray();
 
         this.Bar?.SetNeedsDisplay();
