@@ -58,7 +58,7 @@ public class DeleteViewOperation : Operation
             }
         }
 
-        this.ForceSelection(this.originalSelection);
+        SelectionManager.Instance.ForceSetSelection(this.originalSelection);
     }
 
     /// <inheritdoc/>
@@ -81,7 +81,7 @@ public class DeleteViewOperation : Operation
             }
         }
 
-        this.ForceSelectionClear();
+        SelectionManager.Instance.Clear(false);
 
         return removedAny;
     }

@@ -1,47 +1,30 @@
-﻿using System.Text.RegularExpressions;
+﻿namespace TerminalGuiDesigner.Operations;
 
-namespace TerminalGuiDesigner.Operations;
-
+/// <summary>
+/// Abstract base class for <see cref="IOperation"/>.
+/// </summary>
 public abstract class Operation : IOperation
 {
+    /// <inheritdoc/>
     public bool IsImpossible { get; protected set; }
 
+    /// <inheritdoc/>
+    /// <remarks>Defaults to true.</remarks>
     public bool SupportsUndo { get; protected set; } = true;
 
+    /// <inheritdoc/>
+    /// <remarks>Defaults to <see cref="Guid.NewGuid"/>.</remarks>
     public Guid UniqueIdentifier { get; } = Guid.NewGuid();
 
+    /// <inheritdoc/>
+    /// <remarks>Defaults to <see cref="GetOperationName"/>.</remarks>
     public override string ToString()
     {
         return this.GetOperationName();
     }
 
-    protected string GetOperationName()
-    {
-        string name = this.GetType().Name;
-
-        return name.EndsWith("Operation") ?
-            name.Substring(0, name.Length - "Operation".Length) :
-            name;
-    }
-
-    public static string PascalCaseStringToHumanReadable(string pascalCaseString)
-    {
-        // Deal with legacy property names by replacing underscore with a space
-        pascalCaseString = pascalCaseString.Replace("_", " ");
-
-        // There are two clauses in this Regex
-        // Part1: [A-Z][A-Z]*(?=[A-Z][a-z]|\b) - looks for any series of uppercase letters that have a ending uppercase then lowercase OR end of line charater: https://regex101.com/r/mCqVk6/2
-        // Part2: [A-Z](?=[a-z])               - looks for any single  of uppercase letters followed by a lower case letter: https://regex101.com/r/hdSCqH/1
-        // This is then made into a single group that is matched and we add a space on front during the replacement.
-        pascalCaseString = Regex.Replace(pascalCaseString, @"([A-Z][A-Z]*(?=[A-Z][a-z]|\b)|[A-Z](?=[a-z]))", " $1");
-
-        // Remove any double mutliple white space
-        // Because this matched the first capital letter in a string with Part2 of our regex above we should TRIM to remove the white space.
-        pascalCaseString = Regex.Replace(pascalCaseString, @"\s\s+", " ").Trim();
-
-        return pascalCaseString;
-    }
-
+    /// <inheritdoc/>
+    /// <remarks>Returns false if <see cref="IsImpossible"/>.</remarks>
     public bool Do()
     {
         if (this.IsImpossible)
@@ -49,39 +32,29 @@ public abstract class Operation : IOperation
             return false;
         }
 
-        return DoImpl();
+        return this.DoImpl();
     }
+
+    /// <inheritdoc/>
+    public abstract void Undo();
+
+    /// <inheritdoc/>
+    public abstract void Redo();
 
     /// <inheritdoc cref="IOperation.Do"/>
     protected abstract bool DoImpl();
 
-    public abstract void Undo();
-
-    public abstract void Redo();
-
     /// <summary>
-    /// Clears <see cref="SelectionManager.Selected"/> without respecting
-    /// <see cref="SelectionManager.LockSelection"/>
+    /// Returns human readable name for the instance based on it's
+    /// C# class name.
     /// </summary>
-    /// <param name="selection"></param>
-    protected void ForceSelectionClear()
+    /// <returns>Human readable name.</returns>
+    protected string GetOperationName()
     {
-        var before = SelectionManager.Instance.LockSelection;
-        SelectionManager.Instance.LockSelection = false;
-        SelectionManager.Instance.Clear();
-        SelectionManager.Instance.LockSelection = before;
-    }
+        string name = this.GetType().Name;
 
-    /// <summary>
-    /// Changes <see cref="SelectionManager.Selected"/> without respecting
-    /// <see cref="SelectionManager.LockSelection"/>
-    /// </summary>
-    /// <param name="selection"></param>
-    protected void ForceSelection(params Design[] selection)
-    {
-        var before = SelectionManager.Instance.LockSelection;
-        SelectionManager.Instance.LockSelection = false;
-        SelectionManager.Instance.SetSelection(selection);
-        SelectionManager.Instance.LockSelection = before;
+        return name.EndsWith("Operation") ?
+            name.Substring(0, name.Length - "Operation".Length) :
+            name;
     }
 }
