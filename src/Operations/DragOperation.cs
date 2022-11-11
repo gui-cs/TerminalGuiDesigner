@@ -124,6 +124,13 @@ public partial class DragOperation : Operation
                 return;
             }
 
+            // When dropping onto a TabView
+            if (value is TabView tv && tv.SelectedTab != null && tv.SelectedTab.View != null)
+            {
+                // Add to the content area of the selected tab instead
+                value = tv.SelectedTab.View;
+            }
+
             this.dropInto = value;
         }
     }

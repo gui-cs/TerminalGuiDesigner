@@ -273,6 +273,34 @@ internal class DragOperationTests : Tests
         Assert.Contains(lblDesign.View, rootDesign.View.GetActualSubviews().ToArray(), "Expected label to have moved to the parent Window");
     }
 
+    [Test]
+    public void TestSimpleDrag_IntoTabView()
+    {
+        RoundTrip<View, TabView>((d, v) =>
+        {
+            // move TabView down a bit
+            v.X = 2;
+            v.Y = 2;
+
+            // add a Button
+            var op = new AddViewOperation(new Button("Hello"), d.GetRootDesign(), "mybtn");
+            op.Do();
+
+            Application.Top.Add(d.GetRootDesign().View);
+            Application.Top.LayoutSubviews();
+
+
+            Assert.AreEqual(0, v.Tabs.ElementAt(0).View.GetActualSubviews().Count, "Expected TabView Tab1 to start off empty");
+
+            // Drag the Button into the TabView
+            MouseDrag(d.GetRootDesign(), 0, 0, 3, 3);
+
+            Assert.AreEqual(1, v.Tabs.ElementAt(0).View.GetActualSubviews().Count, "Expected TabView Tab1 to now contain Button");
+            Assert.IsInstanceOf<Button>(v.Tabs.ElementAt(0).View.GetActualSubviews().Single());
+
+        }, out _);
+    }
+
     /// <summary>
     /// Performs a mouse drag from the first coordinates to the second (in screen space)
     /// </summary>
