@@ -6,6 +6,10 @@ using static Terminal.Gui.TabView;
 
 namespace TerminalGuiDesigner;
 
+/// <summary>
+/// Renames the <see cref="TabView.Tab.Text"/> of the currently selected
+/// <see cref="TabView.Tab"/> of a <see cref="TabView"/>.
+/// </summary>
 internal class RenameTabOperation : Operation
 {
     private readonly TabView tabView;
@@ -22,7 +26,7 @@ internal class RenameTabOperation : Operation
         // somehow user ran this command for a non tabview
         if (this.Design.View is not TabView)
         {
-            throw new ArgumentException($"Design must be for a {nameof(TabView)} to support {nameof(AddTabOperation)}");
+            throw new ArgumentException($"Design must be for a {nameof(TabView)} to support {nameof(RenameTabOperation)}");
         }
 
         this.tabView = (TabView)this.Design.View;

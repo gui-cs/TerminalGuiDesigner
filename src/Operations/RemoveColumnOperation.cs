@@ -7,57 +7,28 @@ namespace TerminalGuiDesigner.Operations;
 /// Removes a <see cref="DataColumn"/> from a <see cref="TableView"/>.
 /// Cannot be used to remove the last column.
 /// </summary>
-public class RemoveColumnOperation : Operation
+public class RemoveColumnOperation : ColumnOperation
 {
-    private TableView tableView;
-    private DataColumn? column;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="RemoveColumnOperation"/> class.
     /// </summary>
-    /// <param name="design"><see cref="Design"/> wrapper for a <see cref="TableView"/> that you want
-    /// to remove a <see cref="DataColumn"/> from.</param>
-    /// <param name="column">The column to remove.  Must belong to <see cref="TableView.Table"/> of <paramref name="design"/>.</param>
-    /// <exception cref="ArgumentException">Thrown if <paramref name="design"/> does not wrap a <see cref="TableView"/>.</exception>
-    public RemoveColumnOperation(Design design, DataColumn? column)
+    /// <param name="design">Wrapper for a <see cref="TableView"/>.</param>
+    /// <param name="column">Column to remove.</param>
+    public RemoveColumnOperation(Design design, DataColumn column)
+        : base(design, column)
     {
-        this.Design = design;
-
-        // somehow user ran this command for a non table view
-        if (this.Design.View is not TableView)
-        {
-            throw new ArgumentException($"Design must be for a {nameof(TableView)} to support {nameof(RemoveColumnOperation)}");
-        }
-
-        this.tableView = (TableView)this.Design.View;
-
-        // user specified column, or the currently selected cell in the table
-        this.column = column ??
-            (this.tableView.SelectedColumn < 0 ? null : this.tableView.Table.Columns[this.tableView.SelectedColumn]);
-
-        // user has no column selected
-        if (this.column == null)
-        {
-            this.IsImpossible = true;
-        }
-
-        // TODO: currently this crashes TableView in its ReDraw (calculate viewport) metho
+        // TODO: currently this crashes TableView in its ReDraw (calculate view port) method
         // don't let them remove the last column
-        if (this.tableView.Table.Columns.Count == 1)
+        if (this.TableView.Table.Columns.Count == 1)
         {
             this.IsImpossible = true;
         }
     }
 
-    /// <summary>
-    /// Gets the wrapper for a <see cref="TableView"/> which will be operated on.
-    /// </summary>
-    public Design Design { get; }
-
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"Remove Column '{this.column}'";
+        return $"Remove Column '{this.Column}'";
     }
 
     /// <inheritdoc/>
@@ -69,35 +40,24 @@ public class RemoveColumnOperation : Operation
     /// <inheritdoc/>
     public override void Undo()
     {
-        if (this.column == null)
+        if (!this.TableView.Table.Columns.Contains(this.Column.ColumnName))
         {
-            throw new Exception("No column selected");
-        }
-
-        if (!this.tableView.Table.Columns.Contains(this.column.ColumnName))
-        {
-            this.tableView.Table.Columns.Add(this.column.ColumnName);
-            this.tableView.Update();
+            this.TableView.Table.Columns.Add(this.Column.ColumnName);
+            this.TableView.Update();
         }
     }
 
     /// <inheritdoc/>
     protected override bool DoImpl()
     {
-        if (this.column == null)
+        if (this.TableView.Table.Columns.Contains(this.Column.ColumnName))
         {
-            throw new Exception("No column selected");
-        }
-
-        if (this.tableView.Table.Columns.Contains(this.column.ColumnName))
-        {
-            this.tableView.Table.Columns.Remove(this.column.ColumnName);
-            this.tableView.Update();
+            this.TableView.Table.Columns.Remove(this.Column.ColumnName);
+            this.TableView.Update();
 
             return true;
         }
 
         return false;
     }
-
 }

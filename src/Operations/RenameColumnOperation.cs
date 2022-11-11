@@ -5,78 +5,57 @@ using TerminalGuiDesigner.UI.Windows;
 
 namespace TerminalGuiDesigner;
 
-internal class RenameColumnOperation : Operation
+/// <summary>
+/// Renames a <see cref="DataColumn"/> in a <see cref="TableView"/>.
+/// </summary>
+public class RenameColumnOperation : ColumnOperation
 {
-    private TableView tableView;
-    private DataColumn? column;
     private string? originalName;
     private string? newColumnName;
 
-    public Design Design { get; }
-
-    public RenameColumnOperation(Design design, DataColumn? column)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RenameColumnOperation"/> class.
+    /// </summary>
+    /// <param name="design">The <see cref="Design"/> wrapper for a <see cref="TableView"/>.</param>
+    /// <param name="column">The column to rename.</param>
+    /// <exception cref="ArgumentException">Thrown if <paramref name="design"/> does not wrap a <see cref="TableView"/>.</exception>
+    public RenameColumnOperation(Design design, DataColumn column)
+        : base(design, column)
     {
-        this.Design = design;
-
-        // somehow user ran this command for a non table view
-        if (this.Design.View is not TableView)
-        {
-            throw new ArgumentException($"Design must be for a {nameof(TableView)} to support {nameof(AddColumnOperation)}");
-        }
-
-        this.tableView = (TableView)this.Design.View;
-
-        // user specified column, or the currently selected cell in the table
-        this.column = column ??
-            (this.tableView.SelectedColumn < 0 ? null : this.tableView.Table.Columns[this.tableView.SelectedColumn]);
-
-        // user has no column selected
-        if (this.column == null)
-        {
-            this.IsImpossible = true;
-        }
-
-        this.originalName = this.column?.ColumnName;
+        this.originalName = column.ColumnName;
     }
 
+    /// <inheritdoc/>
     public override string ToString()
     {
         return $"Rename Column '{this.originalName}'";
     }
 
+    /// <inheritdoc/>
+    public override void Redo()
+    {
+        this.Column.ColumnName = this.newColumnName;
+        this.TableView.Update();
+    }
+
+    /// <inheritdoc/>
+    public override void Undo()
+    {
+        this.Column.ColumnName = this.originalName;
+        this.TableView.Update();
+    }
+
+    /// <inheritdoc/>
     protected override bool DoImpl()
     {
-        if (this.column == null)
-        {
-            throw new Exception("No column was selected so command cannot be run");
-        }
-
         if (Modals.GetString("Rename Column", "Column Name", this.originalName, out var newColumnName))
         {
             this.newColumnName = newColumnName;
-            this.column.ColumnName = newColumnName;
-            this.tableView.Update();
+            this.Column.ColumnName = newColumnName;
+            this.TableView.Update();
             return true;
         }
 
         return false;
-    }
-
-    public override void Redo()
-    {
-        if (this.column != null)
-        {
-            this.column.ColumnName = this.newColumnName;
-            this.tableView.Update();
-        }
-    }
-
-    public override void Undo()
-    {
-        if (this.column != null)
-        {
-            this.column.ColumnName = this.originalName;
-            this.tableView.Update();
-        }
     }
 }

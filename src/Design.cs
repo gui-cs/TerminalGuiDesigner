@@ -461,11 +461,12 @@ public class Design
     /// may inform what operations are returned (e.g. right clicking a specific table view column).  Otherwise
     /// <see cref="Point.Empty"/></param>
     /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     internal IEnumerable<IOperation> GetExtraOperations(Point pos)
     {
+        // Extra TableView operations
         if (this.View is TableView tv)
         {
+            // if user right clicks a cell then provide options relating to the clicked column
             DataColumn? col = null;
             if (!pos.IsEmpty)
             {
@@ -478,9 +479,20 @@ public class Design
                 }
             }
 
+            // if no column was right clicked then provide commands for the selected column
+            if (col == null && tv.SelectedColumn >= 0)
+            {
+                col = tv.Table.Columns[tv.SelectedColumn];
+            }
+
             yield return new AddColumnOperation(this, null);
-            yield return new RemoveColumnOperation(this, col);
-            yield return new RenameColumnOperation(this, col);
+
+            // no columns are selected so don't offer removal.
+            if (col != null)
+            {
+                yield return new RemoveColumnOperation(this, col);
+                yield return new RenameColumnOperation(this, col);
+            }
         }
 
         if (this.IsContainerView || this.IsRoot)
