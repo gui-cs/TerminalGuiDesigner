@@ -2,6 +2,11 @@ using Terminal.Gui;
 
 namespace TerminalGuiDesigner.Operations;
 
+/// <summary>
+/// Removes a <see cref="MenuItem"/> from its drop down menu.
+/// This is a drop down menu item e.g. Open, Save (which might be in a sub menu)
+/// not a top level menu e.g. File, Edit.
+/// </summary>
 public class RemoveMenuItemOperation : MenuItemOperation
 {
     private int removedAtIdx;
@@ -9,87 +14,49 @@ public class RemoveMenuItemOperation : MenuItemOperation
     /// <summary>
     /// If as a result of removing this menu item any
     /// top level menu items were also removed (for being
-    /// empty). Track indexes here so we can undo if necessary
+    /// empty). Track indexes here so we can undo if necessary.
     /// </summary>
     private Dictionary<int, MenuBarItem>? prunedEmptyTopLevelMenus;
 
     /// <summary>
-    /// True if as a result of removing a this menu item any
-    /// top level menu items were also removed (for being empty)
+    /// If the removed MenuItem was a sub-menu item and it was the last one then
+    /// its parent will have been converted from a MenuBarItem (has children)
+    /// to a regular MenuItem (does not have children).  This collection
+    /// stores all such replacements made during carrying out the command.
     /// </summary>
-    public bool PrunedTopLevelMenu => this.prunedEmptyTopLevelMenus != null && this.prunedEmptyTopLevelMenus.Any();
+    private Dictionary<MenuBarItem, MenuItem>? convertedMenuBars;
 
     /// <summary>
     /// If as a result of removing this MenuItem the MenuBar ended
     /// up being completely blank and was therefore removed.  This
-    /// field stores the View it was removed from (for undo purposes)
+    /// field stores the View it was removed from (for undo purposes).
     /// </summary>
-    private View? _barRemovedFrom;
+    private View? barRemovedFrom;
 
     /// <summary>
-    /// If the removed MenuItem was a submenu item and it was the last one then
-    /// its parent will have been converted from a MenuBarItem (has children)
-    /// to a regular MenuItem (does not have children).  This collection
-    /// stores all such replacements made during carrying out the command
+    /// Initializes a new instance of the <see cref="RemoveMenuItemOperation"/> class.
     /// </summary>
-    private Dictionary<MenuBarItem, MenuItem>? _convertedMenuBars;
-
+    /// <param name="toRemove">The <see cref="MenuItem"/> that should be removed (deleted).</param>
     public RemoveMenuItemOperation(MenuItem toRemove)
         : base(toRemove)
     {
     }
 
-    protected override bool DoImpl()
-    {
-        if (this.Parent == null || this.OperateOn == null)
-        {
-            return false;
-        }
+    /// <summary>
+    /// Gets a value indicating whether as a result of removing a this menu item any
+    /// top level menu items were also removed (for being empty).
+    /// </summary>
+    /// <remarks>This will be true if removing the last entry (e.g. Open) under a top
+    /// level menu (e.g. File).</remarks>
+    public bool PrunedTopLevelMenu => this.prunedEmptyTopLevelMenus != null && this.prunedEmptyTopLevelMenus.Any();
 
-        var children = this.Parent.Children.ToList<MenuItem>();
-
-        this.removedAtIdx = Math.Max(0, children.IndexOf(this.OperateOn));
-
-        children.Remove(this.OperateOn);
-        this.Parent.Children = children.ToArray();
-        this.Bar?.SetNeedsDisplay();
-
-        if (this.Bar != null)
-        {
-            this._convertedMenuBars = MenuTracker.Instance.ConvertEmptyMenus();
-        }
-
-        // if a top level menu now has no children
-        if (this.Bar != null)
-        {
-            var empty = this.Bar.Menus.Where(bi => bi.Children.Length == 0).ToArray();
-            if (empty.Any())
-            {
-                // remember where they were
-                this.prunedEmptyTopLevelMenus = empty.ToDictionary(e => Array.IndexOf(this.Bar.Menus, e), v => v);
-                // and remove them
-                this.Bar.Menus = this.Bar.Menus.Except(this.prunedEmptyTopLevelMenus.Values).ToArray();
-            }
-
-            // if we just removed the last menu header
-            // leaving a completely blank menu bar
-            if (this.Bar.Menus.Length == 0 && this.Bar.SuperView != null)
-            {
-                // remove the bar completely
-                this.Bar.CloseMenu();
-                this._barRemovedFrom = this.Bar.SuperView;
-                this._barRemovedFrom.Remove(this.Bar);
-            }
-        }
-
-        return true;
-    }
-
+    /// <inheritdoc/>
     public override void Redo()
     {
         this.Do();
     }
 
+    /// <inheritdoc/>
     public override void Undo()
     {
         if (this.Parent == null || this.OperateOn == null)
@@ -104,11 +71,11 @@ public class RemoveMenuItemOperation : MenuItemOperation
         this.Bar?.SetNeedsDisplay();
 
         // if any MenuBarItem were converted to vanilla MenuItem
-        // because we were removed from a submenu then convert
+        // because we were removed from a sub-menu then convert
         // it back
-        if (this._convertedMenuBars != null)
+        if (this.convertedMenuBars != null)
         {
-            foreach (var converted in this._convertedMenuBars)
+            foreach (var converted in this.convertedMenuBars)
             {
                 var grandparent = MenuTracker.Instance.GetParent(converted.Value, out _);
                 if (grandparent != null)
@@ -139,14 +106,62 @@ public class RemoveMenuItemOperation : MenuItemOperation
             this.Bar.Menus = l.ToArray();
         }
 
-        if (this.Bar != null && this._barRemovedFrom != null)
+        if (this.Bar != null && this.barRemovedFrom != null)
         {
-            this._barRemovedFrom.Add(this.Bar);
+            this.barRemovedFrom.Add(this.Bar);
 
-            // lets clear this incase the user some
+            // lets clear this in case the user some
             // manages to undo this command multiple
             // times
-            this._barRemovedFrom = null;
+            this.barRemovedFrom = null;
         }
+    }
+
+    /// <inheritdoc/>
+    protected override bool DoImpl()
+    {
+        if (this.Parent == null || this.OperateOn == null)
+        {
+            return false;
+        }
+
+        var children = this.Parent.Children.ToList<MenuItem>();
+
+        this.removedAtIdx = Math.Max(0, children.IndexOf(this.OperateOn));
+
+        children.Remove(this.OperateOn);
+        this.Parent.Children = children.ToArray();
+        this.Bar?.SetNeedsDisplay();
+
+        if (this.Bar != null)
+        {
+            this.convertedMenuBars = MenuTracker.Instance.ConvertEmptyMenus();
+        }
+
+        // if a top level menu now has no children
+        if (this.Bar != null)
+        {
+            var empty = this.Bar.Menus.Where(bi => bi.Children.Length == 0).ToArray();
+            if (empty.Any())
+            {
+                // remember where they were
+                this.prunedEmptyTopLevelMenus = empty.ToDictionary(e => Array.IndexOf(this.Bar.Menus, e), v => v);
+
+                // and remove them
+                this.Bar.Menus = this.Bar.Menus.Except(this.prunedEmptyTopLevelMenus.Values).ToArray();
+            }
+
+            // if we just removed the last menu header
+            // leaving a completely blank menu bar
+            if (this.Bar.Menus.Length == 0 && this.Bar.SuperView != null)
+            {
+                // remove the bar completely
+                this.Bar.CloseMenu();
+                this.barRemovedFrom = this.Bar.SuperView;
+                this.barRemovedFrom.Remove(this.Bar);
+            }
+        }
+
+        return true;
     }
 }
