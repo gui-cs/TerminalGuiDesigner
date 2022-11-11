@@ -82,7 +82,13 @@ internal class ColorSchemeTests : Tests
         // default when creating a new view is to have no explicit
         // ColorScheme defined and just inherit from parent
         var v = this.Get10By10View();
-        var p = (ColorSchemeProperty)(v.GetDesignableProperty(nameof(View.ColorScheme)) ?? throw new Exception("Expected this not to be null"));
+
+        var btn = new Button("Hey");
+        var op = new AddViewOperation(btn, v, "myBtn");
+        op.Do();
+        Design btnDesign = (Design)btn.Data;
+
+        var p = (ColorSchemeProperty)(btnDesign.GetDesignableProperty(nameof(View.ColorScheme)) ?? throw new Exception("Expected this not to be null"));
 
         Assert.AreEqual("ColorScheme:(Inherited)", p.ToString());
 
@@ -96,7 +102,7 @@ internal class ColorSchemeTests : Tests
             Focus = new Attribute(Color.Cyan, Color.Black),
         };
 
-        mgr.AddOrUpdateScheme("pink", pink, v);
+        mgr.AddOrUpdateScheme("pink", pink, btnDesign);
 
         p.SetValue(pink);
         Assert.AreEqual("ColorScheme:pink", p.ToString());

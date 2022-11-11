@@ -72,7 +72,7 @@ public class SelectionManager
     /// </summary>
     /// <param name="designs"></param>
     public void SetSelection(params Design[] designs)
-    {
+    {        
         this.SetSelection(true, designs);
     }
 
@@ -87,7 +87,7 @@ public class SelectionManager
         this.Clear(respectLock);
 
         // create a new selection based on these
-        this.selection = new List<Design>(designs.Distinct());
+        this.selection = new List<Design>(designs.Distinct().Where(d => !d.IsRoot));
 
         foreach (var d in this.selection)
         {
