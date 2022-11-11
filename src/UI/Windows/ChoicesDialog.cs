@@ -12,34 +12,53 @@ namespace TerminalGuiDesigner.UI.Windows {
     using Terminal.Gui;
     
     
-    public partial class ConfirmDialog {
+    public partial class ChoicesDialog
+    {
         
-        public bool Result { get; private set; }
+        public int Result { get; private set; }
 
         private string _title;
 
-        public ConfirmDialog(string title, string message, string okText = "Yes", string cancelText = "No") {
+        public ChoicesDialog(string title, string message, string[] options) {
             
             const int defaultWidth = 50;
 
             InitializeComponent();
 
-            // add space for right hand side shadow
-            btnOk.Text = okText + " ";
-            btnOk.Clicked += () => {
-                Result = true;
-                Application.RequestStop();
-                };
-            btnOk.DrawContentComplete += (r)=>PaintShadow(btnOk, ColorScheme);
+            if (options.Length == 0 || options.Length > 4)
+            {
+                throw new ArgumentOutOfRangeException(nameof(options), "Too many or too few buttons");
+            }
 
-
-            btnCancel.Text = cancelText + " ";
-            btnCancel.Width = cancelText.Length + 1;
-            btnCancel.Clicked += () => {
-                Result = false;
-                Application.RequestStop();
+            var buttons = new Button[]
+            {
+                btn1,btn2,btn3,btn4
             };
-            btnCancel.DrawContentComplete += (r) => PaintShadow(btnCancel, ColorScheme);
+
+            for (int i = 0; i < options.Length;i++)
+            {
+                // add space for right hand side shadow
+                buttons[i].Text = options[i] + " ";
+
+                // TODO think it depends if it is default if we have to do this hack
+                buttons[i].Width = options[i].Length + 1;
+
+                var i2 = i;
+
+                buttons[i].Clicked += () => {
+                    Result = i2;
+                    Application.RequestStop();
+                };
+
+                buttons[i].DrawContentComplete += (r) =>
+                    ConfirmDialog.PaintShadow(buttons[i2], ColorScheme);
+            }
+
+            // hide other buttons
+            for(int i=options.Length;i<buttons.Length;i++)
+            {
+                buttonPanel.Remove(buttons[i]);
+            }
 
             _title = title;
             label1.Text = message;
@@ -47,7 +66,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             int buttonWidth;
 
             // align buttons bottom of dialog 
-            buttonPanel.Width = buttonWidth = btnOk.Frame.Width + btnCancel.Frame.Width + 1;
+            buttonPanel.Width = buttonWidth = buttons.Sum(b=>b.Frame.Width) + 1;
             
             int maxWidthLine = TextFormatter.MaxWidthLine(message);
             if (maxWidthLine > Application.Driver.Cols)
@@ -66,41 +85,6 @@ namespace TerminalGuiDesigner.UI.Windows {
             Height = msgboxHeight;
         }
 
-        internal static void PaintShadow(Button btn, ColorScheme backgroundScheme)
-        {
-            var bounds = btn.Bounds;
-
-            if(btn.IsDefault)
-            {
-                var rightDefault = new Rune(Driver != null ? Driver.RightDefaultIndicator : '>');
-
-                // draw the 'end' button symbol one in
-                btn.AddRune(bounds.Width - 3, 0, rightDefault);
-            }
-
-            btn.AddRune(bounds.Width - 2, 0, ']');
-
-            var backgroundColor = backgroundScheme.Normal.Background;
-
-            // shadow color
-            Driver.SetAttribute(new Terminal.Gui.Attribute(Color.Black, backgroundColor));
-
-            // end shadow (right)
-            btn.AddRune(bounds.Width - 1, 0, '▄');
-
-            // leave whitespace in lower left in parent/default background color
-            Driver.SetAttribute(new Terminal.Gui.Attribute(Color.Black, backgroundColor));
-            btn.AddRune(0, 1, ' ');
-
-            // The color for rendering shadow is 'black' + parent/default background color
-            Driver.SetAttribute(new Terminal.Gui.Attribute(backgroundColor, Color.Black));
-
-            // underline shadow                
-            for (int x = 1; x < bounds.Width; x++)
-            {
-                btn.AddRune(x, 1, '▄');
-            }
-        }
         public override void Redraw(Rect bounds)
         {
             base.Redraw(bounds);
@@ -123,9 +107,9 @@ namespace TerminalGuiDesigner.UI.Windows {
             Driver.AddStr(ustring.Make(Enumerable.Repeat(Driver.HDLine, padding)));
         }
 
-        internal static bool Show(string title, string message, string okText = "Yes", string cancelText = "No")
+        internal static int Query(string title, string message, params string[] options)
         {
-            var dlg = new ConfirmDialog(title, message, okText, cancelText);
+            var dlg = new ChoicesDialog(title, message, options);
             Application.Run(dlg);
             return dlg.Result;
         }

@@ -246,7 +246,7 @@ public class EditDialog : Window
         else
         if (property.PropertyInfo.PropertyType == typeof(bool))
         {
-            int answer = MessageBox.Query(property.PropertyInfo.Name, $"New value for {property.PropertyInfo.PropertyType}", "Yes", "No");
+            int answer = ChoicesDialog.Query(property.PropertyInfo.Name, $"New value for {property.PropertyInfo.PropertyType}", "Yes", "No");
 
             newValue = answer == 0 ? true : false;
             return answer != -1;
@@ -423,7 +423,7 @@ public class EditDialog : Window
         // TODO: Should really be using the _keyMap here
         if (obj.KeyEvent.Key == Key.DeleteChar)
         {
-            int rly = MessageBox.Query("Clear", "Clear Property Value?", "Yes", "Cancel");
+            int rly = ChoicesDialog.Query("Clear", "Clear Property Value?", "Yes", "Cancel");
             obj.Handled = true;
 
             if (rly == 0)
