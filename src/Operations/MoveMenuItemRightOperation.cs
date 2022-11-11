@@ -43,7 +43,9 @@ public class MoveMenuItemRightOperation : MenuItemOperation
 
         if (this.InsertionIndex != null)
         {
-            submenuChildren.Insert(this.InsertionIndex.Value, this.OperateOn);
+            submenuChildren.Insert(
+                Math.Min(this.InsertionIndex.Value, submenuChildren.Count),
+                this.OperateOn);
         }
         else
         {

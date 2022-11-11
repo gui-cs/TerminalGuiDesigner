@@ -23,17 +23,6 @@ public class MenuTracker
         this.bars.Add(mb);
     }
 
-    private void PruneEmptyBars(MenuBarItem parent, MenuBarItem child)
-    {
-        if (!child.Children.Any())
-        {
-            var newChildren = parent.Children.ToList<MenuItem>();
-            newChildren.Remove(child);
-
-            parent.Children = newChildren.ToArray();
-        }
-    }
-
     private void MenuClosing(MenuClosingEventArgs obj)
     {
         this.CurrentlyOpenMenuItem = null;
