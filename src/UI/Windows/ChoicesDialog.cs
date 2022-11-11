@@ -19,7 +19,7 @@ namespace TerminalGuiDesigner.UI.Windows {
 
         private string _title;
 
-        public ChoicesDialog(string title, string message, string[] options) {
+        public ChoicesDialog(string title, string message, params string[] options) {
             
             const int defaultWidth = 50;
 
@@ -51,7 +51,7 @@ namespace TerminalGuiDesigner.UI.Windows {
                 };
 
                 buttons[i].DrawContentComplete += (r) =>
-                    ConfirmDialog.PaintShadow(buttons[i2], ColorScheme);
+                    ChoicesDialog.PaintShadow(buttons[i2], ColorScheme);
             }
 
             // hide other buttons
@@ -66,7 +66,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             int buttonWidth;
 
             // align buttons bottom of dialog 
-            buttonPanel.Width = buttonWidth = buttons.Sum(b=>b.Frame.Width) + 1;
+            buttonPanel.Width = buttonWidth = buttons.Sum(b=>buttonPanel.Subviews.Contains(b) ? b.Frame.Width : 0) + 1;
             
             int maxWidthLine = TextFormatter.MaxWidthLine(message);
             if (maxWidthLine > Application.Driver.Cols)
@@ -112,6 +112,49 @@ namespace TerminalGuiDesigner.UI.Windows {
             var dlg = new ChoicesDialog(title, message, options);
             Application.Run(dlg);
             return dlg.Result;
+        }
+
+        internal static void PaintShadow(Button btn, ColorScheme backgroundScheme)
+        {
+            var bounds = btn.Bounds;
+
+            if (btn.IsDefault)
+            {
+                var rightDefault = new Rune(Driver != null ? Driver.RightDefaultIndicator : '>');
+
+                // draw the 'end' button symbol one in
+                btn.AddRune(bounds.Width - 3, 0, rightDefault);
+            }
+
+            btn.AddRune(bounds.Width - 2, 0, ']');
+
+            var backgroundColor = backgroundScheme.Normal.Background;
+
+            // shadow color
+            Driver.SetAttribute(new Terminal.Gui.Attribute(Color.Black, backgroundColor));
+
+            // end shadow (right)
+            btn.AddRune(bounds.Width - 1, 0, '▄');
+
+            // leave whitespace in lower left in parent/default background color
+            Driver.SetAttribute(new Terminal.Gui.Attribute(Color.Black, backgroundColor));
+            btn.AddRune(0, 1, ' ');
+
+            // The color for rendering shadow is 'black' + parent/default background color
+            Driver.SetAttribute(new Terminal.Gui.Attribute(backgroundColor, Color.Black));
+
+            // underline shadow                
+            for (int x = 1; x < bounds.Width; x++)
+            {
+                btn.AddRune(x, 1, '▄');
+            }
+        }
+
+        internal static bool Confirm(string title, string message, string okText = "Yes", string cancelText = "No")
+        {
+            var dlg = new ChoicesDialog(title, message, okText, cancelText);
+            Application.Run(dlg);
+            return dlg.Result == 0;
         }
     }
 }
