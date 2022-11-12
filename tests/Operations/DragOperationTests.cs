@@ -300,44 +300,4 @@ internal class DragOperationTests : Tests
 
         }, out _);
     }
-
-    /// <summary>
-    /// Performs a mouse drag from the first coordinates to the second (in screen space)
-    /// </summary>
-    /// <param name="root">The root Design.  Make sure you have added it to <see cref="Application.Top"/> and run <see cref="View.LayoutSubviews"/></param>
-    /// <param name="x1">X coordinate to start drag at</param>
-    /// <param name="y1">Y coordinate to start drag at</param>
-    /// <param name="x2">X coordinate to end drag at</param>
-    /// <param name="y2">Y coordinate to end drag at</param>
-    private void MouseDrag(Design root, int x1, int y1, int x2, int y2)
-    {
-        var mm = new MouseManager();
-
-        mm.HandleMouse(
-            new MouseEvent
-            {
-                X = x1,
-                Y = y1,
-                Flags = MouseFlags.Button1Pressed,
-            }, root);
-
-        // press down at 0,0 of the label
-        mm.HandleMouse(
-            new MouseEvent
-            {
-                X = x2,
-                Y = y2,
-                Flags = MouseFlags.Button1Pressed,
-            }, root);
-
-
-        // release in parent
-        mm.HandleMouse(
-            new MouseEvent
-            {
-                X = x2,
-                Y = y2,
-                Flags = MouseFlags.Button1Released,
-            }, root);
-    }
 }

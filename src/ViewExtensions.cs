@@ -242,6 +242,7 @@ public static class ViewExtensions
         {
             v.Visible = false;
         }
+
         var point = w.ScreenToView(m.X, m.Y);
         var hit = ApplicationExtensions.FindDeepestView(w, m.X, m.Y);
 

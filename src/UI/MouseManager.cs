@@ -41,10 +41,12 @@ public class MouseManager
             }
 
             // if nothing is going on yet
-            if (drag != null && drag.Data is Design design
+            if (drag != null && drag.Data is Design design && drag.SuperView != null
              && this.resizeOperation == null && this.dragOperation == null && this.SelectionStart == null)
             {
-                var dest = viewBeingEdited.View.ScreenToView(m.X, m.Y);
+                var parent = drag.SuperView;
+
+                var dest = parent.ScreenToView(m.X, m.Y);
 
                 if (isLowerRight)
                 {
@@ -99,9 +101,11 @@ public class MouseManager
         }
 
         // continue resizing
-        if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && this.resizeOperation != null)
+        if (m.Flags.HasFlag(MouseFlags.Button1Pressed)
+            && this.resizeOperation != null
+            && this.resizeOperation.BeingResized.View.SuperView != null)
         {
-            var dest = viewBeingEdited.View.ScreenToView(m.X, m.Y);
+            var dest = this.resizeOperation.BeingResized.View.SuperView.ScreenToView(m.X, m.Y);
 
             this.resizeOperation.ContinueResize(dest);
 
