@@ -199,7 +199,7 @@ public class ViewFactory
         var group = new RadioGroup
         {
             Width = 10,
-            Height = 5,
+            Height = 2,
         };
         group.RadioLabels = new ustring[] { "Option 1", "Option 2" };
 
