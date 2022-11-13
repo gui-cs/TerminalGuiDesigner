@@ -248,21 +248,18 @@ public static class ViewExtensions
 
         int resizeBoxArea = 2;
 
-        // get nearest Design to the clicked thing (avoids issues with ContentView and other wierd subviews etc)
-        hit = hit?.GetNearestDesign()?.View;
-
         if (hit != null)
         {
-            hit.ViewToScreenActual(hit.Bounds.Right, hit.Bounds.Bottom, out int lowerRightX, out int lowerRightY, true);
-            hit.ViewToScreenActual(0, 0, out int upperLeftX, out int upperLeftY, true);
+            var screenFrame = hit.FrameToScreen();
 
-            isLowerRight = Math.Abs(lowerRightX - point.X) <= resizeBoxArea && Math.Abs(lowerRightY - point.Y) <= resizeBoxArea;
+            isLowerRight = Math.Abs(screenFrame.X + screenFrame.Width - point.X) <= resizeBoxArea
+                && Math.Abs(screenFrame.Y + screenFrame.Height - point.Y) <= resizeBoxArea;
 
             isBorder =
-                m.X == lowerRightX - 1 ||
-                m.X == upperLeftX ||
-                m.Y == lowerRightY - 1 ||
-                m.Y == upperLeftY;
+                m.X == screenFrame.X + screenFrame.Width - 1 ||
+                m.X == screenFrame.X ||
+                m.Y == screenFrame.Y + screenFrame.Height - 1 ||
+                m.Y == screenFrame.Y;
         }
         else
         {
@@ -315,6 +312,30 @@ public static class ViewExtensions
     public static IEnumerable<View> OrderViewsByScreenPosition(IEnumerable<View> views)
     {
         return views.OrderBy(v => v.Frame.Y).ThenBy(v => v.Frame.X);
+    }
+
+    /// <summary>
+    /// Returns <see cref="View.Frame"/> in screen coordinates.  For tests ensure you
+    /// have run <see cref="View.LayoutSubviews"/> and that <paramref name="view"/> has
+    /// a route to <see cref="Application.Top"/> (e.g. is showing or <see cref="Application.Begin(Toplevel)"/>).
+    /// </summary>
+    /// <param name="view">The view you want to translate coordinates for.</param>
+    /// <returns>Screen coordinates of <paramref name="view"/>'s <see cref="View.Frame"/>.</returns>
+    public static Rect FrameToScreen(this View view)
+    {
+        int x = 0;
+        int y = 0;
+
+        var current = view;
+
+        while (current != null)
+        {
+            x += current.Frame.X;
+            y += current.Frame.Y;
+            current = current.SuperView;
+        }
+
+        return new Rect(x, y, view.Frame.Width, view.Frame.Height);
     }
 
     private static bool HasNoBorderProperty(this View v)

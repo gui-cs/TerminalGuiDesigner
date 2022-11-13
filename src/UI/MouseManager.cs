@@ -142,12 +142,23 @@ public class MouseManager
                 // see if we are dragging into a new container
                 var dropInto = viewBeingEdited.View.HitTest(m, out _, out _, this.dragOperation.BeingDragged.View);
 
-                // we are dragging into a new container
-                this.dragOperation.DropInto = dropInto;
+                // TODO: this is quite hacky workaround for dropping on things like TabView top row.  Need
+                // a better solution to this.
 
-                // end drag
-                OperationManager.Instance.Do(this.dragOperation);
-                this.dragOperation = null;
+                // HitTest might return a sub-control (e.g. TabView top row tabs)
+                // So grab the nearest user designable view.  That's probably what
+                // they want to move into anyway.
+                var into = dropInto?.GetNearestDesign();
+
+                if (into != null && dropInto != this.dragOperation.DropInto)
+                {
+                    // we are dragging into a new container
+                    this.dragOperation.DropInto = into.View;
+
+                    // end drag
+                    OperationManager.Instance.Do(this.dragOperation);
+                    this.dragOperation = null;
+                }
             }
 
             // end resize
