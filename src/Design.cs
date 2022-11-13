@@ -428,6 +428,7 @@ public class Design
         if (this.View is RadioGroup)
         {
             yield return this.CreateProperty(nameof(RadioGroup.RadioLabels));
+            yield return this.CreateProperty(nameof(RadioGroup.DisplayMode));
         }
     }
 
