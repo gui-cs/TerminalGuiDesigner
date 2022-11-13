@@ -21,7 +21,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>TerminalGuiDesigner</PackageId>
-    <Version>1.0.18</Version>
+    <Version>1.0.19</Version>
     <Authors>Thomas Nind</Authors>
     <Nullable>enable</Nullable>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -34,9 +34,16 @@
     <PackageIcon>logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>
+	v1.0.19
+	 * Added `-e` experimental mode flag that lets you create new TopLevel and View classes
+	 * Added dotted border around Views that do not have any visible boundary (e.g. `View`, `TabView` with ShowBorder off)
+	 * Visual improvements in dialog boxes
+	 * Fixed several issues around dragging and dropping (especially into containers)
+	 * Fixed issue with color scheme designer not showing color swatches
+	 * Fixed issue with sub-containers inside TabView not recursively saving all contents
     v1.0.18
 	 * Fixed Checkbox ticking/unticking itself when typing 'space' (e.g. editing its name)
-	 * Fixed issues where pasted/new items sometimes did not recieve focus
+	 * Fixed issues where pasted/new items sometimes did not receive focus
 	 * Fixed select all not working
 	v1.0.17
 	 * Added prompt if there are unsaved changes when closing	  
