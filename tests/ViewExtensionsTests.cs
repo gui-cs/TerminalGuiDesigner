@@ -79,4 +79,28 @@ internal class ViewExtensionsTests : Tests
 
         Assert.AreEqual(expectResult, inst.IsBorderlessContainerView());
     }
+
+    [Test]
+    public void TestHitTest_WindowWithFrameView_InBorder()
+    {
+        var w = new Window();
+        var f = new FrameView()
+        {
+            Width = 5,
+            Height = 5,
+        };
+
+        w.Add(f);
+        Application.Begin(w);
+        w.LayoutSubviews();
+
+        Assert.AreSame(w, w.HitTest(new MouseEvent { X = 0, Y = 0 }, out var isBorder, out _),
+            "Expected 0,0 to be the window border (its client area should start at 1,1)");
+//        Assert.IsTrue(isBorder);
+
+        // 1,1
+        Assert.AreSame(f, w.HitTest(new MouseEvent { X = 1, Y = 1 }, out isBorder, out _),
+            "Expected 1,1 to be the Frame border (its client area should start at 1,1)");
+  //      Assert.IsTrue(isBorder);
+    }
 }

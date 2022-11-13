@@ -90,14 +90,16 @@ public class MouseManager
         }
 
         // continue dragging a view
-        if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && this.dragOperation != null)
+        if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && this.dragOperation?.BeingDragged.View?.SuperView != null)
         {
-            var dest = viewBeingEdited.View.ScreenToView(m.X, m.Y);
+            var dest = this.dragOperation?.BeingDragged.View.SuperView.ScreenToView(m.X, m.Y);
 
-            this.dragOperation.ContinueDrag(dest);
-
-            viewBeingEdited.View.SetNeedsDisplay();
-            Application.DoEvents();
+            if(dest != null && this.dragOperation != null)
+            {
+                this.dragOperation.ContinueDrag(dest.Value);
+                viewBeingEdited.View.SetNeedsDisplay();
+                Application.DoEvents();
+            }
         }
 
         // continue resizing
