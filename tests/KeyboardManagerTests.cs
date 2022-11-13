@@ -18,7 +18,8 @@ internal class KeyboardManagerTests : Tests
 
         var mgr = new KeyboardManager(new KeyMap());
         Assert.IsFalse(mgr.HandleKey(v, new KeyEvent(Key.Backspace, new KeyModifiers())));
-
+        
+        Application.Top.Add(v);
         v.Redraw(v.Bounds = new Rect(0, 0, 6, 1));
     }
 
