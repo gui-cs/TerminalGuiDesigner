@@ -41,7 +41,7 @@ public class KeyboardManager
         }
 
         // if we have changed focus
-        if (this.currentOperation != null && d != this.currentOperation.Design)
+        if (this.currentOperation != null && !this.currentOperation.Designs.Contains(d))
         {
             this.FinishOperation();
         }
@@ -242,12 +242,14 @@ public class KeyboardManager
 
     private bool ApplyKeystrokeToTextProperty(KeyEvent keystroke)
     {
-        if (this.currentOperation == null)
+        if (this.currentOperation == null || this.currentOperation.Designs.Count != 1)
         {
             return false;
         }
 
-        var str = this.currentOperation.Design.View.GetActualText();
+        var design = this.currentOperation.Designs.Single();
+
+        var str = design.View.GetActualText();
 
         if (!this.ApplyKeystrokeToString(str, keystroke, out var newStr))
         {
@@ -255,8 +257,8 @@ public class KeyboardManager
             return false;
         }
 
-        this.currentOperation.Design.View.SetActualText(newStr);
-        this.currentOperation.Design.View.SetNeedsDisplay();
+        design.View.SetActualText(newStr);
+        design.View.SetNeedsDisplay();
         this.currentOperation.NewValue = newStr;
 
         return true;
