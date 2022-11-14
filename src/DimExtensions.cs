@@ -32,6 +32,7 @@ public static class DimExtensions
     }
 
     /// <inheritdoc cref="IsPercent(Dim)"/>
+    /// <param name="d">The <see cref="Dim"/> to determine whether it represents a percent.</param>
     /// <param name="percent">The 'percentage' value of <paramref name="d"/>.  This is the value that would/could be
     /// passed to <see cref="Dim.Percent(float, bool)"/> to produce the <paramref name="d"/> or 0 if <paramref name="d"/> is
     /// not DimFactor.</param>

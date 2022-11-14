@@ -10,24 +10,17 @@ using static Terminal.Gui.TabView;
 
 namespace TerminalGuiDesigner;
 
+/// <summary>
+/// Wrapper of a <see cref="View"/> which is being designed by user.
+/// </summary>
 public class Design
 {
-    public SourceCodeFile SourceCode { get; }
-
     /// <summary>
-    /// Name of the instance member field when the <see cref="View"/>
-    /// is turned to code in a .Designer.cs file.  For example "label1"
+    /// Name to use for the root <see cref="Design"/> (see <see cref="IsRoot"/>).
     /// </summary>
-    public string FieldName { get; set; }
-
-    public bool IsRoot => this.FieldName.Equals(RootDesignName);
-
     public const string RootDesignName = "root";
 
     private readonly List<Property> designableProperties;
-
-    public DesignState State { get; }
-
     private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
     /// <summary>
@@ -56,22 +49,13 @@ public class Design
         typeof(Dialog),
     };
 
-    public Property? GetDesignableProperty(string propertyName)
-    {
-        return this.GetDesignableProperties().SingleOrDefault(p => p.PropertyInfo.Name.Equals(propertyName));
-    }
-
     /// <summary>
-    /// The view being designed.  Do not use <see cref="View.Add(Terminal.Gui.View)"/> on
-    /// this instance.  Instead use <see cref="AddDesign(string, Terminal.Gui.View)"/> so that
-    /// new child controls are preserved for design time changes
+    /// Initializes a new instance of the <see cref="Design"/> class.
     /// </summary>
-    public View View { get; }
-
-    public bool IsContainerView => this.View.IsContainerView();
-
-    public bool IsBorderlessContainerView => this.View.IsBorderlessContainerView();
-
+    /// <param name="sourceCode">Source file that the <see cref="Design"/> will be written to on saving.</param>
+    /// <param name="fieldName">The private instance name to use for <paramref name="view"/> when writing it out
+    /// to <paramref name="sourceCode"/> or <see cref="RootDesignName"/> if <paramref name="view"/> <see cref="IsRoot"/>.</param>
+    /// <param name="view">The view to wrap.</param>
     public Design(SourceCodeFile sourceCode, string fieldName, View view)
     {
         this.View = view;
@@ -81,6 +65,55 @@ public class Design
         this.designableProperties = new List<Property>(this.LoadDesignableProperties());
         this.State = new DesignState(this);
     }
+
+    /// <summary>
+    /// Gets the .Designer.cs and .cs files that the <see cref="GetRootDesign"/>
+    /// will be saved in and/or was loaded from.
+    /// </summary>
+    public SourceCodeFile SourceCode { get; }
+
+    /// <summary>
+    /// Gets or Sets the name of the instance member field when the <see cref="View"/>
+    /// is turned to code in a .Designer.cs file.  For example "label1".
+    /// <para>If this <see cref="IsRoot"/> then this will instead be <see cref="RootDesignName"/>
+    /// and won't be written out to the <see cref="SourceCode"/> file.</para>
+    /// </summary>
+    public string FieldName { get; set; }
+
+    /// <summary>
+    /// Gets a value indicating whether this is the highest level <see cref="View"/>
+    /// and therefore the root Type that user is designing (e.g. MyView : Window).
+    /// <para><see langword="false"/> if the <see cref="Design"/> wraps a sub-view
+    /// (i.e. anything user has added as content).</para>
+    /// </summary>
+    public bool IsRoot => this.FieldName.Equals(RootDesignName);
+
+    /// <summary>
+    /// Gets the record of user configured values of otherwise volatile <see cref="View"/> settings.
+    /// <para>For example while <see cref="View.ColorScheme"/> can change based on selection
+    /// (see <see cref="SelectionManager.SelectedScheme"/> the <see cref="DesignState.OriginalScheme"/>
+    /// will not change.
+    /// </para>
+    /// </summary>
+    public DesignState State { get; }
+    
+    public Property? GetDesignableProperty(string propertyName)
+    {
+        return this.GetDesignableProperties().SingleOrDefault(p => p.PropertyInfo.Name.Equals(propertyName));
+    }
+
+    /// <summary>
+    /// Gets the <see cref="View"/> this <see cref="Design"/> wraps.  Do not use
+    /// <see cref="View.Add(Terminal.Gui.View)"/> on this instance.  Instead use
+    /// <see cref="AddViewOperation"/> so that new child controls are preserved
+    /// for design time changes.
+    /// </summary>
+    public View View { get; }
+
+    public bool IsContainerView => this.View.IsContainerView();
+
+    public bool IsBorderlessContainerView => this.View.IsBorderlessContainerView();
+
 
     public void CreateSubControlDesigns()
     {
@@ -671,10 +704,8 @@ public class Design
     /// <summary>
     /// Returns a new unique name for a view of type <paramref name="viewType"/>
     /// </summary>
-    /// <param name="instance"></param>
     /// <param name="viewType"></param>
     /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     public string GetUniqueFieldName(Type viewType)
     {
         var root = this.GetRootDesign();
