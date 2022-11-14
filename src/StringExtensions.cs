@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.CodeDom;
+using System.Text.RegularExpressions;
 
 namespace TerminalGuiDesigner;
 
@@ -51,5 +52,16 @@ public static class StringExtensions
 
         // found a unique one
         return name + number;
+    }
+
+    /// <summary>
+    /// Returns a <see cref="CodeSnippetExpression"/> or the null expression if <paramref name="s"/>
+    /// is null.
+    /// </summary>
+    /// <param name="s">String to convert into a snippet.</param>
+    /// <returns><see cref="CodeSnippetExpression"/> or <see cref="CodePrimitiveExpression"/> representing null.</returns>
+    public static CodeExpression ToCodeSnippetExpression(this string? s)
+    {
+        return s == null ? new CodePrimitiveExpression() : new CodeSnippetExpression(s);
     }
 }

@@ -120,7 +120,7 @@ public class MenuBarItemsToCode : ToCodeBase
                 children.Select(c =>
 
                     // the array elements have null for separator
-                    c is null ? new CodePrimitiveExpression(null) :
+                    c is null ? new CodePrimitiveExpression() :
 
                     // or the name of the field for each menu item
                     (CodeExpression)new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), c))

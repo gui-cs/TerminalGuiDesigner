@@ -218,7 +218,7 @@ public class Property : ToCodeBase
 
         if (val is Dim d)
         {
-            return new CodeSnippetExpression(d.ToCode());
+            return d.ToCode().ToCodeSnippetExpression();
         }
 
         if (val is Size s)
@@ -238,7 +238,7 @@ public class Property : ToCodeBase
         {
             return new CodeObjectCreateExpression(
                 typeof(TextRegexProvider),
-                new CodePrimitiveExpression(regv.Pattern.ToPrimitive()));
+                regv.Pattern.ToCodePrimitiveExpression());
         }
 
         if (val is ListWrapper w)
@@ -270,7 +270,8 @@ public class Property : ToCodeBase
         if (val is Pos p)
         {
             // TODO: Get EVERYONE! not just siblings
-            return new CodeSnippetExpression(p.ToCode(this.Design.GetSiblings().ToList()));
+            return p.ToCode(this.Design.GetSiblings().ToList())
+                    .ToCodeSnippetExpression();
         }
 
         if (val is Enum e)
@@ -289,10 +290,10 @@ public class Property : ToCodeBase
             var values = ((Array)val).ToList();
             return new CodeArrayCreateExpression(
                 elementType,
-                values.Select(v => new CodePrimitiveExpression(v.ToPrimitive())).ToArray());
+                values.Select(v => v.ToCodePrimitiveExpression()).ToArray());
         }
 
-        return new CodePrimitiveExpression(val.ToPrimitive());
+        return val.ToCodePrimitiveExpression();
     }
 
     /// <summary>

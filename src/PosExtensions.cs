@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.CodeDom;
+using System.Reflection;
 using NStack;
 using Terminal.Gui;
 
@@ -267,6 +268,12 @@ public static class PosExtensions
 
         // we have no idea what this Pos type is
         return false;
+    }
+
+    public static CodePrimitiveExpression ToCodePrimitiveExpression(this object? value)
+    {
+        var val = ToPrimitive(value);
+        return val == null ? new CodePrimitiveExpression() : new CodePrimitiveExpression(val);
     }
 
     /// <summary>

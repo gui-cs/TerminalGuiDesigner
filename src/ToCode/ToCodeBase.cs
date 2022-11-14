@@ -128,7 +128,7 @@ public abstract class ToCodeBase
     /// a primitive (i.e. not a complex class).</param>
     protected void AddPropertyAssignment(CodeDomArgs args, string lhs, object primativeValue)
     {
-        this.AddPropertyAssignment(args, lhs, new CodePrimitiveExpression(primativeValue.ToPrimitive()));
+        this.AddPropertyAssignment(args, lhs, primativeValue.ToCodePrimitiveExpression());
     }
 
     /// <summary>
