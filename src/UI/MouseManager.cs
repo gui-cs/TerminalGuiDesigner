@@ -3,32 +3,44 @@ using TerminalGuiDesigner.Operations;
 
 namespace TerminalGuiDesigner.UI;
 
+/// <summary>
+/// Manages responding to <see cref="Application.RootMouseEvent"/> e.g. by
+/// dragging <see cref="Design"/> around and/or resizing.
+/// </summary>
 public class MouseManager
 {
-    DragOperation? dragOperation = null;
-    ResizeOperation? resizeOperation = null;
+    private DragOperation? dragOperation = null;
+    private ResizeOperation? resizeOperation = null;
 
     /// <summary>
     /// If the user is dragging a selection box then this is the current area
     /// that is being pulled over or null if no multi select is underway.
     /// </summary>
+    private Point? selectionStart = null;
+    private Point? selectionEnd = null;
 
-    private Point? SelectionStart = null;
-    private Point? SelectionEnd = null;
+    /// <summary>
+    /// Gets the container that 'drag a box' selection is occurring in (if any).
+    /// See also <see cref="SelectionBox"/>.
+    /// </summary>
+    private View? selectionContainer;
 
-    public MouseManager()
-    {
-    }
+    /// <summary>
+    /// Gets the current 'drag a box' selection area that is ongoing (if any).
+    /// </summary>
+    public Rect? SelectionBox => RectExtensions.FromBetweenPoints(this.selectionStart, this.selectionEnd);
 
-    public Rect? SelectionBox => RectExtensions.FromBetweenPoints(this.SelectionStart, this.SelectionEnd);
-
-    public View? SelectionContainer { get; private set; }
-
+    /// <summary>
+    /// Responds to <see cref="Application.RootMouseEvent"/>(by changing a 'drag a box' selection area
+    /// or starting a resize etc).
+    /// </summary>
+    /// <param name="m">The <see cref="MouseEvent"/> reported by <see cref="Application.RootMouseEvent"/>.</param>
+    /// <param name="viewBeingEdited">The root <see cref="Design"/> that is open in the <see cref="Editor"/>.</param>
     public void HandleMouse(MouseEvent m, Design viewBeingEdited)
     {
         // start dragging
         if (m.Flags.HasFlag(MouseFlags.Button1Pressed)
-            && this.resizeOperation == null && this.dragOperation == null && this.SelectionStart == null)
+            && this.resizeOperation == null && this.dragOperation == null && this.selectionStart == null)
         {
             var drag = viewBeingEdited.View.HitTest(m, out bool isBorder, out bool isLowerRight);
 
@@ -36,13 +48,13 @@ public class MouseManager
             if (drag != null && drag.IsContainerView() && !isLowerRight && !isBorder)
             {
                 // start dragging a selection box
-                this.SelectionContainer = drag;
-                this.SelectionStart = new Point(m.X, m.Y);
+                this.selectionContainer = drag;
+                this.selectionStart = new Point(m.X, m.Y);
             }
 
             // if nothing is going on yet
             if (drag != null && drag.Data is Design design && drag.SuperView != null
-             && this.resizeOperation == null && this.dragOperation == null && this.SelectionStart == null)
+             && this.resizeOperation == null && this.dragOperation == null && this.selectionStart == null)
             {
                 var parent = drag.SuperView;
 
@@ -61,7 +73,10 @@ public class MouseManager
                     if (multiSelected.Contains(design))
                     {
                         // drag all the views at once
-                        this.dragOperation = new DragOperation(design, dest.X, dest.Y,
+                        this.dragOperation = new DragOperation(
+                            design,
+                            dest.X,
+                            dest.Y,
                             multiSelected.Except(new[] { design }).ToArray());
                     }
                     else
@@ -80,10 +95,10 @@ public class MouseManager
         }
 
         // continue dragging a selection box
-        if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && this.SelectionStart != null)
+        if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && this.selectionStart != null)
         {
             // move selection box to new mouse position
-            this.SelectionEnd = new Point(m.X, m.Y);
+            this.selectionEnd = new Point(m.X, m.Y);
             viewBeingEdited.View.SetNeedsDisplay();
             Application.DoEvents();
             return;
@@ -94,7 +109,7 @@ public class MouseManager
         {
             var dest = this.dragOperation?.BeingDragged.View.SuperView.ScreenToView(m.X, m.Y);
 
-            if(dest != null && this.dragOperation != null)
+            if (dest != null && this.dragOperation != null)
             {
                 this.dragOperation.ContinueDrag(dest.Value);
                 viewBeingEdited.View.SetNeedsDisplay();
@@ -119,19 +134,19 @@ public class MouseManager
         if (!m.Flags.HasFlag(MouseFlags.Button1Pressed))
         {
             // end selection box
-            if (this.SelectionStart != null && this.SelectionBox != null && this.SelectionContainer != null)
+            if (this.selectionStart != null && this.SelectionBox != null && this.selectionContainer != null)
             {
                 SelectionManager.Instance.SetSelection(
-                    this.SelectionContainer.GetActualSubviews()
+                    this.selectionContainer.GetActualSubviews()
                     .Where(v => v.IntersectsScreenRect(this.SelectionBox.Value))
                     .Select(v => v.GetNearestDesign())
                     .Where(d => d != null && !d.IsRoot)
                     .Cast<Design>()
                     .ToArray());
 
-                this.SelectionStart = null;
-                this.SelectionEnd = null;
-                this.SelectionContainer = null;
+                this.selectionStart = null;
+                this.selectionEnd = null;
+                this.selectionContainer = null;
                 viewBeingEdited.View.SetNeedsDisplay();
                 Application.DoEvents();
             }
