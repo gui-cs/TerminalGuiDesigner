@@ -5,16 +5,32 @@ using TerminalGuiDesigner.UI.Windows;
 
 namespace TerminalGuiDesigner.UI;
 
+/// <summary>
+/// Manager for acting on global key presses before they are passed to other
+/// controls while <see cref="Editor"/> has an open <see cref="View"/>.
+/// </summary>
 public class KeyboardManager
 {
+    private readonly KeyMap keyMap;
     private SetPropertyOperation? currentOperation;
-    private KeyMap _keyMap;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="KeyboardManager"/> class.
+    /// </summary>
+    /// <param name="keyMap">User configurable keybindings for class functionality.</param>
     public KeyboardManager(KeyMap keyMap)
     {
-        this._keyMap = keyMap;
+        this.keyMap = keyMap;
     }
 
+    /// <summary>
+    /// Evaluates <paramref name="keystroke"/> when <paramref name="focusedView"/> has
+    /// focus and orders any <see cref="Operation"/> based on it or lets it pass through
+    /// to the rest of the regular Terminal.Gui API layer.
+    /// </summary>
+    /// <param name="focusedView">The <see cref="View"/> that currently holds focus in <see cref="Editor"/>.</param>
+    /// <param name="keystroke">The key that has been reported by <see cref="Application.RootKeyEvent"/>.</param>
+    /// <returns><see langword="true"/> if <paramref name="keystroke"/> should be suppressed.</returns>
     public bool HandleKey(View focusedView, KeyEvent keystroke)
     {
         var menuItem = MenuTracker.Instance.CurrentlyOpenMenuItem;
@@ -46,7 +62,7 @@ public class KeyboardManager
             this.FinishOperation();
         }
 
-        if (keystroke.Key == this._keyMap.Rename)
+        if (keystroke.Key == this.keyMap.Rename)
         {
             var nameProp = d.GetDesignableProperties().OfType<NameProperty>().FirstOrDefault();
             if (nameProp != null)
@@ -76,7 +92,7 @@ public class KeyboardManager
 
     private bool HandleKeyPressInMenu(View focusedView, MenuItem menuItem, KeyEvent keystroke)
     {
-        if (keystroke.Key == this._keyMap.Rename)
+        if (keystroke.Key == this.keyMap.Rename)
         {
             OperationManager.Instance.Do(
                     new RenameMenuItemOperation(menuItem));
@@ -92,7 +108,7 @@ public class KeyboardManager
             return false;
         }
 
-        if (keystroke.Key == this._keyMap.SetShortcut)
+        if (keystroke.Key == this.keyMap.SetShortcut)
         {
             Key key = 0;
 
@@ -110,7 +126,7 @@ public class KeyboardManager
             return false;
         }
 
-        if (keystroke.Key == this._keyMap.MoveRight)
+        if (keystroke.Key == this.keyMap.MoveRight)
         {
             OperationManager.Instance.Do(
                 new MoveMenuItemRightOperation(menuItem));
@@ -119,7 +135,7 @@ public class KeyboardManager
             return true;
         }
 
-        if (keystroke.Key == this._keyMap.MoveLeft)
+        if (keystroke.Key == this.keyMap.MoveLeft)
         {
             OperationManager.Instance.Do(
                 new MoveMenuItemLeftOperation(menuItem));
@@ -128,7 +144,7 @@ public class KeyboardManager
             return false;
         }
 
-        if (keystroke.Key == this._keyMap.MoveUp)
+        if (keystroke.Key == this.keyMap.MoveUp)
         {
             OperationManager.Instance.Do(
                 new MoveMenuItemOperation(menuItem, true));
@@ -136,7 +152,7 @@ public class KeyboardManager
             return false;
         }
 
-        if (keystroke.Key == this._keyMap.MoveDown)
+        if (keystroke.Key == this.keyMap.MoveDown)
         {
             OperationManager.Instance.Do(
                 new MoveMenuItemOperation(menuItem, false));
