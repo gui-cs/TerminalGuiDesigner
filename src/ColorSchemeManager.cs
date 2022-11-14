@@ -36,14 +36,14 @@ public class NamedColorScheme
 
 public class ColorSchemeManager
 {
-    List<NamedColorScheme> colorSchemes = new ();
+    List<NamedColorScheme> colorSchemes = new();
 
     /// <summary>
     /// All known color schemes defined by name
     /// </summary>
     public ReadOnlyCollection<NamedColorScheme> Schemes => this.colorSchemes.ToList().AsReadOnly();
 
-    public static ColorSchemeManager Instance = new ();
+    public static ColorSchemeManager Instance = new();
 
     private ColorSchemeManager()
     {
@@ -51,7 +51,7 @@ public class ColorSchemeManager
 
     public void Clear()
     {
-        this.colorSchemes = new ();
+        this.colorSchemes = new();
     }
 
     public void Remove(NamedColorScheme toDelete)

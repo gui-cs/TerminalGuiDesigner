@@ -29,7 +29,7 @@ public class AddMenuOperation : Operation
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AddMenuOperation"/> class.
-    /// Calling <see cref="Do"/> will add a new top level menu to the <see cref="MenuBar"/>
+    /// Calling <see cref="Operation.Do"/> will add a new top level menu to the <see cref="MenuBar"/>
     /// wrapped by <paramref name="design"/>.
     /// </summary>
     /// <param name="design"><see cref="Design"/> wrapper for a view of Type <see cref="MenuBar"/>.</param>

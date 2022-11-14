@@ -96,11 +96,6 @@ public class Design
     /// </para>
     /// </summary>
     public DesignState State { get; }
-    
-    public Property? GetDesignableProperty(string propertyName)
-    {
-        return this.GetDesignableProperties().SingleOrDefault(p => p.PropertyInfo.Name.Equals(propertyName));
-    }
 
     /// <summary>
     /// Gets the <see cref="View"/> this <see cref="Design"/> wraps.  Do not use
@@ -110,16 +105,41 @@ public class Design
     /// </summary>
     public View View { get; }
 
+    /// <summary>
+    /// Gets a value indicating whether <see cref="View"/> is a 'container' (i.e. designed
+    /// to hold other sub-controls.
+    /// </summary>
     public bool IsContainerView => this.View.IsContainerView();
 
+    /// <summary>
+    /// Gets a value indicating whether <see cref="View"/> <see cref="IsContainerView"/> and
+    /// it has no distinguishable visible border.
+    /// </summary>
     public bool IsBorderlessContainerView => this.View.IsBorderlessContainerView();
 
+    /// <summary>
+    /// Returns the named <see cref="Property"/> if designing is supported for it
+    /// on the <see cref="View"/> Type.
+    /// </summary>
+    /// <param name="propertyName">Name of the designable <see cref="Property.PropertyInfo"/> you want to find.</param>
+    /// <returns>The <see cref="Property"/> if designable or null if not found or not supported.</returns>
+    public Property? GetDesignableProperty(string propertyName)
+    {
+        return this.GetDesignableProperties().SingleOrDefault(p => p.PropertyInfo.Name.Equals(propertyName));
+    }
 
+    /// <summary>
+    /// Walk the <see cref="View"/> hierarchy and create <see cref="Design"/> wrappers
+    /// for any <see cref="View"/> found that were created by user (ignoring those that
+    /// are artifacts of the Terminal.Gui API e.g. ContentView).
+    /// </summary>
     public void CreateSubControlDesigns()
     {
-        // Unlike Window/Dialog the View/TopLevel classes do not have an explicit
-        // colors schemes.  When creating a new View or TopLevel we need to use
-        // the Colors.Base and fiddle a bit with coloring/clearing to ensure things render correctly
+        /*
+         * Unlike Window/Dialog the View/TopLevel classes do not have an explicit
+         * colors schemes.  When creating a new View or TopLevel we need to use
+         * the Colors.Base and fiddle a bit with coloring/clearing to ensure things render correctly
+         */
 
         var baseType = this.View.GetType().BaseType;
 
@@ -148,22 +168,15 @@ public class Design
         this.CreateSubControlDesigns(this.View);
     }
 
-    private void CreateSubControlDesigns(View view)
-    {
-        foreach (var subView in view.GetActualSubviews().ToArray())
-        {
-            this.logger.Info($"Found subView of Type '{subView.GetType()}'");
-
-            if (subView.Data is string name)
-            {
-                subView.Data = this.CreateSubControlDesign(this.SourceCode, name, subView);
-            }
-
-            this.CreateSubControlDesigns(subView);
-        }
-    }
-
-    public Design CreateSubControlDesign(SourceCodeFile sourceCode, string name, View subView)
+    /// <summary>
+    /// Create <see cref="Design"/> wrappers for <paramref name="subView"/> and any children it
+    /// has (recursively) that were created by user (ignoring those that are artifacts of the
+    /// Terminal.Gui API e.g. ContentView).
+    /// </summary>
+    /// <param name="name">The <see cref="Design.FieldName"/> to allocate to the new <see cref="Design"/>.</param>
+    /// <param name="subView">The <see cref="View"/> to create a new <see cref="Design"/> wrapper for.</param>
+    /// <returns>A new <see cref="Design"/> wrapper wrapping <paramref name="subView"/>.</returns>
+    public Design CreateSubControlDesign(string name, View subView)
     {
         // HACK: if you don't pull the label out first it complains that you cant set Focusable to true
         // on the Label because its super is not focusable :(
@@ -254,38 +267,21 @@ public class Design
             super.Add(subView);
         }
 
-        var d = new Design(sourceCode, name, subView);
+        var d = new Design(this.SourceCode, name, subView);
         return d;
     }
 
-    private void SuppressNativeClickEvents(View.MouseEventArgs obj)
-    {
-        // Suppress everything except single click (selection)
-        obj.Handled = obj.MouseEvent.Flags != MouseFlags.Button1Clicked;
-    }
-
-    private void RegisterCheckboxDesignTimeChanges(CheckBox cb)
-    {
-        // prevent space toggling the checkbox
-        // (gives better typing experience e.g. "my lovely checkbox")
-        cb.ClearKeybinding(Key.Space);
-        cb.MouseClick += (e) =>
-        {
-            if (e.MouseEvent.Flags.HasFlag(MouseFlags.Button1Clicked))
-            {
-                e.Handled = true;
-                cb.SetFocus();
-            }
-        };
-    }
-
     /// <summary>
+    /// <para>
     /// Returns true if there is an explicit ColorScheme set
     /// on this Design's View or false if it is inherited from
-    /// a View further up the Layout (or a library default scheme)
+    /// a View further up the Layout (or a library default scheme).
+    /// </para>
     /// <para> If a scheme is found that is not known about by ColorSchemeManager
-    /// then false is returned </para>
+    /// then false is returned.</para>
     /// </summary>
+    /// <returns>True if view explicitly uses one in <see cref="ColorSchemeManager"/>
+    /// because user explicitly allocated it to the <see cref="View"/> (rather than inheriting).</returns>
     public bool HasKnownColorScheme()
     {
         var userDefinedColorScheme = this.State.OriginalScheme ?? this.View.GetExplicitColorScheme();
@@ -315,8 +311,10 @@ public class Design
     /// <summary>
     /// True if this view EXPLICITLY states that it uses the scheme
     /// False if its scheme is inherited from a parent or it explicitly
-    /// uses a different ColorScheme
+    /// uses a different ColorScheme.
     /// </summary>
+    /// <param name="scheme">The scheme you want to know if <see cref="View"/> is using.</param>
+    /// <returns>True if <see cref="View"/> uses <paramref name="scheme"/> explicitly.</returns>
     public bool UsesColorScheme(ColorScheme scheme)
     {
         // we use this scheme if it is a known scheme
@@ -325,14 +323,273 @@ public class Design
     }
 
     /// <summary>
-    /// Gets the designable properties of the hosted View
+    /// Gets the designable properties of the hosted <see cref="View"/>.
     /// </summary>
+    /// <returns>All designable properties on <see cref="View"/>.</returns>
     public IEnumerable<Property> GetDesignableProperties()
     {
         return this.designableProperties;
     }
 
-    protected virtual IEnumerable<Property> LoadDesignableProperties()
+    /// <summary>
+    /// Returns all operations not to do with setting properties.  Often these
+    /// are view specific e.g. add/remove column from a <see cref="TableView"/>.
+    /// </summary>
+    /// <returns>All view specific <see cref="Operation"/> supported on <see cref="View"/> Type.
+    /// Does not return regular <see cref="Property"/> changing operations.</returns>
+    public IEnumerable<IOperation> GetExtraOperations()
+    {
+        return this.GetExtraOperations(Point.Empty);
+    }
+
+    /// <summary>
+    /// Returns all <see cref="Operation"/> that can be performed on the view at position <paramref name="pos"/>
+    /// e.g. 'rename the right clicked column at this point'.
+    /// </summary>
+    /// <param name="pos">If this was triggered by a click then the position of the click
+    /// may inform what operations are returned (e.g. right clicking a specific table view column).  Otherwise
+    /// <see cref="Point.Empty"/>.</param>
+    /// <returns>All view specific <see cref="IOperation"/> that are supported at the <paramref name="pos"/>.</returns>
+    public IEnumerable<IOperation> GetExtraOperations(Point pos)
+    {
+        // Extra TableView operations
+        if (this.View is TableView tv)
+        {
+            // if user right clicks a cell then provide options relating to the clicked column
+            DataColumn? col = null;
+            if (!pos.IsEmpty)
+            {
+                // TODO: Currently you have to right click in the row (body) of the table
+                // and cannot right click the headers themselves
+                var cell = tv.ScreenToCell(pos.X, pos.Y);
+                if (cell != null)
+                {
+                    col = tv.Table.Columns[cell.Value.X];
+                }
+            }
+
+            // if no column was right clicked then provide commands for the selected column
+            if (col == null && tv.SelectedColumn >= 0)
+            {
+                col = tv.Table.Columns[tv.SelectedColumn];
+            }
+
+            yield return new AddColumnOperation(this, null);
+
+            // no columns are selected so don't offer removal.
+            if (col != null)
+            {
+                yield return new RemoveColumnOperation(this, col);
+                yield return new RenameColumnOperation(this, col);
+            }
+        }
+
+        if (this.IsContainerView || this.IsRoot)
+        {
+            yield return new AddViewOperation(this);
+            yield return new PasteOperation(this);
+        }
+        else
+        {
+            var nearestContainer = this.View.GetNearestContainerDesign();
+            if (nearestContainer != null)
+            {
+                yield return new AddViewOperation(nearestContainer);
+            }
+        }
+
+        yield return new DeleteViewOperation(this);
+
+        if (this.View is TabView)
+        {
+            yield return new AddTabOperation(this, null);
+            yield return new RemoveTabOperation(this);
+            yield return new RenameTabOperation(this);
+
+            yield return new MoveTabOperation(this, -1);
+            yield return new MoveTabOperation(this, 1);
+        }
+
+        if (this.View is MenuBar)
+        {
+            yield return new AddMenuOperation(this, null);
+            yield return new RemoveMenuOperation(this);
+        }
+    }
+
+    /// <summary>
+    /// Returns all designable controls that are in the same container as this
+    /// Does not include sub container controls etc.
+    /// </summary>
+    /// <returns>Returns all <see cref="Design"/> in the same parent container  (<see cref="View.SuperView"/>
+    /// as this).</returns>
+    public IEnumerable<Design> GetSiblings()
+    {
+        // If there is no parent then we are likely the top rot Design
+        // or an orphan.  Either way we have no siblings
+        if (this.View.SuperView == null)
+        {
+            yield break;
+        }
+
+        foreach (var v in this.View.SuperView.Subviews)
+        {
+            if (v == this.View)
+            {
+                continue;
+            }
+
+            if (v.Data is Design d)
+            {
+                yield return d;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets all Designs in the current scope.  Starting from the root
+    /// parent of this on down.  Gets everyone... Everyone? EVERYONE!!!.
+    /// </summary>
+    /// <returns>All views in scope.</returns>
+    public IEnumerable<Design> GetAllDesigns()
+    {
+        var root = this.GetRootDesign();
+
+        // Return the root design
+        yield return root;
+
+        // And all child designs
+        foreach (var d in this.GetAllChildDesigns(root.View))
+        {
+            yield return d;
+        }
+    }
+
+    /// <summary>
+    /// Returns the topmost view above this which has an associated
+    /// Design or this if there are no Design above this.
+    /// </summary>
+    /// <returns>The topmost design that is being edited.</returns>
+    public Design GetRootDesign()
+    {
+        var toReturn = this;
+        var v = this.View;
+
+        while (v.SuperView != null)
+        {
+            v = v.SuperView;
+
+            if (v.Data is Design d)
+            {
+                if (d.IsRoot)
+                {
+                    return d;
+                }
+
+                toReturn = d;
+            }
+        }
+
+        return toReturn;
+    }
+
+    /// <summary>
+    /// Returns <see cref="FieldName"/>.
+    /// </summary>
+    /// <returns><see cref="FieldName"/>.</returns>
+    public override string ToString()
+    {
+        return this.FieldName;
+    }
+
+    /// <summary>
+    /// Returns a new unique name for a view of type <paramref name="viewType"/>.
+    /// </summary>
+    /// <param name="viewType">The Type of <see cref="View"/> that the name is for.</param>
+    /// <returns>A sensible, unique name for a new <see cref="View"/> of <paramref name="viewType"/>.</returns>
+    public string GetUniqueFieldName(Type viewType)
+    {
+        var root = this.GetRootDesign();
+
+        var allDesigns = root.GetAllDesigns();
+
+        var name = CodeDomArgs.MakeValidFieldName($"{viewType.Name.ToLower()}");
+        return name.MakeUnique(allDesigns.Select(d => d.FieldName));
+    }
+
+    /// <summary>
+    /// Returns a new non-null, unique, valid <see cref="Design.FieldName"/> based on
+    /// <paramref name="candidate"/>.  Uniqueness is guaranteed for all <see cref="Design"/>
+    /// currently in scope (see <see cref="GetAllDesigns"/>).
+    /// </summary>
+    /// <param name="candidate">The name the user would like.</param>
+    /// <returns>The unique valid non null name that will be used.</returns>
+    public string GetUniqueFieldName(string? candidate)
+    {
+        var root = this.GetRootDesign();
+
+        // remove problematic characters
+        candidate = CodeDomArgs.MakeValidFieldName(candidate);
+
+        var allDesigns = root.GetAllDesigns().ToList();
+        allDesigns.Remove(this);
+
+        // what field names are already taken by other objects?
+        var usedFieldNames = allDesigns.Select(d => d.FieldName).ToList();
+        usedFieldNames.AddRange(ColorSchemeManager.Instance.Schemes.Select(k => k.Name));
+
+        return candidate.MakeUnique(usedFieldNames);
+    }
+
+    /// <summary>
+    /// Returns all <see cref="Design"/> that have dependency on this.
+    /// </summary>
+    /// <returns>All other <see cref="Design"/> that have a <see cref="Pos"/> or other setting
+    /// that relies on this <see cref="Design.View"/> existing (e.g. <see cref="Pos.Left(View)"/>).
+    /// </returns>
+    public IEnumerable<Design> GetDependantDesigns()
+    {
+        var everyone = this.GetAllDesigns().ToArray();
+        return everyone.Where(o => this.DependsOnUs(o, everyone));
+    }
+
+    private void CreateSubControlDesigns(View view)
+    {
+        foreach (var subView in view.GetActualSubviews().ToArray())
+        {
+            this.logger.Info($"Found subView of Type '{subView.GetType()}'");
+
+            if (subView.Data is string name)
+            {
+                subView.Data = this.CreateSubControlDesign(name, subView);
+            }
+
+            this.CreateSubControlDesigns(subView);
+        }
+    }
+
+    private void SuppressNativeClickEvents(View.MouseEventArgs obj)
+    {
+        // Suppress everything except single click (selection)
+        obj.Handled = obj.MouseEvent.Flags != MouseFlags.Button1Clicked;
+    }
+
+    private void RegisterCheckboxDesignTimeChanges(CheckBox cb)
+    {
+        // prevent space toggling the checkbox
+        // (gives better typing experience e.g. "my lovely checkbox")
+        cb.ClearKeybinding(Key.Space);
+        cb.MouseClick += (e) =>
+        {
+            if (e.MouseEvent.Flags.HasFlag(MouseFlags.Button1Clicked))
+            {
+                e.Handled = true;
+                cb.SetFocus();
+            }
+        };
+    }
+
+    private IEnumerable<Property> LoadDesignableProperties()
     {
         yield return this.CreateProperty(nameof(this.View.Width));
         yield return this.CreateProperty(nameof(this.View.Height));
@@ -498,7 +755,7 @@ public class Design
     {
         // never show Text for root because it's almost certainly a container
         // e.g. derived from Window or Dialog or View (directly)
-        if (IsRoot)
+        if (this.IsRoot)
         {
             return false;
         }
@@ -508,173 +765,18 @@ public class Design
 
     private Property CreateSubProperty(string name, string subObjectName, object subObject)
     {
-        return new Property(this, subObject.GetType().GetProperty(name)
-            ?? throw new Exception($"Could not find expected Property '{name}' on Sub Object of Type '{subObject.GetType()}'"),
-            subObjectName, subObject);
+        return new Property(
+            this,
+            subObject.GetType().GetProperty(name) ?? throw new Exception($"Could not find expected Property '{name}' on Sub Object of Type '{subObject.GetType()}'"),
+            subObjectName,
+            subObject);
     }
 
     private Property CreateProperty(string name)
     {
-        return new Property(this, this.View.GetType().GetProperty(name)
-            ?? throw new Exception($"Could not find expected Property '{name}' on View of Type '{this.View.GetType()}'"));
-    }
-
-    /// <summary>
-    /// Returns all operations not to do with setting properties.  Often these
-    /// are view specific e.g. add/remove column from a <see cref="TableView"/>
-    /// </summary>
-    /// <returns></returns>
-    public IEnumerable<IOperation> GetExtraOperations()
-    {
-        return this.GetExtraOperations(Point.Empty);
-    }
-
-    /// <summary>
-    /// Returns one off atomic activities that can be performed on the view e.g. 'add a column'.
-    /// </summary>
-    /// <param name="pos">If this was triggered by a click then the position of the click
-    /// may inform what operations are returned (e.g. right clicking a specific table view column).  Otherwise
-    /// <see cref="Point.Empty"/></param>
-    /// <returns></returns>
-    internal IEnumerable<IOperation> GetExtraOperations(Point pos)
-    {
-        // Extra TableView operations
-        if (this.View is TableView tv)
-        {
-            // if user right clicks a cell then provide options relating to the clicked column
-            DataColumn? col = null;
-            if (!pos.IsEmpty)
-            {
-                // TODO: Currently you have to right click in the row (body) of the table
-                // and cannot right click the headers themselves
-                var cell = tv.ScreenToCell(pos.X, pos.Y);
-                if (cell != null)
-                {
-                    col = tv.Table.Columns[cell.Value.X];
-                }
-            }
-
-            // if no column was right clicked then provide commands for the selected column
-            if (col == null && tv.SelectedColumn >= 0)
-            {
-                col = tv.Table.Columns[tv.SelectedColumn];
-            }
-
-            yield return new AddColumnOperation(this, null);
-
-            // no columns are selected so don't offer removal.
-            if (col != null)
-            {
-                yield return new RemoveColumnOperation(this, col);
-                yield return new RenameColumnOperation(this, col);
-            }
-        }
-
-        if (this.IsContainerView || this.IsRoot)
-        {
-            yield return new AddViewOperation(this);
-            yield return new PasteOperation(this);
-        }
-        else
-        {
-            var nearestContainer = this.View.GetNearestContainerDesign();
-            if (nearestContainer != null)
-            {
-                yield return new AddViewOperation(nearestContainer);
-            }
-        }
-
-        yield return new DeleteViewOperation(this);
-
-        if (this.View is TabView)
-        {
-            yield return new AddTabOperation(this,null);
-            yield return new RemoveTabOperation(this);
-            yield return new RenameTabOperation(this);
-
-            yield return new MoveTabOperation(this, -1);
-            yield return new MoveTabOperation(this, 1);
-        }
-
-        if (this.View is MenuBar)
-        {
-            yield return new AddMenuOperation(this, null);
-            yield return new RemoveMenuOperation(this);
-        }
-    }
-
-    /// <summary>
-    /// Returns all designable controls that are in the same container as this
-    /// Does not include sub container controls etc.
-    /// </summary>
-    /// <returns></returns>
-    public IEnumerable<Design> GetSiblings()
-    {
-        // If there is no parent then we are likely the top rot Design
-        // or an orphan.  Either way we have no siblings
-        if (this.View.SuperView == null)
-        {
-            yield break;
-        }
-
-        foreach (var v in this.View.SuperView.Subviews)
-        {
-            if (v == this.View)
-            {
-                continue;
-            }
-
-            if (v.Data is Design d)
-            {
-                yield return d;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Gets all Designs in the current scope.  Starting from the root
-    /// parent of this on down.  Gets everyone... Everyone? EVERYONE!!!
-    /// </summary>
-    public IEnumerable<Design> GetAllDesigns()
-    {
-        var root = this.GetRootDesign();
-
-        // Return the root design
-        yield return root;
-
-        // And all child designs
-        foreach (var d in this.GetAllChildDesigns(root.View))
-        {
-            yield return d;
-        }
-    }
-
-    /// <summary>
-    /// Returns the topmost view above this which has an associated
-    /// Design or this if there are no Design above this.
-    /// </summary>
-    /// <returns>The topmost design that is being edited.</returns>
-    public Design GetRootDesign()
-    {
-        var toReturn = this;
-        var v = this.View;
-
-        while (v.SuperView != null)
-        {
-            v = v.SuperView;
-
-            if (v.Data is Design d)
-            {
-                if (d.IsRoot)
-                {
-                    return d;
-                }
-
-                toReturn = d;
-            }
-        }
-
-        return toReturn;
+        return new Property(
+            this,
+            this.View.GetType().GetProperty(name) ?? throw new Exception($"Could not find expected Property '{name}' on View of Type '{this.View.GetType()}'"));
     }
 
     private IEnumerable<Design> GetAllChildDesigns(View view)
@@ -694,52 +796,6 @@ public class Design
         }
 
         return toReturn;
-    }
-
-    public override string ToString()
-    {
-        return this.FieldName;
-    }
-
-    /// <summary>
-    /// Returns a new unique name for a view of type <paramref name="viewType"/>
-    /// </summary>
-    /// <param name="viewType"></param>
-    /// <returns></returns>
-    public string GetUniqueFieldName(Type viewType)
-    {
-        var root = this.GetRootDesign();
-
-        var allDesigns = root.GetAllDesigns();
-
-        var name = CodeDomArgs.MakeValidFieldName($"{viewType.Name.ToLower()}");
-        return name.MakeUnique(allDesigns.Select(d => d.FieldName));
-    }
-
-    public string GetUniqueFieldName(string? candidate)
-    {
-        var root = this.GetRootDesign();
-
-        // remove problematic characters
-        candidate = CodeDomArgs.MakeValidFieldName(candidate);
-
-        var allDesigns = root.GetAllDesigns().ToList();
-        allDesigns.Remove(this);
-
-        // what field names are already taken by other objects?
-        var usedFieldNames = allDesigns.Select(d => d.FieldName).ToList();
-        usedFieldNames.AddRange(ColorSchemeManager.Instance.Schemes.Select(k => k.Name));
-
-        return candidate.MakeUnique(usedFieldNames);
-    }
-
-    /// <summary>
-    /// Returns all <see cref="Design"/> that have dependency on this
-    /// </summary>
-    public IEnumerable<Design> GetDependantDesigns()
-    {
-        var everyone = this.GetAllDesigns().ToArray();
-        return everyone.Where(o => this.DependsOnUs(o, everyone));
     }
 
     private bool DependsOnUs(Design other, Design[] everyone)

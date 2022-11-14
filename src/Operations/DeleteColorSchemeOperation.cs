@@ -30,7 +30,7 @@ public class DeleteColorSchemeOperation : Operation
     }
 
     /// <summary>
-    /// Gets the <see cref="NamedColorScheme"/> that will be deleted when operation is run (see <see cref="Do"/>).
+    /// Gets the <see cref="NamedColorScheme"/> that will be deleted when operation is run (see <see cref="Operation.Do"/>).
     /// This will be removed from <see cref="ColorSchemeManager"/> and all users.
     /// </summary>
     public NamedColorScheme ToDelete { get; }

@@ -36,7 +36,7 @@ public class AddViewOperation : Operation
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AddViewOperation"/> class.
-    /// This overload asks users what view type they want at runtime (See <see cref="Do"/>).
+    /// This overload asks users what view type they want at runtime (See <see cref="Operation.Do"/>).
     /// </summary>
     /// <param name="design">A <see cref="Design"/> (which should be <see cref="Design.IsContainerView"/>)
     /// to add any newly created <see cref="View"/> to.</param>
@@ -103,7 +103,7 @@ public class AddViewOperation : Operation
         }
 
         Design design;
-        this.add.Data = design = this.to.CreateSubControlDesign(this.to.SourceCode, this.fieldName, this.add);
+        this.add.Data = design = this.to.CreateSubControlDesign(this.fieldName, this.add);
 
         var v = this.GetViewToAddTo();
         v.Add(this.add);

@@ -23,7 +23,7 @@ public class CompositeOperation : Operation
     /// <paramref name="operations"/> are impossible.
     /// </para>
     /// </summary>
-    /// <param name="operations">All operations to perform in <see cref="Do"/>.</param>
+    /// <param name="operations">All operations to perform in <see cref="Operation.Do"/>.</param>
     public CompositeOperation(params Operation[] operations)
     {
         this.operations = operations;
@@ -33,7 +33,7 @@ public class CompositeOperation : Operation
     }
 
     /// <summary>
-    /// Gets the collection of sub operations performed on <see cref="Do"/> / <see cref="Undo"/>.
+    /// Gets the collection of sub operations performed on <see cref="Operation.Do"/> / <see cref="Undo"/>.
     /// </summary>
     public IReadOnlyCollection<Operation> Operations => new ReadOnlyCollection<Operation>(this.operations);
 

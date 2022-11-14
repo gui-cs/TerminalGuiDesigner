@@ -4,8 +4,7 @@ namespace TerminalGuiDesigner.UI.Windows;
 
 /// <summary>
 /// Cross UI platform (winforms, console, terminal gui) arguments for describing the theming and text
-/// that should appear in a modal 'select something' style operation in <see cref="IBasicActivateItems"/>
-/// (the user interface abstraction layer)
+/// that should appear in a modal 'select something' style operation.
 /// </summary>
 public class DialogArgs
 {

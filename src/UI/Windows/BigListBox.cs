@@ -148,8 +148,6 @@ public class BigListBox<T>
         this.win.Add(btnOk);
         this.win.Add(btnCancel);
 
-        this.AddMoreButtonsAfter(this.win, btnCancel);
-
         this.callback = Application.MainLoop.AddTimeout(TimeSpan.FromMilliseconds(100), this.Timer);
 
         this.listView.FocusFirst();
@@ -240,14 +238,6 @@ public class BigListBox<T>
         }
     }
 
-    /// <summary>
-    /// Last minute method for adding extra stuff to the window (to the right of <paramref name="btnCancel"/>)
-    /// </summary>
-    /// <param name="btnCancel"></param>
-    protected virtual void AddMoreButtonsAfter(Window win, Button btnCancel)
-    {
-    }
-
     bool Timer(MainLoop caller)
     {
         if (this.changes && DateTime.Now.Subtract(this.lastKeypress) > TimeSpan.FromMilliseconds(100))
@@ -270,12 +260,12 @@ public class BigListBox<T>
         return true;
     }
 
-    protected void RestartFiltering()
+    private void RestartFiltering()
     {
         this.RestartFiltering(this.searchBox?.Text.ToString());
     }
 
-    protected void RestartFiltering(string? searchTerm)
+    private void RestartFiltering(string? searchTerm)
     {
         lock (this.taskCancellationLock)
         {
@@ -315,11 +305,11 @@ public class BigListBox<T>
         return toReturn;
     }
 
-    protected virtual IList<T> GetListAfterSearch(string? searchString, CancellationToken token)
+    private IList<T> GetListAfterSearch(string? searchString, CancellationToken token)
     {
         if (this.publicCollection == null)
         {
-            throw new InvalidOperationException("When using the protected constructor derived classes must override this method ");
+            throw new InvalidOperationException("When using the private constructor derived classes must override this method ");
         }
 
         if (string.IsNullOrEmpty(searchString))
@@ -332,11 +322,11 @@ public class BigListBox<T>
             this.AspectGetter(o).Contains(searchString, StringComparison.CurrentCultureIgnoreCase)).ToList();
     }
 
-    protected virtual IList<T> GetInitialSource()
+    private IList<T> GetInitialSource()
     {
         if (this.publicCollection == null)
         {
-            throw new InvalidOperationException("When using the protected constructor derived classes must override this method ");
+            throw new InvalidOperationException("When using the private constructor derived classes must override this method ");
         }
 
         return this.publicCollection;

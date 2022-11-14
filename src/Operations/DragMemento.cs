@@ -41,6 +41,7 @@ internal class DragMemento
     /// Gets the <see cref="View.X"/> of the <see cref="View"/> wrapped by <see cref="Design"/>
     /// at the point the <see cref="DragMemento"/> was created (i.e. when <see cref="DragOperation"/>
     /// started).
+    /// </summary>
     public Pos OriginalX { get; }
 
     /// <summary>

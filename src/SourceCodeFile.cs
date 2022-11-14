@@ -33,10 +33,11 @@ public class SourceCodeFile
     }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="SourceCodeFile"/> class.
     /// Declares a new pair of files (e.g. MyClass.cs and MyClass.Designer.cs) which
-    /// may or may not both exist yet
+    /// may or may not both exist yet.
     /// </summary>
-    /// <param name="file">Either source file of the pair (e.g. either MyClass.cs or MyClass.Designer.cs)</param>
+    /// <param name="path">Either source file of the pair (e.g. either MyClass.cs or MyClass.Designer.cs).</param>
     public SourceCodeFile(string path)
         : this(new FileInfo(path))
     {
@@ -44,9 +45,10 @@ public class SourceCodeFile
 
     /// <summary>
     /// Returns the .Designer.cs file for the given class file.
-    /// Returns a reference even if that file does not exist
+    /// Returns a reference even if that file does not exist.
     /// </summary>
-    /// <returns></returns>
+    /// <param name="csFile">The .cs file that you want to find the partner for.</param>
+    /// <returns>The .Designer.cs file that matches <paramref name="csFile"/>.</returns>
     private FileInfo GetDesignerFile(FileInfo csFile)
     {
         const string expectedCsExtension = ".cs";
@@ -63,11 +65,11 @@ public class SourceCodeFile
     }
 
     /// <summary>
-    /// Returns the class file for a given .Designer.cs file
+    /// Returns the class file for a given .Designer.cs file.
     /// </summary>
-    /// <param name="designerFile"></param>
-    /// <returns></returns>
-    public FileInfo GetCsFile(FileInfo designerFile)
+    /// <param name="designerFile">The Designer.cs file that you want to find the partner for.</param>
+    /// <returns>The .cs file that matches <paramref name="designerFile"/>.</returns>
+    private FileInfo GetCsFile(FileInfo designerFile)
     {
         if (!designerFile.Name.EndsWith(ExpectedExtension))
         {
