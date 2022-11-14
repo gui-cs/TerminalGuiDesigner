@@ -25,15 +25,17 @@ public class CodeDomArgs
 
     /// <summary>
     /// Gets the CodeDOM object representing the root class that is being designed
-    /// (e.g. `public partial class MyView : View`) as it is declared in the .Designer.cs file.
-    /// Use this property to add new fields for each sub-view and subcomponent needed
-    /// by the class.
+    /// as it is declared in the .Designer.cs file e.g.:
+    /// <code>public partial class MyWindow : Terminal.Gui.Window</code>
+    /// <para>Use this property to add new fields for each sub-view and subcomponent needed
+    /// by the class.</para>
     /// </summary>
     public CodeTypeDeclaration Class { get; }
 
     /// <summary>
     /// Gets the CodeDOM object representing the InitializeComponent() method
-    /// of the .Designer.cs file.
+    /// of the .Designer.cs file e.g.
+    /// <code>private void InitializeComponent()</code>
     /// </summary>
     public CodeMemberMethod InitMethod { get; }
 
