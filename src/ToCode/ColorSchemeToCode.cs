@@ -4,15 +4,31 @@ using Attribute = Terminal.Gui.Attribute;
 
 namespace TerminalGuiDesigner.ToCode;
 
+/// <summary>
+/// Handles generating code for a <see cref="NamedColorScheme"/> into .Designer.cs
+/// file (See <see cref="CodeDomArgs"/>).  This will be a private field within the 
+/// class generated e.g.:
+/// <code>private Terminal.Gui.ColorScheme dialogBackground;</code>
+/// </summary>
 public class ColorSchemeToCode : ToCodeBase
 {
     private NamedColorScheme scheme;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ColorSchemeToCode"/> class.
+    /// </summary>
+    /// <param name="scheme">The <see cref="ColorScheme"/> tracked by
+    /// <see cref="ColorSchemeManager"/> that is to be added to .Designer.cs</param>
     public ColorSchemeToCode(NamedColorScheme scheme)
     {
         this.scheme = scheme;
     }
 
+    /// <summary>
+    /// Generates CodeDOM statements to declare private <see cref="ColorScheme"/> field,
+    /// constructor call and property initializations for the <see cref="NamedColorScheme"/>.
+    /// </summary>
+    /// <param name="args">State object for the .Designer.cs file being generated.</param>
     public void ToCode(CodeDomArgs args)
     {
         this.AddFieldToClass(args, typeof(ColorScheme), this.scheme.Name);

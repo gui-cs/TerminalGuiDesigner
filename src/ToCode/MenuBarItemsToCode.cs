@@ -3,19 +3,41 @@ using Terminal.Gui;
 
 namespace TerminalGuiDesigner.ToCode;
 
-internal class MenuBarItemsToCode : ToCodeBase
+/// <summary>
+/// Handles generating code for building all the <see cref="MenuItem"/> in
+/// a <see cref="Terminal.Gui.MenuBar"/> into .Designer.cs (See <see cref="CodeDomArgs"/>).
+/// This will then be assigned to the <see cref="MenuBar.Menus"/> property of the
+/// <see cref="Terminal.Gui.MenuBar"/>.
+/// </summary>
+public class MenuBarItemsToCode : ToCodeBase
 {
-    public Design Design { get; }
+    private readonly Design design;
 
-    public MenuBar MenuBar { get; }
+    private readonly MenuBar menuBar;
 
-    public MenuBarItemsToCode(Design design, MenuBar mb)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MenuBarItemsToCode"/> class.
+    /// </summary>
+    /// <param name="design">Wrapper for a <see cref="MenuBar"/> for which you want
+    /// to generate CodeDOM code to build all <see cref="MenuItem"/>.</param>
+    public MenuBarItemsToCode(Design design)
     {
-        this.Design = design;
-        this.MenuBar = mb;
+        this.design = design;
+
+        if (design.View is not MenuBar mb)
+        {
+            throw new ArgumentException(nameof(design), $"{nameof(MenuBarItemsToCode)} can only be used with {nameof(TerminalGuiDesigner.Design)} that wrap {nameof(MenuBar)}");
+        }
+
+        this.menuBar = mb;
     }
 
-    internal void ToCode(CodeDomArgs args)
+    /// <summary>
+    /// Adds code to .Designer.cs to construct and initialize all <see cref="MenuItem"/>
+    /// in the <see cref="MenuBar"/> (including sub-menus recursively).
+    /// </summary>
+    /// <param name="args">State object for the .Designer.cs file being generated.</param>
+    public void ToCode(CodeDomArgs args)
     {
         /* Make something like this
 
@@ -28,8 +50,8 @@ internal class MenuBarItemsToCode : ToCodeBase
         */
 
         // TODO: Let user name these
-        List<string> menus = new ();
-        foreach (var child in this.MenuBar.Menus)
+        List<string> menus = new();
+        foreach (var child in this.menuBar.Menus)
         {
             this.ToCode(args, child, out string fieldName);
             menus.Add(fieldName);
@@ -37,7 +59,7 @@ internal class MenuBarItemsToCode : ToCodeBase
 
         this.AddPropertyAssignment(
             args,
-            $"this.{this.Design.FieldName}.{nameof(this.MenuBar.Menus)}",
+            $"this.{this.design.FieldName}.{nameof(this.menuBar.Menus)}",
             new CodeArrayCreateExpression(
                 typeof(MenuBarItem),
                 menus.Select(c =>
@@ -52,7 +74,7 @@ internal class MenuBarItemsToCode : ToCodeBase
         this.AddConstructorCall(args, $"this.{fieldName}", child.GetType());
         this.AddPropertyAssignment(args, $"this.{fieldName}.{nameof(MenuItem.Title)}", child.Title);
 
-        List<string?> children = new ();
+        List<string?> children = new();
 
         // TODO: Make recursive for more children
         // plus again let user name these
@@ -66,7 +88,7 @@ internal class MenuBarItemsToCode : ToCodeBase
             else
             if (sub == null)
             {
-                // its a menu seperator (in Terminal.Gui separators are indicated by having a null element).
+                // its a menu separator (in Terminal.Gui separators are indicated by having a null element).
                 children.Add(null);
             }
             else
@@ -105,7 +127,7 @@ internal class MenuBarItemsToCode : ToCodeBase
                     .ToArray()));
     }
 
-    public string GetUniqueFieldName(CodeDomArgs args, MenuItem item)
+    private string GetUniqueFieldName(CodeDomArgs args, MenuItem item)
     {
         return args.GetUniqueFieldName(
             item.Data as string ??

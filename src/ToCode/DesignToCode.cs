@@ -26,13 +26,13 @@ internal class DesignToCode : ToCodeBase
         // if the current component is a TableView we should persist the table too
         if (this.Design.View is TableView tv && tv.Table != null)
         {
-            var designTable = new DataTableToCode(this.Design, tv.Table);
+            var designTable = new DataTableToCode(this.Design);
             designTable.ToCode(args);
         }
 
-        if (this.Design.View is MenuBar mb)
+        if (this.Design.View is MenuBar)
         {
-            var designItems = new MenuBarItemsToCode(this.Design, mb);
+            var designItems = new MenuBarItemsToCode(this.Design);
             designItems.ToCode(args);
         }
 
