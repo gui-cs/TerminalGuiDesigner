@@ -685,7 +685,7 @@ public class Design
         return name.MakeUnique(allDesigns.Select(d => d.FieldName));
     }
 
-    public string GetUniqueFieldName(string candidate)
+    public string GetUniqueFieldName(string? candidate)
     {
         var root = this.GetRootDesign();
 

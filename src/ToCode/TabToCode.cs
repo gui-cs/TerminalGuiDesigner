@@ -1,27 +1,39 @@
 using System.CodeDom;
+using Terminal.Gui;
 using static Terminal.Gui.TabView;
 
 namespace TerminalGuiDesigner.ToCode;
 
+/// <summary>
+/// Handles generating code for a single <see cref="TabView.Tab"/> into .Designer.cs
+/// file (See <see cref="CodeDomArgs"/>).  This will then be added to a <see cref="TabView"/>
+/// via <see cref="TabView.AddTab(Tab, bool)"/>.
+/// </summary>
 public class TabToCode : ToCodeBase
 {
-    public Design Design { get; }
+    private readonly Design design;
+    private readonly Tab tab;
 
-    public Tab Tab { get; }
-
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TabToCode"/> class.
+    /// </summary>
+    /// <param name="design">Wrapper for a <see cref="TabView"/>.</param>
+    /// <param name="tab">A Tab within <paramref name="design"/> that you
+    /// want added to the .Designer.cs file.</param>
     public TabToCode(Design design, Tab tab)
     {
-        this.Design = design;
-        this.Tab = tab;
+        this.design = design;
+        this.tab = tab;
     }
 
     /// <summary>
     /// Adds code that constructs and initializes a single Tab of a
-    /// TabView and adds it to the TabView
+    /// TabView and adds it to the TabView in .Designer.cs file.
     /// </summary>
-    internal void ToCode(CodeDomArgs args)
+    /// <param name="args">State of the .Designer.cs file.</param>
+    public void ToCode(CodeDomArgs args)
     {
-        var tabName = $"{this.Design.FieldName}{this.GetTabFieldName(args)}";
+        var tabName = $"{this.design.FieldName}{this.GetTabFieldName(args)}";
 
         // add a field to the class for the Tab
         this.AddLocalFieldToMethod(args, typeof(Tab), tabName);
@@ -31,7 +43,7 @@ public class TabToCode : ToCodeBase
             args,
             tabName,
             typeof(Tab),
-            new CodePrimitiveExpression(this.Tab.Text.ToPrimitive()),
+            new CodePrimitiveExpression(this.tab.Text.ToPrimitive()),
             new CodeSnippetExpression("new View()"));
 
         // make the Tab.View Dim.Fill
@@ -40,7 +52,7 @@ public class TabToCode : ToCodeBase
 
         // create code statements for everything in the Tab (recursive)
         var viewToCode = new ViewToCode();
-        viewToCode.AddSubViewsToDesignerCs(this.Tab.View, args, new CodeSnippetExpression($"{tabName}.View"));
+        viewToCode.AddSubViewsToDesignerCs(this.tab.View, args, new CodeSnippetExpression($"{tabName}.View"));
 
         // add the constructed tab to the TabView
         this.AddAddTabCall(tabName, args);
@@ -48,7 +60,7 @@ public class TabToCode : ToCodeBase
 
     private string GetTabFieldName(CodeDomArgs args)
     {
-        var tabname = this.Tab.Text?.ToString();
+        var tabname = this.tab.Text?.ToString();
         if (string.IsNullOrWhiteSpace(tabname))
         {
             throw new Exception("Could not generate Tab variable name because its Text was blank or null");
@@ -62,7 +74,7 @@ public class TabToCode : ToCodeBase
         // Construct it
         var addColumnToTableStatement = new CodeMethodInvokeExpression(
             new CodeMethodReferenceExpression(
-                new CodeSnippetExpression($"{this.Design.FieldName}"), "AddTab"),
+                new CodeSnippetExpression($"{this.design.FieldName}"), "AddTab"),
             new CodeSnippetExpression(tabFieldName),
             new CodeSnippetExpression("false"));
 
