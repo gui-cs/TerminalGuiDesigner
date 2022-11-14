@@ -25,4 +25,13 @@ internal class StringExtensionTests
     {
         Assert.AreEqual(expectedOut, stringIn.MakeUnique(whenCollection,System.StringComparer.InvariantCultureIgnoreCase));
     }
+
+    [TestCase("a",4," a  ")]
+    [TestCase("a", 5, "  a  ")]
+    [TestCase("b l", 5, " b l ")]
+    [TestCase("sooooLooong", 2, "sooooLooong")]
+    public void TestPadBoth(string input, int length, string expectedOutput)
+    {
+        Assert.AreEqual(expectedOutput, input.PadBoth(length));
+    }
 }

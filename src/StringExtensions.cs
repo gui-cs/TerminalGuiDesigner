@@ -64,4 +64,31 @@ public static class StringExtensions
     {
         return s == null ? new CodePrimitiveExpression() : new CodeSnippetExpression(s);
     }
+
+    /// <summary>
+    /// <para>
+    /// Pads a string until it reaches <paramref name="length"/> by adding
+    /// spaces to either side (centering it).
+    /// </para>
+    /// <par>
+    /// If <paramref name="source"/> cannot be exactly centered (e.g. 1 width input
+    /// pushed out to 4 desired width) then the extra space will be on the right.
+    /// </par>
+    /// </summary>
+    /// <param name="source">string to pad.</param>
+    /// <param name="length">desired length of new string.</param>
+    /// <returns>A string of <paramref name="length"/> length and centered text.</returns>
+    public static string PadBoth(this string source, int length)
+    {
+        if (source.Length > length)
+        {
+            return source;
+        }
+
+        int spaces = length - source.Length;
+        int padLeft = (spaces / 2) + source.Length;
+        source = source.PadLeft(padLeft).PadRight(length);
+
+        return source;
+    }
 }
