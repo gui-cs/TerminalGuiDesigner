@@ -30,6 +30,32 @@ public class Design
 
     private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+    /// <summary>
+    /// View Types for which <see cref="View.Text"/> does not make sense as a user
+    /// configurable field (e.g. there is a Title field instead).
+    /// </summary>
+    private HashSet<Type> excludeTextPropertyFor = new HashSet<Type>
+    {
+        typeof(FrameView),
+        typeof(TabView),
+        typeof(Window),
+        typeof(Toplevel),
+        typeof(PanelView),
+        typeof(View),
+        typeof(GraphView),
+        typeof(HexView),
+        typeof(LineView),
+        typeof(ListView),
+        typeof(MenuBar),
+        typeof(ScrollBarView),
+        typeof(ScrollView),
+        typeof(TableView),
+        typeof(TabView),
+        typeof(TreeView),
+        typeof(TreeView<>),
+        typeof(Dialog),
+    };
+
     public Property? GetDesignableProperty(string propertyName)
     {
         return this.GetDesignableProperties().SingleOrDefault(p => p.PropertyInfo.Name.Equals(propertyName));
@@ -319,7 +345,10 @@ public class Design
             yield return new NameProperty(this);
         }
 
-        yield return new Property(this, this.View.GetActualTextProperty());
+        if (this.ShowTextProperty())
+        {
+            yield return new Property(this, this.View.GetActualTextProperty());
+        }
 
         // Border properties - Most views dont have a border so Border is
         if (this.View.Border != null)
@@ -430,6 +459,18 @@ public class Design
             yield return this.CreateProperty(nameof(RadioGroup.RadioLabels));
             yield return this.CreateProperty(nameof(RadioGroup.DisplayMode));
         }
+    }
+
+    private bool ShowTextProperty()
+    {
+        // never show Text for root because it's almost certainly a container
+        // e.g. derived from Window or Dialog or View (directly)
+        if (IsRoot)
+        {
+            return false;
+        }
+
+        return !this.excludeTextPropertyFor.Contains(this.View.GetType());
     }
 
     private Property CreateSubProperty(string name, string subObjectName, object subObject)
