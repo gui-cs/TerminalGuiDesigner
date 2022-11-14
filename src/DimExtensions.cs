@@ -50,6 +50,11 @@ public static class DimExtensions
         return false;
     }
 
+    /// <summary>
+    /// Determines whether an input <see cref="Dim"/> is a <see cref="Dim.Fill(int)"/>.
+    /// </summary>
+    /// <param name="d">Input <see cref="Dim"/> to classify.</param>
+    /// <returns><see langword="true"/> if <paramref name="d"/> is the result of a <see cref="Dim.Fill(int)"/> call.</returns>
     public static bool IsFill(this Dim d)
     {
         if (d == null)
@@ -60,6 +65,9 @@ public static class DimExtensions
         return d.GetType().Name == "DimFill";
     }
 
+    /// <inheritdoc cref="IsFill(Dim)"/>
+    /// <param name="d">Input <see cref="Dim"/> to classify.</param>
+    /// <param name="margin">The margin of the <see cref="Dim.Fill(int)"/> used to create <paramref name="d"/> or 0.</param>
     public static bool IsFill(this Dim d, out int margin)
     {
         if (d != null && d.IsFill())
@@ -74,6 +82,11 @@ public static class DimExtensions
         return false;
     }
 
+    /// <summary>
+    /// True if <paramref name="d"/> is an absolute width/height.
+    /// </summary>
+    /// <param name="d">The <see cref="Dim"/> to determine whether it is absolute.</param>
+    /// <returns><see langword="true"/> if <paramref name="d"/> is a fixed absolute number.</returns>
     public static bool IsAbsolute(this Dim d)
     {
         if (d == null)
@@ -84,6 +97,9 @@ public static class DimExtensions
         return d.GetType().Name == "DimAbsolute";
     }
 
+    /// <inheritdoc cref="IsAbsolute(Dim)"/>
+    /// <param name="d">The <see cref="Dim"/> to determine whether it is absolute.</param>
+    /// <param name="n">The value of the fixed number absolute <see cref="Dim"/> value or 0.</param>
     public static bool IsAbsolute(this Dim d, out int n)
     {
         if (d.IsAbsolute())
@@ -105,6 +121,12 @@ public static class DimExtensions
         return false;
     }
 
+    /// <summary>
+    /// True if the <paramref name="d"/> is the combination of 2 other <see cref="Dim"/>
+    /// objects e.g.:<code>Dim.Percent(10)+Dim.Percent(5)</code>
+    /// </summary>
+    /// <param name="d">Input <see cref="Dim"/> you want classified.</param>
+    /// <returns><see langword="true"/> if <paramref name="d"/> is a combination of 2 other <see cref="Dim"/>.</returns>
     public static bool IsCombine(this Dim d)
     {
         if (d == null)
@@ -123,7 +145,7 @@ public static class DimExtensions
     /// <param name="left">The left hand side of the addition/subtraction calculation.  May itself be another DimCombine.  Or 0 if <paramref name="d"/> is not a DimCombine.</param>
     /// <param name="right">The right hand side of the addition/subtraction calculation.  May itself be another DimCombine.  Or 0 if <paramref name="d"/> is not a DimCombine.</param>
     /// <param name="add">True if <paramref name="d"/> is a DimCombine and the calculation is left+right.  False if calculation is subtraction or <paramref name="d"/> is not a DimCombine.</param>
-    /// <returns>True if <paramref name="d"/> is a summation or subtraction of two other <see cref="Dim"/></returns>
+    /// <returns>True if <paramref name="d"/> is a summation or subtraction of two other <see cref="Dim"/>.</returns>
     /// <exception cref="Exception">Thrown if private Terminal.Gui API changes have taken place and this implementation is therefore broken.</exception>
     public static bool IsCombine(this Dim d, out Dim left, out Dim right, out bool add)
     {
@@ -147,6 +169,18 @@ public static class DimExtensions
         return false;
     }
 
+    /// <summary>
+    /// Evaluates a <see cref="Dim"/> and returns what <see cref="DimType"/> it is and whether it was possible
+    /// to come to a definitive answer.
+    /// </summary>
+    /// <param name="d">The <see cref="Dim"/> to determine type of.</param>
+    /// <param name="type">The determined type.</param>
+    /// <param name="value">The numerical element of the type e.g. for <see cref="Dim.Percent(float, bool)"/>
+    /// the <paramref name="value"/> is the percentage but for <see cref="Dim.Fill(int)"/> the <paramref name="value"/>
+    /// is the margin.</param>
+    /// <param name="offset">The numerical offset if any, for example -5 in the following:
+    /// <code>Dim.Fill(1)-5</code></param>
+    /// <returns>True if it was possible to determine <paramref name="type"/>.</returns>
     public static bool GetDimType(this Dim d, out DimType type, out float value, out int offset)
     {
         if (d.IsAbsolute(out var n))
@@ -192,6 +226,13 @@ public static class DimExtensions
         return false;
     }
 
+    /// <summary>
+    /// Generates code to create <paramref name="d"/>.
+    /// </summary>
+    /// <param name="d"><see cref="Dim"/> to generate code snippet for.</param>
+    /// <returns>The code required to create <paramref name="d"/>.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="d"/> is
+    /// determined to be a <see cref="DimType"/> that is not yet supported.</exception>
     public static string? ToCode(this Dim d)
     {
         if (!d.GetDimType(out var type, out var val, out var offset))

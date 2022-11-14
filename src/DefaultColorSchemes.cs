@@ -70,7 +70,7 @@ public class DefaultColorSchemes
     /// <summary>
     /// Returns all default color schemes.
     /// </summary>
-    /// <returns>All default color schemes configured</returns>
+    /// <returns>All default color schemes configured.</returns>
     public IEnumerable<NamedColorScheme> GetDefaultSchemes()
     {
         return typeof(DefaultColorSchemes)
@@ -83,8 +83,8 @@ public class DefaultColorSchemes
     /// Returns a specific <see cref="NamedColorScheme"/>.
     /// </summary>
     /// <remarks>These are camel case because they will ultimately end up as private fields in a .Designer.cs file (if used).</remarks>
-    /// <param name="name">Name of default e.g. greenOnBlack</param>
-    /// <returns>The named scheme</returns>
+    /// <param name="name">Name of default e.g. greenOnBlack.</param>
+    /// <returns>The named scheme.</returns>
     public NamedColorScheme GetDefaultScheme(string name)
     {
         return this.GetDefaultSchemes().First(s => s.Name.Equals(name));

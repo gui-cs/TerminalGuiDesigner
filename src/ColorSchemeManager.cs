@@ -2,58 +2,48 @@
 using System.Reflection;
 using Terminal.Gui;
 using TerminalGuiDesigner;
+using TerminalGuiDesigner.Operations;
 
 namespace TerminalGuiDesigner;
 
 /// <summary>
-/// A user defined <see cref="ColorScheme"/> and its name as defined
-/// by the user.  The <see cref="Name"/> will be used as Field name
-/// in the class code generated so must not contain illegal characters/spaces
+/// Tracks usage of <see cref="ColorScheme"/> in designed views.
+/// Each <see cref="ColorScheme"/> that the user has created or are
+/// supplied by the designer out of the box is modeled by <see cref="NamedColorScheme"/>.
+/// This class hosts the collection of all <see cref="NamedColorScheme"/>.
 /// </summary>
-public class NamedColorScheme
-{
-    public string Name { get; set; }
-
-    public ColorScheme Scheme { get; set; }
-
-    public NamedColorScheme(string name, ColorScheme scheme)
-    {
-        this.Name = name;
-        this.Scheme = scheme;
-    }
-
-    public NamedColorScheme(string name)
-    {
-        this.Name = name;
-        this.Scheme = new ColorScheme();
-    }
-
-    public override string ToString()
-    {
-        return this.Name;
-    }
-}
-
 public class ColorSchemeManager
 {
-    List<NamedColorScheme> colorSchemes = new();
-
-    /// <summary>
-    /// All known color schemes defined by name
-    /// </summary>
-    public ReadOnlyCollection<NamedColorScheme> Schemes => this.colorSchemes.ToList().AsReadOnly();
-
-    public static ColorSchemeManager Instance = new();
+    private readonly List<NamedColorScheme> colorSchemes = new();
 
     private ColorSchemeManager()
     {
     }
 
+    /// <summary>
+    /// Gets the Singleton instance of <see cref="ColorSchemeManager"/>.
+    /// </summary>
+    public static ColorSchemeManager Instance { get; } = new();
+
+    /// <summary>
+    /// Gets all known named color schemes defined in editor.
+    /// </summary>
+    public ReadOnlyCollection<NamedColorScheme> Schemes => this.colorSchemes.ToList().AsReadOnly();
+
+    /// <summary>
+    /// Clears all <see cref="NamedColorScheme"/> tracked by manager.
+    /// </summary>
     public void Clear()
     {
-        this.colorSchemes = new();
+        this.colorSchemes.Clear();
     }
 
+    /// <summary>
+    /// Makes <see cref="ColorSchemeManager"/> forget about <paramref name="toDelete"/>.
+    /// Note that this does not remove it from any users (to do that use
+    /// <see cref="DeleteColorSchemeOperation"/> instead).
+    /// </summary>
+    /// <param name="toDelete"><see cref="NamedColorScheme"/> to forget about.</param>
     public void Remove(NamedColorScheme toDelete)
     {
         // match on name as instances may change e.g. due to Undo/Redo etc
@@ -70,8 +60,8 @@ public class ColorSchemeManager
     /// Designer.cs file of the <paramref name="viewBeingEdited"/>.  Does not clear any existing known
     /// schemes.
     /// </summary>
-    /// <param name="viewBeingEdited">View to find color schemes in, must be the root design (i.e. <see cref="Design.IsRoot"/>)</param>
-    /// <exception cref="ArgumentException"></exception>
+    /// <param name="viewBeingEdited">View to find color schemes in, must be the root design (i.e. <see cref="Design.IsRoot"/>).</param>
+    /// <exception cref="ArgumentException">Thrown if passed a non root <see cref="Design"/>.</exception>
     public void FindDeclaredColorSchemes(Design viewBeingEdited)
     {
         if (!viewBeingEdited.IsRoot)
@@ -96,6 +86,12 @@ public class ColorSchemeManager
         }
     }
 
+    /// <summary>
+    /// Returns the <see cref="NamedColorScheme.Name"/> for <paramref name="s"/>
+    /// if it is in the collection of known <see cref="Schemes"/>.
+    /// </summary>
+    /// <param name="s">A <see cref="ColorScheme"/> to look up.</param>
+    /// <returns>The name of the scheme or null if it is not known.</returns>
     public string? GetNameForColorScheme(ColorScheme s)
     {
         var match = this.colorSchemes.Where(kvp => s.AreEqual(kvp.Scheme)).ToArray();
@@ -114,9 +110,10 @@ public class ColorSchemeManager
     /// will also update all Views in <paramref name="rootDesign"/> which currently use the
     /// named scheme.
     /// </summary>
-    /// <param name="name"></param>
-    /// <param name="scheme"></param>
-    /// <param name="rootDesign"></param>
+    /// <param name="name">The user generated name for the <see cref="ColorScheme"/>.
+    /// Will become <see cref="NamedColorScheme.Name"/>.</param>
+    /// <param name="scheme">The new <see cref="ColorScheme"/> color values to use.</param>
+    /// <param name="rootDesign">The topmost <see cref="Design"/> the user is editing (see <see cref="Design.GetRootDesign"/>).</param>
     public void AddOrUpdateScheme(string name, ColorScheme scheme, Design rootDesign)
     {
         var oldScheme = this.colorSchemes.FirstOrDefault(c => c.Name.Equals(name));
@@ -143,6 +140,12 @@ public class ColorSchemeManager
         oldScheme.Scheme = scheme;
     }
 
+    /// <summary>
+    /// Renames the known <see cref="Schemes"/> that is called <paramref name="oldName"/> to
+    /// <paramref name="newName"/> if the name exists in <see cref="Schemes"/>.
+    /// </summary>
+    /// <param name="oldName">The name to change.</param>
+    /// <param name="newName">The value to change it to.</param>
     public void RenameScheme(string oldName, string newName)
     {
         var match = this.colorSchemes.FirstOrDefault(c => c.Name.Equals(oldName));
@@ -155,11 +158,11 @@ public class ColorSchemeManager
 
     /// <summary>
     /// Returns the <see cref="NamedColorScheme"/> from <see cref="Schemes"/> where
-    /// <see cref="NamedColorScheme.Name"/> matches <paramref name="name"/>
+    /// <see cref="NamedColorScheme.Name"/> matches <paramref name="name"/>.
     /// </summary>
-    /// <param name="name"></param>
-    /// <returns></returns>
-    /// <exception cref="KeyNotFoundException">Thrown if the <paramref name="name"/> is not present in <see cref="Schemes"/></exception>
+    /// <param name="name">The name to look up.</param>
+    /// <returns>The scheme if found or null.</returns>
+    /// <exception cref="KeyNotFoundException">Thrown if the <paramref name="name"/> is not present in <see cref="Schemes"/>.</exception>
     public NamedColorScheme GetNamedColorScheme(string name)
     {
         return this.colorSchemes.FirstOrDefault(c => c.Name.Equals(name))

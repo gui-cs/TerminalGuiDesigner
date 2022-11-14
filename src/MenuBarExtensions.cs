@@ -3,12 +3,15 @@ using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
 
+/// <summary>
+/// Extension methods for the <see cref="MenuBar"/> class.
+/// </summary>
 public static class MenuBarExtensions
 {
     /// <summary>
     /// Gets the top level selected <see cref="MenuBarItem"/> in the <paramref name="menuBar"/>
-    /// or null if it is not open/no selection is set.  Note that a submenu may still be
-    /// present but only the root will be returned
+    /// or null if it is not open/no selection is set.  Note that a sub-menu may still be
+    /// present but only the root will be returned.
     /// </summary>
     /// <param name="menuBar"></param>
     /// <returns></returns>
@@ -23,14 +26,6 @@ public static class MenuBarExtensions
         }
 
         return menuBar.Menus[selected];
-    }
-
-    private static object GetNonNullPrivateFieldValue(string fieldName, object item, Type type)
-    {
-        var selectedField = type.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance)
-            ?? throw new Exception($"Expected private field {fieldName} was not present on {type.Name}");
-        return selectedField.GetValue(item)
-            ?? throw new Exception($"Private field {fieldName} was unexpectedly null on {type.Name}");
     }
 
     /// <summary>
@@ -56,5 +51,13 @@ public static class MenuBarExtensions
         }
 
         return barItems.Children[current];
+    }
+
+    private static object GetNonNullPrivateFieldValue(string fieldName, object item, Type type)
+    {
+        var selectedField = type.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance)
+            ?? throw new Exception($"Expected private field {fieldName} was not present on {type.Name}");
+        return selectedField.GetValue(item)
+            ?? throw new Exception($"Private field {fieldName} was unexpectedly null on {type.Name}");
     }
 }

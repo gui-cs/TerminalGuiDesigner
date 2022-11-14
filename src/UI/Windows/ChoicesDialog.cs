@@ -85,6 +85,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             Height = msgboxHeight;
         }
 
+        /// <inheritdoc/>
         public override void Redraw(Rect bounds)
         {
             base.Redraw(bounds);

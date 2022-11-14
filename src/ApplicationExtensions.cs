@@ -4,7 +4,7 @@ using Terminal.Gui;
 namespace TerminalGuiDesigner;
 
 /// <summary>
-/// Extensions for 
+/// Extension methods to access private/internal functions of <see cref="Application"/>.
 /// </summary>
 public static class ApplicationExtensions
 {

@@ -22,13 +22,6 @@ public class BigListBox<T>
 
     private bool addNull;
 
-    public T? Selected { get; private set; }
-
-    /// <summary>
-    /// Determines what is rendered in the list visually
-    /// </summary>
-    public Func<T?, string> AspectGetter { get; set; }
-
     /// <summary>
     /// Ongoing filtering of a large collection should be cancelled when the user changes the filter even if it is not completed yet
     /// </summary>
@@ -90,7 +83,7 @@ public class BigListBox<T>
         };
         this.listView.KeyPress += this._listView_KeyPress;
 
-        this.listView.MouseClick += this._listView_MouseClick;
+        this.listView.MouseClick += this.ListView_MouseClick;
         this.listView.SetSource((this.collection = this.BuildList(this.GetInitialSource())).ToList());
         this.win.Add(this.listView);
 
@@ -153,6 +146,16 @@ public class BigListBox<T>
         this.listView.FocusFirst();
     }
 
+    /// <summary>
+    /// Gets the value the user chose upon exiting.
+    /// </summary>
+    public T? Selected { get; private set; }
+
+    /// <summary>
+    /// Gets or Sets the delegate that controls what is rendered for each object.
+    /// </summary>
+    public Func<T?, string> AspectGetter { get; set; }
+
     private void Accept()
     {
         if (this.listView.SelectedItem >= this.collection.Count)
@@ -165,7 +168,7 @@ public class BigListBox<T>
         this.Selected = this.collection[this.listView.SelectedItem].Object;
     }
 
-    private void _listView_MouseClick(View.MouseEventArgs obj)
+    private void ListView_MouseClick(View.MouseEventArgs obj)
     {
         if (obj.MouseEvent.Flags.HasFlag(MouseFlags.Button1DoubleClicked))
         {
