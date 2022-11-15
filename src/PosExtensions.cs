@@ -5,10 +5,21 @@ using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
 
+/// <summary>
+/// Extension methods for <see cref="Pos"/>.
+/// </summary>
 public static class PosExtensions
 {
-    private static bool TreatNullPosAs0 = true;
+    /// <summary>
+    /// When <see cref="Pos"/> is null should it be treated as 0 instead.
+    /// </summary>
+    private const bool TreatNullPosAs0 = true;
 
+    /// <summary>
+    /// Returns true if <paramref name="p"/> is an absolute fixed position.
+    /// </summary>
+    /// <param name="p"><see cref="Pos"/> to classify.</param>
+    /// <returns>True if <paramref name="p"/> is absolute.</returns>
     public static bool IsAbsolute(this Pos p)
     {
         if (p == null)
@@ -19,6 +30,10 @@ public static class PosExtensions
         return p.GetType().Name == "PosAbsolute";
     }
 
+    /// <inheritdoc cref="IsAbsolute(Pos)"/>
+    /// <param name="p"><see cref="Pos"/> to classify.</param>
+    /// <param name="n">The absolute size or 0.</param>
+    /// <returns>True if <paramref name="p"/> is absolute.</returns>
     public static bool IsAbsolute(this Pos p, out int n)
     {
         if (p.IsAbsolute())
@@ -40,6 +55,11 @@ public static class PosExtensions
         return false;
     }
 
+    /// <summary>
+    /// Returns true if <paramref name="p"/> is a percentage position (See <see cref="Pos.Percent(float)"/>).
+    /// </summary>
+    /// <param name="p"><see cref="Pos"/> to classify.</param>
+    /// <returns>True if <paramref name="p"/> is <see cref="Pos.Percent(float)"/>.</returns>
     public static bool IsPercent(this Pos p)
     {
         if (p == null)
@@ -50,6 +70,12 @@ public static class PosExtensions
         return p.GetType().Name == "PosFactor";
     }
 
+    /// <inheritdoc cref="IsPercent(Pos)"/>
+    /// <param name="p"><see cref="Pos"/> to classify.</param>
+    /// <param name="percent">The percentage number (typically out of 100) that could be passed
+    /// to <see cref="Pos.Percent(float)"/> to produce <paramref name="p"/> or 0 if <paramref name="p"/>
+    /// is not a percent <see cref="Pos"/>.</param>
+    /// <returns>True if <paramref name="p"/> is <see cref="Pos.Percent(float)"/>.</returns>
     public static bool IsPercent(this Pos p, out float percent)
     {
         if (p != null && p.IsPercent())
@@ -66,6 +92,11 @@ public static class PosExtensions
         return false;
     }
 
+    /// <summary>
+    /// Returns true if <paramref name="p"/> is <see cref="Pos.Center"/>.
+    /// </summary>
+    /// <param name="p"><see cref="Pos"/> to classify.</param>
+    /// <returns>True if <see cref="Pos.Center"/>.</returns>
     public static bool IsCenter(this Pos p)
     {
         if (p == null)
@@ -76,6 +107,11 @@ public static class PosExtensions
         return p.GetType().Name == "PosCenter";
     }
 
+    /// <summary>
+    /// Returns true if <paramref name="p"/> is the result of an <see cref="Pos.AnchorEnd(int)"/>.
+    /// </summary>
+    /// <param name="p"><see cref="Pos"/> to classify.</param>
+    /// <returns>True if <paramref name="p"/> is <see cref="Pos.AnchorEnd(int)"/>.</returns>
     public static bool IsAnchorEnd(this Pos p)
     {
         if (p == null)
@@ -86,6 +122,11 @@ public static class PosExtensions
         return p.GetType().Name == "PosAnchorEnd";
     }
 
+    /// <inheritdoc cref="IsAnchorEnd(Pos)"/>
+    /// <param name="p"><see cref="Pos"/> to classify.</param>
+    /// <param name="margin">The margin passed to <see cref="Pos.AnchorEnd(int)"/>.  Typically should
+    /// be 1 or more otherwise things tend to drift off screen.</param>
+    /// <returns></returns>
     public static bool IsAnchorEnd(this Pos p, out int margin)
     {
         if (p.IsAnchorEnd())
@@ -107,27 +148,25 @@ public static class PosExtensions
         return false;
     }
 
-    public static bool IsRelative(this Pos p, out Pos posView)
+    /// <summary>
+    /// True if <paramref name="p"/> is <see cref="PosType.Relative"/> i.e. the result of
+    /// <see cref="Pos.Right(View)"/>, <see cref="Pos.Bottom(View)"/> etc.
+    /// </summary>
+    /// <param name="p"><see cref="Pos"/> to classify.</param>
+    /// <returns>True if <paramref name="p"/> is the result of a call to one of the relative methods
+    /// (e.g. <see cref="Pos.Right(View)"/>).</returns>
+    public static bool IsRelative(this Pos p)
     {
-        // Terminal.Gui will often use Pos.Combine with RHS of 0 instead of just PosView alone
-        if (p != null && p.IsCombine(out var left, out var right, out _))
-        {
-            if (right.IsAbsolute(out int n) && n == 0)
-            {
-                return left.IsRelative(out posView);
-            }
-        }
-
-        if (p != null && p.GetType().Name == "PosView")
-        {
-            posView = p;
-            return true;
-        }
-
-        posView = 0;
-        return false;
+        return p.IsRelative(out _);
     }
 
+    /// <inheritdoc cref="IsRelative(Pos)"/>
+    /// <param name="p"><see cref="Pos"/> to classify.</param>
+    /// <param name="knownDesigns">All <see cref="Design"/> that we might be expressed as relative to (e.g. see <see cref="Design.GetAllDesigns"/>).</param>
+    /// <param name="relativeTo">The wrapper for the <see cref="View"/> that <paramref name="p"/> is relative to (i.e. what was passed to <see cref="Pos.Left(View)"/> etc).
+    /// or null if <paramref name="p"/> is not <see cref="PosType.Relative"/>.</param>
+    /// <param name="side"><see cref="Enum"/> representing the method that was used e.g. <see cref="Pos.Right(View)"/>, <see cref="Pos.Left(View)"/> etc.</param>
+    /// <returns></returns>
     public static bool IsRelative(this Pos p, IList<Design> knownDesigns, out Design? relativeTo, out Side side)
     {
         relativeTo = null;
@@ -167,6 +206,12 @@ public static class PosExtensions
         return false;
     }
 
+    /// <summary>
+    /// Returns true if <paramref name="p"/> is the summation or subtraction of two
+    /// other <see cref="Pos"/>.
+    /// </summary>
+    /// <param name="p"><see cref="Pos"/> to classify.</param>
+    /// <returns>True if <paramref name="p"/> is a PosCombine.</returns>
     public static bool IsCombine(this Pos p)
     {
         if (p == null)
@@ -177,6 +222,12 @@ public static class PosExtensions
         return p.GetType().Name == "PosCombine";
     }
 
+    /// <inheritdoc cref="IsCombine(Pos)"/>
+    /// <param name="p"><see cref="Pos"/> to classify.</param>
+    /// <param name="left">The left hand operand of the summation/subtraction.</param>
+    /// <param name="right">The right hand operand of the summation/subtraction.</param>
+    /// <param name="add"><see langword="true"/> if addition or <see langword="false"/> if subtraction.</param>
+    /// <returns>True if <paramref name="p"/> is PosCombine.</returns>
     public static bool IsCombine(this Pos p, out Pos left, out Pos right, out bool add)
     {
         if (p.IsCombine())
@@ -202,14 +253,14 @@ public static class PosExtensions
     /// <summary>
     /// Determines the <see cref="PosType"/> of an unknown <see cref="Pos"/> instance.
     /// </summary>
-    /// <param name="p">The <see cref="Pos"/> for which you want to determine type</param>
-    /// <param name="knownDesigns">Designs in the current scope, for populating <paramref name="relativeTo"/> in the case of <see cref="PosType.Relative"/></param>
-    /// <param name="type">The type we determined <paramref name="p"/> to be</param>
-    /// <param name="value">Measure for the Type e.g. for <see cref="PosType.Percent"/> this is the percent value, for <see cref="PosType.Absolute"/> it is the absolute positional value</param>
-    /// <param name="relativeTo">Only populated for <see cref="PosType.Relative"/>, this is the <see cref="Design"/> that <paramref name="p"/> positions itself relative to</param>
-    /// <param name="side">Only populated for <see cref="PosType.Relative"/>, this is the direction of offset from <paramref name="relativeTo"/></param>
-    /// <param name="offset">The offset from the listed position.  Is provided if the input has addition/subtraction e.g. Pos.Center() + 2</param>
-    /// <returns></returns>
+    /// <param name="p">The <see cref="Pos"/> for which you want to determine type.</param>
+    /// <param name="knownDesigns">Designs in the current scope, for populating <paramref name="relativeTo"/> in the case of <see cref="PosType.Relative"/>.</param>
+    /// <param name="type">The type we determined <paramref name="p"/> to be.</param>
+    /// <param name="value">Measure for the Type e.g. for <see cref="PosType.Percent"/> this is the percent value, for <see cref="PosType.Absolute"/> it is the absolute positional value.</param>
+    /// <param name="relativeTo">Only populated for <see cref="PosType.Relative"/>, this is the <see cref="Design"/> that <paramref name="p"/> positions itself relative to.</param>
+    /// <param name="side">Only populated for <see cref="PosType.Relative"/>, this is the direction of offset from <paramref name="relativeTo"/>.</param>
+    /// <param name="offset">The offset from the listed position.  Is provided if the input has addition/subtraction e.g.<code>Pos.Center() + 2</code></param>
+    /// <returns>True if it was possible to determine what <see cref="PosType"/> <paramref name="p"/> is.</returns>
     public static bool GetPosType(this Pos p, IList<Design> knownDesigns, out PosType type, out float value, out Design? relativeTo, out Side side, out int offset)
     {
         type = default;
@@ -270,80 +321,15 @@ public static class PosExtensions
         return false;
     }
 
-    public static CodePrimitiveExpression ToCodePrimitiveExpression(this object? value)
-    {
-        var val = ToPrimitive(value);
-        return val == null ? new CodePrimitiveExpression() : new CodePrimitiveExpression(val);
-    }
-
     /// <summary>
-    /// <para>Returns the primitive value of <paramref name="value"/> or the inputted
-    /// value if it is not possible to convert.  Supports:
-    /// </para>
-    /// <list type="bullet">
-    /// <item>ustring to string</item>
-    /// <item>Absolute Pos to int</item>
-    /// <item>Absolute Dim to int</item>
-    /// </list>
+    /// Returns code to generate <paramref name="p"/> as a snippet for writing out to .Designer.cs files.
     /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
-    public static object? ToPrimitive(this object? value)
+    /// <param name="p"><see cref="Pos"/> to classify.</param>
+    /// <param name="knownDesigns">All <see cref="Design"/> that we might be expressed as relative to (e.g. see <see cref="Design.GetAllDesigns"/>).</param>
+    /// <returns>Code to generate <paramref name="p"/>.</returns>
+    public static string? ToCode(this Pos p, List<Design> knownDesigns)
     {
-        if (value == null)
-        {
-            return null;
-        }
-
-        if (value is ustring u)
-        {
-            return u.ToString();
-        }
-
-        if (value is Rune r)
-        {
-            return (char)r;
-        }
-
-        if (value is Pos p)
-        {
-            // Value is a position e.g. X=2
-            // Pos can be many different subclasses all of which are public
-            // lets deal with only PosAbsolute for now
-            if (p.IsAbsolute(out int n))
-            {
-                return n;
-            }
-            else
-            {
-                throw new NotImplementedException("Only absolute positions are supported at the moment");
-            }
-        }
-        else if (value is Dim d)
-        {
-            // Value is a position e.g. X=2
-            // Pos can be many different subclasses all of which are public
-            // lets deal with only PosAbsolute for now
-            if (d.IsAbsolute(out int n))
-            {
-                return n;
-            }
-            else
-            {
-                throw new NotImplementedException("Only absolute dimensions are supported at the moment");
-            }
-        }
-        else
-        {
-            // assume it is already a primitive
-            return value;
-        }
-    }
-
-    public static string? ToCode(this Pos d, List<Design> knownDesigns)
-    {
-        if (!d.GetPosType(knownDesigns, out var type, out var val, out var relativeTo, out var side, out var offset))
+        if (!p.GetPosType(knownDesigns, out var type, out var val, out var relativeTo, out var side, out var offset))
         {
             // could not determine the type
             return null;
@@ -415,20 +401,16 @@ public static class PosExtensions
         }
     }
 
-    private static string GetMethodNameFor(Side side)
-    {
-        return side.ToString();
-    }
-
     /// <summary>
     /// Creates a <see cref="PosType.Relative"/> by calling appropriate method
-    /// e.g. <see cref="Pos.Top(View)"/>
+    /// e.g. <see cref="Pos.Top(View)"/>.
     /// </summary>
-    /// <param name="relativeTo"></param>
-    /// <param name="side"></param>
-    /// <param name="offset"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentOutOfRangeException"></exception>
+    /// <param name="relativeTo">Wrapper for the <see cref="View"/> that result should be positioned relative to.</param>
+    /// <param name="side"><see cref="Enum"/> indicating which relative method should be used
+    /// (e.g. <see cref="Pos.Left(View)"/>, <see cref="Pos.Bottom(View)"/>).</param>
+    /// <param name="offset">The offset if any to use e.g. if you want:
+    /// <code>Pos.Left(myView) + 5</code></param>
+    /// <returns>The resulting <see cref="Pos"/> of the invoked method (e.g. <see cref="Pos.Right(View)"/>.</returns>
     public static Pos CreatePosRelative(Design relativeTo, Side side, int offset)
     {
         Pos pos;
@@ -455,5 +437,31 @@ public static class PosExtensions
         }
 
         return pos;
+    }
+
+    private static bool IsRelative(this Pos p, out Pos posView)
+    {
+        // Terminal.Gui will often use Pos.Combine with RHS of 0 instead of just PosView alone
+        if (p != null && p.IsCombine(out var left, out var right, out _))
+        {
+            if (right.IsAbsolute(out int n) && n == 0)
+            {
+                return left.IsRelative(out posView);
+            }
+        }
+
+        if (p != null && p.GetType().Name == "PosView")
+        {
+            posView = p;
+            return true;
+        }
+
+        posView = 0;
+        return false;
+    }
+
+    private static string GetMethodNameFor(Side side)
+    {
+        return side.ToString();
     }
 }

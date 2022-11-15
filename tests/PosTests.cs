@@ -17,7 +17,7 @@ internal class PosTests : Tests
     {
         Assert.IsTrue(Pos.At(50).IsAbsolute());
         Assert.IsFalse(Pos.At(50).IsPercent());
-        Assert.IsFalse(Pos.At(50).IsRelative(out _));
+        Assert.IsFalse(Pos.At(50).IsRelative());
         Assert.IsFalse(Pos.At(50).IsAnchorEnd(out _));
 
         Assert.IsTrue(Pos.At(50).IsAbsolute(out int size));
@@ -35,7 +35,7 @@ internal class PosTests : Tests
         Pos p = 50;
         Assert.IsTrue(p.IsAbsolute());
         Assert.IsFalse(p.IsPercent());
-        Assert.IsFalse(p.IsRelative(out _));
+        Assert.IsFalse(p.IsRelative());
         Assert.IsFalse(p.IsAnchorEnd(out _));
 
         Assert.IsTrue(p.IsAbsolute(out int size));
@@ -52,7 +52,7 @@ internal class PosTests : Tests
     {
         Assert.IsFalse(Pos.Percent(24).IsAbsolute());
         Assert.IsTrue(Pos.Percent(24).IsPercent());
-        Assert.IsFalse(Pos.Percent(24).IsRelative(out _));
+        Assert.IsFalse(Pos.Percent(24).IsRelative());
         Assert.IsFalse(Pos.Percent(24).IsAnchorEnd(out _));
 
         Assert.IsTrue(Pos.Percent(24).IsPercent(out var size));
@@ -72,7 +72,7 @@ internal class PosTests : Tests
 
         Assert.IsFalse(Pos.Top(v).IsAbsolute());
         Assert.IsFalse(Pos.Top(v).IsPercent());
-        Assert.IsTrue(Pos.Top(v).IsRelative(out _));
+        Assert.IsTrue(Pos.Top(v).IsRelative());
         Assert.IsFalse(Pos.Top(v).IsAnchorEnd(out _));
 
         Assert.IsTrue(Pos.Top(v).IsRelative(new List<Design> { d }, out var relativeTo, out var side));
@@ -90,7 +90,7 @@ internal class PosTests : Tests
     {
         Assert.IsFalse(Pos.AnchorEnd().IsAbsolute());
         Assert.IsFalse(Pos.AnchorEnd().IsPercent());
-        Assert.IsFalse(Pos.AnchorEnd().IsRelative(out _));
+        Assert.IsFalse(Pos.AnchorEnd().IsRelative());
         Assert.IsTrue(Pos.AnchorEnd().IsAnchorEnd(out _));
 
         Assert.IsTrue(Pos.AnchorEnd().IsAnchorEnd(out var margin));
@@ -107,7 +107,7 @@ internal class PosTests : Tests
     {
         Assert.IsFalse(Pos.AnchorEnd(2).IsAbsolute());
         Assert.IsFalse(Pos.AnchorEnd(2).IsPercent());
-        Assert.IsFalse(Pos.AnchorEnd(2).IsRelative(out _));
+        Assert.IsFalse(Pos.AnchorEnd(2).IsRelative());
         Assert.IsTrue(Pos.AnchorEnd(2).IsAnchorEnd(out _));
 
         Assert.IsTrue(Pos.AnchorEnd(2).IsAnchorEnd(out var margin));
@@ -181,7 +181,7 @@ internal class PosTests : Tests
         Assert.IsFalse(v.X.IsCombine());
         Assert.IsFalse(v.X.IsCenter());
 
-        Assert.IsFalse(v.X.IsRelative(out var _));
+        Assert.IsFalse(v.X.IsRelative());
         Assert.IsFalse(v.X.IsRelative(new List<Design>(), out _, out _));
 
         Assert.IsTrue(v.X.GetPosType(new List<Design>(), out var type, out var val, out _, out _, out _));

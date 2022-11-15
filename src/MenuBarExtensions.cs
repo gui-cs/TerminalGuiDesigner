@@ -10,12 +10,11 @@ public static class MenuBarExtensions
 {
     /// <summary>
     /// Gets the top level selected <see cref="MenuBarItem"/> in the <paramref name="menuBar"/>
-    /// or null if it is not open/no selection is set.  Note that a sub-menu may still be
-    /// present but only the root will be returned.
+    /// or null if it is not open/no selection is set.  Note that this is the top level menu item only
+    /// (e.g. File, Edit).
     /// </summary>
-    /// <param name="menuBar"></param>
-    /// <returns></returns>
-    /// <exception cref="Exception"></exception>
+    /// <param name="menuBar">Returns the currently selected <see cref="MenuItem"/> on the <paramref name="menuBar"/>.</param>
+    /// <returns>Selected <see cref="MenuItem"/> or null if none.</returns>
     public static MenuBarItem? GetSelectedMenuItem(this MenuBar menuBar)
     {
         var selected = (int)GetNonNullPrivateFieldValue("selected", menuBar, typeof(MenuBar));
@@ -26,31 +25,6 @@ public static class MenuBarExtensions
         }
 
         return menuBar.Menus[selected];
-    }
-
-    /// <summary>
-    /// Returns the currently selected <paramref name="menu"/> in a dropdown menu that
-    /// is currently expanded and being explored.
-    /// </summary>
-    /// <param name="menu">Must be the internal Terminal.Gui class "Menu"</param>
-    /// <returns></returns>
-    internal static MenuItem? GetSelectedSubMenuItemFromMenu(View menu)
-    {
-        var menuClass = menu.GetType();
-        if (menuClass.Name != "Menu")
-        {
-            return null;
-        }
-
-        var barItems = (MenuBarItem)GetNonNullPrivateFieldValue("barItems", menu, menuClass);
-        var current = (int)GetNonNullPrivateFieldValue("current", menu, menuClass);
-
-        if (current < 0 || current >= barItems.Children.Length)
-        {
-            return null;
-        }
-
-        return barItems.Children[current];
     }
 
     private static object GetNonNullPrivateFieldValue(string fieldName, object item, Type type)
