@@ -6,26 +6,35 @@ namespace TerminalGuiDesigner;
 /// <summary>
 /// Handles tracking and building commands for when multiple
 /// <see cref="View"/> are selected at once within
-/// the editor
+/// the editor.
 /// </summary>
 public class SelectionManager
 {
-    List<Design> selection = new();
+    private List<Design> selection = new();
+    private ColorScheme? selectedScheme;
+
+    private SelectionManager()
+    {
+    }
 
     /// <summary>
-    /// Collection of all the views currently multi selected
+    /// Gets the Singleton instance of <see cref="SelectionManager"/>.
+    /// </summary>
+    public static SelectionManager Instance { get; } = new();
+
+    /// <summary>
+    /// Gets the collection of all the views currently multi selected.
     /// </summary>
     public IReadOnlyCollection<Design> Selected => this.selection.AsReadOnly();
 
     /// <summary>
-    /// Set to true to prevent changes to the current <see cref="Selected"/>
+    /// Gets or Sets a value indicating whether to prevent changes to the current <see cref="Selected"/>
     /// collection (e.g. if running a modal dialog / context menu).
     /// </summary>
     public bool LockSelection { get; set; }
 
     /// <summary>
-    /// The color scheme to assign to controls that have been
-    /// multi selected
+    /// Gets or Sets the color scheme to assign to controls that have been selected.
     /// </summary>
     public ColorScheme SelectedScheme
     {
@@ -54,13 +63,10 @@ public class SelectionManager
         }
     }
 
-    public static SelectionManager Instance = new();
-    private ColorScheme? selectedScheme;
-
     /// <summary>
-    /// Changes the selection without respecting <see cref="LockSelection"/>
+    /// Changes the selection without respecting <see cref="LockSelection"/>.
     /// </summary>
-    /// <param name="designs"></param>
+    /// <param name="designs">One or more <see cref="Design"/> that you want to select.</param>
     public void ForceSetSelection(params Design[] designs)
     {
         this.SetSelection(false, designs);
@@ -70,32 +76,16 @@ public class SelectionManager
     /// Sets the current <see cref="Selected"/> <see cref="Design"/> collection to <paramref name="designs"/>.
     /// Does nothing if <see cref="LockSelection"/> is true.
     /// </summary>
-    /// <param name="designs"></param>
+    /// <param name="designs">One or more <see cref="Design"/> that you want to select.</param>
     public void SetSelection(params Design[] designs)
-    {        
+    {
         this.SetSelection(true, designs);
     }
 
-    private void SetSelection(bool respectLock, Design[] designs)
-    {
-        if (this.LockSelection && respectLock)
-        {
-            return;
-        }
-
-        // reset anything that was previously selected
-        this.Clear(respectLock);
-
-        // create a new selection based on these
-        this.selection = new List<Design>(designs.Distinct().Where(d => !d.IsRoot));
-
-        foreach (var d in this.selection)
-        {
-            // since the view is selected mark it so
-            d.View.ColorScheme = this.SelectedScheme;
-        }
-    }
-
+    /// <summary>
+    /// Clears <see cref="Selected"/>.
+    /// </summary>
+    /// <param name="respectLock">True to respect the locked/unlocked status of the manager.</param>
     public void Clear(bool respectLock = true)
     {
         if (this.LockSelection && respectLock)
@@ -117,9 +107,10 @@ public class SelectionManager
     /// <summary>
     /// If there is only one element in <see cref="Selected"/> then this is returned
     /// otherwise returns null.  Returns null if there is a multi selection going on
-    /// or nothing is selected
+    /// or nothing is selected.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Returns the only entry in <see cref="Selected"/> or null if no selection or
+    /// ongoing multi-selection.</returns>
     public Design? GetSingleSelectionOrNull()
     {
         if (this.selection.Count == 1)
@@ -131,11 +122,32 @@ public class SelectionManager
     }
 
     /// <summary>
-    /// Returns the container of the currently selected item (if a single item is selected)
+    /// Returns the container of the currently selected item (if a single item is selected).
     /// </summary>
-    /// <returns></returns>
+    /// <returns>If a single <see cref="Design"/> is selected this returns its nearest designed
+    /// container (ignoring internal artifacts of Terminal.Gui e.g. ContentView).</returns>
     public Design? GetMostSelectedContainerOrNull()
     {
         return this.GetSingleSelectionOrNull()?.View.GetNearestContainerDesign();
+    }
+
+    private void SetSelection(bool respectLock, Design[] designs)
+    {
+        if (this.LockSelection && respectLock)
+        {
+            return;
+        }
+
+        // reset anything that was previously selected
+        this.Clear(respectLock);
+
+        // create a new selection based on these
+        this.selection = new List<Design>(designs.Distinct().Where(d => !d.IsRoot));
+
+        foreach (var d in this.selection)
+        {
+            // since the view is selected mark it so
+            d.View.ColorScheme = this.SelectedScheme;
+        }
     }
 }
