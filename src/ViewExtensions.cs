@@ -3,6 +3,9 @@ using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
 
+/// <summary>
+/// Extension methods for <see cref="View"/> <see langword="class"/>.
+/// </summary>
 public static class ViewExtensions
 {
     /// <summary>
@@ -92,6 +95,18 @@ public static class ViewExtensions
         }
     }
 
+    /// <summary>
+    /// <para>
+    /// Returns the <see cref="View.Text"/> of <paramref name="view"/> in a way
+    /// that avoids the Terminal.Gui casting issues around use of the <see langword="new"/>
+    /// keyword on this property.
+    /// </para>
+    /// <para>
+    /// See https://github.com/gui-cs/Terminal.Gui/issues/1619 for more info.
+    /// </para>
+    /// </summary>
+    /// <param name="view">The <see cref="View"/> whose text you want.</param>
+    /// <returns>Text of <paramref name="view"/>.</returns>
     public static string GetActualText(this View view)
     {
         if (view is TextField f)
@@ -197,6 +212,12 @@ public static class ViewExtensions
         }
     }
 
+    /// <summary>
+    /// Returns true if <paramref name="v"/> is a Type that is designed to store other
+    /// sub-views in it (<see cref="Window"/>, <see cref="FrameView"/> etc).
+    /// </summary>
+    /// <param name="v">The <see cref="View"/> to classify.</param>
+    /// <returns>True if <paramref name="v"/> is designed to host sub-controls.</returns>
     public static bool IsContainerView(this View v)
     {
         var type = v.GetType();
@@ -220,6 +241,12 @@ public static class ViewExtensions
             type == typeof(View) || type.Name.Equals("ContentView");
     }
 
+    /// <summary>
+    /// True if <paramref name="v"/> has no visible border and is designed
+    /// to contain other views.
+    /// </summary>
+    /// <param name="v"><see cref="View"/> to classify.</param>
+    /// <returns>True if no visible border and <see cref="ViewExtensions.IsContainerView(View)"/>.</returns>
     public static bool IsBorderlessContainerView(this View v)
     {
         if (v is TabView tabView)
@@ -235,6 +262,16 @@ public static class ViewExtensions
         return false;
     }
 
+    /// <summary>
+    /// Finds the deepest view at <paramref name="m"/> screen coordinates.
+    /// </summary>
+    /// <param name="w">Any <see cref="View"/> which is visible and mounted below
+    /// <see cref="Application.Top"/>.</param>
+    /// <param name="m">Screen coordinates.</param>
+    /// <param name="isBorder">True if the click lands on the border of the returned <see cref="View"/>.</param>
+    /// <param name="isLowerRight">True if the click lands in the lower right of the returned <see cref="View"/>.</param>
+    /// <param name="ignoring">One or more <see cref="View"/> to ignore (click through) when performing the hit test.</param>
+    /// <returns>The <see cref="View"/> at the given screen location or null if none found.</returns>
     public static View? HitTest(this View w, MouseEvent m, out bool isBorder, out bool isLowerRight, params View[] ignoring)
     {
         // hide the views while we perform the hit test
@@ -275,7 +312,6 @@ public static class ViewExtensions
 
         return hit;
     }
-
 
     /// <summary>
     /// Returns true if the current screen bounds of <paramref name="v"/> intersect
@@ -336,24 +372,6 @@ public static class ViewExtensions
         }
 
         return new Rect(x, y, view.Frame.Width, view.Frame.Height);
-    }
-
-    public static View? FindDeepestView(View start, int x, int y)
-    {
-        var method = typeof(Application).GetMethod(
-            nameof(FindDeepestView),
-            BindingFlags.Static | BindingFlags.NonPublic,
-            new[] { typeof(View), typeof(int), typeof(int), typeof(int).MakeByRefType(), typeof(int).MakeByRefType() });
-
-        if (method == null)
-        {
-            throw new Exception("Static method FindDeepestView not found on Application class");
-        }
-
-        int resx = 0;
-        int resy = 0;
-
-        return (View?)method.Invoke(null, new object[] { start, x, y, resx, resy });
     }
 
     private static bool HasNoBorderProperty(this View v)

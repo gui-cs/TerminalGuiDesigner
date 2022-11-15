@@ -3,17 +3,19 @@ using static Terminal.Gui.TabView;
 
 namespace TerminalGuiDesigner;
 
+/// <summary>
+/// Extension methods for <see cref="TabView"/>.
+/// </summary>
 public static class TabViewExtensions
 {
     /// <summary>
     /// Inserts or moves <paramref name="tab"/> to <paramref name="atIndex"/> and makes it
-    /// the selected tab
+    /// the <see cref="TabView.SelectedTab"/>.
     /// </summary>
-    /// <param name="tv"></param>
-    /// <param name="atIndex"></param>
-    /// <param name="tab"></param>
-    /// <returns></returns>
-    public static bool InsertTab(this TabView tv, int atIndex, Tab tab)
+    /// <param name="tv">The <see cref="TabView"/> you want to make changes to.</param>
+    /// <param name="atIndex">The index you want to move/insert at.</param>
+    /// <param name="tab">The tab to move/insert.</param>
+    public static void InsertTab(this TabView tv, int atIndex, Tab tab)
     {
         var list = tv.Tabs.ToList();
 
@@ -40,7 +42,5 @@ public static class TabViewExtensions
             // the tab in it's new position
             tv.AddTab(t, i == newIndex);
         }
-
-        return true;
     }
 }
