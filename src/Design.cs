@@ -513,7 +513,7 @@ public class Design
 
         var allDesigns = root.GetAllDesigns();
 
-        var name = CodeDomArgs.MakeValidFieldName($"{viewType.Name.ToLower()}");
+        var name = CodeDomArgs.MakeValidFieldName($"{viewType.Name}");
         return name.MakeUnique(allDesigns.Select(d => d.FieldName));
     }
 

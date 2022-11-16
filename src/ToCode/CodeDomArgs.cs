@@ -1,5 +1,6 @@
 ﻿using System.CodeDom;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace TerminalGuiDesigner.ToCode;
 
@@ -59,14 +60,43 @@ public class CodeDomArgs
     /// Passing null or empty <paramref name="name"/> will return the value "blank".
     /// </remarks>
     /// <param name="name">Value you want to turn into a valid field name.</param>
+    /// <param name="isPublic"><see langword="true"/> if the name is for a public member
+    /// so should have a capital letter at start. <see langword="false"/> for private members
+    /// which should start with a lower case letter.</param>
     /// <returns><paramref name="name"/>.</returns>
-    public static string MakeValidFieldName(string? name)
+    public static string MakeValidFieldName(string? name, bool isPublic = false)
     {
         name = string.IsNullOrWhiteSpace(name) ? "blank" : name;
+
+        // if space is removed and next character is not upper then upper it
+        // to produce camel casing (e.g. "bob is great" becomes "bobIsGreat")
+        name = Regex.Replace(
+            name,
+            "(\\s[a-z])",
+            (m) => char.ToUpper(m.Groups[1].Value[1]).ToString());
+
+        // replace any remaining whitespace, punctuation etc
         name = Regex.Replace(name, "\\W", string.Empty);
 
         // remove leading digits
         name = Regex.Replace(name, "^\\d+", string.Empty);
+
+        if (isPublic)
+        {
+            // if public and starts with lower case letter, replace it with upper
+            name = Regex.Replace(
+                name,
+                "^([a-z])",
+                (m) => char.ToUpper(m.Groups[1].Value[0]).ToString());
+        }
+        else
+        {
+            // if private and starts with an upper case letter, replace it with lower
+            name = Regex.Replace(
+                name,
+                "^([A-Z])",
+                (m) => char.ToLower(m.Groups[1].Value[0]).ToString());
+        }
 
         return name;
     }
@@ -81,10 +111,13 @@ public class CodeDomArgs
     /// </remarks>
     /// <param name="name">String to convert to a valid non duplicate
     /// member name.</param>
+    /// <param name="isPublic"><see langword="true"/> if the name is for a public member
+    /// so should have a capital letter at start. <see langword="false"/> for private members
+    /// which should start with a lower case letter.</param>
     /// <returns>Valid non duplicate non null member name.</returns>
-    public string GetUniqueFieldName(string? name)
+    public string GetUniqueFieldName(string? name, bool isPublic = false)
     {
-        name = MakeValidFieldName(name);
+        name = MakeValidFieldName(name, isPublic);
 
         name = name.MakeUnique(this.FieldNamesUsed);
 

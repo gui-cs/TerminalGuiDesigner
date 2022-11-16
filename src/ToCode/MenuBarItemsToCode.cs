@@ -147,12 +147,6 @@ public class MenuBarItemsToCode : ToCodeBase
         // Make sure name + suffix is unique and not null
         var fname = args.GetUniqueFieldName(title + suffix);
 
-        // ensure name is camel case since MenuItem are created as private fields
-        if (char.IsUpper(fname[0]))
-        {
-            return char.ToLower(fname[0]) + fname.Substring(1);
-        }
-
         return fname;
     }
 }

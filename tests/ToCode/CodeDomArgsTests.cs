@@ -8,11 +8,14 @@ namespace UnitTests.ToCode
 
         public static object[] cases = new object[]{
             new object[]{"fff", "fff"},
-            new object[]{ "33Dalmations", "Dalmations"},
+            new object[]{ "33Dalmations", "dalmations"},
+            new object[]{ "Dalmations33", "dalmations33"},
             new object[]{ "", "blank" },
+            new object[]{ "bob is great", "bobIsGreat" },
             new object[]{ "\t", "blank" },
             new object?[]{ null, "blank" },
-            new object[]{ "test\r\nffish\r\n", "testffish" },
+            new object[]{ "test\r\nffish\r\n", "testFfish" },
+            new object[]{ "test\r\nffish\r\n", "testFfish" },
         };
 
         [TestCaseSource("cases")]
