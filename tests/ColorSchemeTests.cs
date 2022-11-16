@@ -296,9 +296,5 @@ internal class ColorSchemeTests : Tests
             Normal = new Attribute(Color.Green, Color.Black),
             Focus = new Attribute(Color.Cyan, Color.Black),
         };
-
-#pragma warning disable IDE0044 // Add readonly modifier
-        private int ccc;
-#pragma warning restore IDE0044 // Add readonly modifier
     }
 }
