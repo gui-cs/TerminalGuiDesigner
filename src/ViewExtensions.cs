@@ -372,7 +372,11 @@ public static class ViewExtensions
     /// <returns>Collection ordered by screen position.</returns>
     public static IEnumerable<View> OrderViewsByScreenPosition(IEnumerable<View> views)
     {
-        return views.OrderBy(v => v.Frame.Y).ThenBy(v => v.Frame.X);
+        // always put MenuBar last so that it appears top in z order
+        // but order everything else top left to bottom right
+        return views
+            .OrderBy(v => v is MenuBar ? int.MaxValue : 0)
+            .ThenBy(v => v.Frame.Y).ThenBy(v => v.Frame.X);
     }
 
     /// <summary>
