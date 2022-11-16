@@ -54,6 +54,22 @@ public class DeleteColorSchemeOperation : Operation
         ColorSchemeManager.Instance.AddOrUpdateScheme(this.ToDelete.Name, this.ToDelete.Scheme, this.rootDesign);
     }
 
+    /// <inheritdoc/>
+    protected override bool DoImpl()
+    {
+        foreach (var u in this.users)
+        {
+            // we are no longer using a custom scheme
+            u.State.OriginalScheme = null;
+
+            // we use the default (usually thats to inherit from parent)
+            u.View.ColorScheme = this.GetDefaultColorScheme(u);
+        }
+
+        ColorSchemeManager.Instance.Remove(this.ToDelete);
+        return true;
+    }
+
     private ColorScheme? GetDefaultColorScheme(Design d)
     {
         if (d.IsRoot)
@@ -72,21 +88,5 @@ public class DeleteColorSchemeOperation : Operation
         }
 
         return null;
-    }
-
-    /// <inheritdoc/>
-    protected override bool DoImpl()
-    {
-        foreach (var u in this.users)
-        {
-            // we are no longer using a custom scheme
-            u.State.OriginalScheme = null;
-
-            // we use the default (usually thats to inherit from parent)
-            u.View.ColorScheme = this.GetDefaultColorScheme(u);
-        }
-
-        ColorSchemeManager.Instance.Remove(this.ToDelete);
-        return true;
     }
 }

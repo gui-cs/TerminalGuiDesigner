@@ -2,12 +2,14 @@ using Terminal.Gui;
 
 namespace TerminalGuiDesigner.UI.Windows;
 
-class GetTextDialog
+/// <summary>
+/// Popup prompting user to enter some text.
+/// </summary>
+internal class GetTextDialog
 {
     private readonly DialogArgs args;
     private readonly string? initialValue;
     private readonly Window win;
-    public string? ResultText;
     private readonly TextView textField;
     private bool okClicked = false;
 
@@ -93,6 +95,8 @@ class GetTextDialog
         this.win.Add(btnCancel);
         this.win.Add(btnClear);
     }
+
+    public string? ResultText { get; set; }
 
     public bool ShowDialog()
     {

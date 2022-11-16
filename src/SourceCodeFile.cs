@@ -1,17 +1,30 @@
 ﻿namespace TerminalGuiDesigner;
 
+/// <summary>
+/// Describes the pair of files (.cs and .Designer.cs) that makes up the source code
+/// to a root <see cref="Design"/> that is can be openned in the editor.
+/// </summary>
 public class SourceCodeFile
 {
-    public FileInfo CsFile { get; }
-
-    public FileInfo DesignerFile { get; }
-
     /// <summary>
-    /// The name of the InitializeComponent() method.  i.e. "InitializeComponent"
+    /// The name of the InitializeComponent() method.  i.e. "InitializeComponent".
     /// </summary>
     public const string InitializeComponentMethodName = "InitializeComponent";
 
+    /// <summary>
+    /// The .Designer.cs extension on files.
+    /// </summary>
     public const string ExpectedExtension = ".Designer.cs";
+
+    /// <summary>
+    /// Gets the .cs file (e.g. MyView.cs).
+    /// </summary>
+    public FileInfo CsFile { get; }
+
+    /// <summary>
+    /// Gets the .Designer.cs file (e.g. MyView.Designer.cs).
+    /// </summary>
+    public FileInfo DesignerFile { get; }
 
     /// <summary>
     /// Declares a new pair of files (e.g. MyClass.cs and MyClass.Designer.cs) which

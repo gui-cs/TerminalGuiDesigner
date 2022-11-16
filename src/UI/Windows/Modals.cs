@@ -1,7 +1,18 @@
 ﻿namespace TerminalGuiDesigner.UI.Windows;
 
+/// <summary>
+/// Static methods for launching popups that illicit choices from user (e.g. <see cref="GetInt(string, string, int?, out int?)"/>).
+/// </summary>
 public class Modals
 {
+    /// <summary>
+    /// Prompts user to enter a number.
+    /// </summary>
+    /// <param name="windowTitle">Title for the pop-up.</param>
+    /// <param name="entryLabel">Text to show next to the entry field.</param>
+    /// <param name="initialValue">Initial value to put into the entry field.</param>
+    /// <param name="result">Output value user typed.</param>
+    /// <returns>True if user confirmed a choice.</returns>
     public static bool GetInt(string windowTitle, string entryLabel, int? initialValue, out int? result)
     {
         if (GetString(windowTitle, entryLabel, initialValue.ToString(), out var newValue))
@@ -23,7 +34,7 @@ public class Modals
         return false;
     }
 
-    public static bool GetFloat(string windowTitle, string entryLabel, float? initialValue, out float? result)
+    internal static bool GetFloat(string windowTitle, string entryLabel, float? initialValue, out float? result)
     {
         if (GetString(windowTitle, entryLabel, initialValue.ToString(), out var newValue))
         {
@@ -44,7 +55,7 @@ public class Modals
         return false;
     }
 
-    public static bool GetArray(string windowTitle, string entryLabel, Type arrayElement, Array? initialValue, out Array? result)
+    internal static bool GetArray(string windowTitle, string entryLabel, Type arrayElement, Array? initialValue, out Array? result)
     {
         var dlg = new GetTextDialog(
             new DialogArgs()
@@ -81,7 +92,7 @@ public class Modals
         return false;
     }
 
-    public static bool GetString(string windowTitle, string entryLabel, string? initialValue, out string? result, bool multiLine = false)
+    internal static bool GetString(string windowTitle, string entryLabel, string? initialValue, out string? result, bool multiLine = false)
     {
         var dlg = new GetTextDialog(
             new DialogArgs()
@@ -101,12 +112,12 @@ public class Modals
         return false;
     }
 
-    public static bool Get<T>(string prompt, string okText, T[] collection, out T? selected)
+    internal static bool Get<T>(string prompt, string okText, T[] collection, out T? selected)
     {
         return Get(prompt, okText, true, collection, o => o?.ToString() ?? "Null", false, out selected);
     }
 
-    public static bool Get<T>(string prompt, string okText, bool addSearch, T[] collection, Func<T?, string> displayMember, bool addNull, out T? selected)
+    internal static bool Get<T>(string prompt, string okText, bool addSearch, T[] collection, Func<T?, string> displayMember, bool addNull, out T? selected)
     {
         var pick = new BigListBox<T>(prompt, okText, addSearch, collection, displayMember, addNull);
         bool toReturn = pick.ShowDialog();

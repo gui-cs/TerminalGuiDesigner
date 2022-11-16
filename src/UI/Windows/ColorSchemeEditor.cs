@@ -12,11 +12,25 @@ namespace TerminalGuiDesigner.UI.Windows {
     using Terminal.Gui;
     using Attribute = Terminal.Gui.Attribute;
 
+    /// <summary>
+    /// Editor for a <see cref="ColorScheme"/>.
+    /// </summary>
     public partial class ColorSchemeEditor {
         
+        /// <summary>
+        /// All colors to use in all <see cref="View"/> states (focused, normal etc).
+        /// </summary>
         public ColorScheme Result {get;}
+        
+        /// <summary>
+        /// True if dialog was closed without clicking Ok (e.g. Cancel or Ctrl+Q).
+        /// </summary>
         public bool Cancelled { get; set; } = true;
 
+        /// <summary>
+        /// Creates a new instance of the <see cref="ColorSchemeEditor"/> class.
+        /// </summary>
+        /// <param name="scheme"></param>
         public ColorSchemeEditor(ColorScheme scheme) {
             InitializeComponent();
 

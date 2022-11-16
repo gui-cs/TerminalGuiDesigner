@@ -38,16 +38,21 @@ public class BigListBox<T>
     private bool okClicked = false;
 
     /// <summary>
-    /// Public constructor that uses normal (contains text) search to filter the fixed <paramref name="collection"/>
+    /// Initializes a new instance of the <see cref="BigListBox{T}"/> class.
     /// </summary>
-    /// <param name="prompt"></param>
-    /// <param name="okText"></param>
-    /// <param name="addSearch"></param>
-    /// <param name="collection"></param>
-    /// <param name="displayMember">What to display in the list box (defaults to <see cref="object.ToString"/></param>
-    /// <param name="addNull">Creates a selection option "Null" that returns a null selection</param>
-    public BigListBox(string prompt, string okText, bool addSearch, IList<T> collection,
-        Func<T?, string> displayMember, bool addNull)
+    /// <param name="prompt">User message indicating what they are being asked to select.</param>
+    /// <param name="okText">The confirmation text on the 'ok' button.</param>
+    /// <param name="addSearch">True to add search text box.</param>
+    /// <param name="collection">Things to make user pick from.</param>
+    /// <param name="displayMember">What to display in the list box (defaults to <see cref="object.ToString"/>.</param>
+    /// <param name="addNull">Creates a selection option "Null" that returns a null selection.</param>
+    public BigListBox(
+        string prompt,
+        string okText,
+        bool addSearch,
+        IList<T> collection,
+        Func<T?, string> displayMember,
+        bool addNull)
     {
         this.okText = okText;
         this.addSearch = addSearch;
@@ -177,45 +182,6 @@ public class BigListBox<T>
         }
     }
 
-    private class ListViewObject<T2>
-        where T2 : T
-    {
-        private readonly Func<T2?, string> displayFunc;
-
-        public T2? Object { get; }
-
-        public ListViewObject(T2? o, Func<T2?, string> displayFunc)
-        {
-            this.displayFunc = displayFunc;
-            this.Object = o;
-        }
-
-        public override string ToString()
-        {
-            return this.displayFunc(this.Object);
-        }
-
-        public override int GetHashCode()
-        {
-            if (this.Object == null)
-            {
-                return 0;
-            }
-
-            return this.Object.GetHashCode();
-        }
-
-        public override bool Equals(object? obj)
-        {
-            if (obj is ListViewObject<T2> other)
-            {
-                return this.Object?.Equals(other.Object) ?? false;
-            }
-
-            return false;
-        }
-    }
-
     /// <summary>
     /// Runs the dialog as modal blocking and returns true if a selection was made.
     /// </summary>
@@ -333,5 +299,44 @@ public class BigListBox<T>
         }
 
         return this.publicCollection;
+    }
+
+    private class ListViewObject<T2>
+        where T2 : T
+    {
+        private readonly Func<T2?, string> displayFunc;
+
+        public ListViewObject(T2? o, Func<T2?, string> displayFunc)
+        {
+            this.displayFunc = displayFunc;
+            this.Object = o;
+        }
+
+        public T2? Object { get; }
+
+        public override string ToString()
+        {
+            return this.displayFunc(this.Object);
+        }
+
+        public override int GetHashCode()
+        {
+            if (this.Object == null)
+            {
+                return 0;
+            }
+
+            return this.Object.GetHashCode();
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is ListViewObject<T2> other)
+            {
+                return this.Object?.Equals(other.Object) ?? false;
+            }
+
+            return false;
+        }
     }
 }

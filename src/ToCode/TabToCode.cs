@@ -43,7 +43,7 @@ public class TabToCode : ToCodeBase
             args,
             tabName,
             typeof(Tab),
-            new CodePrimitiveExpression(this.tab.Text.ToPrimitive()),
+            this.tab.Text.ToCodePrimitiveExpression(),
             new CodeSnippetExpression("new View()"));
 
         // make the Tab.View Dim.Fill

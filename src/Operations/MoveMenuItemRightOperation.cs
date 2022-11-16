@@ -92,6 +92,7 @@ public class MoveMenuItemRightOperation : MenuItemOperation
 
         // update the main menu
         this.Parent.Children = children.ToArray();
+
         // update the sub-menu
         addTo.Children = submenuChildren.ToArray();
 

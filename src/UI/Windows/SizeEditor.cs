@@ -11,6 +11,9 @@ namespace TerminalGuiDesigner.UI.Windows
 {
     using Terminal.Gui;
 
+    /// <summary>
+    /// Popup editor for the <see cref="Size"/> class.
+    /// </summary>
     public partial class SizeEditor
     {
 
@@ -18,8 +21,16 @@ namespace TerminalGuiDesigner.UI.Windows
         /// The users edited <see cref="Size"/> 
         /// </summary>
         public Size Result { get; private set; }
+
+        /// <summary>
+        /// True if user cancelled the dialog instead of hitting "Ok".
+        /// </summary>
         public bool Cancelled { get; private set; }
 
+        /// <summary>
+        /// Creates a new instance of the <see cref="SizeEditor"/> class.
+        /// </summary>
+        /// <param name="s"></param>
         public SizeEditor(Size s)
         {
             InitializeComponent();

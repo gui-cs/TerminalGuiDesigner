@@ -11,13 +11,32 @@ namespace TerminalGuiDesigner {
     using System;
     using Terminal.Gui;
     
-    
+    /// <summary>
+    /// Pop-up editor for creating a <see cref="Point"/>.
+    /// </summary>
     public partial class PointEditor {
 
-        public bool Cancelled {get;set;}
-        public float ResultX {get;set;}
-        public float ResultY {get;set;}
-        
+        /// <summary>
+        /// Gets a value indicating whether user cancelled the dialog before
+        /// making a choice.
+        /// </summary>
+        public bool Cancelled {get;private set;}
+
+        /// <summary>
+        /// Gets user entered value for <see cref="Point.X"/>
+        /// </summary>
+        public float ResultX {get;private set;}
+
+        /// <summary>
+        /// Gets user entered value for <see cref="Point.Y"/>
+        /// </summary>
+        public float ResultY {get;private set;}
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="PointEditor"/> class.
+        /// </summary>
+        /// <param name="x">Initial value to show in dialog for X.</param>
+        /// <param name="y">Initial value to show in dialog for Y.</param>
         public PointEditor(float x, float y) {
             InitializeComponent();
 

@@ -12,14 +12,25 @@ using Attribute = Terminal.Gui.Attribute;
 
 namespace TerminalGuiDesigner.UI.Windows
 {
-
+    /// <summary>
+    /// Prompts user to pick a two <see cref="Color"/> to make an <see cref="Attribute"/>.
+    /// </summary>
     public partial class ColorPicker
     {
-
-
+        /// <summary>
+        /// The combination of foreground and background <see cref="Color"/> the user chose.
+        /// </summary>
         public Terminal.Gui.Attribute? Result { get; internal set; }
+
+        /// <summary>
+        /// True if user closed dialog with cancel.
+        /// </summary>
         public bool Cancelled { get; internal set; }
 
+        /// <summary>
+        /// Creates a new instance of the <see cref="ColorPicker"/> class.
+        /// </summary>
+        /// <param name="currentValue"></param>
         public ColorPicker(Attribute? currentValue)
         {
             InitializeComponent();

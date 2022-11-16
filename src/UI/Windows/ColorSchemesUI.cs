@@ -16,20 +16,28 @@ namespace TerminalGuiDesigner.UI.Windows {
     using static Terminal.Gui.TableView;
     using Attribute = Terminal.Gui.Attribute;
 
+    /// <summary>
+    /// View that shows all <see cref="ColorScheme"/> tracked by <see cref="ColorSchemeManager"/>.
+    /// This is all the custom schemes user has created plus any default ones supplied with the designer.
+    /// </summary>
     public partial class ColorSchemesUI {
         const string NameColumn = "Name";
         const string EditColumnName = " ";
         const string DeleteColumnName = "  ";
 
-        public Design Design { get; }
+        private Design design;
 
         private NamedColorScheme[] _schemes;
 
+        /// <summary>
+        /// Creates a new instance of the <see cref="ColorSchemesUI"/> class.
+        /// </summary>
+        /// <param name="design"></param>
         public ColorSchemesUI(Design design) {
             
             InitializeComponent();
 
-            Design = design;
+            this.design = design;
 
             tvColorSchemes.NullSymbol = " ";
 
@@ -125,7 +133,7 @@ namespace TerminalGuiDesigner.UI.Windows {
                 if (edit.Cancelled)
                     return;
                 
-                ColorSchemeManager.Instance.AddOrUpdateScheme(_schemes[val].Name, edit.Result, Design.GetRootDesign());
+                ColorSchemeManager.Instance.AddOrUpdateScheme(_schemes[val].Name, edit.Result, design.GetRootDesign());
                 BuildDataTableRows();
             }
 
@@ -134,7 +142,7 @@ namespace TerminalGuiDesigner.UI.Windows {
                 var oldName = GetName(val);
                 if(Modals.GetString("Rename Color Scheme","Name",oldName,out var newName) && !string.IsNullOrWhiteSpace(newName))
                 {
-                    ColorSchemeManager.Instance.RenameScheme(oldName,Design.GetUniqueFieldName(newName));
+                    ColorSchemeManager.Instance.RenameScheme(oldName,design.GetUniqueFieldName(newName));
                     BuildDataTableRows();
                 }
             }
@@ -144,13 +152,13 @@ namespace TerminalGuiDesigner.UI.Windows {
                 // actually its the [+] button
                 if(val == int.MaxValue)
                 {
-                    ColorSchemeManager.Instance.AddOrUpdateScheme(GetNewColorName(),new ColorScheme(), Design.GetRootDesign());
+                    ColorSchemeManager.Instance.AddOrUpdateScheme(GetNewColorName(),new ColorScheme(), design.GetRootDesign());
                     BuildDataTableRows();
                     tvColorSchemes.SelectedRow++;
                 }
                 else
                 {
-                    var cmd = new DeleteColorSchemeOperation(Design,_schemes[val]);
+                    var cmd = new DeleteColorSchemeOperation(design,_schemes[val]);
                     
                     if(cmd.IsImpossible)
                         return;
@@ -165,7 +173,7 @@ namespace TerminalGuiDesigner.UI.Windows {
 
         private string GetNewColorName()
         {  
-            return Design.GetUniqueFieldName("scheme");
+            return design.GetUniqueFieldName("scheme");
         }
 
         private string GetDeleteString(object arg)

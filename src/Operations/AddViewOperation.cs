@@ -71,16 +71,6 @@ public class AddViewOperation : Operation
         v.SetNeedsDisplay();
     }
 
-    private View GetViewToAddTo()
-    {
-        if (this.to.View is TabView tabView)
-        {
-            return tabView.SelectedTab.View;
-        }
-
-        return this.to.View;
-    }
-
     /// <inheritdoc/>
     protected override bool DoImpl()
     {
@@ -117,5 +107,15 @@ public class AddViewOperation : Operation
 
         v.SetNeedsDisplay();
         return true;
+    }
+
+    private View GetViewToAddTo()
+    {
+        if (this.to.View is TabView tabView)
+        {
+            return tabView.SelectedTab.View;
+        }
+
+        return this.to.View;
     }
 }

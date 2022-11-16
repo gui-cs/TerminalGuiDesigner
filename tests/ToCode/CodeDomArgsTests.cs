@@ -11,7 +11,7 @@ namespace UnitTests.ToCode
             new object[]{ "33Dalmations", "Dalmations"},
             new object[]{ "", "blank" },
             new object[]{ "\t", "blank" },
-            new object[]{ null, "blank" },
+            new object?[]{ null, "blank" },
             new object[]{ "test\r\nffish\r\n", "testffish" },
         };
 

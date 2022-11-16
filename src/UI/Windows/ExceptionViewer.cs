@@ -4,8 +4,17 @@ using Terminal.Gui;
 
 namespace TerminalGuiDesigner.UI.Windows;
 
+/// <summary>
+/// Popup dialog that shows an <see cref="Exception"/> including toggle for <see cref="Exception.StackTrace"/>.
+/// </summary>
 public class ExceptionViewer
 {
+    /// <summary>
+    /// Launches a new modal instance of <see cref="ExceptionViewer"/> showing <paramref name="exception"/>.
+    /// </summary>
+    /// <param name="errorText">Message that describes what was going on when <paramref name="exception"/>
+    /// occurred (e.g. "Could not open file x").</param>
+    /// <param name="exception"><see cref="Exception"/> to show.</param>
     public static void ShowException(string errorText, Exception exception)
     {
         var msg = GetExceptionText(errorText, exception, false);

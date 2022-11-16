@@ -22,7 +22,7 @@ public class NameProperty : Property
     /// Initializes a new instance of the <see cref="NameProperty"/> class.
     /// </summary>
     /// <param name="design">Wrapper for a <see cref="View"/> for which you want
-    /// user to be able to adjust <see cref="Design.FieldName"/></param>
+    /// user to be able to adjust <see cref="Design.FieldName"/>.</param>
     /// <exception cref="MissingFieldException">Thrown if reflection cannot find
     /// <see cref="Design.FieldName"/>.</exception>
     public NameProperty(Design design)

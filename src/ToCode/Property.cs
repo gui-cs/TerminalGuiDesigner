@@ -243,8 +243,9 @@ public class Property : ToCodeBase
 
         if (val is ListWrapper w)
         {
-            // Create an Expression like:
-            // new ListWrapper(new string[]{"bob","frank"})
+            /* Create an Expression like:
+             * new ListWrapper(new string[]{"bob","frank"})
+             */
 
             var a = new CodeArrayCreateExpression();
             Type? listType = null;
@@ -289,7 +290,7 @@ public class Property : ToCodeBase
 
             var values = ((Array)val).ToList();
             return new CodeArrayCreateExpression(
-                elementType,
+                elementType ?? throw new Exception($"Type {type} was an Array but {nameof(Type.GetElementType)} returned null"),
                 values.Select(v => v.ToCodePrimitiveExpression()).ToArray());
         }
 

@@ -15,19 +15,36 @@ namespace TerminalGuiDesigner.UI.Windows
     using TerminalGuiDesigner.ToCode;
     using TerminalGuiDesigner.UI.Windows;
 
+    /// <summary>
+    /// Editor for the <see cref="Pos"/> type.
+    /// </summary>
     public partial class PosEditor : Dialog {
 
+        private Design design;
+        private Property property;
+
+        /// <summary>
+        /// Users configured <see cref="Pos"/> (assembled from radio button
+        /// selected and text values entered - offset etc).
+        /// </summary>
         public Pos Result { get; private set; }
+
+        /// <summary>
+        /// True if user cancelled the dialog instead of hitting Ok.
+        /// </summary>
         public bool Cancelled { get; private set; }
 
-        public Design Design { get; }
-        public Property Property { get; }
-
+        /// <summary>
+        /// Prompt user to create a new <see cref="Pos"/> value to populate
+        /// <paramref name="property"/> on <paramref name="design"/> with.
+        /// </summary>
+        /// <param name="design">What to set the value on.</param>
+        /// <param name="property">The property to set (must be of type <see cref="Pos"/>).</param>
         public PosEditor(Design design, Property property) {
             InitializeComponent();
             
-            Design = design;
-            Property = property;
+            this.design = design;
+            this.property = property;
 
 
             Title = "Pos Designer";
@@ -40,7 +57,7 @@ namespace TerminalGuiDesigner.UI.Windows
             Cancelled = true;
             Modal = true;
 
-            var siblings = Design.GetSiblings().ToList();
+            var siblings = design.GetSiblings().ToList();
 
             ddRelativeTo.SetSource(siblings);
             ddRelativeTo.AddKeyBinding(Key.CursorDown, Command.Expand);
@@ -202,7 +219,7 @@ namespace TerminalGuiDesigner.UI.Windows
             Application.RequestStop();
         }
 
-        public bool BuildPos(out Pos result)
+        private bool BuildPos(out Pos result)
         {
             // pick what type of Pos they want
             var type = GetPosType();

@@ -9,15 +9,16 @@ namespace TerminalGuiDesigner;
 public static class ViewExtensions
 {
     /// <summary>
-    /// Returns the subviews of <paramref name="v"/> skipping out any
+    /// Returns the sub-views of <paramref name="v"/> skipping out any
     /// public views used by the Terminal.Gui API e.g. the 'ContentView'
-    /// invisible sub view of the 'Window' class
+    /// invisible sub view of the 'Window' class.
     /// <para>
-    /// Also unpacks Tabs in a <see cref="TabView"/>> to return all of those too
+    /// Also unpacks Tabs in a <see cref="TabView"/>> to return all of those too.
     /// </para>
     /// </summary>
-    /// <param name="v"></param>
-    /// <returns></returns>
+    /// <param name="v"><see cref="View"/> whose children you want to find.</param>
+    /// <returns>All <see cref="View"/> that user perceives as within <paramref name="v"/> skipping over
+    /// any Terminal.Gui artifacts (e.g. ContentView).</returns>
     public static IList<View> GetActualSubviews(this View v)
     {
         if (v is Window w)
@@ -40,14 +41,16 @@ public static class ViewExtensions
 
     /// <summary>
     /// Returns the Text property.  This deals with some Views (e.g. Button, TextField)
-    /// having two Text properties (use of `new` keyword).
-    ///
-    /// <para>
+    /// having two Text properties (use of <see langword="new"/> keyword).
+    /// <code>
     /// See https://github.com/migueldeicaza/gui.cs/issues/1619
-    /// </para>
+    /// </code>
     /// </summary>
-    /// <param name="view"></param>
-    /// <returns></returns>
+    /// <param name="view"><see cref="View"/> you want to retrieve instance member Text for
+    /// (effectively treating Terminal.Gui use of <see langword="new"/> as <see langword="virtual"/>
+    /// on properties).</param>
+    /// <returns>Text property declared on the underlying type of <paramref name="view"/> (E.g.
+    /// Button.Text not View.Text).</returns>
     public static PropertyInfo GetActualTextProperty(this View view)
     {
         return view.GetType().GetProperty("Text") ?? typeof(View).GetProperty("Text") ?? throw new Exception("Expected property 'Text' on Type 'View' was missing");
@@ -55,14 +58,13 @@ public static class ViewExtensions
 
     /// <summary>
     /// Sets the Text property.  This deals with some Views (e.g. Button, TextField)
-    /// having two Text properties (use of `new` keyword).
-    ///
-    /// <para>
+    /// having two Text properties (use of <see langword="new"/> keyword).
+    /// <code>
     /// See https://github.com/migueldeicaza/gui.cs/issues/1619
-    /// </para>
+    /// </code>
     /// </summary>
-    /// <param name="view"></param>
-    /// <param name="text"></param>
+    /// <param name="view"><see cref="View"/> to set Text property on.</param>
+    /// <param name="text">Value to set.</param>
     public static void SetActualText(this View view, string text)
     {
         if (view is TextField f)
@@ -130,10 +132,18 @@ public static class ViewExtensions
     }
 
     /// <summary>
-    /// Some Views have hidden subviews e.g. TabView, ComboBox etc
+    /// <para>Some Views have hidden sub-views e.g. TabView, ComboBox etc
     /// Sometimes the most focused view is a sub element.  This method
-    /// goes up the hierarchy and finds the first that is designable
+    /// returns the <see cref="Design"/> for <paramref name="view"/> or goes up
+    /// the hierarchy and finds the first parent that is designable.
+    /// </para>
+    /// <para>This method differs from <see cref="GetNearestContainerDesign(View)"/>
+    /// because it will first check if <paramref name="view"/> itself has a
+    /// <see cref="Design"/> and returns that if so.</para>
     /// </summary>
+    /// <param name="view">The <see cref="View"/> you want the nearest <see cref="Design"/> to.</param>
+    /// <returns><see cref="Design"/> associated with <paramref name="view"/> or its
+    /// closest designed parent.</returns>
     public static Design? GetNearestDesign(this View view)
     {
         if (view is null)
@@ -152,9 +162,11 @@ public static class ViewExtensions
     /// <summary>
     /// Travels up the nested views until it finds one that is
     /// <see cref="Design.IsContainerView"/> or returns null if
-    /// none are
+    /// none are.
     /// </summary>
-    /// <returns></returns>
+    /// <param name="v">The <see cref="View"/> you want to find parent container of.</param>
+    /// <returns>Wrapper for the nearest parental <see cref="View"/> that user added
+    /// (i.e. not a Terminal.Gui internal artifact) view.</returns>
     public static Design? GetNearestContainerDesign(this View v)
     {
         var d = GetNearestDesign(v);
@@ -317,11 +329,13 @@ public static class ViewExtensions
     /// Returns true if the current screen bounds of <paramref name="v"/> intersect
     /// with the <paramref name="screenRect"/> rectangle.
     /// </summary>
-    /// <param name="v"></param>
-    /// <param name="screenRect"></param>
-    /// <returns></returns>
+    /// <param name="v"><see cref="View"/> whose bounds will be intersected with <paramref name="screenRect"/>.</param>
+    /// <param name="screenRect"><see cref="Rect"/> to intersect with <paramref name="v"/>.</param>
+    /// <returns>True if the client area intersects.</returns>
     public static bool IntersectsScreenRect(this View v, Rect screenRect)
     {
+        // TODO: maybe this should use Frame instead? Currently this will not let you drag box
+        // selection over the border of a container to select it (e.g. FrameView).
         v.ViewToScreenActual(0, 0, out var x0, out var y0);
         v.ViewToScreenActual(v.Bounds.Width, v.Bounds.Height, out var x1, out var y1);
 
@@ -329,10 +343,19 @@ public static class ViewExtensions
     }
 
     /// <summary>
-    /// Returns the explicitly defined private ColorScheme on the view
-    /// Or null if it inherits it from its parent or a globa scheme
+    /// <para>Returns the explicitly defined private ColorScheme on the view
+    /// Or null if it inherits it from its parent or a global scheme.</para>
+    /// <para>
+    /// The private backing field value for <see cref="View.ColorScheme"/> is
+    /// queried with reflection.  This is necessary because <see cref="View.ColorScheme"/> getter
+    /// returns from parent (inherited) if setter has not been called but we want to know
+    /// if the <see cref="View"/> really has a 'user intended' scheme assigned.
+    /// </para>
     /// </summary>
-    /// <returns></returns>
+    /// <param name="v">The <see cref="View"/> you want to get 'user intended' explicitly set
+    /// <see cref="ColorScheme"/> for.</param>
+    /// <returns>The value that was used to call <see cref="View.ColorScheme"/> setter or null
+    /// if never called (i.e. <see cref="View.ColorScheme"/> getter is returning inherited parent value).</returns>
     public static ColorScheme? GetExplicitColorScheme(this View v)
     {
         var explicitColorSchemeField = typeof(View).GetField("colorScheme", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
@@ -343,8 +366,10 @@ public static class ViewExtensions
 
     /// <summary>
     /// Order the passed views from top left to bottom right
-    /// (helps ensure a sensible Tab order)
+    /// (helps ensure a sensible Tab order).
     /// </summary>
+    /// <param name="views">Collection of <see cref="View"/> to order.</param>
+    /// <returns>Collection ordered by screen position.</returns>
     public static IEnumerable<View> OrderViewsByScreenPosition(IEnumerable<View> views)
     {
         return views.OrderBy(v => v.Frame.Y).ThenBy(v => v.Frame.X);

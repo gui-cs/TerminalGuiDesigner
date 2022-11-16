@@ -13,20 +13,35 @@ namespace TerminalGuiDesigner.UI.Windows
     using TerminalGuiDesigner;
     using TerminalGuiDesigner.ToCode;
 
+    /// <summary>
+    /// Editor for the <see cref="Dim"/> class.
+    /// </summary>
     public partial class DimEditor : Dialog
     {
+        private Design design;
+        private Property property { get; }
 
+        /// <summary>
+        /// The final <see cref="Dim"/> value user has configured based on
+        /// radio buttons and text box values.
+        /// </summary>
         public Dim Result { get; private set; }
+
+        /// <summary>
+        /// True if dialog was canceled.
+        /// </summary>
         public bool Cancelled { get; private set; }
 
-        public Design Design { get; }
-        public Property Property { get; }
-
+        /// <summary>
+        /// Creates a new instance of the <see cref="DimEditor"/> class.
+        /// </summary>
+        /// <param name="design"></param>
+        /// <param name="property"></param>
         public DimEditor(Design design, Property property) {
             InitializeComponent();
             
-            Design = design;
-            Property = property;
+            this.design = design;
+            this.property = property;
 
 
             Title = "Dim Designer";
@@ -123,7 +138,7 @@ namespace TerminalGuiDesigner.UI.Windows
             Application.RequestStop();
         }
 
-        public Dim BuildResult()
+        private Dim BuildResult()
         {
             // pick what type of Pos they want
             var type = GetDimType();

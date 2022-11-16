@@ -6,7 +6,7 @@ namespace TerminalGuiDesigner.ToCode;
 
 /// <summary>
 /// Handles generating code for a <see cref="NamedColorScheme"/> into .Designer.cs
-/// file (See <see cref="CodeDomArgs"/>).  This will be a private field within the 
+/// file (See <see cref="CodeDomArgs"/>).  This will be a private field within the
 /// class generated e.g.:
 /// <code>private Terminal.Gui.ColorScheme dialogBackground;</code>
 /// </summary>

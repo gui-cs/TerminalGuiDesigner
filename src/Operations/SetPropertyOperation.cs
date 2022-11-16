@@ -34,7 +34,7 @@ public class SetPropertyOperation : Operation
     /// </summary>
     /// <param name="design">A single <see cref="Design"/> on which to change a single <paramref name="property"/>.</param>
     /// <param name="property">Property to change (see <see cref="Design.GetDesignableProperties()"/>).</param>
-    /// <param name="valueGetter">Delegate for fetching the new value for the <paramref name="property"/> when 
+    /// <param name="valueGetter">Delegate for fetching the new value for the <paramref name="property"/> when
     /// command is run e.g. via a <see cref="Modals"/> dialog.</param>
     public SetPropertyOperation(Design design, Property property, PropertyValueGetterDelegate valueGetter)
         : this(design, property, property.GetValue(), null)

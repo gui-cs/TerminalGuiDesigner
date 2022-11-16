@@ -12,13 +12,25 @@ namespace TerminalGuiDesigner.UI.Windows {
     using Terminal.Gui;
     
     
+    /// <summary>
+    /// Popup dialog with a message and 1 or more buttons the user can press.
+    /// </summary>
     public partial class ChoicesDialog
     {
-        
+        /// <summary>
+        /// The index of the button user clicked (starting at 0).
+        /// </summary>
         public int Result { get; private set; }
 
         private string _title;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="message"></param>
+        /// <param name="options"></param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public ChoicesDialog(string title, string message, params string[] options) {
             
             const int defaultWidth = 50;
