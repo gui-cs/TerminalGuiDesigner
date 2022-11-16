@@ -87,14 +87,14 @@ internal class AddMenuOperationTests : Tests
 
         StringAssert.Contains("private Terminal.Gui.MenuBarItem _FileF9Menu;", code);
         StringAssert.Contains("private Terminal.Gui.MenuBarItem fishMenu;", code);
-        StringAssert.Contains("private Terminal.Gui.MenuBarItem fishMenu2;", code);
+        StringAssert.Contains("private Terminal.Gui.MenuBarItem fish2Menu;", code);
 
 
         StringAssert.Contains(
             "private Terminal.Gui.MenuItem editMeMenuItem;",
             code,
             "Expected these to be created as template items under the new top level menus");
-        StringAssert.Contains("private Terminal.Gui.MenuItem editMe2MenuItem;", code);
+        StringAssert.Contains("private Terminal.Gui.MenuItem editMeMenuItem2;", code);
     }
     [Test]
     public void TestAddingMenu_AtRoot_UnDo()
