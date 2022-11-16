@@ -140,7 +140,12 @@ public class MenuBarItemsToCode : ToCodeBase
 
         var suffix = item is MenuBarItem ? "Menu" : "MenuItem";
 
-        var fname = args.GetUniqueFieldName(item.Title.ToString() + suffix);
+        // Remove underscores from title when generating field name because those indicate shortcut keys
+        // and are not rendered (user might not even be aware they are there).
+        var title = item.Title.ToString()?.Replace('_', ' ');
+
+        // Make sure name + suffix is unique and not null
+        var fname = args.GetUniqueFieldName(title + suffix);
 
         // ensure name is camel case since MenuItem are created as private fields
         if (char.IsUpper(fname[0]))

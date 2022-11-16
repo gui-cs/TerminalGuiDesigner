@@ -85,7 +85,7 @@ internal class AddMenuOperationTests : Tests
         FileAssert.Exists(((Design)viewIn.Data).SourceCode.DesignerFile);
         var code = File.ReadAllText(((Design)viewIn.Data).SourceCode.DesignerFile.FullName);
 
-        StringAssert.Contains("private Terminal.Gui.MenuBarItem _FileF9Menu;", code);
+        StringAssert.Contains("private Terminal.Gui.MenuBarItem fileF9Menu;", code);
         StringAssert.Contains("private Terminal.Gui.MenuBarItem fishMenu;", code);
         StringAssert.Contains("private Terminal.Gui.MenuBarItem fish2Menu;", code);
 
