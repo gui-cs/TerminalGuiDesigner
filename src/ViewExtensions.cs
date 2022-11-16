@@ -376,7 +376,8 @@ public static class ViewExtensions
         // but order everything else top left to bottom right
         return views
             .OrderBy(v => v is MenuBar ? int.MaxValue : 0)
-            .ThenBy(v => v.Frame.Y).ThenBy(v => v.Frame.X);
+            .ThenBy(v => v.Frame.Y)
+            .ThenBy(v => v.Frame.X);
     }
 
     /// <summary>
