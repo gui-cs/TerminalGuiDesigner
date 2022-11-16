@@ -42,7 +42,9 @@ internal class AddViewOperationTests : Tests
     {
         int stackSize = 0;
         var factory = new ViewFactory();
-        var supportedViews = ViewFactory.GetSupportedViews().ToArray();
+        var supportedViews = ViewFactory.GetSupportedViews()
+            // Add MenuBar last so order is preserved in Assert check.
+            .OrderBy(t=>t == typeof(MenuBar) ? int.MaxValue : 0).ToArray();
 
         var windowIn = RoundTrip<Toplevel, Window>((d, v) =>
         {

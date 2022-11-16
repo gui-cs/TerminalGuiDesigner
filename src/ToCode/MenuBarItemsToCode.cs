@@ -138,7 +138,9 @@ public class MenuBarItemsToCode : ToCodeBase
             return args.GetUniqueFieldName(s);
         }
 
-        var fname = args.GetUniqueFieldName(item.Title.ToString() + "MenuItem");
+        var suffix = item is MenuBarItem ? "Menu" : "MenuItem";
+
+        var fname = args.GetUniqueFieldName(item.Title.ToString() + suffix);
 
         // ensure name is camel case since MenuItem are created as private fields
         if (char.IsUpper(fname[0]))

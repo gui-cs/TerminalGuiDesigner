@@ -1,6 +1,8 @@
 ﻿using NUnit.Framework;
 using System;
+using System.IO;
 using Terminal.Gui;
+using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
 
 namespace UnitTests.Operations;
@@ -78,6 +80,21 @@ internal class AddMenuOperationTests : Tests
         Assert.AreEqual(3, viewIn.Menus.Length);
         Assert.AreEqual("Fish", viewIn.Menus[1].Title.ToString());
         Assert.AreEqual("Fish2", viewIn.Menus[2].Title.ToString());
+
+        // Check that the .Designer.cs is producing sensible private field names
+        FileAssert.Exists(((Design)viewIn.Data).SourceCode.DesignerFile);
+        var code = File.ReadAllText(((Design)viewIn.Data).SourceCode.DesignerFile.FullName);
+
+        StringAssert.Contains("private Terminal.Gui.MenuBarItem _FileF9Menu;", code);
+        StringAssert.Contains("private Terminal.Gui.MenuBarItem fishMenu;", code);
+        StringAssert.Contains("private Terminal.Gui.MenuBarItem fishMenu2;", code);
+
+
+        StringAssert.Contains(
+            "private Terminal.Gui.MenuItem editMeMenuItem;",
+            code,
+            "Expected these to be created as template items under the new top level menus");
+        StringAssert.Contains("private Terminal.Gui.MenuItem editMe2MenuItem;", code);
     }
     [Test]
     public void TestAddingMenu_AtRoot_UnDo()
