@@ -22,6 +22,17 @@ namespace UnitTests.ToCode
         public void Test_MakeValidFieldName(string? input, string expectedOutput)
         {
             Assert.AreEqual(expectedOutput, CodeDomArgs.MakeValidFieldName(input));
+
+            // when public we should start with an upper case letter
+            Assert.IsTrue(char.IsUpper(CodeDomArgs.MakeValidFieldName(name: input, isPublic: true)[0]));
+
+            // when private we should start with an upper case letter
+            Assert.IsFalse(char.IsUpper(CodeDomArgs.MakeValidFieldName(name: input, isPublic: false)[0]));
+
+            Assert.AreEqual(
+                CodeDomArgs.MakeValidFieldName(input, true).Substring(1),
+                CodeDomArgs.MakeValidFieldName(input, false).Substring(1),
+                "Expected public/private to only differ on first letter caps");
         }
 
         [TestCaseSource("cases")]
