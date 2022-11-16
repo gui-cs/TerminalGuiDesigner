@@ -99,12 +99,15 @@ public class MenuBarItemsToCode : ToCodeBase
                 this.AddPropertyAssignment(args, $"this.{subFieldName}.{nameof(MenuItem.Title)}", sub.Title);
                 this.AddPropertyAssignment(args, $"this.{subFieldName}.{nameof(MenuItem.Data)}", subFieldName);
 
-                this.AddPropertyAssignment(
+                if (sub.Shortcut != Key.Null)
+                {
+                    this.AddPropertyAssignment(
                     args,
                     $"this.{subFieldName}.{nameof(MenuItem.Shortcut)}",
                     new CodeCastExpression(
                         new CodeTypeReference(typeof(Key)),
                         new CodePrimitiveExpression((uint)sub.Shortcut)));
+                }
 
                 children.Add(subFieldName);
             }
@@ -129,8 +132,27 @@ public class MenuBarItemsToCode : ToCodeBase
 
     private string GetUniqueFieldName(CodeDomArgs args, MenuItem item)
     {
-        return args.GetUniqueFieldName(
-            item.Data as string ??
-            item.Title.ToString());
+        // if user has an explicit name they have set
+        if (item.Data is string s)
+        {
+            return args.GetUniqueFieldName(s);
+        }
+
+        var suffix = item is MenuBarItem ? "Menu" : "MenuItem";
+
+        // Remove underscores from title when generating field name because those indicate shortcut keys
+        // and are not rendered (user might not even be aware they are there).
+        var title = item.Title.ToString()?.Replace('_', ' ');
+
+        // Make sure name + suffix is unique and not null
+        var fname = args.GetUniqueFieldName(title + suffix);
+
+        // ensure name is camel case since MenuItem are created as private fields
+        if (char.IsUpper(fname[0]))
+        {
+            return char.ToLower(fname[0]) + fname.Substring(1);
+        }
+
+        return fname;
     }
 }
