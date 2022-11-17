@@ -17,6 +17,9 @@ public abstract class Operation : IOperation
     public Guid UniqueIdentifier { get; } = Guid.NewGuid();
 
     /// <inheritdoc/>
+    public string Category { get; protected set; } = string.Empty;
+
+    /// <inheritdoc/>
     /// <remarks>Defaults to <see cref="GetOperationName"/>.</remarks>
     public override string ToString()
     {

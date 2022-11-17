@@ -18,7 +18,7 @@ public class ColorSchemeToCode : ToCodeBase
     /// Initializes a new instance of the <see cref="ColorSchemeToCode"/> class.
     /// </summary>
     /// <param name="scheme">The <see cref="ColorScheme"/> tracked by
-    /// <see cref="ColorSchemeManager"/> that is to be added to .Designer.cs</param>
+    /// <see cref="ColorSchemeManager"/> that is to be added to .Designer.cs.</param>
     public ColorSchemeToCode(NamedColorScheme scheme)
     {
         this.scheme = scheme;

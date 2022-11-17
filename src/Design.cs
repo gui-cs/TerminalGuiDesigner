@@ -4,6 +4,7 @@ using Terminal.Gui;
 using Terminal.Gui.Graphs;
 using Terminal.Gui.Trees;
 using TerminalGuiDesigner.Operations;
+using TerminalGuiDesigner.Operations.TableViewOperations;
 using TerminalGuiDesigner.ToCode;
 using static Terminal.Gui.TableView;
 using static Terminal.Gui.TabView;
@@ -359,9 +360,11 @@ public class Design
             DataColumn? col = null;
             if (!pos.IsEmpty)
             {
-                // TODO: Currently you have to right click in the row (body) of the table
-                // and cannot right click the headers themselves
-                var cell = tv.ScreenToCell(pos.X, pos.Y);
+                // See which column the right click lands.  If nowhere (but still within TableView) then it
+                // might be a click in the header (i.e. too high up to hit a cell).  So check with Y coordinate
+                // close to bottom of control see if that gives a non null result.
+                var cell = tv.ScreenToCell(pos.X, pos.Y) ?? tv.ScreenToCell(pos.X, tv.Frame.Bottom - 2);
+
                 if (cell != null)
                 {
                     col = tv.Table.Columns[cell.Value.X];
@@ -381,6 +384,8 @@ public class Design
             {
                 yield return new RemoveColumnOperation(this, col);
                 yield return new RenameColumnOperation(this, col);
+                yield return new MoveColumnOperation(this, col, -1);
+                yield return new MoveColumnOperation(this, col, 1);
             }
         }
 

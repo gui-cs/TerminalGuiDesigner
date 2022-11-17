@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using Terminal.Gui;
 
-namespace TerminalGuiDesigner.Operations;
+namespace TerminalGuiDesigner.Operations.TableViewOperations;
 
 /// <summary>
 /// Abstract base class for <see cref="Operation"/> which affect a <see cref="DataColumn"/> in a <see cref="TableView"/>.
@@ -19,6 +19,7 @@ public abstract class ColumnOperation : Operation
     {
         this.Design = design;
         this.Column = column;
+        this.Category = column.ColumnName;
 
         // somehow user ran this command for a non table view
         if (this.Design.View is not Terminal.Gui.TableView)
@@ -27,6 +28,11 @@ public abstract class ColumnOperation : Operation
         }
 
         this.TableView = (TableView)this.Design.View;
+
+        if (this.TableView.Table != column.Table)
+        {
+            throw new ArgumentException($"Column provided does not belong to the {nameof(Terminal.Gui.TableView)} Table");
+        }
     }
 
     /// <summary>

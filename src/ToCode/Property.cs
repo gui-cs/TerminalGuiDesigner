@@ -378,7 +378,7 @@ public class Property : ToCodeBase
 
     /// <summary>
     /// Calls any methods that update the state of the View
-    /// and refresh it against its style e.g. <see cref="TableView.Update"/>
+    /// and refresh it against its style e.g. <see cref="TableView.Update"/>.
     /// </summary>
     private void CallRefreshMethodsIfAny()
     {

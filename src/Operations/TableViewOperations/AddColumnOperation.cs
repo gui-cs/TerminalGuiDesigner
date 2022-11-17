@@ -1,8 +1,9 @@
 ﻿using System.Data;
 using Terminal.Gui;
+using TerminalGuiDesigner;
 using TerminalGuiDesigner.UI.Windows;
 
-namespace TerminalGuiDesigner.Operations;
+namespace TerminalGuiDesigner.Operations.TableViewOperations;
 
 /// <summary>
 /// Adds a new <see cref="DataColumn"/> to a <see cref="DataTable"/> hosted in a <see cref="TableView"/>.
@@ -21,16 +22,16 @@ public class AddColumnOperation : Operation
     /// <exception cref="ArgumentException">Thrown if <paramref name="design"/> is not wrapping a <see cref="TableView"/>.</exception>
     public AddColumnOperation(Design design, string? newColumnName)
     {
-        this.Design = design;
+        Design = design;
         this.newColumnName = newColumnName;
 
         // somehow user ran this command for a non table view
-        if (this.Design.View is not TableView)
+        if (Design.View is not TableView)
         {
             throw new ArgumentException($"Design must be for a {nameof(TableView)} to support {nameof(AddColumnOperation)}");
         }
 
-        this.tableView = (TableView)this.Design.View;
+        tableView = (TableView)Design.View;
     }
 
     /// <summary>
@@ -42,37 +43,37 @@ public class AddColumnOperation : Operation
     public override void Redo()
     {
         // cannot redo (maybe user hit redo twice thats fine)
-        if (this.column == null || this.tableView.Table.Columns.Contains(this.column.ColumnName))
+        if (column == null || tableView.Table.Columns.Contains(column.ColumnName))
         {
             return;
         }
 
-        this.tableView.Table.Columns.Add(this.column);
-        this.tableView.Update();
+        tableView.Table.Columns.Add(column);
+        tableView.Update();
     }
 
     /// <inheritdoc/>
     public override void Undo()
     {
         // cannot undo
-        if (this.column == null || !this.tableView.Table.Columns.Contains(this.column.ColumnName))
+        if (column == null || !tableView.Table.Columns.Contains(column.ColumnName))
         {
             return;
         }
 
-        this.tableView.Table.Columns.Remove(this.column);
-        this.tableView.Update();
+        tableView.Table.Columns.Remove(column);
+        tableView.Update();
     }
 
     /// <inheritdoc/>
     protected override bool DoImpl()
     {
-        if (this.column != null)
+        if (column != null)
         {
             throw new Exception("This command has already been performed once.  Use Redo instead of Do");
         }
 
-        string? name = this.newColumnName;
+        string? name = newColumnName;
 
         if (name == null)
         {
@@ -89,11 +90,11 @@ public class AddColumnOperation : Operation
             return false;
         }
 
-        name = name.MakeUnique(this.tableView.Table.Columns.Cast<DataColumn>().Select(c => c.ColumnName));
+        name = name.MakeUnique(tableView.Table.Columns.Cast<DataColumn>().Select(c => c.ColumnName));
 
         // Add the new column
-        this.column = this.tableView.Table.Columns.Add(name);
-        this.tableView.Update();
+        column = tableView.Table.Columns.Add(name);
+        tableView.Update();
 
         return true;
     }

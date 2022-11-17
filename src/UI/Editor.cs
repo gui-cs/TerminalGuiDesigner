@@ -620,17 +620,19 @@ Ctrl+Q - Quit
             .ToArray();
 
         var setProps = operations.OfType<SetPropertyOperation>();
-        var others = operations.Except(setProps);
+        var others = operations
+            .Except(setProps)
+            .GroupBy(k => k.Category, this.ToMenuItem);
 
-        var setPropsItems = setProps.Select(this.ToMenuItem);
-        var othersItems = others.Select(this.ToMenuItem);
+        var setPropsItems = setProps.Select(this.ToMenuItem).ToArray();
+        bool hasPropsItems = setPropsItems.Any();
 
         var all = new List<MenuItem>();
 
         // only add the set properties category if there are some
-        if (setPropsItems.Any())
+        if (hasPropsItems)
         {
-            all.Add(new MenuBarItem(name, setPropsItems.ToArray())
+            all.Add(new MenuBarItem(name, setPropsItems)
             {
                 Action = () =>
                 {
@@ -642,7 +644,22 @@ Ctrl+Q - Quit
             });
         }
 
-        all.AddRange(othersItems.ToArray());
+        // For each ExtraOperation grouped by Category
+        foreach (var g in others)
+        {
+            // if there is no category
+            if (string.IsNullOrWhiteSpace(g.Key))
+            {
+                all.AddRange(g);
+            }
+            else
+            {
+                // Add categories first
+                all.Insert(
+                    hasPropsItems ? 1 : 0,
+                    new MenuBarItem(g.Key, g.ToArray()));
+            }
+        }
 
         // theres nothing we can do
         if (all.Count == 0)
