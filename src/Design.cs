@@ -4,6 +4,7 @@ using Terminal.Gui;
 using Terminal.Gui.Graphs;
 using Terminal.Gui.Trees;
 using TerminalGuiDesigner.Operations;
+using TerminalGuiDesigner.Operations.TableViewOperations;
 using TerminalGuiDesigner.ToCode;
 using static Terminal.Gui.TableView;
 using static Terminal.Gui.TabView;
@@ -381,6 +382,8 @@ public class Design
             {
                 yield return new RemoveColumnOperation(this, col);
                 yield return new RenameColumnOperation(this, col);
+                yield return new MoveColumnOperation(this, col, -1);
+                yield return new MoveColumnOperation(this, col, 1);
             }
         }
 

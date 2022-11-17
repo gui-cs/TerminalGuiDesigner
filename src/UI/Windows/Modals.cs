@@ -63,7 +63,8 @@ public class Modals
             WindowTitle = windowTitle,
             EntryLabel = entryLabel,
             MultiLine = true,
-        }, initialValue == null ? string.Empty : string.Join('\n', initialValue.ToList().Select(v => v?.ToString() ?? string.Empty)));
+        },
+            initialValue == null ? string.Empty : string.Join('\n', initialValue.ToList().Select(v => v?.ToString() ?? string.Empty)));
 
         if (dlg.ShowDialog())
         {
@@ -100,7 +101,8 @@ public class Modals
             WindowTitle = windowTitle,
             EntryLabel = entryLabel,
             MultiLine = multiLine,
-        }, initialValue);
+        },
+            initialValue);
 
         if (dlg.ShowDialog())
         {

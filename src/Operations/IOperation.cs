@@ -12,6 +12,13 @@ public interface IOperation
     /// </summary>
     Guid UniqueIdentifier { get; }
 
+
+    /// <summary>
+    /// Gets the category to put this <see cref="Operation"/>
+    /// under in context menus.
+    /// </summary>
+    string Category { get; }
+
     /// <summary>
     /// Gets a value indicating whether the <see cref="IOperation"/> is in a valid
     /// state for execution.

@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using Terminal.Gui;
 
-namespace TerminalGuiDesigner.Operations;
+namespace TerminalGuiDesigner.Operations.TableViewOperations;
 
 /// <summary>
 /// Removes a <see cref="DataColumn"/> from a <see cref="TableView"/>.
@@ -19,41 +19,41 @@ public class RemoveColumnOperation : ColumnOperation
     {
         // TODO: currently this crashes TableView in its ReDraw (calculate view port) method
         // don't let them remove the last column
-        if (this.TableView.Table.Columns.Count == 1)
+        if (TableView.Table.Columns.Count == 1)
         {
-            this.IsImpossible = true;
+            IsImpossible = true;
         }
     }
 
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"Remove Column '{this.Column}'";
+        return $"Remove Column '{Column}'";
     }
 
     /// <inheritdoc/>
     public override void Redo()
     {
-        this.Do();
+        Do();
     }
 
     /// <inheritdoc/>
     public override void Undo()
     {
-        if (!this.TableView.Table.Columns.Contains(this.Column.ColumnName))
+        if (!TableView.Table.Columns.Contains(Column.ColumnName))
         {
-            this.TableView.Table.Columns.Add(this.Column.ColumnName);
-            this.TableView.Update();
+            TableView.Table.Columns.Add(Column.ColumnName);
+            TableView.Update();
         }
     }
 
     /// <inheritdoc/>
     protected override bool DoImpl()
     {
-        if (this.TableView.Table.Columns.Contains(this.Column.ColumnName))
+        if (TableView.Table.Columns.Contains(Column.ColumnName))
         {
-            this.TableView.Table.Columns.Remove(this.Column.ColumnName);
-            this.TableView.Update();
+            TableView.Table.Columns.Remove(Column.ColumnName);
+            TableView.Update();
 
             return true;
         }
