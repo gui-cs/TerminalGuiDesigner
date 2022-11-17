@@ -47,7 +47,7 @@ namespace UnitTests.Operations
         }
 
         [TestCase(3,-8,0,true)] // move left lots
-        [TestCase(2, 55, 4, true)] // move right lots
+        [TestCase(2, 55, 3, true)] // move right lots
         [TestCase(0, 0, 0, false)] // move 0 nowhere
         [TestCase(0, 1, 1, true)] // move 0 right 1
         [TestCase(1, -1, 0, true)] // move 1 left 1
