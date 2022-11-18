@@ -407,14 +407,19 @@ public class Design
 
         yield return new DeleteViewOperation(this);
 
-        if (this.View is TabView)
+        if (this.View is TabView tabView)
         {
             yield return new AddTabOperation(this, null);
             yield return new RemoveTabOperation(this);
             yield return new RenameTabOperation(this);
 
-            yield return new MoveTabOperation(this, -1);
-            yield return new MoveTabOperation(this, 1);
+            var selected = tabView.SelectedTab;
+
+            if (selected != null)
+            {
+                yield return new MoveTabOperation(this, selected, -1);
+                yield return new MoveTabOperation(this, selected, 1);
+            }
         }
 
         if (this.View is MenuBar mb)
@@ -425,7 +430,7 @@ public class Design
 
             if (menu != null)
             {
-                yield return new RemoveMenuOperation(this,menu);
+                yield return new RemoveMenuOperation(this, menu);
                 yield return new MoveMenuOperation(this, menu, -1);
                 yield return new MoveMenuOperation(this, menu, 1);
             }

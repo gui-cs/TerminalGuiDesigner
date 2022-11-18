@@ -16,7 +16,7 @@ namespace UnitTests.Operations
             // Label is not a TabView so should get Exception
             RoundTrip<Window, Label>((d, v) =>
             {
-                Assert.Throws<ArgumentException>(()=>new MoveTabOperation(d, 1));
+                Assert.Throws<ArgumentException>(()=>new MoveTabOperation(d,new TabView.Tab(), 1));
             }, out _);
         }
 
@@ -29,7 +29,7 @@ namespace UnitTests.Operations
                 v.RemoveTab(v.Tabs.ElementAt(1));
                 Assert.AreEqual(1, v.Tabs.Count);
 
-                Assert.IsTrue(new MoveTabOperation(d,1).IsImpossible,"Should be impossible to move tab when there is only one of them");
+                Assert.IsTrue(new MoveTabOperation(d, v.SelectedTab, 1).IsImpossible,"Should be impossible to move tab when there is only one of them");
             }, out _);
         }
 
@@ -53,7 +53,7 @@ namespace UnitTests.Operations
                 var originalIndex = v.Tabs.IndexOf(toMove);
 
                 v.SelectedTab = toMove;
-                var op = new MoveTabOperation(d, adjustment);
+                var op = new MoveTabOperation(d, toMove, adjustment);
 
                 if(expectPossible)
                 {

@@ -58,7 +58,7 @@ class TabViewTests : Tests
         tv.SelectedTab = tv.Tabs.First();
 
         // try to move tab 1 left
-        var cmd = new MoveTabOperation(d, -1);
+        var cmd = new MoveTabOperation(d, tv.SelectedTab, -1);
         Assert.IsFalse(cmd.Do(), "Expected not to be able to move tab left because selected is the first");
 
         // Select Tab2
@@ -67,7 +67,7 @@ class TabViewTests : Tests
         Assert.AreEqual(tv.SelectedTab.Text, "Tab2", "Tab2 should be selected before operation is applied");
 
         // try to move tab 2 left
-        cmd = new MoveTabOperation(d, -1);
+        cmd = new MoveTabOperation(d, tv.SelectedTab, -1);
         Assert.IsFalse(cmd.IsImpossible);
         Assert.IsTrue(cmd.Do());
 
