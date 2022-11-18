@@ -1,9 +1,8 @@
 using NStack;
 using Terminal.Gui;
-using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.UI.Windows;
 
-namespace TerminalGuiDesigner;
+namespace TerminalGuiDesigner.Operations.TabOperations;
 
 /// <summary>
 /// Renames the <see cref="TabView.Tab.Text"/> of the currently selected

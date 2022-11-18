@@ -12,7 +12,6 @@ public interface IOperation
     /// </summary>
     Guid UniqueIdentifier { get; }
 
-
     /// <summary>
     /// Gets the category to put this <see cref="Operation"/>
     /// under in context menus.

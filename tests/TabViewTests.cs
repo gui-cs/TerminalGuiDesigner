@@ -5,6 +5,7 @@ using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.FromCode;
 using TerminalGuiDesigner.Operations;
+using TerminalGuiDesigner.Operations.TabOperations;
 using TerminalGuiDesigner.ToCode;
 
 namespace UnitTests;

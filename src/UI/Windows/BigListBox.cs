@@ -207,7 +207,7 @@ public class BigListBox<T>
         }
     }
 
-    bool Timer(MainLoop caller)
+    private bool Timer(MainLoop caller)
     {
         if (this.changes && DateTime.Now.Subtract(this.lastKeypress) > TimeSpan.FromMilliseconds(100))
         {

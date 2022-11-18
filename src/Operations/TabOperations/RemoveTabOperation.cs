@@ -1,6 +1,7 @@
 using Terminal.Gui;
+using TerminalGuiDesigner;
 
-namespace TerminalGuiDesigner.Operations;
+namespace TerminalGuiDesigner.Operations.TabOperations;
 
 /// <summary>
 /// Removes (deletes) a <see cref="TabView.Tab"/> from a <see cref="TabView"/>.

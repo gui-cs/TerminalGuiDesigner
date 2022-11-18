@@ -1,6 +1,6 @@
 using Terminal.Gui;
 
-namespace TerminalGuiDesigner.Operations;
+namespace TerminalGuiDesigner.Operations.MenuOperations;
 
 /// <summary>
 /// Moves a <see cref="MenuItem"/> up or down within the same menu.  To move

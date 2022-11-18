@@ -2,7 +2,7 @@ using Terminal.Gui;
 using TerminalGuiDesigner.ToCode;
 using TerminalGuiDesigner.UI.Windows;
 
-namespace TerminalGuiDesigner.Operations;
+namespace TerminalGuiDesigner.Operations.MenuOperations;
 
 /// <summary>
 /// Renames a <see cref="MenuItem"/>.  Normally names are automatically

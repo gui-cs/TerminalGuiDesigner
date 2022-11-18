@@ -19,41 +19,41 @@ public class RemoveColumnOperation : ColumnOperation
     {
         // TODO: currently this crashes TableView in its ReDraw (calculate view port) method
         // don't let them remove the last column
-        if (TableView.Table.Columns.Count == 1)
+        if (this.TableView.Table.Columns.Count == 1)
         {
-            IsImpossible = true;
+            this.IsImpossible = true;
         }
     }
 
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"Remove Column '{Column}'";
+        return $"Remove Column '{this.Column}'";
     }
 
     /// <inheritdoc/>
     public override void Redo()
     {
-        Do();
+        this.Do();
     }
 
     /// <inheritdoc/>
     public override void Undo()
     {
-        if (!TableView.Table.Columns.Contains(Column.ColumnName))
+        if (!this.TableView.Table.Columns.Contains(this.Column.ColumnName))
         {
-            TableView.Table.Columns.Add(Column.ColumnName);
-            TableView.Update();
+            this.TableView.Table.Columns.Add(this.Column.ColumnName);
+            this.TableView.Update();
         }
     }
 
     /// <inheritdoc/>
     protected override bool DoImpl()
     {
-        if (TableView.Table.Columns.Contains(Column.ColumnName))
+        if (this.TableView.Table.Columns.Contains(this.Column.ColumnName))
         {
-            TableView.Table.Columns.Remove(Column.ColumnName);
-            TableView.Update();
+            this.TableView.Table.Columns.Remove(this.Column.ColumnName);
+            this.TableView.Update();
 
             return true;
         }

@@ -1,6 +1,6 @@
 using Terminal.Gui;
 
-namespace TerminalGuiDesigner.Operations;
+namespace TerminalGuiDesigner.Operations.MenuOperations;
 
 /// <summary>
 /// Removes a <see cref="MenuItem"/> from its drop down menu.

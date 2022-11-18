@@ -2,7 +2,7 @@ using Terminal.Gui;
 using TerminalGuiDesigner.UI.Windows;
 using static Terminal.Gui.TabView;
 
-namespace TerminalGuiDesigner.Operations;
+namespace TerminalGuiDesigner.Operations.TabOperations;
 
 /// <summary>
 /// Adds a new tab to a <see cref="TabView"/>.

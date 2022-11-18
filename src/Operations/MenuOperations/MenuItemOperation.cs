@@ -1,6 +1,6 @@
 using Terminal.Gui;
 
-namespace TerminalGuiDesigner.Operations;
+namespace TerminalGuiDesigner.Operations.MenuOperations;
 
 /// <summary>
 /// Abstract base class for <see cref="Operation"/> which affect a <see cref="MenuItem"/>

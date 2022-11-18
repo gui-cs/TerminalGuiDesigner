@@ -17,18 +17,8 @@ public class SourceCodeFile
     public const string ExpectedExtension = ".Designer.cs";
 
     /// <summary>
-    /// Gets the .cs file (e.g. MyView.cs).
-    /// </summary>
-    public FileInfo CsFile { get; }
-
-    /// <summary>
-    /// Gets the .Designer.cs file (e.g. MyView.Designer.cs).
-    /// </summary>
-    public FileInfo DesignerFile { get; }
-
-    /// <summary>
     /// Declares a new pair of files (e.g. MyClass.cs and MyClass.Designer.cs) which
-    /// may or may not both exist yet
+    /// may or may not both exist yet.
     /// </summary>
     /// <param name="file">Either source file of the pair (e.g. either MyClass.cs or MyClass.Designer.cs)</param>
     public SourceCodeFile(FileInfo file)
@@ -44,6 +34,16 @@ public class SourceCodeFile
             this.DesignerFile = this.GetDesignerFile(file);
         }
     }
+
+    /// <summary>
+    /// Gets the .cs file (e.g. MyView.cs).
+    /// </summary>
+    public FileInfo CsFile { get; }
+
+    /// <summary>
+    /// Gets the .Designer.cs file (e.g. MyView.Designer.cs).
+    /// </summary>
+    public FileInfo DesignerFile { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="SourceCodeFile"/> class.

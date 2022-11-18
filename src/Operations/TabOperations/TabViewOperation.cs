@@ -1,7 +1,7 @@
 ﻿using Terminal.Gui;
 using static Terminal.Gui.TabView;
 
-namespace TerminalGuiDesigner.Operations;
+namespace TerminalGuiDesigner.Operations.TabOperations;
 
 /// <summary>
 /// Abstract base class for all <see cref="Operation"/> which operate
@@ -30,7 +30,7 @@ public abstract class TabViewOperation : Operation
     }
 
     /// <summary>
-    /// Gets the <see cref="TabView.Tab"/> that was selected when the operation
+    /// Gets the <see cref="Tab"/> that was selected when the operation
     /// was constructed.  This should be what you operate on if you
     /// are removing or reordering etc the tabs.
     /// </summary>

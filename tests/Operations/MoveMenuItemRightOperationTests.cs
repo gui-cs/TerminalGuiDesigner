@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terminal.Gui;
 using TerminalGuiDesigner.Operations;
+using TerminalGuiDesigner.Operations.MenuOperations;
 
 namespace UnitTests.Operations
 {

@@ -1,6 +1,6 @@
 using Terminal.Gui;
 
-namespace TerminalGuiDesigner.Operations;
+namespace TerminalGuiDesigner.Operations.MenuOperations;
 
 /// <summary>
 /// Moves a <see cref="MenuItem"/> into a sub-menu of the <see cref="MenuItem"/>

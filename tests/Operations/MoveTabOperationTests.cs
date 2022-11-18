@@ -4,6 +4,7 @@ using System.Linq;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
+using TerminalGuiDesigner.Operations.TabOperations;
 
 namespace UnitTests.Operations
 {

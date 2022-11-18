@@ -1,6 +1,6 @@
 ﻿using Terminal.Gui;
 
-namespace TerminalGuiDesigner.Operations;
+namespace TerminalGuiDesigner.Operations.MenuOperations;
 
 /// <summary>
 /// Removes a top level menu from a <see cref="MenuBar"/> e.g. File, Edit.

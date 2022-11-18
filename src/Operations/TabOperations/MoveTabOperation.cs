@@ -1,6 +1,7 @@
 ﻿using Terminal.Gui;
+using TerminalGuiDesigner;
 
-namespace TerminalGuiDesigner.Operations;
+namespace TerminalGuiDesigner.Operations.TabOperations;
 
 /// <summary>
 /// Moves a <see cref="TabView.Tab"/> left or right within the ordering

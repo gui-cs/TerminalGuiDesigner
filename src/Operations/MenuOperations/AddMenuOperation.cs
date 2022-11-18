@@ -2,7 +2,7 @@
 using Terminal.Gui;
 using TerminalGuiDesigner.UI.Windows;
 
-namespace TerminalGuiDesigner.Operations;
+namespace TerminalGuiDesigner.Operations.MenuOperations;
 
 /// <summary>
 /// <see cref="Operation"/> for adding a new top level menu to a <see cref="MenuBar"/> (e.g. File, Edit).

@@ -28,31 +28,31 @@ public class RenameColumnOperation : ColumnOperation
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"Rename Column '{originalName}'";
+        return $"Rename Column '{this.originalName}'";
     }
 
     /// <inheritdoc/>
     public override void Redo()
     {
-        Column.ColumnName = newColumnName;
-        TableView.Update();
+        this.Column.ColumnName = this.newColumnName;
+        this.TableView.Update();
     }
 
     /// <inheritdoc/>
     public override void Undo()
     {
-        Column.ColumnName = originalName;
-        TableView.Update();
+        this.Column.ColumnName = this.originalName;
+        this.TableView.Update();
     }
 
     /// <inheritdoc/>
     protected override bool DoImpl()
     {
-        if (Modals.GetString("Rename Column", "Column Name", originalName, out var newColumnName))
+        if (Modals.GetString("Rename Column", "Column Name", this.originalName, out var newColumnName))
         {
             this.newColumnName = newColumnName;
-            Column.ColumnName = newColumnName;
-            TableView.Update();
+            this.Column.ColumnName = newColumnName;
+            this.TableView.Update();
             return true;
         }
 
