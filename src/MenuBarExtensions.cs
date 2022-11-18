@@ -49,7 +49,7 @@ public static class MenuBarExtensions
         var clientPoint = menuBar.ScreenToView(screenX, 0);
 
         // if click is not in our client area
-        if(screenX < initialWhitespace)
+        if (clientPoint.X < initialWhitespace)
         {
             return null;
         }
@@ -67,7 +67,15 @@ public static class MenuBarExtensions
         // anything after this is not a click on a menu
         menuXLocations.Add(distance, null);
 
-        return menuXLocations.Last(m => m.Key < clientPoint.X).Value;
+        // LastOrDefault does not work with Dictionaries, if we somehow still have a point outside bounds
+        // of anything then just return null;
+        if (!menuXLocations.Any(m => m.Key <= clientPoint.X))
+        {
+            return null;
+        }
+
+        // Return the last menu item that begins rendering before this X point
+        return menuXLocations.Last(m => m.Key <= clientPoint.X).Value;
     }
 
     private static object GetNonNullPrivateFieldValue(string fieldName, object item, Type type)
