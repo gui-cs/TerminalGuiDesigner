@@ -417,10 +417,18 @@ public class Design
             yield return new MoveTabOperation(this, 1);
         }
 
-        if (this.View is MenuBar)
+        if (this.View is MenuBar mb)
         {
             yield return new AddMenuOperation(this, null);
-            yield return new RemoveMenuOperation(this);
+
+            var menu = pos.IsEmpty ? mb.GetSelectedMenuItem() : mb.ScreenToMenuBarItem(pos.X);
+
+            if (menu != null)
+            {
+                yield return new RemoveMenuOperation(this,menu);
+                yield return new MoveMenuOperation(this, menu, -1);
+                yield return new MoveMenuOperation(this, menu, 1);
+            }
         }
     }
 

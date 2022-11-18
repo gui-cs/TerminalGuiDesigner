@@ -9,9 +9,9 @@ namespace TerminalGuiDesigner.Operations;
 /// </summary>
 public class AddViewOperation : Operation
 {
+    private readonly Design to;
     private View? add;
     private string? fieldName;
-    private readonly Design to;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AddViewOperation"/> class.

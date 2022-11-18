@@ -76,7 +76,7 @@ public class SetPropertyOperation : Operation
     /// <param name="propertyName">The name of a designable <see cref="Property"/> on
     /// all the <paramref name="designs"/> (See <see cref="Design.GetDesignableProperties"/>).</param>
     /// <param name="valueGetter">Delegate for fetching the new value for
-    /// the <paramref name="propertyName"/> when command is run e.g. via a <see cref="Modals"/></param>
+    /// the <paramref name="propertyName"/> when command is run e.g. via a <see cref="Modals"/>.</param>
     /// <exception cref="ArgumentException">Thrown if <paramref name="propertyName"/> is not found amongst <paramref name="designs"/> properties.</exception>
     public SetPropertyOperation(Design[] designs, string propertyName, PropertyValueGetterDelegate valueGetter)
     {
@@ -157,10 +157,9 @@ public class SetPropertyOperation : Operation
                 // for this property?
                 var currentVals = this.mementos.Select(p => p.Property.GetValue()).Distinct().ToArray();
 
+                // are we setting multiple at once? and the current values are different? If so then pass null for current value (no consensus)
                 this.NewValue = currentVals.Length == 1 ?
-                    // yes
                     this.valueGetter(this.mementos[0].Property, currentVals[0]) :
-                    // we are setting multiple at once and the current values are different so just tell the user theres no value
                     this.valueGetter(this.mementos[0].Property, null);
             }
             catch (OperationCanceledException)

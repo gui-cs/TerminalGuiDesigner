@@ -36,16 +36,6 @@ public class SourceCodeFile
     }
 
     /// <summary>
-    /// Gets the .cs file (e.g. MyView.cs).
-    /// </summary>
-    public FileInfo CsFile { get; }
-
-    /// <summary>
-    /// Gets the .Designer.cs file (e.g. MyView.Designer.cs).
-    /// </summary>
-    public FileInfo DesignerFile { get; }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="SourceCodeFile"/> class.
     /// Declares a new pair of files (e.g. MyClass.cs and MyClass.Designer.cs) which
     /// may or may not both exist yet.
@@ -55,6 +45,16 @@ public class SourceCodeFile
         : this(new FileInfo(path))
     {
     }
+
+    /// <summary>
+    /// Gets the .cs file (e.g. MyView.cs).
+    /// </summary>
+    public FileInfo CsFile { get; }
+
+    /// <summary>
+    /// Gets the .Designer.cs file (e.g. MyView.Designer.cs).
+    /// </summary>
+    public FileInfo DesignerFile { get; }
 
     /// <summary>
     /// Returns the .Designer.cs file for the given class file.

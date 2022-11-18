@@ -161,6 +161,19 @@ public class BigListBox<T>
     /// </summary>
     public Func<T?, string> AspectGetter { get; set; }
 
+    /// <summary>
+    /// Runs the dialog as modal blocking and returns true if a selection was made.
+    /// </summary>
+    /// <returns>True if selection was made (see <see cref="Selected"/>) or false if user cancelled the dialog</returns>
+    public bool ShowDialog()
+    {
+        Application.Run(this.win);
+
+        Application.MainLoop.RemoveTimeout(this.callback);
+
+        return this.okClicked;
+    }
+
     private void Accept()
     {
         if (this.listView.SelectedItem >= this.collection.Count)
@@ -180,19 +193,6 @@ public class BigListBox<T>
             obj.Handled = true;
             this.Accept();
         }
-    }
-
-    /// <summary>
-    /// Runs the dialog as modal blocking and returns true if a selection was made.
-    /// </summary>
-    /// <returns>True if selection was made (see <see cref="Selected"/>) or false if user cancelled the dialog</returns>
-    public bool ShowDialog()
-    {
-        Application.Run(this.win);
-
-        Application.MainLoop.RemoveTimeout(this.callback);
-
-        return this.okClicked;
     }
 
     private void _listView_KeyPress(View.KeyEventEventArgs obj)
