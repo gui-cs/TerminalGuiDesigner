@@ -20,7 +20,7 @@ public class MoveTabOperation : MoveOperation<TabView, TabView.Tab>
         : base(
             (t) => t.Tabs.ToArray(),
             SetTabs,
-            tab => tab.Text.ToString() ?? "unnamed tab",
+            tab => tab.Text.ToString() ?? Operation.Unnamed,
             design,
             toMove,
             adjustment)

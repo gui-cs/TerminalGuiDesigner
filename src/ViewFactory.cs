@@ -3,6 +3,7 @@ using NStack;
 using Terminal.Gui;
 using Terminal.Gui.TextValidateProviders;
 using TerminalGuiDesigner.Operations.MenuOperations;
+using TerminalGuiDesigner.Operations.TableViewOperations;
 using static Terminal.Gui.Border;
 using Attribute = Terminal.Gui.Attribute;
 
@@ -77,6 +78,11 @@ public class ViewFactory
         if (typeof(MenuBar).IsAssignableFrom(t))
         {
             return this.CreateMenuBar();
+        }
+
+        if (typeof(StatusBar).IsAssignableFrom(t))
+        {
+            return new StatusBar(new[] { new StatusItem(Key.F1, "F1 - Edit Me", () => { }) });
         }
 
         if (t == typeof(TextValidateField))

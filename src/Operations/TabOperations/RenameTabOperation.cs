@@ -29,7 +29,7 @@ public class RenameTabOperation : TabViewOperation
         }
 
         this.originalName = this.SelectedTab.Text;
-        this.Category = this.SelectedTab?.Text.ToString() ?? "unnamed tab";
+        this.Category = this.SelectedTab?.Text.ToString() ?? Operation.Unnamed;
     }
 
     /// <inheritdoc/>

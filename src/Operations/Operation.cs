@@ -5,6 +5,11 @@
 /// </summary>
 public abstract class Operation : IOperation
 {
+    /// <summary>
+    /// The name to give to all objects which do not have a title/text etc.
+    /// </summary>
+    public const string Unnamed = "unnamed";
+
     /// <inheritdoc/>
     public bool IsImpossible { get; protected set; }
 

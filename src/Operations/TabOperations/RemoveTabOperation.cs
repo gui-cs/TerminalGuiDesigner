@@ -28,7 +28,7 @@ public class RemoveTabOperation : TabViewOperation
             this.IsImpossible = true;
         }
 
-        this.Category = this.SelectedTab?.Text.ToString() ?? "unnamed tab";
+        this.Category = this.SelectedTab?.Text.ToString() ?? Operation.Unnamed;
     }
 
     /// <inheritdoc/>
