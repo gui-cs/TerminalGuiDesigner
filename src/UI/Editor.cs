@@ -650,7 +650,8 @@ Ctrl+Q - Quit
             // if there is no category
             if (string.IsNullOrWhiteSpace(g.Key))
             {
-                all.AddRange(g);
+                // add the operations with no category in alphabetical order
+                all.AddRange(g.OrderBy(g => g.Title));
             }
             else
             {

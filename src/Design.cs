@@ -421,7 +421,7 @@ public class Design
         {
             yield return new AddMenuOperation(this, null);
 
-            var menu = mb.ScreenToMenuBarItem(pos.X);
+            var menu = pos.IsEmpty ? mb.GetSelectedMenuItem() : mb.ScreenToMenuBarItem(pos.X);
 
             if (menu != null)
             {
