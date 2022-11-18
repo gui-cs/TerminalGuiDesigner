@@ -51,6 +51,12 @@ internal class DesignToCode : ToCodeBase
                 nameof(TabView.ApplyStyleChanges));
         }
 
+        if (this.Design.View is StatusBar)
+        {
+            var designItems = new StatusBarItemsToCode(this.Design);
+            designItems.ToCode(args);
+        }
+
         // call this.Add(someView)
         this.AddAddToViewStatement(args, this.Design, parentView);
     }

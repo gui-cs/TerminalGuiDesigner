@@ -82,7 +82,7 @@ public class ViewFactory
 
         if (typeof(StatusBar).IsAssignableFrom(t))
         {
-            return new StatusBar(new[] { new StatusItem(Key.F1, "F1 - Edit Me", () => { }) });
+            return new StatusBar(new[] { new StatusItem(Key.F1, "F1 - Edit Me", null) });
         }
 
         if (t == typeof(TextValidateField))
