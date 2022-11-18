@@ -52,6 +52,8 @@ public class MoveMenuOperation : Operation
         }
 
         this.adjustment = adjustment;
+
+        this.Category = this.toMove.Title?.ToString() ?? "blank menu";
     }
 
     /// <inheritdoc/>
@@ -90,6 +92,7 @@ public class MoveMenuOperation : Operation
         menus.Insert(this.originalIdx, this.toMove);
 
         this.menuBar.Menus = menus.Cast<MenuBarItem>().ToArray();
+        this.menuBar.SetNeedsDisplay();
     }
 
     /// <inheritdoc/>
@@ -101,6 +104,7 @@ public class MoveMenuOperation : Operation
         menus.Insert(this.newIndex, this.toMove);
 
         this.menuBar.Menus = menus.Cast<MenuBarItem>().ToArray();
+        this.menuBar.SetNeedsDisplay();
         return true;
     }
 }

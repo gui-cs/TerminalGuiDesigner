@@ -17,21 +17,27 @@ public class RemoveMenuOperation : Operation
     /// Initializes a new instance of the <see cref="RemoveMenuOperation"/> class.
     /// </summary>
     /// <param name="design">Wrapper for a <see cref="MenuBar"/> upon which you wish to operate.</param>
+    /// <param name="toRemove">The <see cref="MenuBarItem"/> to remove.</param>
     /// <exception cref="ArgumentException">Thrown if <paramref name="design"/> does not wrap a <see cref="MenuBar"/>.</exception>
-    public RemoveMenuOperation(Design design)
+    public RemoveMenuOperation(Design design, MenuBarItem toRemove)
     {
         this.Design = design;
+        this.toRemove = toRemove;
 
         // somehow user ran this command for a non tab view
-        if (this.Design.View is not MenuBar)
+        if (this.Design.View is not MenuBar mb)
         {
             throw new ArgumentException($"Design must be for a {nameof(MenuBar)} to support {nameof(AddMenuOperation)}");
         }
 
-        this.menuBar = (MenuBar)this.Design.View;
-        this.toRemove = this.menuBar.GetSelectedMenuItem();
+        this.menuBar = mb;
 
-        this.IsImpossible = this.toRemove == null;
+        if (!this.menuBar.Menus.Contains(toRemove))
+        {
+            throw new ArgumentException(nameof(toRemove), $"{nameof(toRemove)} {nameof(MenuBarItem)} did not belong to the passed {nameof(design)}");
+        }
+
+        this.Category = this.toRemove.Title?.ToString() ?? "blank menu";
     }
 
     /// <summary>

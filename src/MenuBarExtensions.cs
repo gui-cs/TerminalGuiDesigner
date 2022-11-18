@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using NLog.LayoutRenderers;
+using System.Reflection;
+using System.Text;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
@@ -25,6 +27,47 @@ public static class MenuBarExtensions
         }
 
         return menuBar.Menus[selected];
+    }
+
+    /// <summary>
+    /// Returns the <see cref="MenuBarItem"/> that appears at the <paramref name="screenX"/> of the click.
+    /// </summary>
+    /// <param name="menuBar"><see cref="MenuBar"/> you want to find the clicked <see cref="MenuBarItem"/> (top level menu) for.</param>
+    /// <param name="screenX">Screen coordinate of the click in X.</param>
+    /// <returns>The <see cref="MenuBarItem"/> under the mouse at this position or null (only considers X)</returns>
+    public static MenuBarItem? ScreenToMenuBarItem(this MenuBar menuBar, int screenX)
+    {
+        // These might be changed in Terminal.Gui library
+        const int initialWhitespace = 1;
+        const int afterEachItemWhitespace = 2;
+
+        if (menuBar.Menus.Length == 0)
+        {
+            return null;
+        }
+
+        var clientPoint = menuBar.ScreenToView(screenX, 0);
+
+        // if click is not in our client area
+        if(screenX < initialWhitespace)
+        {
+            return null;
+        }
+
+        // Calculate the x display positions of each menu
+        int distance = initialWhitespace;
+        Dictionary<int, MenuBarItem?> menuXLocations = new();
+
+        foreach (var mb in menuBar.Menus)
+        {
+            menuXLocations.Add(distance, mb);
+            distance += mb.Title.Sum((t) => System.Rune.ColumnWidth(t)) + afterEachItemWhitespace;
+        }
+
+        // anything after this is not a click on a menu
+        menuXLocations.Add(distance, null);
+
+        return menuXLocations.Last(m => m.Key < clientPoint.X).Value;
     }
 
     private static object GetNonNullPrivateFieldValue(string fieldName, object item, Type type)
