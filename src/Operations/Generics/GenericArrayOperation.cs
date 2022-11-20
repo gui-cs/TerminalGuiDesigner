@@ -37,7 +37,7 @@ public abstract class GenericArrayOperation<T1, T2> : GenericOperation<T1>
     /// Adds <paramref name="newItem"/> to <see cref="View"/>.
     /// </summary>
     /// <param name="newItem">The array element to add.</param>
-    protected void Add(T2? newItem)
+    protected virtual void Add(T2? newItem)
     {
         var current = this.ArrayGetter(this.View).ToList();
 

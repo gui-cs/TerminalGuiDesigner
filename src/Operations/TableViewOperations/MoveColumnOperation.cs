@@ -21,7 +21,7 @@ public class MoveColumnOperation : MoveOperation<TableView, DataColumn>
     public MoveColumnOperation(Design design, DataColumn column, int adjustment)
         : base(
             (v) => v.Table.Columns.Cast<DataColumn>().ToArray(),
-            (v, a) => v.Table.ReOrderColumns(a),
+            (v, a) => v.ReOrderColumns(a),
             (c) => c.ColumnName,
             design,
             column,

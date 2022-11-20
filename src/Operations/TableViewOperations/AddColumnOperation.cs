@@ -19,11 +19,19 @@ public class AddColumnOperation : AddOperation<TableView, DataColumn>
     public AddColumnOperation(Design design, string? newColumnName)
         : base(
             (v) => v.Table.Columns.Cast<DataColumn>().ToArray(),
-            (v, a) => v.Table.ReOrderColumns(a),
+            (v, a) => v.ReOrderColumns(a),
             (c) => c.ColumnName,
             (v, n) => { return v.Table?.Columns.Add(n) ?? throw new Exception("TableView Table had not been initialized at the time we were asked to construct a new DataColumn for it."); },
             design,
             newColumnName)
     {
+    }
+
+    /// <inheritdoc/>
+    protected override void Add(DataColumn? newItem)
+    {
+        base.Add(newItem);
+
+        this.View.Update();
     }
 }

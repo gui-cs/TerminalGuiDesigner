@@ -53,7 +53,7 @@ public abstract class AddOperation<T1, T2> : GenericArrayOperation<T1, T2>
 
         if (uniqueName == null)
         {
-            if (!Modals.GetString("Name", "Name", $"My{nameof(T2)}", out uniqueName))
+            if (!Modals.GetString("Name", "Name", $"My{typeof(T2).Name}", out uniqueName))
             {
                 // user canceled adding
                 return false;
