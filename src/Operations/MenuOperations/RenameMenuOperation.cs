@@ -3,6 +3,9 @@ using TerminalGuiDesigner.Operations.TabOperations;
 
 namespace TerminalGuiDesigner.Operations.MenuOperations;
 
+/// <summary>
+/// Renames a top level <see cref="MenuBarItem"/> on a <see cref="MenuBar"/> (File, Edit etc).
+/// </summary>
 public class RenameMenuOperation : RenameOperation<MenuBar, MenuBarItem>
 {
     /// <summary>

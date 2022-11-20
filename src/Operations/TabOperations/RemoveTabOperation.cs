@@ -25,6 +25,7 @@ public class RemoveTabOperation : RemoveOperation<TabView, TabView.Tab>
     {
     }
 
+    /// <inheritdoc/>
     protected override void SetNeedsDisplay()
     {
         if (!this.View.Tabs.Contains(this.View.SelectedTab))

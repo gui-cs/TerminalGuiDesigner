@@ -7,118 +7,117 @@
 //      You can make changes to this file and they will not be overwritten when saving.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
-namespace TerminalGuiDesigner.UI.Windows {
-    using System;
-    using Terminal.Gui;
-    using Attribute = Terminal.Gui.Attribute;
+namespace TerminalGuiDesigner.UI.Windows; 
+using System;
+using Terminal.Gui;
+using Attribute = Terminal.Gui.Attribute;
+
+/// <summary>
+/// Editor for a <see cref="ColorScheme"/>.
+/// </summary>
+public partial class ColorSchemeEditor {
+    
+    /// <summary>
+    /// All colors to use in all <see cref="View"/> states (focused, normal etc).
+    /// </summary>
+    public ColorScheme Result {get;}
+    
+    /// <summary>
+    /// True if dialog was closed without clicking Ok (e.g. Cancel or Ctrl+Q).
+    /// </summary>
+    public bool Cancelled { get; set; } = true;
 
     /// <summary>
-    /// Editor for a <see cref="ColorScheme"/>.
+    /// Creates a new instance of the <see cref="ColorSchemeEditor"/> class.
     /// </summary>
-    public partial class ColorSchemeEditor {
-        
-        /// <summary>
-        /// All colors to use in all <see cref="View"/> states (focused, normal etc).
-        /// </summary>
-        public ColorScheme Result {get;}
-        
-        /// <summary>
-        /// True if dialog was closed without clicking Ok (e.g. Cancel or Ctrl+Q).
-        /// </summary>
-        public bool Cancelled { get; set; } = true;
+    /// <param name="scheme"></param>
+    public ColorSchemeEditor(ColorScheme scheme) {
+        InitializeComponent();
 
-        /// <summary>
-        /// Creates a new instance of the <see cref="ColorSchemeEditor"/> class.
-        /// </summary>
-        /// <param name="scheme"></param>
-        public ColorSchemeEditor(ColorScheme scheme) {
-            InitializeComponent();
+        Result = Clone(scheme);
 
-            Result = Clone(scheme);
+        SetColorPatches();
 
+        btnEditNormal.Clicked += ()=>{
+            Result.Normal = PickNewColorsFor(Result.Normal);
             SetColorPatches();
-
-            btnEditNormal.Clicked += ()=>{
-                Result.Normal = PickNewColorsFor(Result.Normal);
-                SetColorPatches();
-                };
-
-
-            btnEditHotNormal.Clicked += ()=>{
-                Result.HotNormal = PickNewColorsFor(Result.HotNormal);
-                SetColorPatches();
-                };
-
-
-            btnEditFocus.Clicked += ()=>{
-                Result.Focus = PickNewColorsFor(Result.Focus);
-                SetColorPatches();
-                };
-
-
-            btnEditHotFocus.Clicked += ()=>{
-                Result.HotFocus = PickNewColorsFor(Result.HotFocus);
-                SetColorPatches();
-                };
-
-
-            btnEditDisabled.Clicked += ()=>{
-                Result.Disabled = PickNewColorsFor(Result.Disabled);
-                SetColorPatches();
-                };
-
-            btnCancel.Clicked += ()=>{
-                Cancelled = true;
-                Application.RequestStop();
             };
 
-            btnOk.Clicked += ()=>{
-                Cancelled = false;
-                Application.RequestStop();
+
+        btnEditHotNormal.Clicked += ()=>{
+            Result.HotNormal = PickNewColorsFor(Result.HotNormal);
+            SetColorPatches();
             };
-            
-        }
 
-        private ColorScheme Clone(ColorScheme scheme)
-        {
-            return new ColorScheme{
-                Normal = new Attribute(scheme.Normal.Foreground,scheme.Normal.Background),
-                HotNormal = new Attribute(scheme.HotNormal.Foreground,scheme.HotNormal.Background),
-                Focus = new Attribute(scheme.Focus.Foreground,scheme.Focus.Background),
-                HotFocus = new Attribute(scheme.HotFocus.Foreground,scheme.HotFocus.Background),
-                Disabled = new Attribute(scheme.Disabled.Foreground,scheme.Disabled.Background),
+
+        btnEditFocus.Clicked += ()=>{
+            Result.Focus = PickNewColorsFor(Result.Focus);
+            SetColorPatches();
             };
-        }
 
-        private Terminal.Gui.Attribute PickNewColorsFor(Terminal.Gui.Attribute current)
-        {
-            var pick = new ColorPicker(current);
-            Application.Run(pick);
 
-            return pick.Cancelled ? current : pick.Result ?? current;
-        }
+        btnEditHotFocus.Clicked += ()=>{
+            Result.HotFocus = PickNewColorsFor(Result.HotFocus);
+            SetColorPatches();
+            };
 
-        private void SetColorPatches()
-        {
-            SetColor(lblBackgroundNormal,Result.Normal.Background);
-            SetColor(lblForegroundNormal,Result.Normal.Foreground);
 
-            SetColor(lblBackgroundHotNormal,Result.HotNormal.Background);
-            SetColor(lblForegroundHotNormal,Result.HotNormal.Foreground);
+        btnEditDisabled.Clicked += ()=>{
+            Result.Disabled = PickNewColorsFor(Result.Disabled);
+            SetColorPatches();
+            };
 
-            SetColor(lblBackgroundFocus,Result.Focus.Background);
-            SetColor(lblForegroundFocus,Result.Focus.Foreground);
+        btnCancel.Clicked += ()=>{
+            Cancelled = true;
+            Application.RequestStop();
+        };
 
-            SetColor(lblBackgroundHotFocus,Result.HotFocus.Background);
-            SetColor(lblForegroundHotFocus,Result.HotFocus.Foreground);
+        btnOk.Clicked += ()=>{
+            Cancelled = false;
+            Application.RequestStop();
+        };
+        
+    }
 
-            SetColor(lblBackgroundDisabled,Result.Disabled.Background);
-            SetColor(lblForegroundDisabled,Result.Disabled.Foreground);
-        }
+    private ColorScheme Clone(ColorScheme scheme)
+    {
+        return new ColorScheme{
+            Normal = new Attribute(scheme.Normal.Foreground,scheme.Normal.Background),
+            HotNormal = new Attribute(scheme.HotNormal.Foreground,scheme.HotNormal.Background),
+            Focus = new Attribute(scheme.Focus.Foreground,scheme.Focus.Background),
+            HotFocus = new Attribute(scheme.HotFocus.Foreground,scheme.HotFocus.Background),
+            Disabled = new Attribute(scheme.Disabled.Foreground,scheme.Disabled.Background),
+        };
+    }
 
-        private void SetColor(Label label, Color color)
-        {
-            label.ColorScheme = new ColorScheme{Normal = new Terminal.Gui.Attribute(color,color)};
-        }
+    private Terminal.Gui.Attribute PickNewColorsFor(Terminal.Gui.Attribute current)
+    {
+        var pick = new ColorPicker(current);
+        Application.Run(pick);
+
+        return pick.Cancelled ? current : pick.Result ?? current;
+    }
+
+    private void SetColorPatches()
+    {
+        SetColor(lblBackgroundNormal,Result.Normal.Background);
+        SetColor(lblForegroundNormal,Result.Normal.Foreground);
+
+        SetColor(lblBackgroundHotNormal,Result.HotNormal.Background);
+        SetColor(lblForegroundHotNormal,Result.HotNormal.Foreground);
+
+        SetColor(lblBackgroundFocus,Result.Focus.Background);
+        SetColor(lblForegroundFocus,Result.Focus.Foreground);
+
+        SetColor(lblBackgroundHotFocus,Result.HotFocus.Background);
+        SetColor(lblForegroundHotFocus,Result.HotFocus.Foreground);
+
+        SetColor(lblBackgroundDisabled,Result.Disabled.Background);
+        SetColor(lblForegroundDisabled,Result.Disabled.Foreground);
+    }
+
+    private void SetColor(Label label, Color color)
+    {
+        label.ColorScheme = new ColorScheme{Normal = new Terminal.Gui.Attribute(color,color)};
     }
 }

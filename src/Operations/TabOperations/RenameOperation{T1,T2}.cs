@@ -6,6 +6,13 @@ using TerminalGuiDesigner.UI.Windows;
 
 namespace TerminalGuiDesigner.Operations.TabOperations;
 
+/// <summary>
+/// Generic abstract base class for an <see cref="Operation"/> that will rename a single
+/// array element of Type <typeparamref name="T2"/> in the collection hosted by a <see cref="View"/>
+/// of Type <typeparamref name="T1"/>.
+/// </summary>
+/// <typeparam name="T1">Type of <see cref="View"/> that hosts the collection.</typeparam>
+/// <typeparam name="T2">Type of array element that is to be renamed (e.g. <see cref="TabView.Tab"/>).</typeparam>
 public abstract class RenameOperation<T1, T2> : GenericArrayElementOperation<T1, T2>
     where T1 : View
 {

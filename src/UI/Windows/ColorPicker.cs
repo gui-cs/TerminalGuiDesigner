@@ -10,69 +10,68 @@
 using Terminal.Gui;
 using Attribute = Terminal.Gui.Attribute;
 
-namespace TerminalGuiDesigner.UI.Windows
+namespace TerminalGuiDesigner.UI.Windows;
+
+/// <summary>
+/// Prompts user to pick a two <see cref="Color"/> to make an <see cref="Attribute"/>.
+/// </summary>
+public partial class ColorPicker
 {
     /// <summary>
-    /// Prompts user to pick a two <see cref="Color"/> to make an <see cref="Attribute"/>.
+    /// The combination of foreground and background <see cref="Color"/> the user chose.
     /// </summary>
-    public partial class ColorPicker
+    public Terminal.Gui.Attribute? Result { get; internal set; }
+
+    /// <summary>
+    /// True if user closed dialog with cancel.
+    /// </summary>
+    public bool Cancelled { get; internal set; }
+
+    /// <summary>
+    /// Creates a new instance of the <see cref="ColorPicker"/> class.
+    /// </summary>
+    /// <param name="currentValue"></param>
+    public ColorPicker(Attribute? currentValue)
     {
-        /// <summary>
-        /// The combination of foreground and background <see cref="Color"/> the user chose.
-        /// </summary>
-        public Terminal.Gui.Attribute? Result { get; internal set; }
+        InitializeComponent();
 
-        /// <summary>
-        /// True if user closed dialog with cancel.
-        /// </summary>
-        public bool Cancelled { get; internal set; }
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="ColorPicker"/> class.
-        /// </summary>
-        /// <param name="currentValue"></param>
-        public ColorPicker(Attribute? currentValue)
+        if (currentValue != null)
         {
-            InitializeComponent();
-
-            if (currentValue != null)
-            {
-                radiogroup1.SelectedItem = (int)currentValue.Value.Foreground;
-                radiogroup2.SelectedItem = (int)currentValue.Value.Background;
-            }
-
-            lblPreview.ColorScheme = new ColorScheme();
-            UpdatePreview();
-
-            radiogroup1.SelectedItemChanged += (s) => UpdatePreview();
-            radiogroup2.SelectedItemChanged += (s) => UpdatePreview();
-
-            btnOk.Clicked += () => Ok();
-            btnCancel.Clicked += () => Cancel();
+            radiogroup1.SelectedItem = (int)currentValue.Value.Foreground;
+            radiogroup2.SelectedItem = (int)currentValue.Value.Background;
         }
 
-        private void Ok()
-        {
-            Cancelled = false;
-            Result = GetColor();
-            Application.RequestStop();
-        }
-        private void Cancel()
-        {
-            Cancelled = true;
-            Result = null;
-            Application.RequestStop();
-        }
+        lblPreview.ColorScheme = new ColorScheme();
+        UpdatePreview();
 
-        private void UpdatePreview()
-        {
-            lblPreview.ColorScheme.Normal = GetColor();
-            lblPreview.SetNeedsDisplay();
-        }
+        radiogroup1.SelectedItemChanged += (s) => UpdatePreview();
+        radiogroup2.SelectedItemChanged += (s) => UpdatePreview();
 
-        private Attribute GetColor()
-        {
-            return Attribute.Make((Color)radiogroup1.SelectedItem, (Color)radiogroup2.SelectedItem);
-        }
+        btnOk.Clicked += () => Ok();
+        btnCancel.Clicked += () => Cancel();
+    }
+
+    private void Ok()
+    {
+        Cancelled = false;
+        Result = GetColor();
+        Application.RequestStop();
+    }
+    private void Cancel()
+    {
+        Cancelled = true;
+        Result = null;
+        Application.RequestStop();
+    }
+
+    private void UpdatePreview()
+    {
+        lblPreview.ColorScheme.Normal = GetColor();
+        lblPreview.SetNeedsDisplay();
+    }
+
+    private Attribute GetColor()
+    {
+        return Attribute.Make((Color)radiogroup1.SelectedItem, (Color)radiogroup2.SelectedItem);
     }
 }

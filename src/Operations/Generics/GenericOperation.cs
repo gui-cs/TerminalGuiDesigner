@@ -10,6 +10,11 @@ namespace TerminalGuiDesigner.Operations.Generics;
 public abstract class GenericOperation<T> : Operation
         where T : View
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GenericOperation{T}"/> class.
+    /// </summary>
+    /// <param name="design">Design Wrapper for a <see cref="View"/> of Type <typeparamref name="T"/>.</param>
+    /// <exception cref="ArgumentException">Thrown if <paramref name="design"/> does not wrap a <typeparamref name="T"/>.</exception>
     public GenericOperation(Design design)
     {
         if (design.View is not T t)

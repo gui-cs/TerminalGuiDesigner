@@ -7,33 +7,32 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TerminalGuiDesigner {
-    using System;
-    using Terminal.Gui;
+namespace TerminalGuiDesigner; 
+using System;
+using Terminal.Gui;
+
+
+public partial class LoadingDialog : Terminal.Gui.Dialog {
     
+    private Terminal.Gui.Label lblLoading;
     
-    public partial class LoadingDialog : Terminal.Gui.Dialog {
-        
-        private Terminal.Gui.Label lblLoading;
-        
-        private void InitializeComponent() {
-            this.Text = "";
-            this.Width = 40;
-            this.Height = 5;
-            this.X = Pos.Center();
-            this.Y = Pos.Center();
-            this.TextAlignment = TextAlignment.Left;
-            this.Title = "Loading...";
-            this.Title = "Loading...";
-            this.lblLoading = new Terminal.Gui.Label();
-            this.lblLoading.Data = "lblLoading";
-            this.lblLoading.Text = "Please wait ...";
-            this.lblLoading.Width = 36;
-            this.lblLoading.Height = 1;
-            this.lblLoading.X = 1;
-            this.lblLoading.Y = 1;
-            this.lblLoading.TextAlignment = TextAlignment.Left;
-            this.Add(this.lblLoading);
-        }
+    private void InitializeComponent() {
+        this.Text = "";
+        this.Width = 40;
+        this.Height = 5;
+        this.X = Pos.Center();
+        this.Y = Pos.Center();
+        this.TextAlignment = TextAlignment.Left;
+        this.Title = "Loading...";
+        this.Title = "Loading...";
+        this.lblLoading = new Terminal.Gui.Label();
+        this.lblLoading.Data = "lblLoading";
+        this.lblLoading.Text = "Please wait ...";
+        this.lblLoading.Width = 36;
+        this.lblLoading.Height = 1;
+        this.lblLoading.X = 1;
+        this.lblLoading.Y = 1;
+        this.lblLoading.TextAlignment = TextAlignment.Left;
+        this.Add(this.lblLoading);
     }
 }

@@ -2,9 +2,23 @@
 
 namespace TerminalGuiDesigner.Operations.Generics;
 
+/// <summary>
+/// Generic abstract base class for operations which modify an array of elements
+/// of Type <typeparamref name="T2"/> hosted by a <see cref="View"/> of Type
+/// <typeparamref name="T1"/>.
+/// </summary>
+/// <typeparam name="T1">The <see cref="View"/> Type that hosts the collection.</typeparam>
+/// <typeparam name="T2">The array element type.</typeparam>
 public abstract class GenericArrayOperation<T1, T2> : GenericOperation<T1>
     where T1 : View
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="GenericArrayOperation{T1, T2}"/> class.
+    /// </summary>
+    /// <param name="arrayGetter">Method for getting the current collection.</param>
+    /// <param name="arraySetter">Method for setting the new collection.</param>
+    /// <param name="stringGetter">Method for turning an element into a user readable string (Name, Title etc).</param>
+    /// <param name="design">Wrapper for a <see cref="View"/> of Type <typeparamref name="T1"/>.</param>
     public GenericArrayOperation(
         ArrayGetterDelegate<T1, T2> arrayGetter,
         ArraySetterDelegate<T1, T2> arraySetter,

@@ -17,10 +17,11 @@ public class SourceCodeFile
     public const string ExpectedExtension = ".Designer.cs";
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="SourceCodeFile"/> class.
     /// Declares a new pair of files (e.g. MyClass.cs and MyClass.Designer.cs) which
     /// may or may not both exist yet.
     /// </summary>
-    /// <param name="file">Either source file of the pair (e.g. either MyClass.cs or MyClass.Designer.cs)</param>
+    /// <param name="file">Either source file of the pair (e.g. either MyClass.cs or MyClass.Designer.cs).</param>
     public SourceCodeFile(FileInfo file)
     {
         if (file.Name.EndsWith(ExpectedExtension))
