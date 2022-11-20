@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="TerminalGuiDesigner.Operations.Operation" Collapsed="true">
-    <Position X="1.5" Y="1.5" Width="1.5" />
+    <Position X="0.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAABQAEAAAgABBBCAAAAAAAACAAAAAACAA=</HashCode>
       <FileName>Operations\Operation.cs</FileName>
@@ -9,77 +9,112 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="TerminalGuiDesigner.Operations.Generics.GenericOperation&lt;T&gt;" Collapsed="true">
-    <Position X="1.25" Y="2.5" Width="2" />
+    <Position X="0.5" Y="2.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Operations\Generics\GenericOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TerminalGuiDesigner.Operations.Generics.GenericArrayOperation&lt;T1, T2&gt;" Collapsed="true">
-    <Position X="1" Y="3.5" Width="2.5" />
+    <Position X="0.5" Y="3.5" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>AAIAAAAAAAAAAAAAgAAABAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <HashCode>AAIAAAAAAAAAAAAAgAAABAAAAAAAAAgAAAAAAAAACAA=</HashCode>
       <FileName>Operations\Generics\GenericArrayOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TerminalGuiDesigner.Operations.Generics.GenericArrayElementOperation&lt;T1, T2&gt;" Collapsed="true">
-    <Position X="0.75" Y="4.5" Width="3" />
+    <Position X="0.5" Y="4.5" Width="3" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Operations\Generics\GenericArrayElementOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TerminalGuiDesigner.Operations.Generics.AddOperation&lt;T1, T2&gt;" Collapsed="true">
-    <Position X="5" Y="3.5" Width="2" />
+    <Position X="6.25" Y="5.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAgAAAABCAAAAAAAABBAAAEAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Operations\Generics\AddOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TerminalGuiDesigner.Operations.Generics.MoveOperation&lt;T1, T2&gt;" Collapsed="true">
-    <Position X="0.75" Y="5.75" Width="3" />
+    <Position X="0.5" Y="5.5" Width="3" />
     <TypeIdentifier>
       <HashCode>IAAAAAAAAAAABAAEAAAgAABFAAAAAAAEAAAAAAAAAAA=</HashCode>
       <FileName>Operations\Generics\MoveOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TerminalGuiDesigner.Operations.MenuOperations.MoveMenuOperation" Collapsed="true">
-    <Position X="0.5" Y="7.25" Width="1.5" />
+    <Position X="0.5" Y="6.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Operations\MenuOperations\MoveMenuOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TerminalGuiDesigner.Operations.TableViewOperations.MoveColumnOperation" Collapsed="true">
-    <Position X="2" Y="7.25" Width="1.5" />
+    <Position X="0.5" Y="6.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Operations\TableViewOperations\MoveColumnOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TerminalGuiDesigner.Operations.TabOperations.MoveTabOperation" Collapsed="true">
-    <Position X="3.5" Y="7.25" Width="1.5" />
+    <Position X="0.5" Y="6.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Operations\TabOperations\MoveTabOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TerminalGuiDesigner.Operations.MenuOperations.AddMenuOperation" Collapsed="true">
-    <Position X="4.25" Y="4.5" Width="1.5" />
+    <Position X="6.25" Y="6.25" Width="2" />
     <TypeIdentifier>
       <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Operations\MenuOperations\AddMenuOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TerminalGuiDesigner.Operations.TableViewOperations.AddColumnOperation" Collapsed="true">
-    <Position X="5.75" Y="4.5" Width="1.5" />
+    <Position X="6.25" Y="6.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAA=</HashCode>
       <FileName>Operations\TableViewOperations\AddColumnOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="TerminalGuiDesigner.Operations.TabOperations.AddTabOperation" Collapsed="true">
+    <Position X="6.25" Y="6.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Operations\TabOperations\AddTabOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TerminalGuiDesigner.Operations.Generics.RemoveOperation&lt;T1, T2&gt;" Collapsed="true">
+    <Position X="3.5" Y="5.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAEAAAAAABBAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Operations\Generics\RemoveOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TerminalGuiDesigner.Operations.MenuOperations.RemoveMenuOperation" Collapsed="true">
+    <Position X="3.5" Y="6.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Operations\MenuOperations\RemoveMenuOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TerminalGuiDesigner.Operations.TableViewOperations.RemoveColumnOperation" Collapsed="true">
+    <Position X="3.5" Y="6.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Operations\TableViewOperations\RemoveColumnOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TerminalGuiDesigner.Operations.TabOperations.RemoveTabOperation" Collapsed="true">
+    <Position X="3.5" Y="6.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Operations\TabOperations\RemoveTabOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Interface Name="TerminalGuiDesigner.Operations.IOperation" Collapsed="true">
-    <Position X="1.25" Y="0.5" Width="1.5" />
+    <Position X="0.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAABAAAAAAgABABCAAAAAAAACAAAAAACAA=</HashCode>
       <FileName>Operations\IOperation.cs</FileName>

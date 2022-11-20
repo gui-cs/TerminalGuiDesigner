@@ -410,8 +410,12 @@ public class Design
         if (this.View is TabView tabView)
         {
             yield return new AddTabOperation(this, null);
-            yield return new RemoveTabOperation(this);
-            yield return new RenameTabOperation(this);
+
+            if (tabView.SelectedTab != null)
+            {
+                yield return new RemoveTabOperation(this, tabView.SelectedTab);
+                yield return new RenameTabOperation(this);
+            }
 
             var selected = tabView.SelectedTab;
 

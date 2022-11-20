@@ -49,6 +49,15 @@ public abstract class GenericArrayOperation<T1, T2> : GenericOperation<T1>
 
         current.Add(newItem);
         this.ArraySetter(this.View, current.Cast<T2>().ToArray());
+        this.SetNeedsDisplay();
+    }
+
+    /// <summary>
+    /// Calls any update/refresh status code that is needed after making changes to collection.
+    /// Default implementation just calls <see cref="View.SetNeedsDisplay()"/> on <see cref="View"/>.
+    /// </summary>
+    protected virtual void SetNeedsDisplay()
+    {
         this.View.SetNeedsDisplay();
     }
 
@@ -56,18 +65,21 @@ public abstract class GenericArrayOperation<T1, T2> : GenericOperation<T1>
     /// Removes <paramref name="toRemove"/> from <see cref="View"/>.
     /// </summary>
     /// <param name="toRemove">Array element to remove.</param>
-    protected void Remove(T2? toRemove)
+    /// <returns>True if element was removed.  False if element was null or not in collection.</returns>
+    protected bool Remove(T2? toRemove)
     {
         var current = this.ArrayGetter(this.View).ToList();
 
         // its not there anyways
         if (toRemove == null || !current.Contains(toRemove))
         {
-            return;
+            return false;
         }
 
         current.Remove(toRemove);
         this.ArraySetter(this.View, current.Cast<T2>().ToArray());
-        this.View.SetNeedsDisplay();
+        this.SetNeedsDisplay();
+
+        return true;
     }
 }

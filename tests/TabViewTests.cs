@@ -98,13 +98,13 @@ class TabViewTests : Tests
         tv.SelectedTab = tv.Tabs.First();
 
         // try to remove the first tab
-        Assert.IsTrue(OperationManager.Instance.Do(new RemoveTabOperation(d)));
+        Assert.IsTrue(OperationManager.Instance.Do(new RemoveTabOperation(d, tv.SelectedTab)));
 
         Assert.AreEqual(1, tv.Tabs.Count);
         Assert.AreEqual("Tab2", tv.Tabs.ElementAt(0).Text);
 
-        // remove the last tab (tab2
-        Assert.IsTrue(OperationManager.Instance.Do(new RemoveTabOperation(d)));
+        // remove the last tab (tab2)
+        Assert.IsTrue(OperationManager.Instance.Do(new RemoveTabOperation(d, tv.SelectedTab)));
         Assert.IsEmpty(tv.Tabs);
 
         OperationManager.Instance.Undo();
