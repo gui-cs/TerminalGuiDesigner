@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Headers;
-using Terminal.Gui;
+﻿using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
 

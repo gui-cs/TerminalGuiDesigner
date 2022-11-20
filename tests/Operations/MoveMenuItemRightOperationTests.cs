@@ -1,11 +1,5 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terminal.Gui;
-using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.Operations.MenuOperations;
 
 namespace UnitTests.Operations;

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Reflection;
 using Terminal.Gui;
 using TerminalGuiDesigner.ToCode;

@@ -1,12 +1,6 @@
-using System.IO;
-using System.Linq;
 using NStack;
 using NUnit.Framework;
 using Terminal.Gui;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.FromCode;
-using TerminalGuiDesigner.Operations;
-using TerminalGuiDesigner.ToCode;
 
 namespace UnitTests;
 

@@ -1,5 +1,5 @@
 ﻿using Terminal.Gui;
-using TerminalGuiDesigner.Operations.TabOperations;
+using TerminalGuiDesigner.Operations.Generics;
 
 namespace TerminalGuiDesigner.Operations.MenuOperations;
 

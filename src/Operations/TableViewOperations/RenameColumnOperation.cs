@@ -1,9 +1,6 @@
 ﻿using System.Data;
 using Terminal.Gui;
-using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.Operations.Generics;
-using TerminalGuiDesigner.Operations.TabOperations;
-using TerminalGuiDesigner.UI.Windows;
 
 namespace TerminalGuiDesigner.Operations.TableViewOperations;
 
