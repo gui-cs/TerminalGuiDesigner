@@ -1,10 +1,7 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using NStack;
-using Terminal.Gui;
-using TerminalGuiDesigner.Operations.Generics;
+﻿using Terminal.Gui;
 using TerminalGuiDesigner.UI.Windows;
 
-namespace TerminalGuiDesigner.Operations.TabOperations;
+namespace TerminalGuiDesigner.Operations.Generics;
 
 /// <summary>
 /// Generic abstract base class for an <see cref="Operation"/> that will rename a single

@@ -1,5 +1,4 @@
-﻿using System.Data;
-using Terminal.Gui;
+﻿using Terminal.Gui;
 using TerminalGuiDesigner.Operations.Generics;
 
 namespace TerminalGuiDesigner.Operations.MenuOperations;

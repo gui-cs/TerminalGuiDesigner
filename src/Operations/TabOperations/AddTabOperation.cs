@@ -1,6 +1,5 @@
 using Terminal.Gui;
 using TerminalGuiDesigner.Operations.Generics;
-using TerminalGuiDesigner.UI.Windows;
 using static Terminal.Gui.TabView;
 
 namespace TerminalGuiDesigner.Operations.TabOperations;
