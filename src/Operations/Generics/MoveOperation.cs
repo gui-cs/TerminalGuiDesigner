@@ -19,8 +19,6 @@ public abstract class MoveOperation<T1, T2> : GenericArrayElementOperation<T1, T
     private readonly int originalIdx;
     private readonly int newIndex;
 
-    private T2 toMove;
-
     /// <summary>
     /// Initializes a new instance of the <see cref="MoveOperation{T1, T2}"/> class.
     /// </summary>
@@ -58,7 +56,6 @@ public abstract class MoveOperation<T1, T2> : GenericArrayElementOperation<T1, T
         }
 
         this.adjustment = adjustment;
-        this.toMove = toMove;
         this.Category = stringGetter(toMove);
     }
 
@@ -72,12 +69,12 @@ public abstract class MoveOperation<T1, T2> : GenericArrayElementOperation<T1, T
 
         if (this.adjustment < 0)
         {
-            return $"Move '{this.StringGetter(this.toMove)}' Left";
+            return $"Move '{this.StringGetter(this.OperateOn)}' Left";
         }
 
         if (this.adjustment > 0)
         {
-            return $"Move '{this.StringGetter(this.toMove)}' Right";
+            return $"Move '{this.StringGetter(this.OperateOn)}' Right";
         }
 
         return base.ToString();
@@ -94,8 +91,8 @@ public abstract class MoveOperation<T1, T2> : GenericArrayElementOperation<T1, T
     {
         var list = this.ArrayGetter(this.View).ToList();
 
-        list.Remove(this.toMove);
-        list.Insert(this.originalIdx, this.toMove);
+        list.Remove(this.OperateOn);
+        list.Insert(this.originalIdx, this.OperateOn);
 
         this.ArraySetter(this.View, list.Cast<T2>().ToArray());
         this.SetNeedsDisplay();
@@ -106,8 +103,8 @@ public abstract class MoveOperation<T1, T2> : GenericArrayElementOperation<T1, T
     {
         var list = this.ArrayGetter(this.View).ToList();
 
-        list.Remove(this.toMove);
-        list.Insert(this.newIndex, this.toMove);
+        list.Remove(this.OperateOn);
+        list.Insert(this.newIndex, this.OperateOn);
 
         this.ArraySetter(this.View, list.Cast<T2>().ToArray());
         this.SetNeedsDisplay();

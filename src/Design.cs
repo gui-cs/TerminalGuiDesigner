@@ -414,7 +414,7 @@ public class Design
             if (tabView.SelectedTab != null)
             {
                 yield return new RemoveTabOperation(this, tabView.SelectedTab);
-                yield return new RenameTabOperation(this);
+                yield return new RenameTabOperation(this, tabView.SelectedTab, null);
             }
 
             var selected = tabView.SelectedTab;
