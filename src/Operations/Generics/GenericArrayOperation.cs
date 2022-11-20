@@ -37,9 +37,16 @@ public abstract class GenericArrayOperation<T1, T2> : GenericOperation<T1>
     /// Adds <paramref name="newItem"/> to <see cref="View"/>.
     /// </summary>
     /// <param name="newItem">The array element to add.</param>
-    protected void Add(T2 newItem)
+    protected void Add(T2? newItem)
     {
         var current = this.ArrayGetter(this.View).ToList();
+
+        // its already there
+        if (newItem == null || current.Contains(newItem))
+        {
+            return;
+        }
+
         current.Add(newItem);
         this.ArraySetter(this.View, current.Cast<T2>().ToArray());
         this.View.SetNeedsDisplay();
@@ -49,9 +56,16 @@ public abstract class GenericArrayOperation<T1, T2> : GenericOperation<T1>
     /// Removes <paramref name="toRemove"/> from <see cref="View"/>.
     /// </summary>
     /// <param name="toRemove">Array element to remove.</param>
-    protected void Remove(T2 toRemove)
+    protected void Remove(T2? toRemove)
     {
         var current = this.ArrayGetter(this.View).ToList();
+
+        // its not there anyways
+        if (toRemove == null || !current.Contains(toRemove))
+        {
+            return;
+        }
+
         current.Remove(toRemove);
         this.ArraySetter(this.View, current.Cast<T2>().ToArray());
         this.View.SetNeedsDisplay();

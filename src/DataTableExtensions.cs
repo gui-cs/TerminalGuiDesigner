@@ -15,6 +15,12 @@ namespace TerminalGuiDesigner
         /// <param name="newOrder">The new order for all columns in <paramref name="dt"/>.</param>
         public static void ReOrderColumns(this DataTable dt, DataColumn[] newOrder)
         {
+            foreach (DataColumn toRemove in dt.Columns.Cast<DataColumn>().Except(newOrder).ToArray())
+            {
+                dt.Columns.Remove(toRemove);
+            }
+
+
             if (newOrder.Intersect(dt.Columns.Cast<DataColumn>()).Count() != newOrder.Length)
             {
                 throw new ArgumentException("Not all columns provided appeared in DataTable or additional columns were in the provided array.");

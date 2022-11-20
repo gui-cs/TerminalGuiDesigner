@@ -43,4 +43,26 @@ public static class TabViewExtensions
             tv.AddTab(t, i == newIndex);
         }
     }
+
+    /// <summary>
+    /// Reorders <see cref="Tab"/> of <paramref name="tabView"/> to match <paramref name="newOrder"/>.
+    /// </summary>
+    /// <param name="tabView">The view whose tabs should be reordered.</param>
+    /// <param name="newOrder">The new order to enforce.</param>
+    public static void ReOrderTabs(this TabView tabView, TabView.Tab[] newOrder)
+    {
+        var selectedBefore = tabView.SelectedTab;
+
+        foreach (var tab in tabView.Tabs.ToArray())
+        {
+            tabView.RemoveTab(tab);
+        }
+
+        foreach (var tab in newOrder)
+        {
+            tabView.AddTab(tab, true);
+        }
+
+        tabView.SelectedTab = selectedBefore;
+    }
 }

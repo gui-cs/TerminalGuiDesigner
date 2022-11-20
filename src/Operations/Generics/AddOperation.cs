@@ -27,24 +27,12 @@ public abstract class AddOperation<T1, T2> : GenericArrayOperation<T1, T2>
     /// <inheritdoc/>
     public override void Undo()
     {
-        // its not there anyways
-        if (this.newItem == null || !this.ArrayGetter(this.View).Contains(this.newItem))
-        {
-            return;
-        }
-
         this.Remove(this.newItem);
     }
 
     /// <inheritdoc/>
     public override void Redo()
     {
-        // its already there
-        if (this.newItem == null || this.ArrayGetter(this.View).Contains(this.newItem))
-        {
-            return;
-        }
-
         this.Add(this.newItem);
     }
 

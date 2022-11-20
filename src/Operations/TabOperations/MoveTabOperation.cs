@@ -20,28 +20,11 @@ public class MoveTabOperation : MoveOperation<TabView, TabView.Tab>
     public MoveTabOperation(Design design, TabView.Tab toMove, int adjustment)
         : base(
             (t) => t.Tabs.ToArray(),
-            SetTabs,
+            (v, a) => v.ReOrderTabs(a),
             tab => tab.Text.ToString() ?? "unnamed tab",
             design,
             toMove,
             adjustment)
     {
-    }
-
-    private static void SetTabs(TabView tabView, TabView.Tab[] newOrder)
-    {
-        var selectedBefore = tabView.SelectedTab;
-
-        foreach (var tab in tabView.Tabs.ToArray())
-        {
-            tabView.RemoveTab(tab);
-        }
-
-        foreach (var tab in newOrder)
-        {
-            tabView.AddTab(tab, true);
-        }
-
-        tabView.SelectedTab = selectedBefore;
     }
 }

@@ -13,7 +13,7 @@ internal class AddColumnOperationTests : Tests
         var d = Get10By10View();
         var ex = Assert.Throws<ArgumentException>(() => new AddColumnOperation(d, null));
 
-        Assert.AreEqual("Design must be for a TableView to support AddColumnOperation", ex?.Message);
+        Assert.AreEqual("Design must wrap a TableView to be used with this operation.", ex?.Message);
     }
     
     [Test]
