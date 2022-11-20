@@ -33,10 +33,10 @@ public class AddMenuOperation : AddOperation<MenuBar, MenuBarItem>
     /// <exception cref="ArgumentException">Thrown if the <paramref name="design"/> is not wrapping a <see cref="MenuBar"/>.</exception>
     public AddMenuOperation(Design design, string? name)
         : base(
-            v => v.Menus,
+            (v) => v.Menus,
             (v, a) => v.Menus = a,
-            s => s.Title.ToString() ?? "blank menu",
-            n => { return new MenuBarItem(n, new MenuItem[] { new MenuItem { Title = DefaultMenuItemText } }); },
+            (s) => s.Title.ToString() ?? "blank menu",
+            (v, n) => { return new MenuBarItem(n, new MenuItem[] { new MenuItem { Title = DefaultMenuItemText } }); },
             design,
             name)
     {

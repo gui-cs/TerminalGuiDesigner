@@ -6,5 +6,5 @@
 
     public delegate string StringGetterDelegate<T>(T arrayElement);
 
-    public delegate T ArrayElementFactory<T>(string name);
+    public delegate T2 ArrayElementFactory<T1, T2>(T1 view, string name);
 }

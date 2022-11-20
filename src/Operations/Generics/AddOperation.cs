@@ -9,13 +9,13 @@ public abstract class AddOperation<T1, T2> : GenericArrayOperation<T1, T2>
     private T2? newItem;
     private string? name;
 
-    public ArrayElementFactory<T2> ElementFactory { get; }
+    public ArrayElementFactory<T1, T2> ElementFactory { get; }
 
     public AddOperation(
         ArrayGetterDelegate<T1,T2> arrayGetter,
         ArraySetterDelegate<T1, T2> arraySetter,
         StringGetterDelegate<T2> stringGetter,
-        ArrayElementFactory<T2> elementFactory,
+        ArrayElementFactory<T1, T2> elementFactory,
         Design design,
         string? name)
         : base(arrayGetter, arraySetter, stringGetter, design)
@@ -77,7 +77,7 @@ public abstract class AddOperation<T1, T2> : GenericArrayOperation<T1, T2>
                 .Where(t => t != null)
                 .Cast<string>());
 
-        this.newItem = this.ElementFactory(uniqueName);
+        this.newItem = this.ElementFactory(this.View, uniqueName);
         this.Add(this.newItem);
         return true;
     }

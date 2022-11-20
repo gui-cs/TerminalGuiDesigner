@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TerminalGuiDesigner.Operations.Operation" Collapsed="true">
+    <Position X="1.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABQAEAAAgABBBCAAAAAAAACAAAAAACAA=</HashCode>
+      <FileName>Operations\Operation.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TerminalGuiDesigner.Operations.Generics.GenericOperation&lt;T&gt;" Collapsed="true">
+    <Position X="1.25" Y="2.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Operations\Generics\GenericOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TerminalGuiDesigner.Operations.Generics.GenericArrayOperation&lt;T1, T2&gt;" Collapsed="true">
+    <Position X="1" Y="3.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAgAAABAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Operations\Generics\GenericArrayOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TerminalGuiDesigner.Operations.Generics.GenericArrayElementOperation&lt;T1, T2&gt;" Collapsed="true">
+    <Position X="0.75" Y="4.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Operations\Generics\GenericArrayElementOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TerminalGuiDesigner.Operations.Generics.AddOperation&lt;T1, T2&gt;" Collapsed="true">
+    <Position X="5" Y="3.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAABCAAAAAAAABBAAAEAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Operations\Generics\AddOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TerminalGuiDesigner.Operations.Generics.MoveOperation&lt;T1, T2&gt;" Collapsed="true">
+    <Position X="0.75" Y="5.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAAAAAAABAAEAAAgAABFAAAAAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Operations\Generics\MoveOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TerminalGuiDesigner.Operations.MenuOperations.MoveMenuOperation" Collapsed="true">
+    <Position X="0.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Operations\MenuOperations\MoveMenuOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TerminalGuiDesigner.Operations.TableViewOperations.MoveColumnOperation" Collapsed="true">
+    <Position X="2" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Operations\TableViewOperations\MoveColumnOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TerminalGuiDesigner.Operations.TabOperations.MoveTabOperation" Collapsed="true">
+    <Position X="3.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Operations\TabOperations\MoveTabOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TerminalGuiDesigner.Operations.MenuOperations.AddMenuOperation" Collapsed="true">
+    <Position X="4.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Operations\MenuOperations\AddMenuOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TerminalGuiDesigner.Operations.TableViewOperations.AddColumnOperation" Collapsed="true">
+    <Position X="5.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Operations\TableViewOperations\AddColumnOperation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="TerminalGuiDesigner.Operations.IOperation" Collapsed="true">
+    <Position X="1.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAgABABCAAAAAAAACAAAAAACAA=</HashCode>
+      <FileName>Operations\IOperation.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
