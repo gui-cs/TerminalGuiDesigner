@@ -438,7 +438,17 @@ public class Design
 
         if (this.View is StatusBar sb)
         {
-            yield return new RenameStatusItemOperation(this, sb.Items[0]);
+            yield return new AddStatusItemOperation(this, null);
+
+            var item = sb.ScreenToMenuBarItem(pos.X);
+
+            if (item != null)
+            {
+                yield return new RemoveStatusItemOperation(this, item);
+                yield return new RenameStatusItemOperation(this, item, null);
+                yield return new MoveStatusItemOperation(this, item, -1);
+                yield return new MoveStatusItemOperation(this, item, 1);
+            }
         }
     }
 
