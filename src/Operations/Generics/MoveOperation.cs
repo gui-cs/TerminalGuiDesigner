@@ -1,7 +1,6 @@
 ﻿using Terminal.Gui;
-using TerminalGuiDesigner.Operations;
 
-namespace TerminalGuiDesigner;
+namespace TerminalGuiDesigner.Operations.Generics;
 
 /// <summary>
 /// Abstract base class for <see cref="Operation"/> which move something
@@ -9,7 +8,7 @@ namespace TerminalGuiDesigner;
 /// </summary>
 /// <typeparam name="T1">The <see cref="View"/> that your operation is modifying (e.g. <see cref="MenuBar"/>).</typeparam>
 /// <typeparam name="T2">The element type within the array that is being moved (e.g. <see cref="MenuBarItem"/>).</typeparam>
-public abstract class MoveOperation<T1, T2> : Operation
+public abstract class MoveOperation<T1, T2> : GenericArrayElementOperation<T1, T2>
     where T1 : View
 {
     /// <summary>
@@ -19,11 +18,7 @@ public abstract class MoveOperation<T1, T2> : Operation
     private readonly int adjustment;
     private readonly int originalIdx;
     private readonly int newIndex;
-    private readonly Func<T2, string> stringGetter;
-    private readonly Func<T1, T2[]> arrayGetter;
-    private readonly Action<T1, T2[]> arraySetter;
 
-    private T1 view;
     private T2 toMove;
 
     /// <summary>
@@ -35,20 +30,16 @@ public abstract class MoveOperation<T1, T2> : Operation
     /// <param name="design">Wrapper for a <see cref="View"/> of Type <typeparamref name="T1"/> which owns the collection (e.g. <see cref="MenuBar"/>).</param>
     /// <param name="toMove">The Array element to move.</param>
     /// <param name="adjustment">Negative to move left, positive to move right.</param>
-    protected MoveOperation(Func<T1, T2[]> arrayGetter, Action<T1, T2[]> arraySetter, Func<T2, string> stringGetter, Design design, T2 toMove, int adjustment)
+    protected MoveOperation(
+        ArrayGetterDelegate<T1,T2> arrayGetter,
+        ArraySetterDelegate<T1,T2> arraySetter,
+        StringGetterDelegate<T2> stringGetter,
+        Design design,
+        T2 toMove,
+        int adjustment)
+        : base(arrayGetter, arraySetter, stringGetter, design, toMove)
     {
-        if (design.View is not T1 t1)
-        {
-            throw new ArgumentException($"Design must wrap a {typeof(T1).Name} to be used with this operation.");
-        }
-
-        this.view = t1;
-        this.toMove = toMove;
-        this.stringGetter = stringGetter;
-        this.arrayGetter = arrayGetter;
-        this.arraySetter = arraySetter;
-
-        var array = arrayGetter(this.view);
+        var array = arrayGetter(this.View);
 
         this.originalIdx = Array.IndexOf(array, toMove);
 
@@ -67,6 +58,7 @@ public abstract class MoveOperation<T1, T2> : Operation
         }
 
         this.adjustment = adjustment;
+        this.toMove = toMove;
         this.Category = stringGetter(toMove);
     }
 
@@ -80,12 +72,12 @@ public abstract class MoveOperation<T1, T2> : Operation
 
         if (this.adjustment < 0)
         {
-            return $"Move '{this.stringGetter(this.toMove)}' Left";
+            return $"Move '{this.StringGetter(this.toMove)}' Left";
         }
 
         if (this.adjustment > 0)
         {
-            return $"Move '{this.stringGetter(this.toMove)}' Right";
+            return $"Move '{this.StringGetter(this.toMove)}' Right";
         }
 
         return base.ToString();
@@ -100,25 +92,25 @@ public abstract class MoveOperation<T1, T2> : Operation
     /// <inheritdoc/>
     public override void Undo()
     {
-        var list = this.arrayGetter(this.view).ToList();
+        var list = this.ArrayGetter(this.View).ToList();
 
         list.Remove(this.toMove);
         list.Insert(this.originalIdx, this.toMove);
 
-        this.arraySetter(this.view, list.Cast<T2>().ToArray());
-        this.view.SetNeedsDisplay();
+        this.ArraySetter(this.View, list.Cast<T2>().ToArray());
+        this.View.SetNeedsDisplay();
     }
 
     /// <inheritdoc/>
     protected override bool DoImpl()
     {
-        var list = this.arrayGetter(this.view).ToList();
+        var list = this.ArrayGetter(this.View).ToList();
 
         list.Remove(this.toMove);
         list.Insert(this.newIndex, this.toMove);
 
-        this.arraySetter(this.view, list.Cast<T2>().ToArray());
-        this.view.SetNeedsDisplay();
+        this.ArraySetter(this.View, list.Cast<T2>().ToArray());
+        this.View.SetNeedsDisplay();
         return true;
     }
 }

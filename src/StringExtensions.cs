@@ -16,7 +16,7 @@ public static class StringExtensions
     /// <param name="inScope">Comparison to use or null for default (<see cref="StringComparer.InvariantCulture"/>).</param>
     /// <param name="comparer">Comparer for matching against collection (e.g. case sensitive or not).</param>
     /// <returns>The same string if it is unique or a modified version (e.g. with numerical suffix).</returns>
-    public static string MakeUnique(this string name, IEnumerable<string> inScope, StringComparer? comparer = null)
+    public static string MakeUnique(this string? name, IEnumerable<string> inScope, StringComparer? comparer = null)
     {
         comparer ??= StringComparer.InvariantCulture;
 
