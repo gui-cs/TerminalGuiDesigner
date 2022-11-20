@@ -29,8 +29,8 @@ public abstract class MoveOperation<T1, T2> : GenericArrayElementOperation<T1, T
     /// <param name="toMove">The Array element to move.</param>
     /// <param name="adjustment">Negative to move left, positive to move right.</param>
     protected MoveOperation(
-        ArrayGetterDelegate<T1,T2> arrayGetter,
-        ArraySetterDelegate<T1,T2> arraySetter,
+        ArrayGetterDelegate<T1, T2> arrayGetter,
+        ArraySetterDelegate<T1, T2> arraySetter,
         StringGetterDelegate<T2> stringGetter,
         Design design,
         T2 toMove,
@@ -56,7 +56,6 @@ public abstract class MoveOperation<T1, T2> : GenericArrayElementOperation<T1, T
         }
 
         this.adjustment = adjustment;
-        this.Category = stringGetter(toMove);
     }
 
     /// <inheritdoc/>

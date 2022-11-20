@@ -2,7 +2,7 @@
 
 namespace TerminalGuiDesigner.Operations.Generics
 {
-    public class RemoveOperation<T1, T2> : GenericArrayElementOperation<T1, T2>
+    public abstract class RemoveOperation<T1, T2> : GenericArrayElementOperation<T1, T2>
         where T1 : View
     {
         private readonly int idx;

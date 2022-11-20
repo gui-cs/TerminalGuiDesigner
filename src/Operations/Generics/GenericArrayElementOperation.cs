@@ -18,6 +18,8 @@ public abstract class GenericArrayElementOperation<T1, T2> : GenericArrayOperati
         {
             throw new ArgumentException(nameof(element), $"{nameof(element)} {typeof(T2).Name} did not belong to the passed {nameof(design)}");
         }
+
+        this.Category = stringGetter(this.OperateOn);
     }
 
     /// <summary>

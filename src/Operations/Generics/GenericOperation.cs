@@ -10,6 +10,17 @@ namespace TerminalGuiDesigner.Operations.Generics;
 public abstract class GenericOperation<T> : Operation
         where T : View
 {
+    public GenericOperation(Design design)
+    {
+        if (design.View is not T t)
+        {
+            throw new ArgumentException($"Design must wrap a {typeof(T).Name} to be used with this operation.");
+        }
+
+        this.View = t;
+        this.Design = design;
+    }
+
     /// <summary>
     /// Gets the <see cref="Design"/> which will be operated on by this operation.  The
     /// <see cref="Design.View"/> will be a <typeparamref name="T"/>.
@@ -21,14 +32,4 @@ public abstract class GenericOperation<T> : Operation
     /// will be operated on.
     /// </summary>
     protected T View { get; }
-
-    public GenericOperation(Design design)
-    {
-        if (design.View is not T t)
-        {
-            throw new ArgumentException($"Design must wrap a {typeof(T).Name} to be used with this operation.");
-        }
-
-        this.View = t;
-    }
 }

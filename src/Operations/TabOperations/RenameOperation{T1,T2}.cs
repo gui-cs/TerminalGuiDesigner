@@ -19,9 +19,10 @@ public abstract class RenameOperation<T1, T2> : GenericArrayElementOperation<T1,
     /// <param name="arrayGetter">Method for retrieving the Array that should be modified.</param>
     /// <param name="arraySetter">Method to invoke with the new Array order.</param>
     /// <param name="stringGetter">Method for turning an Array element into a string (e.g. for <see cref="Operation.Category"/>).</param>
+    /// <param name="stringSetter">Method for updating the 'name' of <paramref name="toRename"/>.</param>
     /// <param name="design">Wrapper for a <see cref="View"/> of Type <typeparamref name="T1"/> which owns the collection (e.g. <see cref="MenuBar"/>).</param>
-    /// <param name="toMove">The Array element to move.</param>
-    /// <param name="adjustment">Negative to move left, positive to move right.</param>
+    /// <param name="toRename">Element to rename.</param>
+    /// <param name="newName">New name to use or null to prompt user for name.</param>
     protected RenameOperation(
         ArrayGetterDelegate<T1, T2> arrayGetter,
         ArraySetterDelegate<T1, T2> arraySetter,
@@ -33,7 +34,7 @@ public abstract class RenameOperation<T1, T2> : GenericArrayElementOperation<T1,
         : base(arrayGetter, arraySetter, stringGetter, design, toRename)
     {
         this.stringSetter = stringSetter;
-        this.originalName = StringGetter(toRename);
+        this.originalName = this.StringGetter(toRename);
         this.newName = newName;
     }
 
@@ -46,7 +47,12 @@ public abstract class RenameOperation<T1, T2> : GenericArrayElementOperation<T1,
     /// <inheritdoc/>
     public override void Redo()
     {
-        this.stringSetter(OperateOn, newName);
+        if (this.newName == null)
+        {
+            return;
+        }
+
+        this.stringSetter(this.OperateOn, this.newName);
         this.SetNeedsDisplay();
     }
 

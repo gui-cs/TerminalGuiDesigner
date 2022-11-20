@@ -1,6 +1,4 @@
-﻿using NLog.LayoutRenderers;
-using System.Reflection;
-using System.Text;
+﻿using System.Reflection;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
