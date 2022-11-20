@@ -15,7 +15,7 @@ internal class AddMenuOperationTests : Tests
     {
         var d = Get10By10View();
         var ex = Assert.Throws<ArgumentException>(() => new AddMenuOperation(d, "haha!"));
-        Assert.AreEqual("Design must be for a MenuBar to support AddMenuOperation", ex?.Message);
+        Assert.AreEqual("Design must wrap a MenuBar to be used with this operation.", ex?.Message);
     }
 
     [Test]

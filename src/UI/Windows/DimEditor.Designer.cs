@@ -8,121 +8,120 @@
 //      the code is regenerated.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
-namespace TerminalGuiDesigner.UI.Windows {
-    using System;
-    using Terminal.Gui;
+namespace TerminalGuiDesigner.UI.Windows; 
+using System;
+using Terminal.Gui;
+
+
+public partial class DimEditor : Terminal.Gui.Dialog {
     
+    private Terminal.Gui.RadioGroup rgDimType;
     
-    public partial class DimEditor : Terminal.Gui.Dialog {
-        
-        private Terminal.Gui.RadioGroup rgDimType;
-        
-        private Terminal.Gui.LineView lineview1;
-        
-        private Terminal.Gui.Label lblValue;
-        
-        private Terminal.Gui.TextField tbValue;
-        
-        private Terminal.Gui.Label lblOffset;
-        
-        private Terminal.Gui.TextField tbOffset;
-        
-        private Terminal.Gui.Button btnOk;
-        
-        private Terminal.Gui.Button btnCancel;
-        
-        private void InitializeComponent() {
-            this.btnCancel = new Terminal.Gui.Button();
-            this.btnOk = new Terminal.Gui.Button();
-            this.tbOffset = new Terminal.Gui.TextField();
-            this.lblOffset = new Terminal.Gui.Label();
-            this.tbValue = new Terminal.Gui.TextField();
-            this.lblValue = new Terminal.Gui.Label();
-            this.lineview1 = new Terminal.Gui.LineView();
-            this.rgDimType = new Terminal.Gui.RadioGroup();
-            this.Width = 40;
-            this.Height = 9;
-            this.X = Pos.Center();
-            this.Y = Pos.Center();
-            this.Modal = true;
-            this.Text = "";
-            this.Border.BorderStyle = Terminal.Gui.BorderStyle.Single;
-            this.Border.Effect3D = true;
-            this.Border.DrawMarginFrame = true;
-            this.TextAlignment = Terminal.Gui.TextAlignment.Left;
-            this.Title = "";
-            this.rgDimType.Width = 11;
-            this.rgDimType.Height = 3;
-            this.rgDimType.X = 1;
-            this.rgDimType.Y = 1;
-            this.rgDimType.Data = "rgDimType";
-            this.rgDimType.Text = "";
-            this.rgDimType.TextAlignment = Terminal.Gui.TextAlignment.Left;
-            this.rgDimType.RadioLabels = new NStack.ustring[] {
-                    "Absolute",
-                    "Percent",
-                    "Fill"};
-            this.Add(this.rgDimType);
-            this.lineview1.Width = 1;
-            this.lineview1.Height = 3;
-            this.lineview1.X = 12;
-            this.lineview1.Y = 1;
-            this.lineview1.Data = "lineview1";
-            this.lineview1.Text = "";
-            this.lineview1.TextAlignment = Terminal.Gui.TextAlignment.Left;
-            this.lineview1.LineRune = '│';
-            this.lineview1.Orientation = Terminal.Gui.Graphs.Orientation.Vertical;
-            this.Add(this.lineview1);
-            this.lblValue.Width = 6;
-            this.lblValue.Height = 1;
-            this.lblValue.X = 14;
-            this.lblValue.Y = 1;
-            this.lblValue.Data = "lblValue";
-            this.lblValue.Text = "Value:";
-            this.lblValue.TextAlignment = Terminal.Gui.TextAlignment.Left;
-            this.Add(this.lblValue);
-            this.tbValue.Width = 15;
-            this.tbValue.Height = 1;
-            this.tbValue.X = Pos.Right(lblValue) + 2;
-            this.tbValue.Y = Pos.Top(lblValue);
-            this.tbValue.Secret = false;
-            this.tbValue.Data = "tbValue";
-            this.tbValue.Text = "";
-            this.tbValue.TextAlignment = Terminal.Gui.TextAlignment.Left;
-            this.Add(this.tbValue);
-            this.lblOffset.Width = 7;
-            this.lblOffset.Height = 1;
-            this.lblOffset.X = 14;
-            this.lblOffset.Y = 3;
-            this.lblOffset.Data = "lblOffset";
-            this.lblOffset.Text = "Offset:";
-            this.lblOffset.TextAlignment = Terminal.Gui.TextAlignment.Left;
-            this.Add(this.lblOffset);
-            this.tbOffset.Width = 15;
-            this.tbOffset.Height = 1;
-            this.tbOffset.X = Pos.Right(lblOffset) + 1;
-            this.tbOffset.Y = Pos.Top(lblOffset);
-            this.tbOffset.Secret = false;
-            this.tbOffset.Data = "tbOffset";
-            this.tbOffset.Text = "";
-            this.tbOffset.TextAlignment = Terminal.Gui.TextAlignment.Left;
-            this.Add(this.tbOffset);
-            this.btnOk.Width = 8;
-            this.btnOk.X = 5;
-            this.btnOk.Y = 5;
-            this.btnOk.Data = "btnOk";
-            this.btnOk.Text = "Ok";
-            this.btnOk.TextAlignment = Terminal.Gui.TextAlignment.Centered;
-            this.btnOk.IsDefault = true;
-            this.Add(this.btnOk);
-            this.btnCancel.Width = 10;
-            this.btnCancel.X = 16;
-            this.btnCancel.Y = 5;
-            this.btnCancel.Data = "btnCancel";
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.TextAlignment = Terminal.Gui.TextAlignment.Centered;
-            this.btnCancel.IsDefault = false;
-            this.Add(this.btnCancel);
-        }
+    private Terminal.Gui.LineView lineview1;
+    
+    private Terminal.Gui.Label lblValue;
+    
+    private Terminal.Gui.TextField tbValue;
+    
+    private Terminal.Gui.Label lblOffset;
+    
+    private Terminal.Gui.TextField tbOffset;
+    
+    private Terminal.Gui.Button btnOk;
+    
+    private Terminal.Gui.Button btnCancel;
+    
+    private void InitializeComponent() {
+        this.btnCancel = new Terminal.Gui.Button();
+        this.btnOk = new Terminal.Gui.Button();
+        this.tbOffset = new Terminal.Gui.TextField();
+        this.lblOffset = new Terminal.Gui.Label();
+        this.tbValue = new Terminal.Gui.TextField();
+        this.lblValue = new Terminal.Gui.Label();
+        this.lineview1 = new Terminal.Gui.LineView();
+        this.rgDimType = new Terminal.Gui.RadioGroup();
+        this.Width = 40;
+        this.Height = 9;
+        this.X = Pos.Center();
+        this.Y = Pos.Center();
+        this.Modal = true;
+        this.Text = "";
+        this.Border.BorderStyle = Terminal.Gui.BorderStyle.Single;
+        this.Border.Effect3D = true;
+        this.Border.DrawMarginFrame = true;
+        this.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.Title = "";
+        this.rgDimType.Width = 11;
+        this.rgDimType.Height = 3;
+        this.rgDimType.X = 1;
+        this.rgDimType.Y = 1;
+        this.rgDimType.Data = "rgDimType";
+        this.rgDimType.Text = "";
+        this.rgDimType.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.rgDimType.RadioLabels = new NStack.ustring[] {
+                "Absolute",
+                "Percent",
+                "Fill"};
+        this.Add(this.rgDimType);
+        this.lineview1.Width = 1;
+        this.lineview1.Height = 3;
+        this.lineview1.X = 12;
+        this.lineview1.Y = 1;
+        this.lineview1.Data = "lineview1";
+        this.lineview1.Text = "";
+        this.lineview1.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lineview1.LineRune = '│';
+        this.lineview1.Orientation = Terminal.Gui.Graphs.Orientation.Vertical;
+        this.Add(this.lineview1);
+        this.lblValue.Width = 6;
+        this.lblValue.Height = 1;
+        this.lblValue.X = 14;
+        this.lblValue.Y = 1;
+        this.lblValue.Data = "lblValue";
+        this.lblValue.Text = "Value:";
+        this.lblValue.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.Add(this.lblValue);
+        this.tbValue.Width = 15;
+        this.tbValue.Height = 1;
+        this.tbValue.X = Pos.Right(lblValue) + 2;
+        this.tbValue.Y = Pos.Top(lblValue);
+        this.tbValue.Secret = false;
+        this.tbValue.Data = "tbValue";
+        this.tbValue.Text = "";
+        this.tbValue.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.Add(this.tbValue);
+        this.lblOffset.Width = 7;
+        this.lblOffset.Height = 1;
+        this.lblOffset.X = 14;
+        this.lblOffset.Y = 3;
+        this.lblOffset.Data = "lblOffset";
+        this.lblOffset.Text = "Offset:";
+        this.lblOffset.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.Add(this.lblOffset);
+        this.tbOffset.Width = 15;
+        this.tbOffset.Height = 1;
+        this.tbOffset.X = Pos.Right(lblOffset) + 1;
+        this.tbOffset.Y = Pos.Top(lblOffset);
+        this.tbOffset.Secret = false;
+        this.tbOffset.Data = "tbOffset";
+        this.tbOffset.Text = "";
+        this.tbOffset.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.Add(this.tbOffset);
+        this.btnOk.Width = 8;
+        this.btnOk.X = 5;
+        this.btnOk.Y = 5;
+        this.btnOk.Data = "btnOk";
+        this.btnOk.Text = "Ok";
+        this.btnOk.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+        this.btnOk.IsDefault = true;
+        this.Add(this.btnOk);
+        this.btnCancel.Width = 10;
+        this.btnCancel.X = 16;
+        this.btnCancel.Y = 5;
+        this.btnCancel.Data = "btnCancel";
+        this.btnCancel.Text = "Cancel";
+        this.btnCancel.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+        this.btnCancel.IsDefault = false;
+        this.Add(this.btnCancel);
     }
 }

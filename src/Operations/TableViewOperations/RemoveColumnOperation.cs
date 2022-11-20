@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using Terminal.Gui;
+using TerminalGuiDesigner.Operations.Generics;
 
 namespace TerminalGuiDesigner.Operations.TableViewOperations;
 
@@ -7,7 +8,7 @@ namespace TerminalGuiDesigner.Operations.TableViewOperations;
 /// Removes a <see cref="DataColumn"/> from a <see cref="TableView"/>.
 /// Cannot be used to remove the last column.
 /// </summary>
-public class RemoveColumnOperation : ColumnOperation
+public class RemoveColumnOperation : RemoveOperation<TableView, DataColumn>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="RemoveColumnOperation"/> class.
@@ -15,49 +16,18 @@ public class RemoveColumnOperation : ColumnOperation
     /// <param name="design">Wrapper for a <see cref="TableView"/>.</param>
     /// <param name="column">Column to remove.</param>
     public RemoveColumnOperation(Design design, DataColumn column)
-        : base(design, column)
+         : base(
+            (v) => v.Table.Columns.Cast<DataColumn>().ToArray(),
+            (v, a) => v.ReOrderColumns(a),
+            (c) => c.ColumnName,
+            design,
+            column)
     {
         // TODO: currently this crashes TableView in its ReDraw (calculate view port) method
         // don't let them remove the last column
-        if (this.TableView.Table.Columns.Count == 1)
+        if (this.View.Table.Columns.Count == 1)
         {
             this.IsImpossible = true;
         }
-    }
-
-    /// <inheritdoc/>
-    public override string ToString()
-    {
-        return $"Remove Column '{this.Column}'";
-    }
-
-    /// <inheritdoc/>
-    public override void Redo()
-    {
-        this.Do();
-    }
-
-    /// <inheritdoc/>
-    public override void Undo()
-    {
-        if (!this.TableView.Table.Columns.Contains(this.Column.ColumnName))
-        {
-            this.TableView.Table.Columns.Add(this.Column.ColumnName);
-            this.TableView.Update();
-        }
-    }
-
-    /// <inheritdoc/>
-    protected override bool DoImpl()
-    {
-        if (this.TableView.Table.Columns.Contains(this.Column.ColumnName))
-        {
-            this.TableView.Table.Columns.Remove(this.Column.ColumnName);
-            this.TableView.Update();
-
-            return true;
-        }
-
-        return false;
     }
 }

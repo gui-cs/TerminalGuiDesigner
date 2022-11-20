@@ -7,351 +7,335 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TerminalGuiDesigner.UI.Windows
-{
-    using Terminal.Gui;
-    using System.Linq;
-    using TerminalGuiDesigner;
-    using TerminalGuiDesigner.ToCode;
-    using TerminalGuiDesigner.UI.Windows;
+namespace TerminalGuiDesigner.UI.Windows;
+
+using Terminal.Gui;
+using System.Linq;
+using TerminalGuiDesigner;
+using TerminalGuiDesigner.ToCode;
+using TerminalGuiDesigner.UI.Windows;
+
+/// <summary>
+/// Editor for the <see cref="Pos"/> type.
+/// </summary>
+public partial class PosEditor : Dialog {
+
+    private Design design;
+    private Property property;
 
     /// <summary>
-    /// Editor for the <see cref="Pos"/> type.
+    /// Users configured <see cref="Pos"/> (assembled from radio button
+    /// selected and text values entered - offset etc).
     /// </summary>
-    public partial class PosEditor : Dialog {
+    public Pos Result { get; private set; }
 
-        private Design design;
-        private Property property;
+    /// <summary>
+    /// True if user cancelled the dialog instead of hitting Ok.
+    /// </summary>
+    public bool Cancelled { get; private set; }
 
-        /// <summary>
-        /// Users configured <see cref="Pos"/> (assembled from radio button
-        /// selected and text values entered - offset etc).
-        /// </summary>
-        public Pos Result { get; private set; }
-
-        /// <summary>
-        /// True if user cancelled the dialog instead of hitting Ok.
-        /// </summary>
-        public bool Cancelled { get; private set; }
-
-        /// <summary>
-        /// Prompt user to create a new <see cref="Pos"/> value to populate
-        /// <paramref name="property"/> on <paramref name="design"/> with.
-        /// </summary>
-        /// <param name="design">What to set the value on.</param>
-        /// <param name="property">The property to set (must be of type <see cref="Pos"/>).</param>
-        public PosEditor(Design design, Property property) {
-            InitializeComponent();
-            
-            this.design = design;
-            this.property = property;
+    /// <summary>
+    /// Prompt user to create a new <see cref="Pos"/> value to populate
+    /// <paramref name="property"/> on <paramref name="design"/> with.
+    /// </summary>
+    /// <param name="design">What to set the value on.</param>
+    /// <param name="property">The property to set (must be of type <see cref="Pos"/>).</param>
+    public PosEditor(Design design, Property property) {
+        InitializeComponent();
+        
+        this.design = design;
+        this.property = property;
 
 
-            Title = "Pos Designer";
-            Border.BorderStyle = BorderStyle.Double;
+        Title = "Pos Designer";
+        Border.BorderStyle = BorderStyle.Double;
 
-            rgPosType.KeyPress += RgPosType_KeyPress;
+        rgPosType.KeyPress += RgPosType_KeyPress;
 
-            btnOk.Clicked += BtnOk_Clicked;
-            btnCancel.Clicked += BtnCancel_Clicked;
-            Cancelled = true;
-            Modal = true;
+        btnOk.Clicked += BtnOk_Clicked;
+        btnCancel.Clicked += BtnCancel_Clicked;
+        Cancelled = true;
+        Modal = true;
 
-            var siblings = design.GetSiblings().ToList();
+        var siblings = design.GetSiblings().ToList();
 
-            ddRelativeTo.SetSource(siblings);
-            ddRelativeTo.AddKeyBinding(Key.CursorDown, Command.Expand);
+        ddRelativeTo.SetSource(siblings);
+        ddRelativeTo.AddKeyBinding(Key.CursorDown, Command.Expand);
 
-            ddSide.SetSource(Enum.GetValues(typeof(Side)).Cast<Enum>().ToList());
-            ddSide.AddKeyBinding(Key.CursorDown, Command.Expand);
+        ddSide.SetSource(Enum.GetValues(typeof(Side)).Cast<Enum>().ToList());
+        ddSide.AddKeyBinding(Key.CursorDown, Command.Expand);
 
-            var val = (Pos)property.GetValue();
-            if(val.GetPosType(siblings,out var type,out var value,out var relativeTo,out var side, out var offset))
-            {
-                switch(type)
-                {
-                    case PosType.Absolute:
-                        rgPosType.SelectedItem = 0;
-                        break;
-                    case PosType.Percent:
-                        rgPosType.SelectedItem = 1;
-                        break;
-                    case PosType.Relative:
-                        rgPosType.SelectedItem = 2;
-                        if(relativeTo != null)
-                            ddRelativeTo.SelectedItem = siblings.IndexOf(relativeTo);
-                        ddSide.SelectedItem = (int)side;
-                        break;
-                    case PosType.Center:
-                        rgPosType.SelectedItem = 3;                        
-                        break;
-                    case PosType.AnchorEnd:
-                        rgPosType.SelectedItem = 4;
-                        break;
-                }
-
-                tbValue.Text = value.ToString("G5");
-                tbOffset.Text = offset.ToString();
-            }
-
-            SetupForCurrentPosType();
-
-            rgPosType.SelectedItemChanged += DdType_SelectedItemChanged;
-
-        }
-
-        private void RgPosType_KeyPress(KeyEventEventArgs obj)
+        var val = (Pos)property.GetValue();
+        if(val.GetPosType(siblings,out var type,out var value,out var relativeTo,out var side, out var offset))
         {
-            var c = (char)obj.KeyEvent.KeyValue;
-            
-            // if user types in some text change the focus to the text box to enable entering digits
-            if ((obj.KeyEvent.Key == Key.Backspace || char.IsDigit(c)) && tbValue.Visible)
-            {
-                tbValue?.FocusFirst();
-            }            
-        }
-
-        private void DdType_SelectedItemChanged(SelectedItemChangedArgs obj)
-        {
-            SetupForCurrentPosType();            
-        }
-
-        private void SetupForCurrentPosType()
-        {
-            
-            switch(GetPosType())
-            {
-                case PosType.Percent:
-                    lblRelativeTo.Visible = false;
-                    ddRelativeTo.Visible = false;
-                    lblSide.Visible = false;
-                    ddSide.Visible = false;
-                    
-                    lblValue.Y = 1;
-                    lblValue.Visible = true;
-                    tbValue.Visible = true;
-                    
-                    lblOffset.Y = 3;
-                    lblOffset.Visible = true;
-                    
-                    tbOffset.Y = 3;
-                    tbOffset.Visible = true;
-
-                    SetNeedsDisplay();
-                    break;
-                case PosType.Center:
-                    lblRelativeTo.Visible = false;
-                    ddRelativeTo.Visible = false;
-                    lblSide.Visible = false;
-                    ddSide.Visible = false;
-                    
-                    lblValue.Visible = false;
-                    tbValue.Visible = false;
-                    
-                    lblOffset.Y = 1;
-                    lblOffset.Visible = true;
-                    tbOffset.Y = 1;
-                    tbOffset.Visible = true;
-
-                    SetNeedsDisplay();
-                    break;
-                case PosType.Absolute:
-                case PosType.AnchorEnd:
-                    ddRelativeTo.Visible = false;
-                    lblRelativeTo.Visible = false;
-                    lblSide.Visible = false;
-                    ddSide.Visible = false;
-
-                    lblValue.Y = 1;
-                    lblValue.Visible = true;
-                    tbValue.Visible = true;
-
-                    lblOffset.Visible = false;
-                    tbOffset.Visible = false;
-                    SetNeedsDisplay();
-                    break;
-                case PosType.Relative:
-                    lblRelativeTo.Y = 1;
-                    lblRelativeTo.Visible = true;
-                    ddRelativeTo.Y = 1;
-                    ddRelativeTo.Visible = true;
-
-                    lblSide.Y = 3;
-                    lblSide.Visible = true;
-
-                    ddSide.IsInitialized = false;
-                    ddSide.Y = 3;
-                    ddSide.Visible = true;
-                    ddSide.IsInitialized = true;
-
-                    lblValue.Visible = false;
-                    tbValue.Visible = false;
-
-                    lblOffset.Y = 5;
-                    lblOffset.Visible = true;
-                    tbOffset.Y = 5;
-                    tbOffset.Visible = true;
-                    SetNeedsDisplay();
-                    break;
-
-                default: throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        private void BtnCancel_Clicked()
-        {
-            Cancelled = true;
-            Application.RequestStop();
-        }
-
-        private void BtnOk_Clicked()
-        {
-            if(GetPosType() == PosType.AnchorEnd && GetValue(out var value) && value <=0)
-            {
-                if (!ChoicesDialog.Confirm("Anchor Without Margin", "Using AnchorEnd without a margin will result in a point outside of parent bounds.\nAre you sure?"))
-                {
-                    return;
-                }   
-            }
-
-            Cancelled = !BuildPos(out var result);
-            Result = result;
-            Application.RequestStop();
-        }
-
-        private bool BuildPos(out Pos result)
-        {
-            // pick what type of Pos they want
-            var type = GetPosType();
-
-            switch (type)
+            switch(type)
             {
                 case PosType.Absolute:
-                    return BuildPosAbsolute(out result);
-                case PosType.Relative:
-                    return BuildPosRelative(out result);
+                    rgPosType.SelectedItem = 0;
+                    break;
                 case PosType.Percent:
-                    return BuildPosPercent(out result);
+                    rgPosType.SelectedItem = 1;
+                    break;
+                case PosType.Relative:
+                    rgPosType.SelectedItem = 2;
+                    if(relativeTo != null)
+                        ddRelativeTo.SelectedItem = siblings.IndexOf(relativeTo);
+                    ddSide.SelectedItem = (int)side;
+                    break;
                 case PosType.Center:
-                    return BuildPosCenter(out result);
+                    rgPosType.SelectedItem = 3;                        
+                    break;
                 case PosType.AnchorEnd:
-                    return BuildPosAnchorEnd(out result);
-
-                default: throw new ArgumentOutOfRangeException();
-
+                    rgPosType.SelectedItem = 4;
+                    break;
             }
+
+            tbValue.Text = value.ToString("G5");
+            tbOffset.Text = offset.ToString();
         }
 
-        private PosType GetPosType()
+        SetupForCurrentPosType();
+
+        rgPosType.SelectedItemChanged += DdType_SelectedItemChanged;
+
+    }
+
+    private void RgPosType_KeyPress(KeyEventEventArgs obj)
+    {
+        var c = (char)obj.KeyEvent.KeyValue;
+        
+        // if user types in some text change the focus to the text box to enable entering digits
+        if ((obj.KeyEvent.Key == Key.Backspace || char.IsDigit(c)) && tbValue.Visible)
         {
-            return Enum.Parse<PosType>(rgPosType.RadioLabels[rgPosType.SelectedItem].ToString());
+            tbValue?.FocusFirst();
+        }            
+    }
+
+    private void DdType_SelectedItemChanged(SelectedItemChangedArgs obj)
+    {
+        SetupForCurrentPosType();            
+    }
+
+    private void SetupForCurrentPosType()
+    {
+        
+        switch(GetPosType())
+        {
+            case PosType.Percent:
+                lblRelativeTo.Visible = false;
+                ddRelativeTo.Visible = false;
+                lblSide.Visible = false;
+                ddSide.Visible = false;
+                
+                lblValue.Y = 1;
+                lblValue.Visible = true;
+                tbValue.Visible = true;
+                
+                lblOffset.Y = 3;
+                lblOffset.Visible = true;
+                
+                tbOffset.Y = 3;
+                tbOffset.Visible = true;
+
+                SetNeedsDisplay();
+                break;
+            case PosType.Center:
+                lblRelativeTo.Visible = false;
+                ddRelativeTo.Visible = false;
+                lblSide.Visible = false;
+                ddSide.Visible = false;
+                
+                lblValue.Visible = false;
+                tbValue.Visible = false;
+                
+                lblOffset.Y = 1;
+                lblOffset.Visible = true;
+                tbOffset.Y = 1;
+                tbOffset.Visible = true;
+
+                SetNeedsDisplay();
+                break;
+            case PosType.Absolute:
+            case PosType.AnchorEnd:
+                ddRelativeTo.Visible = false;
+                lblRelativeTo.Visible = false;
+                lblSide.Visible = false;
+                ddSide.Visible = false;
+
+                lblValue.Y = 1;
+                lblValue.Visible = true;
+                tbValue.Visible = true;
+
+                lblOffset.Visible = false;
+                tbOffset.Visible = false;
+                SetNeedsDisplay();
+                break;
+            case PosType.Relative:
+                lblRelativeTo.Y = 1;
+                lblRelativeTo.Visible = true;
+                ddRelativeTo.Y = 1;
+                ddRelativeTo.Visible = true;
+
+                lblSide.Y = 3;
+                lblSide.Visible = true;
+
+                ddSide.IsInitialized = false;
+                ddSide.Y = 3;
+                ddSide.Visible = true;
+                ddSide.IsInitialized = true;
+
+                lblValue.Visible = false;
+                tbValue.Visible = false;
+
+                lblOffset.Y = 5;
+                lblOffset.Visible = true;
+                tbOffset.Y = 5;
+                tbOffset.Visible = true;
+                SetNeedsDisplay();
+                break;
+
+            default: throw new ArgumentOutOfRangeException();
+        }
+    }
+
+    private void BtnCancel_Clicked()
+    {
+        Cancelled = true;
+        Application.RequestStop();
+    }
+
+    private void BtnOk_Clicked()
+    {
+        if(GetPosType() == PosType.AnchorEnd && GetValue(out var value) && value <=0)
+        {
+            if (!ChoicesDialog.Confirm("Anchor Without Margin", "Using AnchorEnd without a margin will result in a point outside of parent bounds.\nAre you sure?"))
+            {
+                return;
+            }   
         }
 
+        Cancelled = !BuildPos(out var result);
+        Result = result;
+        Application.RequestStop();
+    }
 
-        private Side? GetSide()
+    private bool BuildPos(out Pos result)
+    {
+        // pick what type of Pos they want
+        var type = GetPosType();
+
+        switch (type)
         {
-            return ddSide.SelectedItem == -1 ? null : (Side)ddSide.Source.ToList()[ddSide.SelectedItem];
+            case PosType.Absolute:
+                return BuildPosAbsolute(out result);
+            case PosType.Relative:
+                return BuildPosRelative(out result);
+            case PosType.Percent:
+                return BuildPosPercent(out result);
+            case PosType.Center:
+                return BuildPosCenter(out result);
+            case PosType.AnchorEnd:
+                return BuildPosAnchorEnd(out result);
+
+            default: throw new ArgumentOutOfRangeException();
+
+        }
+    }
+
+    private PosType GetPosType()
+    {
+        return Enum.Parse<PosType>(rgPosType.RadioLabels[rgPosType.SelectedItem].ToString());
+    }
+
+
+    private Side? GetSide()
+    {
+        return ddSide.SelectedItem == -1 ? null : (Side)ddSide.Source.ToList()[ddSide.SelectedItem];
+    }
+
+    private bool GetOffset(out int offset)
+    {
+        // blank text box counts as 0
+        if(string.IsNullOrWhiteSpace(tbOffset.Text.ToString()))
+        {
+            offset = 0;
+            return true;
         }
 
-        private bool GetOffset(out int offset)
+        if (int.TryParse(tbOffset.Text.ToString(), out offset))
         {
-            // blank text box counts as 0
-            if(string.IsNullOrWhiteSpace(tbOffset.Text.ToString()))
-            {
-                offset = 0;
-                return true;
-            }
-
-            if (int.TryParse(tbOffset.Text.ToString(), out offset))
-            {
-                return true;
-            }
-            else
-            {
-                offset = 0;
-                return false;
-            }
+            return true;
         }
-
-        private bool BuildPosRelative(out Pos result)
+        else
         {
-            var relativeTo = ddRelativeTo.SelectedItem == -1 ? null : ddRelativeTo.Source.ToList()[ddRelativeTo.SelectedItem] as Design;
-
-            if (relativeTo != null)
-            {
-                var side = GetSide();
-
-                if (side != null)
-                {
-                    GetOffset(out int offset);
-
-                    result = PosExtensions.CreatePosRelative(relativeTo, side.Value,offset);
-                    return true;
-                }
-            }
-
-            // Its got no side or no relative to control
-            result = null;
+            offset = 0;
             return false;
         }
+    }
 
-        private bool BuildPosAbsolute(out Pos result)
+    private bool BuildPosRelative(out Pos result)
+    {
+        var relativeTo = ddRelativeTo.SelectedItem == -1 ? null : ddRelativeTo.Source.ToList()[ddRelativeTo.SelectedItem] as Design;
+
+        if (relativeTo != null)
         {
-            if (GetValue(out int newPos))
+            var side = GetSide();
+
+            if (side != null)
             {
-                result = Pos.At(newPos);
+                GetOffset(out int offset);
+
+                result = PosExtensions.CreatePosRelative(relativeTo, side.Value,offset);
                 return true;
             }
-
-            result = null;
-            return false;
         }
 
-        private bool BuildPosAnchorEnd(out Pos result)
-        {
-            if (GetValue(out int newPos))
-            {
-                result = Pos.AnchorEnd(newPos);
-                return true;
-            }
+        // Its got no side or no relative to control
+        result = null;
+        return false;
+    }
 
-            result = null;
-            return false;
+    private bool BuildPosAbsolute(out Pos result)
+    {
+        if (GetValue(out int newPos))
+        {
+            result = Pos.At(newPos);
+            return true;
         }
 
-        private bool GetValue(out int newPos)
-        {
-            // blank text box counts as 0
-            if(string.IsNullOrWhiteSpace(tbValue.Text.ToString()))
-            {
-                newPos = 0;
-                return true;
-            }
+        result = null;
+        return false;
+    }
 
-            return int.TryParse(tbValue.Text.ToString(),out newPos);
+    private bool BuildPosAnchorEnd(out Pos result)
+    {
+        if (GetValue(out int newPos))
+        {
+            result = Pos.AnchorEnd(newPos);
+            return true;
         }
 
-        private bool BuildPosPercent(out Pos result)
+        result = null;
+        return false;
+    }
+
+    private bool GetValue(out int newPos)
+    {
+        // blank text box counts as 0
+        if(string.IsNullOrWhiteSpace(tbValue.Text.ToString()))
         {
-            if (GetValue(out int newPercent))
-            {
-                result = Pos.Percent(newPercent);
-
-                if (GetOffset(out int offset) && offset != 0)
-                {
-                    result = result + offset;
-                    return true;
-                }
-
-                return true;
-            }
-
-            result = null;
-            return false;
+            newPos = 0;
+            return true;
         }
-        private bool BuildPosCenter(out Pos result)
+
+        return int.TryParse(tbValue.Text.ToString(),out newPos);
+    }
+
+    private bool BuildPosPercent(out Pos result)
+    {
+        if (GetValue(out int newPercent))
         {
-            result = Pos.Center();
+            result = Pos.Percent(newPercent);
 
             if (GetOffset(out int offset) && offset != 0)
             {
@@ -361,5 +345,20 @@ namespace TerminalGuiDesigner.UI.Windows
 
             return true;
         }
+
+        result = null;
+        return false;
+    }
+    private bool BuildPosCenter(out Pos result)
+    {
+        result = Pos.Center();
+
+        if (GetOffset(out int offset) && offset != 0)
+        {
+            result = result + offset;
+            return true;
+        }
+
+        return true;
     }
 }

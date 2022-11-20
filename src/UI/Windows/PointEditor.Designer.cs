@@ -7,89 +7,88 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TerminalGuiDesigner {
-    using System;
-    using Terminal.Gui;
+namespace TerminalGuiDesigner; 
+using System;
+using Terminal.Gui;
+
+
+public partial class PointEditor : Terminal.Gui.Dialog {
     
+    private Terminal.Gui.Label lblX;
     
-    public partial class PointEditor : Terminal.Gui.Dialog {
-        
-        private Terminal.Gui.Label lblX;
-        
-        private Terminal.Gui.TextField tbX;
-        
-        private Terminal.Gui.Label lblY;
-        
-        private Terminal.Gui.TextField tbY;
-        
-        private Terminal.Gui.Button btnOk;
-        
-        private Terminal.Gui.Button btnCancel;
-        
-        private void InitializeComponent() {
-            this.Text = "";
-            this.Width = 23;
-            this.Height = 8;
-            this.X = Pos.Center();
-            this.Y = Pos.Center();
-            this.TextAlignment = TextAlignment.Left;
-            this.Title = "Point Designer";
-            this.lblX = new Terminal.Gui.Label();
-            this.lblX.Data = "lblX";
-            this.lblX.Text = "X:";
-            this.lblX.Width = 2;
-            this.lblX.Height = 1;
-            this.lblX.X = 2;
-            this.lblX.Y = 1;
-            this.lblX.TextAlignment = TextAlignment.Left;
-            this.Add(this.lblX);
-            this.tbX = new Terminal.Gui.TextField();
-            this.tbX.Data = "tbX";
-            this.tbX.Text = "";
-            this.tbX.Width = 10;
-            this.tbX.Height = 1;
-            this.tbX.X = 5;
-            this.tbX.Y = 1;
-            this.tbX.TextAlignment = TextAlignment.Left;
-            this.Add(this.tbX);
-            this.lblY = new Terminal.Gui.Label();
-            this.lblY.Data = "lblY";
-            this.lblY.Text = "Y:";
-            this.lblY.Width = 2;
-            this.lblY.Height = 1;
-            this.lblY.X = 2;
-            this.lblY.Y = 3;
-            this.lblY.TextAlignment = TextAlignment.Left;
-            this.Add(this.lblY);
-            this.tbY = new Terminal.Gui.TextField();
-            this.tbY.Data = "tbY";
-            this.tbY.Text = "";
-            this.tbY.Width = 10;
-            this.tbY.Height = 1;
-            this.tbY.X = 5;
-            this.tbY.Y = 3;
-            this.tbY.TextAlignment = TextAlignment.Left;
-            this.Add(this.tbY);
-            this.btnOk = new Terminal.Gui.Button();
-            this.btnOk.Data = "btnOk";
-            this.btnOk.Text = "Ok";
-            this.btnOk.Width = 8;
-            this.btnOk.Height = 1;
-            this.btnOk.X = 1;
-            this.btnOk.Y = 5;
-            this.btnOk.TextAlignment = TextAlignment.Centered;
-            this.btnOk.IsDefault = true;
-            this.Add(this.btnOk);
-            this.btnCancel = new Terminal.Gui.Button();
-            this.btnCancel.Data = "btnCancel";
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.Width = 10;
-            this.btnCancel.Height = 1;
-            this.btnCancel.X = 10;
-            this.btnCancel.Y = 5;
-            this.btnCancel.TextAlignment = TextAlignment.Centered;
-            this.btnCancel.IsDefault = false;
-            this.Add(this.btnCancel);
-        }
+    private Terminal.Gui.TextField tbX;
+    
+    private Terminal.Gui.Label lblY;
+    
+    private Terminal.Gui.TextField tbY;
+    
+    private Terminal.Gui.Button btnOk;
+    
+    private Terminal.Gui.Button btnCancel;
+    
+    private void InitializeComponent() {
+        this.Text = "";
+        this.Width = 23;
+        this.Height = 8;
+        this.X = Pos.Center();
+        this.Y = Pos.Center();
+        this.TextAlignment = TextAlignment.Left;
+        this.Title = "Point Designer";
+        this.lblX = new Terminal.Gui.Label();
+        this.lblX.Data = "lblX";
+        this.lblX.Text = "X:";
+        this.lblX.Width = 2;
+        this.lblX.Height = 1;
+        this.lblX.X = 2;
+        this.lblX.Y = 1;
+        this.lblX.TextAlignment = TextAlignment.Left;
+        this.Add(this.lblX);
+        this.tbX = new Terminal.Gui.TextField();
+        this.tbX.Data = "tbX";
+        this.tbX.Text = "";
+        this.tbX.Width = 10;
+        this.tbX.Height = 1;
+        this.tbX.X = 5;
+        this.tbX.Y = 1;
+        this.tbX.TextAlignment = TextAlignment.Left;
+        this.Add(this.tbX);
+        this.lblY = new Terminal.Gui.Label();
+        this.lblY.Data = "lblY";
+        this.lblY.Text = "Y:";
+        this.lblY.Width = 2;
+        this.lblY.Height = 1;
+        this.lblY.X = 2;
+        this.lblY.Y = 3;
+        this.lblY.TextAlignment = TextAlignment.Left;
+        this.Add(this.lblY);
+        this.tbY = new Terminal.Gui.TextField();
+        this.tbY.Data = "tbY";
+        this.tbY.Text = "";
+        this.tbY.Width = 10;
+        this.tbY.Height = 1;
+        this.tbY.X = 5;
+        this.tbY.Y = 3;
+        this.tbY.TextAlignment = TextAlignment.Left;
+        this.Add(this.tbY);
+        this.btnOk = new Terminal.Gui.Button();
+        this.btnOk.Data = "btnOk";
+        this.btnOk.Text = "Ok";
+        this.btnOk.Width = 8;
+        this.btnOk.Height = 1;
+        this.btnOk.X = 1;
+        this.btnOk.Y = 5;
+        this.btnOk.TextAlignment = TextAlignment.Centered;
+        this.btnOk.IsDefault = true;
+        this.Add(this.btnOk);
+        this.btnCancel = new Terminal.Gui.Button();
+        this.btnCancel.Data = "btnCancel";
+        this.btnCancel.Text = "Cancel";
+        this.btnCancel.Width = 10;
+        this.btnCancel.Height = 1;
+        this.btnCancel.X = 10;
+        this.btnCancel.Y = 5;
+        this.btnCancel.TextAlignment = TextAlignment.Centered;
+        this.btnCancel.IsDefault = false;
+        this.Add(this.btnCancel);
     }
 }

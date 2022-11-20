@@ -14,7 +14,7 @@ internal class AddTabOperationTests : Tests
     {
         var d = Get10By10View();
         var ex = Assert.Throws<ArgumentException>(() => new AddTabOperation(d, null));
-        Assert.AreEqual("Design must be for a TabView to support this Operation", ex?.Message);
+        Assert.AreEqual("Design must wrap a TabView to be used with this operation.", ex?.Message);
     }
 
     [Test]

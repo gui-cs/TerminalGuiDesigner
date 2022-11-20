@@ -86,7 +86,7 @@ public class BigListBox<T>
             Height = Dim.Fill(2),
             Width = Dim.Fill(2),
         };
-        this.listView.KeyPress += this._listView_KeyPress;
+        this.listView.KeyPress += this.ListView_KeyPress;
 
         this.listView.MouseClick += this.ListView_MouseClick;
         this.listView.SetSource((this.collection = this.BuildList(this.GetInitialSource())).ToList());
@@ -195,7 +195,7 @@ public class BigListBox<T>
         }
     }
 
-    private void _listView_KeyPress(View.KeyEventEventArgs obj)
+    private void ListView_KeyPress(View.KeyEventEventArgs obj)
     {
         // if user types in some text change the focus to the text box to enable searching
         var c = (char)obj.KeyEvent.KeyValue;

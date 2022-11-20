@@ -7,37 +7,36 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TerminalGuiDesigner {
-    using Terminal.Gui;
+namespace TerminalGuiDesigner; 
+using Terminal.Gui;
+
+/// <summary>
+/// Popup modal dialog with no buttons.  Designed to be closed by the code after
+/// an event has finished (e.g. loading a file).
+/// </summary>
+public partial class LoadingDialog {
+
+    private LoadingDialog()
+    {
+        InitializeComponent();
+    }
+
+    /// <summary>
+    /// Creates a new instance of <see cref="LoadingDialog"/> showing <paramref name="message"/>.
+    /// </summary>
+    /// <param name="message"></param>
+    public LoadingDialog(string message):this() {
+
+        lblLoading.Text = message;
+    }
     
     /// <summary>
-    /// Popup modal dialog with no buttons.  Designed to be closed by the code after
-    /// an event has finished (e.g. loading a file).
+    /// Creates a new instance of the <see cref="LoadingDialog"/> showing a message about
+    /// is loading <paramref name="file"/>.
     /// </summary>
-    public partial class LoadingDialog {
+    /// <param name="file">File path to show.</param>
+    public LoadingDialog(FileInfo file):this() {
 
-        private LoadingDialog()
-        {
-            InitializeComponent();
-        }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="LoadingDialog"/> showing <paramref name="message"/>.
-        /// </summary>
-        /// <param name="message"></param>
-        public LoadingDialog(string message):this() {
-
-            lblLoading.Text = message;
-        }
-        
-        /// <summary>
-        /// Creates a new instance of the <see cref="LoadingDialog"/> showing a message about
-        /// is loading <paramref name="file"/>.
-        /// </summary>
-        /// <param name="file">File path to show.</param>
-        public LoadingDialog(FileInfo file):this() {
-
-            lblLoading.Text = $"Loading {file.Name}";
-        }
+        lblLoading.Text = $"Loading {file.Name}";
     }
 }

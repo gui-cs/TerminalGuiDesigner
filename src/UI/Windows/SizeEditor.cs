@@ -7,59 +7,58 @@
 //      You can make changes to this file and they will not be overwritten when saving.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
-namespace TerminalGuiDesigner.UI.Windows
+namespace TerminalGuiDesigner.UI.Windows;
+
+using Terminal.Gui;
+
+/// <summary>
+/// Popup editor for the <see cref="Size"/> class.
+/// </summary>
+public partial class SizeEditor
 {
-    using Terminal.Gui;
 
     /// <summary>
-    /// Popup editor for the <see cref="Size"/> class.
+    /// The users edited <see cref="Size"/> 
     /// </summary>
-    public partial class SizeEditor
+    public Size Result { get; private set; }
+
+    /// <summary>
+    /// True if user cancelled the dialog instead of hitting "Ok".
+    /// </summary>
+    public bool Cancelled { get; private set; }
+
+    /// <summary>
+    /// Creates a new instance of the <see cref="SizeEditor"/> class.
+    /// </summary>
+    /// <param name="s"></param>
+    public SizeEditor(Size s)
     {
+        InitializeComponent();
+        Result = s;
 
-        /// <summary>
-        /// The users edited <see cref="Size"/> 
-        /// </summary>
-        public Size Result { get; private set; }
+        tfWidth.Text = s.Width.ToString();
+        tfHeight.Text = s.Height.ToString();
 
-        /// <summary>
-        /// True if user cancelled the dialog instead of hitting "Ok".
-        /// </summary>
-        public bool Cancelled { get; private set; }
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="SizeEditor"/> class.
-        /// </summary>
-        /// <param name="s"></param>
-        public SizeEditor(Size s)
+        btnOk.Clicked += () =>
         {
-            InitializeComponent();
-            Result = s;
-
-            tfWidth.Text = s.Width.ToString();
-            tfHeight.Text = s.Height.ToString();
-
-            btnOk.Clicked += () =>
+            try
             {
-                try
-                {
-                    Result = new Size(int.Parse(tfWidth.Text.ToString()), int.Parse(tfHeight.Text.ToString()));
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.ErrorQuery("Bad Value", ex.Message);
-                    return;
-                }
-
-                Cancelled = false;
-                RequestStop();
-            };
-
-            btnCancel.Clicked += () =>
+                Result = new Size(int.Parse(tfWidth.Text.ToString()), int.Parse(tfHeight.Text.ToString()));
+            }
+            catch (Exception ex)
             {
-                Cancelled = true;
-                RequestStop();
-            };
-        }
+                MessageBox.ErrorQuery("Bad Value", ex.Message);
+                return;
+            }
+
+            Cancelled = false;
+            RequestStop();
+        };
+
+        btnCancel.Clicked += () =>
+        {
+            Cancelled = true;
+            RequestStop();
+        };
     }
 }

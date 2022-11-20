@@ -386,7 +386,7 @@ public class Design
             if (col != null)
             {
                 yield return new RemoveColumnOperation(this, col);
-                yield return new RenameColumnOperation(this, col);
+                yield return new RenameColumnOperation(this, col, null);
                 yield return new MoveColumnOperation(this, col, -1);
                 yield return new MoveColumnOperation(this, col, 1);
             }
@@ -411,15 +411,13 @@ public class Design
         if (this.View is TabView tabView)
         {
             yield return new AddTabOperation(this, null);
-            yield return new RemoveTabOperation(this);
-            yield return new RenameTabOperation(this);
 
-            var selected = tabView.SelectedTab;
-
-            if (selected != null)
+            if (tabView.SelectedTab != null)
             {
-                yield return new MoveTabOperation(this, selected, -1);
-                yield return new MoveTabOperation(this, selected, 1);
+                yield return new RemoveTabOperation(this, tabView.SelectedTab);
+                yield return new RenameTabOperation(this, tabView.SelectedTab, null);
+                yield return new MoveTabOperation(this, tabView.SelectedTab, -1);
+                yield return new MoveTabOperation(this, tabView.SelectedTab, 1);
             }
         }
 
@@ -432,6 +430,7 @@ public class Design
             if (menu != null)
             {
                 yield return new RemoveMenuOperation(this, menu);
+                yield return new RenameMenuOperation(this, menu, null);
                 yield return new MoveMenuOperation(this, menu, -1);
                 yield return new MoveMenuOperation(this, menu, 1);
             }
