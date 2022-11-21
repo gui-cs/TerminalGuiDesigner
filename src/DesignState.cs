@@ -40,7 +40,12 @@ public class DesignState
 
     private void Enter(View.FocusEventArgs obj)
     {
-        SelectionManager.Instance.SetSelection(this.Design);
+        // when tabbing or clicking into this View when nothing complicated is going on (e.g. Ctrl+Click multi select)
+        if (SelectionManager.Instance.Selected.Count <= 1)
+        {
+            // set the selection to the View that has focus
+            SelectionManager.Instance.SetSelection(this.Design);
+        }
     }
 
     private void DrawContent(Rect r)

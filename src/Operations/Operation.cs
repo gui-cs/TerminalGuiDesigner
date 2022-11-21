@@ -65,4 +65,29 @@ public abstract class Operation : IOperation
             name.Substring(0, name.Length - "Operation".Length) :
             name;
     }
+
+    /// <summary>
+    /// Removes from <paramref name="collection"/> any element which is a child of any other element.
+    /// This prevents a copy of a container + 1 or more of its content items resulting in duplicate
+    /// pasting.
+    /// </summary>
+    /// <param name="collection">A collection to modify such that none contains any other.</param>
+    /// <returns>Collection without any elements that are children of other elements.</returns>
+    protected Design[]? PruneChildViews(Design[]? collection)
+    {
+        if (collection == null || collection.Length == 0)
+        {
+            return null;
+        }
+
+        var toReturn = collection.ToList().Cast<Design>().ToList();
+
+        foreach (var e in collection)
+        {
+            var children = e.GetAllChildDesigns(e.View).ToArray();
+            toReturn.RemoveAll(children.Contains);
+        }
+
+        return toReturn.ToArray();
+    }
 }

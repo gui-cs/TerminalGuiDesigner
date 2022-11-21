@@ -42,7 +42,31 @@ public class MouseManager
         if (m.Flags.HasFlag(MouseFlags.Button1Pressed)
             && this.resizeOperation == null && this.dragOperation == null && this.selectionStart == null)
         {
-            var drag = viewBeingEdited.View.HitTest(m, out bool isBorder, out bool isLowerRight);
+            View? drag = viewBeingEdited.View.HitTest(m, out bool isBorder, out bool isLowerRight);
+
+            // if user is ctrl+click
+            if (m.Flags.HasFlag(MouseFlags.ButtonCtrl) && drag != null)
+            {
+                // then add or remove the clicked item from the group selection
+                var addOrRemove = drag.GetNearestDesign();
+                var selection = SelectionManager.Instance.Selected.ToList();
+
+                if (addOrRemove != null && selection.Any())
+                {
+                    if (selection.Contains(addOrRemove))
+                    {
+                        selection.Remove(addOrRemove);
+                    }
+                    else
+                    {
+                        selection.Add(addOrRemove);
+                    }
+
+
+                    SelectionManager.Instance.ForceSetSelection(selection.ToArray());
+                    return;
+                }
+            }
 
             // if mousing down in empty space
             if (drag != null && drag.IsContainerView() && !isLowerRight && !isBorder)

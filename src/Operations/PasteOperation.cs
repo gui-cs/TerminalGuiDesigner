@@ -100,30 +100,6 @@ public class PasteOperation : Operation
         return didAny;
     }
 
-    /// <summary>
-    /// Removes from <paramref name="collection"/> any element which is a child of any other element.
-    /// This prevents a copy of a container + 1 or more of its content items resulting in duplicate
-    /// pasting.
-    /// </summary>
-    /// <returns>Collection without any elements that are children of other elements.</returns>
-    private Design[]? PruneChildViews(Design[]? collection)
-    {
-        if (collection == null || collection.Length == 0)
-        {
-            return null;
-        }
-
-        var toReturn = collection.ToList().Cast<Design>().ToList();
-
-        foreach (var e in collection)
-        {
-            var children = e.GetAllChildDesigns(e.View).ToArray();
-            toReturn.RemoveAll(children.Contains);
-        }
-
-        return toReturn.ToArray();
-    }
-
     private bool Paste(Design d)
     {
         return this.Paste(d, this.to);
