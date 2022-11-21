@@ -27,7 +27,7 @@ public class PasteOperation : Operation
     public PasteOperation(Design addTo)
     {
         this.toCopy = CopyOperation.LastCopiedDesign;
-        this.toCopy = this.PruneChildViews();
+        this.toCopy = this.PruneChildViews(this.toCopy);
 
         this.IsImpossible = this.toCopy == null || this.toCopy.Length == 0;
         this.to = addTo;
@@ -86,26 +86,36 @@ public class PasteOperation : Operation
 
         this.MigratePosRelatives();
 
-        SelectionManager.Instance.ForceSetSelection(this.clones.Values.ToArray());
+        var newSelection = this.PruneChildViews(this.clones.Values.ToArray());
+
+        if (newSelection != null)
+        {
+            SelectionManager.Instance.ForceSetSelection(newSelection);
+        }
+        else
+        {
+            SelectionManager.Instance.Clear(false);
+        }
+
         return didAny;
     }
 
     /// <summary>
-    /// Removes from <paramref name="toCopy"/> any element which is a child of any other element.
+    /// Removes from <paramref name="collection"/> any element which is a child of any other element.
     /// This prevents a copy of a container + 1 or more of its content items resulting in duplicate
     /// pasting.
     /// </summary>
     /// <returns>Collection without any elements that are children of other elements.</returns>
-    private Design[]? PruneChildViews()
+    private Design[]? PruneChildViews(Design[]? collection)
     {
-        if (this.toCopy == null || this.toCopy.Length == 0)
+        if (collection == null || collection.Length == 0)
         {
             return null;
         }
 
-        var toReturn = this.toCopy.ToList().Cast<Design>().ToList();
+        var toReturn = collection.ToList().Cast<Design>().ToList();
 
-        foreach (var e in this.toCopy)
+        foreach (var e in collection)
         {
             var children = e.GetAllChildDesigns(e.View).ToArray();
             toReturn.RemoveAll(children.Contains);
