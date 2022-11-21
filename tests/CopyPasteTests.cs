@@ -297,7 +297,43 @@ internal class CopyPasteTests : Tests
             }
             , out _
             );
+    }
 
+    [Test]
+    public void TestCopyPasteContainer_Empty_ScrollView()
+    {
+        RoundTrip<Window, ScrollView>(
+            (d, v) =>
+            {
+                // copy the ScrollView
+                new CopyOperation(d).Do();
 
+                var rootDesign = d.GetRootDesign();
+
+                Assert.IsTrue(new PasteOperation(rootDesign).Do());
+
+                var rootSubviews = rootDesign.View.GetActualSubviews();
+
+                Assert.AreEqual(2, rootSubviews.Count, "Expected root to have 2 ScrollView now");
+                Assert.IsTrue(rootSubviews.All(v => v is ScrollView));
+            }
+            , out _
+            );
+    }
+    [Test]
+    public void TestCopyPasteContainer_Empty_ScrollView_IntoItself()
+    {
+        RoundTrip<Window, ScrollView>(
+            (d, v) =>
+            {
+                // copy the ScrollView
+                new CopyOperation(d).Do();
+
+                var rootDesign = d.GetRootDesign();
+
+                Assert.IsFalse(new PasteOperation(d).Do(), "Expected it to be against the rules to paste a container into itself");
+            }
+            , out _
+            );
     }
 }

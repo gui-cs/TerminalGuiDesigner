@@ -1,5 +1,4 @@
 using System.Data;
-using System.Runtime.CompilerServices;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner.Operations;
@@ -12,6 +11,7 @@ public class PasteOperation : Operation
     private readonly Design to;
     private readonly IReadOnlyCollection<Design> oldSelection;
     private readonly List<AddViewOperation> addOperations = new();
+    private readonly Design[]? toCopy;
 
     /// <summary>
     /// Mapping from old (Key) Views to new cloned Views (Value).
@@ -26,9 +26,24 @@ public class PasteOperation : Operation
     /// (e.g. <see cref="TabView"/>) but pasting into another.</param>
     public PasteOperation(Design addTo)
     {
-        this.IsImpossible = CopyOperation.LastCopiedDesign == null;
+        this.toCopy = CopyOperation.LastCopiedDesign;
+        this.toCopy = this.PruneChildViews();
+
+        this.IsImpossible = this.toCopy == null || this.toCopy.Length == 0;
         this.to = addTo;
         this.oldSelection = SelectionManager.Instance.Selected;
+
+        // don't let user copy and paste a view into itself!
+        if (this.toCopy?.Contains(this.to) ?? false)
+        {
+            this.IsImpossible = true;
+        }
+
+        // don't let user copy a container into one of its own child containers.
+        if (this.toCopy?.Any(c => c.GetAllChildDesigns(c.View).Contains(this.to)) ?? false)
+        {
+            this.IsImpossible = true;
+        }
     }
 
     /// <inheritdoc/>
@@ -56,19 +71,15 @@ public class PasteOperation : Operation
     /// <inheritdoc/>
     protected override bool DoImpl()
     {
-        var toCopy = CopyOperation.LastCopiedDesign;
-
         // if nothing to copy or calling Do() multiple times
-        if (toCopy == null || this.addOperations.Any())
+        if (this.toCopy == null || this.addOperations.Any())
         {
             return false;
         }
 
         bool didAny = false;
 
-        toCopy = PruneChildViews(toCopy);
-
-        foreach (var d in toCopy)
+        foreach (var d in this.toCopy)
         {
             didAny = this.Paste(d) || didAny;
         }
@@ -84,13 +95,17 @@ public class PasteOperation : Operation
     /// This prevents a copy of a container + 1 or more of its content items resulting in duplicate
     /// pasting.
     /// </summary>
-    /// <param name="toCopy">Collection you are copying.</param>
     /// <returns>Collection without any elements that are children of other elements.</returns>
-    private Design[] PruneChildViews(Design[] toCopy)
+    private Design[]? PruneChildViews()
     {
-        var toReturn = toCopy.ToList().Cast<Design>().ToList();
+        if (this.toCopy == null || this.toCopy.Length == 0)
+        {
+            return null;
+        }
 
-        foreach (var e in toCopy)
+        var toReturn = this.toCopy.ToList().Cast<Design>().ToList();
+
+        foreach (var e in this.toCopy)
         {
             var children = e.GetAllChildDesigns(e.View).ToArray();
             toReturn.RemoveAll(children.Contains);
