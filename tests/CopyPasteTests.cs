@@ -251,4 +251,53 @@ internal class CopyPasteTests : Tests
             dtb2.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
             "TextBox2 should have its copy pasted explicitly marked green");
     }
+
+    [TestCase(true)]
+    [TestCase(false)]
+    public void TestCopyPasteContainer(bool alsoSelectSubElements)
+    {
+        RoundTrip<Window, FrameView>(
+            (d, v) =>
+            {
+                new AddViewOperation(new Label(), d, "lbl1").Do();
+                new AddViewOperation(new Label(), d, "lbl2").Do();
+                
+                Assert.AreEqual(2,v.GetActualSubviews().Count(), "Expected the FrameView to have 2 children (lbl1 and lbl2)");
+
+                Design[] toCopy;
+
+                if(alsoSelectSubElements)
+                {
+                    var lbl1Design = (Design)d.View.GetActualSubviews().First().Data;
+                    Assert.AreEqual("lbl1", lbl1Design.FieldName);
+
+                    toCopy = new Design[] { d, lbl1Design};
+                }
+                else
+                {
+                    toCopy = new[] { d };
+                }
+
+                // copy the FrameView
+                new CopyOperation(toCopy).Do();
+
+                var rootDesign = d.GetRootDesign();
+
+                Assert.IsTrue(new PasteOperation(rootDesign).Do());
+
+                var rootSubviews = rootDesign.View.GetActualSubviews();
+
+                Assert.AreEqual(2, rootSubviews.Count, "Expected root to have 2 FrameView now");
+                Assert.IsTrue(rootSubviews.All(v => v is FrameView));
+
+
+                Assert.IsTrue(
+                    rootSubviews.All(f => f.GetActualSubviews().Count() == 2),
+                    "Expected both FrameView (copied and pasted) to have the full contents of 2 Labels");
+            }
+            , out _
+            );
+
+
+    }
 }

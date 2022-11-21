@@ -1,4 +1,5 @@
 using System.Data;
+using System.Runtime.CompilerServices;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner.Operations;
@@ -65,6 +66,8 @@ public class PasteOperation : Operation
 
         bool didAny = false;
 
+        toCopy = PruneChildViews(toCopy);
+
         foreach (var d in toCopy)
         {
             didAny = this.Paste(d) || didAny;
@@ -76,12 +79,36 @@ public class PasteOperation : Operation
         return didAny;
     }
 
+    /// <summary>
+    /// Removes from <paramref name="toCopy"/> any element which is a child of any other element.
+    /// This prevents a copy of a container + 1 or more of its content items resulting in duplicate
+    /// pasting.
+    /// </summary>
+    /// <param name="toCopy">Collection you are copying.</param>
+    /// <returns>Collection without any elements that are children of other elements.</returns>
+    private Design[] PruneChildViews(Design[] toCopy)
+    {
+        var toReturn = toCopy.ToList().Cast<Design>().ToList();
+
+        foreach (var e in toCopy)
+        {
+            var children = e.GetAllChildDesigns(e.View).ToArray();
+            toReturn.RemoveAll(children.Contains);
+        }
+
+        return toReturn.ToArray();
+    }
+
     private bool Paste(Design d)
     {
-        var v = new ViewFactory();
-        var clone = v.Create(d.View.GetType());
+        return this.Paste(d, this.to);
+    }
 
-        var addOperation = new AddViewOperation(clone, this.to, null);
+    private bool Paste(Design copy, Design into)
+    {
+        var v = new ViewFactory();
+        var clone = v.Create(copy.View.GetType());
+        var addOperation = new AddViewOperation(clone, into, null);
 
         // couldn't add for some reason
         if (!addOperation.Do())
@@ -93,8 +120,27 @@ public class PasteOperation : Operation
 
         var cloneDesign = clone.Data as Design ?? throw new Exception($"AddViewOperation did not result in View of type {clone.GetType()} having a Design");
 
-        var cloneProps = cloneDesign.GetDesignableProperties();
-        var copyProps = d.GetDesignableProperties();
+        this.CopyProperties(copy, cloneDesign);
+
+        if (copy.IsContainerView)
+        {
+            // TODO TabView is going to be more complex than this
+            foreach (var content in copy.View.GetActualSubviews())
+            {
+                if (content.Data is Design contentDesign)
+                {
+                    this.Paste(contentDesign, cloneDesign);
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private void CopyProperties(Design from, Design toClone)
+    {
+        var cloneProps = toClone.GetDesignableProperties();
+        var copyProps = from.GetDesignableProperties();
 
         foreach (var copyProp in copyProps)
         {
@@ -102,22 +148,21 @@ public class PasteOperation : Operation
             cloneProp.SetValue(copyProp.GetValue());
         }
 
-        this.clones.Add(d, cloneDesign);
+        this.clones.Add(from, toClone);
 
         // If pasting a TableView make sure to
         // replicate the Table too.
         // TODO: think of a way to make this pattern
 
         // sustainable e.g. IPasteExtraBits or something
-        if (d.View is TableView copyTv)
+        if (from.View is TableView copyTv)
         {
-            this.CloneTableView(copyTv, (TableView)cloneDesign.View);
+            this.CloneTableView(copyTv, (TableView)toClone.View);
         }
 
         // TODO: adjust X/Y etc to make clone more visible
 
         // TODO: Clone child designs too e.g. copy and paste a TabView
-        return true;
     }
 
     private void CloneTableView(TableView copy, TableView pasted)
