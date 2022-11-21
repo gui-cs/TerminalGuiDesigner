@@ -3,7 +3,9 @@ using TerminalGuiDesigner.Operations.Generics;
 
 namespace TerminalGuiDesigner.Operations.StatusBarOperations
 {
-
+    /// <summary>
+    /// Operation for adding a new <see cref="StatusItem"/> to a <see cref="StatusBar"/>.
+    /// </summary>
     public class AddStatusItemOperation : AddOperation<StatusBar, StatusItem>
     {
         public AddStatusItemOperation(Design design, string? name)

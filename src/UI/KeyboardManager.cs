@@ -111,17 +111,7 @@ public class KeyboardManager
 
         if (keystroke.Key == this.keyMap.SetShortcut)
         {
-            Key key = 0;
-
-            var dlg = new LoadingDialog("Press Shortcut or Del");
-            dlg.KeyPress += (s) =>
-            {
-                key = s.KeyEvent.Key;
-                Application.RequestStop();
-            };
-            Application.Run(dlg);
-
-            menuItem.Shortcut = key == Key.DeleteChar ? 0 : key;
+            menuItem.Shortcut = Modals.GetShortcut();
 
             focusedView.SetNeedsDisplay();
             return false;

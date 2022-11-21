@@ -446,6 +446,7 @@ public class Design
             {
                 yield return new RemoveStatusItemOperation(this, item);
                 yield return new RenameStatusItemOperation(this, item, null);
+                yield return new SetShortcutOperation(this, item, null);
                 yield return new MoveStatusItemOperation(this, item, -1);
                 yield return new MoveStatusItemOperation(this, item, 1);
             }

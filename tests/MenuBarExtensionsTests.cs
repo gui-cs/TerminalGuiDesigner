@@ -127,4 +127,14 @@ internal class MenuBarExtensionsTests : Tests
             Assert.IsNull(v.ScreenToMenuBarItem(5+19));
         }, out _);
     }
+
+    [Test]
+    public void TestSetShortcut()
+    {
+        var si = new StatusItem(Key.F, "ff", () => { });
+        Assert.AreEqual(Key.F, si.Shortcut);
+        
+        si.SetShortcut(Key.B);
+        Assert.AreEqual(Key.B, si.Shortcut);
+    }
 }
