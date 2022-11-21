@@ -45,7 +45,7 @@ public abstract class RenameOperation<T1, T2> : GenericArrayElementOperation<T1,
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"Rename Tab '{this.StringGetter(this.OperateOn)}'";
+        return $"Rename {typeof(T2).Name} '{this.StringGetter(this.OperateOn)}'";
     }
 
     /// <inheritdoc/>
@@ -84,6 +84,8 @@ public abstract class RenameOperation<T1, T2> : GenericArrayElementOperation<T1,
         }
 
         this.stringSetter(this.OperateOn, this.newName);
+        this.SetNeedsDisplay();
+
         return true;
     }
 }

@@ -5,6 +5,7 @@ using Terminal.Gui.Graphs;
 using Terminal.Gui.Trees;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.Operations.MenuOperations;
+using TerminalGuiDesigner.Operations.StatusBarOperations;
 using TerminalGuiDesigner.Operations.TableViewOperations;
 using TerminalGuiDesigner.Operations.TabOperations;
 using TerminalGuiDesigner.ToCode;
@@ -432,6 +433,22 @@ public class Design
                 yield return new RenameMenuOperation(this, menu, null);
                 yield return new MoveMenuOperation(this, menu, -1);
                 yield return new MoveMenuOperation(this, menu, 1);
+            }
+        }
+
+        if (this.View is StatusBar sb)
+        {
+            yield return new AddStatusItemOperation(this, null);
+
+            var item = sb.ScreenToMenuBarItem(pos.X);
+
+            if (item != null)
+            {
+                yield return new RemoveStatusItemOperation(this, item);
+                yield return new RenameStatusItemOperation(this, item, null);
+                yield return new SetShortcutOperation(this, item, null);
+                yield return new MoveStatusItemOperation(this, item, -1);
+                yield return new MoveStatusItemOperation(this, item, 1);
             }
         }
     }

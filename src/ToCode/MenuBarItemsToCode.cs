@@ -1,4 +1,4 @@
-using System.CodeDom;
+﻿using System.CodeDom;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner.ToCode;
@@ -12,7 +12,6 @@ namespace TerminalGuiDesigner.ToCode;
 public class MenuBarItemsToCode : ToCodeBase
 {
     private readonly Design design;
-
     private readonly MenuBar menuBar;
 
     /// <summary>

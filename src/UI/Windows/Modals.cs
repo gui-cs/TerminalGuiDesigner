@@ -1,4 +1,8 @@
-﻿namespace TerminalGuiDesigner.UI.Windows;
+﻿using Terminal.Gui;
+using YamlDotNet.Core.Tokens;
+using Key = Terminal.Gui.Key;
+
+namespace TerminalGuiDesigner.UI.Windows;
 
 /// <summary>
 /// Static methods for launching popups that illicit choices from user (e.g. <see cref="GetInt(string, string, int?, out int?)"/>).
@@ -151,5 +155,19 @@ public class Modals
 
         resultChar = null;
         return false;
+    }
+
+    internal static Terminal.Gui.Key GetShortcut()
+    {
+        Key key = 0;
+        var dlg = new LoadingDialog("Press Shortcut or Del");
+        dlg.KeyPress += (s) =>
+        {
+            key = s.KeyEvent.Key;
+            Application.RequestStop();
+        };
+        Application.Run(dlg);
+
+        return key == Key.DeleteChar ? 0 : key;
     }
 }
