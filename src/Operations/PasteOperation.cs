@@ -29,9 +29,26 @@ public class PasteOperation : Operation
         this.toCopy = CopyOperation.LastCopiedDesign;
         this.toCopy = this.PruneChildViews(this.toCopy);
 
-        this.IsImpossible = this.toCopy == null || this.toCopy.Length == 0;
+        if (this.toCopy == null || this.toCopy.Length == 0)
+        {
+            this.IsImpossible = true;
+            return;
+        }
+
         this.to = addTo;
         this.oldSelection = SelectionManager.Instance.Selected;
+
+        // if trying to copy into itself
+        if (this.toCopy.Length == 1 && this.toCopy[0] == this.to)
+        {
+            // instead paste into the container that contains it
+            var parent = this.to.View.SuperView?.GetNearestContainerDesign();
+
+            if (parent != null)
+            {
+                this.to = parent;
+            }
+        }
 
         // don't let user copy and paste a view into itself!
         if (this.toCopy?.Contains(this.to) ?? false)
