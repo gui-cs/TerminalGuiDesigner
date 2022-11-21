@@ -322,7 +322,7 @@ internal class CopyPasteTests : Tests
             );
     }
     [Test]
-    public void TestCopyPasteContainer_Empty_ScrollView_IntoItself()
+    public void TestCopyPasteContainer_EmptyScrollView_IntoItself_InsteadPastesToRoot()
     {
         RoundTrip<Window, ScrollView>(
             (d, v) =>
@@ -332,7 +332,12 @@ internal class CopyPasteTests : Tests
 
                 var rootDesign = d.GetRootDesign();
 
-                Assert.IsFalse(new PasteOperation(d).Do(), "Expected it to be against the rules to paste a container into itself");
+                Assert.IsTrue(new PasteOperation(d).Do());
+
+                var rootSubviews = rootDesign.View.GetActualSubviews();
+
+                Assert.AreEqual(2, rootSubviews.Count, "Expected root to have 2 ScrollView now");
+                Assert.IsTrue(rootSubviews.All(v => v is ScrollView));
             }
             , out _
             );

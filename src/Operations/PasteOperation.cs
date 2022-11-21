@@ -178,30 +178,37 @@ public class PasteOperation : Operation
 
     private void CopyProperties(Design from, Design toClone)
     {
-        var cloneProps = toClone.GetDesignableProperties();
-        var copyProps = from.GetDesignableProperties();
-
-        foreach (var copyProp in copyProps)
+        try
         {
-            var cloneProp = cloneProps.Single(p => p.PropertyInfo == copyProp.PropertyInfo);
-            cloneProp.SetValue(copyProp.GetValue());
+            var cloneProps = toClone.GetDesignableProperties();
+            var copyProps = from.GetDesignableProperties();
+
+            foreach (var copyProp in copyProps)
+            {
+                var cloneProp = cloneProps.Single(p => p.PropertyInfo == copyProp.PropertyInfo);
+                cloneProp.SetValue(copyProp.GetValue());
+            }
+
+            this.clones.Add(from, toClone);
+
+            // If pasting a TableView make sure to
+            // replicate the Table too.
+            // TODO: think of a way to make this pattern
+
+            // sustainable e.g. IPasteExtraBits or something
+            if (from.View is TableView copyTv)
+            {
+                this.CloneTableView(copyTv, (TableView)toClone.View);
+            }
+
+            // TODO: adjust X/Y etc to make clone more visible
+
+            // TODO: Clone child designs too e.g. copy and paste a TabView
         }
-
-        this.clones.Add(from, toClone);
-
-        // If pasting a TableView make sure to
-        // replicate the Table too.
-        // TODO: think of a way to make this pattern
-
-        // sustainable e.g. IPasteExtraBits or something
-        if (from.View is TableView copyTv)
+        catch (Exception ex)
         {
-            this.CloneTableView(copyTv, (TableView)toClone.View);
+            throw new Exception($"Failed to copy {from} ({from.View.GetType().Name}) properties to {toClone} ({toClone.View.GetType().Name})",ex);
         }
-
-        // TODO: adjust X/Y etc to make clone more visible
-
-        // TODO: Clone child designs too e.g. copy and paste a TabView
     }
 
     private void CloneTableView(TableView copy, TableView pasted)
