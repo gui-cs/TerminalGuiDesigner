@@ -589,6 +589,30 @@ public class Design
         return everyone.Where(o => this.DependsOnUs(o, everyone));
     }
 
+    /// <summary>
+    /// Returns all user designable sub-views of <paramref name="view"/>.
+    /// </summary>
+    /// <param name="view">The parent whose children you want to retrieve.</param>
+    /// <returns>All designable children recursively.</returns>
+    public IEnumerable<Design> GetAllChildDesigns(View view)
+    {
+        List<Design> toReturn = new List<Design>();
+
+        foreach (var subView in view.GetActualSubviews().ToArray())
+        {
+            if (subView.Data is Design d)
+            {
+                toReturn.Add(d);
+            }
+
+            // even if this sub-view isn't designable there might be designable ones further down
+            // e.g. a ContentView of a Window
+            toReturn.AddRange(this.GetAllChildDesigns(subView));
+        }
+
+        return toReturn;
+    }
+
     private void CreateSubControlDesigns(View view)
     {
         foreach (var subView in view.GetActualSubviews().ToArray())
@@ -813,25 +837,6 @@ public class Design
         return new Property(
             this,
             this.View.GetType().GetProperty(name) ?? throw new Exception($"Could not find expected Property '{name}' on View of Type '{this.View.GetType()}'"));
-    }
-
-    private IEnumerable<Design> GetAllChildDesigns(View view)
-    {
-        List<Design> toReturn = new List<Design>();
-
-        foreach (var subView in view.GetActualSubviews().ToArray())
-        {
-            if (subView.Data is Design d)
-            {
-                toReturn.Add(d);
-            }
-
-            // even if this subview isn't designable there might be designable ones further down
-            // e.g. a ContentView of a Window
-            toReturn.AddRange(this.GetAllChildDesigns(subView));
-        }
-
-        return toReturn;
     }
 
     private bool DependsOnUs(Design other, Design[] everyone)

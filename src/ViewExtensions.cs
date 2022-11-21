@@ -26,6 +26,11 @@ public static class ViewExtensions
             return w.Subviews[0].Subviews;
         }
 
+        if (v is FrameView f)
+        {
+            return f.Subviews[0].Subviews;
+        }
+
         if (v is ScrollView scroll)
         {
             return scroll.Subviews[0].Subviews;

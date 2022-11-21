@@ -39,7 +39,9 @@ public partial class DragOperation : Operation
         this.DestinationX = originalX;
         this.DestinationY = originalY;
 
-        foreach (var d in alsoDrag ?? new Design[0])
+        // we also have to drag all these but don't drag
+        // a thing that is in a container which is also being dragged
+        foreach (var d in this.PruneChildViews(alsoDrag ?? new Design[0]) ?? new Design[0])
         {
             if (!this.mementos.Any(m => m.Design == d))
             {
