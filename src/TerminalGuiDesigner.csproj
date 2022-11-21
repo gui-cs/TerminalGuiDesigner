@@ -21,7 +21,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>TerminalGuiDesigner</PackageId>
-    <Version>1.0.19</Version>
+    <Version>1.0.20</Version>
     <Authors>Thomas Nind</Authors>
     <Nullable>enable</Nullable>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -34,6 +34,13 @@
     <PackageIcon>logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>
+	v1.0.20
+	 * Ability to copy and paste containers
+	 * StatusBar support (add, remove, rename etc)
+	 * Fix right click on TableView headers
+	 * Improve context menu layout for menus, status bars etc 
+	 * Improved private field naming conventions
+	 * RadioGroup can now be set to horizontal
 	v1.0.19
 	 * Added `-e` experimental mode flag that lets you create new TopLevel and View classes
 	 * Added dotted border around Views that do not have any visible boundary (e.g. `View`, `TabView` with ShowBorder off)

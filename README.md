@@ -156,7 +156,7 @@ italics are experimental and require passing the `-e` flag when starting applica
 - [x] Copy/Paste 
   - [x] Single simple views
   - [ ] Cut
-  - [ ] Container views (e.g. TabView)
+  - [x] Container views (e.g. TabView)
   - [ ] To OS clipboard (e.g. open one Designer.cs View and copy to another)
   - [x] Retain PosRelative mappings in pasted views (e.g. `A` LeftOf `B`)
 - [x] Move views to subviews
@@ -190,7 +190,7 @@ italics are experimental and require passing the `-e` flag when starting applica
     - [ ] Copy/Paste preserve menu entries
   - [x] ProgressBar
   - [x] RadioGroup
-  - [ ] StatusBar
+  - [x] StatusBar
   - [x] TableView
     - [x] Add/Remove Columns
     - [x] Copy/Paste preserve table schema
