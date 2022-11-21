@@ -105,6 +105,24 @@ public class PasteOperation : Operation
         return this.Paste(d, this.to);
     }
 
+    private void Paste(View copy, Design into)
+    {
+        // TODO this is going to miss 'drop through' View which themselves contain Data
+        if (copy.Data is Design copyDesign)
+        {
+            this.Paste(copyDesign, into);
+        }
+        else
+        {
+            // its not a Design so its probably an artifact of Terminal.Gui e.g. ContentView etc
+            // so we need to recurse into its children but not actually replicate this View
+            foreach (var sub in copy.GetActualSubviews())
+            {
+                this.Paste(sub, into);
+            }
+        }
+    }
+
     private bool Paste(Design copy, Design into)
     {
         var v = new ViewFactory();
@@ -123,20 +141,23 @@ public class PasteOperation : Operation
 
         this.CopyProperties(copy, cloneDesign);
 
+
+        if (clone is TabView tabView)
+        {
+            this.CloneTabView((TabView)copy.View, tabView);
+        }
+        else
         if (copy.IsContainerView)
         {
-            // TODO TabView is going to be more complex than this
             foreach (var content in copy.View.GetActualSubviews())
             {
-                if (content.Data is Design contentDesign)
-                {
-                    this.Paste(contentDesign, cloneDesign);
-                }
+                this.Paste(content, cloneDesign);
             }
         }
 
         return true;
     }
+
 
     private void CopyProperties(Design from, Design toClone)
     {
@@ -176,6 +197,30 @@ public class PasteOperation : Operation
         }
 
         pasted.Update();
+    }
+
+    private void CloneTabView(TabView copy, TabView pasted)
+    {
+        // clear tabs in the pasted view as they will just come from ViewFactory
+        foreach (var tab in pasted.Tabs.ToArray())
+        {
+            pasted.RemoveTab(tab);
+        }
+
+        // add a new Tab for each one in the source
+        foreach (var copyTab in copy.Tabs)
+        {
+            var tab = pasted.AddEmptyTab(copyTab.Text?.ToString() ?? Operation.Unnamed);
+
+            // copy the tab contents
+            copy.SelectedTab = copyTab;
+            pasted.SelectedTab = tab;
+
+            foreach (var copySub in copyTab.View.GetActualSubviews())
+            {
+                this.Paste(copySub, (Design)pasted.Data);
+            }
+        }
     }
 
     private void MigratePosRelatives()

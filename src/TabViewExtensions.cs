@@ -65,4 +65,18 @@ public static class TabViewExtensions
 
         tabView.SelectedTab = selectedBefore;
     }
+
+    /// <summary>
+    /// Creates a new <see cref="TabView.Tab"/> with a <see cref="View"/> that fills
+    /// all available space.  Tab will have the name <paramref name="named"/>.
+    /// </summary>
+    /// <param name="tabView"><see cref="TabView"/> to add the new tab to.</param>
+    /// <param name="named">Name for the new tab.</param>
+    /// <returns>The tab added.</returns>
+    public static Tab AddEmptyTab(this TabView tabView, string named)
+    {
+        var tab = new TabView.Tab(named, new View { Width = Dim.Fill(), Height = Dim.Fill() });
+        tabView.AddTab(tab, false);
+        return tab;
+    }
 }
