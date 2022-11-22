@@ -19,12 +19,12 @@
     <Position X="8.473" Y="4.589" Height="0.327" Width="1.906" />
   </Comment>
   <Comment CommentText="Example Operations (of which there are many)">
-    <Position X="10.75" Y="5.5" Height="0.511" Width="1.993" />
+    <Position X="10.75" Y="4.979" Height="0.511" Width="1.993" />
   </Comment>
   <Class Name="TerminalGuiDesigner.Design">
     <Position X="3.75" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AhABABACACoBABAHAAAAAEIQAACJhAAgAQAAAgAAgAg=</HashCode>
+      <HashCode>AhABQBACACKBADAHCAAAAEIQAECJhAAgARAABAAAgAg=</HashCode>
       <FileName>Design.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -37,37 +37,30 @@
     <TypeIdentifier />
   </Class>
   <Class Name="TerminalGuiDesigner.Operations.AddViewOperation" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="10.75" Y="2.75" Width="2" />
+    <Position X="10.75" Y="3.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAEAAAAABAAAAAAAAIgBCBAAAAAAAAAAAAACAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAIhBABAAAAAAAAAAAAACAAA=</HashCode>
       <FileName>Operations\AddViewOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TerminalGuiDesigner.Operations.DeleteViewOperation" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="10.75" Y="3.25" Width="2" />
+    <Position X="10.75" Y="3.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAIAAAAABAAEAAAAAQABCAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAIAAAAABAAEAAAAAQBBAAAAAAACAAAAAAAAAAA=</HashCode>
       <FileName>Operations\DeleteViewOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TerminalGuiDesigner.Operations.RenameViewOperation" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="10.75" Y="3.75" Width="2" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAACAAAADAAAAAAAAAABCAAAAAAIAAAAAAAAAAA=</HashCode>
-      <FileName>Operations\RenameViewOperation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="TerminalGuiDesigner.Operations.SetPropertyOperation" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="10.75" Y="4.25" Width="2" />
+    <Position X="10.75" Y="4" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAADAgEAAAAEAgBCAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAABAAEACAAEABDAAAAAAAAAAAAAAAAAEA=</HashCode>
       <FileName>Operations\SetPropertyOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TerminalGuiDesigner.Operations.OperationManager" Collapsed="true">
     <Position X="8.5" Y="1" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAEAAABAAAAAAAAAADCEAgAEAAQAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAEAAAEAAABAAAAAAAAAADCEAgAEAAQAAAAAAAAAA=</HashCode>
       <FileName>Operations\OperationManager.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -81,7 +74,7 @@
   <Class Name="TerminalGuiDesigner.FromCode.CodeToView">
     <Position X="13" Y="2.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>gAAABAAAAACAAAACAAAAAgAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>gAAABAAAAACAAAAAAAAAAgAAAAAAIAAAAAAAAAAAAAA=</HashCode>
       <FileName>FromCode\CodeToView.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -91,12 +84,9 @@
   <Class Name="TerminalGuiDesigner.UI.Editor">
     <Position X="0.5" Y="0.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>EQRgBIAQASISJCAwAABAQAABigEAUAAAFAFAAQAACAI=</HashCode>
+      <HashCode>IQRiB4gQACICNCQgCABAAAIBigMAQAgBEAFAIQAACAI=</HashCode>
       <FileName>UI\Editor.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Field Name="_viewBeingEdited" />
-    </ShowAsAssociation>
   </Class>
   <Class Name="TerminalGuiDesigner.ToCode.Property" Collapsed="true">
     <Position X="6.5" Y="0.5" Width="1.75" />
@@ -113,9 +103,9 @@
     </TypeIdentifier>
   </Class>
   <Class Name="TerminalGuiDesigner.Operations.DragOperation" Collapsed="true">
-    <Position X="10.75" Y="4.75" Width="2" />
+    <Position X="10.75" Y="4.25" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAEAAAAAAAAgJAAAAAAAAAABKARAAAAEQAgAAAAAAAA=</HashCode>
+      <HashCode>AAEAAAAAAAAgBAAAACAAAABBKARAAAAEQAgAAAAAAAA=</HashCode>
       <FileName>Operations\DragOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -129,21 +119,21 @@
   <Class Name="TerminalGuiDesigner.ToCode.TabToCode" Collapsed="true">
     <Position X="17" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAEAAAAAAgCAAAAACAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <HashCode>AAAAECAAAAAAAAAAAAiAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
       <FileName>ToCode\TabToCode.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TerminalGuiDesigner.ToCode.ToCodeBase" Collapsed="true">
     <Position X="17.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAEAAAAAAAUAAAAAAAABAgAAQAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAgAAAAAEAAAAAAAUAAAAAAAABAgAAQAAAAAAAAA=</HashCode>
       <FileName>ToCode\ToCodeBase.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TerminalGuiDesigner.ToCode.DataTableToCode" Collapsed="true">
     <Position X="18.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAEAAAABAACAAAAAAAQAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <HashCode>AAAAEAAAABAAAABAAAgAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
       <FileName>ToCode\DataTableToCode.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -167,14 +157,14 @@
   <Class Name="TerminalGuiDesigner.ColorSchemeManager" Collapsed="true">
     <Position X="8.5" Y="3.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAIABAAAAAAQgAAAAAAABAAEAAAAAAAAQAAAAABAgAA=</HashCode>
+      <HashCode>AAIBBAAQAAAQgAAAAAAABAAAAAAAAAAAQAAAAABAgAA=</HashCode>
       <FileName>ColorSchemeManager.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TerminalGuiDesigner.SelectionManager" Collapsed="true">
     <Position X="8.5" Y="4" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAgAAAAAAAAAwAACQAAAAAAAAAAEAAQABEAABAAAI=</HashCode>
+      <HashCode>CAAAAAAAAAAAAAgAACQAAAAAAAAAAEAAQABIAABAAAI=</HashCode>
       <FileName>SelectionManager.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -184,7 +174,7 @@
   <Class Name="TerminalGuiDesigner.ToCode.ColorSchemeToCode" Collapsed="true">
     <Position X="20" Y="1.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAEAAEAAAAAAAAAIAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAEAAAAAAAAAAAAIAABAAAAAAABAAAAAAAAAAAAAA=</HashCode>
       <FileName>ToCode\ColorSchemeToCode.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -198,14 +188,14 @@
   <Class Name="TerminalGuiDesigner.Operations.OperationFactory" Collapsed="true">
     <Position X="8.5" Y="1.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAAAAAAAIAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAACAAAAAAIAAAAAAAAAAAA=</HashCode>
       <FileName>Operations\OperationFactory.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Interface Name="TerminalGuiDesigner.Operations.IOperation">
     <Position X="10.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAABAAAAAAAABABCAAAAAAAACAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAABAAAAAAgABABCAAAAAAAACAAAAAACAA=</HashCode>
       <FileName>Operations\IOperation.cs</FileName>
     </TypeIdentifier>
   </Interface>
