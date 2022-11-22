@@ -8,6 +8,11 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
     /// </summary>
     public class AddStatusItemOperation : AddOperation<StatusBar, StatusItem>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AddStatusItemOperation"/> class.
+        /// </summary>
+        /// <param name="design">Wrapper for a <see cref="StatusBar"/>.</param>
+        /// <param name="name">Name for the new item created or null to prompt user.</param>
         public AddStatusItemOperation(Design design, string? name)
             : base(
                   (d) => d.Items,

@@ -28,15 +28,14 @@ public class PasteOperation : Operation
     {
         this.toCopy = CopyOperation.LastCopiedDesign;
         this.toCopy = this.PruneChildViews(this.toCopy);
+        this.to = addTo;
+        this.oldSelection = SelectionManager.Instance.Selected;
 
         if (this.toCopy == null || this.toCopy.Length == 0)
         {
             this.IsImpossible = true;
             return;
         }
-
-        this.to = addTo;
-        this.oldSelection = SelectionManager.Instance.Selected;
 
         // if trying to copy into itself
         if (this.toCopy.Length == 1 && this.toCopy[0] == this.to)
@@ -158,7 +157,6 @@ public class PasteOperation : Operation
 
         this.CopyProperties(copy, cloneDesign);
 
-
         if (clone is TabView tabView)
         {
             this.CloneTabView((TabView)copy.View, tabView);
@@ -174,7 +172,6 @@ public class PasteOperation : Operation
 
         return true;
     }
-
 
     private void CopyProperties(Design from, Design toClone)
     {
@@ -207,7 +204,7 @@ public class PasteOperation : Operation
         }
         catch (Exception ex)
         {
-            throw new Exception($"Failed to copy {from} ({from.View.GetType().Name}) properties to {toClone} ({toClone.View.GetType().Name})",ex);
+            throw new Exception($"Failed to copy {from} ({from.View.GetType().Name}) properties to {toClone} ({toClone.View.GetType().Name})", ex);
         }
     }
 
