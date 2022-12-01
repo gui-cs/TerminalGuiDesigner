@@ -126,8 +126,8 @@ italics are experimental and require passing the `-e` flag when starting applica
     - [x] X/Y
     - [x] Width/Height
     - [x] Text
-    - [ ] Color Schemes
-- [ ] Edit multiple Views' property at once (e.g. select 3 views and set all Width to 10)
+    - [x] Color Schemes
+- [x] Edit multiple Views' property at once (e.g. select 3 views and set all Width to 10)
 - [x] Mouse Input
   - [x] Drag to move
   - [x] Drag into/out of sub view
@@ -141,17 +141,17 @@ italics are experimental and require passing the `-e` flag when starting applica
   - [x] Add menu bar separators (Type '---')
   - [x] Assign shortcuts
   - [x] Set fieldnames `(Name)`
-- [ ] Easy Status Bar Designing
+- [x] Easy Status Bar Designing
 - [ ] Create Events e.g. MyButton_OnClick
-- [ ] View Dependency Management
+- [x] View Dependency Management
   - [x] Prevent deleting views where other Views hold RelativeTo dependencies
-  - [ ] Write out dependant views to `InitializeComponent` before dependers
-  - [ ] Order Multi Delete operations to delete dependers before dependants
+  - [x] Write out dependant views to `InitializeComponent` before dependers
+  - [x] Order Multi Delete operations to delete dependers before dependants
 - [x] Mutli select
   - [x] Multi delete
   - [x] Multi keyboard move
   - [x] Multi mouse drag move
-  - [ ] Multi set Property
+  - [x] Multi set Property
   - [x] Multi Copy/Paste
 - [x] Copy/Paste 
   - [x] Single simple views
@@ -191,13 +191,14 @@ italics are experimental and require passing the `-e` flag when starting applica
   - [x] ProgressBar
   - [x] RadioGroup
   - [x] StatusBar
+    - [ ] Copy/Paste preserve menu entries
   - [x] TableView
     - [x] Add/Remove Columns
     - [x] Copy/Paste preserve table schema
   - [x] TabView
     - [x] Add/Remove new Tabs
     - [x] Reorder Tabs
-    - [ ] Copy/Paste preserve tabs/content
+    - [x] Copy/Paste preserve tabs/content
   - [x] TextField
   - [x] TextValidateField
   - [x] TextView
