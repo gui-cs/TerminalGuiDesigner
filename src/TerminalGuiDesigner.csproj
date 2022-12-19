@@ -134,7 +134,7 @@
     </PackageReference>
     <PackageReference Include="System.CodeDom" Version="7.0.0" />
     <PackageReference Include="Terminal.gui" Version="1.8.2" />
-    <PackageReference Include="YamlDotNet" Version="12.1.0" />
+    <PackageReference Include="YamlDotNet" Version="12.3.1" />
   </ItemGroup>
 
 </Project>
