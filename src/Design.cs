@@ -139,22 +139,6 @@ public class Design
     /// </summary>
     public void CreateSubControlDesigns()
     {
-        /*
-         * Unlike Window/Dialog the View/TopLevel classes do not have an explicit
-         * colors schemes.  When creating a new View or TopLevel we need to use
-         * the Colors.Base and fiddle a bit with coloring/clearing to ensure things render correctly
-         */
-
-        var baseType = this.View.GetType().BaseType;
-
-        if (baseType == typeof(View) || baseType == typeof(Toplevel))
-        {
-            if (this.View.ColorScheme == null || this.View.ColorScheme == Colors.TopLevel)
-            {
-                this.State.OriginalScheme = this.View.ColorScheme = Colors.Base;
-            }
-        }
-
         this.CreateSubControlDesigns(this.View);
     }
 
