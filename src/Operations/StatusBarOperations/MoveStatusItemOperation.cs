@@ -15,10 +15,10 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
         /// <param name="toMove">The <see cref="StatusItem"/> to move.</param>
         /// <param name="adjustment">Negative for left, positive for right.</param>
         public MoveStatusItemOperation(Design design, StatusItem toMove, int adjustment)
-            :base(
-                 (v)=>v.Items,
-                 (v,a)=>v.Items = a,
-                 (e)=>e.Title?.ToString() ?? Operation.Unnamed,
+            : base(
+                 (v) => v.Items,
+                 (v, a) => v.Items = a,
+                 (e) => e.Title?.ToString() ?? Operation.Unnamed,
                  design,
                  toMove,
                  adjustment)
