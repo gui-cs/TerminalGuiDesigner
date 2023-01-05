@@ -43,7 +43,7 @@ public class DefaultColorSchemes
         this.GrayOnBlack.Scheme.Focus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.DarkGray);
         this.GrayOnBlack.Scheme.HotFocus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.DarkGray);
         this.GrayOnBlack.Scheme.Disabled = new Terminal.Gui.Attribute(Terminal.Gui.Color.DarkGray, Terminal.Gui.Color.Black);
-                
+
         this.TerminalGuiDefault = new NamedColorScheme("tgDefault");
         this.TerminalGuiDefault.Scheme.Normal = new Terminal.Gui.Attribute(Color.White, Color.Blue);
         this.TerminalGuiDefault.Scheme.HotNormal = new Terminal.Gui.Attribute(Color.BrightCyan, Color.Blue);
