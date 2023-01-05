@@ -363,12 +363,10 @@ public class Design
             DataColumn? col = null;
             if (!pos.IsEmpty)
             {
-                // See which column the right click lands.  If nowhere (but still within TableView) then it
-                // might be a click in the header (i.e. too high up to hit a cell).  So check with Y coordinate
-                // close to bottom of control see if that gives a non null result.
-                var cell = tv.ScreenToCell(pos.X, pos.Y) ?? tv.ScreenToCell(pos.X, tv.Frame.Bottom - 2);
+                // See which column the right click lands.
+                var cell = tv.ScreenToCell(pos.X, pos.Y, out col);
 
-                if (cell != null)
+                if (cell != null && col == null)
                 {
                     col = tv.Table.Columns[cell.Value.X];
                 }
