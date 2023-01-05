@@ -63,7 +63,7 @@ public class DefaultColorSchemes
 
     /// <summary>
     /// Gets a default color scheme provided out of the box as an example.
-    /// Red foreground on black background.
+    /// This scheme is based on the normal blue/white scheme of Terminal.gui.
     /// </summary>
     public NamedColorScheme TerminalGuiDefault { get; }
 
