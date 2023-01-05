@@ -118,8 +118,8 @@ italics are experimental and require passing the `-e` flag when starting applica
 - [x] Design classes 
     - [x] Window
     - [x] Dialog
-    - [x] _View_
-    - [x] _Top level_
+    - [x] View
+    - [x] Top level
 - [x] Configure root properties (e.g. Window.Width, Title etc)
 - [x] Configure subview properties
     - [x] (Name)

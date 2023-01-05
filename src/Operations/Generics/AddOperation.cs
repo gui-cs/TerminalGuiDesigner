@@ -13,10 +13,10 @@ namespace TerminalGuiDesigner.Operations.Generics;
 public abstract class AddOperation<T1, T2> : GenericArrayOperation<T1, T2>
     where T1 : View
 {
+    private readonly ArrayElementFactory<T1, T2> elementFactory;
+
     private T2? newItem;
     private string? name;
-
-    private readonly ArrayElementFactory<T1, T2> elementFactory;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AddOperation{T1, T2}"/> class.

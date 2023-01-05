@@ -62,7 +62,6 @@ public class MouseManager
                         selection.Add(addOrRemove);
                     }
 
-
                     SelectionManager.Instance.ForceSetSelection(selection.ToArray());
                     return;
                 }
