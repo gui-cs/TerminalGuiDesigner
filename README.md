@@ -190,8 +190,10 @@ italics are experimental and require passing the `-e` flag when starting applica
     - [ ] Copy/Paste preserve menu entries
   - [x] ProgressBar
   - [x] RadioGroup
+  - [ ] [SplitContainer](https://github.com/gui-cs/Terminal.Gui/pull/2258) (Unreleased)
+    - [ ] Copy/Paste preserve tabs/content
   - [x] StatusBar
-    - [ ] Copy/Paste preserve menu entries
+    - [ ] Copy/Paste preserve split content panels
   - [x] TableView
     - [x] Add/Remove Columns
     - [x] Copy/Paste preserve table schema
