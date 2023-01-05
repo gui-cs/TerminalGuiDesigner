@@ -1,4 +1,6 @@
-﻿namespace TerminalGuiDesigner;
+﻿using Terminal.Gui;
+
+namespace TerminalGuiDesigner;
 
 /// <summary>
 /// Provides some out of the box nicely set up color schemes
@@ -41,6 +43,16 @@ public class DefaultColorSchemes
         this.GrayOnBlack.Scheme.Focus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.DarkGray);
         this.GrayOnBlack.Scheme.HotFocus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.DarkGray);
         this.GrayOnBlack.Scheme.Disabled = new Terminal.Gui.Attribute(Terminal.Gui.Color.DarkGray, Terminal.Gui.Color.Black);
+
+        this.TerminalGuiDefault = new NamedColorScheme("tgDefault");
+        this.TerminalGuiDefault.Scheme.Normal = new Terminal.Gui.Attribute(Color.White, Color.Blue);
+        this.TerminalGuiDefault.Scheme.HotNormal = new Terminal.Gui.Attribute(Color.BrightCyan, Color.Blue);
+        this.TerminalGuiDefault.Scheme.Focus = new Terminal.Gui.Attribute(Color.Black, Color.Gray);
+        this.TerminalGuiDefault.Scheme.HotFocus = new Terminal.Gui.Attribute(Color.BrightBlue, Color.Gray);
+
+        // HACK : Keeping this foreground as Brown because otherwise designer will think this is legit
+        // the real default and assume user has not chosen it.  See: https://github.com/gui-cs/TerminalGuiDesigner/issues/133
+        this.TerminalGuiDefault.Scheme.Disabled = new Terminal.Gui.Attribute(Color.Brown, Color.Blue);
     }
 
     /// <summary>
@@ -48,6 +60,12 @@ public class DefaultColorSchemes
     /// Red foreground on black background.
     /// </summary>
     public NamedColorScheme RedOnBlack { get; }
+
+    /// <summary>
+    /// Gets a default color scheme provided out of the box as an example.
+    /// This scheme is based on the normal blue/white scheme of Terminal.gui.
+    /// </summary>
+    public NamedColorScheme TerminalGuiDefault { get; }
 
     /// <summary>
     /// Gets a  default color scheme provided out of the box as an example.

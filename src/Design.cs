@@ -139,36 +139,6 @@ public class Design
     /// </summary>
     public void CreateSubControlDesigns()
     {
-        /*
-         * Unlike Window/Dialog the View/TopLevel classes do not have an explicit
-         * colors schemes.  When creating a new View or TopLevel we need to use
-         * the Colors.Base and fiddle a bit with coloring/clearing to ensure things render correctly
-         */
-
-        var baseType = this.View.GetType().BaseType;
-
-        if (baseType == typeof(View) || baseType == typeof(Toplevel))
-        {
-            if (this.View.ColorScheme == null || this.View.ColorScheme == Colors.TopLevel)
-            {
-                this.State.OriginalScheme = this.View.ColorScheme = Colors.Base;
-            }
-
-            // TODO: Remove this when https://github.com/gui-cs/Terminal.Gui/issues/2094 is fixed
-            // HACK
-
-            // View and TopLevel doe not clear their states regularly during drawing
-            // we have to do that ourselves
-            this.View.DrawContent += (r) =>
-            {
-                // manually erase stale content
-                Application.Driver.SetAttribute(
-                    this.State.OriginalScheme?.Normal ??
-                    this.View.ColorScheme.Normal);
-                this.View.Clear();
-            };
-        }
-
         this.CreateSubControlDesigns(this.View);
     }
 
@@ -363,12 +333,10 @@ public class Design
             DataColumn? col = null;
             if (!pos.IsEmpty)
             {
-                // See which column the right click lands.  If nowhere (but still within TableView) then it
-                // might be a click in the header (i.e. too high up to hit a cell).  So check with Y coordinate
-                // close to bottom of control see if that gives a non null result.
-                var cell = tv.ScreenToCell(pos.X, pos.Y) ?? tv.ScreenToCell(pos.X, tv.Frame.Bottom - 2);
+                // See which column the right click lands.
+                var cell = tv.ScreenToCell(pos.X, pos.Y, out col);
 
-                if (cell != null)
+                if (cell != null && col == null)
                 {
                     col = tv.Table.Columns[cell.Value.X];
                 }

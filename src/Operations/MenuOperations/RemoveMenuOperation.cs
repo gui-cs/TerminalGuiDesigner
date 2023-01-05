@@ -10,7 +10,6 @@ namespace TerminalGuiDesigner.Operations.MenuOperations;
 /// </summary>
 public class RemoveMenuOperation : RemoveOperation<MenuBar, MenuBarItem>
 {
-
     /// <summary>
     /// Initializes a new instance of the <see cref="RemoveMenuOperation"/> class.
     /// </summary>

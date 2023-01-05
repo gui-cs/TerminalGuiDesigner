@@ -9,7 +9,6 @@ namespace TerminalGuiDesigner.Operations.TableViewOperations;
 /// </summary>
 public class RenameColumnOperation : RenameOperation<TableView, DataColumn>
 {
-
     /// <summary>
     /// Initializes a new instance of the <see cref="RenameColumnOperation"/> class.
     /// </summary>

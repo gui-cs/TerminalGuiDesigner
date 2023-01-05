@@ -1,5 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Reflection;
+﻿using System.Reflection;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner;

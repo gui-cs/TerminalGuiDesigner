@@ -118,8 +118,8 @@ italics are experimental and require passing the `-e` flag when starting applica
 - [x] Design classes 
     - [x] Window
     - [x] Dialog
-    - [x] _View_
-    - [x] _Top level_
+    - [x] View
+    - [x] Top level
 - [x] Configure root properties (e.g. Window.Width, Title etc)
 - [x] Configure subview properties
     - [x] (Name)
@@ -190,6 +190,8 @@ italics are experimental and require passing the `-e` flag when starting applica
     - [ ] Copy/Paste preserve menu entries
   - [x] ProgressBar
   - [x] RadioGroup
+  - [ ] [SplitContainer](https://github.com/gui-cs/Terminal.Gui/pull/2258) (Unreleased)
+    - [ ] Copy/Paste preserve split content panels
   - [x] StatusBar
     - [ ] Copy/Paste preserve menu entries
   - [x] TableView

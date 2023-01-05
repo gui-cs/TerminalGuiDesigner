@@ -104,7 +104,7 @@ public partial class ChoicesDialog
 
         Move(1, 0, false);
 
-        var padding = ((bounds.Width - _title.Sum(Rune.ColumnWidth)) / 2) - 1;
+        var padding = ((bounds.Width - _title.Sum(v=>Rune.ColumnWidth(v))) / 2) - 1;
 
         Driver.SetAttribute(
             new Attribute(ColorScheme.Normal.Foreground, ColorScheme.Normal.Background));
@@ -130,6 +130,12 @@ public partial class ChoicesDialog
     internal static void PaintShadow(Button btn, ColorScheme backgroundScheme)
     {
         var bounds = btn.Bounds;
+
+        Attribute buttonColor = btn.HasFocus ? 
+            new Terminal.Gui.Attribute(btn.ColorScheme.Focus.Foreground, btn.ColorScheme.Focus.Background):
+            new Terminal.Gui.Attribute(btn.ColorScheme.Normal.Foreground, btn.ColorScheme.Normal.Background);
+
+        Driver.SetAttribute(buttonColor);
 
         if (btn.IsDefault)
         {

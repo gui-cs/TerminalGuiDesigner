@@ -671,9 +671,9 @@ Ctrl+Q - Quit
         var menu = new ContextMenu();
         menu.MenuItems = new MenuBarItem(all.ToArray());
 
-        if (m.HasValue)
+        if (m != null)
         {
-            menu.Position = new Point(m.Value.X, m.Value.Y);
+            menu.Position = new Point(m.X, m.Y);
         }
         else
         {
@@ -992,13 +992,7 @@ Ctrl+Q - Quit
 
     private Type[] GetSupportedRootViews()
     {
-        // TODO: When more robust, remove these from experimental status
-        if (Editor.Experimental)
-        {
-            return new Type[] { typeof(Window), typeof(Dialog), typeof(View), typeof(Toplevel) };
-        }
-
-        return new Type[] { typeof(Window), typeof(Dialog) };
+       return new Type[] { typeof(Window), typeof(Dialog), typeof(View), typeof(Toplevel) };
     }
 
     private void New(FileInfo toOpen, Type typeToCreate, string? explicitNamespace)
