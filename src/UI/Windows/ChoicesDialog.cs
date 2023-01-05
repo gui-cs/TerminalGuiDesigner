@@ -131,6 +131,12 @@ public partial class ChoicesDialog
     {
         var bounds = btn.Bounds;
 
+        Attribute buttonColor = btn.HasFocus ? 
+            new Terminal.Gui.Attribute(btn.ColorScheme.Focus.Foreground, btn.ColorScheme.Focus.Background):
+            new Terminal.Gui.Attribute(btn.ColorScheme.Normal.Foreground, btn.ColorScheme.Normal.Background);
+
+        Driver.SetAttribute(buttonColor);
+
         if (btn.IsDefault)
         {
             var rightDefault = new Rune(Driver != null ? Driver.RightDefaultIndicator : '>');
