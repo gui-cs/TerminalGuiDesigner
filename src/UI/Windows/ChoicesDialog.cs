@@ -104,7 +104,7 @@ public partial class ChoicesDialog
 
         Move(1, 0, false);
 
-        var padding = ((bounds.Width - _title.Sum(Rune.ColumnWidth)) / 2) - 1;
+        var padding = ((bounds.Width - _title.Sum(v=>Rune.ColumnWidth(v))) / 2) - 1;
 
         Driver.SetAttribute(
             new Attribute(ColorScheme.Normal.Foreground, ColorScheme.Normal.Background));

@@ -24,7 +24,7 @@ internal class Tests
             throw new InvalidOperationException("After did not run.");
         }
 
-        Application.Init(new FakeDriver(), new FakeMainLoop(() => FakeConsole.ReadKey(true)));
+        Application.Init(new FakeDriver(), new FakeMainLoop());
         init = true;
 
         OperationManager.Instance.ClearUndoRedo();

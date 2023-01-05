@@ -671,9 +671,9 @@ Ctrl+Q - Quit
         var menu = new ContextMenu();
         menu.MenuItems = new MenuBarItem(all.ToArray());
 
-        if (m.HasValue)
+        if (m != null)
         {
-            menu.Position = new Point(m.Value.X, m.Value.Y);
+            menu.Position = new Point(m.X, m.Y);
         }
         else
         {
