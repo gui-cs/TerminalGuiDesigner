@@ -32,7 +32,6 @@ public class ViewFactory
         Type[] exclude = new Type[]
         {
             typeof(Toplevel),
-            typeof(Window),
             typeof(ToplevelContainer),
             typeof(Dialog),
             typeof(FileDialog),
@@ -115,6 +114,14 @@ public class ViewFactory
             };
         }
 
+        if (t == typeof(Window))
+        {
+            return new Window
+            {
+                Width = 10,
+                Height = 5,
+            };
+        }
         if (t == typeof(TextField))
         {
             return new TextField
