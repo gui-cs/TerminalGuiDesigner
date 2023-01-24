@@ -35,10 +35,10 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>
 	v1.0.22
-	 * Allow adding `Window` as a content view (handy when designing a TopLevel)
+	 * Allow adding `Window` as a content view (handy when designing a Toplevel)
 	v1.0.21
 	 * Add Default (Blue/Yellow) ColorScheme
-	 * Take `TopLevel` and `View` root Types out of Experimental mode
+	 * Take `Toplevel` and `View` root Types out of Experimental mode
 	 * Update Terminal.Gui dependency to 1.9.0
 	v1.0.20
 	 * Ability to copy and paste containers
@@ -48,7 +48,7 @@
 	 * Improved private field naming conventions
 	 * RadioGroup can now be set to horizontal
 	v1.0.19
-	 * Added `-e` experimental mode flag that lets you create new TopLevel and View classes
+	 * Added `-e` experimental mode flag that lets you create new Toplevel and View classes
 	 * Added dotted border around Views that do not have any visible boundary (e.g. `View`, `TabView` with ShowBorder off)
 	 * Visual improvements in dialog boxes
 	 * Fixed several issues around dragging and dropping (especially into containers)

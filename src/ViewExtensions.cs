@@ -242,7 +242,7 @@ public static class ViewExtensions
         if (v.Data is Design d)
         {
             // The root class user is designing (e.g. MyView) could be inheriting from
-            // TopLevel or View in which case we must allow dropping into it
+            // Toplevel or View in which case we must allow dropping into it
             if (d.IsRoot)
             {
                 return true;
