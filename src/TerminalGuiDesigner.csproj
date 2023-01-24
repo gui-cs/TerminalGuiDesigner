@@ -21,7 +21,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>TerminalGuiDesigner</PackageId>
-    <Version>1.0.21</Version>
+    <Version>1.0.22</Version>
     <Authors>Thomas Nind</Authors>
     <Nullable>enable</Nullable>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -34,6 +34,8 @@
     <PackageIcon>logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>
+	v1.0.22
+	 * Allow adding `Window` as a content view (handy when designing a TopLevel)
 	v1.0.21
 	 * Add Default (Blue/Yellow) ColorScheme
 	 * Take `TopLevel` and `View` root Types out of Experimental mode
