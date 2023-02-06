@@ -23,7 +23,7 @@ public static class ObjectExtensions
             return ustring.Make(s);
         }
 
-        var methodInfo = typeof(ObjectExtensions).GetMethod(nameof(CastTo), BindingFlags.Static | BindingFlags.Public);
+        var methodInfo = typeof(ObjectExtensions).GetMethod(nameof(CastTo), BindingFlags.Static | BindingFlags.NonPublic);
         var genericArguments = new[] { type };
         var genericMethodInfo = methodInfo?.MakeGenericMethod(genericArguments);
         return genericMethodInfo?.Invoke(null, new[] { o }) ?? throw new Exception("Expected genericMethodInfo CastTo<T> to have a non null return value");

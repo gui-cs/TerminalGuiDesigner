@@ -142,4 +142,12 @@ internal class Tests
                 Flags = MouseFlags.Button1Released,
             }, root);
     }
+
+    [Test]
+    public void TesatCastTo()
+    {
+        var str = "cat";
+        object obj = str.CastToReflected(typeof(object));
+        Assert.IsInstanceOf<object>(obj);
+    }
 }
