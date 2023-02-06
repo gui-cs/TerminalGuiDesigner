@@ -708,6 +708,8 @@ public class Design
         if (this.View is ListView lv)
         {
             yield return this.CreateProperty(nameof(ListView.Source));
+            yield return this.CreateProperty(nameof(ListView.AllowsMarking));
+            yield return this.CreateProperty(nameof(ListView.AllowsMultipleSelection));
         }
 
         if (this.View is GraphView gv)
