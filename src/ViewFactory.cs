@@ -122,6 +122,7 @@ public class ViewFactory
                 Height = 5,
             };
         }
+
         if (t == typeof(TextField))
         {
             return new TextField

@@ -32,7 +32,7 @@ public static class MenuBarExtensions
     /// </summary>
     /// <param name="menuBar"><see cref="MenuBar"/> you want to find the clicked <see cref="MenuBarItem"/> (top level menu) for.</param>
     /// <param name="screenX">Screen coordinate of the click in X.</param>
-    /// <returns>The <see cref="MenuBarItem"/> under the mouse at this position or null (only considers X)</returns>
+    /// <returns>The <see cref="MenuBarItem"/> under the mouse at this position or null (only considers X).</returns>
     public static MenuBarItem? ScreenToMenuBarItem(this MenuBar menuBar, int screenX)
     {
         // These might be changed in Terminal.Gui library

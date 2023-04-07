@@ -7,7 +7,7 @@ namespace TerminalGuiDesigner.UI.Windows;
 /// Modal list box with search.  Displays a collection of objects of Type
 /// <typeparamref name="T"/> and gets the user to pick one.
 /// </summary>
-/// <typeparam name="T"></typeparam>
+/// <typeparam name="T">Class Type for the objects the user is to pick from.</typeparam>
 public class BigListBox<T>
 {
     private readonly string okText;
@@ -16,14 +16,14 @@ public class BigListBox<T>
     private IList<ListViewObject<T>> collection;
 
     /// <summary>
-    /// If the public constructor was used then this is the fixed list we were initialized with
+    /// If the public constructor was used then this is the fixed list we were initialized with.
     /// </summary>
     private IList<T> publicCollection;
 
     private bool addNull;
 
     /// <summary>
-    /// Ongoing filtering of a large collection should be cancelled when the user changes the filter even if it is not completed yet
+    /// Ongoing filtering of a large collection should be cancelled when the user changes the filter even if it is not completed yet.
     /// </summary>
     private ConcurrentBag<CancellationTokenSource> cancelFiltering = new ConcurrentBag<CancellationTokenSource>();
     private object taskCancellationLock = new object();
@@ -164,7 +164,7 @@ public class BigListBox<T>
     /// <summary>
     /// Runs the dialog as modal blocking and returns true if a selection was made.
     /// </summary>
-    /// <returns>True if selection was made (see <see cref="Selected"/>) or false if user cancelled the dialog</returns>
+    /// <returns>True if selection was made (see <see cref="Selected"/>) or false if user cancelled the dialog.</returns>
     public bool ShowDialog()
     {
         Application.Run(this.win);

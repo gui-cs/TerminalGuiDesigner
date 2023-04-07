@@ -86,5 +86,4 @@ public abstract class AddOperation<T1, T2> : GenericArrayOperation<T1, T2>
         this.SetNeedsDisplay();
         return true;
     }
-
 }
