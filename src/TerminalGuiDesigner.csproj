@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<ItemGroup>
 		<AdditionalFiles Include="stylecop.json" />
 	</ItemGroup>
@@ -142,7 +142,7 @@
     </PackageReference>
     <PackageReference Include="System.CodeDom" Version="7.0.0" />
     <PackageReference Include="Terminal.gui" Version="1.9.0" />
-    <PackageReference Include="YamlDotNet" Version="12.3.1" />
+    <PackageReference Include="YamlDotNet" Version="13.0.2" />
   </ItemGroup>
 
 </Project>
