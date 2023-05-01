@@ -120,7 +120,7 @@ public partial class ColorSchemesUI {
         };
     }
 
-    private void CellActivated(TableView.CellActivatedEventArgs e)
+    private void CellActivated(object sender, CellActivatedEventArgs e)
     {
         var col = e.Table.Columns[e.Col];
         var val = (int)e.Table.Rows[e.Row][e.Col];
