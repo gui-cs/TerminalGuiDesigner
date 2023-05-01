@@ -109,7 +109,7 @@ public partial class ChoicesDialog
         Driver.SetAttribute(
             new Attribute(ColorScheme.Normal.Foreground, ColorScheme.Normal.Background));
         
-        Driver.AddStr(ustring.Make(Enumerable.Repeat(Driver.HDLine,padding)));
+        Driver.AddStr(ustring.Make(Enumerable.Repeat(Driver.HDLine, padding)));
 
         Driver.SetAttribute(
             new Attribute(ColorScheme.Normal.Background, ColorScheme.Normal.Foreground));

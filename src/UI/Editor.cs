@@ -855,8 +855,7 @@ Ctrl+Q - Quit
     {
         var ofd = new OpenDialog(
             "Open",
-            $"Select {SourceCodeFile.ExpectedExtension} file",
-            new List<string>(new[] { SourceCodeFile.ExpectedExtension }));
+            new List<IAllowedType>(new[] { new AllowedType("View",SourceCodeFile.ExpectedExtension )}));
 
         Application.Run(ofd, this.ErrorHandler);
 
@@ -864,7 +863,7 @@ Ctrl+Q - Quit
         {
             try
             {
-                var path = ofd.FilePath.ToString();
+                var path = ofd.Path.ToString();
 
                 if (string.IsNullOrEmpty(path))
                 {

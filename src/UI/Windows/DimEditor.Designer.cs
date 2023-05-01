@@ -46,9 +46,7 @@ public partial class DimEditor : Terminal.Gui.Dialog {
         this.Y = Pos.Center();
         this.Modal = true;
         this.Text = "";
-        this.Border.BorderStyle = Terminal.Gui.BorderStyle.Single;
-        this.Border.Effect3D = true;
-        this.Border.DrawMarginFrame = true;
+        this.Border.BorderStyle = Terminal.Gui.LineStyle.Single;
         this.TextAlignment = Terminal.Gui.TextAlignment.Left;
         this.Title = "";
         this.rgDimType.Width = 11;
@@ -71,7 +69,7 @@ public partial class DimEditor : Terminal.Gui.Dialog {
         this.lineview1.Text = "";
         this.lineview1.TextAlignment = Terminal.Gui.TextAlignment.Left;
         this.lineview1.LineRune = '│';
-        this.lineview1.Orientation = Terminal.Gui.Graphs.Orientation.Vertical;
+        this.lineview1.Orientation = Orientation.Vertical;
         this.Add(this.lineview1);
         this.lblValue.Width = 6;
         this.lblValue.Height = 1;

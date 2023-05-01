@@ -58,9 +58,7 @@ public partial class PosEditor : Terminal.Gui.Dialog {
         this.Y = Pos.Center();
         this.Modal = true;
         this.Text = "";
-        this.Border.BorderStyle = Terminal.Gui.BorderStyle.Single;
-        this.Border.Effect3D = true;
-        this.Border.DrawMarginFrame = true;
+        this.Border.BorderStyle = Terminal.Gui.LineStyle.Single;
         this.TextAlignment = Terminal.Gui.TextAlignment.Left;
         this.Title = "";
         this.rgPosType.Width = 12;
