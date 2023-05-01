@@ -547,7 +547,7 @@ Ctrl+Q - Quit
             ColorScheme = new DefaultColorSchemes().GetDefaultScheme("greyOnBlack").Scheme,
         };
 
-        this.rootCommandsListView.KeyDown += (e) =>
+        this.rootCommandsListView.KeyDown += (s, e) =>
         {
             if (e.KeyEvent.Key == Key.Enter)
             {
@@ -571,7 +571,7 @@ Ctrl+Q - Quit
         this.Add(this.rootCommandsListView);
     }
 
-    private void Editor_Closing(ToplevelClosingEventArgs obj)
+    private void Editor_Closing(object sender, ToplevelClosingEventArgs obj)
     {
         if (this.viewBeingEdited == null)
         {
@@ -685,7 +685,7 @@ Ctrl+Q - Quit
         this.menuOpen = true;
         SelectionManager.Instance.LockSelection = true;
         menu.Show();
-        menu.MenuBar.MenuAllClosed += () =>
+        menu.MenuBar.MenuAllClosed += (s, e) =>
         {
             this.menuOpen = false;
             SelectionManager.Instance.LockSelection = false;
@@ -933,13 +933,9 @@ Ctrl+Q - Quit
 
         var ofd = new SaveDialog(
             "New",
-            $"Class file",
-            new List<string>(new[] { ".cs" }))
+            new List<IAllowedType>() { new AllowedType("C# File", ".cs") })
         {
-            NameDirLabel = "Directory",
-            NameFieldLabel = "Class",
-            FilePath = "MyView.cs",
-            AllowsOtherFileTypes = false,
+            Path = "MyView.cs",
         };
 
         Application.Run(ofd);
@@ -992,7 +988,7 @@ Ctrl+Q - Quit
 
     private Type[] GetSupportedRootViews()
     {
-       return new Type[] { typeof(Window), typeof(Dialog), typeof(View), typeof(Toplevel) };
+        return new Type[] { typeof(Window), typeof(Dialog), typeof(View), typeof(Toplevel) };
     }
 
     private void New(FileInfo toOpen, Type typeToCreate, string? explicitNamespace)

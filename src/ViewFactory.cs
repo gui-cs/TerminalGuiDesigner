@@ -4,7 +4,6 @@ using Terminal.Gui;
 using Terminal.Gui.TextValidateProviders;
 using TerminalGuiDesigner.Operations.MenuOperations;
 using TerminalGuiDesigner.Operations.TableViewOperations;
-using static Terminal.Gui.Border;
 using Attribute = Terminal.Gui.Attribute;
 
 namespace TerminalGuiDesigner;
@@ -32,14 +31,12 @@ public class ViewFactory
         Type[] exclude = new Type[]
         {
             typeof(Toplevel),
-            typeof(ToplevelContainer),
             typeof(Dialog),
             typeof(FileDialog),
             typeof(SaveDialog),
             typeof(OpenDialog),
             typeof(ScrollBarView),
             typeof(TreeView<>),
-            typeof(PanelView),
         }; // The generic version of TreeView
 
         return typeof(View).Assembly.DefinedTypes.Where(t =>
@@ -230,7 +227,7 @@ public class ViewFactory
         {
             Width = 50,
             Height = 5,
-            Table = dt,
+            Table = new DataTableSource(dt),
         };
     }
 

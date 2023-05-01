@@ -1,8 +1,6 @@
 using System.Data;
 using NLog;
 using Terminal.Gui;
-using Terminal.Gui.Graphs;
-using Terminal.Gui.Trees;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.Operations.MenuOperations;
 using TerminalGuiDesigner.Operations.StatusBarOperations;

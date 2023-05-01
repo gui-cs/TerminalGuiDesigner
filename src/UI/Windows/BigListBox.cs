@@ -96,7 +96,7 @@ public class BigListBox<T>
         {
             Y = Pos.Bottom(this.listView),
         };
-        btnOk.Clicked += () =>
+        btnOk.Clicked += (s, e) =>
         {
             this.Accept();
         };
@@ -105,7 +105,7 @@ public class BigListBox<T>
         {
             Y = Pos.Bottom(this.listView),
         };
-        btnCancel.Clicked += () => Application.RequestStop();
+        btnCancel.Clicked += (s, e) => Application.RequestStop();
 
         if (this.addSearch)
         {
@@ -186,7 +186,7 @@ public class BigListBox<T>
         this.Selected = this.collection[this.listView.SelectedItem].Object;
     }
 
-    private void ListView_MouseClick(object sender, MouseEventArgs obj)
+    private void ListView_MouseClick(object sender, MouseEventEventArgs obj)
     {
         if (obj.MouseEvent.Flags.HasFlag(MouseFlags.Button1DoubleClicked))
         {

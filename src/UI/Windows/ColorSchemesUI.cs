@@ -78,7 +78,7 @@ public partial class ColorSchemesUI {
         tvColorSchemes.SelectedCellChanged += CellChanged;
 
         // When entering control for the first time ensure a valid selection
-        CellChanged(
+        CellChanged(this,
             new SelectedCellChangedEventArgs(
                 tvColorSchemes.Table,
                 tvColorSchemes.SelectedColumn,
@@ -87,14 +87,14 @@ public partial class ColorSchemesUI {
                 tvColorSchemes.SelectedRow));
     }
 
-    private void CellChanged(SelectedCellChangedEventArgs e)
+    private void CellChanged(object sender, SelectedCellChangedEventArgs e)
     {
         // don't let user select the color swatches
         if(e.NewCol > 2)
             tvColorSchemes.SelectedColumn = 2;
 
         // if selecting last row in the table
-        if(e.NewRow == tvColorSchemes.Table.Rows.Count-1)
+        if(e.NewRow == tvColorSchemes.Table.Rows-1)
         {
             // only let them press the Add button
             tvColorSchemes.SelectedColumn = 2;
@@ -217,7 +217,7 @@ public partial class ColorSchemesUI {
         var tbl = tvColorSchemes.Table;
 
         var r = tbl.Rows.Add();
-        for(int j = 0;j<tbl.Columns.Count;j++)
+        for(int j = 0;j<tbl.Columns;j++)
         {
             r[j] = i;
         }

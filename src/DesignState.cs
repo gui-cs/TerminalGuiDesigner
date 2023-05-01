@@ -48,11 +48,11 @@ public class DesignState
         }
     }
 
-    private void DrawContent(Rect r)
+    private void DrawContent(object sender, DrawEventArgs r)
     {
         if (this.Design.View.IsBorderlessContainerView() && Editor.ShowBorders)
         {
-            this.DrawBorderlessViewFrame(r);
+            this.DrawBorderlessViewFrame(r.Rect);
         }
     }
 
