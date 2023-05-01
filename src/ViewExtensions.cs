@@ -421,7 +421,7 @@ public static class ViewExtensions
             return true;
         }
 
-        if (v.Border.BorderStyle == BorderStyle.None)
+        if (v.Border.BorderStyle == LineStyle.None)
         {
             return true;
         }

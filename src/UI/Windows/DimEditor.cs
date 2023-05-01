@@ -45,7 +45,7 @@ public partial class DimEditor : Dialog
 
 
         Title = "Dim Designer";
-        Border.BorderStyle = BorderStyle.Double;
+        Border.BorderStyle = LineStyle.Double;
 
         btnOk.Clicked += BtnOk_Clicked;
         btnCancel.Clicked += BtnCancel_Clicked;
@@ -79,7 +79,7 @@ public partial class DimEditor : Dialog
         rgDimType.SelectedItemChanged += DdType_SelectedItemChanged;
     }
 
-    private void RgDimType_KeyPress(KeyEventEventArgs obj)
+    private void RgDimType_KeyPress(object sender, KeyEventEventArgs obj)
     {
         var c = (char)obj.KeyEvent.KeyValue;
 
@@ -90,7 +90,7 @@ public partial class DimEditor : Dialog
         }
     }
 
-    private void DdType_SelectedItemChanged(SelectedItemChangedArgs obj)
+    private void DdType_SelectedItemChanged(object sender, SelectedItemChangedArgs obj)
     {
         SetupForCurrentDimType();
     }
@@ -125,13 +125,13 @@ public partial class DimEditor : Dialog
         }
     }
 
-    private void BtnCancel_Clicked()
+    private void BtnCancel_Clicked(object sender, EventArgs e)
     {
         Cancelled = true;
         Application.RequestStop();
     }
 
-    private void BtnOk_Clicked()
+    private void BtnOk_Clicked(object sender, EventArgs e)
     {
         Cancelled = false;
         Result = BuildResult();

@@ -51,7 +51,7 @@ public class EditDialog : Window
             IsDefault = true,
         };
 
-        btnSet.Clicked += () =>
+        btnSet.Clicked += (s, e) =>
         {
             this.SetProperty(false);
         };
@@ -61,7 +61,7 @@ public class EditDialog : Window
             X = Pos.Right(btnSet),
             Y = Pos.Bottom(this.list),
         };
-        btnClose.Clicked += () => Application.RequestStop();
+        btnClose.Clicked += (s, e) => Application.RequestStop();
 
         this.Add(this.list);
         this.Add(btnSet);
@@ -433,7 +433,7 @@ public class EditDialog : Window
         }
     }
 
-    private void List_KeyPress(KeyEventEventArgs obj)
+    private void List_KeyPress(object sender, KeyEventEventArgs obj)
     {
         // TODO: Should really be using the _keyMap here
         if (obj.KeyEvent.Key == Key.DeleteChar)

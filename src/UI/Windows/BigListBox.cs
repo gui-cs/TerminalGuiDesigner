@@ -130,7 +130,7 @@ public class BigListBox<T>
             this.win.Add(this.searchBox);
             this.searchBox.SetFocus();
 
-            this.searchBox.TextChanged += (s) =>
+            this.searchBox.TextChanged += (s, e) =>
             {
                 // Don't update the UI while user is hammering away on the keyboard
                 this.lastKeypress = DateTime.Now;

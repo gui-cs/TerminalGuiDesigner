@@ -16,7 +16,8 @@ using Terminal.Gui;
 public partial class ColorSchemesUI : Terminal.Gui.Window {
     
     private Terminal.Gui.TableView tvColorSchemes;
-    
+    private System.Data.DataTable tvColorSchemesTable;
+
     private void InitializeComponent() {
         this.Width = Dim.Fill(0);
         this.Height = Dim.Fill(0);
@@ -24,9 +25,6 @@ public partial class ColorSchemesUI : Terminal.Gui.Window {
         this.Y = 0;
         this.Modal = false;
         this.Text = "";
-        this.Border.BorderStyle = Terminal.Gui.BorderStyle.Single;
-        this.Border.BorderBrush = Terminal.Gui.Color.Blue;
-        this.Border.Effect3D = false;
         this.TextAlignment = Terminal.Gui.TextAlignment.Left;
         this.Title = "Color Schemes (Ctrl+Q to exit)";
         this.tvColorSchemes = new Terminal.Gui.TableView();
@@ -45,7 +43,6 @@ public partial class ColorSchemesUI : Terminal.Gui.Window {
         this.tvColorSchemes.Style.ShowHorizontalHeaderUnderline = true;
         this.tvColorSchemes.Style.ShowVerticalCellLines = true;
         this.tvColorSchemes.Style.ShowVerticalHeaderLines = true;
-        System.Data.DataTable tvColorSchemesTable;
         tvColorSchemesTable = new System.Data.DataTable();
         System.Data.DataColumn tvColorSchemesTableName;
         tvColorSchemesTableName = new System.Data.DataColumn();
@@ -99,7 +96,7 @@ public partial class ColorSchemesUI : Terminal.Gui.Window {
         tvColorSchemesTable9 = new System.Data.DataColumn();
         tvColorSchemesTable9.ColumnName = "9";
         tvColorSchemesTable.Columns.Add(tvColorSchemesTable9);
-        this.tvColorSchemes.Table = tvColorSchemesTable;
+        this.tvColorSchemes.Table = new DataTableSource(tvColorSchemesTable);
         this.Add(this.tvColorSchemes);
     }
 }

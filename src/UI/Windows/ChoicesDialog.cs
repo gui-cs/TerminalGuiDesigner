@@ -57,12 +57,12 @@ public partial class ChoicesDialog
 
             var i2 = i;
 
-            buttons[i].Clicked += () => {
+            buttons[i].Clicked += (s,e) => {
                 Result = i2;
                 Application.RequestStop();
             };
 
-            buttons[i].DrawContentComplete += (r) =>
+            buttons[i].DrawContentComplete += (s,r) =>
                 ChoicesDialog.PaintShadow(buttons[i2], ColorScheme);
         }
 

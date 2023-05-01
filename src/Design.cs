@@ -35,7 +35,6 @@ public class Design
         typeof(TabView),
         typeof(Window),
         typeof(Toplevel),
-        typeof(PanelView),
         typeof(View),
         typeof(GraphView),
         typeof(HexView),
@@ -594,7 +593,7 @@ public class Design
         }
     }
 
-    private void SuppressNativeClickEvents(View.MouseEventArgs obj)
+    private void SuppressNativeClickEvents(object sender, MouseEventEventArgs obj)
     {
         // Suppress everything except single click (selection)
         obj.Handled = obj.MouseEvent.Flags != MouseFlags.Button1Clicked;
