@@ -2,7 +2,6 @@
 using System.Reflection;
 using NStack;
 using Terminal.Gui;
-using Terminal.Gui.Graphs;
 using Terminal.Gui.TextValidateProviders;
 using TerminalGuiDesigner;
 using static Terminal.Gui.TableView;

@@ -18,7 +18,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>TerminalGuiDesigner</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>TerminalGuiDesigner</PackageId>
     <Version>1.0.24</Version>
@@ -143,8 +143,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="System.CodeDom" Version="7.0.0" />
-    <PackageReference Include="Terminal.gui" Version="1.10.1" />
     <PackageReference Include="YamlDotNet" Version="13.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Terminal.Gui\Terminal.Gui\Terminal.Gui.csproj" />
   </ItemGroup>
 
 </Project>
