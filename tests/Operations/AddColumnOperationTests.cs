@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 using Terminal.Gui;
+using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations.TableViewOperations;
 
 namespace UnitTests.Operations;
@@ -24,18 +25,20 @@ internal class AddColumnOperationTests : Tests
 
         RoundTrip<View, TableView>((d, v) =>
         {
+            var dt = v.GetDataTable();
+
             vBefore = v;
-            colsBefore = v.Table.Columns.Count;
+            colsBefore = dt.Columns.Count;
             
             var op = new AddColumnOperation(d, "MyCol");
             op.Do();
 
-            Assert.AreEqual(colsBefore + 1, v.Table.Columns.Count, "Expected AddColumnOperation to increase column count by 1");
+            Assert.AreEqual(colsBefore + 1, dt.Columns.Count, "Expected AddColumnOperation to increase column count by 1");
 
         }, out var vAfter);
 
-        Assert.AreEqual(colsBefore + 1, vAfter.Table.Columns.Count);
-        Assert.AreEqual(colsBefore + 1, vBefore?.Table.Columns.Count);
+        Assert.AreEqual(colsBefore + 1, vAfter.GetDataTable().Columns.Count);
+        Assert.AreEqual(colsBefore + 1, vBefore?.GetDataTable().Columns.Count);
     }
 
     [Test]
@@ -46,20 +49,22 @@ internal class AddColumnOperationTests : Tests
 
         RoundTrip<View, TableView>((d, v) =>
         {
+            var dt = v.GetDataTable();
+
             vBefore = v;
-            colsBefore = v.Table.Columns.Count;
+            colsBefore = dt.Columns.Count;
 
             var op = new AddColumnOperation(d, "MyCol");
             op.Do();
-            Assert.AreEqual(colsBefore + 1, v.Table.Columns.Count, "Expected AddColumnOperation to increase column count by 1");
+            Assert.AreEqual(colsBefore + 1, dt.Columns.Count, "Expected AddColumnOperation to increase column count by 1");
 
             op.Undo();
-            Assert.AreEqual(colsBefore, v.Table.Columns.Count, "Expected AddColumnOperation Undo to go back to original count");
+            Assert.AreEqual(colsBefore, dt.Columns.Count, "Expected AddColumnOperation Undo to go back to original count");
 
         }, out var vAfter);
 
-        Assert.AreEqual(colsBefore, vAfter.Table.Columns.Count);
-        Assert.AreEqual(colsBefore, vBefore?.Table.Columns.Count);
+        Assert.AreEqual(colsBefore, vAfter.GetDataTable().Columns.Count);
+        Assert.AreEqual(colsBefore, vBefore?.GetDataTable().Columns.Count);
     }
 
     [Test]
@@ -71,19 +76,21 @@ internal class AddColumnOperationTests : Tests
         RoundTrip<View, TableView>((d, v) =>
         {
             vBefore = v;
-            colsBefore = v.Table.Columns.Count;
+            var dt = v.GetDataTable();
+
+            colsBefore = dt.Columns.Count;
 
             // TableView comes with some free columns.  Try using that column name again
-            v.Table.Columns[0].ColumnName = "Test";
+            dt.Columns[0].ColumnName = "Test";
             var op = new AddColumnOperation(d, "Test");
             op.Do();
 
-            Assert.AreEqual("Test2", v.Table.Columns[colsBefore].ColumnName);
-            Assert.AreEqual(colsBefore + 1, v.Table.Columns.Count, "Expected AddColumnOperation to increase column count by 1");
+            Assert.AreEqual("Test2", dt.Columns[colsBefore].ColumnName);
+            Assert.AreEqual(colsBefore + 1, dt.Columns.Count, "Expected AddColumnOperation to increase column count by 1");
 
         }, out var vAfter);
 
-        Assert.AreEqual(colsBefore+1, vAfter.Table.Columns.Count);
-        Assert.AreEqual(colsBefore+1, vBefore?.Table.Columns.Count);
+        Assert.AreEqual(colsBefore+1, vAfter.GetDataTable().Columns.Count);
+        Assert.AreEqual(colsBefore+1, vBefore?.GetDataTable().Columns.Count);
     }
 }

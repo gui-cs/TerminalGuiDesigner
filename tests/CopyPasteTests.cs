@@ -46,10 +46,12 @@ internal class CopyPasteTests : Tests
             tv.FullRowSelect,
             "Expected default state for this flag to be false");
 
-        tv.Table.Rows.Clear();
-        tv.Table.Columns.Clear();
-        tv.Table.Columns.Add("Yarg", typeof(int));
-        tv.Table.Columns.Add("Blerg", typeof(DateTime));
+        var dt = tv.GetDataTable();
+
+        dt.Rows.Clear();
+        dt.Columns.Clear();
+        dt.Columns.Add("Yarg", typeof(int));
+        dt.Columns.Add("Blerg", typeof(DateTime));
 
         // flip these flags to so we can check that it is
         // properly cloned
@@ -88,12 +90,12 @@ internal class CopyPasteTests : Tests
         Assert.IsTrue(tv2.FullRowSelect);
 
         // The cloned table columns should match the copied ones
-        Assert.AreEqual(2, tv2.Table.Columns.Count);
-        Assert.AreEqual(0, tv2.Table.Rows.Count);
-        Assert.AreEqual("Yarg", tv2.Table.Columns[0].ColumnName);
-        Assert.AreEqual("Blerg", tv2.Table.Columns[1].ColumnName);
-        Assert.AreEqual(typeof(int), tv2.Table.Columns[0].DataType);
-        Assert.AreEqual(typeof(DateTime), tv2.Table.Columns[1].DataType);
+        Assert.AreEqual(2, tv2.Table.Columns);
+        Assert.AreEqual(0, tv2.Table.Rows);
+        Assert.AreEqual("Yarg", tv2.Table.ColumnNames[0]);
+        Assert.AreEqual("Blerg", tv2.Table.ColumnNames[1]);
+        Assert.AreEqual(typeof(int), tv2.GetDataTable().Columns[0].DataType);
+        Assert.AreEqual(typeof(DateTime), tv2.GetDataTable().Columns[1].DataType);
 
         Assert.AreNotSame(tv.Table, tv2.Table,
             "Cloned table should be a new table not a reference to the old one");

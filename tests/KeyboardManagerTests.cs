@@ -20,7 +20,8 @@ internal class KeyboardManagerTests : Tests
         Assert.IsFalse(mgr.HandleKey(v, new KeyEvent(Key.Backspace, new KeyModifiers())));
         
         Application.Top.Add(v);
-        v.Redraw(v.Bounds = new Rect(0, 0, 6, 1));
+        v.Bounds = new Rect(0, 0, 6, 1);
+        v.Draw();
     }
 
     [Test]

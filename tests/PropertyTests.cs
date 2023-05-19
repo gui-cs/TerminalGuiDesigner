@@ -6,7 +6,6 @@ using System.Linq;
 using Microsoft.CSharp;
 using NUnit.Framework;
 using Terminal.Gui;
-using Terminal.Gui.Graphs;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.ToCode;
 using Attribute = Terminal.Gui.Attribute;
@@ -104,12 +103,12 @@ internal class PropertyTests : Tests
         lv.IsInitialized = true;
 
         Assert.AreEqual(Orientation.Horizontal, lv.Orientation);
-        Assert.AreEqual(Application.Driver.HRLine, lv.LineRune);
+        Assert.AreEqual(ConfigurationManager.Glyphs.HalfRightLine, lv.LineRune);
         var prop = d.GetDesignableProperty(nameof(LineView.Orientation));
 
         Assert.IsNotNull(prop);
         prop?.SetValue(Orientation.Vertical);
-        Assert.AreEqual(Application.Driver.VLine, lv.LineRune);
+        Assert.AreEqual(ConfigurationManager.Glyphs.VLine, lv.LineRune);
 
         // now try with a dim fill
         lv.Height = Dim.Fill();
@@ -117,7 +116,7 @@ internal class PropertyTests : Tests
 
         prop?.SetValue(Orientation.Horizontal);
         Assert.AreEqual(Orientation.Horizontal, lv.Orientation);
-        Assert.AreEqual(Application.Driver.HRLine, lv.LineRune);
+        Assert.AreEqual(ConfigurationManager.Glyphs.HalfRightLine, lv.LineRune);
         Assert.AreEqual(Dim.Fill(), lv.Width);
         Assert.AreEqual(Dim.Sized(1), lv.Height);
     }
