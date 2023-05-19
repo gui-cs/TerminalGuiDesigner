@@ -368,7 +368,7 @@ public static class ViewExtensions
     /// if never called (i.e. <see cref="View.ColorScheme"/> getter is returning inherited parent value).</returns>
     public static ColorScheme? GetExplicitColorScheme(this View v)
     {
-        var explicitColorSchemeField = typeof(View).GetField("colorScheme", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+        var explicitColorSchemeField = typeof(View).GetField("_colorScheme", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
             ?? throw new Exception("ColorScheme private backing field no longer exists");
 
         return (ColorScheme?)explicitColorSchemeField.GetValue(v);
