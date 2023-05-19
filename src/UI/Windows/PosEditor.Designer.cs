@@ -83,7 +83,7 @@ public partial class PosEditor : Terminal.Gui.Dialog {
         this.lineview1.Text = "";
         this.lineview1.TextAlignment = Terminal.Gui.TextAlignment.Left;
         this.lineview1.LineRune = '│';
-        this.lineview1.Orientation = Terminal.Gui.Graphs.Orientation.Vertical;
+        this.lineview1.Orientation = Orientation.Vertical;
         this.Add(this.lineview1);
         this.lblValue.Width = 6;
         this.lblValue.Height = 1;

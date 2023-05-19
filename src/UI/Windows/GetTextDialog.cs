@@ -18,8 +18,9 @@ internal class GetTextDialog
         this.args = args;
         this.initialValue = initialValue;
 
-        this.win = new Window(this.args.WindowTitle)
+        this.win = new Window()
         {
+            Title = this.args.WindowTitle,
             X = 0,
             Y = 0,
             Modal = true,

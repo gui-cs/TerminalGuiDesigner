@@ -20,7 +20,7 @@ public class MoveColumnOperation : MoveOperation<TableView, DataColumn>
     /// <param name="adjustment">Negative to move left, positive to move right.</param>
     public MoveColumnOperation(Design design, DataColumn column, int adjustment)
         : base(
-            (v) => v.Table.Columns.Cast<DataColumn>().ToArray(),
+            (v) => v.GetDataTable().Columns.Cast<DataColumn>().ToArray(),
             (v, a) => v.ReOrderColumns(a),
             (c) => c.ColumnName,
             design,

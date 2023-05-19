@@ -158,13 +158,13 @@ public class Property : ToCodeBase
                 case Orientation.Horizontal:
                     v.Width = v.Height;
                     v.Height = 1;
-                    v.LineRune = Application.Driver.HLine;
+                    v.LineRune = ConfigurationManager.Glyphs.HLine;
 
                     break;
                 case Orientation.Vertical:
                     v.Height = v.Width;
                     v.Width = 1;
-                    v.LineRune = Application.Driver.VLine;
+                    v.LineRune = ConfigurationManager.Glyphs.VLine;
                     break;
                 default:
                     throw new ArgumentException($"Unknown Orientation {newOrientation}");

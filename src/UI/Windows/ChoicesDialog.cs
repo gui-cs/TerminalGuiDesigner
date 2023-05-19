@@ -97,10 +97,9 @@ public partial class ChoicesDialog
         Height = msgboxHeight;
     }
 
-    /// <inheritdoc/>
-    public override void Redraw(Rect bounds)
+    public override void OnDrawContent(Rect bounds)
     {
-        base.Redraw(bounds);
+        base.OnDrawContent(bounds);
 
         Move(1, 0, false);
 
@@ -109,7 +108,7 @@ public partial class ChoicesDialog
         Driver.SetAttribute(
             new Attribute(ColorScheme.Normal.Foreground, ColorScheme.Normal.Background));
         
-        Driver.AddStr(ustring.Make(Enumerable.Repeat(Driver.HDLine, padding)));
+        Driver.AddStr(ustring.Make(Enumerable.Repeat(ConfigurationManager.Glyphs.HLineHv, padding)));
 
         Driver.SetAttribute(
             new Attribute(ColorScheme.Normal.Background, ColorScheme.Normal.Foreground));
@@ -117,7 +116,7 @@ public partial class ChoicesDialog
 
         Driver.SetAttribute(
             new Attribute(ColorScheme.Normal.Foreground, ColorScheme.Normal.Background));
-        Driver.AddStr(ustring.Make(Enumerable.Repeat(Driver.HDLine, padding)));
+        Driver.AddStr(ustring.Make(Enumerable.Repeat(ConfigurationManager.Glyphs.HLineHv, padding)));
     }
 
     internal static int Query(string title, string message, params string[] options)
@@ -139,7 +138,7 @@ public partial class ChoicesDialog
 
         if (btn.IsDefault)
         {
-            var rightDefault = new Rune(Driver != null ? Driver.RightDefaultIndicator : '>');
+            var rightDefault = new Rune(Driver != null ? ConfigurationManager.Glyphs.RightDefaultIndicator : '>');
 
             // draw the 'end' button symbol one in
             btn.AddRune(bounds.Width - 3, 0, rightDefault);

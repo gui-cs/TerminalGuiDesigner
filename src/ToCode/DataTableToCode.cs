@@ -26,7 +26,7 @@ public class DataTableToCode : ToCodeBase
             throw new ArgumentException(nameof(design), $"{nameof(DataTableToCode)} can only be used with {nameof(TerminalGuiDesigner.Design)} that wrap {nameof(TableView)}");
         }
 
-        this.table = tv.Table;
+        this.table = tv.GetDataTable();
     }
 
     /// <summary>

@@ -17,7 +17,7 @@ public class RemoveColumnOperation : RemoveOperation<TableView, DataColumn>
     /// <param name="column">Column to remove.</param>
     public RemoveColumnOperation(Design design, DataColumn column)
          : base(
-            (v) => v.Table.Columns.Cast<DataColumn>().ToArray(),
+            (v) => v.GetDataTable().Columns.Cast<DataColumn>().ToArray(),
             (v, a) => v.ReOrderColumns(a),
             (c) => c.ColumnName,
             design,
@@ -25,7 +25,7 @@ public class RemoveColumnOperation : RemoveOperation<TableView, DataColumn>
     {
         // TODO: currently this crashes TableView in its ReDraw (calculate view port) method
         // don't let them remove the last column
-        if (this.View.Table.Columns.Count == 1)
+        if (this.View.GetDataTable().Columns.Count == 1)
         {
             this.IsImpossible = true;
         }

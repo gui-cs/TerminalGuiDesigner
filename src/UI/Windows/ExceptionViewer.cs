@@ -43,8 +43,9 @@ public class ExceptionViewer
             toggleStack = !toggleStack;
         };
 
-        var dlg = new Dialog("Error", 10, 10, btnOk, btnStack)
+        var dlg = new Dialog(btnOk, btnStack)
         {
+            Title = "Error",
             X = Pos.Percent(10),
             Y = Pos.Percent(10),
             Width = Dim.Percent(80),

@@ -9,6 +9,15 @@ namespace TerminalGuiDesigner;
 public static class TableViewExtensions
 {
     /// <summary>
+    /// Returns the <see cref="TableView.Table"/> as a <see cref="DataTable"/>
+    /// by hard casting. This will fail if source is e.g. <see cref="EnumerableTableSource{T}"/>
+    /// </summary>
+    public static DataTable GetDataTable(this TableView tv)
+    {
+        return ((DataTableSource)tv.Table).DataTable;
+    }
+
+    /// <summary>
     /// Reorders all <paramref name="newOrder"/> columns to match the element order
     /// they appear in.
     /// </summary>
@@ -16,7 +25,7 @@ public static class TableViewExtensions
     /// <param name="newOrder">The new order for all columns in <paramref name="tv"/>.</param>
     public static void ReOrderColumns(this TableView tv, DataColumn[] newOrder)
     {
-        var dt = tv.Table;
+        var dt = tv.GetDataTable();
 
         foreach (DataColumn toRemove in dt.Columns.Cast<DataColumn>().Except(newOrder).ToArray())
         {

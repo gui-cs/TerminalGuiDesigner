@@ -161,18 +161,20 @@ public class Design
         // or deleted etc
         subView.CanFocus = true;
 
-        if (subView is TableView tv && tv.Table != null && tv.Table.Rows.Count == 0)
+        if (subView is TableView tv && tv.Table != null && tv.GetDataTable().Rows.Count == 0)
         {
+            var dt = tv.GetDataTable();
+
             // add example rows so that it is easier to design the view
             for (int i = 0; i < 100; i++)
             {
-                var row = tv.Table.NewRow();
-                for (int c = 0; c < tv.Table.Columns.Count; c++)
+                var row = dt.NewRow();
+                for (int c = 0; c < dt.Columns.Count; c++)
                 {
                     row[c] = DBNull.Value;
                 }
 
-                tv.Table.Rows.Add(row);
+                dt.Rows.Add(row);
             }
         }
 
@@ -202,14 +204,14 @@ public class Design
         {
             // prevent control from responding to events
             txt.MouseClick += this.SuppressNativeClickEvents;
-            txt.KeyDown += (s) => s.Handled = true;
+            txt.KeyDown += (s,e) => e.Handled = true;
         }
 
         if (subView is TextField tf)
         {
             // prevent control from responding to events
             tf.MouseClick += this.SuppressNativeClickEvents;
-            tf.KeyDown += (s) => s.Handled = true;
+            tf.KeyDown += (s,e) => e.Handled = true;
         }
 
         if (subView is TreeView tree)
@@ -326,23 +328,26 @@ public class Design
         // Extra TableView operations
         if (this.View is TableView tv)
         {
+            var dt = tv.GetDataTable();
+
             // if user right clicks a cell then provide options relating to the clicked column
             DataColumn? col = null;
             if (!pos.IsEmpty)
             {
                 // See which column the right click lands.
-                var cell = tv.ScreenToCell(pos.X, pos.Y, out col);
+                var cell = tv.ScreenToCell(pos.X, pos.Y, out var colIdx);
 
-                if (cell != null && col == null)
+
+                if (cell != null && colIdx == null)
                 {
-                    col = tv.Table.Columns[cell.Value.X];
+                    col = dt.Columns[cell.Value.X];
                 }
             }
 
             // if no column was right clicked then provide commands for the selected column
             if (col == null && tv.SelectedColumn >= 0)
             {
-                col = tv.Table.Columns[tv.SelectedColumn];
+                col = dt.Columns[tv.SelectedColumn];
             }
 
             yield return new AddColumnOperation(this, null);
@@ -603,8 +608,8 @@ public class Design
     {
         // prevent space toggling the checkbox
         // (gives better typing experience e.g. "my lovely checkbox")
-        cb.ClearKeybinding(Key.Space);
-        cb.MouseClick += (e) =>
+        cb.ClearKeyBinding(Key.Space);
+        cb.MouseClick += (s,e) =>
         {
             if (e.MouseEvent.Flags.HasFlag(MouseFlags.Button1Clicked))
             {
@@ -665,6 +670,8 @@ public class Design
             yield return new Property(this, this.View.GetActualTextProperty());
         }
 
+    /*
+    TODO: Borders are changed a lot in v2
         // Border properties - Most views dont have a border so Border is
         if (this.View.Border != null)
         {
@@ -674,6 +681,7 @@ public class Design
             yield return this.CreateSubProperty(nameof(Border.Effect3DBrush), nameof(this.View.Border), this.View.Border);
             yield return this.CreateSubProperty(nameof(Border.DrawMarginFrame), nameof(this.View.Border), this.View.Border);
         }
+        */
 
         yield return this.CreateProperty(nameof(this.View.TextAlignment));
 

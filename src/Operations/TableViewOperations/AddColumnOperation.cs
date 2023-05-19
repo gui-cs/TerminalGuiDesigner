@@ -18,10 +18,10 @@ public class AddColumnOperation : AddOperation<TableView, DataColumn>
     /// <exception cref="ArgumentException">Thrown if <paramref name="design"/> is not wrapping a <see cref="TableView"/>.</exception>
     public AddColumnOperation(Design design, string? newColumnName)
         : base(
-            (v) => v.Table.Columns.Cast<DataColumn>().ToArray(),
+            (v) => v.GetDataTable().Columns.Cast<DataColumn>().ToArray(),
             (v, a) => v.ReOrderColumns(a),
             (c) => c.ColumnName,
-            (v, n) => { return v.Table?.Columns.Add(n) ?? throw new Exception("TableView Table had not been initialized at the time we were asked to construct a new DataColumn for it."); },
+            (v, n) => { return v.GetDataTable()?.Columns.Add(n) ?? throw new Exception("TableView Table had not been initialized at the time we were asked to construct a new DataColumn for it."); },
             design,
             newColumnName)
     {

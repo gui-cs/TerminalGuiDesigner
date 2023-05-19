@@ -68,10 +68,11 @@ public class BigListBox<T>
         this.publicCollection = collection;
         this.addNull = addNull;
 
-        this.win = new Window(this.prompt)
+        this.win = new Window()
         {
             X = 0,
             Y = 0,
+            Title = this.prompt,
 
             // By using Dim.Fill(), it will automatically resize without manual intervention
             Width = Dim.Fill(),

@@ -193,9 +193,9 @@ public class Editor : Toplevel
     /// Tailors redrawing to add overlays (e.g. showing what is selected etc).
     /// </summary>
     /// <param name="bounds">The view bounds.</param>
-    public override void Redraw(Rect bounds)
+    public override void OnDrawContent(Rect bounds)
     {
-        base.Redraw(bounds);
+        base.OnDrawContent(bounds);
 
         // if we are editing a view
         if (this.viewBeingEdited != null)
@@ -874,7 +874,7 @@ Ctrl+Q - Quit
             }
             catch (Exception ex)
             {
-                ExceptionViewer.ShowException($"Failed to open '{ofd.FilePath}'", ex);
+                ExceptionViewer.ShowException($"Failed to open '{ofd.Path}'", ex);
             }
         }
     }
@@ -943,7 +943,7 @@ Ctrl+Q - Quit
         {
             try
             {
-                var path = ofd.FilePath.ToString();
+                var path = ofd.Path.ToString();
 
                 if (string.IsNullOrWhiteSpace(path) || selected == null)
                 {
@@ -979,7 +979,7 @@ Ctrl+Q - Quit
             }
             catch (Exception ex)
             {
-                ExceptionViewer.ShowException($"Failed to create '{ofd.FilePath}'", ex);
+                ExceptionViewer.ShowException($"Failed to create '{ofd.Path}'", ex);
                 throw;
             }
         }

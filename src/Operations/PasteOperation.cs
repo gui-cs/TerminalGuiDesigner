@@ -210,13 +210,14 @@ public class PasteOperation : Operation
 
     private void CloneTableView(TableView copy, TableView pasted)
     {
-        pasted.Table = copy.Table.Clone();
+        var copyDt = copy.GetDataTable();
+        var pastedDt = copyDt.Clone();
 
-        foreach (DataRow row in copy.Table.Rows)
+        foreach (DataRow row in copyDt.Rows)
         {
-            pasted.Table.Rows.Add(row.ItemArray);
+            pastedDt.Rows.Add(row.ItemArray);
         }
-
+        pasted.Table = new DataTableSource(pastedDt);
         pasted.Update();
     }
 
