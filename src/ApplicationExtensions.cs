@@ -20,19 +20,6 @@ public static class ApplicationExtensions
     /// <exception cref="MissingMethodException">Thrown if Terminal.Gui private API changes.</exception>
     public static View? FindDeepestView(View start, int x, int y)
     {
-        var method = typeof(Application).GetMethod(
-            nameof(FindDeepestView),
-            BindingFlags.Static | BindingFlags.NonPublic,
-            new[] { typeof(View), typeof(int), typeof(int), typeof(int).MakeByRefType(), typeof(int).MakeByRefType() });
-
-        if (method == null)
-        {
-            throw new MissingMethodException("Static method FindDeepestView not found on Application class");
-        }
-
-        int resx = 0;
-        int resy = 0;
-
-        return (View?)method.Invoke(null, new object[] { start, x, y, resx, resy });
+        return View.FindDeepestView(start,x,y,out _, out _);
     }
 }
