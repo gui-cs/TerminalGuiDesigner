@@ -23,17 +23,17 @@ public static class ViewExtensions
     {
         if (v is Window w)
         {
-            return w.Subviews[0].Subviews;
+            return w.Subviews;
         }
 
         if (v is FrameView f)
         {
-            return f.Subviews[0].Subviews;
+            return f.Subviews;
         }
 
         if (v is ScrollView scroll)
         {
-            return scroll.Subviews[0].Subviews;
+            return scroll.Subviews;
         }
 
         if (v is TabView t)
