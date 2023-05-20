@@ -177,14 +177,15 @@ public class BigListBox<T>
 
     private void Accept()
     {
-        if (this.listView.SelectedItem >= this.collection.Count)
+        var selected = this.listView.SelectedItem;
+        if (selected < 0 || selected >= this.collection.Count)
         {
             return;
         }
 
         this.okClicked = true;
         Application.RequestStop();
-        this.Selected = this.collection[this.listView.SelectedItem].Object;
+        this.Selected = this.collection[selected].Object;
     }
 
     private void ListView_MouseClick(object sender, MouseEventEventArgs obj)

@@ -855,7 +855,7 @@ Ctrl+Q - Quit
     {
         var ofd = new OpenDialog(
             "Open",
-            new List<IAllowedType>(new[] { new AllowedType("View",SourceCodeFile.ExpectedExtension )}));
+            new List<IAllowedType>(new[] { new AllowedType("View", SourceCodeFile.ExpectedExtension ) }));
 
         Application.Run(ofd, this.ErrorHandler);
 

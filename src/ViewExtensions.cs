@@ -204,12 +204,6 @@ public static class ViewExtensions
     /// <param name="clipped">Whether to clip the result of the ViewToScreen method, if set to <c>true</c>, the rcol, rrow values are clamped to the screen (terminal) dimensions (0..TerminalDim-1).</param>
     public static void ViewToScreenActual(this View v, int col, int row, out int rcol, out int rrow, bool clipped = true)
     {
-        if (v is Window || v is FrameView)
-        {
-            v.Subviews[0].ViewToScreenActual(col, row, out rcol, out rrow, clipped);
-            return;
-        }
-
         // Computes the real row, col relative to the screen.
         rrow = row + v.Frame.Y;
         rcol = col + v.Frame.X;

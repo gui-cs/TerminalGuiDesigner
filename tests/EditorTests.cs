@@ -1,5 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
+using Terminal.Gui;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.UI;
 
@@ -30,6 +31,13 @@ internal class EditorTests : Tests
 
         OperationManager.Instance.Undo();
         Assert.IsFalse(e.HasUnsavedChanges(), "Undoing the newly performed operation should mean that we are back where we were when we saved (i.e. no changes)");
+    }
+
+    [Test]
+    public void DesignerCsIsAllowed()
+    {
+        var type = new AllowedType("designer", ".Designer.cs");
+        Assert.IsTrue(type.IsAllowed("MyView.Designer.cs"));
     }
 
     class DummyOperation : Operation
