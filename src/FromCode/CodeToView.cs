@@ -147,15 +147,16 @@ public class CodeToView
         var dd = typeof(Enumerable).GetTypeInfo().Assembly.Location;
         var coreDir = Directory.GetParent(dd) ?? throw new Exception($"Could not find parent directory of dotnet sdk.  Sdk directory was {dd}");
 
-        var references = new List<MetadataReference>(ReferenceAssemblies.Net60);
-
-        references.Add(MetadataReference.CreateFromFile(typeof(View).Assembly.Location));
-        references.Add(MetadataReference.CreateFromFile(typeof(ustring).Assembly.Location));
-        references.Add(MetadataReference.CreateFromFile(typeof(System.Data.DataTable).Assembly.Location));
-        references.Add(MetadataReference.CreateFromFile(typeof(object).Assembly.Location));
-        references.Add(MetadataReference.CreateFromFile(typeof(MarshalByValueComponent).Assembly.Location));
-        references.Add(MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "mscorlib.dll"));
-        references.Add(MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "System.Runtime.dll"));
+        var references = new List<MetadataReference>()
+        {
+            MetadataReference.CreateFromFile(typeof(View).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(ustring).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.Data.DataTable).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(MarshalByValueComponent).Assembly.Location),
+            MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "mscorlib.dll"),
+            MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "System.Runtime.dll")
+        };
 
         var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary);
 
