@@ -10,8 +10,10 @@ public static class TableViewExtensions
 {
     /// <summary>
     /// Returns the <see cref="TableView.Table"/> as a <see cref="DataTable"/>
-    /// by hard casting. This will fail if source is e.g. <see cref="EnumerableTableSource{T}"/>
+    /// by hard casting. This will fail if source is e.g. <see cref="EnumerableTableSource{T}"/>.
     /// </summary>
+    /// <param name="tv">TableView to get the underlying table from.</param>
+    /// <returns>Underlying data table wrapped by <paramref name="tv"/>.</returns>
     public static DataTable GetDataTable(this TableView tv)
     {
         return ((DataTableSource)tv.Table).DataTable;

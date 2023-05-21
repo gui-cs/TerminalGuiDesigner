@@ -59,7 +59,7 @@ public static class MenuBarExtensions
         foreach (var mb in menuBar.Menus)
         {
             menuXLocations.Add(distance, mb);
-            distance += mb.Title.ConsoleWidth + afterEachItemWhitespace;
+            distance += mb.Title.GetColumns() + afterEachItemWhitespace;
         }
 
         // anything after this is not a click on a menu

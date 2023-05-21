@@ -1,4 +1,5 @@
-﻿using Terminal.Gui;
+﻿using System.Text;
+using Terminal.Gui;
 using Terminal.Gui.TextValidateProviders;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
@@ -243,7 +244,7 @@ public class EditDialog : Window
             // TODO : Make this work with non strings e.g.
             // if user types a bunch of numbers in or dates
             var oldValueAsArrayOfStrings = oldValue == null ?
-                    new string[0] :
+                    Array.Empty<string>() :
                     ((IListDataSource)oldValue).ToList()
                                                .Cast<object>()
                                                .Select(o => o?.ToString())
@@ -253,7 +254,7 @@ public class EditDialog : Window
                 property.PropertyInfo.Name,
                 "New List Value",
                 typeof(string),
-                oldValueAsArrayOfStrings ?? new string[0],
+                oldValueAsArrayOfStrings ?? Array.Empty<string>(),
                 out Array? resultArray))
             {
                 newValue = resultArray;
@@ -311,7 +312,7 @@ public class EditDialog : Window
         {
             if (Modals.GetChar(property.PropertyInfo.Name, "New Single Character", oldValue is null ? null : (char?)oldValue.ToPrimitive() ?? null, out var resultChar))
             {
-                newValue = resultChar == null ? null : (Rune)resultChar;
+                newValue = resultChar == null ? null : new Rune(resultChar.Value);
                 return true;
             }
         }

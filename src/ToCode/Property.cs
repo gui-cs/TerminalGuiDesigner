@@ -1,6 +1,6 @@
 ﻿using System.CodeDom;
 using System.Reflection;
-using NStack;
+using System.Text;
 using Terminal.Gui;
 using Terminal.Gui.TextValidateProviders;
 using TerminalGuiDesigner;
@@ -108,28 +108,6 @@ public class Property : ToCodeBase
             if (value is int i)
             {
                 value = Dim.Sized(i);
-            }
-        }
-
-        if (this.PropertyInfo.PropertyType == typeof(ustring))
-        {
-            if (value is string s)
-            {
-                value = ustring.Make(s);
-
-                // TODO: This seems like something AutoSize should do automatically
-                // if renaming a button update its size to match
-                if (this.Design.View is Button b && this.PropertyInfo.Name.Equals("Text") && b.Width.IsAbsolute())
-                {
-                    b.Width = s.Length + (b.IsDefault ? 6 : 4);
-                }
-            }
-
-            // some views don't like null and only work with "" e.g. TextView
-            // see https://github.com/gui-cs/TerminalGuiDesigner/issues/91
-            if (value == null)
-            {
-                value = ustring.Make(string.Empty);
             }
         }
 

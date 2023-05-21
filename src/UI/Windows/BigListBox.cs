@@ -25,8 +25,8 @@ public class BigListBox<T>
     /// <summary>
     /// Ongoing filtering of a large collection should be cancelled when the user changes the filter even if it is not completed yet.
     /// </summary>
-    private ConcurrentBag<CancellationTokenSource> cancelFiltering = new ConcurrentBag<CancellationTokenSource>();
-    private object taskCancellationLock = new object();
+    private ConcurrentBag<CancellationTokenSource> cancelFiltering = new();
+    private object taskCancellationLock = new();
     private Window win;
     private ListView listView;
     private bool changes;
@@ -62,7 +62,7 @@ public class BigListBox<T>
 
         if (collection == null)
         {
-            throw new ArgumentNullException("collection");
+            throw new ArgumentNullException(nameof(collection));
         }
 
         this.publicCollection = collection;

@@ -204,14 +204,14 @@ public class Design
         {
             // prevent control from responding to events
             txt.MouseClick += this.SuppressNativeClickEvents;
-            txt.KeyDown += (s,e) => e.Handled = true;
+            txt.KeyDown += (s, e) => e.Handled = true;
         }
 
         if (subView is TextField tf)
         {
             // prevent control from responding to events
             tf.MouseClick += this.SuppressNativeClickEvents;
-            tf.KeyDown += (s,e) => e.Handled = true;
+            tf.KeyDown += (s, e) => e.Handled = true;
         }
 
         if (subView is TreeView tree)
@@ -609,7 +609,7 @@ public class Design
         // prevent space toggling the checkbox
         // (gives better typing experience e.g. "my lovely checkbox")
         cb.ClearKeyBinding(Key.Space);
-        cb.MouseClick += (s,e) =>
+        cb.MouseClick += (s, e) =>
         {
             if (e.MouseEvent.Flags.HasFlag(MouseFlags.Button1Clicked))
             {

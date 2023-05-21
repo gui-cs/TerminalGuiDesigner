@@ -80,7 +80,7 @@ public partial class ColorPicker : Terminal.Gui.Dialog {
         this.radiogroup1.Data = "radiogroup1";
         this.radiogroup1.Text = "";
         this.radiogroup1.TextAlignment = Terminal.Gui.TextAlignment.Left;
-        this.radiogroup1.RadioLabels = new NStack.ustring[] {
+        this.radiogroup1.RadioLabels = new string[] {
                 "Black",
                 "Blue",
                 "Green",
@@ -105,7 +105,7 @@ public partial class ColorPicker : Terminal.Gui.Dialog {
         this.radiogroup2.Data = "radiogroup2";
         this.radiogroup2.Text = "";
         this.radiogroup2.TextAlignment = Terminal.Gui.TextAlignment.Left;
-        this.radiogroup2.RadioLabels = new NStack.ustring[] {
+        this.radiogroup2.RadioLabels = new string[] {
                 "Black",
                 "Blue",
                 "Green",

@@ -216,7 +216,7 @@ public class Editor : Toplevel
 
                     for (int i = 0; i < len; i++)
                     {
-                        this.AddRune(right - len + i, y, toDisplay[i]);
+                        this.AddRune(right - len + i, y, new Rune(toDisplay[i]));
                     }
                 }
             }
@@ -230,7 +230,7 @@ public class Editor : Toplevel
                     {
                         if (y == 0 || y == box.Height - 1 || x == 0 || x == box.Width - 1)
                         {
-                            this.AddRune(box.X + x, box.Y + y, '.');
+                            this.AddRune(box.X + x, box.Y + y, new Rune('.'));
                         }
                     }
                 }

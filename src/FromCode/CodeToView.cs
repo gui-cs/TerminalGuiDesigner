@@ -6,7 +6,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Emit;
 using NLog;
-using NStack;
 using Terminal.Gui;
 using TerminalGuiDesigner.ToCode;
 
@@ -18,7 +17,7 @@ namespace TerminalGuiDesigner.FromCode;
 /// </summary>
 /// <remarks>
 /// Compiling requires having the correct assembly references for dependencies.  This is handled
-/// by <see cref="CompileAssembly"/>.  Most references come from <see cref="ReferenceAssemblies.Net60"/>
+/// by <see cref="CompileAssembly"/>.  Most references come from <see cref="Basic.Reference.Assemblies"/>
 /// but also <see cref="Terminal.Gui"/>.
 /// </remarks>
 public class CodeToView
@@ -150,7 +149,6 @@ public class CodeToView
         var references = new List<MetadataReference>()
         {
             MetadataReference.CreateFromFile(typeof(View).Assembly.Location),
-            MetadataReference.CreateFromFile(typeof(ustring).Assembly.Location),
             MetadataReference.CreateFromFile(typeof(System.Data.DataTable).Assembly.Location),
             MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
             MetadataReference.CreateFromFile(typeof(MarshalByValueComponent).Assembly.Location),

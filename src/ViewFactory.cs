@@ -1,5 +1,5 @@
 ﻿using System.Data;
-using NStack;
+
 using Terminal.Gui;
 using Terminal.Gui.TextValidateProviders;
 using TerminalGuiDesigner.Operations.MenuOperations;
@@ -210,7 +210,7 @@ public class ViewFactory
             Width = 10,
             Height = 2,
         };
-        group.RadioLabels = new ustring[] { "Option 1", "Option 2" };
+        group.RadioLabels = new string[] { "Option 1", "Option 2" };
 
         return group;
     }

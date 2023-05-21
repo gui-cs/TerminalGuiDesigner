@@ -1,5 +1,4 @@
-﻿using NStack;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
@@ -24,6 +23,6 @@ internal class TextViewTests : Tests
 
         op.Do();
 
-        Assert.IsTrue(ustring.IsNullOrEmpty(tv.Text));
+        Assert.IsTrue(string.IsNullOrEmpty(tv.Text));
     }
 }

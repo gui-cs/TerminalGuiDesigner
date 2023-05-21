@@ -1,4 +1,5 @@
-﻿using Terminal.Gui;
+﻿using System.Text;
+using Terminal.Gui;
 using TerminalGuiDesigner.UI;
 
 namespace TerminalGuiDesigner;
@@ -75,7 +76,7 @@ public class DesignState
                 if (y == 0 || y == r.Height - 1 || x == 0 || x == r.Width - 1)
                 {
                     var rune = (y == r.Height - 1 && x == r.Width - 1 && isSelected) ? '╬' : '.';
-                    v.AddRune(x, y, rune);
+                    v.AddRune(x, y, new Rune(rune));
                 }
             }
         }

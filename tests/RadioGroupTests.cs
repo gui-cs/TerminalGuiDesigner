@@ -1,4 +1,3 @@
-using NStack;
 using NUnit.Framework;
 using Terminal.Gui;
 
@@ -25,7 +24,7 @@ class RadioGroupTests : Tests
         var rgIn = this.RoundTrip<Window, RadioGroup>(
             (_, r) =>
             {
-                r.RadioLabels = new ustring[] { "Fish", "Cat", "Balloon" };
+                r.RadioLabels = new string[] { "Fish", "Cat", "Balloon" };
         }, out _);
 
         Assert.AreEqual(3, rgIn.RadioLabels.Length);
@@ -41,7 +40,7 @@ class RadioGroupTests : Tests
         var rgIn = this.RoundTrip<Window, RadioGroup>(
             (_, r) =>
             {
-                r.RadioLabels = new ustring[] { };
+                r.RadioLabels = new string[] { };
             }, out _);
 
         Assert.IsEmpty(rgIn.RadioLabels);

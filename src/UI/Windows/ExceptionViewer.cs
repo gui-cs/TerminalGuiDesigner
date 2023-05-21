@@ -1,5 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using NStack;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner.UI.Windows;
@@ -56,7 +55,7 @@ public class ExceptionViewer
         Application.Run(dlg);
     }
 
-    private static ustring GetExceptionText(string errorText, Exception exception, bool includeStackTrace)
+    private static string GetExceptionText(string errorText, Exception exception, bool includeStackTrace)
     {
         return Wrap(errorText + "\n" + ExceptionHelper.ExceptionToListOfInnerMessages(exception, includeStackTrace), 76);
     }

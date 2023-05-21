@@ -217,6 +217,7 @@ public class PasteOperation : Operation
         {
             pastedDt.Rows.Add(row.ItemArray);
         }
+
         pasted.Table = new DataTableSource(pastedDt);
         pasted.Update();
     }

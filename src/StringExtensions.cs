@@ -1,5 +1,6 @@
 ﻿using System.CodeDom;
 using System.Text.RegularExpressions;
+using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
 
@@ -63,6 +64,18 @@ public static class StringExtensions
     public static CodeExpression ToCodeSnippetExpression(this string? s)
     {
         return s == null ? new CodePrimitiveExpression() : new CodeSnippetExpression(s);
+    }
+
+    /// <summary>
+    /// Returns the console width of the string.
+    /// </summary>
+    /// <param name="s">String to measure.</param>
+    /// <returns>Number of columns the string will take up when printed.</returns>
+    public static int GetColumns(this string? s)
+    {
+        return string.IsNullOrEmpty(s) ?
+            0 :
+            s.EnumerateRunes().Sum(r => r.GetColumns());
     }
 
     /// <summary>
