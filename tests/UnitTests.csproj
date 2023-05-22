@@ -13,7 +13,7 @@
     <PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
     <PackageReference Include="YamlDotNet" Version="13.1.0" />
 	  <PackageReference Include="ReportGenerator" Version="5.1.20" />
-	  <PackageReference Include="coverlet.collector" Version="3.2.0">
+	  <PackageReference Include="coverlet.collector" Version="6.0.0">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
