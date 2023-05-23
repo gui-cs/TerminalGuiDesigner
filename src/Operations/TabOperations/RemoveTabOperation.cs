@@ -4,9 +4,9 @@ using TerminalGuiDesigner.Operations.Generics;
 namespace TerminalGuiDesigner.Operations.TabOperations;
 
 /// <summary>
-/// Removes (deletes) a <see cref="TabView.Tab"/> from a <see cref="TabView"/>.
+/// Removes (deletes) a <see cref="Tab"/> from a <see cref="TabView"/>.
 /// </summary>
-public class RemoveTabOperation : RemoveOperation<TabView, TabView.Tab>
+public class RemoveTabOperation : RemoveOperation<TabView, Tab>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="RemoveTabOperation"/> class.
@@ -15,7 +15,7 @@ public class RemoveTabOperation : RemoveOperation<TabView, TabView.Tab>
     /// <param name="design">Wrapper for a <see cref="TabView"/> from which you want to remove the tab.</param>
     /// <param name="toRemove">The tab to remove.</param>
     /// <exception cref="ArgumentException">Thrown if <paramref name="design"/> does not wrap a <see cref="TabView"/>.</exception>
-    public RemoveTabOperation(Design design, TabView.Tab toRemove)
+    public RemoveTabOperation(Design design, Tab toRemove)
         : base(
             (t) => t.Tabs.ToArray(),
             (v, a) => v.ReOrderTabs(a),

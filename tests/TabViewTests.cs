@@ -198,8 +198,8 @@ class TabViewTests : Tests
         var lbl2 = new Design(source, "lbl2", new Label("ddd"));
         lbl2.View.Data = lbl2;
 
-        tv.AddTab(new TabView.Tab("Yay", lbl1.View), true);
-        tv.AddTab(new TabView.Tab("Yay", lbl2.View), false);
+        tv.AddTab(new Tab("Yay", lbl1.View), true);
+        tv.AddTab(new Tab("Yay", lbl2.View), false);
 
         var tvDesign = new Design(source, "tv", tv);
 
