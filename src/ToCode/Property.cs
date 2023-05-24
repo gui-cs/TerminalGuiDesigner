@@ -122,6 +122,15 @@ public class Property : ToCodeBase
             }
         }
 
+        // Some Terminal.Gui string properties get angry at null but are ok with empty strings
+        if (this.PropertyInfo.PropertyType == typeof(string))
+        {
+            if (value == null)
+            {
+                value = string.Empty;
+            }
+        }
+
         // TODO: This hack gets around an ArgumentException that gets thrown when
         // switching from Computed to Absolute values of Dim/Pos
         this.Design.View.IsInitialized = false;
@@ -186,6 +195,31 @@ public class Property : ToCodeBase
         if (val == null)
         {
             return new CodeSnippetExpression("null");
+        }
+
+        if(val is Rune rune)
+        {
+            char[] chars = new char[rune.Utf16SequenceLength];
+            rune.EncodeToUtf16(chars);
+
+            if(chars.Length == 1)
+            {
+                return new CodeObjectCreateExpression(
+                    typeof(Rune),
+                    new CodePrimitiveExpression(chars[0]));
+            }
+            else if (chars.Length == 2)
+            {
+                // User is setting to an emoticon or something
+                return new CodeObjectCreateExpression(
+                    typeof(Rune),
+                    new CodePrimitiveExpression(chars[0]),
+                    new CodePrimitiveExpression(chars[1]));
+            }
+            else
+            {
+                throw new Exception($"Unexpected unicode character size.  Rune was {rune}");
+            }            
         }
 
         if (val is Attribute attribute)

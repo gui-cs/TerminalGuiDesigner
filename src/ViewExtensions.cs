@@ -21,21 +21,6 @@ public static class ViewExtensions
     /// any Terminal.Gui artifacts (e.g. ContentView).</returns>
     public static IList<View> GetActualSubviews(this View v)
     {
-        if (v is Window w)
-        {
-            return w.Subviews;
-        }
-
-        if (v is FrameView f)
-        {
-            return f.Subviews;
-        }
-
-        if (v is ScrollView scroll)
-        {
-            return scroll.Subviews;
-        }
-
         if (v is TabView t)
         {
             return t.Tabs.Select(tab => tab.View).Where(v => v != null).ToList();
@@ -393,19 +378,21 @@ public static class ViewExtensions
     /// <returns>Screen coordinates of <paramref name="view"/>'s <see cref="View.Frame"/>.</returns>
     public static Rect FrameToScreen(this View view)
     {
-        int x = 0;
-        int y = 0;
-
-        var current = view;
-
-        while (current != null)
+        if(view.SuperView == null)
         {
-            x += current.Frame.X;
-            y += current.Frame.Y;
-            current = current.SuperView;
+            return view.Frame;
         }
 
-        return new Rect(x, y, view.Frame.Width, view.Frame.Height);
+        return view.SuperView.ViewToScreen(view.Frame);
+    }
+
+    /// <summary>
+    /// Converts a region in view-relative coordinates to screen-relative coordinates.
+    /// </summary>
+    private static Rect ViewToScreen (this View v, Rect region)
+    {
+        v.ViewToScreen (region.X, region.Y, out var x, out var y, clamped: false);
+        return new Rect (x, y, region.Width, region.Height);
     }
 
     private static bool HasNoBorderProperty(this View v)
