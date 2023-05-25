@@ -37,6 +37,13 @@ public class ViewFactory
             typeof(OpenDialog),
             typeof(ScrollBarView),
             typeof(TreeView<>),
+
+            // Theses are special types of view and shouldn't be added manually by user
+            typeof(Frame),
+
+            // These seem to cause stack overflows in CreateSubControlDesigns (see TestAddView_RoundTrip)
+            typeof(Wizard),
+            typeof(WizardStep),
         }; // The generic version of TreeView
 
         return typeof(View).Assembly.DefinedTypes.Where(t =>

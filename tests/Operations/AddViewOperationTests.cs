@@ -56,12 +56,13 @@ internal class AddViewOperationTests : Tests
                 op.Do();
             }
         }, out _);
-
-        Assert.AreEqual(stackSize, windowIn.GetActualSubviews().Count);
+        
+        var roundTripViews = windowIn.GetActualSubviews();
+        Assert.AreEqual(stackSize, roundTripViews.Count);
 
         for (int i = 0; i < stackSize; i++)
         {
-            Assert.IsInstanceOf(supportedViews[i], windowIn.GetActualSubviews()[i]);
+            Assert.IsInstanceOf(supportedViews[i], roundTripViews[i]);
         }
     }
 
