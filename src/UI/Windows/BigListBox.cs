@@ -150,6 +150,7 @@ public class BigListBox<T>
         this.callback = Application.MainLoop.AddTimeout(TimeSpan.FromMilliseconds(100), this.Timer);
 
         this.listView.FocusFirst();
+        this.listView.SelectedItem = 0;
     }
 
     /// <summary>
