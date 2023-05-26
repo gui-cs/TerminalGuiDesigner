@@ -678,7 +678,7 @@ Ctrl+Q - Quit
         else
         {
             var d = SelectionManager.Instance.Selected.FirstOrDefault() ?? this.viewBeingEdited;
-            d.View.ViewToScreenActual(0, 0, out var x, out var y);
+            d.View.ViewToScreen(0, 0, out var x, out var y);
             menu.Position = new Point(x, y);
         }
 

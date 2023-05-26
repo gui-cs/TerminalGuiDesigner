@@ -181,40 +181,6 @@ public static class ViewExtensions
     }
 
     /// <summary>
-    /// <para>
-    /// Converts a view-relative (col,row) position to a screen-relative position (col,row). The values are optionally clamped to the screen dimensions.
-    /// </para>
-    /// <para>This method differs from the private method in Terminal.Gui because it will unwrap private views e.g. <see cref="Window"/> such that the real
-    /// client coordinates of children are returned (e.g. see <see cref="GetActualSubviews(View)"/>).</para>
-    /// </summary>
-    /// <param name="v">The view that you want to translate client coordinates for.</param>
-    /// <param name="col">View-relative column.</param>
-    /// <param name="row">View-relative row.</param>
-    /// <param name="rcol">Absolute column; screen-relative.</param>
-    /// <param name="rrow">Absolute row; screen-relative.</param>
-    /// <param name="clipped">Whether to clip the result of the ViewToScreen method, if set to <c>true</c>, the rcol, rrow values are clamped to the screen (terminal) dimensions (0..TerminalDim-1).</param>
-    public static void ViewToScreenActual(this View v, int col, int row, out int rcol, out int rrow, bool clipped = true)
-    {
-        // Computes the real row, col relative to the screen.
-        rrow = row + v.Frame.Y;
-        rcol = col + v.Frame.X;
-        var ccontainer = v.SuperView;
-        while (ccontainer != null)
-        {
-            rrow += ccontainer.Frame.Y;
-            rcol += ccontainer.Frame.X;
-            ccontainer = ccontainer.SuperView;
-        }
-
-        // The following ensures that the cursor is always in the screen boundaries.
-        if (clipped)
-        {
-            rrow = Math.Min(rrow, Application.Driver.Rows - 1);
-            rcol = Math.Min(rcol, Application.Driver.Cols - 1);
-        }
-    }
-
-    /// <summary>
     /// Returns true if <paramref name="v"/> is a Type that is designed to store other
     /// sub-views in it (<see cref="Window"/>, <see cref="FrameView"/> etc).
     /// </summary>
@@ -331,8 +297,8 @@ public static class ViewExtensions
     {
         // TODO: maybe this should use Frame instead? Currently this will not let you drag box
         // selection over the border of a container to select it (e.g. FrameView).
-        v.ViewToScreenActual(0, 0, out var x0, out var y0);
-        v.ViewToScreenActual(v.Bounds.Width, v.Bounds.Height, out var x1, out var y1);
+        v.ViewToScreen(0, 0, out var x0, out var y0);
+        v.ViewToScreen(v.Bounds.Width, v.Bounds.Height, out var x1, out var y1);
 
         return Rect.FromLTRB(x0, y0, x1, y1).IntersectsWith(screenRect);
     }
