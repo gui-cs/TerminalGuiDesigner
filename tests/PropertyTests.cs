@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.IO;
@@ -90,7 +90,7 @@ internal class PropertyTests : Tests
 
         var code = ExpressionToCode(prop.GetRhs());
 
-        Assert.AreEqual("'F'", code);
+        Assert.AreEqual("new System.Text.Rune('F')", code);
     }
 
     [Test]
@@ -104,7 +104,7 @@ internal class PropertyTests : Tests
         lv.IsInitialized = true;
 
         Assert.AreEqual(Orientation.Horizontal, lv.Orientation);
-        Assert.AreEqual(ConfigurationManager.Glyphs.HalfRightLine, lv.LineRune);
+        Assert.AreEqual(new Rune('─'), lv.LineRune);
         var prop = d.GetDesignableProperty(nameof(LineView.Orientation));
 
         Assert.IsNotNull(prop);
@@ -117,7 +117,7 @@ internal class PropertyTests : Tests
 
         prop?.SetValue(Orientation.Horizontal);
         Assert.AreEqual(Orientation.Horizontal, lv.Orientation);
-        Assert.AreEqual(ConfigurationManager.Glyphs.HalfRightLine, lv.LineRune);
+        Assert.AreEqual(ConfigurationManager.Glyphs.HLine, lv.LineRune);
         Assert.AreEqual(Dim.Fill(), lv.Width);
         Assert.AreEqual(Dim.Sized(1), lv.Height);
     }

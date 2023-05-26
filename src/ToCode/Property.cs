@@ -131,10 +131,6 @@ public class Property : ToCodeBase
             }
         }
 
-        // TODO: This hack gets around an ArgumentException that gets thrown when
-        // switching from Computed to Absolute values of Dim/Pos
-        this.Design.View.IsInitialized = false;
-
         // if a LineView and changing Orientation then also flip
         // the Height/Width and set appropriate new rune
         if (this.PropertyInfo.Name == nameof(LineView.Orientation)
@@ -161,8 +157,6 @@ public class Property : ToCodeBase
         this.PropertyInfo.SetValue(this.DeclaringObject, value);
 
         this.CallRefreshMethodsIfAny();
-
-        this.Design.View.IsInitialized = true;
     }
 
     /// <summary>

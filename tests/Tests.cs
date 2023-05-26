@@ -50,6 +50,9 @@ internal class Tests
         var d = new Design(new SourceCodeFile(new FileInfo("TenByTen.cs")), Design.RootDesignName, v);
         v.Data = d;
 
+        v.BeginInit();
+        v.EndInit();
+
         return d;
     }
 
@@ -64,7 +67,7 @@ internal class Tests
         var rootDesign = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window));
         rootDesign.View.X = 100;
         rootDesign.View.Y = 100;
-        
+
         return rootDesign;
     }
     /// <summary>

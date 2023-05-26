@@ -26,6 +26,12 @@ public static class ViewExtensions
             return t.Tabs.Select(tab => tab.View).Where(v => v != null).ToList();
         }
 
+        // ScrollView has a content view so to reach its children you have to dive down an extra layer
+        if (v is ScrollView sc)
+        {
+            return sc.Subviews[0].Subviews;
+        }
+
         return v.Subviews;
     }
 
