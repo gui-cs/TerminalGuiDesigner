@@ -9,7 +9,7 @@ using Terminal.Gui;
 namespace TerminalGuiDesigner.ToCode
 {
     /// <summary>
-    /// Ancilliary code generation for <see cref="SpinnerView"/> e.g. setting up auto spin.
+    /// Ancillary code generation for <see cref="SpinnerView"/> e.g. setting up auto spin.
     /// </summary>
     internal class SpinnerViewToCode : ToCodeBase
     {

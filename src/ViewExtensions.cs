@@ -254,6 +254,7 @@ public static class ViewExtensions
         }
 
         var point = w.ScreenToView(m.X, m.Y);
+
         var hit = ApplicationExtensions.FindDeepestView(w, m.X, m.Y);
 
         int resizeBoxArea = 2;
@@ -262,8 +263,15 @@ public static class ViewExtensions
         {
             var screenFrame = hit.FrameToScreen();
 
-            isLowerRight = Math.Abs(screenFrame.X + screenFrame.Width - point.X) <= resizeBoxArea
+            if (point != new Point(screenFrame.X, screenFrame.Y))
+            {
+                isLowerRight = Math.Abs(screenFrame.X + screenFrame.Width - point.X) <= resizeBoxArea
                 && Math.Abs(screenFrame.Y + screenFrame.Height - point.Y) <= resizeBoxArea;
+            }
+            else
+            {
+                isLowerRight = false;
+            }
 
             isBorder =
                 m.X == screenFrame.X + screenFrame.Width - 1 ||
