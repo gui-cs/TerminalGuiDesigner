@@ -641,6 +641,11 @@ public class Design
             yield return this.CreateProperty(nameof(TextField.Secret));
         }
 
+        if (this.View is SpinnerView)
+        {
+            yield return this.CreateProperty(nameof(SpinnerView.AutoSpin));
+        }
+
         if (this.View is ScrollView)
         {
             yield return this.CreateProperty(nameof(ScrollView.ContentSize));

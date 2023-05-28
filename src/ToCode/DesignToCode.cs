@@ -36,12 +36,6 @@ internal class DesignToCode : ToCodeBase
             designItems.ToCode(args);
         }
 
-        if (this.Design.View is SpinnerView)
-        {
-            var spin = new SpinnerViewToCode(this.Design);
-            spin.ToCode(args);
-        }
-
         if (this.Design.View is TabView tabView)
         {
             foreach (var tab in tabView.Tabs)

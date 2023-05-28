@@ -88,13 +88,6 @@ public class ViewFactory
             return new StatusBar(new[] { new StatusItem(Key.F1, "F1 - Edit Me", null) });
         }
 
-        if (typeof(SpinnerView).IsAssignableFrom(t))
-        {
-            var s = new SpinnerView();
-            s.AutoSpin();
-            return s;
-        }
-
         if (t == typeof(TextValidateField))
         {
             return new TextValidateField
@@ -190,6 +183,11 @@ public class ViewFactory
                 Height = 5,
                 ContentSize = new Size(20, 10),
             };
+        }
+
+        if (typeof(SpinnerView).IsAssignableFrom(t))
+        {
+            return new SpinnerView() { AutoSpin = true };
         }
 
         var instance = Activator.CreateInstance(t) as View ?? throw new Exception($"CreateInstance returned null for Type '{t}'");
