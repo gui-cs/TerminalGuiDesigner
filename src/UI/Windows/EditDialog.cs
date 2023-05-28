@@ -217,6 +217,25 @@ public class EditDialog : Window
             }
         }
         else
+        if (property is InstanceOfProperty inst)
+        {
+            if (Modals.Get<Type>(
+                property.PropertyInfo.Name,
+                "New Value",
+                typeof(Label).Assembly.GetTypes().Where(inst.MustBeDerrivedFrom.IsAssignableFrom).ToArray(),
+                out Type? typeChosen))
+            {
+                if (typeChosen == null)
+                {
+                    newValue = null;
+                    return false;
+                }
+
+                newValue = Activator.CreateInstance(typeChosen);
+                return true;
+            }
+        }
+        else
         if (property.PropertyInfo.PropertyType == typeof(bool))
         {
             int answer = ChoicesDialog.Query(property.PropertyInfo.Name, $"New value for {property.PropertyInfo.PropertyType}", "Yes", "No");

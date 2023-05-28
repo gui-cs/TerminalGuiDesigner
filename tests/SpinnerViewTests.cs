@@ -51,7 +51,7 @@ namespace UnitTests
                 var prop = d.GetDesignableProperty(nameof(SpinnerView.Style))
                     ?? throw new Exception("Property was unexpectedly not designable");
 
-                prop.SetValue(typeof(Triangle));
+                prop.SetValue(new Triangle());
                 Assert.IsInstanceOf<Triangle>(v.Style);
             }, out _);
 

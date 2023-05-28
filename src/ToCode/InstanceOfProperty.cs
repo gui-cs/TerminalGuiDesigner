@@ -16,7 +16,7 @@ public class InstanceOfProperty : Property
     public InstanceOfProperty(Design design, PropertyInfo property)
         : base(design, property)
     {
-        this.MustBeDerrivedFrom = property.DeclaringType
+        this.MustBeDerrivedFrom = property.PropertyType
             ?? throw new Exception("Unable to determine property type");
     }
 
