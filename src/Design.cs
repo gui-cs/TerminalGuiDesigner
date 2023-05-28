@@ -1,4 +1,5 @@
 using System.Data;
+using System.Xml.Linq;
 using NLog;
 using Terminal.Gui;
 using TerminalGuiDesigner.Operations;
@@ -644,6 +645,10 @@ public class Design
         if (this.View is SpinnerView)
         {
             yield return this.CreateProperty(nameof(SpinnerView.AutoSpin));
+
+            yield return new InstanceOfProperty(
+                this,
+                this.View.GetType().GetProperty(nameof(SpinnerView.Style)) ?? throw new Exception($"Could not find expected Property SpinnerView.Style on View of Type '{this.View.GetType()}'"));
         }
 
         if (this.View is ScrollView)
@@ -675,18 +680,18 @@ public class Design
             yield return new Property(this, this.View.GetActualTextProperty());
         }
 
-    /*
-    TODO: Borders are changed a lot in v2
-        // Border properties - Most views dont have a border so Border is
-        if (this.View.Border != null)
-        {
-            yield return this.CreateSubProperty(nameof(Border.BorderStyle), nameof(this.View.Border), this.View.Border);
-            yield return this.CreateSubProperty(nameof(Border.BorderBrush), nameof(this.View.Border), this.View.Border);
-            yield return this.CreateSubProperty(nameof(Border.Effect3D), nameof(this.View.Border), this.View.Border);
-            yield return this.CreateSubProperty(nameof(Border.Effect3DBrush), nameof(this.View.Border), this.View.Border);
-            yield return this.CreateSubProperty(nameof(Border.DrawMarginFrame), nameof(this.View.Border), this.View.Border);
-        }
-        */
+        /*
+        TODO: Borders are changed a lot in v2
+            // Border properties - Most views dont have a border so Border is
+            if (this.View.Border != null)
+            {
+                yield return this.CreateSubProperty(nameof(Border.BorderStyle), nameof(this.View.Border), this.View.Border);
+                yield return this.CreateSubProperty(nameof(Border.BorderBrush), nameof(this.View.Border), this.View.Border);
+                yield return this.CreateSubProperty(nameof(Border.Effect3D), nameof(this.View.Border), this.View.Border);
+                yield return this.CreateSubProperty(nameof(Border.Effect3DBrush), nameof(this.View.Border), this.View.Border);
+                yield return this.CreateSubProperty(nameof(Border.DrawMarginFrame), nameof(this.View.Border), this.View.Border);
+            }
+            */
 
         yield return this.CreateProperty(nameof(this.View.TextAlignment));
 

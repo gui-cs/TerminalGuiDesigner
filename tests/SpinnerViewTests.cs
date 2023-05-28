@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terminal.Gui;
 using TerminalGuiDesigner;
+using static Terminal.Gui.SpinnerStyle;
 
 namespace UnitTests
 {
@@ -40,6 +41,22 @@ namespace UnitTests
 
             // Autospin original and the one that is read back in
             Assert.AreEqual(2, Application.MainLoop.timeouts.Count);
+        }
+
+        [Test]
+        public void TestNewSpinnerAutoSpins_ChangeStyle()
+        {
+            var backIn = RoundTrip<View, SpinnerView>((d, v) =>
+            {
+                var prop = d.GetDesignableProperty(nameof(SpinnerView.Style))
+                    ?? throw new Exception("Property was unexpectedly not designable");
+
+                prop.SetValue(typeof(Triangle));
+                Assert.IsInstanceOf<Triangle>(v.Style);
+            }, out _);
+
+            // Autospin original and the one that is read back in
+            Assert.IsInstanceOf<Triangle>(backIn.Style);
         }
     }
 }
