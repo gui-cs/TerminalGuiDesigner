@@ -50,4 +50,15 @@ internal class CodeDomArgsTests
         args.FieldNamesUsed.Add(firstAdd);
         Assert.AreEqual(expectOutput,args.GetUniqueFieldName(thenInput));
     }
+
+    [TestCase("if", "_if")]
+    [TestCase("ref", "_ref")]
+    [TestCase("default", "_default")]
+    [TestCase("out", "_out")]
+    [TestCase("bool", "_bool")]
+    [TestCase("else", "_else")]
+    public void Test_MakeValidFieldName_ShouldPrependUnderscoreToReservedKeywords(string input, string expectedOutput)
+    {
+        Assert.AreEqual(expectedOutput, CodeDomArgs.MakeValidFieldName(input));
+    }
 }

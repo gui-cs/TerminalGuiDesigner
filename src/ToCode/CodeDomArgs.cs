@@ -1,5 +1,6 @@
 ﻿using System.CodeDom;
 using System.Text.RegularExpressions;
+using Microsoft.CSharp;
 
 namespace TerminalGuiDesigner.ToCode;
 
@@ -10,6 +11,11 @@ namespace TerminalGuiDesigner.ToCode;
 /// </summary>
 public class CodeDomArgs
 {
+    /// <summary>
+    /// To check against C# reserved keywords.
+    /// </summary>
+    private static CSharpCodeProvider cSharpCodeProvider = new();
+
     /// <summary>
     /// Initializes a new instance of the <see cref="CodeDomArgs"/> class.
     /// </summary>
@@ -95,6 +101,12 @@ public class CodeDomArgs
                 name,
                 "^([A-Z])",
                 (m) => char.ToLower(m.Groups[1].Value[0]).ToString());
+
+            // prepend underscore to name if it is a C# reserved keyword
+            if (!cSharpCodeProvider.IsValidIdentifier(name))
+            {
+                return $"_{name}";
+            }
         }
 
         return name;
