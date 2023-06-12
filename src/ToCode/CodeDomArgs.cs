@@ -1,4 +1,5 @@
-﻿using System.CodeDom;
+﻿using Microsoft.CSharp;
+using System.CodeDom;
 using System.Text.RegularExpressions;
 
 namespace TerminalGuiDesigner.ToCode;
@@ -52,6 +53,11 @@ public class CodeDomArgs
     public HashSet<string> FieldNamesUsed { get; } = new();
 
     /// <summary>
+    /// To check against C# reserved keywords.
+    /// </summary>
+    private static CSharpCodeProvider cSharpCodeProvider = new();
+
+    /// <summary>
     /// Removes all invalid bits of <paramref name="name"/> such that it could be used
     /// as a class member.  This includes removing spaces, preceding numbers etc.
     /// </summary>
@@ -96,6 +102,10 @@ public class CodeDomArgs
                 "^([A-Z])",
                 (m) => char.ToLower(m.Groups[1].Value[0]).ToString());
         }
+
+        // reject name if it is a C# reserved keyword
+        if (!cSharpCodeProvider.IsValidIdentifier(name))
+            return "blank";
 
         return name;
     }
