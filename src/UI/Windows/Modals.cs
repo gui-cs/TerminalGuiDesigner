@@ -118,22 +118,22 @@ public class Modals
         return false;
     }
 
-    internal static bool Get<T>(string prompt, string okText, T[] collection, out T? selected)
+    internal static bool Get<T>(string prompt, string okText, T[] collection, T? currentSelection, out T? selected)
     {
-        return Get(prompt, okText, true, collection, o => o?.ToString() ?? "Null", false, out selected);
+        return Get(prompt, okText, true, collection, o => o?.ToString() ?? "Null", false, currentSelection, out selected);
     }
 
-    internal static bool Get<T>(string prompt, string okText, bool addSearch, T[] collection, Func<T?, string> displayMember, bool addNull, out T? selected)
+    internal static bool Get<T>(string prompt, string okText, bool addSearch, T[] collection, Func<T?, string> displayMember, bool addNull, T? currentSelection, out T? selected)
     {
-        var pick = new BigListBox<T>(prompt, okText, addSearch, collection, displayMember, addNull);
+        var pick = new BigListBox<T>(prompt, okText, addSearch, collection, displayMember, addNull, currentSelection);
         bool toReturn = pick.ShowDialog();
         selected = pick.Selected;
         return toReturn;
     }
 
-    internal static bool GetEnum(string prompt, string okText, Type enumType, out Enum? result)
+    internal static bool GetEnum(string prompt, string okText, Type enumType, Enum? currentValue, out Enum? result)
     {
-        return Get(prompt, okText, true, Enum.GetValues(enumType).Cast<Enum>().ToArray(), o => o?.ToString() ?? "Null", false, out result);
+        return Get(prompt, okText, true, Enum.GetValues(enumType).Cast<Enum>().ToArray(), o => o?.ToString() ?? "Null", false, currentValue, out result);
     }
 
     internal static bool GetChar(string windowTitle, string entryLabel, char? oldValue, out char? resultChar)

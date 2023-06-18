@@ -283,7 +283,7 @@ public class EditDialog : Window
         else
         if (property.PropertyInfo.PropertyType.IsEnum)
         {
-            if (Modals.GetEnum(property.PropertyInfo.Name, "New Enum Value", property.PropertyInfo.PropertyType, out var resultEnum))
+            if (Modals.GetEnum(property.PropertyInfo.Name, "New Enum Value", property.PropertyInfo.PropertyType, (Enum?)property.GetValue(), out var resultEnum))
             {
                 newValue = resultEnum;
                 return true;
@@ -370,7 +370,7 @@ public class EditDialog : Window
         // add the option to jump to custom colors
         offer.Add(custom);
 
-        if (Modals.Get("Color Scheme", "Ok", offer.ToArray(), out var selected))
+        if (Modals.Get("Color Scheme", "Ok", offer.ToArray(), design.View.ColorScheme, out var selected))
         {
             // if user clicked "Custom..."
             if (selected is string s && string.Equals(s, custom))
