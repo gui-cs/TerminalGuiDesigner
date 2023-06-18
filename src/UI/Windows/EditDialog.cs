@@ -263,7 +263,7 @@ public class EditDialog : Window
         else
         if (property.PropertyInfo.PropertyType.IsEnum)
         {
-            if (Modals.GetEnum(property.PropertyInfo.Name, "New Enum Value", property.PropertyInfo.PropertyType, out var resultEnum))
+            if (Modals.GetEnum(property.PropertyInfo.Name, "New Enum Value", property.PropertyInfo.PropertyType, (Enum?)property.GetValue(), out var resultEnum))
             {
                 newValue = resultEnum;
                 return true;

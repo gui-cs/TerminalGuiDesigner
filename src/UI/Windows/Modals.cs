@@ -141,9 +141,9 @@ public class Modals
         return Get(prompt, okText, addSearch, collection, displayMember, addNull, default, out selected);
     }
 
-    internal static bool GetEnum(string prompt, string okText, Type enumType, out Enum? result)
+    internal static bool GetEnum(string prompt, string okText, Type enumType, Enum? currentValue, out Enum? result)
     {
-        return Get(prompt, okText, true, Enum.GetValues(enumType).Cast<Enum>().ToArray(), o => o?.ToString() ?? "Null", false, out result);
+        return Get(prompt, okText, true, Enum.GetValues(enumType).Cast<Enum>().ToArray(), o => o?.ToString() ?? "Null", false, currentValue, out result);
     }
 
     internal static bool GetChar(string windowTitle, string entryLabel, char? oldValue, out char? resultChar)
