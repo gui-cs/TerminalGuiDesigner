@@ -319,6 +319,15 @@ public class BigListBox<T>
                     this.listView.SelectedItem = this.collection.IndexOf(currentSelectionInCollection);
                 }
             }
+            else
+            {
+                var currentSelectionInCollection = this.collection.FirstOrDefault(o => o.Object != null && object.Equals(o.Object, currentSelection));
+
+                if (currentSelectionInCollection != null)
+                {
+                    this.listView.SelectedItem = this.collection.IndexOf(currentSelectionInCollection);
+                }
+            }
         }
     }
 
