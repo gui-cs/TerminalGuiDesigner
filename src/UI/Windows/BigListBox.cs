@@ -148,7 +148,7 @@ public class BigListBox<T>
         this.win.Add(btnOk);
         this.win.Add(btnCancel);
 
-        this.GetCurrentSelection(currentSelection);
+        this.SetCurrentSelection(currentSelection);
 
         this.callback = Application.MainLoop.AddTimeout(TimeSpan.FromMilliseconds(100), this.Timer);
 
@@ -305,30 +305,33 @@ public class BigListBox<T>
         return this.publicCollection;
     }
 
-    private void GetCurrentSelection(T? currentSelection)
+    private void SetCurrentSelection(T? currentSelection)
     {
-        if (currentSelection != null)
+        if (currentSelection == null)
         {
-            if (currentSelection is ColorScheme colorScheme)
-            {
-                var colorSchemeName = ColorSchemeManager.Instance.GetNameForColorScheme(colorScheme);
-                var currentSelectionInCollection = this.collection.FirstOrDefault(o => o.Object != null && o.Object is NamedColorScheme scheme && scheme.Name == colorSchemeName);
+            return;
+        }
+        
+        if (currentSelection is ColorScheme colorScheme)
+        {
+            var colorSchemeName = ColorSchemeManager.Instance.GetNameForColorScheme(colorScheme);
+            var currentSelectionInCollection = this.collection.FirstOrDefault(o => o.Object != null && o.Object is NamedColorScheme scheme && scheme.Name == colorSchemeName);
 
-                if (currentSelectionInCollection != null)
-                {
-                    this.listView.SelectedItem = this.collection.IndexOf(currentSelectionInCollection);
-                }
-            }
-            else
+            if (currentSelectionInCollection != null)
             {
-                var currentSelectionInCollection = this.collection.FirstOrDefault(o => o.Object != null && object.Equals(o.Object, currentSelection));
-
-                if (currentSelectionInCollection != null)
-                {
-                    this.listView.SelectedItem = this.collection.IndexOf(currentSelectionInCollection);
-                }
+                this.listView.SelectedItem = this.collection.IndexOf(currentSelectionInCollection);
             }
         }
+        else
+        {
+            var currentSelectionInCollection = this.collection.FirstOrDefault(o => o.Object != null && object.Equals(o.Object, currentSelection));
+
+            if (currentSelectionInCollection != null)
+            {
+                this.listView.SelectedItem = this.collection.IndexOf(currentSelectionInCollection);
+            }
+        }
+    
     }
 
     private class ListViewObject<T2>
