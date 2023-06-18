@@ -120,15 +120,25 @@ public class Modals
 
     internal static bool Get<T>(string prompt, string okText, T[] collection, out T? selected)
     {
-        return Get(prompt, okText, true, collection, o => o?.ToString() ?? "Null", false, out selected);
+        return Get(prompt, okText, true, collection, o => o?.ToString() ?? "Null", false, default, out selected);
+    }
+
+    internal static bool Get<T>(string prompt, string okText, T[] collection, T? currentSelection, out T? selected)
+    {
+        return Get(prompt, okText, true, collection, o => o?.ToString() ?? "Null", false, currentSelection, out selected);
+    }
+
+    internal static bool Get<T>(string prompt, string okText, bool addSearch, T[] collection, Func<T?, string> displayMember, bool addNull, T? currentSelection, out T? selected)
+    {
+        var pick = new BigListBox<T>(prompt, okText, addSearch, collection, displayMember, addNull, currentSelection);
+        bool toReturn = pick.ShowDialog();
+        selected = pick.Selected;
+        return toReturn;
     }
 
     internal static bool Get<T>(string prompt, string okText, bool addSearch, T[] collection, Func<T?, string> displayMember, bool addNull, out T? selected)
     {
-        var pick = new BigListBox<T>(prompt, okText, addSearch, collection, displayMember, addNull);
-        bool toReturn = pick.ShowDialog();
-        selected = pick.Selected;
-        return toReturn;
+        return Get(prompt, okText, addSearch, collection, displayMember, addNull, default, out selected);
     }
 
     internal static bool GetEnum(string prompt, string okText, Type enumType, out Enum? result)
