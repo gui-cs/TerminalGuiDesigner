@@ -46,13 +46,15 @@ public class BigListBox<T>
     /// <param name="collection">Things to make user pick from.</param>
     /// <param name="displayMember">What to display in the list box (defaults to <see cref="object.ToString"/>.</param>
     /// <param name="addNull">Creates a selection option "Null" that returns a null selection.</param>
+    /// <param name="currentSelection">The optional existing value, if present it should be selected in the list.</param>
     public BigListBox(
         string prompt,
         string okText,
         bool addSearch,
         IList<T> collection,
         Func<T?, string> displayMember,
-        bool addNull)
+        bool addNull,
+        T? currentSelection)
     {
         this.okText = okText;
         this.addSearch = addSearch;
@@ -145,6 +147,8 @@ public class BigListBox<T>
 
         this.win.Add(btnOk);
         this.win.Add(btnCancel);
+
+        this.GetCurrentSelection(currentSelection);
 
         this.callback = Application.MainLoop.AddTimeout(TimeSpan.FromMilliseconds(100), this.Timer);
 
@@ -299,6 +303,23 @@ public class BigListBox<T>
         }
 
         return this.publicCollection;
+    }
+
+    private void GetCurrentSelection(T? currentSelection)
+    {
+        if (currentSelection != null)
+        {
+            if (currentSelection is ColorScheme colorScheme)
+            {
+                var colorSchemeName = ColorSchemeManager.Instance.GetNameForColorScheme(colorScheme);
+                var currentSelectionInCollection = this.collection.FirstOrDefault(o => o.Object != null && o.Object is NamedColorScheme scheme && scheme.Name == colorSchemeName);
+
+                if (currentSelectionInCollection != null)
+                {
+                    this.listView.SelectedItem = this.collection.IndexOf(currentSelectionInCollection);
+                }
+            }
+        }
     }
 
     private class ListViewObject<T2>
