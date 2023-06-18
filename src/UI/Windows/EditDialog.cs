@@ -223,6 +223,8 @@ public class EditDialog : Window
                 property.PropertyInfo.Name,
                 "New Value",
                 typeof(Label).Assembly.GetTypes().Where(inst.MustBeDerrivedFrom.IsAssignableFrom).ToArray(),
+                // TODO: Doesn't seem to be working :(
+                inst.GetValue()?.GetType(),
                 out Type? typeChosen))
             {
                 if (typeChosen == null)
