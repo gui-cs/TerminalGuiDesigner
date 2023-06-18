@@ -311,7 +311,7 @@ public class BigListBox<T>
         {
             return;
         }
-        
+
         if (currentSelection is ColorScheme colorScheme)
         {
             var colorSchemeName = ColorSchemeManager.Instance.GetNameForColorScheme(colorScheme);
@@ -331,7 +331,6 @@ public class BigListBox<T>
                 this.listView.SelectedItem = this.collection.IndexOf(currentSelectionInCollection);
             }
         }
-    
     }
 
     private class ListViewObject<T2>

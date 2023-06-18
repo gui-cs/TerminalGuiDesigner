@@ -118,11 +118,6 @@ public class Modals
         return false;
     }
 
-    internal static bool Get<T>(string prompt, string okText, T[] collection, out T? selected)
-    {
-        return Get(prompt, okText, true, collection, o => o?.ToString() ?? "Null", false, default, out selected);
-    }
-
     internal static bool Get<T>(string prompt, string okText, T[] collection, T? currentSelection, out T? selected)
     {
         return Get(prompt, okText, true, collection, o => o?.ToString() ?? "Null", false, currentSelection, out selected);
@@ -134,11 +129,6 @@ public class Modals
         bool toReturn = pick.ShowDialog();
         selected = pick.Selected;
         return toReturn;
-    }
-
-    internal static bool Get<T>(string prompt, string okText, bool addSearch, T[] collection, Func<T?, string> displayMember, bool addNull, out T? selected)
-    {
-        return Get(prompt, okText, addSearch, collection, displayMember, addNull, default, out selected);
     }
 
     internal static bool GetEnum(string prompt, string okText, Type enumType, Enum? currentValue, out Enum? result)

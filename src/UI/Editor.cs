@@ -785,7 +785,7 @@ Ctrl+Q - Quit
         {
             var options = d.GetExtraOperations().Where(o => !o.IsImpossible).ToArray();
 
-            if (options.Any() && Modals.Get("Operations", "Ok", options, out var selected) && selected != null)
+            if (options.Any() && Modals.Get("Operations", "Ok", options, null, out var selected) && selected != null)
             {
                 OperationManager.Instance.Do(selected);
             }
@@ -926,7 +926,7 @@ Ctrl+Q - Quit
 
     private void New()
     {
-        if (!Modals.Get("Create New View", "Ok", this.GetSupportedRootViews(), out var selected))
+        if (!Modals.Get("Create New View", "Ok", this.GetSupportedRootViews(), null, out var selected))
         {
             return;
         }
