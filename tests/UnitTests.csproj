@@ -11,7 +11,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
-    <PackageReference Include="YamlDotNet" Version="13.1.0" />
+    <PackageReference Include="YamlDotNet" Version="13.1.1" />
 	  <PackageReference Include="ReportGenerator" Version="5.1.20" />
 	  <PackageReference Include="coverlet.collector" Version="3.2.0">
 		  <PrivateAssets>all</PrivateAssets>
