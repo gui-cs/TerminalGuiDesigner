@@ -88,7 +88,9 @@ public class BigListBox<T>
             Y = 0,
             Height = Dim.Fill(2),
             Width = Dim.Fill(2),
+            SelectedItem = 0,
         };
+
         this.listView.KeyPress += this.ListView_KeyPress;
 
         this.listView.MouseClick += this.ListView_MouseClick;
@@ -154,7 +156,6 @@ public class BigListBox<T>
         this.callback = Application.MainLoop.AddTimeout(TimeSpan.FromMilliseconds(100), this.Timer);
 
         this.listView.FocusFirst();
-        this.listView.SelectedItem = 0;
     }
 
     /// <summary>
