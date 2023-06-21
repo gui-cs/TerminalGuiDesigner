@@ -155,7 +155,13 @@ public class Editor : Toplevel
                 return;
             }
 
-            if (this.editting || !this.enableDrag || this.viewBeingEdited == null)
+            // If disabling drag we suppress all but right click (button 3)
+            if (!m.Flags.HasFlag(MouseFlags.Button3Clicked) && !this.enableDrag)
+            {
+                return;
+            }
+
+            if (this.editting || this.viewBeingEdited == null)
             {
                 return;
             }
