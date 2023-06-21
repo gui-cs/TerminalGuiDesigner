@@ -1,4 +1,5 @@
-﻿using Terminal.Gui;
+﻿using System.Text;
+using Terminal.Gui;
 using Terminal.Gui.TextValidateProviders;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
@@ -51,7 +52,7 @@ public class EditDialog : Window
             IsDefault = true,
         };
 
-        btnSet.Clicked += () =>
+        btnSet.Clicked += (s, e) =>
         {
             this.SetProperty(false);
         };
@@ -61,7 +62,7 @@ public class EditDialog : Window
             X = Pos.Right(btnSet),
             Y = Pos.Bottom(this.list),
         };
-        btnClose.Clicked += () => Application.RequestStop();
+        btnClose.Clicked += (s, e) => Application.RequestStop();
 
         this.Add(this.list);
         this.Add(btnSet);
@@ -216,6 +217,26 @@ public class EditDialog : Window
             }
         }
         else
+        if (property is InstanceOfProperty inst)
+        {
+            if (Modals.Get<Type>(
+                property.PropertyInfo.Name,
+                "New Value",
+                typeof(Label).Assembly.GetTypes().Where(inst.MustBeDerrivedFrom.IsAssignableFrom).ToArray(),
+                inst.GetValue()?.GetType(),
+                out Type? typeChosen))
+            {
+                if (typeChosen == null)
+                {
+                    newValue = null;
+                    return false;
+                }
+
+                newValue = Activator.CreateInstance(typeChosen);
+                return true;
+            }
+        }
+        else
         if (property.PropertyInfo.PropertyType == typeof(bool))
         {
             int answer = ChoicesDialog.Query(property.PropertyInfo.Name, $"New value for {property.PropertyInfo.PropertyType}", "Yes", "No");
@@ -243,7 +264,7 @@ public class EditDialog : Window
             // TODO : Make this work with non strings e.g.
             // if user types a bunch of numbers in or dates
             var oldValueAsArrayOfStrings = oldValue == null ?
-                    new string[0] :
+                    Array.Empty<string>() :
                     ((IListDataSource)oldValue).ToList()
                                                .Cast<object>()
                                                .Select(o => o?.ToString())
@@ -253,7 +274,7 @@ public class EditDialog : Window
                 property.PropertyInfo.Name,
                 "New List Value",
                 typeof(string),
-                oldValueAsArrayOfStrings ?? new string[0],
+                oldValueAsArrayOfStrings ?? Array.Empty<string>(),
                 out Array? resultArray))
             {
                 newValue = resultArray;
@@ -311,7 +332,7 @@ public class EditDialog : Window
         {
             if (Modals.GetChar(property.PropertyInfo.Name, "New Single Character", oldValue is null ? null : (char?)oldValue.ToPrimitive() ?? null, out var resultChar))
             {
-                newValue = resultChar == null ? null : (Rune)resultChar;
+                newValue = resultChar == null ? null : new Rune(resultChar.Value);
                 return true;
             }
         }
@@ -433,7 +454,7 @@ public class EditDialog : Window
         }
     }
 
-    private void List_KeyPress(KeyEventEventArgs obj)
+    private void List_KeyPress(object sender, KeyEventEventArgs obj)
     {
         // TODO: Should really be using the _keyMap here
         if (obj.KeyEvent.Key == Key.DeleteChar)

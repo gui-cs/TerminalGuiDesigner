@@ -21,24 +21,15 @@ public static class ViewExtensions
     /// any Terminal.Gui artifacts (e.g. ContentView).</returns>
     public static IList<View> GetActualSubviews(this View v)
     {
-        if (v is Window w)
-        {
-            return w.Subviews[0].Subviews;
-        }
-
-        if (v is FrameView f)
-        {
-            return f.Subviews[0].Subviews;
-        }
-
-        if (v is ScrollView scroll)
-        {
-            return scroll.Subviews[0].Subviews;
-        }
-
         if (v is TabView t)
         {
             return t.Tabs.Select(tab => tab.View).Where(v => v != null).ToList();
+        }
+
+        // ScrollView has a content view so to reach its children you have to dive down an extra layer
+        if (v is ScrollView sc)
+        {
+            return sc.Subviews[0].Subviews;
         }
 
         return v.Subviews;
@@ -190,46 +181,6 @@ public static class ViewExtensions
     }
 
     /// <summary>
-    /// <para>
-    /// Converts a view-relative (col,row) position to a screen-relative position (col,row). The values are optionally clamped to the screen dimensions.
-    /// </para>
-    /// <para>This method differs from the private method in Terminal.Gui because it will unwrap private views e.g. <see cref="Window"/> such that the real
-    /// client coordinates of children are returned (e.g. see <see cref="GetActualSubviews(View)"/>).</para>
-    /// </summary>
-    /// <param name="v">The view that you want to translate client coordinates for.</param>
-    /// <param name="col">View-relative column.</param>
-    /// <param name="row">View-relative row.</param>
-    /// <param name="rcol">Absolute column; screen-relative.</param>
-    /// <param name="rrow">Absolute row; screen-relative.</param>
-    /// <param name="clipped">Whether to clip the result of the ViewToScreen method, if set to <c>true</c>, the rcol, rrow values are clamped to the screen (terminal) dimensions (0..TerminalDim-1).</param>
-    public static void ViewToScreenActual(this View v, int col, int row, out int rcol, out int rrow, bool clipped = true)
-    {
-        if (v is Window || v is FrameView)
-        {
-            v.Subviews[0].ViewToScreenActual(col, row, out rcol, out rrow, clipped);
-            return;
-        }
-
-        // Computes the real row, col relative to the screen.
-        rrow = row + v.Frame.Y;
-        rcol = col + v.Frame.X;
-        var ccontainer = v.SuperView;
-        while (ccontainer != null)
-        {
-            rrow += ccontainer.Frame.Y;
-            rcol += ccontainer.Frame.X;
-            ccontainer = ccontainer.SuperView;
-        }
-
-        // The following ensures that the cursor is always in the screen boundaries.
-        if (clipped)
-        {
-            rrow = Math.Min(rrow, Application.Driver.Rows - 1);
-            rcol = Math.Min(rcol, Application.Driver.Cols - 1);
-        }
-    }
-
-    /// <summary>
     /// Returns true if <paramref name="v"/> is a Type that is designed to store other
     /// sub-views in it (<see cref="Window"/>, <see cref="FrameView"/> etc).
     /// </summary>
@@ -303,6 +254,7 @@ public static class ViewExtensions
         }
 
         var point = w.ScreenToView(m.X, m.Y);
+
         var hit = ApplicationExtensions.FindDeepestView(w, m.X, m.Y);
 
         int resizeBoxArea = 2;
@@ -311,8 +263,15 @@ public static class ViewExtensions
         {
             var screenFrame = hit.FrameToScreen();
 
-            isLowerRight = Math.Abs(screenFrame.X + screenFrame.Width - point.X) <= resizeBoxArea
+            if (point != new Point(screenFrame.X, screenFrame.Y))
+            {
+                isLowerRight = Math.Abs(screenFrame.X + screenFrame.Width - point.X) <= resizeBoxArea
                 && Math.Abs(screenFrame.Y + screenFrame.Height - point.Y) <= resizeBoxArea;
+            }
+            else
+            {
+                isLowerRight = false;
+            }
 
             isBorder =
                 m.X == screenFrame.X + screenFrame.Width - 1 ||
@@ -346,8 +305,8 @@ public static class ViewExtensions
     {
         // TODO: maybe this should use Frame instead? Currently this will not let you drag box
         // selection over the border of a container to select it (e.g. FrameView).
-        v.ViewToScreenActual(0, 0, out var x0, out var y0);
-        v.ViewToScreenActual(v.Bounds.Width, v.Bounds.Height, out var x1, out var y1);
+        v.ViewToScreen(0, 0, out var x0, out var y0);
+        v.ViewToScreen(v.Bounds.Width, v.Bounds.Height, out var x1, out var y1);
 
         return Rect.FromLTRB(x0, y0, x1, y1).IntersectsWith(screenRect);
     }
@@ -368,7 +327,7 @@ public static class ViewExtensions
     /// if never called (i.e. <see cref="View.ColorScheme"/> getter is returning inherited parent value).</returns>
     public static ColorScheme? GetExplicitColorScheme(this View v)
     {
-        var explicitColorSchemeField = typeof(View).GetField("colorScheme", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+        var explicitColorSchemeField = typeof(View).GetField("_colorScheme", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
             ?? throw new Exception("ColorScheme private backing field no longer exists");
 
         return (ColorScheme?)explicitColorSchemeField.GetValue(v);
@@ -399,19 +358,21 @@ public static class ViewExtensions
     /// <returns>Screen coordinates of <paramref name="view"/>'s <see cref="View.Frame"/>.</returns>
     public static Rect FrameToScreen(this View view)
     {
-        int x = 0;
-        int y = 0;
-
-        var current = view;
-
-        while (current != null)
+        if(view.SuperView == null)
         {
-            x += current.Frame.X;
-            y += current.Frame.Y;
-            current = current.SuperView;
+            return view.Frame;
         }
 
-        return new Rect(x, y, view.Frame.Width, view.Frame.Height);
+        return view.SuperView.ViewToScreen(view.Frame);
+    }
+
+    /// <summary>
+    /// Converts a region in view-relative coordinates to screen-relative coordinates.
+    /// </summary>
+    private static Rect ViewToScreen (this View v, Rect region)
+    {
+        v.ViewToScreen (region.X, region.Y, out var x, out var y, clamped: false);
+        return new Rect (x, y, region.Width, region.Height);
     }
 
     private static bool HasNoBorderProperty(this View v)
@@ -421,7 +382,7 @@ public static class ViewExtensions
             return true;
         }
 
-        if (v.Border.BorderStyle == BorderStyle.None)
+        if (v.Border.BorderStyle == LineStyle.None)
         {
             return true;
         }

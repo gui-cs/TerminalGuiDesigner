@@ -49,7 +49,7 @@ public static class TabViewExtensions
     /// </summary>
     /// <param name="tabView">The view whose tabs should be reordered.</param>
     /// <param name="newOrder">The new order to enforce.</param>
-    public static void ReOrderTabs(this TabView tabView, TabView.Tab[] newOrder)
+    public static void ReOrderTabs(this TabView tabView, Tab[] newOrder)
     {
         var selectedBefore = tabView.SelectedTab;
 
@@ -67,7 +67,7 @@ public static class TabViewExtensions
     }
 
     /// <summary>
-    /// Creates a new <see cref="TabView.Tab"/> with a <see cref="View"/> that fills
+    /// Creates a new <see cref="Tab"/> with a <see cref="View"/> that fills
     /// all available space.  Tab will have the name <paramref name="named"/>.
     /// </summary>
     /// <param name="tabView"><see cref="TabView"/> to add the new tab to.</param>
@@ -75,7 +75,7 @@ public static class TabViewExtensions
     /// <returns>The tab added.</returns>
     public static Tab AddEmptyTab(this TabView tabView, string named)
     {
-        var tab = new TabView.Tab(named, new View { Width = Dim.Fill(), Height = Dim.Fill() });
+        var tab = new Tab(named, new View { Width = Dim.Fill(), Height = Dim.Fill() });
         tabView.AddTab(tab, false);
         return tab;
     }

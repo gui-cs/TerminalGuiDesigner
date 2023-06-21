@@ -5,7 +5,7 @@ namespace TerminalGuiDesigner.Operations.Generics;
 
 /// <summary>
 /// Generic abstract class for an <see cref="Operation"/> which adds a new element
-/// to a collection hosted by a <see cref="View"/> e.g. a new <see cref="TabView.Tab"/>
+/// to a collection hosted by a <see cref="View"/> e.g. a new <see cref="Tab"/>
 /// to a <see cref="TabView"/>.
 /// </summary>
 /// <typeparam name="T1">The <see cref="View"/> that hosts the collection you want to modify.</typeparam>

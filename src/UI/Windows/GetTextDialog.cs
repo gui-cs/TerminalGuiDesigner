@@ -18,8 +18,9 @@ internal class GetTextDialog
         this.args = args;
         this.initialValue = initialValue;
 
-        this.win = new Window(this.args.WindowTitle)
+        this.win = new Window()
         {
+            Title = this.args.WindowTitle,
             X = 0,
             Y = 0,
             Modal = true,
@@ -64,7 +65,7 @@ internal class GetTextDialog
             Y = Pos.Bottom(this.textField),
             IsDefault = !this.args.MultiLine,
         };
-        btnOk.Clicked += () =>
+        btnOk.Clicked += (s, e) =>
         {
             this.Accept();
         };
@@ -75,7 +76,7 @@ internal class GetTextDialog
             Y = Pos.Bottom(this.textField),
             IsDefault = false,
         };
-        btnCancel.Clicked += () =>
+        btnCancel.Clicked += (s, e) =>
         {
             this.okClicked = false;
             Application.RequestStop();
@@ -86,7 +87,7 @@ internal class GetTextDialog
             X = Pos.Right(btnCancel),
             Y = Pos.Bottom(this.textField),
         };
-        btnClear.Clicked += () =>
+        btnClear.Clicked += (s, e) =>
         {
             this.textField.Text = string.Empty;
         };
@@ -112,7 +113,7 @@ internal class GetTextDialog
         Application.RequestStop();
     }
 
-    private void TextField_KeyPress(View.KeyEventEventArgs obj)
+    private void TextField_KeyPress(object sender, KeyEventEventArgs obj)
     {
         if (obj.KeyEvent.Key == Key.Enter && !this.args.MultiLine)
         {

@@ -25,8 +25,8 @@ public class BigListBox<T>
     /// <summary>
     /// Ongoing filtering of a large collection should be cancelled when the user changes the filter even if it is not completed yet.
     /// </summary>
-    private ConcurrentBag<CancellationTokenSource> cancelFiltering = new ConcurrentBag<CancellationTokenSource>();
-    private object taskCancellationLock = new object();
+    private ConcurrentBag<CancellationTokenSource> cancelFiltering = new();
+    private object taskCancellationLock = new();
     private Window win;
     private ListView listView;
     private bool changes;
@@ -64,16 +64,17 @@ public class BigListBox<T>
 
         if (collection == null)
         {
-            throw new ArgumentNullException("collection");
+            throw new ArgumentNullException(nameof(collection));
         }
 
         this.publicCollection = collection;
         this.addNull = addNull;
 
-        this.win = new Window(this.prompt)
+        this.win = new Window()
         {
             X = 0,
             Y = 0,
+            Title = this.prompt,
 
             // By using Dim.Fill(), it will automatically resize without manual intervention
             Width = Dim.Fill(),
@@ -87,7 +88,9 @@ public class BigListBox<T>
             Y = 0,
             Height = Dim.Fill(2),
             Width = Dim.Fill(2),
+            SelectedItem = 0,
         };
+
         this.listView.KeyPress += this.ListView_KeyPress;
 
         this.listView.MouseClick += this.ListView_MouseClick;
@@ -98,7 +101,7 @@ public class BigListBox<T>
         {
             Y = Pos.Bottom(this.listView),
         };
-        btnOk.Clicked += () =>
+        btnOk.Clicked += (s, e) =>
         {
             this.Accept();
         };
@@ -107,7 +110,7 @@ public class BigListBox<T>
         {
             Y = Pos.Bottom(this.listView),
         };
-        btnCancel.Clicked += () => Application.RequestStop();
+        btnCancel.Clicked += (s, e) => Application.RequestStop();
 
         if (this.addSearch)
         {
@@ -132,7 +135,7 @@ public class BigListBox<T>
             this.win.Add(this.searchBox);
             this.searchBox.SetFocus();
 
-            this.searchBox.TextChanged += (s) =>
+            this.searchBox.TextChanged += (s, e) =>
             {
                 // Don't update the UI while user is hammering away on the keyboard
                 this.lastKeypress = DateTime.Now;
@@ -180,17 +183,18 @@ public class BigListBox<T>
 
     private void Accept()
     {
-        if (this.listView.SelectedItem >= this.collection.Count)
+        var selected = this.listView.SelectedItem;
+        if (selected < 0 || selected >= this.collection.Count)
         {
             return;
         }
 
         this.okClicked = true;
         Application.RequestStop();
-        this.Selected = this.collection[this.listView.SelectedItem].Object;
+        this.Selected = this.collection[selected].Object;
     }
 
-    private void ListView_MouseClick(View.MouseEventArgs obj)
+    private void ListView_MouseClick(object sender, MouseEventEventArgs obj)
     {
         if (obj.MouseEvent.Flags.HasFlag(MouseFlags.Button1DoubleClicked))
         {
@@ -199,7 +203,7 @@ public class BigListBox<T>
         }
     }
 
-    private void ListView_KeyPress(View.KeyEventEventArgs obj)
+    private void ListView_KeyPress(object sender, KeyEventEventArgs obj)
     {
         // if user types in some text change the focus to the text box to enable searching
         var c = (char)obj.KeyEvent.KeyValue;

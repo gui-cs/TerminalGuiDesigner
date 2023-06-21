@@ -1,8 +1,7 @@
 ﻿using System.CodeDom;
 using System.Reflection;
-using NStack;
+using System.Text;
 using Terminal.Gui;
-using Terminal.Gui.Graphs;
 using Terminal.Gui.TextValidateProviders;
 using TerminalGuiDesigner;
 using static Terminal.Gui.TableView;
@@ -112,28 +111,6 @@ public class Property : ToCodeBase
             }
         }
 
-        if (this.PropertyInfo.PropertyType == typeof(ustring))
-        {
-            if (value is string s)
-            {
-                value = ustring.Make(s);
-
-                // TODO: This seems like something AutoSize should do automatically
-                // if renaming a button update its size to match
-                if (this.Design.View is Button b && this.PropertyInfo.Name.Equals("Text") && b.Width.IsAbsolute())
-                {
-                    b.Width = s.Length + (b.IsDefault ? 6 : 4);
-                }
-            }
-
-            // some views don't like null and only work with "" e.g. TextView
-            // see https://github.com/gui-cs/TerminalGuiDesigner/issues/91
-            if (value == null)
-            {
-                value = ustring.Make(string.Empty);
-            }
-        }
-
         if (this.PropertyInfo.PropertyType == typeof(IListDataSource))
         {
             if (value != null && value is Array a)
@@ -145,9 +122,14 @@ public class Property : ToCodeBase
             }
         }
 
-        // TODO: This hack gets around an ArgumentException that gets thrown when
-        // switching from Computed to Absolute values of Dim/Pos
-        this.Design.View.IsInitialized = false;
+        // Some Terminal.Gui string properties get angry at null but are ok with empty strings
+        if (this.PropertyInfo.PropertyType == typeof(string))
+        {
+            if (value == null)
+            {
+                value = string.Empty;
+            }
+        }
 
         // if a LineView and changing Orientation then also flip
         // the Height/Width and set appropriate new rune
@@ -159,13 +141,13 @@ public class Property : ToCodeBase
                 case Orientation.Horizontal:
                     v.Width = v.Height;
                     v.Height = 1;
-                    v.LineRune = Application.Driver.HLine;
+                    v.LineRune = ConfigurationManager.Glyphs.HLine;
 
                     break;
                 case Orientation.Vertical:
                     v.Height = v.Width;
                     v.Width = 1;
-                    v.LineRune = Application.Driver.VLine;
+                    v.LineRune = ConfigurationManager.Glyphs.VLine;
                     break;
                 default:
                     throw new ArgumentException($"Unknown Orientation {newOrientation}");
@@ -175,8 +157,6 @@ public class Property : ToCodeBase
         this.PropertyInfo.SetValue(this.DeclaringObject, value);
 
         this.CallRefreshMethodsIfAny();
-
-        this.Design.View.IsInitialized = true;
     }
 
     /// <summary>
@@ -209,6 +189,31 @@ public class Property : ToCodeBase
         if (val == null)
         {
             return new CodeSnippetExpression("null");
+        }
+
+        if(val is Rune rune)
+        {
+            char[] chars = new char[rune.Utf16SequenceLength];
+            rune.EncodeToUtf16(chars);
+
+            if(chars.Length == 1)
+            {
+                return new CodeObjectCreateExpression(
+                    typeof(Rune),
+                    new CodePrimitiveExpression(chars[0]));
+            }
+            else if (chars.Length == 2)
+            {
+                // User is setting to an emoticon or something
+                return new CodeObjectCreateExpression(
+                    typeof(Rune),
+                    new CodePrimitiveExpression(chars[0]),
+                    new CodePrimitiveExpression(chars[1]));
+            }
+            else
+            {
+                throw new Exception($"Unexpected unicode character size.  Rune was {rune}");
+            }            
         }
 
         if (val is Attribute attribute)

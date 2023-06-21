@@ -1,12 +1,12 @@
-using System;
+﻿using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Microsoft.CSharp;
 using NUnit.Framework;
 using Terminal.Gui;
-using Terminal.Gui.Graphs;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.ToCode;
 using Attribute = Terminal.Gui.Attribute;
@@ -90,7 +90,7 @@ internal class PropertyTests : Tests
 
         var code = ExpressionToCode(prop.GetRhs());
 
-        Assert.AreEqual("'F'", code);
+        Assert.AreEqual("new System.Text.Rune('F')", code);
     }
 
     [Test]
@@ -104,12 +104,12 @@ internal class PropertyTests : Tests
         lv.IsInitialized = true;
 
         Assert.AreEqual(Orientation.Horizontal, lv.Orientation);
-        Assert.AreEqual(Application.Driver.HRLine, lv.LineRune);
+        Assert.AreEqual(new Rune('─'), lv.LineRune);
         var prop = d.GetDesignableProperty(nameof(LineView.Orientation));
 
         Assert.IsNotNull(prop);
         prop?.SetValue(Orientation.Vertical);
-        Assert.AreEqual(Application.Driver.VLine, lv.LineRune);
+        Assert.AreEqual(ConfigurationManager.Glyphs.VLine, lv.LineRune);
 
         // now try with a dim fill
         lv.Height = Dim.Fill();
@@ -117,7 +117,7 @@ internal class PropertyTests : Tests
 
         prop?.SetValue(Orientation.Horizontal);
         Assert.AreEqual(Orientation.Horizontal, lv.Orientation);
-        Assert.AreEqual(Application.Driver.HRLine, lv.LineRune);
+        Assert.AreEqual(ConfigurationManager.Glyphs.HLine, lv.LineRune);
         Assert.AreEqual(Dim.Fill(), lv.Width);
         Assert.AreEqual(Dim.Sized(1), lv.Height);
     }

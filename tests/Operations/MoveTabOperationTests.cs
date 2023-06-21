@@ -15,7 +15,7 @@ internal class MoveTabOperationTests : Tests
         // Label is not a TabView so should get Exception
         RoundTrip<Window, Label>((d, v) =>
         {
-            Assert.Throws<ArgumentException>(()=>new MoveTabOperation(d,new TabView.Tab(), 1));
+            Assert.Throws<ArgumentException>(()=>new MoveTabOperation(d,new Tab(), 1));
         }, out _);
     }
 

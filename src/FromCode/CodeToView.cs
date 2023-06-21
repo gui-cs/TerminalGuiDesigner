@@ -6,7 +6,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Emit;
 using NLog;
-using NStack;
 using Terminal.Gui;
 using TerminalGuiDesigner.ToCode;
 
@@ -18,7 +17,7 @@ namespace TerminalGuiDesigner.FromCode;
 /// </summary>
 /// <remarks>
 /// Compiling requires having the correct assembly references for dependencies.  This is handled
-/// by <see cref="CompileAssembly"/>.  Most references come from <see cref="ReferenceAssemblies.Net60"/>
+/// by <see cref="CompileAssembly"/>.  Most references come from <see cref="Basic.Reference.Assemblies"/>
 /// but also <see cref="Terminal.Gui"/>.
 /// </remarks>
 public class CodeToView
@@ -147,15 +146,15 @@ public class CodeToView
         var dd = typeof(Enumerable).GetTypeInfo().Assembly.Location;
         var coreDir = Directory.GetParent(dd) ?? throw new Exception($"Could not find parent directory of dotnet sdk.  Sdk directory was {dd}");
 
-        var references = new List<MetadataReference>(ReferenceAssemblies.Net60);
-
-        references.Add(MetadataReference.CreateFromFile(typeof(View).Assembly.Location));
-        references.Add(MetadataReference.CreateFromFile(typeof(ustring).Assembly.Location));
-        references.Add(MetadataReference.CreateFromFile(typeof(System.Data.DataTable).Assembly.Location));
-        references.Add(MetadataReference.CreateFromFile(typeof(object).Assembly.Location));
-        references.Add(MetadataReference.CreateFromFile(typeof(MarshalByValueComponent).Assembly.Location));
-        references.Add(MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "mscorlib.dll"));
-        references.Add(MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "System.Runtime.dll"));
+        var references = new List<MetadataReference>()
+        {
+            MetadataReference.CreateFromFile(typeof(View).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.Data.DataTable).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(MarshalByValueComponent).Assembly.Location),
+            MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "mscorlib.dll"),
+            MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "System.Runtime.dll")
+        };
 
         var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary);
 

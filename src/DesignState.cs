@@ -1,4 +1,5 @@
-﻿using Terminal.Gui;
+﻿using System.Text;
+using Terminal.Gui;
 using TerminalGuiDesigner.UI;
 
 namespace TerminalGuiDesigner;
@@ -38,7 +39,7 @@ public class DesignState
     /// </summary>
     public Design Design { get; }
 
-    private void Enter(View.FocusEventArgs obj)
+    private void Enter(object sender, FocusEventArgs obj)
     {
         // when tabbing or clicking into this View when nothing complicated is going on (e.g. Ctrl+Click multi select)
         if (SelectionManager.Instance.Selected.Count <= 1)
@@ -48,11 +49,11 @@ public class DesignState
         }
     }
 
-    private void DrawContent(Rect r)
+    private void DrawContent(object sender, DrawEventArgs r)
     {
         if (this.Design.View.IsBorderlessContainerView() && Editor.ShowBorders)
         {
-            this.DrawBorderlessViewFrame(r);
+            this.DrawBorderlessViewFrame(r.Rect);
         }
     }
 
@@ -75,7 +76,7 @@ public class DesignState
                 if (y == 0 || y == r.Height - 1 || x == 0 || x == r.Width - 1)
                 {
                     var rune = (y == r.Height - 1 && x == r.Width - 1 && isSelected) ? '╬' : '.';
-                    v.AddRune(x, y, rune);
+                    v.AddRune(x, y, new Rune(rune));
                 }
             }
         }

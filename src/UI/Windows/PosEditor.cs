@@ -48,7 +48,7 @@ public partial class PosEditor : Dialog {
 
 
         Title = "Pos Designer";
-        Border.BorderStyle = BorderStyle.Double;
+        Border.BorderStyle = LineStyle.Double;
 
         rgPosType.KeyPress += RgPosType_KeyPress;
 
@@ -100,7 +100,7 @@ public partial class PosEditor : Dialog {
 
     }
 
-    private void RgPosType_KeyPress(KeyEventEventArgs obj)
+    private void RgPosType_KeyPress(object sender, KeyEventEventArgs obj)
     {
         var c = (char)obj.KeyEvent.KeyValue;
         
@@ -111,7 +111,7 @@ public partial class PosEditor : Dialog {
         }            
     }
 
-    private void DdType_SelectedItemChanged(SelectedItemChangedArgs obj)
+    private void DdType_SelectedItemChanged(object sender, SelectedItemChangedArgs obj)
     {
         SetupForCurrentPosType();            
     }
@@ -198,13 +198,13 @@ public partial class PosEditor : Dialog {
         }
     }
 
-    private void BtnCancel_Clicked()
+    private void BtnCancel_Clicked(object sender, EventArgs e)
     {
         Cancelled = true;
         Application.RequestStop();
     }
 
-    private void BtnOk_Clicked()
+    private void BtnOk_Clicked(object sender, EventArgs e)
     {
         if(GetPosType() == PosType.AnchorEnd && GetValue(out var value) && value <=0)
         {

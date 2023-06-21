@@ -18,7 +18,7 @@ public class RenameColumnOperation : RenameOperation<TableView, DataColumn>
     /// <exception cref="ArgumentException">Thrown if <paramref name="design"/> does not wrap a <see cref="TableView"/>.</exception>
     public RenameColumnOperation(Design design, DataColumn column, string? newName)
         : base(
-            (v) => v.Table.Columns.Cast<DataColumn>().ToArray(),
+            (v) => v.GetDataTable().Columns.Cast<DataColumn>().ToArray(),
             (v, a) => v.ReOrderColumns(a),
             (c) => c.ColumnName,
             (c, name) => c.ColumnName = name,

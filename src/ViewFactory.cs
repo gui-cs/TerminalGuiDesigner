@@ -1,10 +1,9 @@
 ﻿using System.Data;
-using NStack;
+
 using Terminal.Gui;
 using Terminal.Gui.TextValidateProviders;
 using TerminalGuiDesigner.Operations.MenuOperations;
 using TerminalGuiDesigner.Operations.TableViewOperations;
-using static Terminal.Gui.Border;
 using Attribute = Terminal.Gui.Attribute;
 
 namespace TerminalGuiDesigner;
@@ -32,14 +31,19 @@ public class ViewFactory
         Type[] exclude = new Type[]
         {
             typeof(Toplevel),
-            typeof(ToplevelContainer),
             typeof(Dialog),
             typeof(FileDialog),
             typeof(SaveDialog),
             typeof(OpenDialog),
             typeof(ScrollBarView),
             typeof(TreeView<>),
-            typeof(PanelView),
+
+            // Theses are special types of view and shouldn't be added manually by user
+            typeof(Frame),
+
+            // These seem to cause stack overflows in CreateSubControlDesigns (see TestAddView_RoundTrip)
+            typeof(Wizard),
+            typeof(WizardStep),
         }; // The generic version of TreeView
 
         return typeof(View).Assembly.DefinedTypes.Where(t =>
@@ -181,6 +185,11 @@ public class ViewFactory
             };
         }
 
+        if (typeof(SpinnerView).IsAssignableFrom(t))
+        {
+            return new SpinnerView() { AutoSpin = true };
+        }
+
         var instance = Activator.CreateInstance(t) as View ?? throw new Exception($"CreateInstance returned null for Type '{t}'");
         instance.SetActualText("Heya");
 
@@ -213,7 +222,7 @@ public class ViewFactory
             Width = 10,
             Height = 2,
         };
-        group.RadioLabels = new ustring[] { "Option 1", "Option 2" };
+        group.RadioLabels = new string[] { "Option 1", "Option 2" };
 
         return group;
     }
@@ -230,7 +239,7 @@ public class ViewFactory
         {
             Width = 50,
             Height = 5,
-            Table = dt,
+            Table = new DataTableSource(dt),
         };
     }
 

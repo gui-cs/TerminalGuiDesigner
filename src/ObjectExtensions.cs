@@ -1,6 +1,6 @@
 using System.CodeDom;
 using System.Reflection;
-using NStack;
+using System.Text;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
@@ -18,11 +18,6 @@ public static class ObjectExtensions
     /// <returns>Hard typed dynamic of <paramref name="type"/>.</returns>
     public static dynamic CastToReflected(this object o, Type type)
     {
-        if (o is string s && type == typeof(ustring))
-        {
-            return ustring.Make(s);
-        }
-
         var methodInfo = typeof(ObjectExtensions).GetMethod(nameof(CastTo), BindingFlags.Static | BindingFlags.NonPublic);
         var genericArguments = new[] { type };
         var genericMethodInfo = methodInfo?.MakeGenericMethod(genericArguments);
@@ -47,14 +42,13 @@ public static class ObjectExtensions
     /// value if it is not possible to convert.  Supports:
     /// </para>
     /// <list type="bullet">
-    /// <item><see cref="ustring"/> to <see cref="string"/></item>
     /// <item><see cref="Rune"/> to <see cref="char"/></item>
     /// <item>Absolute <see cref="Pos"/> to int</item>
     /// <item>Absolute <see cref="Dim"/> to int</item>
     /// </list>
     /// </summary>
     /// <param name="value">Value type to convert.</param>
-    /// <returns>A simpler value type for <paramref name="value"/> e.g. convert <see cref="ustring"/>
+    /// <returns>A simpler value type for <paramref name="value"/> e.g. convert PosAbsolute to int
     /// to <see cref="string"/>.  If no conversion exists then <paramref name="value"/> is returned
     /// unchanged.</returns>
     /// <exception cref="ArgumentException">Thrown if Type is <see cref="Pos"/> or <see cref="Dim"/>
@@ -64,16 +58,6 @@ public static class ObjectExtensions
         if (value == null)
         {
             return null;
-        }
-
-        if (value is ustring u)
-        {
-            return u.ToString();
-        }
-
-        if (value is Rune r)
-        {
-            return (char)r;
         }
 
         if (value is Pos p)

@@ -199,9 +199,9 @@ public class Editor : Toplevel
     /// Tailors redrawing to add overlays (e.g. showing what is selected etc).
     /// </summary>
     /// <param name="bounds">The view bounds.</param>
-    public override void Redraw(Rect bounds)
+    public override void OnDrawContent(Rect bounds)
     {
-        base.Redraw(bounds);
+        base.OnDrawContent(bounds);
 
         // if we are editing a view
         if (this.viewBeingEdited != null)
@@ -222,7 +222,7 @@ public class Editor : Toplevel
 
                     for (int i = 0; i < len; i++)
                     {
-                        this.AddRune(right - len + i, y, toDisplay[i]);
+                        this.AddRune(right - len + i, y, new Rune(toDisplay[i]));
                     }
                 }
             }
@@ -236,7 +236,7 @@ public class Editor : Toplevel
                     {
                         if (y == 0 || y == box.Height - 1 || x == 0 || x == box.Width - 1)
                         {
-                            this.AddRune(box.X + x, box.Y + y, '.');
+                            this.AddRune(box.X + x, box.Y + y, new Rune('.'));
                         }
                     }
                 }
@@ -553,7 +553,7 @@ Ctrl+Q - Quit
             ColorScheme = new DefaultColorSchemes().GetDefaultScheme("greyOnBlack").Scheme,
         };
 
-        this.rootCommandsListView.KeyDown += (e) =>
+        this.rootCommandsListView.KeyDown += (s, e) =>
         {
             if (e.KeyEvent.Key == Key.Enter)
             {
@@ -577,7 +577,7 @@ Ctrl+Q - Quit
         this.Add(this.rootCommandsListView);
     }
 
-    private void Editor_Closing(ToplevelClosingEventArgs obj)
+    private void Editor_Closing(object sender, ToplevelClosingEventArgs obj)
     {
         if (this.viewBeingEdited == null)
         {
@@ -684,14 +684,14 @@ Ctrl+Q - Quit
         else
         {
             var d = SelectionManager.Instance.Selected.FirstOrDefault() ?? this.viewBeingEdited;
-            d.View.ViewToScreenActual(0, 0, out var x, out var y);
+            d.View.ViewToScreen(0, 0, out var x, out var y);
             menu.Position = new Point(x, y);
         }
 
         this.menuOpen = true;
         SelectionManager.Instance.LockSelection = true;
         menu.Show();
-        menu.MenuBar.MenuAllClosed += () =>
+        menu.MenuBar.MenuAllClosed += (s, e) =>
         {
             this.menuOpen = false;
             SelectionManager.Instance.LockSelection = false;
@@ -861,8 +861,7 @@ Ctrl+Q - Quit
     {
         var ofd = new OpenDialog(
             "Open",
-            $"Select {SourceCodeFile.ExpectedExtension} file",
-            new List<string>(new[] { SourceCodeFile.ExpectedExtension }));
+            new List<IAllowedType>(new[] { new AllowedType("View", SourceCodeFile.ExpectedExtension ) }));
 
         Application.Run(ofd, this.ErrorHandler);
 
@@ -870,7 +869,7 @@ Ctrl+Q - Quit
         {
             try
             {
-                var path = ofd.FilePath.ToString();
+                var path = ofd.Path.ToString();
 
                 if (string.IsNullOrEmpty(path))
                 {
@@ -881,7 +880,7 @@ Ctrl+Q - Quit
             }
             catch (Exception ex)
             {
-                ExceptionViewer.ShowException($"Failed to open '{ofd.FilePath}'", ex);
+                ExceptionViewer.ShowException($"Failed to open '{ofd.Path}'", ex);
             }
         }
     }
@@ -939,13 +938,9 @@ Ctrl+Q - Quit
 
         var ofd = new SaveDialog(
             "New",
-            $"Class file",
-            new List<string>(new[] { ".cs" }))
+            new List<IAllowedType>() { new AllowedType("C# File", ".cs") })
         {
-            NameDirLabel = "Directory",
-            NameFieldLabel = "Class",
-            FilePath = "MyView.cs",
-            AllowsOtherFileTypes = false,
+            Path = "MyView.cs",
         };
 
         Application.Run(ofd);
@@ -954,7 +949,7 @@ Ctrl+Q - Quit
         {
             try
             {
-                var path = ofd.FilePath.ToString();
+                var path = ofd.Path.ToString();
 
                 if (string.IsNullOrWhiteSpace(path) || selected == null)
                 {
@@ -990,7 +985,7 @@ Ctrl+Q - Quit
             }
             catch (Exception ex)
             {
-                ExceptionViewer.ShowException($"Failed to create '{ofd.FilePath}'", ex);
+                ExceptionViewer.ShowException($"Failed to create '{ofd.Path}'", ex);
                 throw;
             }
         }
@@ -998,7 +993,7 @@ Ctrl+Q - Quit
 
     private Type[] GetSupportedRootViews()
     {
-       return new Type[] { typeof(Window), typeof(Dialog), typeof(View), typeof(Toplevel) };
+        return new Type[] { typeof(Window), typeof(Dialog), typeof(View), typeof(Toplevel) };
     }
 
     private void New(FileInfo toOpen, Type typeToCreate, string? explicitNamespace)

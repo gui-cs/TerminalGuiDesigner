@@ -1,5 +1,6 @@
 ﻿using System.CodeDom;
 using System.Text.RegularExpressions;
+using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
 

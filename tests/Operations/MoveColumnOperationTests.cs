@@ -36,13 +36,15 @@ internal class MoveColumnOperationTests : Tests
     {
         RoundTrip<Window, TableView>((d, v) =>
         {
-            Assert.AreEqual(4, v.Table.Columns.Count, $"Expected {nameof(ViewFactory)} to create a {nameof(TableView)} with 4 example placeholder Columns");
-            v.Table.Columns.RemoveAt(1);
-            v.Table.Columns.RemoveAt(1);
-            v.Table.Columns.RemoveAt(1);
-            Assert.AreEqual(1, v.Table.Columns.Count);
+            var dt = v.GetDataTable();
 
-            Assert.IsTrue(new MoveColumnOperation(d, v.Table.Columns[0],1).IsImpossible,"Should be impossible to move Column when there is only one of them");
+            Assert.AreEqual(4, dt.Columns.Count, $"Expected {nameof(ViewFactory)} to create a {nameof(TableView)} with 4 example placeholder Columns");
+            dt.Columns.RemoveAt(1);
+            dt.Columns.RemoveAt(1);
+            dt.Columns.RemoveAt(1);
+            Assert.AreEqual(1, v.Table.Columns);
+
+            Assert.IsTrue(new MoveColumnOperation(d, dt.Columns[0],1).IsImpossible,"Should be impossible to move Column when there is only one of them");
         }, out _);
     }
 
@@ -55,9 +57,11 @@ internal class MoveColumnOperationTests : Tests
     {
         RoundTrip<Window, TableView>((d, v) =>
         {
-            Assert.AreEqual(4, v.Table.Columns.Count, $"Expected {nameof(ViewFactory)} to create a {nameof(TableView)} with 4 example placeholder Columns");
+            var dt = v.GetDataTable();
 
-            var toMove = v.Table.Columns[idxToMove];
+            Assert.AreEqual(4, dt.Columns.Count, $"Expected {nameof(ViewFactory)} to create a {nameof(TableView)} with 4 example placeholder Columns");
+
+            var toMove = dt.Columns[idxToMove];
             var originalIndex = toMove.Ordinal;
 
             var op = new MoveColumnOperation(d, toMove, adjustment);

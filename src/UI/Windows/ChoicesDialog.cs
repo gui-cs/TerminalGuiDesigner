@@ -7,8 +7,9 @@
 //      You can make changes to this file and they will not be overwritten when saving.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
-namespace TerminalGuiDesigner.UI.Windows; 
-using NStack;
+namespace TerminalGuiDesigner.UI.Windows;
+
+using System.Text;
 using Terminal.Gui;
 
 
@@ -57,12 +58,12 @@ public partial class ChoicesDialog
 
             var i2 = i;
 
-            buttons[i].Clicked += () => {
+            buttons[i].Clicked += (s,e) => {
                 Result = i2;
                 Application.RequestStop();
             };
 
-            buttons[i].DrawContentComplete += (r) =>
+            buttons[i].DrawContentComplete += (s,r) =>
                 ChoicesDialog.PaintShadow(buttons[i2], ColorScheme);
         }
 
@@ -93,23 +94,23 @@ public partial class ChoicesDialog
         int textHeight = TextFormatter.MaxLines(message, textWidth) + 2; // message.Count (ustring.Make ('\n')) + 1;
         int msgboxHeight = Math.Min(Math.Max(1, textHeight) + 4, Application.Driver.Rows); // textHeight + (top + top padding + buttons + bottom)
 
-        Width = Math.Min(Math.Max(maxWidthLine, Math.Max(Title.ConsoleWidth, Math.Max(textWidth + 2, buttonWidth))), Application.Driver.Cols);
+        Width = Math.Min(Math.Max(maxWidthLine, Math.Max(Title.GetColumns(), Math.Max(textWidth + 2, buttonWidth))), Application.Driver.Cols);
         Height = msgboxHeight;
     }
 
     /// <inheritdoc/>
-    public override void Redraw(Rect bounds)
+    public override void OnDrawContent(Rect bounds)
     {
-        base.Redraw(bounds);
+        base.OnDrawContent(bounds);
 
         Move(1, 0, false);
-
-        var padding = ((bounds.Width - _title.Sum(v=>Rune.ColumnWidth(v))) / 2) - 1;
+        
+        var padding = ((bounds.Width - _title.EnumerateRunes().Sum(v=>v.GetColumns())) / 2) - 1;
 
         Driver.SetAttribute(
             new Attribute(ColorScheme.Normal.Foreground, ColorScheme.Normal.Background));
         
-        Driver.AddStr(ustring.Make(Enumerable.Repeat(Driver.HDLine,padding)));
+        Driver.AddStr(string.Join("",Enumerable.Repeat(ConfigurationManager.Glyphs.HLineHv, padding)));
 
         Driver.SetAttribute(
             new Attribute(ColorScheme.Normal.Background, ColorScheme.Normal.Foreground));
@@ -117,7 +118,11 @@ public partial class ChoicesDialog
 
         Driver.SetAttribute(
             new Attribute(ColorScheme.Normal.Foreground, ColorScheme.Normal.Background));
-        Driver.AddStr(ustring.Make(Enumerable.Repeat(Driver.HDLine, padding)));
+
+        StringBuilder sb = new StringBuilder();
+        sb.Append(ConfigurationManager.Glyphs.HLineHv);
+
+        Driver.AddStr(string.Join("", Enumerable.Repeat(ConfigurationManager.Glyphs.HLineHv.ToString(), padding)));
     }
 
     internal static int Query(string title, string message, params string[] options)
@@ -139,13 +144,13 @@ public partial class ChoicesDialog
 
         if (btn.IsDefault)
         {
-            var rightDefault = new Rune(Driver != null ? Driver.RightDefaultIndicator : '>');
+            var rightDefault = Driver != null ? ConfigurationManager.Glyphs.RightDefaultIndicator : new Rune('>');
 
             // draw the 'end' button symbol one in
             btn.AddRune(bounds.Width - 3, 0, rightDefault);
         }
 
-        btn.AddRune(bounds.Width - 2, 0, ']');
+        btn.AddRune(bounds.Width - 2, 0, new System.Text.Rune(']'));
 
         var backgroundColor = backgroundScheme.Normal.Background;
 
@@ -153,11 +158,11 @@ public partial class ChoicesDialog
         Driver.SetAttribute(new Terminal.Gui.Attribute(Color.Black, backgroundColor));
 
         // end shadow (right)
-        btn.AddRune(bounds.Width - 1, 0, '▄');
+        btn.AddRune(bounds.Width - 1, 0, new System.Text.Rune('▄'));
 
         // leave whitespace in lower left in parent/default background color
         Driver.SetAttribute(new Terminal.Gui.Attribute(Color.Black, backgroundColor));
-        btn.AddRune(0, 1, ' ');
+        btn.AddRune(0, 1, new System.Text.Rune(' '));
 
         // The color for rendering shadow is 'black' + parent/default background color
         Driver.SetAttribute(new Terminal.Gui.Attribute(backgroundColor, Color.Black));
@@ -165,7 +170,7 @@ public partial class ChoicesDialog
         // underline shadow                
         for (int x = 1; x < bounds.Width; x++)
         {
-            btn.AddRune(x, 1, '▄');
+            btn.AddRune(x, 1, new System.Text.Rune('▄'));
         }
     }
 

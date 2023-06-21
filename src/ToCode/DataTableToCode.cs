@@ -26,7 +26,7 @@ public class DataTableToCode : ToCodeBase
             throw new ArgumentException(nameof(design), $"{nameof(DataTableToCode)} can only be used with {nameof(TerminalGuiDesigner.Design)} that wrap {nameof(TableView)}");
         }
 
-        this.table = tv.Table;
+        this.table = tv.GetDataTable();
     }
 
     /// <summary>
@@ -74,8 +74,10 @@ public class DataTableToCode : ToCodeBase
         var setLhs = new CodeFieldReferenceExpression();
         setLhs.FieldName = $"this.{this.design.FieldName}.Table";
 
-        var setRhs = new CodeFieldReferenceExpression();
-        setRhs.FieldName = $"{tableFieldName}";
+        var arg0 = new CodeFieldReferenceExpression();
+        arg0.FieldName = $"{tableFieldName}";
+
+        var setRhs = new CodeObjectCreateExpression(typeof(DataTableSource),arg0);
 
         var assignStatement = new CodeAssignStatement();
         assignStatement.Left = setLhs;

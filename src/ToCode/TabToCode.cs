@@ -5,7 +5,7 @@ using static Terminal.Gui.TabView;
 namespace TerminalGuiDesigner.ToCode;
 
 /// <summary>
-/// Handles generating code for a single <see cref="TabView.Tab"/> into .Designer.cs
+/// Handles generating code for a single <see cref="Tab"/> into .Designer.cs
 /// file (See <see cref="CodeDomArgs"/>).  This will then be added to a <see cref="TabView"/>
 /// via <see cref="TabView.AddTab(Tab, bool)"/>.
 /// </summary>

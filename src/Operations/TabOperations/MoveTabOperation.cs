@@ -4,10 +4,10 @@ using TerminalGuiDesigner.Operations.Generics;
 namespace TerminalGuiDesigner.Operations.TabOperations;
 
 /// <summary>
-/// Moves a <see cref="TabView.Tab"/> left or right within the ordering
+/// Moves a <see cref="Tab"/> left or right within the ordering
 /// of tabs in a <see cref="TabView"/>.
 /// </summary>
-public class MoveTabOperation : MoveOperation<TabView, TabView.Tab>
+public class MoveTabOperation : MoveOperation<TabView, Tab>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="MoveTabOperation"/> class.
@@ -17,7 +17,7 @@ public class MoveTabOperation : MoveOperation<TabView, TabView.Tab>
     /// <param name="design">Wrapper for a <see cref="TabView"/>.</param>
     /// <param name="toMove">The Tab to move.</param>
     /// <param name="adjustment">Negative to move tab left, positive to move tab right.</param>
-    public MoveTabOperation(Design design, TabView.Tab toMove, int adjustment)
+    public MoveTabOperation(Design design, Tab toMove, int adjustment)
         : base(
             (t) => t.Tabs.ToArray(),
             (v, a) => v.ReOrderTabs(a),

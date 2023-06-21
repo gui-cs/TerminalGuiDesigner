@@ -44,11 +44,11 @@ public partial class ColorPicker
         lblPreview.ColorScheme = new ColorScheme();
         UpdatePreview();
 
-        radiogroup1.SelectedItemChanged += (s) => UpdatePreview();
-        radiogroup2.SelectedItemChanged += (s) => UpdatePreview();
+        radiogroup1.SelectedItemChanged += (s,e) => UpdatePreview();
+        radiogroup2.SelectedItemChanged += (s,e) => UpdatePreview();
 
-        btnOk.Clicked += () => Ok();
-        btnCancel.Clicked += () => Cancel();
+        btnOk.Clicked += (s, e) => Ok();
+        btnCancel.Clicked += (s, e) => Cancel();
     }
 
     private void Ok()

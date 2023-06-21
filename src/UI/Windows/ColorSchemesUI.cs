@@ -41,21 +41,21 @@ public partial class ColorSchemesUI {
 
         tvColorSchemes.NullSymbol = " ";
 
-        var tbl = tvColorSchemes.Table;
-
+        var tbl = tvColorSchemesTable;
+        
         foreach(DataColumn col in tbl.Columns)
         {
             col.DataType = typeof(int);
         }
 
-        var sName = tvColorSchemes.Style.GetOrCreateColumnStyle(tbl.Columns[NameColumn]);
+        var sName = tvColorSchemes.Style.GetOrCreateColumnStyle(tbl.Columns[NameColumn].Ordinal);
         sName.RepresentationGetter = GetName;
 
-        var sEdit = tvColorSchemes.Style.GetOrCreateColumnStyle(tbl.Columns[EditColumnName]);
+        var sEdit = tvColorSchemes.Style.GetOrCreateColumnStyle(tbl.Columns[EditColumnName].Ordinal);
         sEdit.RepresentationGetter = GetEditString;
         sEdit.MinWidth = 7;
         
-        var sDelete = tvColorSchemes.Style.GetOrCreateColumnStyle(tbl.Columns[DeleteColumnName]);
+        var sDelete = tvColorSchemes.Style.GetOrCreateColumnStyle(tbl.Columns[DeleteColumnName].Ordinal);
         sDelete.RepresentationGetter = GetDeleteString;
         sDelete.MinWidth = 8;
 
@@ -78,7 +78,7 @@ public partial class ColorSchemesUI {
         tvColorSchemes.SelectedCellChanged += CellChanged;
 
         // When entering control for the first time ensure a valid selection
-        CellChanged(
+        CellChanged(this,
             new SelectedCellChangedEventArgs(
                 tvColorSchemes.Table,
                 tvColorSchemes.SelectedColumn,
@@ -87,14 +87,14 @@ public partial class ColorSchemesUI {
                 tvColorSchemes.SelectedRow));
     }
 
-    private void CellChanged(SelectedCellChangedEventArgs e)
+    private void CellChanged(object sender, SelectedCellChangedEventArgs e)
     {
         // don't let user select the color swatches
         if(e.NewCol > 2)
             tvColorSchemes.SelectedColumn = 2;
 
         // if selecting last row in the table
-        if(e.NewRow == tvColorSchemes.Table.Rows.Count-1)
+        if(e.NewRow == tvColorSchemes.Table.Rows-1)
         {
             // only let them press the Add button
             tvColorSchemes.SelectedColumn = 2;
@@ -103,7 +103,7 @@ public partial class ColorSchemesUI {
 
     private void SetupSwatchColumn(DataTable tbl, DataColumn col, Func<ColorScheme, Color> func)
     {
-        var colStyle = tvColorSchemes.Style.GetOrCreateColumnStyle(col);
+        var colStyle = tvColorSchemes.Style.GetOrCreateColumnStyle(col.Ordinal);
 
         colStyle.RepresentationGetter = (o)=> " ";
         colStyle.ColorGetter = (e)=>(int)e.CellValue == int.MaxValue ? null : ColorToScheme(func(_schemes[(int)e.CellValue].Scheme));
@@ -120,10 +120,11 @@ public partial class ColorSchemesUI {
         };
     }
 
-    private void CellActivated(TableView.CellActivatedEventArgs e)
+    private void CellActivated(object sender, CellActivatedEventArgs e)
     {
-        var col = e.Table.Columns[e.Col];
-        var val = (int)e.Table.Rows[e.Row][e.Col];
+        
+        var col = tvColorSchemesTable.Columns[e.Col];
+        var val = (int)tvColorSchemesTable.Rows[e.Row][e.Col];
 
         if(col.ColumnName == EditColumnName && val < _schemes.Length)
         {
@@ -197,7 +198,7 @@ public partial class ColorSchemesUI {
 
     private void BuildDataTableRows()
     {
-        var tbl = tvColorSchemes.Table;
+        var tbl = tvColorSchemesTable;
         tbl.Rows.Clear();
 
         _schemes = ColorSchemeManager.Instance.Schemes.ToArray();
@@ -214,7 +215,7 @@ public partial class ColorSchemesUI {
 
     private void AddRowToTableWithAllCellsHavingValue(int i)
     {            
-        var tbl = tvColorSchemes.Table;
+        var tbl = tvColorSchemesTable;
 
         var r = tbl.Rows.Add();
         for(int j = 0;j<tbl.Columns.Count;j++)

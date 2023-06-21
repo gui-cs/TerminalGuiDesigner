@@ -57,11 +57,7 @@ public partial class ChoicesDialog : Terminal.Gui.Window {
         this.ColorScheme = this.dialogBackground;
         this.Modal = true;
         this.Text = "";
-        this.Border.BorderStyle = Terminal.Gui.BorderStyle.Double;
-        this.Border.BorderBrush = Terminal.Gui.Color.Blue;
-        this.Border.Effect3D = true;
-        this.Border.Effect3DBrush = Terminal.Gui.Attribute.Make(Color.Black,Color.Black);
-        this.Border.DrawMarginFrame = true;
+        this.Border.BorderStyle = Terminal.Gui.LineStyle.Double;
         this.TextAlignment = Terminal.Gui.TextAlignment.Left;
         this.Title = "";
         this.label1.Width = Dim.Fill(0);

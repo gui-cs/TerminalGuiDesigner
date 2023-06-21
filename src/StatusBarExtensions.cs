@@ -40,7 +40,7 @@ public static class StatusBarExtensions
         foreach (var si in statusBar.Items)
         {
             xLocations.Add(distance, si);
-            distance += si.Title.ConsoleWidth + afterEachItemWhitespace;
+            distance += si.Title.GetColumns() + afterEachItemWhitespace;
         }
 
         // anything after this is not a click on a menu

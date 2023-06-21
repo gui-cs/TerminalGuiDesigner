@@ -96,7 +96,7 @@ public class ResizeOperation : Operation
     {
         // update width, the +1 comes because we want to include the cursor location in the Width.
         // e.g. resize bounds 0,0 to 1,1 means we want a width/height of 2
-        if (this.BeingResized.View.Y.IsAbsolute(out var y))
+        if (this.BeingResized.View.Y.IsAbsolute(out var y) && this.BeingResized.View.Height.IsAbsolute())
         {
             this.BeingResized.GetDesignableProperty("Height")?.SetValue(Math.Max(1, this.DestinationY + 1 - y));
         }
@@ -104,7 +104,7 @@ public class ResizeOperation : Operation
 
     private void SetWidth()
     {
-        if (this.BeingResized.View.X.IsAbsolute(out var x))
+        if (this.BeingResized.View.X.IsAbsolute(out var x) && this.BeingResized.View.Width.IsAbsolute())
         {
             this.BeingResized.GetDesignableProperty("Width")?.SetValue(Math.Max(1, this.DestinationX + 1 - x));
         }

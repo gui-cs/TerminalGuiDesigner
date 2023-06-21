@@ -47,13 +47,13 @@ public partial class PointEditor {
         btnCancel.Clicked += Cancel;
     }
 
-    private void Cancel()
+    private void Cancel(object sender, EventArgs e)
     {
         Cancelled = true;
         Application.RequestStop();
     }
 
-    private void Ok()
+    private void Ok(object sender, EventArgs e)
     {
         if(float.TryParse(tbX.Text.ToString(), out var x))
         {

@@ -1,5 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using NStack;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner.UI.Windows;
@@ -33,9 +32,9 @@ public class ExceptionViewer
         bool toggleStack = true;
 
         var btnOk = new Button("Ok", true);
-        btnOk.Clicked += () => Application.RequestStop();
+        btnOk.Clicked += (s, e) => Application.RequestStop();
         var btnStack = new Button("Stack");
-        btnStack.Clicked += () =>
+        btnStack.Clicked += (s, e) =>
         {
             // flip between stack / no stack
             textView.Text = GetExceptionText(errorText, exception, toggleStack);
@@ -43,8 +42,9 @@ public class ExceptionViewer
             toggleStack = !toggleStack;
         };
 
-        var dlg = new Dialog("Error", 10, 10, btnOk, btnStack)
+        var dlg = new Dialog(btnOk, btnStack)
         {
+            Title = "Error",
             X = Pos.Percent(10),
             Y = Pos.Percent(10),
             Width = Dim.Percent(80),
@@ -55,7 +55,7 @@ public class ExceptionViewer
         Application.Run(dlg);
     }
 
-    private static ustring GetExceptionText(string errorText, Exception exception, bool includeStackTrace)
+    private static string GetExceptionText(string errorText, Exception exception, bool includeStackTrace)
     {
         return Wrap(errorText + "\n" + ExceptionHelper.ExceptionToListOfInnerMessages(exception, includeStackTrace), 76);
     }
