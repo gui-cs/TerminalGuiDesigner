@@ -175,7 +175,7 @@ public class ViewToCode
 
             File.WriteAllText(
                 file.DesignerFile.FullName,
-                TrimHeader(sw.ToString()));
+                TrimHeader(sw.ToString().Replace("Terminal.Gui.Color.-1", "(Color)(-1)")));
         }
     }
 
