@@ -673,6 +673,7 @@ public class Design
         {
             yield return this.CreateSubProperty(nameof(Border.BorderStyle), nameof(this.View.Border), this.View.Border);
             yield return this.CreateSubProperty(nameof(Border.BorderBrush), nameof(this.View.Border), this.View.Border);
+            yield return this.CreateSubProperty(nameof(Border.Background), nameof(this.View.Border), this.View.Border);
             yield return this.CreateSubProperty(nameof(Border.Effect3D), nameof(this.View.Border), this.View.Border);
             yield return this.CreateSubProperty(nameof(Border.Effect3DBrush), nameof(this.View.Border), this.View.Border);
             yield return this.CreateSubProperty(nameof(Border.DrawMarginFrame), nameof(this.View.Border), this.View.Border);
