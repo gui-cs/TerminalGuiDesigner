@@ -782,26 +782,6 @@ public class Design
         }
     }
 
-    private Color GetBorderBorderBrush()
-    {
-        if (this.View.Border.BorderBrush == (Color)(-1) && this.View.Border.Parent.ColorScheme != null)
-        {
-            return this.View.Border.Parent.ColorScheme.Normal.Foreground;
-        }
-
-        return this.View.Border.BorderBrush;
-    }
-
-    private Color GetBorderBackground()
-    {
-        if (this.View.Border.Background == (Color)(-1) && this.View.Border.Parent.ColorScheme != null)
-        {
-            return this.View.Border.Parent.ColorScheme.Normal.Background;
-        }
-
-        return this.View.Border.Background;
-    }
-
     private bool ShowTextProperty()
     {
         // never show Text for root because it's almost certainly a container
@@ -816,16 +796,6 @@ public class Design
 
     private Property CreateSubProperty(string name, string subObjectName, object subObject)
     {
-        if (name == "BorderBrush")
-        {
-            this.View.Border.BorderBrush = this.GetBorderBorderBrush();
-        }
-
-        if (name == "Background")
-        {
-            this.View.Border.Background = this.GetBorderBackground();
-        }
-
         return new Property(
             this,
             subObject.GetType().GetProperty(name) ?? throw new Exception($"Could not find expected Property '{name}' on Sub Object of Type '{subObject.GetType()}'"),
