@@ -163,8 +163,8 @@ public class Design
             super.Remove(subView);
             if (subView.Border != null)
             {
-                subView.Border.BorderBrush = (Color)borderBrush!;
-                subView.Border.Background = (Color)background!;
+                subView.Border.BorderBrush = borderBrush!;
+                subView.Border.Background = background!;
             }
         }
 
