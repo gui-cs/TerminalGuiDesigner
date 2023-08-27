@@ -155,17 +155,9 @@ public class Design
         // HACK: if you don't pull the label out first it complains that you cant set Focusable to true
         // on the Label because its super is not focusable :(
         var super = subView.SuperView;
-        var borderBrush = subView.Border != null ? subView.Border.BorderBrush : (Color)(-1);
-        var background = subView.Border != null ? subView.Border.Background : (Color)(-1);
-        if (super != null && super.Subviews.FirstOrDefault(sv => sv == subView && sv.Data == subView.Data) != null)
+        if (super != null)
         {
-            this.logger.Info($"Found and removing subView of Type '{subView.GetType()}' in the superView'{super}'");
             super.Remove(subView);
-            if (subView.Border != null)
-            {
-                subView.Border.BorderBrush = (Color)borderBrush!;
-                subView.Border.Background = (Color)background!;
-            }
         }
 
         // all views can be focused so that they can be edited
