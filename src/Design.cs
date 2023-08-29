@@ -654,6 +654,7 @@ public class Design
         if (this.View is Toplevel)
         {
             yield return this.CreateProperty(nameof(Toplevel.Modal));
+            yield return this.CreateProperty(nameof(Toplevel.IsMdiContainer));
         }
 
         // Allow changing the FieldName on anything but root where
