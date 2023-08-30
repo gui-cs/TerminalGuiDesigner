@@ -625,6 +625,8 @@ public class Design
         yield return this.CreateProperty(nameof(this.View.X));
         yield return this.CreateProperty(nameof(this.View.Y));
 
+        yield return this.CreateSuppressedProperty(nameof(this.View.Visible), true);
+
         yield return new ColorSchemeProperty(this);
 
         // its important that this comes before Text because
@@ -807,6 +809,14 @@ public class Design
         return new Property(
             this,
             this.View.GetType().GetProperty(name) ?? throw new Exception($"Could not find expected Property '{name}' on View of Type '{this.View.GetType()}'"));
+    }
+
+    private Property CreateSuppressedProperty(string name, object? designTimeValue)
+    {
+        return new SuppressedProperty(
+            this,
+            this.View.GetType().GetProperty(name) ?? throw new Exception($"Could not find expected Property '{name}' on View of Type '{this.View.GetType()}'"),
+            designTimeValue);
     }
 
     private bool DependsOnUs(Design other, Design[] everyone)
