@@ -4,7 +4,6 @@ using System.Text;
 using Terminal.Gui;
 using Terminal.Gui.TextValidateProviders;
 using TerminalGuiDesigner;
-using static Terminal.Gui.TableView;
 using Attribute = Terminal.Gui.Attribute;
 
 namespace TerminalGuiDesigner.ToCode;
@@ -94,42 +93,7 @@ public class Property : ToCodeBase
     /// <exception cref="ArgumentException">Thrown if invalid values are passed.</exception>
     public virtual void SetValue(object? value)
     {
-        // handle type conversions
-        if (this.PropertyInfo.PropertyType == typeof(Rune))
-        {
-            if (value is char ch)
-            {
-                value = new Rune(ch);
-            }
-        }
-
-        if (this.PropertyInfo.PropertyType == typeof(Dim))
-        {
-            if (value is int i)
-            {
-                value = Dim.Sized(i);
-            }
-        }
-
-        if (this.PropertyInfo.PropertyType == typeof(IListDataSource))
-        {
-            if (value != null && value is Array a)
-            {
-                // accept arrays as valid input values
-                // for setting an IListDataSource.  Just
-                // convert them to ListWrappers
-                value = new ListWrapper(a.ToList());
-            }
-        }
-
-        // Some Terminal.Gui string properties get angry at null but are ok with empty strings
-        if (this.PropertyInfo.PropertyType == typeof(string))
-        {
-            if (value == null)
-            {
-                value = string.Empty;
-            }
-        }
+        value = AdjustValueBeingSet(value);
 
         // if a LineView and changing Orientation then also flip
         // the Height/Width and set appropriate new rune
@@ -379,6 +343,53 @@ public class Property : ToCodeBase
         }
 
         return val.ToString() ?? string.Empty;
+    }
+
+    /// <summary>
+    /// Adjust <paramref name="value"/> to match the expectations of <see cref="PropertyInfo"/>
+    /// e.g. convert char to <see cref="Rune"/>.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    protected object? AdjustValueBeingSet(object? value)
+    {
+        // handle type conversions
+        if (this.PropertyInfo.PropertyType == typeof(Rune))
+        {
+            if (value is char ch)
+            {
+                value = new Rune(ch);
+            }
+        }
+
+        if (this.PropertyInfo.PropertyType == typeof(Dim))
+        {
+            if (value is int i)
+            {
+                value = Dim.Sized(i);
+            }
+        }
+        // Some Terminal.Gui string properties get angry at null but are ok with empty strings
+        if (this.PropertyInfo.PropertyType == typeof(string))
+        {
+            if (value == null)
+            {
+                value = string.Empty;
+            }
+        }
+
+        if (this.PropertyInfo.PropertyType == typeof(IListDataSource))
+        {
+            if (value != null && value is Array a)
+            {
+                // accept arrays as valid input values
+                // for setting an IListDataSource.  Just
+                // convert them to ListWrappers
+                value = new ListWrapper(a.ToList());
+            }
+        }
+
+        return value;
     }
 
     /// <summary>
