@@ -25,7 +25,6 @@ public class Editor : Toplevel
     private KeyboardManager keyboardManager;
     private MouseManager mouseManager;
     private ListView? rootCommandsListView;
-    private bool menuOpen;
 
     /// <summary>
     /// Set this to have a short duration message appear in lower right
@@ -278,7 +277,7 @@ public class Editor : Toplevel
             this.editting = true;
             SelectionManager.Instance.LockSelection = true;
 
-            if (keyEvent.Key == this.keyMap.ShowContextMenu && !this.menuOpen)
+            if (keyEvent.Key == this.keyMap.ShowContextMenu && !ContextMenu.IsShow)
             {
                 this.CreateAndShowContextMenu(null, null);
                 return true;
@@ -688,12 +687,10 @@ Ctrl+Q - Quit
             menu.Position = new Point(x, y);
         }
 
-        this.menuOpen = true;
         SelectionManager.Instance.LockSelection = true;
         menu.Show();
         menu.MenuBar.MenuAllClosed += () =>
         {
-            this.menuOpen = false;
             SelectionManager.Instance.LockSelection = false;
         };
     }
