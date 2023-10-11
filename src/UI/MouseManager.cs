@@ -83,7 +83,7 @@ public class MouseManager
 
                 var dest = parent.ScreenToView(m.X, m.Y);
 
-                if (isLowerRight)
+                if (isLowerRight && !this.IsOneByOneView(drag))
                 {
                     this.resizeOperation = new ResizeOperation(design, dest.X, dest.Y);
                 }
@@ -207,5 +207,10 @@ public class MouseManager
                 this.resizeOperation = null;
             }
         }
+    }
+
+    private bool IsOneByOneView(View view)
+    {
+        return view.Bounds.Width <= 1 && view.Bounds.Height <= 1;
     }
 }

@@ -220,4 +220,66 @@ internal class MouseManagerTests : Tests
                 $"Expectation wrong for label index {i} (indexes are 0 based)");
         }
     }
+
+    [Test]
+    public void CannotMouseResizeOneByOne()
+    {
+        var d = this.Get10By10View();
+
+        // label is 1x1 size
+        var lbl1 = new Label(new Rect(0, 0, 1, 1))
+        {
+            X = 3,
+            Y = 4,
+        };
+
+        var lbl1Design = new Design(d.SourceCode, "lbl1", lbl1);
+ 
+        lbl1.Data = lbl1Design;
+
+        d.View.Add(lbl1);
+
+        Assert.AreEqual(Dim.Sized(1), lbl1.Width);
+        Assert.AreEqual(Dim.Sized(1), lbl1.Height);
+
+        var selection = SelectionManager.Instance;
+        selection.Clear();
+        var mgr = new MouseManager();
+
+        // user presses down directly in the label
+        var e = new MouseEvent
+        {
+            X = 3,
+            Y = 4,
+            Flags = MouseFlags.Button1Pressed,
+        };
+
+        mgr.HandleMouse(e, d);
+
+        // user pulled selection box to destination
+        e = new MouseEvent
+        {
+            X = 4,
+            Y = 6,
+            Flags = MouseFlags.Button1Pressed,
+        };
+        mgr.HandleMouse(e, d);
+
+        // user releases mouse (in place)
+        e = new MouseEvent
+        {
+            X = 4,
+            Y = 6,
+        };
+        mgr.HandleMouse(e, d);
+
+        // do not expect dragging to resize
+        Assert.AreEqual(Dim.Sized(1), lbl1.Width);
+        Assert.AreEqual(Dim.Sized(1), lbl1.Height);
+
+        // expect drag move instead
+
+        Assert.AreEqual(Pos.At(4), lbl1.X);
+        Assert.AreEqual(Pos.At(6), lbl1.Y);
+    }
 }
