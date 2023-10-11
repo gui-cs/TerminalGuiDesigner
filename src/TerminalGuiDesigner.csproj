@@ -18,14 +18,14 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>TerminalGuiDesigner</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>TerminalGuiDesigner</PackageId>
-    <Version>1.0.24</Version>
+    <Version>1.0.25</Version>
     <Authors>Thomas Nind</Authors>
     <Nullable>enable</Nullable>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Description>Command line visual designer tool for creating Terminal.Gui C# applications.  Create and edit Termianl.Gui views as easily as you could with the Windows Forms Designer.  All generated code is contained in a seperate file (e.g. MyControl.Designer.cs).  Run the tool by calling directly from the command line 'TerminalGuiDesigner'</Description>
+    <Description>Command line visual designer tool for creating Terminal.Gui C# applications.  Create and edit Termianl.Gui views as easily as you could with the Windows Forms Designer.  All generated code is contained in a separate file (e.g. MyControl.Designer.cs).  Run the tool by calling directly from the command line 'TerminalGuiDesigner'</Description>
     <Owners>Thomas Nind</Owners>
     <Title>TerminalGuiDesigner does for Terminal.Gui what the Windows Forms Designer does for WinForms</Title>
     <PackageProjectUrl>https://github.com/tznind/TerminalGuiDesigner/</PackageProjectUrl>
@@ -34,6 +34,8 @@
     <PackageIcon>logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>
+	v1.0.25
+	 * Upgrade dependencies, stability improvements
 	v1.0.24
 	 * Update Terminal.Gui dependency to 1.10.1
 	v1.0.23
@@ -134,17 +136,17 @@
 		</Content>
 	</ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Basic.Reference.Assemblies" Version="1.4.1" />
+    <PackageReference Include="Basic.Reference.Assemblies.Net70" Version="1.4.5" />
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.5.0" />
-    <PackageReference Include="nlog" Version="5.1.3" />
-    <PackageReference Include="StyleCop.Analyzers.Unstable" Version="1.2.0.435">
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.7.0" />
+    <PackageReference Include="nlog" Version="5.2.3" />
+    <PackageReference Include="StyleCop.Analyzers.Unstable" Version="1.2.0.507">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="System.CodeDom" Version="7.0.0" />
-    <PackageReference Include="Terminal.gui" Version="1.10.1" />
-    <PackageReference Include="YamlDotNet" Version="13.1.0" />
+    <PackageReference Include="Terminal.gui" Version="1.14.0" />
+    <PackageReference Include="YamlDotNet" Version="13.3.1" />
   </ItemGroup>
 
 </Project>

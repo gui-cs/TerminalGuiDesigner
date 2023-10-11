@@ -95,55 +95,7 @@ public class Property : ToCodeBase
     /// <exception cref="ArgumentException">Thrown if invalid values are passed.</exception>
     public virtual void SetValue(object? value)
     {
-        // handle type conversions
-        if (this.PropertyInfo.PropertyType == typeof(Rune))
-        {
-            if (value is char ch)
-            {
-                value = new Rune(ch);
-            }
-        }
-
-        if (this.PropertyInfo.PropertyType == typeof(Dim))
-        {
-            if (value is int i)
-            {
-                value = Dim.Sized(i);
-            }
-        }
-
-        if (this.PropertyInfo.PropertyType == typeof(ustring))
-        {
-            if (value is string s)
-            {
-                value = ustring.Make(s);
-
-                // TODO: This seems like something AutoSize should do automatically
-                // if renaming a button update its size to match
-                if (this.Design.View is Button b && this.PropertyInfo.Name.Equals("Text") && b.Width.IsAbsolute())
-                {
-                    b.Width = s.Length + (b.IsDefault ? 6 : 4);
-                }
-            }
-
-            // some views don't like null and only work with "" e.g. TextView
-            // see https://github.com/gui-cs/TerminalGuiDesigner/issues/91
-            if (value == null)
-            {
-                value = ustring.Make(string.Empty);
-            }
-        }
-
-        if (this.PropertyInfo.PropertyType == typeof(IListDataSource))
-        {
-            if (value != null && value is Array a)
-            {
-                // accept arrays as valid input values
-                // for setting an IListDataSource.  Just
-                // convert them to ListWrappers
-                value = new ListWrapper(a.ToList());
-            }
-        }
+        value = AdjustValueBeingSet(value);
 
         // TODO: This hack gets around an ArgumentException that gets thrown when
         // switching from Computed to Absolute values of Dim/Pos
@@ -188,6 +140,12 @@ public class Property : ToCodeBase
     /// <exception cref="Exception">Thrown if it is not possible to generate code for the current <see cref="Property"/>.</exception>
     public virtual void ToCode(CodeDomArgs args)
     {
+        // If property value is known default then do not emit in code gen
+        if(this.SkipToCode())
+        {
+            return;
+        }
+
         try
         {
             this.AddPropertyAssignment(args, this.GetLhs(), this.GetRhs());
@@ -196,6 +154,24 @@ public class Property : ToCodeBase
         {
             throw new Exception($"Failed to generate ToCode for Property '{this.PropertyInfo.Name}' of Design '{this.Design.FieldName}'", ex);
         }
+    }
+
+    /// <summary>
+    /// Returns true if the value of the property is a known default for the API
+    /// and should not be included in generated code.  Especially if the default is
+    /// odd (e.g. -1 Enum value) or assigning the default to a property breaks other things.
+    /// </summary>
+    /// <returns>True if <see cref="ToCode(CodeDomArgs)"/> should not take place.</returns>
+    private bool SkipToCode()
+    {
+        // Color does not contain a definition of -1 but it is used in shorthand to be 'no color'
+        if (this.PropertyInfo.PropertyType == typeof(Color))
+        {
+            var val = this.GetValue();
+            return val != null && (int)val == -1;
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -374,6 +350,67 @@ public class Property : ToCodeBase
         }
 
         return val.ToString() ?? string.Empty;
+    }
+
+    /// <summary>
+    /// Adjust <paramref name="value"/> to match the expectations of <see cref="PropertyInfo"/>
+    /// e.g. convert char to <see cref="Rune"/>.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    protected object? AdjustValueBeingSet(object? value)
+    {
+        // handle type conversions
+        if (this.PropertyInfo.PropertyType == typeof(Rune))
+        {
+            if (value is char ch)
+            {
+                value = new Rune(ch);
+            }
+        }
+
+        if (this.PropertyInfo.PropertyType == typeof(Dim))
+        {
+            if (value is int i)
+            {
+                value = Dim.Sized(i);
+            }
+        }
+
+        if (this.PropertyInfo.PropertyType == typeof(ustring))
+        {
+            if (value is string s)
+            {
+                value = ustring.Make(s);
+
+                // TODO: This seems like something AutoSize should do automatically
+                // if renaming a button update its size to match
+                if (this.Design.View is Button b && this.PropertyInfo.Name.Equals("Text") && b.Width.IsAbsolute())
+                {
+                    b.Width = s.Length + (b.IsDefault ? 6 : 4);
+                }
+            }
+
+            // some views don't like null and only work with "" e.g. TextView
+            // see https://github.com/gui-cs/TerminalGuiDesigner/issues/91
+            if (value == null)
+            {
+                value = ustring.Make(string.Empty);
+            }
+        }
+
+        if (this.PropertyInfo.PropertyType == typeof(IListDataSource))
+        {
+            if (value != null && value is Array a)
+            {
+                // accept arrays as valid input values
+                // for setting an IListDataSource.  Just
+                // convert them to ListWrappers
+                value = new ListWrapper(a.ToList());
+            }
+        }
+
+        return value;
     }
 
     /// <summary>

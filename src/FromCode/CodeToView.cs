@@ -18,7 +18,7 @@ namespace TerminalGuiDesigner.FromCode;
 /// </summary>
 /// <remarks>
 /// Compiling requires having the correct assembly references for dependencies.  This is handled
-/// by <see cref="CompileAssembly"/>.  Most references come from <see cref="ReferenceAssemblies.Net60"/>
+/// by <see cref="CompileAssembly"/>.  Most references come from <see cref="Net70.References"/>
 /// but also <see cref="Terminal.Gui"/>.
 /// </remarks>
 public class CodeToView
@@ -147,7 +147,7 @@ public class CodeToView
         var dd = typeof(Enumerable).GetTypeInfo().Assembly.Location;
         var coreDir = Directory.GetParent(dd) ?? throw new Exception($"Could not find parent directory of dotnet sdk.  Sdk directory was {dd}");
 
-        var references = new List<MetadataReference>(ReferenceAssemblies.Net60);
+        var references = new List<MetadataReference>(Net70.References.All);
 
         references.Add(MetadataReference.CreateFromFile(typeof(View).Assembly.Location));
         references.Add(MetadataReference.CreateFromFile(typeof(ustring).Assembly.Location));

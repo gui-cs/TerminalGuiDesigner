@@ -625,6 +625,8 @@ public class Design
         yield return this.CreateProperty(nameof(this.View.X));
         yield return this.CreateProperty(nameof(this.View.Y));
 
+        yield return this.CreateSuppressedProperty(nameof(this.View.Visible), true);
+
         yield return new ColorSchemeProperty(this);
 
         // its important that this comes before Text because
@@ -654,6 +656,7 @@ public class Design
         if (this.View is Toplevel)
         {
             yield return this.CreateProperty(nameof(Toplevel.Modal));
+            yield return this.CreateProperty(nameof(Toplevel.IsMdiContainer));
         }
 
         // Allow changing the FieldName on anything but root where
@@ -673,6 +676,7 @@ public class Design
         {
             yield return this.CreateSubProperty(nameof(Border.BorderStyle), nameof(this.View.Border), this.View.Border);
             yield return this.CreateSubProperty(nameof(Border.BorderBrush), nameof(this.View.Border), this.View.Border);
+            yield return this.CreateSubProperty(nameof(Border.Background), nameof(this.View.Border), this.View.Border);
             yield return this.CreateSubProperty(nameof(Border.Effect3D), nameof(this.View.Border), this.View.Border);
             yield return this.CreateSubProperty(nameof(Border.Effect3DBrush), nameof(this.View.Border), this.View.Border);
             yield return this.CreateSubProperty(nameof(Border.DrawMarginFrame), nameof(this.View.Border), this.View.Border);
@@ -807,6 +811,14 @@ public class Design
         return new Property(
             this,
             this.View.GetType().GetProperty(name) ?? throw new Exception($"Could not find expected Property '{name}' on View of Type '{this.View.GetType()}'"));
+    }
+
+    private Property CreateSuppressedProperty(string name, object? designTimeValue)
+    {
+        return new SuppressedProperty(
+            this,
+            this.View.GetType().GetProperty(name) ?? throw new Exception($"Could not find expected Property '{name}' on View of Type '{this.View.GetType()}'"),
+            designTimeValue);
     }
 
     private bool DependsOnUs(Design other, Design[] everyone)
