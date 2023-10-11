@@ -151,7 +151,14 @@ public class BigListBox<T>
         this.win.Add(btnOk);
         this.win.Add(btnCancel);
 
-        this.SetCurrentSelection(currentSelection);
+        if (currentSelection != null)
+        {
+            this.SetCurrentSelection(currentSelection);
+        }
+        else
+        {
+            this.listView.SelectedItem = 0;
+        }
 
         this.callback = Application.MainLoop.AddTimeout(TimeSpan.FromMilliseconds(100), this.Timer);
 
