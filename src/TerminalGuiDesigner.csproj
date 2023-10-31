@@ -145,7 +145,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="System.CodeDom" Version="7.0.0" />
-    <PackageReference Include="Terminal.gui" Version="1.14.0" />
+    <PackageReference Include="Terminal.gui" Version="1.14.1" />
     <PackageReference Include="YamlDotNet" Version="13.3.1" />
   </ItemGroup>
 
