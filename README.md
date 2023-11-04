@@ -19,7 +19,7 @@ dotnet tool update --global TerminalGuiDesigner
 
 This project is in alpha.  See the [feature list](./README.md#features) for progress.
 
-![newdemo](https://user-images.githubusercontent.com/31306100/175789072-27fcacf0-e9f0-4543-818d-50058bb46a2f.gif)
+![long-demo](https://github.com/gui-cs/TerminalGuiDesigner/assets/31306100/5df9f545-8c61-4655-bc0c-1e75d1c149d9)
 
 ### Building
 ----------------
