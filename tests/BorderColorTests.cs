@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using System.Linq;
 using System.Reflection;
 using Terminal.Gui;
@@ -7,6 +7,7 @@ using TerminalGuiDesigner.Operations;
 
 namespace UnitTests
 {
+    [TestFixture]
     internal class BorderColorTests : Tests
     {
         [Test]
@@ -15,35 +16,39 @@ namespace UnitTests
             var result = RoundTrip<Window, FrameView>((d, v) =>
             {
                 // Our view should not have any border color to start with
-                Assert.AreEqual(-1, (int)v.Border.BorderBrush);
-                Assert.AreEqual(-1, (int)v.Border.Background);
+                Assert.Multiple( ( ) =>
+                {
+                    Assert.That((int)v.Border.BorderBrush, Is.EqualTo( -1 ));
+                    Assert.That((int)v.Border.Background, Is.EqualTo( -1 ));
+                } );
 
             }, out _);
 
             // Since there were no changes we would expect them to stay the same
             // after reload
-            Assert.AreEqual(-1, (int)result.Border.BorderBrush);
-            Assert.AreEqual(-1, (int)result.Border.Background);
+            Assert.Multiple( ( ) =>
+            {
+                Assert.That((int)result.Border.BorderBrush, Is.EqualTo( -1 ));
+                Assert.That((int)result.Border.Background, Is.EqualTo( -1 ));
+            } );
         }
 
-        [TestCase(true)]
-        [TestCase(false)]
-        public void TestCopyPasteContainer(bool alsoSelectSubElements)
+        [Test]
+        public void TestCopyPasteContainer([Values]bool alsoSelectSubElements)
         {
             RoundTrip<Window, FrameView>((d, v) =>
                 {
                     new AddViewOperation(new Label(), d, "lbl1").Do();
                     new AddViewOperation(new Label(), d, "lbl2").Do();
 
-                    Assert.AreEqual(2, v.GetActualSubviews().Count(), "Expected the FrameView to have 2 children (lbl1 and lbl2)");
+                    Assert.That(v.GetActualSubviews().Count, Is.EqualTo(2),"Expected the FrameView to have 2 children (lbl1 and lbl2)");
 
                     Design[] toCopy;
 
                     if (alsoSelectSubElements)
                     {
                         var lbl1Design = (Design)d.View.GetActualSubviews().First().Data;
-                        Assert.AreEqual("lbl1", lbl1Design.FieldName);
-
+                        Assert.That(lbl1Design.FieldName, Is.EqualTo("lbl1"));
                         toCopy = new Design[] { d, lbl1Design };
                     }
                     else
@@ -52,31 +57,31 @@ namespace UnitTests
                     }
 
                     // copy the FrameView
-                    Assert.IsTrue(new CopyOperation(toCopy).Do());
+                    Assert.That(new CopyOperation(toCopy).Do(), Is.True);
 
                     var rootDesign = d.GetRootDesign();
 
                     // paste the FrameView
-                    Assert.IsTrue(new PasteOperation(rootDesign).Do());
-
+                    Assert.That(new PasteOperation(rootDesign).Do(), Is.True);
+                    
                     var rootSubviews = rootDesign.View.GetActualSubviews();
 
-                    Assert.AreEqual(2, rootSubviews.Count, "Expected root to have 2 FrameView now");
-                    Assert.IsTrue(rootSubviews.All(v => v is FrameView));
-
-                    Assert.IsTrue(
-                        rootSubviews.All(f => f.GetActualSubviews().Count() == 2),
-                        "Expected both FrameView (copied and pasted) to have the full contents of 2 Labels");
-
-                    // Since there were no changes we would expect them to stay the same
-                    // after reload
-                    foreach (var rsv in rootSubviews)
+                    Assert.Multiple( ( ) =>
                     {
-                        Assert.AreEqual(-1, (int)rsv.Border.BorderBrush);
-                        Assert.AreEqual(-1, (int)rsv.Border.Background);
-                        Assert.Null(GetFieldValue<Color?>(rsv.Border, "borderBrush"));
-                        Assert.Null(GetFieldValue<Color?>(rsv.Border, "background"));
-                    }
+                        Assert.That(rootSubviews.Count, Is.EqualTo(2), "Expected root to have 2 FrameView now");
+                        Assert.That(rootSubviews, Is.All.TypeOf<FrameView>());
+
+                        Assert.That( rootSubviews.Select(f=>f.GetActualSubviews(  )),
+                                     Has.All.Count.EqualTo( 2 ),
+                                     "Expected both FrameView (copied and pasted) to have the full contents of 2 Labels");
+
+                        // Since there were no changes we would expect them to stay the same
+                        // after reload
+                        Assert.That(rootSubviews.Select(rsv=> rsv.Border.BorderBrush).Cast<int>(  ), Has.All.EqualTo(-1));
+                        Assert.That(rootSubviews.Select(rsv=> rsv.Border.Background).Cast<int>(  ), Has.All.EqualTo(-1));
+                        Assert.That(rootSubviews.Select(rsv=> GetFieldValue<Color?>( rsv.Border, "borderBrush" )), Has.All.Null);
+                        Assert.That(rootSubviews.Select(rsv=> GetFieldValue<Color?>( rsv.Border, "background" )), Has.All.Null);
+                    } );
                 }
                 , out _);
         }

@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using System;
 using System.Linq;
 using Terminal.Gui;
@@ -15,7 +15,7 @@ internal class MoveMenuOperationTests : Tests
         // Label is not a MenuBar so should get Exception
         RoundTrip<Window, Label>((d, v) =>
         {
-            Assert.Throws<ArgumentException>(()=>new MoveMenuOperation(d,new MenuBarItem(), 1));
+            ClassicAssert.Throws<ArgumentException>(()=>new MoveMenuOperation(d,new MenuBarItem(), 1));
         }, out _);
     }
 
@@ -25,7 +25,7 @@ internal class MoveMenuOperationTests : Tests
         RoundTrip<Window, MenuBar>((d, v) =>
         {
             // we passed a new MenuBarItem which will not belong to d and therefore should be an Exception
-            Assert.Throws<ArgumentException>(() => new MoveMenuOperation(d, new MenuBarItem(), 1));
+            ClassicAssert.Throws<ArgumentException>(() => new MoveMenuOperation(d, new MenuBarItem(), 1));
         }, out _);
     }
 
@@ -34,8 +34,8 @@ internal class MoveMenuOperationTests : Tests
     {
         RoundTrip<Window, MenuBar>((d, v) =>
         {
-            Assert.AreEqual(1, v.Menus.Length, $"Expected {nameof(ViewFactory)} to create a {nameof(MenuBar)} with 1 example placeholder Menu");
-            Assert.IsTrue(new MoveMenuOperation(d, v.Menus[0], 1).IsImpossible,"Should be impossible to move Menu when there is only one of them");
+            ClassicAssert.AreEqual(1, v.Menus.Length, $"Expected {nameof(ViewFactory)} to create a {nameof(MenuBar)} with 1 example placeholder Menu");
+            ClassicAssert.IsTrue(new MoveMenuOperation(d, v.Menus[0], 1).IsImpossible,"Should be impossible to move Menu when there is only one of them");
         }, out _);
     }
 
@@ -60,22 +60,22 @@ internal class MoveMenuOperationTests : Tests
 
             if(expectPossible)
             {
-                Assert.IsFalse(op.IsImpossible);
-                Assert.IsTrue(op.Do());
+                ClassicAssert.IsFalse(op.IsImpossible);
+                ClassicAssert.IsTrue(op.Do());
             }
             else
             {
-                Assert.IsTrue(op.IsImpossible);
-                Assert.False(op.Do());
+                ClassicAssert.IsTrue(op.IsImpossible);
+                ClassicAssert.False(op.Do());
             }
 
-            Assert.AreEqual(expectedNewIndex, v.Menus.IndexOf(toMove));
+            ClassicAssert.AreEqual(expectedNewIndex, v.Menus.IndexOf(toMove));
 
             op.Undo();
-            Assert.AreEqual(originalIndex, v.Menus.IndexOf(toMove));
+            ClassicAssert.AreEqual(originalIndex, v.Menus.IndexOf(toMove));
 
             op.Redo();
-            Assert.AreEqual(expectedNewIndex, v.Menus.IndexOf(toMove));
+            ClassicAssert.AreEqual(expectedNewIndex, v.Menus.IndexOf(toMove));
 
         }, out _);
     }

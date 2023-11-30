@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using Terminal.Gui;
@@ -32,7 +32,7 @@ internal class LabelTests : Tests
         OperationManager.Instance.Redo();
         OperationManager.Instance.Redo();
 
-        Assert.AreEqual(lblDesign.View.X.ToString(), $"Pos.Factor({0.5})");
+        ClassicAssert.AreEqual(lblDesign.View.X.ToString(), $"Pos.Factor({0.5})");
     }
 
     [Test]
@@ -72,6 +72,6 @@ internal class LabelTests : Tests
         OperationManager.Instance.Redo();
         OperationManager.Instance.Undo();
 
-        Assert.AreEqual(lblDesign.View.X.ToString(), $"Pos.Factor({0.5})");
+        ClassicAssert.AreEqual(lblDesign.View.X.ToString(), $"Pos.Factor({0.5})");
     }
 }

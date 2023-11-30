@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner.Operations.MenuOperations;
 
@@ -15,26 +15,26 @@ internal class AddMenuItemOperationTests : Tests
 
         var viewIn = RoundTrip<View, MenuBar>((d, v) =>
         {
-            Assert.IsNotNull(v.Menus[0].Children[0], "Expected a new MenuBar added in Designer to have a placeholder MenuItem entry");
-            Assert.AreEqual(1, v.Menus[0].Children.Length);
+            ClassicAssert.IsNotNull(v.Menus[0].Children[0], "Expected a new MenuBar added in Designer to have a placeholder MenuItem entry");
+            ClassicAssert.AreEqual(1, v.Menus[0].Children.Length);
             var first = v.Menus[0].Children[0];
             firstMenuItemName = first.Title.ToString();
 
             var add = new AddMenuItemOperation(first);
 
-            Assert.IsNotNull(v.Menus[0].Children[0], "Expected no changes until we actually run the operation");
-            Assert.AreEqual(1, v.Menus[0].Children.Length);
+            ClassicAssert.IsNotNull(v.Menus[0].Children[0], "Expected no changes until we actually run the operation");
+            ClassicAssert.AreEqual(1, v.Menus[0].Children.Length);
 
             add.Do();
             
-            Assert.AreEqual(2, v.Menus[0].Children.Length);
-            Assert.AreSame(first, v.Menus[0].Children[0], "Expected new item to be below the original (unchanged) item");
-            Assert.AreEqual("", v.Menus[0].Children[1].Title.ToString(),"Expected new menu items to have no text initially (user Types to enter them)");
+            ClassicAssert.AreEqual(2, v.Menus[0].Children.Length);
+            ClassicAssert.AreSame(first, v.Menus[0].Children[0], "Expected new item to be below the original (unchanged) item");
+            ClassicAssert.AreEqual("", v.Menus[0].Children[1].Title.ToString(),"Expected new menu items to have no text initially (user Types to enter them)");
         }, out _);
 
-        Assert.AreEqual(2, viewIn.Menus[0].Children.Length);
-        Assert.AreEqual(firstMenuItemName, viewIn.Menus[0].Children[0].Title.ToString(), "Expected save/reload to have no effect on menu names");
-        Assert.AreEqual("", viewIn.Menus[0].Children[1].Title.ToString());
+        ClassicAssert.AreEqual(2, viewIn.Menus[0].Children.Length);
+        ClassicAssert.AreEqual(firstMenuItemName, viewIn.Menus[0].Children[0].Title.ToString(), "Expected save/reload to have no effect on menu names");
+        ClassicAssert.AreEqual("", viewIn.Menus[0].Children[1].Title.ToString());
     }
 
     [Test]
@@ -46,42 +46,42 @@ internal class AddMenuItemOperationTests : Tests
 
         var viewIn = RoundTrip<View, MenuBar>((d, v) =>
         {
-            Assert.IsNotNull(v.Menus[0].Children[0], "Expected a new MenuBar added in Designer to have a placeholder MenuItem entry");
-            Assert.AreEqual(1, v.Menus[0].Children.Length);
+            ClassicAssert.IsNotNull(v.Menus[0].Children[0], "Expected a new MenuBar added in Designer to have a placeholder MenuItem entry");
+            ClassicAssert.AreEqual(1, v.Menus[0].Children.Length);
             var first = v.Menus[0].Children[0];
             firstMenuItemName = first.Title.ToString();
 
             var add = new AddMenuItemOperation(first);
 
-            Assert.IsNotNull(v.Menus[0].Children[0], "Expected no changes until we actually run the operation");
-            Assert.AreEqual(1, v.Menus[0].Children.Length);
+            ClassicAssert.IsNotNull(v.Menus[0].Children[0], "Expected no changes until we actually run the operation");
+            ClassicAssert.AreEqual(1, v.Menus[0].Children.Length);
 
             add.Do();
-            Assert.AreEqual(2, v.Menus[0].Children.Length);
-            Assert.AreSame(first, v.Menus[0].Children[0], "Expected new item to be below the original (unchanged) item");
-            Assert.AreEqual("", v.Menus[0].Children[1].Title.ToString(), "Expected new menu items to have no text initially (user Types to enter them)");
+            ClassicAssert.AreEqual(2, v.Menus[0].Children.Length);
+            ClassicAssert.AreSame(first, v.Menus[0].Children[0], "Expected new item to be below the original (unchanged) item");
+            ClassicAssert.AreEqual("", v.Menus[0].Children[1].Title.ToString(), "Expected new menu items to have no text initially (user Types to enter them)");
 
             // curve ball undo it a bunch of times and redo
             add.Undo();
-            Assert.AreEqual(1, v.Menus[0].Children.Length);
-            Assert.AreSame(first, v.Menus[0].Children[0], "Expected new item to be below the original (unchanged) item");
+            ClassicAssert.AreEqual(1, v.Menus[0].Children.Length);
+            ClassicAssert.AreSame(first, v.Menus[0].Children[0], "Expected new item to be below the original (unchanged) item");
             add.Undo();
             add.Undo();
 
             add.Redo();
-            Assert.AreEqual(2, v.Menus[0].Children.Length);
-            Assert.AreSame(first, v.Menus[0].Children[0], "Expected new item to be below the original (unchanged) item");
-            Assert.AreEqual("", v.Menus[0].Children[1].Title.ToString(), "Expected new menu items to have no text initially (user Types to enter them)");
+            ClassicAssert.AreEqual(2, v.Menus[0].Children.Length);
+            ClassicAssert.AreSame(first, v.Menus[0].Children[0], "Expected new item to be below the original (unchanged) item");
+            ClassicAssert.AreEqual("", v.Menus[0].Children[1].Title.ToString(), "Expected new menu items to have no text initially (user Types to enter them)");
 
             add.Undo();
             add.Undo();
             add.Undo();
-            Assert.AreEqual(1, v.Menus[0].Children.Length);
-            Assert.AreSame(first, v.Menus[0].Children[0], "Expected new item to be below the original (unchanged) item");
+            ClassicAssert.AreEqual(1, v.Menus[0].Children.Length);
+            ClassicAssert.AreSame(first, v.Menus[0].Children[0], "Expected new item to be below the original (unchanged) item");
 
         }, out _);
 
-        Assert.AreEqual(1, viewIn.Menus[0].Children.Length);
-        Assert.AreEqual(firstMenuItemName, viewIn.Menus[0].Children[0].Title.ToString(), "Expected save/reload to have no effect on menu names");
+        ClassicAssert.AreEqual(1, viewIn.Menus[0].Children.Length);
+        ClassicAssert.AreEqual(firstMenuItemName, viewIn.Menus[0].Children[0].Title.ToString(), "Expected save/reload to have no effect on menu names");
     }
 }

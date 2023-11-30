@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
@@ -20,11 +20,11 @@ internal class DeleteColorSchemeOperationTests : Tests
         {
             // Clear known default colors
             ColorSchemeManager.Instance.Clear();
-            Assert.IsEmpty(ColorSchemeManager.Instance.Schemes);
+            ClassicAssert.IsEmpty(ColorSchemeManager.Instance.Schemes);
 
             // Add a new color for our Label
             ColorSchemeManager.Instance.AddOrUpdateScheme("yarg", scheme, d.GetRootDesign());
-            Assert.AreEqual(1, ColorSchemeManager.Instance.Schemes.Count);
+            ClassicAssert.AreEqual(1, ColorSchemeManager.Instance.Schemes.Count);
 
             // Assign the new color to the view
             var prop = new SetPropertyOperation(d, new ColorSchemeProperty(d), null, scheme);
@@ -35,7 +35,7 @@ internal class DeleteColorSchemeOperationTests : Tests
 
         ColorSchemeManager.Instance.Clear();
         ColorSchemeManager.Instance.FindDeclaredColorSchemes(lblInDesign.GetRootDesign());
-        Assert.AreEqual(1, ColorSchemeManager.Instance.Schemes.Count, "Reloading the view should find the explicitly declared scheme 'yarg'");
+        ClassicAssert.AreEqual(1, ColorSchemeManager.Instance.Schemes.Count, "Reloading the view should find the explicitly declared scheme 'yarg'");
 
         var rootDesignIn = lblInDesign.GetRootDesign();
 
@@ -48,11 +48,11 @@ internal class DeleteColorSchemeOperationTests : Tests
         var yarg = ColorSchemeManager.Instance.GetNamedColorScheme("yarg");
         var deleteOp = new DeleteColorSchemeOperation(rootDesignIn, yarg);
 
-        Assert.IsTrue(deleteOp.Do());
+        ClassicAssert.IsTrue(deleteOp.Do());
 
         // after deleting the color scheme nobody should be using it
-        Assert.IsNull(lblIn.GetExplicitColorScheme());
-        Assert.IsNull(lblInDesign.State.OriginalScheme);
+        ClassicAssert.IsNull(lblIn.GetExplicitColorScheme());
+        ClassicAssert.IsNull(lblInDesign.State.OriginalScheme);
 
         // throw a curve ball, all these should do nothing
         deleteOp.Do();
@@ -63,13 +63,13 @@ internal class DeleteColorSchemeOperationTests : Tests
         // after redoing the operation we should be back to using it again
         deleteOp.Undo();
 
-        Assert.AreEqual(
+        ClassicAssert.AreEqual(
             "yarg",
             ColorSchemeManager.Instance.GetNameForColorScheme(
             lblIn.GetExplicitColorScheme() ?? throw new Exception("Expected lblIn to have the scheme again")),
             "Expected designer to still know the name of lblIn ColorScheme");
 
-        Assert.AreEqual(yarg.Scheme, lblIn.GetExplicitColorScheme() ?? throw new Exception("View was unexpected no longer using our color scheme after Redo"));
-        Assert.AreEqual(yarg.Scheme, lblInDesign.State.OriginalScheme ?? throw new Exception("View was unexpected no longer using our color scheme after Redo"));
+        ClassicAssert.AreEqual(yarg.Scheme, lblIn.GetExplicitColorScheme() ?? throw new Exception("View was unexpected no longer using our color scheme after Redo"));
+        ClassicAssert.AreEqual(yarg.Scheme, lblInDesign.State.OriginalScheme ?? throw new Exception("View was unexpected no longer using our color scheme after Redo"));
     }
 }

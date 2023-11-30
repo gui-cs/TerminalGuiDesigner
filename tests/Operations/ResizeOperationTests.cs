@@ -18,8 +18,8 @@ internal class ResizeOperationTests : Tests
             root.View.Height = Dim.Fill();
 
             root.View.ViewToScreenActual(0, 0, out var screenX, out var screenY);
-            Assert.AreEqual(1, screenX, "Expected root view of Dialog to have border 1 so client area starting at screen coordinates 1,1");
-            Assert.AreEqual(1, screenY);
+            ClassicAssert.AreEqual(1, screenX, "Expected root view of Dialog to have border 1 so client area starting at screen coordinates 1,1");
+            ClassicAssert.AreEqual(1, screenY);
 
 
             // within Dialog there is a View
@@ -52,14 +52,14 @@ internal class ResizeOperationTests : Tests
              * */
             // Double check the above figures
             v.ViewToScreenActual(0, 0, out screenX, out screenY);
-            Assert.AreEqual(4, screenX);
-            Assert.AreEqual(6, screenY);
+            ClassicAssert.AreEqual(4, screenX);
+            ClassicAssert.AreEqual(6, screenY);
             tab.ViewToScreenActual(0,0, out screenX, out screenY);
-            Assert.AreEqual(6, screenX);
-            Assert.AreEqual(7, screenY);
+            ClassicAssert.AreEqual(6, screenX);
+            ClassicAssert.AreEqual(7, screenY);
             tab.ViewToScreenActual(4, 4, out screenX, out screenY);
-            Assert.AreEqual(10, screenX);
-            Assert.AreEqual(11, screenY);
+            ClassicAssert.AreEqual(10, screenX);
+            ClassicAssert.AreEqual(11, screenY);
 
             Application.Begin((Dialog)root.View);
             root.View.LayoutSubviews();
@@ -75,14 +75,14 @@ internal class ResizeOperationTests : Tests
             else
             {
                 var hit = root.View.HitTest(new MouseEvent { X = 10, Y = 11 },out _, out var isLowerRight);
-                Assert.AreSame(tab, hit, "Expected above diagram which already passed asserts to work for HitTest too given the above screen coordinates");
-                Assert.IsTrue(isLowerRight);
+                ClassicAssert.AreSame(tab, hit, "Expected above diagram which already passed asserts to work for HitTest too given the above screen coordinates");
+                ClassicAssert.IsTrue(isLowerRight);
 
                 MouseDrag(root, 10, 11, 11, 13);
             }
 
-            Assert.AreEqual((Dim)6, tab.Width); // (5+1)
-            Assert.AreEqual((Dim)7, tab.Height); // (5+2)
+            ClassicAssert.AreEqual((Dim)6, tab.Width); // (5+1)
+            ClassicAssert.AreEqual((Dim)7, tab.Height); // (5+2)
         }, out _);
     }
 }

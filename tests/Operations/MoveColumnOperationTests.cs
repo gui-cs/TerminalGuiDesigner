@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using System;
 using Terminal.Gui;
 using TerminalGuiDesigner;
@@ -14,7 +14,7 @@ internal class MoveColumnOperationTests : Tests
         // Label is not a TableView so should get Exception
         RoundTrip<Window, Label>((d, v) =>
         {
-            Assert.Throws<ArgumentException>(()=>new MoveColumnOperation(d,new System.Data.DataColumn(), 1));
+            ClassicAssert.Throws<ArgumentException>(()=>new MoveColumnOperation(d,new System.Data.DataColumn(), 1));
         }, out _);
     }
 
@@ -25,7 +25,7 @@ internal class MoveColumnOperationTests : Tests
         RoundTrip<Window, TableView>((d, v) =>
         {
             // DataColumn is new and not in v.Table
-            Assert.Throws<ArgumentException>(() =>
+            ClassicAssert.Throws<ArgumentException>(() =>
                 new MoveColumnOperation(d, new System.Data.DataColumn(), 1));
         }, out _);
     }
@@ -36,13 +36,13 @@ internal class MoveColumnOperationTests : Tests
     {
         RoundTrip<Window, TableView>((d, v) =>
         {
-            Assert.AreEqual(4, v.Table.Columns.Count, $"Expected {nameof(ViewFactory)} to create a {nameof(TableView)} with 4 example placeholder Columns");
+            ClassicAssert.AreEqual(4, v.Table.Columns.Count, $"Expected {nameof(ViewFactory)} to create a {nameof(TableView)} with 4 example placeholder Columns");
             v.Table.Columns.RemoveAt(1);
             v.Table.Columns.RemoveAt(1);
             v.Table.Columns.RemoveAt(1);
-            Assert.AreEqual(1, v.Table.Columns.Count);
+            ClassicAssert.AreEqual(1, v.Table.Columns.Count);
 
-            Assert.IsTrue(new MoveColumnOperation(d, v.Table.Columns[0],1).IsImpossible,"Should be impossible to move Column when there is only one of them");
+            ClassicAssert.IsTrue(new MoveColumnOperation(d, v.Table.Columns[0],1).IsImpossible,"Should be impossible to move Column when there is only one of them");
         }, out _);
     }
 
@@ -55,7 +55,7 @@ internal class MoveColumnOperationTests : Tests
     {
         RoundTrip<Window, TableView>((d, v) =>
         {
-            Assert.AreEqual(4, v.Table.Columns.Count, $"Expected {nameof(ViewFactory)} to create a {nameof(TableView)} with 4 example placeholder Columns");
+            ClassicAssert.AreEqual(4, v.Table.Columns.Count, $"Expected {nameof(ViewFactory)} to create a {nameof(TableView)} with 4 example placeholder Columns");
 
             var toMove = v.Table.Columns[idxToMove];
             var originalIndex = toMove.Ordinal;
@@ -64,22 +64,22 @@ internal class MoveColumnOperationTests : Tests
 
             if(expectPossible)
             {
-                Assert.IsFalse(op.IsImpossible);
-                Assert.IsTrue(op.Do());
+                ClassicAssert.IsFalse(op.IsImpossible);
+                ClassicAssert.IsTrue(op.Do());
             }
             else
             {
-                Assert.IsTrue(op.IsImpossible);
-                Assert.False(op.Do());
+                ClassicAssert.IsTrue(op.IsImpossible);
+                ClassicAssert.False(op.Do());
             }
 
-            Assert.AreEqual(expectedNewIndex, toMove.Ordinal);
+            ClassicAssert.AreEqual(expectedNewIndex, toMove.Ordinal);
 
             op.Undo();
-            Assert.AreEqual(originalIndex, toMove.Ordinal);
+            ClassicAssert.AreEqual(originalIndex, toMove.Ordinal);
 
             op.Redo();
-            Assert.AreEqual(expectedNewIndex, toMove.Ordinal);
+            ClassicAssert.AreEqual(expectedNewIndex, toMove.Ordinal);
 
         }, out _);
     }
