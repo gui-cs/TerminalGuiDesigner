@@ -13,6 +13,8 @@
     </None>
   </ItemGroup>
   <PropertyGroup>
+	<TargetFrameworks>net7.0;net8.0</TargetFrameworks>
+	<DefineConstants>$(DefineConstants);Building_For_Dotnet_8</DefineConstants>
     <OutputType>Exe</OutputType>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackAsTool>true</PackAsTool>
@@ -147,6 +149,7 @@
     <PackageReference Include="System.CodeDom" Version="7.0.0" />
     <PackageReference Include="Terminal.gui" Version="1.14.0" />
     <PackageReference Include="YamlDotNet" Version="13.3.1" />
+	  <PackageReference Include="Basic.Reference.Assemblies.Net80" Version="1.4.5" />
+	  <PackageReference Include="System.CodeDom" Version="8.0.0" />
   </ItemGroup>
-
 </Project>
