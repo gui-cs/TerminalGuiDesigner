@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<ItemGroup>
 		<AdditionalFiles Include="stylecop.json" />
 	</ItemGroup>
@@ -23,7 +23,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>TerminalGuiDesigner</PackageId>
-    <Version>1.0.25</Version>
+    <Version>1.1.0-rc1</Version>
     <Authors>Thomas Nind</Authors>
     <Nullable>enable</Nullable>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -36,6 +36,8 @@
     <PackageIcon>logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>
+	v1.1.0-rc1
+	 * Prototype dual targeting dotnet 8 and 7
 	v1.0.25
 	 * Upgrade dependencies, stability improvements
 	v1.0.24
@@ -146,7 +148,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.CodeDom" Version="7.0.0" />
     <PackageReference Include="Terminal.gui" Version="1.14.0" />
     <PackageReference Include="YamlDotNet" Version="13.3.1" />
 	  <PackageReference Include="Basic.Reference.Assemblies.Net80" Version="1.4.5" />

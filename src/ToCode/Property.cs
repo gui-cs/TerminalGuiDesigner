@@ -1,4 +1,6 @@
-﻿using System.CodeDom;
+﻿// Ignore Spelling: Lhs Rhs
+
+using System.CodeDom;
 using System.Reflection;
 using NStack;
 using Terminal.Gui;
@@ -95,7 +97,7 @@ public class Property : ToCodeBase
     /// <exception cref="ArgumentException">Thrown if invalid values are passed.</exception>
     public virtual void SetValue(object? value)
     {
-        value = AdjustValueBeingSet(value);
+        value = this.AdjustValueBeingSet(value);
 
         // TODO: This hack gets around an ArgumentException that gets thrown when
         // switching from Computed to Absolute values of Dim/Pos
@@ -141,7 +143,7 @@ public class Property : ToCodeBase
     public virtual void ToCode(CodeDomArgs args)
     {
         // If property value is known default then do not emit in code gen
-        if(this.SkipToCode())
+        if (this.SkipToCode())
         {
             return;
         }
@@ -154,24 +156,6 @@ public class Property : ToCodeBase
         {
             throw new Exception($"Failed to generate ToCode for Property '{this.PropertyInfo.Name}' of Design '{this.Design.FieldName}'", ex);
         }
-    }
-
-    /// <summary>
-    /// Returns true if the value of the property is a known default for the API
-    /// and should not be included in generated code.  Especially if the default is
-    /// odd (e.g. -1 Enum value) or assigning the default to a property breaks other things.
-    /// </summary>
-    /// <returns>True if <see cref="ToCode(CodeDomArgs)"/> should not take place.</returns>
-    private bool SkipToCode()
-    {
-        // Color does not contain a definition of -1 but it is used in shorthand to be 'no color'
-        if (this.PropertyInfo.PropertyType == typeof(Color))
-        {
-            var val = this.GetValue();
-            return val != null && (int)val == -1;
-        }
-
-        return false;
     }
 
     /// <summary>
@@ -356,8 +340,8 @@ public class Property : ToCodeBase
     /// Adjust <paramref name="value"/> to match the expectations of <see cref="PropertyInfo"/>
     /// e.g. convert char to <see cref="Rune"/>.
     /// </summary>
-    /// <param name="value"></param>
-    /// <returns></returns>
+    /// <param name="value">The value to adjust.</param>
+    /// <returns>Adjusted value.</returns>
     protected object? AdjustValueBeingSet(object? value)
     {
         // handle type conversions
@@ -411,6 +395,24 @@ public class Property : ToCodeBase
         }
 
         return value;
+    }
+
+    /// <summary>
+    /// Returns true if the value of the property is a known default for the API
+    /// and should not be included in generated code.  Especially if the default is
+    /// odd (e.g. -1 Enum value) or assigning the default to a property breaks other things.
+    /// </summary>
+    /// <returns>True if <see cref="ToCode(CodeDomArgs)"/> should not take place.</returns>
+    private bool SkipToCode()
+    {
+        // Color does not contain a definition of -1 but it is used in shorthand to be 'no color'
+        if (this.PropertyInfo.PropertyType == typeof(Color))
+        {
+            var val = this.GetValue();
+            return val != null && (int)val == -1;
+        }
+
+        return false;
     }
 
     /// <summary>
