@@ -37,4 +37,4 @@ jobs:
         run: cd src && dotnet pack
       - name: Publish to Nuget
         if: contains(github.ref, 'refs/tags/v')
-        run: dotnet nuget push ./src/nupkg/TerminalGuiDesigner.$(fgrep \<Version\> ./src/TerminalGuiDesigner.csproj | grep -oEi '[0-9.\-rc]+').nupkg --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push ./src/nupkg/TerminalGuiDesigner.$(fgrep \<Version\> ./src/TerminalGuiDesigner.csproj | grep -oEi '[0-9.\\-rc]+').nupkg --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
