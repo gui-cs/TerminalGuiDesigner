@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Reflection;
 using Basic.Reference.Assemblies;
 using Microsoft.CodeAnalysis;
@@ -147,7 +147,11 @@ public class CodeToView
         var dd = typeof(Enumerable).GetTypeInfo().Assembly.Location;
         var coreDir = Directory.GetParent(dd) ?? throw new Exception($"Could not find parent directory of dotnet sdk.  Sdk directory was {dd}");
 
-        var references = new List<MetadataReference>(Net70.References.All);
+#if Building_For_Dotnet_8
+        var references = new List<MetadataReference>( Net80.References.All );
+#else
+        var references = new List<MetadataReference>( Net70.References.All );
+#endif
 
         references.Add(MetadataReference.CreateFromFile(typeof(View).Assembly.Location));
         references.Add(MetadataReference.CreateFromFile(typeof(ustring).Assembly.Location));

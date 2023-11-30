@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Configurations>Debug;Release;Debug-net8.0;Release-net8.0</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,8 +19,20 @@
 	  </PackageReference>
   </ItemGroup>
 
+  <Choose>
+    <When Condition="'$(Configuration)'=='Debug-net8.0' Or '$(Configuration)'=='Release-net8.0'">
+      <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
   <ItemGroup>
     <ProjectReference Include="..\src\TerminalGuiDesigner.csproj" />
   </ItemGroup>
-
 </Project>

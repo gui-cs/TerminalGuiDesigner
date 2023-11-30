@@ -19,17 +19,27 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug-net8.0|Any CPU = Debug-net8.0|Any CPU
 		Release|Any CPU = Release|Any CPU
+		Release-net8.0|Any CPU = Release-net8.0|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{93CDA720-AEC9-4FE2-A1CB-AF62CE6BEFA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{93CDA720-AEC9-4FE2-A1CB-AF62CE6BEFA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93CDA720-AEC9-4FE2-A1CB-AF62CE6BEFA6}.Debug-net8.0|Any CPU.ActiveCfg = Debug-net8.0|Any CPU
+		{93CDA720-AEC9-4FE2-A1CB-AF62CE6BEFA6}.Debug-net8.0|Any CPU.Build.0 = Debug-net8.0|Any CPU
 		{93CDA720-AEC9-4FE2-A1CB-AF62CE6BEFA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93CDA720-AEC9-4FE2-A1CB-AF62CE6BEFA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93CDA720-AEC9-4FE2-A1CB-AF62CE6BEFA6}.Release-net8.0|Any CPU.ActiveCfg = Release-net8.0|Any CPU
+		{93CDA720-AEC9-4FE2-A1CB-AF62CE6BEFA6}.Release-net8.0|Any CPU.Build.0 = Release-net8.0|Any CPU
 		{A207B4E2-4821-4710-A0C2-25236DE7FE99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A207B4E2-4821-4710-A0C2-25236DE7FE99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A207B4E2-4821-4710-A0C2-25236DE7FE99}.Debug-net8.0|Any CPU.ActiveCfg = Debug-net8.0|Any CPU
+		{A207B4E2-4821-4710-A0C2-25236DE7FE99}.Debug-net8.0|Any CPU.Build.0 = Debug-net8.0|Any CPU
 		{A207B4E2-4821-4710-A0C2-25236DE7FE99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A207B4E2-4821-4710-A0C2-25236DE7FE99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A207B4E2-4821-4710-A0C2-25236DE7FE99}.Release-net8.0|Any CPU.ActiveCfg = Release-net8.0|Any CPU
+		{A207B4E2-4821-4710-A0C2-25236DE7FE99}.Release-net8.0|Any CPU.Build.0 = Release-net8.0|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

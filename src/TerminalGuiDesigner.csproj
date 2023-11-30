@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
-	<ItemGroup>
-		<AdditionalFiles Include="stylecop.json" />
-	</ItemGroup>
-	<ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include=".\logo.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
@@ -14,11 +14,10 @@
   </ItemGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>TerminalGuiDesigner</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
-    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>TerminalGuiDesigner</PackageId>
     <Version>1.0.25</Version>
@@ -126,17 +125,17 @@
 	 * Added progress indicator for creating new Views
 	 * Fixed mouse dragging/resizing of views in subviews (e.g. TabViews)
 	</PackageReleaseNotes>
+    <Configurations>Debug;Release;Debug-net8.0;Release-net8.0</Configurations>
   </PropertyGroup>
-	<ItemGroup>
-		<Content Include="NLog.config">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Keys.yaml">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-	</ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Basic.Reference.Assemblies.Net70" Version="1.4.5" />
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Keys.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.9.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.7.0" />
     <PackageReference Include="nlog" Version="5.2.3" />
@@ -144,9 +143,29 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.CodeDom" Version="7.0.0" />
     <PackageReference Include="Terminal.gui" Version="1.14.0" />
     <PackageReference Include="YamlDotNet" Version="13.3.1" />
   </ItemGroup>
 
+  <Choose>
+    <When Condition="'$(Configuration)'=='Debug-net8.0' Or '$(Configuration)'=='Release-net8.0'">
+      <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <DefineConstants>$(DefineConstants);Building_For_Dotnet_8</DefineConstants>
+      </PropertyGroup>
+      <ItemGroup>
+        <PackageReference Include="Basic.Reference.Assemblies.Net80" Version="1.4.5" />
+        <PackageReference Include="System.CodeDom" Version="8.0.0" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+      </PropertyGroup>
+      <ItemGroup>
+        <PackageReference Include="Basic.Reference.Assemblies.Net70" Version="1.4.5" />
+        <PackageReference Include="System.CodeDom" Version="7.0.0" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
 </Project>
