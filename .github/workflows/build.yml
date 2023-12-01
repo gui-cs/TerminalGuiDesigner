@@ -15,7 +15,7 @@ jobs:
       - name: Move test results to accessible directory
         run: |
           mkdir TestResults
-          mv -v tests/TestResults/*/*.* TestResults/
+          mv -v --backup=numbered tests/TestResults/*/*.* TestResults/
       # Note: this step is currently not writing to the gist for some reason
       - name: Create Test Coverage Badge
         uses: simon-k/dotnet-code-coverage-badge@v1.0.0
