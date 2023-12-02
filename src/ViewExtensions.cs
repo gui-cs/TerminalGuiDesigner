@@ -253,7 +253,7 @@ public static class ViewExtensions
             v.Visible = false;
         }
 
-        var point = w.ScreenToView(m.X, m.Y);
+        var point = w.ScreenToBounds(m.X, m.Y);
 
         var hit = ApplicationExtensions.FindDeepestView(w, m.X, m.Y);
 
@@ -305,8 +305,8 @@ public static class ViewExtensions
     {
         // TODO: maybe this should use Frame instead? Currently this will not let you drag box
         // selection over the border of a container to select it (e.g. FrameView).
-        v.ViewToScreen(0, 0, out var x0, out var y0);
-        v.ViewToScreen(v.Bounds.Width, v.Bounds.Height, out var x1, out var y1);
+        v.BoundsToScreen(0, 0, out var x0, out var y0);
+        v.BoundsToScreen(v.Bounds.Width, v.Bounds.Height, out var x1, out var y1);
 
         return Rect.FromLTRB(x0, y0, x1, y1).IntersectsWith(screenRect);
     }
@@ -363,7 +363,7 @@ public static class ViewExtensions
             return view.Frame;
         }
 
-        return view.SuperView.ViewToScreen(view.Frame);
+        return view.SuperView.BoundsToScreen(view.Frame);
     }
 
     /// <summary>
@@ -371,7 +371,7 @@ public static class ViewExtensions
     /// </summary>
     private static Rect ViewToScreen (this View v, Rect region)
     {
-        v.ViewToScreen (region.X, region.Y, out var x, out var y, clamped: false);
+        v.BoundsToScreen (region.X, region.Y, out var x, out var y, clamped: false);
         return new Rect (x, y, region.Width, region.Height);
     }
 

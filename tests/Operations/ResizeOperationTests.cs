@@ -17,7 +17,7 @@ internal class ResizeOperationTests : Tests
             root.View.Width = Dim.Fill();
             root.View.Height = Dim.Fill();
 
-            root.View.ViewToScreen(0, 0, out var screenX, out var screenY);
+            root.View.BoundsToScreen(0, 0, out var screenX, out var screenY);
             ClassicAssert.AreEqual(1, screenX, "Expected root view of Dialog to have border 1 so client area starting at screen coordinates 1,1");
             ClassicAssert.AreEqual(1, screenY);
 
@@ -51,13 +51,13 @@ internal class ResizeOperationTests : Tests
              * 
              * */
             // Double check the above figures
-            v.ViewToScreen(0, 0, out screenX, out screenY);
+            v.BoundsToScreen(0, 0, out screenX, out screenY);
             ClassicAssert.AreEqual(4, screenX);
             ClassicAssert.AreEqual(6, screenY);
-            tab.ViewToScreen(0,0, out screenX, out screenY);
+            tab.BoundsToScreen(0,0, out screenX, out screenY);
             ClassicAssert.AreEqual(6, screenX);
             ClassicAssert.AreEqual(7, screenY);
-            tab.ViewToScreen(4, 4, out screenX, out screenY);
+            tab.BoundsToScreen(4, 4, out screenX, out screenY);
             ClassicAssert.AreEqual(10, screenX);
             ClassicAssert.AreEqual(11, screenY);
 
