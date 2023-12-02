@@ -23,7 +23,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>TerminalGuiDesigner</PackageId>
-    <Version>1.1.0-rc1</Version>
+    <Version>1.1.0</Version>
     <Authors>Thomas Nind</Authors>
     <Nullable>enable</Nullable>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -36,8 +36,8 @@
     <PackageIcon>logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>
-	v1.1.0-rc1
-	 * Prototype dual targeting dotnet 8 and 7
+	v1.1.0
+	 * Dual targeting dotnet 8 and 7
 	v1.0.25
 	 * Upgrade dependencies, stability improvements
 	v1.0.24
