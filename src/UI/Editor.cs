@@ -175,14 +175,14 @@ public class Editor : Toplevel
                 // right click
                 if (m.MouseEvent.Flags.HasFlag(this.keyMap.RightClick))
                 {
-                    var hit = this.viewBeingEdited.View.HitTest(m, out _, out _);
+                    var hit = this.viewBeingEdited.View.HitTest(m.MouseEvent, out _, out _);
 
                     if (hit != null)
                     {
                         var d = hit.GetNearestDesign() ?? this.viewBeingEdited;
                         if (d != null)
                         {
-                            this.CreateAndShowContextMenu(m, d);
+                            this.CreateAndShowContextMenu(m.MouseEvent, d);
                         }
                     }
                 }
