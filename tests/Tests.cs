@@ -148,6 +148,6 @@ internal class Tests
     {
         var str = "cat";
         object obj = str.CastToReflected(typeof(object));
-        Assert.IsInstanceOf<object>(obj);
+        ClassicAssert.IsInstanceOf<object>(obj);
     }
 }

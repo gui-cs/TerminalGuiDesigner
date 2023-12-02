@@ -24,6 +24,6 @@ internal class TextViewTests : Tests
 
         op.Do();
 
-        Assert.IsTrue(ustring.IsNullOrEmpty(tv.Text));
+        ClassicAssert.IsTrue(ustring.IsNullOrEmpty(tv.Text));
     }
 }

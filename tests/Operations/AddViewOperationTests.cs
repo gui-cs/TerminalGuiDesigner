@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using System.Linq;
 using Terminal.Gui;
 using TerminalGuiDesigner;
@@ -23,14 +23,14 @@ internal class AddViewOperationTests : Tests
             var op = new AddViewOperation(instance, d, "blah");
             op.Do();
 
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 stackSize, d.View.Subviews.Count,
                 "Expected the count of views to increase to match the number we have added");
 
-            Assert.AreSame(
+            ClassicAssert.AreSame(
                 instance, d.View.Subviews.Last(),
                 "Expected the view instance that was added to be the same we passed to operation constructor");
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 "blah" + (stackSize == 1 ? "" : stackSize.ToString()),
                 ((Design)d.View.Subviews.Last().Data).FieldName,
                 "Expected field name duplicates to be automatically resolved"
@@ -57,11 +57,11 @@ internal class AddViewOperationTests : Tests
             }
         }, out _);
 
-        Assert.AreEqual(stackSize, windowIn.GetActualSubviews().Count);
+        ClassicAssert.AreEqual(stackSize, windowIn.GetActualSubviews().Count);
 
         for (int i = 0; i < stackSize; i++)
         {
-            Assert.IsInstanceOf(supportedViews[i], windowIn.GetActualSubviews()[i]);
+            ClassicAssert.IsInstanceOf(supportedViews[i], windowIn.GetActualSubviews()[i]);
         }
     }
 
@@ -79,7 +79,7 @@ internal class AddViewOperationTests : Tests
             var instance = factory.Create(type);
             var op = new AddViewOperation(instance, d, "blah");
             OperationManager.Instance.Do(op);
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 stackSize, d.View.Subviews.Count,
                 "Expected the count of views to increase to match the number we have added");
         }
@@ -87,11 +87,11 @@ internal class AddViewOperationTests : Tests
         for (int i = 1; i <= stackSize; i++)
         {
             OperationManager.Instance.Undo();
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 stackSize-i, d.View.Subviews.Count,
                 "Expected the count of views to decrease once each time we Undo");
         }
 
-        Assert.IsEmpty(d.View.Subviews);
+        ClassicAssert.IsEmpty(d.View.Subviews);
     }
 }

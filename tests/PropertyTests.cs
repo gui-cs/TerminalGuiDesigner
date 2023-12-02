@@ -26,7 +26,7 @@ internal class PropertyTests : Tests
         var rhs = (CodeSnippetExpression)xProp.GetRhs();
 
         // The code generated for a Property of Type Pos should be the function call
-        Assert.AreEqual(rhs.Value, "Pos.Center()");
+        ClassicAssert.AreEqual(rhs.Value, "Pos.Center()");
     }
 
     [Test]
@@ -40,7 +40,7 @@ internal class PropertyTests : Tests
         var rhs = (CodeSnippetExpression)xProp.GetRhs();
 
         // The code generated for a Property of Type Pos should be the function call
-        Assert.AreEqual(rhs.Value, "Pos.Center()");
+        ClassicAssert.AreEqual(rhs.Value, "Pos.Center()");
     }
 
     [Test]
@@ -52,12 +52,12 @@ internal class PropertyTests : Tests
         colorProp.SetValue(null);
 
         var rhs = (CodeSnippetExpression)colorProp.GetRhs();
-        Assert.AreEqual(rhs.Value, "null");
+        ClassicAssert.AreEqual(rhs.Value, "null");
 
         colorProp.SetValue(Attribute.Make(Color.BrightMagenta, Color.Blue));
 
         rhs = (CodeSnippetExpression)colorProp.GetRhs();
-        Assert.AreEqual(rhs.Value, "Terminal.Gui.Attribute.Make(Color.BrightMagenta,Color.Blue)");
+        ClassicAssert.AreEqual(rhs.Value, "Terminal.Gui.Attribute.Make(Color.BrightMagenta,Color.Blue)");
     }
 
     [Test]
@@ -71,7 +71,7 @@ internal class PropertyTests : Tests
         var rhs = (CodeObjectCreateExpression)pointProp.GetRhs();
 
         // The code generated should be a new PointF
-        Assert.AreEqual(rhs.Parameters.Count, 2);
+        ClassicAssert.AreEqual(rhs.Parameters.Count, 2);
     }
 
     [Test]
@@ -86,11 +86,11 @@ internal class PropertyTests : Tests
 
         prop.SetValue('F');
 
-        Assert.AreEqual(new Rune('F'), lv.LineRune);
+        ClassicAssert.AreEqual(new Rune('F'), lv.LineRune);
 
         var code = ExpressionToCode(prop.GetRhs());
 
-        Assert.AreEqual("'F'", code);
+        ClassicAssert.AreEqual("'F'", code);
     }
 
     [Test]
@@ -103,23 +103,23 @@ internal class PropertyTests : Tests
         v.View.Add(lv);
         lv.IsInitialized = true;
 
-        Assert.AreEqual(Orientation.Horizontal, lv.Orientation);
-        Assert.AreEqual(Application.Driver.HRLine, lv.LineRune);
+        ClassicAssert.AreEqual(Orientation.Horizontal, lv.Orientation);
+        ClassicAssert.AreEqual(Application.Driver.HRLine, lv.LineRune);
         var prop = d.GetDesignableProperty(nameof(LineView.Orientation));
 
-        Assert.IsNotNull(prop);
+        ClassicAssert.IsNotNull(prop);
         prop?.SetValue(Orientation.Vertical);
-        Assert.AreEqual(Application.Driver.VLine, lv.LineRune);
+        ClassicAssert.AreEqual(Application.Driver.VLine, lv.LineRune);
 
         // now try with a dim fill
         lv.Height = Dim.Fill();
         lv.Width = 1;
 
         prop?.SetValue(Orientation.Horizontal);
-        Assert.AreEqual(Orientation.Horizontal, lv.Orientation);
-        Assert.AreEqual(Application.Driver.HRLine, lv.LineRune);
-        Assert.AreEqual(Dim.Fill(), lv.Width);
-        Assert.AreEqual(Dim.Sized(1), lv.Height);
+        ClassicAssert.AreEqual(Orientation.Horizontal, lv.Orientation);
+        ClassicAssert.AreEqual(Application.Driver.HRLine, lv.LineRune);
+        ClassicAssert.AreEqual(Dim.Fill(), lv.Width);
+        ClassicAssert.AreEqual(Dim.Sized(1), lv.Height);
     }
 
     public static string ExpressionToCode(CodeExpression expression)

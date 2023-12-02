@@ -22,7 +22,7 @@ class TextValidateFieldTests : Tests
         var factory = new ViewFactory();
         var tvfOut = (TextValidateField)factory.Create(typeof(TextValidateField));
 
-        Assert.IsNotNull(tvfOut.Provider);
+        ClassicAssert.IsNotNull(tvfOut.Provider);
 
         OperationManager.Instance.Do(new AddViewOperation(tvfOut, designOut, "myfield"));
 
@@ -33,6 +33,6 @@ class TextValidateFieldTests : Tests
 
         var tvfIn = designBackIn.View.GetActualSubviews().OfType<TextValidateField>().Single();
 
-        Assert.IsNotNull(tvfIn.Provider);
+        ClassicAssert.IsNotNull(tvfIn.Provider);
     }
 }

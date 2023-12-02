@@ -15,53 +15,53 @@ internal class PosTests : Tests
     [Test]
     public void TestIsAbsolute()
     {
-        Assert.IsTrue(Pos.At(50).IsAbsolute());
-        Assert.IsFalse(Pos.At(50).IsPercent());
-        Assert.IsFalse(Pos.At(50).IsRelative());
-        Assert.IsFalse(Pos.At(50).IsAnchorEnd(out _));
+        ClassicAssert.IsTrue(Pos.At(50).IsAbsolute());
+        ClassicAssert.IsFalse(Pos.At(50).IsPercent());
+        ClassicAssert.IsFalse(Pos.At(50).IsRelative());
+        ClassicAssert.IsFalse(Pos.At(50).IsAnchorEnd(out _));
 
-        Assert.IsTrue(Pos.At(50).IsAbsolute(out int size));
-        Assert.AreEqual(50, size);
+        ClassicAssert.IsTrue(Pos.At(50).IsAbsolute(out int size));
+        ClassicAssert.AreEqual(50, size);
 
-        Assert.IsTrue(Pos.At(50).GetPosType(new List<Design>(), out var type, out var val, out var design, out var side, out var offset));
-        Assert.AreEqual(PosType.Absolute, type);
-        Assert.AreEqual(50, val);
-        Assert.AreEqual(0, offset);
+        ClassicAssert.IsTrue(Pos.At(50).GetPosType(new List<Design>(), out var type, out var val, out var design, out var side, out var offset));
+        ClassicAssert.AreEqual(PosType.Absolute, type);
+        ClassicAssert.AreEqual(50, val);
+        ClassicAssert.AreEqual(0, offset);
     }
 
     [Test]
     public void TestIsAbsolute_FromInt()
     {
         Pos p = 50;
-        Assert.IsTrue(p.IsAbsolute());
-        Assert.IsFalse(p.IsPercent());
-        Assert.IsFalse(p.IsRelative());
-        Assert.IsFalse(p.IsAnchorEnd(out _));
+        ClassicAssert.IsTrue(p.IsAbsolute());
+        ClassicAssert.IsFalse(p.IsPercent());
+        ClassicAssert.IsFalse(p.IsRelative());
+        ClassicAssert.IsFalse(p.IsAnchorEnd(out _));
 
-        Assert.IsTrue(p.IsAbsolute(out int size));
-        Assert.AreEqual(50, size);
+        ClassicAssert.IsTrue(p.IsAbsolute(out int size));
+        ClassicAssert.AreEqual(50, size);
 
-        Assert.IsTrue(p.GetPosType(new List<Design>(), out var type, out var val, out var design, out var side, out var offset));
-        Assert.AreEqual(PosType.Absolute, type);
-        Assert.AreEqual(50, val);
-        Assert.AreEqual(0, offset);
+        ClassicAssert.IsTrue(p.GetPosType(new List<Design>(), out var type, out var val, out var design, out var side, out var offset));
+        ClassicAssert.AreEqual(PosType.Absolute, type);
+        ClassicAssert.AreEqual(50, val);
+        ClassicAssert.AreEqual(0, offset);
     }
 
     [Test]
     public void TestIsPercent()
     {
-        Assert.IsFalse(Pos.Percent(24).IsAbsolute());
-        Assert.IsTrue(Pos.Percent(24).IsPercent());
-        Assert.IsFalse(Pos.Percent(24).IsRelative());
-        Assert.IsFalse(Pos.Percent(24).IsAnchorEnd(out _));
+        ClassicAssert.IsFalse(Pos.Percent(24).IsAbsolute());
+        ClassicAssert.IsTrue(Pos.Percent(24).IsPercent());
+        ClassicAssert.IsFalse(Pos.Percent(24).IsRelative());
+        ClassicAssert.IsFalse(Pos.Percent(24).IsAnchorEnd(out _));
 
-        Assert.IsTrue(Pos.Percent(24).IsPercent(out var size));
-        Assert.AreEqual(24f, size);
+        ClassicAssert.IsTrue(Pos.Percent(24).IsPercent(out var size));
+        ClassicAssert.AreEqual(24f, size);
 
-        Assert.IsTrue(Pos.Percent(24).GetPosType(new List<Design>(), out var type, out var val, out var design, out var side, out var offset));
-        Assert.AreEqual(PosType.Percent, type);
-        Assert.AreEqual(24, val);
-        Assert.AreEqual(0, offset);
+        ClassicAssert.IsTrue(Pos.Percent(24).GetPosType(new List<Design>(), out var type, out var val, out var design, out var side, out var offset));
+        ClassicAssert.AreEqual(PosType.Percent, type);
+        ClassicAssert.AreEqual(24, val);
+        ClassicAssert.AreEqual(0, offset);
     }
 
     [Test]
@@ -70,67 +70,67 @@ internal class PosTests : Tests
         View v = new View();
         var d = new Design(new SourceCodeFile(new FileInfo("yarg.cs")), "myView", v);
 
-        Assert.IsFalse(Pos.Top(v).IsAbsolute());
-        Assert.IsFalse(Pos.Top(v).IsPercent());
-        Assert.IsTrue(Pos.Top(v).IsRelative());
-        Assert.IsFalse(Pos.Top(v).IsAnchorEnd(out _));
+        ClassicAssert.IsFalse(Pos.Top(v).IsAbsolute());
+        ClassicAssert.IsFalse(Pos.Top(v).IsPercent());
+        ClassicAssert.IsTrue(Pos.Top(v).IsRelative());
+        ClassicAssert.IsFalse(Pos.Top(v).IsAnchorEnd(out _));
 
-        Assert.IsTrue(Pos.Top(v).IsRelative(new List<Design> { d }, out var relativeTo, out var side));
-        Assert.AreSame(d, relativeTo);
-        Assert.AreEqual(Side.Top, side);
+        ClassicAssert.IsTrue(Pos.Top(v).IsRelative(new List<Design> { d }, out var relativeTo, out var side));
+        ClassicAssert.AreSame(d, relativeTo);
+        ClassicAssert.AreEqual(Side.Top, side);
 
-        Assert.IsTrue(Pos.Top(v).GetPosType(new List<Design> { d }, out var type, out var val, out relativeTo, out side, out var offset));
-        Assert.AreEqual(PosType.Relative, type);
-        Assert.AreSame(d, relativeTo);
-        Assert.AreEqual(Side.Top, side);
+        ClassicAssert.IsTrue(Pos.Top(v).GetPosType(new List<Design> { d }, out var type, out var val, out relativeTo, out side, out var offset));
+        ClassicAssert.AreEqual(PosType.Relative, type);
+        ClassicAssert.AreSame(d, relativeTo);
+        ClassicAssert.AreEqual(Side.Top, side);
     }
 
     [Test]
     public void TestIsAnchorEnd()
     {
-        Assert.IsFalse(Pos.AnchorEnd().IsAbsolute());
-        Assert.IsFalse(Pos.AnchorEnd().IsPercent());
-        Assert.IsFalse(Pos.AnchorEnd().IsRelative());
-        Assert.IsTrue(Pos.AnchorEnd().IsAnchorEnd(out _));
+        ClassicAssert.IsFalse(Pos.AnchorEnd().IsAbsolute());
+        ClassicAssert.IsFalse(Pos.AnchorEnd().IsPercent());
+        ClassicAssert.IsFalse(Pos.AnchorEnd().IsRelative());
+        ClassicAssert.IsTrue(Pos.AnchorEnd().IsAnchorEnd(out _));
 
-        Assert.IsTrue(Pos.AnchorEnd().IsAnchorEnd(out var margin));
-        Assert.AreEqual(0, margin);
+        ClassicAssert.IsTrue(Pos.AnchorEnd().IsAnchorEnd(out var margin));
+        ClassicAssert.AreEqual(0, margin);
 
-        Assert.IsTrue(Pos.AnchorEnd().GetPosType(new List<Design>(), out var type, out var val, out var design, out var side, out var offset));
-        Assert.AreEqual(PosType.AnchorEnd, type);
-        Assert.AreEqual(0, val);
-        Assert.AreEqual(0, offset);
+        ClassicAssert.IsTrue(Pos.AnchorEnd().GetPosType(new List<Design>(), out var type, out var val, out var design, out var side, out var offset));
+        ClassicAssert.AreEqual(PosType.AnchorEnd, type);
+        ClassicAssert.AreEqual(0, val);
+        ClassicAssert.AreEqual(0, offset);
     }
 
     [Test]
     public void TestIsAnchorEnd_WithMargin()
     {
-        Assert.IsFalse(Pos.AnchorEnd(2).IsAbsolute());
-        Assert.IsFalse(Pos.AnchorEnd(2).IsPercent());
-        Assert.IsFalse(Pos.AnchorEnd(2).IsRelative());
-        Assert.IsTrue(Pos.AnchorEnd(2).IsAnchorEnd(out _));
+        ClassicAssert.IsFalse(Pos.AnchorEnd(2).IsAbsolute());
+        ClassicAssert.IsFalse(Pos.AnchorEnd(2).IsPercent());
+        ClassicAssert.IsFalse(Pos.AnchorEnd(2).IsRelative());
+        ClassicAssert.IsTrue(Pos.AnchorEnd(2).IsAnchorEnd(out _));
 
-        Assert.IsTrue(Pos.AnchorEnd(2).IsAnchorEnd(out var margin));
-        Assert.AreEqual(2, margin);
+        ClassicAssert.IsTrue(Pos.AnchorEnd(2).IsAnchorEnd(out var margin));
+        ClassicAssert.AreEqual(2, margin);
 
-        Assert.IsTrue(Pos.AnchorEnd(2).GetPosType(new List<Design>(), out var type, out var val, out var design, out var side, out var offset));
-        Assert.AreEqual(PosType.AnchorEnd, type);
-        Assert.AreEqual(2, val);
-        Assert.AreEqual(0, offset);
+        ClassicAssert.IsTrue(Pos.AnchorEnd(2).GetPosType(new List<Design>(), out var type, out var val, out var design, out var side, out var offset));
+        ClassicAssert.AreEqual(PosType.AnchorEnd, type);
+        ClassicAssert.AreEqual(2, val);
+        ClassicAssert.AreEqual(0, offset);
     }
 
     [Test]
     public void TestIsAnchorEnd_WithOffset()
     {
-        Assert.IsTrue((Pos.AnchorEnd(1) + 2).GetPosType(new List<Design>(), out var type, out var val, out var design, out var side, out var offset));
-        Assert.AreEqual(PosType.AnchorEnd, type);
-        Assert.AreEqual(1, val);
-        Assert.AreEqual(2, offset);
+        ClassicAssert.IsTrue((Pos.AnchorEnd(1) + 2).GetPosType(new List<Design>(), out var type, out var val, out var design, out var side, out var offset));
+        ClassicAssert.AreEqual(PosType.AnchorEnd, type);
+        ClassicAssert.AreEqual(1, val);
+        ClassicAssert.AreEqual(2, offset);
 
-        Assert.IsTrue((Pos.AnchorEnd(1) - 2).GetPosType(new List<Design>(), out type, out val, out design, out side, out offset));
-        Assert.AreEqual(PosType.AnchorEnd, type);
-        Assert.AreEqual(1, val);
-        Assert.AreEqual(-2, offset);
+        ClassicAssert.IsTrue((Pos.AnchorEnd(1) - 2).GetPosType(new List<Design>(), out type, out val, out design, out side, out offset));
+        ClassicAssert.AreEqual(PosType.AnchorEnd, type);
+        ClassicAssert.AreEqual(1, val);
+        ClassicAssert.AreEqual(-2, offset);
     }
 
     [Test]
@@ -140,30 +140,30 @@ internal class PosTests : Tests
         var d = new Design(new SourceCodeFile(new FileInfo("yarg.cs")), "myView", v);
 
         var p = Pos.Percent(50) + 2;
-        Assert.True(p.GetPosType(new List<Design> { d }, out PosType type, out float value, out var relativeTo, out var side, out int offset), $"Could not figure out PosType for '{p}'");
-        Assert.AreEqual(PosType.Percent, type);
-        Assert.AreEqual(50, value);
-        Assert.AreEqual(2, offset);
+        ClassicAssert.True(p.GetPosType(new List<Design> { d }, out PosType type, out float value, out var relativeTo, out var side, out int offset), $"Could not figure out PosType for '{p}'");
+        ClassicAssert.AreEqual(PosType.Percent, type);
+        ClassicAssert.AreEqual(50, value);
+        ClassicAssert.AreEqual(2, offset);
 
         p = Pos.Percent(50) - 2;
-        Assert.True(p.GetPosType(new List<Design> { d }, out type, out value, out relativeTo, out side, out offset), $"Could not figure out PosType for '{p}'");
-        Assert.AreEqual(PosType.Percent, type);
-        Assert.AreEqual(50, value);
-        Assert.AreEqual(-2, offset);
+        ClassicAssert.True(p.GetPosType(new List<Design> { d }, out type, out value, out relativeTo, out side, out offset), $"Could not figure out PosType for '{p}'");
+        ClassicAssert.AreEqual(PosType.Percent, type);
+        ClassicAssert.AreEqual(50, value);
+        ClassicAssert.AreEqual(-2, offset);
 
         p = Pos.Top(v) + 2;
-        Assert.True(p.GetPosType(new List<Design> { d }, out type, out value, out relativeTo, out side, out offset), $"Could not figure out PosType for '{p}'");
-        Assert.AreEqual(PosType.Relative, type);
-        Assert.AreSame(d, relativeTo);
-        Assert.AreEqual(Side.Top, side);
-        Assert.AreEqual(2, offset);
+        ClassicAssert.True(p.GetPosType(new List<Design> { d }, out type, out value, out relativeTo, out side, out offset), $"Could not figure out PosType for '{p}'");
+        ClassicAssert.AreEqual(PosType.Relative, type);
+        ClassicAssert.AreSame(d, relativeTo);
+        ClassicAssert.AreEqual(Side.Top, side);
+        ClassicAssert.AreEqual(2, offset);
 
         p = Pos.Top(v) - 2;
-        Assert.True(p.GetPosType(new List<Design> { d }, out type, out value, out relativeTo, out side, out offset), $"Could not figure out PosType for '{p}'");
-        Assert.AreEqual(PosType.Relative, type);
-        Assert.AreSame(d, relativeTo);
-        Assert.AreEqual(Side.Top, side);
-        Assert.AreEqual(-2, offset);
+        ClassicAssert.True(p.GetPosType(new List<Design> { d }, out type, out value, out relativeTo, out side, out offset), $"Could not figure out PosType for '{p}'");
+        ClassicAssert.AreEqual(PosType.Relative, type);
+        ClassicAssert.AreSame(d, relativeTo);
+        ClassicAssert.AreEqual(Side.Top, side);
+        ClassicAssert.AreEqual(-2, offset);
     }
 
     [Test]
@@ -171,23 +171,23 @@ internal class PosTests : Tests
     {
         var v = new View();
 
-        Assert.IsNull(v.X, "As of v1.7.0 a new View started getting null for its X, if this assert fails it means that behaviour was reverted and this test can be altered or suppressed");
+        ClassicAssert.IsNull(v.X, "As of v1.7.0 a new View started getting null for its X, if this assert fails it means that behaviour was reverted and this test can be altered or suppressed");
 
-        Assert.IsTrue(v.X.IsAbsolute());
-        Assert.IsTrue(v.X.IsAbsolute(out int n));
-        Assert.AreEqual(0, n);
+        ClassicAssert.IsTrue(v.X.IsAbsolute());
+        ClassicAssert.IsTrue(v.X.IsAbsolute(out int n));
+        ClassicAssert.AreEqual(0, n);
 
-        Assert.IsFalse(v.X.IsPercent());
-        Assert.IsFalse(v.X.IsCombine());
-        Assert.IsFalse(v.X.IsCenter());
+        ClassicAssert.IsFalse(v.X.IsPercent());
+        ClassicAssert.IsFalse(v.X.IsCombine());
+        ClassicAssert.IsFalse(v.X.IsCenter());
 
-        Assert.IsFalse(v.X.IsRelative());
-        Assert.IsFalse(v.X.IsRelative(new List<Design>(), out _, out _));
+        ClassicAssert.IsFalse(v.X.IsRelative());
+        ClassicAssert.IsFalse(v.X.IsRelative(new List<Design>(), out _, out _));
 
-        Assert.IsTrue(v.X.GetPosType(new List<Design>(), out var type, out var val, out _, out _, out _));
+        ClassicAssert.IsTrue(v.X.GetPosType(new List<Design>(), out var type, out var val, out _, out _, out _));
 
-        Assert.AreEqual(PosType.Absolute, type);
-        Assert.AreEqual(0, val);
+        ClassicAssert.AreEqual(PosType.Absolute, type);
+        ClassicAssert.AreEqual(0, val);
     }
 
     [Test]
@@ -197,16 +197,16 @@ internal class PosTests : Tests
         var d = new Design(new SourceCodeFile(new FileInfo("yarg.cs")), "myView", v);
 
         var p = Pos.Percent(50);
-        Assert.AreEqual("Pos.Percent(50f)", p.ToCode(new List<Design> { d }));
+        ClassicAssert.AreEqual("Pos.Percent(50f)", p.ToCode(new List<Design> { d }));
 
         p = Pos.Left(v);
-        Assert.AreEqual("Pos.Left(myView)", p.ToCode(new List<Design> { d }));
+        ClassicAssert.AreEqual("Pos.Left(myView)", p.ToCode(new List<Design> { d }));
         p = Pos.Right(v);
-        Assert.AreEqual("Pos.Right(myView)", p.ToCode(new List<Design> { d }));
+        ClassicAssert.AreEqual("Pos.Right(myView)", p.ToCode(new List<Design> { d }));
         p = Pos.Bottom(v);
-        Assert.AreEqual("Pos.Bottom(myView)", p.ToCode(new List<Design> { d }));
+        ClassicAssert.AreEqual("Pos.Bottom(myView)", p.ToCode(new List<Design> { d }));
         p = Pos.Top(v);
-        Assert.AreEqual("Pos.Top(myView)", p.ToCode(new List<Design> { d }));
+        ClassicAssert.AreEqual("Pos.Top(myView)", p.ToCode(new List<Design> { d }));
     }
 
     [Test]
@@ -216,16 +216,16 @@ internal class PosTests : Tests
         var d = new Design(new SourceCodeFile(new FileInfo("yarg.cs")), "myView", v);
 
         var p = Pos.Percent(50) + 2;
-        Assert.AreEqual("Pos.Percent(50f) + 2", p.ToCode(new List<Design> { d }));
+        ClassicAssert.AreEqual("Pos.Percent(50f) + 2", p.ToCode(new List<Design> { d }));
 
         p = Pos.Percent(50) - 2;
-        Assert.AreEqual("Pos.Percent(50f) - 2", p.ToCode(new List<Design> { d }));
+        ClassicAssert.AreEqual("Pos.Percent(50f) - 2", p.ToCode(new List<Design> { d }));
 
         p = Pos.Right(v) + 2;
-        Assert.AreEqual("Pos.Right(myView) + 2", p.ToCode(new List<Design> { d }));
+        ClassicAssert.AreEqual("Pos.Right(myView) + 2", p.ToCode(new List<Design> { d }));
 
         p = Pos.Right(v) - 2;
-        Assert.AreEqual("Pos.Right(myView) - 2", p.ToCode(new List<Design> { d }));
+        ClassicAssert.AreEqual("Pos.Right(myView) - 2", p.ToCode(new List<Design> { d }));
     }
 
     [TestCase(Side.Left, -2, "X")]
@@ -286,11 +286,11 @@ internal class PosTests : Tests
             btnIn.Y.GetPosType(designBackIn.GetAllDesigns().ToList(), out backInType, out _, out backInRelativeTo, out backInSide, out backInOffset);
         }
 
-        Assert.AreEqual(side, backInSide);
-        Assert.AreEqual(PosType.Relative, backInType);
-        Assert.AreEqual(offset, backInOffset);
-        Assert.IsNotNull(backInRelativeTo);
-        Assert.IsInstanceOf<Label>(backInRelativeTo?.View);
+        ClassicAssert.AreEqual(side, backInSide);
+        ClassicAssert.AreEqual(PosType.Relative, backInType);
+        ClassicAssert.AreEqual(offset, backInOffset);
+        ClassicAssert.IsNotNull(backInRelativeTo);
+        ClassicAssert.IsInstanceOf<Label>(backInRelativeTo?.View);
     }
 
     [Test]
@@ -319,14 +319,14 @@ internal class PosTests : Tests
         var lblIn = designBackIn.View.GetActualSubviews().OfType<Label>().Single();
 
         lblIn.X.GetPosType(designBackIn.GetAllDesigns().ToList(), out var backInType, out var backInValue, out _, out _, out var backInOffset);
-        Assert.AreEqual(0, backInOffset);
-        Assert.AreEqual(PosType.AnchorEnd, backInType);
-        Assert.AreEqual(1, backInValue);
+        ClassicAssert.AreEqual(0, backInOffset);
+        ClassicAssert.AreEqual(PosType.AnchorEnd, backInType);
+        ClassicAssert.AreEqual(1, backInValue);
 
         lblIn.Y.GetPosType(designBackIn.GetAllDesigns().ToList(), out backInType, out backInValue, out _, out _, out backInOffset);
-        Assert.AreEqual(0, backInOffset);
-        Assert.AreEqual(PosType.AnchorEnd, backInType);
-        Assert.AreEqual(4, backInValue);
+        ClassicAssert.AreEqual(0, backInOffset);
+        ClassicAssert.AreEqual(PosType.AnchorEnd, backInType);
+        ClassicAssert.AreEqual(4, backInValue);
     }
 
     [Test]
@@ -355,13 +355,13 @@ internal class PosTests : Tests
         var lblIn = designBackIn.View.GetActualSubviews().OfType<Label>().Single();
 
         lblIn.X.GetPosType(designBackIn.GetAllDesigns().ToList(), out var backInType, out var backInValue, out _, out _, out var backInOffset);
-        Assert.AreEqual(5, backInOffset);
-        Assert.AreEqual(PosType.AnchorEnd, backInType);
-        Assert.AreEqual(1, backInValue);
+        ClassicAssert.AreEqual(5, backInOffset);
+        ClassicAssert.AreEqual(PosType.AnchorEnd, backInType);
+        ClassicAssert.AreEqual(1, backInValue);
 
         lblIn.Y.GetPosType(designBackIn.GetAllDesigns().ToList(), out backInType, out backInValue, out _, out _, out backInOffset);
-        Assert.AreEqual(-3, backInOffset);
-        Assert.AreEqual(PosType.AnchorEnd, backInType);
-        Assert.AreEqual(4, backInValue);
+        ClassicAssert.AreEqual(-3, backInOffset);
+        ClassicAssert.AreEqual(PosType.AnchorEnd, backInType);
+        ClassicAssert.AreEqual(4, backInValue);
     }
 }

@@ -24,7 +24,7 @@ class ListViewTests : Tests
         var factory = new ViewFactory();
         var lvOut = (ListView)factory.Create(typeof(ListView));
 
-        Assert.AreEqual(3, lvOut.Source.Count);
+        ClassicAssert.AreEqual(3, lvOut.Source.Count);
 
         OperationManager.Instance.Do(new AddViewOperation(lvOut, designOut, "myList"));
 
@@ -37,7 +37,7 @@ class ListViewTests : Tests
 
         var listIn = designBackIn.View.GetActualSubviews().OfType<ListView>().Single();
 
-        Assert.AreEqual(3, listIn.Source.Count);
+        ClassicAssert.AreEqual(3, listIn.Source.Count);
     }
 
     [Test]
@@ -50,15 +50,15 @@ class ListViewTests : Tests
         var d = new Design(new SourceCodeFile(file), "lv", lv);
         var prop = d.GetDesignableProperties().Single(p => p.PropertyInfo.Name.Equals("Source"));
 
-        Assert.IsNull(lv.Source);
+        ClassicAssert.IsNull(lv.Source);
 
         prop.SetValue(new string[] { "hi there", "my friend" });
 
-        Assert.AreEqual(2, lv.Source.Count);
+        ClassicAssert.AreEqual(2, lv.Source.Count);
 
         var code = PropertyTests.ExpressionToCode(prop.GetRhs());
 
-        Assert.AreEqual(
+        ClassicAssert.AreEqual(
             "new Terminal.Gui.ListWrapper(new string[] {\n            \"hi there\",\n            \"my friend\"})".Replace("\n", Environment.NewLine),
             code);
     }

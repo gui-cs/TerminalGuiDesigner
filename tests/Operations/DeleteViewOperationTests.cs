@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using Terminal.Gui;
@@ -27,13 +27,13 @@ internal class DeleteViewOperationTests : Tests
         new AddViewOperation(lbl2, designOut, "lbl2").Do();
 
         // not impossible, we could totally delete either of these
-        Assert.IsFalse(new DeleteViewOperation((Design)lbl1.Data).IsImpossible);
-        Assert.IsFalse(new DeleteViewOperation((Design)lbl2.Data).IsImpossible);
+        ClassicAssert.IsFalse(new DeleteViewOperation((Design)lbl1.Data).IsImpossible);
+        ClassicAssert.IsFalse(new DeleteViewOperation((Design)lbl2.Data).IsImpossible);
 
         // we now have a dependency of lbl2 on lbl1 so deleting lbl1 will go badly
         lbl2.X = Pos.Right(lbl1) + 5;
 
-        Assert.IsTrue(new DeleteViewOperation((Design)lbl1.Data).IsImpossible);
+        ClassicAssert.IsTrue(new DeleteViewOperation((Design)lbl1.Data).IsImpossible);
     }
 
     [Test]
@@ -56,16 +56,16 @@ internal class DeleteViewOperationTests : Tests
         lbl2.X = Pos.Right(lbl1) + 5;
 
         // Deleting both at once should be possible since there are no hanging references
-        Assert.IsFalse(new DeleteViewOperation((Design)lbl1.Data, (Design)lbl2.Data).IsImpossible);
-        Assert.IsFalse(new DeleteViewOperation((Design)lbl2.Data, (Design)lbl1.Data).IsImpossible);
+        ClassicAssert.IsFalse(new DeleteViewOperation((Design)lbl1.Data, (Design)lbl2.Data).IsImpossible);
+        ClassicAssert.IsFalse(new DeleteViewOperation((Design)lbl2.Data, (Design)lbl1.Data).IsImpossible);
 
-        Assert.AreEqual(3, designOut.GetAllDesigns().Count());
+        ClassicAssert.AreEqual(3, designOut.GetAllDesigns().Count());
         var cmd = new DeleteViewOperation((Design)lbl2.Data, (Design)lbl1.Data);
-        Assert.IsTrue(cmd.Do());
-        Assert.AreEqual(1, designOut.GetAllDesigns().Count());
+        ClassicAssert.IsTrue(cmd.Do());
+        ClassicAssert.AreEqual(1, designOut.GetAllDesigns().Count());
 
         cmd.Undo();
-        Assert.AreEqual(3, designOut.GetAllDesigns().Count());
+        ClassicAssert.AreEqual(3, designOut.GetAllDesigns().Count());
     }
 
     [TestCase(true)]
@@ -89,20 +89,20 @@ internal class DeleteViewOperationTests : Tests
         // normally commands are run with locked selection, lets run this test with both cases to be sure
         SelectionManager.Instance.LockSelection = lockSelection;
 
-        Assert.IsFalse(new DeleteViewOperation(lbl1Design).IsImpossible);
+        ClassicAssert.IsFalse(new DeleteViewOperation(lbl1Design).IsImpossible);
 
-        Assert.AreEqual(2, designOut.GetAllDesigns().Count());
+        ClassicAssert.AreEqual(2, designOut.GetAllDesigns().Count());
         var cmd = new DeleteViewOperation(lbl1Design);
 
-        Assert.Contains(lbl1Design, SelectionManager.Instance.Selected.ToArray());
+        ClassicAssert.Contains(lbl1Design, SelectionManager.Instance.Selected.ToArray());
 
-        Assert.IsTrue(cmd.Do());
-        Assert.AreEqual(1, designOut.GetAllDesigns().Count());
+        ClassicAssert.IsTrue(cmd.Do());
+        ClassicAssert.AreEqual(1, designOut.GetAllDesigns().Count());
 
-        Assert.IsEmpty(SelectionManager.Instance.Selected.ToArray(), "Deleting the view should remove it from the active selection");
+        ClassicAssert.IsEmpty(SelectionManager.Instance.Selected.ToArray(), "Deleting the view should remove it from the active selection");
 
         cmd.Undo();
-        Assert.AreEqual(2, designOut.GetAllDesigns().Count());
-        Assert.Contains(lbl1Design, SelectionManager.Instance.Selected.ToArray(), "Undoing a delete operation should restore the previous selection");
+        ClassicAssert.AreEqual(2, designOut.GetAllDesigns().Count());
+        ClassicAssert.Contains(lbl1Design, SelectionManager.Instance.Selected.ToArray(), "Undoing a delete operation should restore the previous selection");
     }
 }

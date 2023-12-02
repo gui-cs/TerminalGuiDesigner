@@ -14,7 +14,7 @@ internal class StringExtensionTests
     [TestCase("Fish1", "Fish1", new[] { "fish1"})] // default behavior is case sensitive
     public void TestMakeUnique_DefaultComparer(string stringIn, string expectedOut, string[] whenCollection)
     {
-        Assert.AreEqual(expectedOut, stringIn.MakeUnique(whenCollection));
+        ClassicAssert.AreEqual(expectedOut, stringIn.MakeUnique(whenCollection));
     }
 
     [TestCase("bob", "bob", new[] { "fish" })]
@@ -23,7 +23,7 @@ internal class StringExtensionTests
     [TestCase("fish2", "fish3", new[] { "fiSH1", "fiSH2" })]
     public void TestMakeUnique_IgnoreCaps(string stringIn, string expectedOut, string[] whenCollection)
     {
-        Assert.AreEqual(expectedOut, stringIn.MakeUnique(whenCollection,System.StringComparer.InvariantCultureIgnoreCase));
+        ClassicAssert.AreEqual(expectedOut, stringIn.MakeUnique(whenCollection,System.StringComparer.InvariantCultureIgnoreCase));
     }
 
     [TestCase("a",4," a  ")]
@@ -32,6 +32,6 @@ internal class StringExtensionTests
     [TestCase("sooooLooong", 2, "sooooLooong")]
     public void TestPadBoth(string input, int length, string expectedOutput)
     {
-        Assert.AreEqual(expectedOutput, input.PadBoth(length));
+        ClassicAssert.AreEqual(expectedOutput, input.PadBoth(length));
     }
 }
