@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
@@ -20,10 +19,10 @@ internal class CopyPasteTests : Tests
         var top = new Toplevel();
         top.Add(d.View);
 
-        ClassicAssert.IsTrue(d.IsRoot);
+        Assert.That(d.IsRoot);
         var copy = new CopyOperation(d);
 
-        ClassicAssert.IsTrue(copy.IsImpossible);
+        Assert.That(copy.IsImpossible);
     }
 
     [Test]
@@ -33,25 +32,33 @@ internal class CopyPasteTests : Tests
 
         var tv = (TableView)new ViewFactory().Create(typeof(TableView));
 
-        ClassicAssert.IsTrue(
-            new AddViewOperation(tv, d, "mytbl").Do());
+        Assert.That( new AddViewOperation(tv, d, "mytbl").Do() );
 
         var tvDesign = (Design)tv.Data;
 
-        ClassicAssert.IsFalse(
-            tv.Style.InvertSelectedCellFirstCharacter,
-            "Expected default state for this flag to be false");
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That(
+                tv.Style.InvertSelectedCellFirstCharacter, Is.False,
+                "Expected default state for this flag to be false");
 
-        ClassicAssert.IsFalse(
-            tv.FullRowSelect,
-            "Expected default state for this flag to be false");
+            Assert.That(
+                tv.FullRowSelect, Is.False,
+                "Expected default state for this flag to be false");
+        } );
 
         var dt = tv.GetDataTable();
 
         dt.Rows.Clear();
         dt.Columns.Clear();
-        dt.Columns.Add("Yarg", typeof(int));
-        dt.Columns.Add("Blerg", typeof(DateTime));
+
+        Assume.That( dt.Rows, Is.Empty );
+        Assume.That( dt.Columns, Is.Empty );
+
+        const string columnName1 = "Yarg";
+        const string columnName2 = "Blerg";
+        dt.Columns.Add(columnName1, typeof(int));
+        dt.Columns.Add(columnName2, typeof(DateTime));
 
         // flip these flags to so we can check that it is
         // properly cloned
@@ -65,40 +72,57 @@ internal class CopyPasteTests : Tests
         var copy = new CopyOperation(tvDesign);
         OperationManager.Instance.Do(copy);
 
-        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize,
-            "Since you cannot Undo a Copy we expected undo stack to be empty");
+        Assert.That( OperationManager.Instance.UndoStackSize,
+                     Is.Zero,
+                     "Since you cannot Undo a Copy we expected undo stack to be empty" );
 
         selectionManager.Clear();
 
-        ClassicAssert.IsEmpty(selectionManager.Selected);
+        Assert.That( selectionManager.Selected, Is.Null.Or.Empty );
 
         var paste = new PasteOperation(d);
         OperationManager.Instance.Do(paste);
 
-        ClassicAssert.AreEqual(1, OperationManager.Instance.UndoStackSize,
-            "Undo stack should contain the paste operation");
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( OperationManager.Instance.UndoStackSize,
+                         Is.EqualTo( 1 ),
+                         "Undo stack should contain the paste operation" );
 
-        ClassicAssert.IsNotEmpty(
-            selectionManager.Selected,
-            "After pasting, the new clone should be selected");
+            Assert.That( selectionManager.Selected,
+                         Is.Not.Empty,
+                         "After pasting, the new clone should be selected" );
+        } );
 
         var tv2Design = selectionManager.Selected.Single();
         var tv2 = (TableView)tv2Design.View;
 
         // The cloned table style/properties should match the copied ones
-        ClassicAssert.IsTrue(tv2.Style.InvertSelectedCellFirstCharacter);
-        ClassicAssert.IsTrue(tv2.FullRowSelect);
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That(tv2.Style.InvertSelectedCellFirstCharacter);
+            Assert.That(tv2.FullRowSelect);
+        } );
 
         // The cloned table columns should match the copied ones
-        ClassicAssert.AreEqual(2, tv2.Table.Columns);
-        ClassicAssert.AreEqual(0, tv2.Table.Rows);
-        ClassicAssert.AreEqual("Yarg", tv2.Table.ColumnNames[0]);
-        ClassicAssert.AreEqual("Blerg", tv2.Table.ColumnNames[1]);
-        ClassicAssert.AreEqual(typeof(int), tv2.GetDataTable().Columns[0].DataType);
-        ClassicAssert.AreEqual(typeof(DateTime), tv2.GetDataTable().Columns[1].DataType);
+        var tableSource = tv2.Table;
+        Assume.That( tableSource, Is.Not.Null );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( tableSource.Columns, Is.EqualTo( 2 ) );
+            Assert.That( tableSource.Rows, Is.Zero );
+            Assert.That( tableSource.ColumnNames[0], Is.EqualTo( columnName1 ) );
+            Assert.That( tableSource.ColumnNames[1], Is.EqualTo( columnName2 ) );
+        } );
 
-        ClassicAssert.AreNotSame(tv.Table, tv2.Table,
-            "Cloned table should be a new table not a reference to the old one");
+        var dataTableColumns = tv2.GetDataTable().Columns;
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( dataTableColumns[ 0 ].DataType, Is.EqualTo( typeof( int ) ) );
+            Assert.That( dataTableColumns[ 1 ].DataType, Is.EqualTo( typeof( DateTime ) ) );
+
+            Assert.That( tableSource, Is.Not.SameAs( tv.Table ) );
+        } );
     }
 
     [Test]
