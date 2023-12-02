@@ -78,7 +78,7 @@ internal class ColorSchemeTests : Tests
     {
         // default when creating a new view is to have no explicit
         // ColorScheme defined and just inherit from parent
-        var v = this.Get10By10View();
+        var v = Get10By10View();
 
         var btn = new Button("Hey");
         var op = new AddViewOperation(btn, v, "myBtn");
@@ -138,7 +138,7 @@ internal class ColorSchemeTests : Tests
     {
         // default when creating a new view is to have no explicit
         // ColorScheme defined and just inherit from parent
-        var v = this.Get10By10View();
+        var v = Get10By10View();
         var p = (ColorSchemeProperty?)v.GetDesignableProperty(nameof(View.ColorScheme));
 
         Assume.That( p, Is.Not.Null );

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using NUnit.Framework;
 using Terminal.Gui;
@@ -15,7 +15,7 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CannotCopyRoot()
     {
-        var d = this.Get10By10View();
+        var d = Get10By10View();
 
         var top = new Toplevel();
         top.Add(d.View);
@@ -29,7 +29,7 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPasteTableView()
     {
-        var d = this.Get10By10View();
+        var d = Get10By10View();
 
         var tv = (TableView)new ViewFactory().Create(typeof(TableView));
 
@@ -104,7 +104,7 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPastePosRelative_Simple()
     {
-        var d = this.Get10By10View();
+        var d = Get10By10View();
 
         var lbl = new Label("Name:");
         var tb = new TextField
@@ -154,7 +154,7 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPastePosRelative_CopyOnlyDepender()
     {
-        var d = this.Get10By10View();
+        var d = Get10By10View();
 
         var lbl = new Label("Name:");
         var tb = new TextField
@@ -196,7 +196,7 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPasteColorScheme()
     {
-        var d = this.Get10By10View();
+        var d = Get10By10View();
 
         var lbl = new Label("Name:");
         var tb = new TextField();
