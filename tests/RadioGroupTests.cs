@@ -11,10 +11,10 @@ class RadioGroupTests : Tests
 
         var rgIn = this.RoundTrip<Window, RadioGroup>((_, _) => { }, out _);
 
-        Assert.AreEqual(2, rgIn.RadioLabels.Length);
+        ClassicAssert.AreEqual(2, rgIn.RadioLabels.Length);
 
-        Assert.AreEqual("Option 1", rgIn.RadioLabels[0].ToString());
-        Assert.AreEqual("Option 2", rgIn.RadioLabels[1].ToString());
+        ClassicAssert.AreEqual("Option 1", rgIn.RadioLabels[0].ToString());
+        ClassicAssert.AreEqual("Option 2", rgIn.RadioLabels[1].ToString());
     }
 
     [Test]
@@ -27,11 +27,11 @@ class RadioGroupTests : Tests
                 r.RadioLabels = new string[] { "Fish", "Cat", "Balloon" };
         }, out _);
 
-        Assert.AreEqual(3, rgIn.RadioLabels.Length);
+        ClassicAssert.AreEqual(3, rgIn.RadioLabels.Length);
 
-        Assert.AreEqual("Fish", rgIn.RadioLabels[0].ToString());
-        Assert.AreEqual("Cat", rgIn.RadioLabels[1].ToString());
-        Assert.AreEqual("Balloon", rgIn.RadioLabels[2].ToString());
+        ClassicAssert.AreEqual("Fish", rgIn.RadioLabels[0].ToString());
+        ClassicAssert.AreEqual("Cat", rgIn.RadioLabels[1].ToString());
+        ClassicAssert.AreEqual("Balloon", rgIn.RadioLabels[2].ToString());
     }
 
     [Test]
@@ -43,6 +43,6 @@ class RadioGroupTests : Tests
                 r.RadioLabels = new string[] { };
             }, out _);
 
-        Assert.IsEmpty(rgIn.RadioLabels);
+        ClassicAssert.IsEmpty(rgIn.RadioLabels);
     }
 }

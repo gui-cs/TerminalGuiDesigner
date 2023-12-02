@@ -14,13 +14,13 @@ internal class TableViewTests : Tests
     {
         TableView tableIn = this.RoundTrip<Window, TableView>(
 
-            (d, v) => Assert.IsNotEmpty(v.GetDataTable().Columns, "Default ViewFactory should create some columns for new TableViews"),
+            (d, v) => ClassicAssert.IsNotEmpty(v.GetDataTable().Columns, "Default ViewFactory should create some columns for new TableViews"),
             out TableView tableOut);
 
-        Assert.IsNotNull(tableIn.Table);
+        ClassicAssert.IsNotNull(tableIn.Table);
 
-        Assert.AreEqual(tableOut.Table.Columns, tableIn.Table.Columns);
-        Assert.AreEqual(tableOut.Table.Rows, tableIn.Table.Rows);
+        ClassicAssert.AreEqual(tableOut.Table.Columns, tableIn.Table.Columns);
+        ClassicAssert.AreEqual(tableOut.Table.Rows, tableIn.Table.Rows);
     }
 
     [Test]
@@ -41,9 +41,9 @@ internal class TableViewTests : Tests
         var designBackIn = ((Design)tableIn.Data).GetRootDesign();
         var tables = designBackIn.View.GetActualSubviews().OfType<TableView>().ToArray();
 
-        Assert.AreEqual(2, tables.Length);
+        ClassicAssert.AreEqual(2, tables.Length);
 
-        Assert.That(
+        ClassicAssert.That(
             tables[0].GetDataTable().Columns.Cast<DataColumn>().Select(c => c.ColumnName),
             Is.EquivalentTo(
                 tables[1].GetDataTable().Columns.Cast<DataColumn>().Select(c => c.ColumnName)),

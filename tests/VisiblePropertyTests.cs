@@ -25,15 +25,15 @@ namespace UnitTests
                     );
                 
                 // Should start off visible
-                Assert.AreEqual(true, prop.GetValue());
-                Assert.True(v.Visible);
+                ClassicAssert.AreEqual(true, prop.GetValue());
+                ClassicAssert.True(v.Visible);
 
                 prop.SetValue(false);
 
                 // Prop should know it is not visible
-                Assert.AreEqual(false, prop.GetValue());
+                ClassicAssert.AreEqual(false, prop.GetValue());
                 // But View in editor should remain visible so that it can be clicked on etc
-                Assert.True(v.Visible);
+                ClassicAssert.True(v.Visible);
 
             },out _);
 
@@ -41,8 +41,8 @@ namespace UnitTests
             var d = (Design)result.Data;
             var prop = d.GetDesignableProperties().Single(p => p.PropertyInfo.Name.Equals(nameof(View.Visible)));
 
-            Assert.AreEqual(false, prop.GetValue());
-            Assert.True(result.Visible);
+            ClassicAssert.AreEqual(false, prop.GetValue());
+            ClassicAssert.True(result.Visible);
         }
     }
 }

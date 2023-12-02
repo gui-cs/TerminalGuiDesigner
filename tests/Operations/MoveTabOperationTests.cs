@@ -15,7 +15,7 @@ internal class MoveTabOperationTests : Tests
         // Label is not a TabView so should get Exception
         RoundTrip<Window, Label>((d, v) =>
         {
-            Assert.Throws<ArgumentException>(()=>new MoveTabOperation(d,new Tab(), 1));
+            ClassicAssert.Throws<ArgumentException>(()=>new MoveTabOperation(d,new Tab(), 1));
         }, out _);
     }
 
@@ -24,11 +24,11 @@ internal class MoveTabOperationTests : Tests
     {
         RoundTrip<Window, TabView>((d, v) =>
         {
-            Assert.AreEqual(2, v.Tabs.Count, $"Expected {nameof(ViewFactory)} to create a {nameof(TabView)} with 2 example placeholder tabs");
+            ClassicAssert.AreEqual(2, v.Tabs.Count, $"Expected {nameof(ViewFactory)} to create a {nameof(TabView)} with 2 example placeholder tabs");
             v.RemoveTab(v.Tabs.ElementAt(1));
-            Assert.AreEqual(1, v.Tabs.Count);
+            ClassicAssert.AreEqual(1, v.Tabs.Count);
 
-            Assert.IsTrue(new MoveTabOperation(d, v.SelectedTab, 1).IsImpossible,"Should be impossible to move tab when there is only one of them");
+            ClassicAssert.IsTrue(new MoveTabOperation(d, v.SelectedTab, 1).IsImpossible,"Should be impossible to move tab when there is only one of them");
         }, out _);
     }
 
@@ -56,22 +56,22 @@ internal class MoveTabOperationTests : Tests
 
             if(expectPossible)
             {
-                Assert.IsFalse(op.IsImpossible);
-                Assert.IsTrue(op.Do());
+                ClassicAssert.IsFalse(op.IsImpossible);
+                ClassicAssert.IsTrue(op.Do());
             }
             else
             {
-                Assert.IsTrue(op.IsImpossible);
-                Assert.False(op.Do());
+                ClassicAssert.IsTrue(op.IsImpossible);
+                ClassicAssert.False(op.Do());
             }
 
-            Assert.AreEqual(expectedNewIndex, v.Tabs.IndexOf(toMove));
+            ClassicAssert.AreEqual(expectedNewIndex, v.Tabs.IndexOf(toMove));
 
             op.Undo();
-            Assert.AreEqual(originalIndex, v.Tabs.IndexOf(toMove));
+            ClassicAssert.AreEqual(originalIndex, v.Tabs.IndexOf(toMove));
 
             op.Redo();
-            Assert.AreEqual(expectedNewIndex, v.Tabs.IndexOf(toMove));
+            ClassicAssert.AreEqual(expectedNewIndex, v.Tabs.IndexOf(toMove));
 
         }, out _);
     }

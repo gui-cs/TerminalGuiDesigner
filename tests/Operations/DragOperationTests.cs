@@ -32,18 +32,18 @@ internal class DragOperationTests : Tests
 
         // drag down 3 lines
         drag.ContinueDrag(new Point(2, 3));
-        Assert.AreEqual(Pos.At(0), lbl.X);
-        Assert.AreEqual(Pos.At(3), lbl.Y);
+        ClassicAssert.AreEqual(Pos.At(0), lbl.X);
+        ClassicAssert.AreEqual(Pos.At(3), lbl.Y);
 
         // finalise the operation
         drag.Do();
-        Assert.AreEqual(Pos.At(0), lbl.X);
-        Assert.AreEqual(Pos.At(3), lbl.Y);
+        ClassicAssert.AreEqual(Pos.At(0), lbl.X);
+        ClassicAssert.AreEqual(Pos.At(3), lbl.Y);
 
         // now test undoing it
         drag.Undo();
-        Assert.AreEqual(Pos.At(0), lbl.X);
-        Assert.AreEqual(Pos.At(0), lbl.Y);
+        ClassicAssert.AreEqual(Pos.At(0), lbl.X);
+        ClassicAssert.AreEqual(Pos.At(0), lbl.Y);
     }
 
     /// <summary>
@@ -66,13 +66,13 @@ internal class DragOperationTests : Tests
         MouseDrag(d, 2, 0, 2, 3);
 
         // finalize the operation
-        Assert.AreEqual(Pos.At(0), lbl.X);
-        Assert.AreEqual(Pos.At(3), lbl.Y);
+        ClassicAssert.AreEqual(Pos.At(0), lbl.X);
+        ClassicAssert.AreEqual(Pos.At(3), lbl.Y);
 
         // now test undoing it
         OperationManager.Instance.Undo();
-        Assert.AreEqual(Pos.At(0), lbl.X);
-        Assert.AreEqual(Pos.At(0), lbl.Y);
+        ClassicAssert.AreEqual(Pos.At(0), lbl.X);
+        ClassicAssert.AreEqual(Pos.At(0), lbl.Y);
     }
 
 
@@ -100,24 +100,24 @@ internal class DragOperationTests : Tests
 
         // drag down 3 lines
         drag.ContinueDrag(new Point(2, 3));
-        Assert.AreEqual(Pos.At(0), lbl1.X);
-        Assert.AreEqual(Pos.At(3), lbl1.Y);
-        Assert.AreEqual(Pos.At(1), lbl2.X);
-        Assert.AreEqual(Pos.At(4), lbl2.Y);
+        ClassicAssert.AreEqual(Pos.At(0), lbl1.X);
+        ClassicAssert.AreEqual(Pos.At(3), lbl1.Y);
+        ClassicAssert.AreEqual(Pos.At(1), lbl2.X);
+        ClassicAssert.AreEqual(Pos.At(4), lbl2.Y);
 
         // finalize the operation
         drag.Do();
-        Assert.AreEqual(Pos.At(0), lbl1.X);
-        Assert.AreEqual(Pos.At(3), lbl1.Y);
-        Assert.AreEqual(Pos.At(1), lbl2.X);
-        Assert.AreEqual(Pos.At(4), lbl2.Y);
+        ClassicAssert.AreEqual(Pos.At(0), lbl1.X);
+        ClassicAssert.AreEqual(Pos.At(3), lbl1.Y);
+        ClassicAssert.AreEqual(Pos.At(1), lbl2.X);
+        ClassicAssert.AreEqual(Pos.At(4), lbl2.Y);
 
         // now test undoing it
         drag.Undo();
-        Assert.AreEqual(Pos.At(0), lbl1.X);
-        Assert.AreEqual(Pos.At(0), lbl1.Y);
-        Assert.AreEqual(Pos.At(1), lbl2.X);
-        Assert.AreEqual(Pos.At(1), lbl2.Y);
+        ClassicAssert.AreEqual(Pos.At(0), lbl1.X);
+        ClassicAssert.AreEqual(Pos.At(0), lbl1.Y);
+        ClassicAssert.AreEqual(Pos.At(1), lbl2.X);
+        ClassicAssert.AreEqual(Pos.At(1), lbl2.Y);
     }
 
     [Test]
@@ -146,17 +146,17 @@ internal class DragOperationTests : Tests
 
         // In client coordinate system of container1 we have not moved the mouse
         // anywhere so the drag will not take the View to anywhere
-        Assert.AreEqual(1, drag.DestinationX);
-        Assert.AreEqual(2, drag.DestinationY);
+        ClassicAssert.AreEqual(1, drag.DestinationX);
+        ClassicAssert.AreEqual(2, drag.DestinationY);
 
         drag.ContinueDrag(new Point(2, 3));
 
-        Assert.AreEqual(2, drag.DestinationX);
-        Assert.AreEqual(3, drag.DestinationY);
+        ClassicAssert.AreEqual(2, drag.DestinationX);
+        ClassicAssert.AreEqual(3, drag.DestinationY);
         drag.Do();
 
-        Assert.AreEqual(Pos.At(2), lbl.X);
-        Assert.AreEqual(Pos.At(3), lbl.Y);
+        ClassicAssert.AreEqual(Pos.At(2), lbl.X);
+        ClassicAssert.AreEqual(Pos.At(3), lbl.Y);
     }
 
     [Test]
@@ -199,22 +199,22 @@ internal class DragOperationTests : Tests
         drag.ContinueDrag(new Point(6, 7));
         drag.DropInto = container2;
 
-        Assert.AreEqual(Pos.At(4), lbl.X);
-        Assert.AreEqual(Pos.At(7), lbl.Y);
-        Assert.Contains(lbl, container1.Subviews.ToArray(), "Did not expect continue drag to move to a new container");
+        ClassicAssert.AreEqual(Pos.At(4), lbl.X);
+        ClassicAssert.AreEqual(Pos.At(7), lbl.Y);
+        ClassicAssert.Contains(lbl, container1.Subviews.ToArray(), "Did not expect continue drag to move to a new container");
 
         // finalise the operation
         drag.Do();
-        Assert.IsFalse(container1.Subviews.Contains(lbl));
-        Assert.Contains(lbl, container2.Subviews.ToArray(), "Expected new container to be the one we dropped into");
-        Assert.AreEqual(Pos.At(-1), lbl.X);
-        Assert.AreEqual(Pos.At(2), lbl.Y);
+        ClassicAssert.IsFalse(container1.Subviews.Contains(lbl));
+        ClassicAssert.Contains(lbl, container2.Subviews.ToArray(), "Expected new container to be the one we dropped into");
+        ClassicAssert.AreEqual(Pos.At(-1), lbl.X);
+        ClassicAssert.AreEqual(Pos.At(2), lbl.Y);
 
         // now test undoing it
         drag.Undo();
-        Assert.AreEqual(Pos.At(1), lbl.X);
-        Assert.AreEqual(Pos.At(2), lbl.Y);
-        Assert.Contains(lbl, container1.Subviews.ToArray(), "Expected undo to return view to its original parent");
+        ClassicAssert.AreEqual(Pos.At(1), lbl.X);
+        ClassicAssert.AreEqual(Pos.At(2), lbl.Y);
+        ClassicAssert.Contains(lbl, container1.Subviews.ToArray(), "Expected undo to return view to its original parent");
     }
 
     [Test]
@@ -227,8 +227,8 @@ internal class DragOperationTests : Tests
         rootDesign.View.ViewToScreen(0, 0, out var screenX, out var screenY);
 
         // A window is positioned at 0,0 but its client area (to which controls are added) is 1,1 due to border
-        Assert.AreEqual(1, screenX);
-        Assert.AreEqual(1, screenY);
+        ClassicAssert.AreEqual(1, screenX);
+        ClassicAssert.AreEqual(1, screenY);
 
         var frameView = new ViewFactory().Create(typeof(FrameView));
         frameView.X = 10;
@@ -242,8 +242,8 @@ internal class DragOperationTests : Tests
         /*Window client area starts at (1,1) + (10,10 X/Y) + (1,1) for border of FrameView*/
 
         frameView.ViewToScreen(0, 0, out screenX, out screenY);
-        Assert.AreEqual(12, screenX);
-        Assert.AreEqual(12, screenY);
+        ClassicAssert.AreEqual(12, screenX);
+        ClassicAssert.AreEqual(12, screenY);
 
         var lbl = new Label(1, 2, "Hi there buddy");
         var lblDesign = new Design(rootDesign.SourceCode, "mylabel", lbl);
@@ -255,11 +255,11 @@ internal class DragOperationTests : Tests
 
         // check screen coordinates are as expected
         lblDesign.View.ViewToScreen(0, 0, out screenX, out screenY);
-        Assert.AreEqual(13, screenX, "Expected label X screen to be at its parents 0,0 (11,11) + 1");
-        Assert.AreEqual(14, screenY, "Expected label Y screen to be at its parents 0,0 (11,11) + 2");
+        ClassicAssert.AreEqual(13, screenX, "Expected label X screen to be at its parents 0,0 (11,11) + 1");
+        ClassicAssert.AreEqual(14, screenY, "Expected label Y screen to be at its parents 0,0 (11,11) + 2");
 
         // press down at 0,0 of the label
-        Assert.AreEqual(lbl, rootDesign.View.HitTest(new MouseEvent { X = 13, Y = 14 }, out _, out _)
+        ClassicAssert.AreEqual(lbl, rootDesign.View.HitTest(new MouseEvent { X = 13, Y = 14 }, out _, out _)
             , "We just asked ViewToScreen for these same coordinates, how can they fail HitTest now?");
 
         // Drag up 4 so it is no longer in its parents container.
@@ -269,8 +269,8 @@ internal class DragOperationTests : Tests
         MouseDrag(rootDesign, 13, 14, 13, 10);
 
 
-        Assert.False(frameView.GetActualSubviews().Contains(lbl), "Expected label to no longer be in the scroll view");
-        Assert.Contains(lblDesign.View, rootDesign.View.GetActualSubviews().ToArray(), "Expected label to have moved to the parent Window");
+        ClassicAssert.False(frameView.GetActualSubviews().Contains(lbl), "Expected label to no longer be in the scroll view");
+        ClassicAssert.Contains(lblDesign.View, rootDesign.View.GetActualSubviews().ToArray(), "Expected label to have moved to the parent Window");
     }
 
     [Test]
@@ -290,13 +290,13 @@ internal class DragOperationTests : Tests
             Application.Top.LayoutSubviews();
 
 
-            Assert.AreEqual(0, v.Tabs.ElementAt(0).View.GetActualSubviews().Count, "Expected TabView Tab1 to start off empty");
+            ClassicAssert.AreEqual(0, v.Tabs.ElementAt(0).View.GetActualSubviews().Count, "Expected TabView Tab1 to start off empty");
 
             // Drag the Button into the TabView
             MouseDrag(d.GetRootDesign(), 0, 0, 3, 3);
 
-            Assert.AreEqual(1, v.Tabs.ElementAt(0).View.GetActualSubviews().Count, "Expected TabView Tab1 to now contain Button");
-            Assert.IsInstanceOf<Button>(v.Tabs.ElementAt(0).View.GetActualSubviews().Single());
+            ClassicAssert.AreEqual(1, v.Tabs.ElementAt(0).View.GetActualSubviews().Count, "Expected TabView Tab1 to now contain Button");
+            ClassicAssert.IsInstanceOf<Button>(v.Tabs.ElementAt(0).View.GetActualSubviews().Single());
 
         }, out _);
     }

@@ -12,9 +12,9 @@ internal class AddColumnOperationTests : Tests
     public void TestAddColumn_BadViewType()
     {
         var d = Get10By10View();
-        var ex = Assert.Throws<ArgumentException>(() => new AddColumnOperation(d, null));
+        var ex = ClassicAssert.Throws<ArgumentException>(() => new AddColumnOperation(d, null));
 
-        Assert.AreEqual("Design must wrap a TableView to be used with this operation.", ex?.Message);
+        ClassicAssert.AreEqual("Design must wrap a TableView to be used with this operation.", ex?.Message);
     }
     
     [Test]
@@ -33,12 +33,12 @@ internal class AddColumnOperationTests : Tests
             var op = new AddColumnOperation(d, "MyCol");
             op.Do();
 
-            Assert.AreEqual(colsBefore + 1, dt.Columns.Count, "Expected AddColumnOperation to increase column count by 1");
+            ClassicAssert.AreEqual(colsBefore + 1, dt.Columns.Count, "Expected AddColumnOperation to increase column count by 1");
 
         }, out var vAfter);
 
-        Assert.AreEqual(colsBefore + 1, vAfter.GetDataTable().Columns.Count);
-        Assert.AreEqual(colsBefore + 1, vBefore?.GetDataTable().Columns.Count);
+        ClassicAssert.AreEqual(colsBefore + 1, vAfter.GetDataTable().Columns.Count);
+        ClassicAssert.AreEqual(colsBefore + 1, vBefore?.GetDataTable().Columns.Count);
     }
 
     [Test]
@@ -56,15 +56,15 @@ internal class AddColumnOperationTests : Tests
 
             var op = new AddColumnOperation(d, "MyCol");
             op.Do();
-            Assert.AreEqual(colsBefore + 1, dt.Columns.Count, "Expected AddColumnOperation to increase column count by 1");
+            ClassicAssert.AreEqual(colsBefore + 1, dt.Columns.Count, "Expected AddColumnOperation to increase column count by 1");
 
             op.Undo();
-            Assert.AreEqual(colsBefore, dt.Columns.Count, "Expected AddColumnOperation Undo to go back to original count");
+            ClassicAssert.AreEqual(colsBefore, dt.Columns.Count, "Expected AddColumnOperation Undo to go back to original count");
 
         }, out var vAfter);
 
-        Assert.AreEqual(colsBefore, vAfter.GetDataTable().Columns.Count);
-        Assert.AreEqual(colsBefore, vBefore?.GetDataTable().Columns.Count);
+        ClassicAssert.AreEqual(colsBefore, vAfter.GetDataTable().Columns.Count);
+        ClassicAssert.AreEqual(colsBefore, vBefore?.GetDataTable().Columns.Count);
     }
 
     [Test]
@@ -85,12 +85,12 @@ internal class AddColumnOperationTests : Tests
             var op = new AddColumnOperation(d, "Test");
             op.Do();
 
-            Assert.AreEqual("Test2", dt.Columns[colsBefore].ColumnName);
-            Assert.AreEqual(colsBefore + 1, dt.Columns.Count, "Expected AddColumnOperation to increase column count by 1");
+            ClassicAssert.AreEqual("Test2", dt.Columns[colsBefore].ColumnName);
+            ClassicAssert.AreEqual(colsBefore + 1, dt.Columns.Count, "Expected AddColumnOperation to increase column count by 1");
 
         }, out var vAfter);
 
-        Assert.AreEqual(colsBefore+1, vAfter.GetDataTable().Columns.Count);
-        Assert.AreEqual(colsBefore+1, vBefore?.GetDataTable().Columns.Count);
+        ClassicAssert.AreEqual(colsBefore+1, vAfter.GetDataTable().Columns.Count);
+        ClassicAssert.AreEqual(colsBefore+1, vBefore?.GetDataTable().Columns.Count);
     }
 }

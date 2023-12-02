@@ -17,7 +17,7 @@ internal class KeyboardManagerTests : Tests
         v.Data = d;
 
         var mgr = new KeyboardManager(new KeyMap());
-        Assert.IsFalse(mgr.HandleKey(v, new KeyEvent(Key.Backspace, new KeyModifiers())));
+        ClassicAssert.IsFalse(mgr.HandleKey(v, new KeyEvent(Key.Backspace, new KeyModifiers())));
         
         Application.Top.Add(v);
         v.Bounds = new Rect(0, 0, 6, 1);
@@ -42,17 +42,17 @@ internal class KeyboardManagerTests : Tests
         mgr.HandleKey(v, new KeyEvent(Key.Backspace, new KeyModifiers()));
         mgr.HandleKey(v, new KeyEvent(Key.Backspace, new KeyModifiers()));
 
-        Assert.IsTrue(string.IsNullOrWhiteSpace(v.Text.ToString()));
+        ClassicAssert.IsTrue(string.IsNullOrWhiteSpace(v.Text.ToString()));
 
         mgr.HandleKey(v, new KeyEvent(Key.B, new KeyModifiers { Shift = true }));
         mgr.HandleKey(v, new KeyEvent((Key)'a', new KeyModifiers()));
         mgr.HandleKey(v, new KeyEvent((Key)'d', new KeyModifiers()));
 
-        Assert.AreEqual("Bad", v.Text.ToString());
+        ClassicAssert.AreEqual("Bad", v.Text.ToString());
 
         mgr.HandleKey(v, new KeyEvent(Key.Backspace, new KeyModifiers()));
         mgr.HandleKey(v, new KeyEvent(Key.Backspace, new KeyModifiers()));
 
-        Assert.AreEqual("B", v.Text.ToString());
+        ClassicAssert.AreEqual("B", v.Text.ToString());
     }
 }

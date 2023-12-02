@@ -3,128 +3,134 @@
 		<AdditionalFiles Include="stylecop.json" />
 	</ItemGroup>
 	<ItemGroup>
-    <None Include=".\logo.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-	<GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackAsTool>true</PackAsTool>
-    <ToolCommandName>TerminalGuiDesigner</ToolCommandName>
-    <PackageOutputPath>./nupkg</PackageOutputPath>
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <PackageId>TerminalGuiDesigner</PackageId>
-    <Version>1.0.24</Version>
-    <Authors>Thomas Nind</Authors>
-    <Nullable>enable</Nullable>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Description>Command line visual designer tool for creating Terminal.Gui C# applications.  Create and edit Termianl.Gui views as easily as you could with the Windows Forms Designer.  All generated code is contained in a seperate file (e.g. MyControl.Designer.cs).  Run the tool by calling directly from the command line 'TerminalGuiDesigner'</Description>
-    <Owners>Thomas Nind</Owners>
-    <Title>TerminalGuiDesigner does for Terminal.Gui what the Windows Forms Designer does for WinForms</Title>
-    <PackageProjectUrl>https://github.com/tznind/TerminalGuiDesigner/</PackageProjectUrl>
-    <IncludeSymbols>true</IncludeSymbols>
-    <PackageTags>csharp, terminal, c#, gui, toolkit, designer, console</PackageTags>
-    <PackageIcon>logo.png</PackageIcon>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes>
-	v1.0.24
-	 * Update Terminal.Gui dependency to 1.10.1
-	v1.0.23
-	 * Fix bug changing list items
-	v1.0.22
-	 * Allow adding `Window` as a content view (handy when designing a Toplevel)
-	v1.0.21
-	 * Add Default (Blue/Yellow) ColorScheme
-	 * Take `Toplevel` and `View` root Types out of Experimental mode
-	 * Update Terminal.Gui dependency to 1.9.0
-	v1.0.20
-	 * Ability to copy and paste containers
-	 * StatusBar support (add, remove, rename etc)
-	 * Fix right click on TableView headers
-	 * Improve context menu layout for menus, status bars etc 
-	 * Improved private field naming conventions
-	 * RadioGroup can now be set to horizontal
-	v1.0.19
-	 * Added `-e` experimental mode flag that lets you create new Toplevel and View classes
-	 * Added dotted border around Views that do not have any visible boundary (e.g. `View`, `TabView` with ShowBorder off)
-	 * Visual improvements in dialog boxes
-	 * Fixed several issues around dragging and dropping (especially into containers)
-	 * Fixed issue with color scheme designer not showing color swatches
-	 * Fixed issue with sub-containers inside TabView not recursively saving all contents
-    v1.0.18
-	 * Fixed Checkbox ticking/unticking itself when typing 'space' (e.g. editing its name)
-	 * Fixed issues where pasted/new items sometimes did not receive focus
-	 * Fixed select all not working
-	v1.0.17
-	 * Added prompt if there are unsaved changes when closing	  
-	 * Fixed bug where code generated for PosRelative could not compile due to statement sequence order
-	 * Updated to use Terminal.Gui 1.7.1 package
-	v1.0.16
-	 * Support for designing ColorSchemes
-	 * Ability to update the same field on multiple selected Views at once (e.g. set all width to 10)
-	 * Selection color (defaults to green) is now applied to single selections (e.g. tab/mouse selection).  Previously this scheme was only used for multi selection
-	 * Lower right status text now shows when there is an ongoing multi selection (e.g. 'Selected: 3 objects')
-	 * Fixed new FrameView instances being created with Text instead of Title set
-	 * Added DrawMarginFrame as a designable property on Window allowing for removing Border from root view if desired
-	 * Multi Copy/paste now preserves/maps PosRelative (e.g. view1.X = Pos.Right(otherView)) when all referenced views are in the copy/paste collection
-	v1.0.15
-	 * Fixed bug generating code for Pos/Dim values that had decimal places (e.g. Percent(60))
-	v1.0.14
-     * Improved MenuBar undo and fixed stability issues
-     * Deleting the last item on a MenuBar now removes the MenuBar too
-     * Added multi copy/paste (drag selection box and copy/paste).  Still restricted to non container views (i.e. not TabView etc)
-    v1.0.13
-     * Changing LineView Orientation now properly flips rune and Width/Height
-     * Fixed mouse drag moving and resizing container views (e.g. TabView)
-     * Fixed bug where you were able to copy/paste the root view
-    v1.0.12
-     * Fixed bug multi selections including tab views
-    v1.0.11
-     * Multi select support for delete and keyboard move
-     * Prevent Copy/Paste on root view
-     * Prevent changing Height on Buttons
-     * Added nuget icon
-    v1.0.10
-     * Support for setting shortcuts in menus (defaults to Ctrl+T)
-     * Support for renaming menu items (defaults to Ctrl+R)
-     * Delete added to view context menu
-     * Blank values in Pos/Dim editor (e.g. Margin size) are now treated as 0
-    v1.0.9
-     * Support for adding menu separators by typing '---'
-     * Prevent deleting when another view has a RelativeTo specified on it
-     * Warn when overwritting a file when creating a new View
-     * Replaced generic code comments in files generated to indicate the tool and version used
-     * Added copy and paste of single views
-     * Support for dragging a control into a seperate container (e.g. into a tab view)
-     * Prevent illegal field `(Name)` values being entered
-     * Fixed bad code being generated if multiple tables/tab views had columns/tabs with the same name
-    v1.0.8
-     * Fixed bug free typing new titles for checkboxes
-     * Fixed bug free typing new titles dropping last character typed
-     * Added keybinding (defaults to Enter) for opening context menu
-     * Changed context menu title from 'Properties' to the fieldname of the control being edited
-    v1.0.7
-     * Support for editing MenuBars
-    v1.0.6
-     * Fixed bug adding Views to newly created TabViews
-     * Fixed undo for operations performed via context menus
-     * Added Try/Catch to context menu operations
-     * Added support for TreeView
-     * Changed TableView example data to be all nulls
-	v1.0.5
-	 * Right click context menu support
-	 * Increased mouse resizing click hit box
-	 * Added progress indicator for creating new Views
-	 * Fixed mouse dragging/resizing of views in subviews (e.g. TabViews)
-	</PackageReleaseNotes>
-  </PropertyGroup>
+		<None Include=".\logo.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net7.0;net8.0</TargetFrameworks>
+		<DefineConstants>$(DefineConstants);Building_For_Dotnet_8</DefineConstants>
+		<OutputType>Exe</OutputType>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<PackAsTool>true</PackAsTool>
+		<ToolCommandName>TerminalGuiDesigner</ToolCommandName>
+		<PackageOutputPath>./nupkg</PackageOutputPath>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<PackageId>TerminalGuiDesigner</PackageId>
+		<Version>1.1.0-rc1</Version>
+		<Authors>Thomas Nind</Authors>
+		<Nullable>enable</Nullable>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Description>Command line visual designer tool for creating Terminal.Gui C# applications.  Create and edit Termianl.Gui views as easily as you could with the Windows Forms Designer.  All generated code is contained in a separate file (e.g. MyControl.Designer.cs).  Run the tool by calling directly from the command line 'TerminalGuiDesigner'</Description>
+		<Owners>Thomas Nind</Owners>
+		<Title>TerminalGuiDesigner does for Terminal.Gui what the Windows Forms Designer does for WinForms</Title>
+		<PackageProjectUrl>https://github.com/tznind/TerminalGuiDesigner/</PackageProjectUrl>
+		<IncludeSymbols>true</IncludeSymbols>
+		<PackageTags>csharp, terminal, c#, gui, toolkit, designer, console</PackageTags>
+		<PackageIcon>logo.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageReleaseNotes>
+			v1.1.0-rc1
+			* Prototype dual targeting dotnet 8 and 7
+			v1.0.25
+			* Upgrade dependencies, stability improvements
+			v1.0.24
+			* Update Terminal.Gui dependency to 1.10.1
+			v1.0.23
+			* Fix bug changing list items
+			v1.0.22
+			* Allow adding `Window` as a content view (handy when designing a Toplevel)
+			v1.0.21
+			* Add Default (Blue/Yellow) ColorScheme
+			* Take `Toplevel` and `View` root Types out of Experimental mode
+			* Update Terminal.Gui dependency to 1.9.0
+			v1.0.20
+			* Ability to copy and paste containers
+			* StatusBar support (add, remove, rename etc)
+			* Fix right click on TableView headers
+			* Improve context menu layout for menus, status bars etc
+			* Improved private field naming conventions
+			* RadioGroup can now be set to horizontal
+			v1.0.19
+			* Added `-e` experimental mode flag that lets you create new Toplevel and View classes
+			* Added dotted border around Views that do not have any visible boundary (e.g. `View`, `TabView` with ShowBorder off)
+			* Visual improvements in dialog boxes
+			* Fixed several issues around dragging and dropping (especially into containers)
+			* Fixed issue with color scheme designer not showing color swatches
+			* Fixed issue with sub-containers inside TabView not recursively saving all contents
+			v1.0.18
+			* Fixed Checkbox ticking/unticking itself when typing 'space' (e.g. editing its name)
+			* Fixed issues where pasted/new items sometimes did not receive focus
+			* Fixed select all not working
+			v1.0.17
+			* Added prompt if there are unsaved changes when closing
+			* Fixed bug where code generated for PosRelative could not compile due to statement sequence order
+			* Updated to use Terminal.Gui 1.7.1 package
+			v1.0.16
+			* Support for designing ColorSchemes
+			* Ability to update the same field on multiple selected Views at once (e.g. set all width to 10)
+			* Selection color (defaults to green) is now applied to single selections (e.g. tab/mouse selection).  Previously this scheme was only used for multi selection
+			* Lower right status text now shows when there is an ongoing multi selection (e.g. 'Selected: 3 objects')
+			* Fixed new FrameView instances being created with Text instead of Title set
+			* Added DrawMarginFrame as a designable property on Window allowing for removing Border from root view if desired
+			* Multi Copy/paste now preserves/maps PosRelative (e.g. view1.X = Pos.Right(otherView)) when all referenced views are in the copy/paste collection
+			v1.0.15
+			* Fixed bug generating code for Pos/Dim values that had decimal places (e.g. Percent(60))
+			v1.0.14
+			* Improved MenuBar undo and fixed stability issues
+			* Deleting the last item on a MenuBar now removes the MenuBar too
+			* Added multi copy/paste (drag selection box and copy/paste).  Still restricted to non container views (i.e. not TabView etc)
+			v1.0.13
+			* Changing LineView Orientation now properly flips rune and Width/Height
+			* Fixed mouse drag moving and resizing container views (e.g. TabView)
+			* Fixed bug where you were able to copy/paste the root view
+			v1.0.12
+			* Fixed bug multi selections including tab views
+			v1.0.11
+			* Multi select support for delete and keyboard move
+			* Prevent Copy/Paste on root view
+			* Prevent changing Height on Buttons
+			* Added nuget icon
+			v1.0.10
+			* Support for setting shortcuts in menus (defaults to Ctrl+T)
+			* Support for renaming menu items (defaults to Ctrl+R)
+			* Delete added to view context menu
+			* Blank values in Pos/Dim editor (e.g. Margin size) are now treated as 0
+			v1.0.9
+			* Support for adding menu separators by typing '---'
+			* Prevent deleting when another view has a RelativeTo specified on it
+			* Warn when overwritting a file when creating a new View
+			* Replaced generic code comments in files generated to indicate the tool and version used
+			* Added copy and paste of single views
+			* Support for dragging a control into a seperate container (e.g. into a tab view)
+			* Prevent illegal field `(Name)` values being entered
+			* Fixed bad code being generated if multiple tables/tab views had columns/tabs with the same name
+			v1.0.8
+			* Fixed bug free typing new titles for checkboxes
+			* Fixed bug free typing new titles dropping last character typed
+			* Added keybinding (defaults to Enter) for opening context menu
+			* Changed context menu title from 'Properties' to the fieldname of the control being edited
+			v1.0.7
+			* Support for editing MenuBars
+			v1.0.6
+			* Fixed bug adding Views to newly created TabViews
+			* Fixed undo for operations performed via context menus
+			* Added Try/Catch to context menu operations
+			* Added support for TreeView
+			* Changed TableView example data to be all nulls
+			v1.0.5
+			* Right click context menu support
+			* Increased mouse resizing click hit box
+			* Added progress indicator for creating new Views
+			* Fixed mouse dragging/resizing of views in subviews (e.g. TabViews)
+		</PackageReleaseNotes>
+	</PropertyGroup>
 	<ItemGroup>
 		<Content Include="NLog.config">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -133,17 +139,18 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Basic.Reference.Assemblies.Net70" Version="1.4.5" />
-    <PackageReference Include="CommandLineParser" Version="2.9.1" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.7.0" />
-    <PackageReference Include="nlog" Version="5.2.4" />
-    <PackageReference Include="StyleCop.Analyzers.Unstable" Version="1.2.0.507">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="System.CodeDom" Version="7.0.0" />
-    <PackageReference Include="Terminal.Gui" Version="2.0.0-tags-v2-0-0-alpha-12.1" />
-    <PackageReference Include="YamlDotNet" Version="13.7.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Basic.Reference.Assemblies.Net70" Version="1.4.5" />
+		<PackageReference Include="CommandLineParser" Version="2.9.1" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.7.0" />
+		<PackageReference Include="nlog" Version="5.2.3" />
+		<PackageReference Include="StyleCop.Analyzers.Unstable" Version="1.2.0.507">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Terminal.Gui" Version="2.0.0-tags-v2-0-0-alpha-12.1" />
+		<PackageReference Include="YamlDotNet" Version="13.3.1" />
+		<PackageReference Include="Basic.Reference.Assemblies.Net80" Version="1.4.5" />
+		<PackageReference Include="System.CodeDom" Version="8.0.0" />
+	</ItemGroup>
 </Project>

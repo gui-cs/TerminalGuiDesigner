@@ -17,13 +17,13 @@ class TabViewTests : Tests
     {
         TabView tabIn = this.RoundTrip<Dialog, TabView>(
             (d, t) =>
-            Assert.IsNotEmpty(t.Tabs, "Expected default TabView created by ViewFactory to have some placeholder Tabs"),
+            ClassicAssert.IsNotEmpty(t.Tabs, "Expected default TabView created by ViewFactory to have some placeholder Tabs"),
             out TabView tabOut);
 
-        Assert.AreEqual(2, tabIn.Tabs.Count());
+        ClassicAssert.AreEqual(2, tabIn.Tabs.Count());
 
-        Assert.AreEqual("Tab1", tabIn.Tabs.ElementAt(0).Text);
-        Assert.AreEqual("Tab2", tabIn.Tabs.ElementAt(1).Text);
+        ClassicAssert.AreEqual("Tab1", tabIn.Tabs.ElementAt(0).Text);
+        ClassicAssert.AreEqual("Tab2", tabIn.Tabs.ElementAt(1).Text);
     }
 
     /// <summary>
@@ -51,37 +51,37 @@ class TabViewTests : Tests
         var d = this.GetTabView();
         var tv = (TabView)d.View;
 
-        Assert.AreEqual("Tab1", tv.Tabs.ElementAt(0).Text);
-        Assert.AreEqual("Tab2", tv.Tabs.ElementAt(1).Text);
+        ClassicAssert.AreEqual("Tab1", tv.Tabs.ElementAt(0).Text);
+        ClassicAssert.AreEqual("Tab2", tv.Tabs.ElementAt(1).Text);
 
         // Select Tab1
         tv.SelectedTab = tv.Tabs.First();
 
         // try to move tab 1 left
         var cmd = new MoveTabOperation(d, tv.SelectedTab, -1);
-        Assert.IsFalse(cmd.Do(), "Expected not to be able to move tab left because selected is the first");
+        ClassicAssert.IsFalse(cmd.Do(), "Expected not to be able to move tab left because selected is the first");
 
         // Select Tab2
         tv.SelectedTab = tv.Tabs.Last();
 
-        Assert.AreEqual(tv.SelectedTab.Text, "Tab2", "Tab2 should be selected before operation is applied");
+        ClassicAssert.AreEqual(tv.SelectedTab.Text, "Tab2", "Tab2 should be selected before operation is applied");
 
         // try to move tab 2 left
         cmd = new MoveTabOperation(d, tv.SelectedTab, -1);
-        Assert.IsFalse(cmd.IsImpossible);
-        Assert.IsTrue(cmd.Do());
+        ClassicAssert.IsFalse(cmd.IsImpossible);
+        ClassicAssert.IsTrue(cmd.Do());
 
-        Assert.AreEqual(tv.SelectedTab.Text, "Tab2", "Tab2 should still be selected after operation is applied");
+        ClassicAssert.AreEqual(tv.SelectedTab.Text, "Tab2", "Tab2 should still be selected after operation is applied");
 
         // tabs should now be in reverse order
-        Assert.AreEqual("Tab2", tv.Tabs.ElementAt(0).Text);
-        Assert.AreEqual("Tab1", tv.Tabs.ElementAt(1).Text);
+        ClassicAssert.AreEqual("Tab2", tv.Tabs.ElementAt(0).Text);
+        ClassicAssert.AreEqual("Tab1", tv.Tabs.ElementAt(1).Text);
 
         cmd.Undo();
 
         // undoing command should revert to original tab order
-        Assert.AreEqual("Tab1", tv.Tabs.ElementAt(0).Text);
-        Assert.AreEqual("Tab2", tv.Tabs.ElementAt(1).Text);
+        ClassicAssert.AreEqual("Tab1", tv.Tabs.ElementAt(0).Text);
+        ClassicAssert.AreEqual("Tab2", tv.Tabs.ElementAt(1).Text);
     }
 
     [Test]
@@ -90,38 +90,38 @@ class TabViewTests : Tests
         var d = this.GetTabView();
         var tv = (TabView)d.View;
 
-        Assert.AreEqual(2, tv.Tabs.Count);
-        Assert.AreEqual("Tab1", tv.Tabs.ElementAt(0).Text);
-        Assert.AreEqual("Tab2", tv.Tabs.ElementAt(1).Text);
+        ClassicAssert.AreEqual(2, tv.Tabs.Count);
+        ClassicAssert.AreEqual("Tab1", tv.Tabs.ElementAt(0).Text);
+        ClassicAssert.AreEqual("Tab2", tv.Tabs.ElementAt(1).Text);
 
         // Select Tab1
         tv.SelectedTab = tv.Tabs.First();
 
         // try to remove the first tab
-        Assert.IsTrue(OperationManager.Instance.Do(new RemoveTabOperation(d, tv.SelectedTab)));
+        ClassicAssert.IsTrue(OperationManager.Instance.Do(new RemoveTabOperation(d, tv.SelectedTab)));
 
-        Assert.AreEqual(1, tv.Tabs.Count);
-        Assert.AreEqual("Tab2", tv.Tabs.ElementAt(0).Text);
+        ClassicAssert.AreEqual(1, tv.Tabs.Count);
+        ClassicAssert.AreEqual("Tab2", tv.Tabs.ElementAt(0).Text);
 
         // remove the last tab (tab2)
-        Assert.IsTrue(OperationManager.Instance.Do(new RemoveTabOperation(d, tv.SelectedTab)));
-        Assert.IsEmpty(tv.Tabs);
+        ClassicAssert.IsTrue(OperationManager.Instance.Do(new RemoveTabOperation(d, tv.SelectedTab)));
+        ClassicAssert.IsEmpty(tv.Tabs);
 
         OperationManager.Instance.Undo();
 
-        Assert.AreEqual(1, tv.Tabs.Count);
-        Assert.AreEqual("Tab2", tv.Tabs.ElementAt(0).Text);
+        ClassicAssert.AreEqual(1, tv.Tabs.Count);
+        ClassicAssert.AreEqual("Tab2", tv.Tabs.ElementAt(0).Text);
 
         OperationManager.Instance.Redo();
-        Assert.IsEmpty(tv.Tabs);
+        ClassicAssert.IsEmpty(tv.Tabs);
 
         // undo removing both
         OperationManager.Instance.Undo();
         OperationManager.Instance.Undo();
 
-        Assert.AreEqual(2, tv.Tabs.Count);
-        Assert.AreEqual("Tab1", tv.Tabs.ElementAt(0).Text.ToString());
-        Assert.AreEqual("Tab2", tv.Tabs.ElementAt(1).Text.ToString());
+        ClassicAssert.AreEqual(2, tv.Tabs.Count);
+        ClassicAssert.AreEqual("Tab1", tv.Tabs.ElementAt(0).Text.ToString());
+        ClassicAssert.AreEqual("Tab2", tv.Tabs.ElementAt(1).Text.ToString());
     }
 
     [Test]
@@ -150,10 +150,10 @@ class TabViewTests : Tests
 
         var tabIn = designBackIn.View.GetActualSubviews().OfType<TabView>().Single();
 
-        Assert.AreEqual(2, tabIn.Tabs.Count());
+        ClassicAssert.AreEqual(2, tabIn.Tabs.Count());
 
-        Assert.AreEqual("MyTab", tabIn.Tabs.ElementAt(0).Text.ToString());
-        Assert.AreEqual("MyTab", tabIn.Tabs.ElementAt(1).Text.ToString());
+        ClassicAssert.AreEqual("MyTab", tabIn.Tabs.ElementAt(0).Text.ToString());
+        ClassicAssert.AreEqual("MyTab", tabIn.Tabs.ElementAt(1).Text.ToString());
     }
 
     [Test]
@@ -172,7 +172,7 @@ class TabViewTests : Tests
         var label = factory.Create(typeof(Label));
 
         OperationManager.Instance.Do(new AddViewOperation(label, (Design)tvOut.Data, "myLabel"));
-        Assert.Contains(label, tvOut.SelectedTab.View.Subviews.ToArray(), "Expected currently selected tab to have the new label but it did not");
+        ClassicAssert.Contains(label, tvOut.SelectedTab.View.Subviews.ToArray(), "Expected currently selected tab to have the new label but it did not");
 
         viewToCode.GenerateDesignerCs(designOut, typeof(Dialog));
 
@@ -182,7 +182,7 @@ class TabViewTests : Tests
         var tabIn = designBackIn.View.GetActualSubviews().OfType<TabView>().Single();
         var tabInLabel = tabIn.SelectedTab.View.Subviews.Single();
 
-        Assert.AreEqual(label.Text, tabInLabel.Text);
+        ClassicAssert.AreEqual(label.Text, tabInLabel.Text);
     }
 
     [Test]
@@ -203,11 +203,11 @@ class TabViewTests : Tests
 
         var tvDesign = new Design(source, "tv", tv);
 
-        Assert.Contains(tvDesign, tvDesign.GetAllDesigns().ToArray());
-        Assert.Contains(lbl1, tvDesign.GetAllDesigns().ToArray());
-        Assert.Contains(lbl2, tvDesign.GetAllDesigns().ToArray());
+        ClassicAssert.Contains(tvDesign, tvDesign.GetAllDesigns().ToArray());
+        ClassicAssert.Contains(lbl1, tvDesign.GetAllDesigns().ToArray());
+        ClassicAssert.Contains(lbl2, tvDesign.GetAllDesigns().ToArray());
 
-        Assert.AreEqual(3, tvDesign.GetAllDesigns().Count(), $"Expected only 3 Designs but they were {string.Join(",", tvDesign.GetAllDesigns())}");
+        ClassicAssert.AreEqual(3, tvDesign.GetAllDesigns().Count(), $"Expected only 3 Designs but they were {string.Join(",", tvDesign.GetAllDesigns())}");
     }
 
     [Test]
@@ -215,12 +215,12 @@ class TabViewTests : Tests
     {
         var inst = new TabView();
 
-        Assert.IsTrue(inst.Style.ShowBorder);
-        Assert.False(inst.IsBorderlessContainerView());
+        ClassicAssert.IsTrue(inst.Style.ShowBorder);
+        ClassicAssert.False(inst.IsBorderlessContainerView());
 
         inst.Style.ShowBorder = false;
 
-        Assert.True(inst.IsBorderlessContainerView());
+        ClassicAssert.True(inst.IsBorderlessContainerView());
     }
 
     [Test]
@@ -228,11 +228,11 @@ class TabViewTests : Tests
     {
         var inst = new TabView();
 
-        Assert.IsFalse(inst.Style.TabsOnBottom);
-        Assert.False(inst.IsBorderlessContainerView());
+        ClassicAssert.IsFalse(inst.Style.TabsOnBottom);
+        ClassicAssert.False(inst.IsBorderlessContainerView());
 
         inst.Style.TabsOnBottom = true;
 
-        Assert.True(inst.IsBorderlessContainerView());
+        ClassicAssert.True(inst.IsBorderlessContainerView());
     }
 }

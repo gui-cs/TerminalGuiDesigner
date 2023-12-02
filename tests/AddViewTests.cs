@@ -29,17 +29,17 @@ internal class AddViewTests : Tests
         var op = new AddViewOperation(lbl, designOut, "label1");
 
         OperationManager.Instance.Do(op);
-        Assert.AreEqual(1, designOut.View.GetActualSubviews().OfType<Label>().Count());
+        ClassicAssert.AreEqual(1, designOut.View.GetActualSubviews().OfType<Label>().Count());
 
         OperationManager.Instance.Undo();
-        Assert.AreEqual(0, designOut.View.GetActualSubviews().OfType<Label>().Count());
+        ClassicAssert.AreEqual(0, designOut.View.GetActualSubviews().OfType<Label>().Count());
 
         viewToCode.GenerateDesignerCs(designOut, typeof(Dialog));
 
         var codeToView = new CodeToView(designOut.SourceCode);
         var designBackIn = codeToView.CreateInstance();
 
-        Assert.AreEqual(0, designBackIn.View.GetActualSubviews().OfType<Label>().Count());
+        ClassicAssert.AreEqual(0, designBackIn.View.GetActualSubviews().OfType<Label>().Count());
     }
 
     [Test]
@@ -67,7 +67,7 @@ internal class AddViewTests : Tests
 
         var lblIn = designBackIn.View.GetActualSubviews().OfType<Label>().Single();
 
-        Assert.AreEqual(lblOut.Text, lblIn.Text);
+        ClassicAssert.AreEqual(lblOut.Text, lblIn.Text);
     }
 
     /// <summary>
@@ -89,15 +89,15 @@ internal class AddViewTests : Tests
             lbl.X = offset == null ? Pos.Percent(60) : offset.Value ? Pos.Percent(60) + 1 : Pos.Percent(60) - 1;
         }, out var lblOut);
 
-        Assert.AreEqual(lblOut.Text, lblIn.Text);
+        ClassicAssert.AreEqual(lblOut.Text, lblIn.Text);
 
         lblIn.Width.GetDimType(out var outDimType, out var outDimValue, out var outDimOffset);
         lblIn.X.GetPosType(new List<Design>(), out var outPosType, out var outPosValue, out var outPosOffset, out _, out _);
 
-        Assert.AreEqual(DimType.Percent, outDimType);
-        Assert.Less(Math.Abs(60f - outDimValue), 0.0001);
+        ClassicAssert.AreEqual(DimType.Percent, outDimType);
+        ClassicAssert.Less(Math.Abs(60f - outDimValue), 0.0001);
 
-        Assert.AreEqual(PosType.Percent, outPosType);
-        Assert.Less(Math.Abs(60f - outPosValue), 0.0001);
+        ClassicAssert.AreEqual(PosType.Percent, outPosType);
+        ClassicAssert.Less(Math.Abs(60f - outPosValue), 0.0001);
     }
 }

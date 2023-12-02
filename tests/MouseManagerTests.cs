@@ -23,8 +23,8 @@ internal class MouseManagerTests : Tests
         var mgr = new MouseManager();
 
         // we haven't done anything yet
-        Assert.AreEqual(0, OperationManager.Instance.UndoStackSize);
-        Assert.AreEqual(0, lbl.Bounds.Y);
+        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
+        ClassicAssert.AreEqual(0, lbl.Bounds.Y);
 
         // user presses down over the control
         var e = new MouseEvent
@@ -36,10 +36,10 @@ internal class MouseManagerTests : Tests
 
         mgr.HandleMouse(e, d);
 
-        Assert.AreEqual(0, lbl.Bounds.Y);
+        ClassicAssert.AreEqual(0, lbl.Bounds.Y);
 
         // we still haven't committed to anything
-        Assert.AreEqual(0, OperationManager.Instance.UndoStackSize);
+        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
 
         // user pulled view down but still has mouse down
         e = new MouseEvent
@@ -50,10 +50,10 @@ internal class MouseManagerTests : Tests
         };
         mgr.HandleMouse(e, d);
 
-        Assert.AreEqual((Pos)1, lbl.Y);
+        ClassicAssert.AreEqual((Pos)1, lbl.Y);
 
         // we still haven't committed to anything
-        Assert.AreEqual(0, OperationManager.Instance.UndoStackSize);
+        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
 
         // user releases mouse (in place)
         e = new MouseEvent
@@ -63,10 +63,10 @@ internal class MouseManagerTests : Tests
         };
         mgr.HandleMouse(e, d);
 
-        Assert.AreEqual((Pos)1, lbl.Y);
+        ClassicAssert.AreEqual((Pos)1, lbl.Y);
 
         // we have now committed the drag so could undo
-        Assert.AreEqual(1, OperationManager.Instance.UndoStackSize);
+        ClassicAssert.AreEqual(1, OperationManager.Instance.UndoStackSize);
     }
 
     [TestCase(typeof(Button))]
@@ -85,15 +85,15 @@ internal class MouseManagerTests : Tests
         view.Data = design;
         d.View.Add(view);
 
-        Assert.AreEqual(8, view.Bounds.Width);
+        ClassicAssert.AreEqual(8, view.Bounds.Width);
         var mgr = new MouseManager();
 
         // we haven't done anything yet
-        Assert.AreEqual(0, OperationManager.Instance.UndoStackSize);
-        Assert.AreEqual(0, view.Bounds.X);
-        Assert.AreEqual(0, view.Bounds.Y);
-        Assert.AreEqual(8, view.Bounds.Width);
-        Assert.AreEqual(1, view.Bounds.Height);
+        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
+        ClassicAssert.AreEqual(0, view.Bounds.X);
+        ClassicAssert.AreEqual(0, view.Bounds.Y);
+        ClassicAssert.AreEqual(8, view.Bounds.Width);
+        ClassicAssert.AreEqual(1, view.Bounds.Height);
 
         // user presses down in the lower right of control
         var e = new MouseEvent
@@ -105,10 +105,10 @@ internal class MouseManagerTests : Tests
 
         mgr.HandleMouse(e, d);
 
-        Assert.AreEqual(0, view.Bounds.Y);
+        ClassicAssert.AreEqual(0, view.Bounds.Y);
 
         // we still haven't committed to anything
-        Assert.AreEqual(0, OperationManager.Instance.UndoStackSize);
+        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
 
         // user pulled view size +1 width and +1 height
         e = new MouseEvent
@@ -119,13 +119,13 @@ internal class MouseManagerTests : Tests
         };
         mgr.HandleMouse(e, d);
 
-        Assert.AreEqual(0, view.Bounds.X);
-        Assert.AreEqual(0, view.Bounds.Y);
-        Assert.AreEqual(10, view.Bounds.Width, "Expected resize to increase Width when dragging");
-        Assert.AreEqual(1, view.Bounds.Height, "Expected resize of button to ignore Y component");
+        ClassicAssert.AreEqual(0, view.Bounds.X);
+        ClassicAssert.AreEqual(0, view.Bounds.Y);
+        ClassicAssert.AreEqual(10, view.Bounds.Width, "Expected resize to increase Width when dragging");
+        ClassicAssert.AreEqual(1, view.Bounds.Height, "Expected resize of button to ignore Y component");
 
         // we still haven't committed to anything
-        Assert.AreEqual(0, OperationManager.Instance.UndoStackSize);
+        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
 
         // user releases mouse (in place)
         e = new MouseEvent
@@ -135,13 +135,13 @@ internal class MouseManagerTests : Tests
         };
         mgr.HandleMouse(e, d);
 
-        Assert.AreEqual(0, view.Bounds.X);
-        Assert.AreEqual(0, view.Bounds.Y);
-        Assert.AreEqual(10, view.Bounds.Width, "Expected resize to increase Width when dragging");
-        Assert.AreEqual(1, view.Bounds.Height);
+        ClassicAssert.AreEqual(0, view.Bounds.X);
+        ClassicAssert.AreEqual(0, view.Bounds.Y);
+        ClassicAssert.AreEqual(10, view.Bounds.Width, "Expected resize to increase Width when dragging");
+        ClassicAssert.AreEqual(1, view.Bounds.Height);
 
         // we have now committed the drag so could undo
-        Assert.AreEqual(1, OperationManager.Instance.UndoStackSize);
+        ClassicAssert.AreEqual(1, OperationManager.Instance.UndoStackSize);
     }
 
     [TestCase(typeof(View))]
@@ -160,11 +160,11 @@ internal class MouseManagerTests : Tests
         var mgr = new MouseManager();
 
         // we haven't done anything yet
-        Assert.AreEqual(0, OperationManager.Instance.UndoStackSize);
-        Assert.AreEqual(0, view.Bounds.X);
-        Assert.AreEqual(0, view.Bounds.Y);
-        Assert.AreEqual(10, view.Bounds.Width);
-        Assert.AreEqual(1, view.Bounds.Height);
+        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
+        ClassicAssert.AreEqual(0, view.Bounds.X);
+        ClassicAssert.AreEqual(0, view.Bounds.Y);
+        ClassicAssert.AreEqual(10, view.Bounds.Width);
+        ClassicAssert.AreEqual(1, view.Bounds.Height);
 
         // user presses down in the lower right of control
         var e = new MouseEvent
@@ -176,10 +176,10 @@ internal class MouseManagerTests : Tests
 
         mgr.HandleMouse(e, d);
 
-        Assert.AreEqual(0, view.Bounds.Y);
+        ClassicAssert.AreEqual(0, view.Bounds.Y);
 
         // we still haven't committed to anything
-        Assert.AreEqual(0, OperationManager.Instance.UndoStackSize);
+        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
 
         // user pulled view size down and left
         e = new MouseEvent
@@ -190,15 +190,15 @@ internal class MouseManagerTests : Tests
         };
         mgr.HandleMouse(e, d);
 
-        Assert.AreEqual(0, view.Bounds.X);
-        Assert.AreEqual(0, view.Bounds.Y);
-        Assert.AreEqual(10, view.Bounds.Width, "Expected Width to remain constant because it is Dim.Fill()");
-        Assert.AreEqual(4, view.Bounds.Height, "Expected resize to update Y component");
-        Assert.AreEqual(Dim.Fill(),view.Width);
-        Assert.AreEqual(Dim.Sized(4), view.Height);
+        ClassicAssert.AreEqual(0, view.Bounds.X);
+        ClassicAssert.AreEqual(0, view.Bounds.Y);
+        ClassicAssert.AreEqual(10, view.Bounds.Width, "Expected Width to remain constant because it is Dim.Fill()");
+        ClassicAssert.AreEqual(4, view.Bounds.Height, "Expected resize to update Y component");
+        ClassicAssert.AreEqual(Dim.Fill(),view.Width);
+        ClassicAssert.AreEqual(Dim.Sized(4), view.Height);
 
         // we still haven't committed to anything
-        Assert.AreEqual(0, OperationManager.Instance.UndoStackSize);
+        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
 
         // user releases mouse (in place)
         e = new MouseEvent
@@ -208,26 +208,26 @@ internal class MouseManagerTests : Tests
         };
         mgr.HandleMouse(e, d);
 
-        Assert.AreEqual(0, view.Bounds.X);
-        Assert.AreEqual(0, view.Bounds.Y);
-        Assert.AreEqual(10, view.Bounds.Width, "Expected Width to remain constant because it is Dim.Fill()");
-        Assert.AreEqual(4, view.Bounds.Height, "Expected resize to update Y component");
-        Assert.AreEqual(Dim.Fill(), view.Width);
-        Assert.AreEqual(Dim.Sized(4), view.Height);
+        ClassicAssert.AreEqual(0, view.Bounds.X);
+        ClassicAssert.AreEqual(0, view.Bounds.Y);
+        ClassicAssert.AreEqual(10, view.Bounds.Width, "Expected Width to remain constant because it is Dim.Fill()");
+        ClassicAssert.AreEqual(4, view.Bounds.Height, "Expected resize to update Y component");
+        ClassicAssert.AreEqual(Dim.Fill(), view.Width);
+        ClassicAssert.AreEqual(Dim.Sized(4), view.Height);
 
         // we have now committed the drag so could undo
-        Assert.AreEqual(1, OperationManager.Instance.UndoStackSize);
+        ClassicAssert.AreEqual(1, OperationManager.Instance.UndoStackSize);
 
         OperationManager.Instance.Undo();
 
         // Should reset us to the initial state
-        Assert.AreEqual(0, OperationManager.Instance.UndoStackSize);
-        Assert.AreEqual(0, view.Bounds.X);
-        Assert.AreEqual(0, view.Bounds.Y);
-        Assert.AreEqual(10, view.Bounds.Width);
-        Assert.AreEqual(1, view.Bounds.Height); 
-        Assert.AreEqual(Dim.Fill(), view.Width);
-        Assert.AreEqual(Dim.Sized(1), view.Height);
+        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
+        ClassicAssert.AreEqual(0, view.Bounds.X);
+        ClassicAssert.AreEqual(0, view.Bounds.Y);
+        ClassicAssert.AreEqual(10, view.Bounds.Width);
+        ClassicAssert.AreEqual(1, view.Bounds.Height); 
+        ClassicAssert.AreEqual(Dim.Fill(), view.Width);
+        ClassicAssert.AreEqual(Dim.Sized(1), view.Height);
 
     }
 
@@ -253,11 +253,11 @@ internal class MouseManagerTests : Tests
         var mgr = new MouseManager();
 
         // we haven't done anything yet
-        Assert.AreEqual(0, OperationManager.Instance.UndoStackSize);
-        Assert.AreEqual(locationOfViewX, view.Frame.X);
-        Assert.AreEqual(locationOfViewY, view.Frame.Y);
-        Assert.AreEqual(1, view.Bounds.Width);
-        Assert.AreEqual(1, view.Bounds.Height);
+        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
+        ClassicAssert.AreEqual(locationOfViewX, view.Frame.X);
+        ClassicAssert.AreEqual(locationOfViewY, view.Frame.Y);
+        ClassicAssert.AreEqual(1, view.Bounds.Width);
+        ClassicAssert.AreEqual(1, view.Bounds.Height);
 
         // user presses down in the lower right of control
         var e = new MouseEvent
@@ -268,16 +268,16 @@ internal class MouseManagerTests : Tests
         };
 
         var hit = view.HitTest(e, out var isBorder, out var isLowerRight);
-        Assert.AreSame(view, hit);
-        Assert.IsTrue(isBorder);
-        Assert.IsFalse(isLowerRight,"Upper left should never be considered lower right even if view is 1x1");
+        ClassicAssert.AreSame(view, hit);
+        ClassicAssert.IsTrue(isBorder);
+        ClassicAssert.IsFalse(isLowerRight,"Upper left should never be considered lower right even if view is 1x1");
 
         mgr.HandleMouse(e, d);
 
-        Assert.AreEqual(locationOfViewY, view.Frame.Y);
+        ClassicAssert.AreEqual(locationOfViewY, view.Frame.Y);
 
         // we still haven't committed to anything
-        Assert.AreEqual(0, OperationManager.Instance.UndoStackSize);
+        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
 
         // user pulled view size down and left
         e = new MouseEvent
@@ -288,8 +288,8 @@ internal class MouseManagerTests : Tests
         };
         mgr.HandleMouse(e, d);
 
-        Assert.AreEqual(1, view.Bounds.Width);
-        Assert.AreEqual(1, view.Bounds.Height);
+        ClassicAssert.AreEqual(1, view.Bounds.Width);
+        ClassicAssert.AreEqual(1, view.Bounds.Height);
     }
 
     [TestCase(1, 1, 4, 6, new[] { 0, 2 })] // drag from 1,1 to 4,6 and expect labels 0 and 2 to be selected
@@ -355,14 +355,14 @@ internal class MouseManagerTests : Tests
 
         // do not expect dragging selection box to change anything
         // or be undoable
-        Assert.AreEqual(0, OperationManager.Instance.UndoStackSize);
+        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
 
         // for each selectable thing
         for (int i = 0; i < labels.Length; i++)
         {
             // its selection status should match the expectation
             // passed in the test case
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 expectSelected.Contains(i),
                 selection.Selected.ToList().Contains(labels[i]),
                 $"Expectation wrong for label index {i} (indexes are 0 based)");

@@ -32,7 +32,7 @@ internal class LabelTests : Tests
         OperationManager.Instance.Redo();
         OperationManager.Instance.Redo();
 
-        Assert.AreEqual($"Factor({0.5})",lblDesign.View.X.ToString());
+        ClassicAssert.AreEqual($"Factor({0.5})",lblDesign.View.X.ToString());
     }
 
     [Test]
@@ -72,6 +72,6 @@ internal class LabelTests : Tests
         OperationManager.Instance.Redo();
         OperationManager.Instance.Undo();
 
-        Assert.AreEqual($"Factor({0.5})", lblDesign.View.X.ToString());
+        ClassicAssert.AreEqual($"Factor({0.5})", lblDesign.View.X.ToString());
     }
 }
