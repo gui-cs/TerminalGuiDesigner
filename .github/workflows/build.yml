@@ -7,9 +7,6 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
-      # TODO: Remove this when v2 is live and we are consuming via nuget
-      - name: Initialize submodules
-        run: git submodule init && git submodule update
       - name: Build
         run: cd src && dotnet build
       - name: Test
@@ -18,7 +15,7 @@ jobs:
       - name: Move test results to accessible directory
         run: |
           mkdir TestResults
-          mv -v tests/TestResults/*/*.* TestResults/
+          mv -v --backup=numbered tests/TestResults/*/*.* TestResults/
       # Note: this step is currently not writing to the gist for some reason
       - name: Create Test Coverage Badge
         uses: simon-k/dotnet-code-coverage-badge@v1.0.0
@@ -40,4 +37,4 @@ jobs:
         run: cd src && dotnet pack
       - name: Publish to Nuget
         if: contains(github.ref, 'refs/tags/v')
-        run: dotnet nuget push ./src/nupkg/TerminalGuiDesigner.$(fgrep \<Version\> ./src/TerminalGuiDesigner.csproj | grep -oEi '[0-9.]+').nupkg --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push ./src/nupkg/TerminalGuiDesigner.$(fgrep \<Version\> ./src/TerminalGuiDesigner.csproj | grep -oEi '[-0-9.rc]{5,}').nupkg --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
