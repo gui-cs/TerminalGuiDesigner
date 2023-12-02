@@ -21,6 +21,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\TerminalGuiDesigner.csproj" />
+		<Using Include="NUnit.Framework"/>
+		<Using Include="NUnit.Framework.Legacy"/>
   </ItemGroup>
 
 </Project>
