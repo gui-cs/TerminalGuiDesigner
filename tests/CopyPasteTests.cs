@@ -9,6 +9,7 @@ using Attribute = Terminal.Gui.Attribute;
 
 namespace UnitTests;
 
+[TestFixture]
 internal class CopyPasteTests : Tests
 {
     [Test]
@@ -176,7 +177,7 @@ internal class CopyPasteTests : Tests
     /// Pos how it is (pointing at the original View).
     /// </summary>
     [Test]
-    public void CopyPastePosRelative_CopyOnlyDepender()
+    public void CopyPastePosRelative_CopyOnlyDependent()
     {
         var d = Get10By10View();
 
