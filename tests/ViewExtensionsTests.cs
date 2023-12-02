@@ -22,7 +22,7 @@ internal class ViewExtensionsTests : Tests
     [TestCase(3, 4, true, false, false)]
     public void TestHitTest(int x, int y, bool hit, bool border, bool lowerRight)
     {
-        var v = this.Get10By10View().View;
+        var v = Get10By10View().View;
 
         v.X = 2;
         v.Y = 3;

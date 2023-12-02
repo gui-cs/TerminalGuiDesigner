@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
@@ -13,7 +12,7 @@ internal class MouseManagerTests : Tests
     [Test]
     public void TestDragLabel()
     {
-        var d = this.Get10By10View();
+        var d = Get10By10View();
 
         var lbl = new Label(0, 0, "Hi there buddy");
         var lblDesign = new Design(d.SourceCode, "mylabel", lbl);
@@ -75,7 +74,7 @@ internal class MouseManagerTests : Tests
     [TestCase(typeof(View))]
     public void TestDragResizeView(Type t)
     {
-        var d = this.Get10By10View();
+        var d = Get10By10View();
 
         var view = new ViewFactory().Create(t);
         view.Width = 8;
@@ -147,7 +146,7 @@ internal class MouseManagerTests : Tests
     [TestCase(typeof(View))]
     public void TestDragResizeView_CannotResize_DimFill(Type t)
     {
-        var d = this.Get10By10View();
+        var d = Get10By10View();
 
         var view = new ViewFactory().Create(t);
         view.Width = Dim.Fill();
@@ -235,7 +234,7 @@ internal class MouseManagerTests : Tests
     [TestCase(3, 3)]
     public void TestDragResizeView_CannotResize_1By1View(int locationOfViewX, int locationOfViewY)
     {
-        var d = this.Get10By10View();
+        var d = Get10By10View();
 
         var view = new ViewFactory().Create(typeof(View));
         view.Width = Dim.Fill();
@@ -296,7 +295,7 @@ internal class MouseManagerTests : Tests
     [TestCase(1, 1, 10, 10, new[] { 0, 1, 2 })] // drag over all
     public void TestDragSelectionBox(int xStart, int yStart, int xEnd, int yEnd, int[] expectSelected)
     {
-        var d = this.Get10By10View();
+        var d = Get10By10View();
 
         /*
           Hi

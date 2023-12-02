@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -41,7 +41,7 @@ internal class Tests
         ColorSchemeManager.Instance.Clear();
     }
 
-    protected Design Get10By10View()
+    protected static Design Get10By10View()
     {
         // start with blank slate
         OperationManager.Instance.ClearUndoRedo();

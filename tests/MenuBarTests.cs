@@ -174,7 +174,7 @@ class MenuBarTests : Tests
 
     private MenuBar GetMenuBar(out Design root)
     {
-        root = this.Get10By10View();
+        root = Get10By10View();
 
         var bar = (MenuBar)new ViewFactory().Create(typeof(MenuBar));
         var addBarCmd = new AddViewOperation(bar, root, "mb");

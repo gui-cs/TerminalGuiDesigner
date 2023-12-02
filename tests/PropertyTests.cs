@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.IO;
@@ -96,7 +96,7 @@ internal class PropertyTests : Tests
     [Test]
     public void TestChanging_LineViewOrientation()
     {
-        var v = this.Get10By10View();
+        var v = Get10By10View();
         var lv = (LineView)new ViewFactory().Create(typeof(LineView));
         var d = new Design(v.SourceCode, "lv", lv);
 
