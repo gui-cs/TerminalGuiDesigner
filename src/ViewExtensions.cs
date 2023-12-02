@@ -257,6 +257,11 @@ public static class ViewExtensions
 
         var hit = ApplicationExtensions.FindDeepestView(w, m.X, m.Y);
 
+        if (hit != null && hit.GetType().Name.Equals("TabRowView"))
+        {
+            hit = hit.SuperView;
+        }
+
         int resizeBoxArea = 2;
 
         if (hit != null)
