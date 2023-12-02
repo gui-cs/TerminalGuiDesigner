@@ -47,8 +47,8 @@ public partial class ChoicesDialog : Terminal.Gui.Window {
         this.buttons = new Terminal.Gui.ColorScheme();
         this.buttons.Normal = new Terminal.Gui.Attribute(Terminal.Gui.Color.DarkGray, Terminal.Gui.Color.White);
         this.buttons.HotNormal = new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.White);
-        this.buttons.Focus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Red, Terminal.Gui.Color.Brown);
-        this.buttons.HotFocus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.Brown);
+        this.buttons.Focus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Red, Terminal.Gui.Color.Yellow);
+        this.buttons.HotFocus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.Yellow);
         this.buttons.Disabled = new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.Black);
         this.Width = Dim.Percent(85f);
         this.Height = Dim.Percent(85f);
