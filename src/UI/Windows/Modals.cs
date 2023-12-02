@@ -161,7 +161,7 @@ public class Modals
     {
         Key key = 0;
         var dlg = new LoadingDialog("Press Shortcut or Del");
-        dlg.KeyPress += (s, e) =>
+        dlg.KeyPressed += (s, e) =>
         {
             key = e.KeyEvent.Key;
             Application.RequestStop();

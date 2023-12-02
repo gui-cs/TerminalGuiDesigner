@@ -129,25 +129,27 @@ public class Editor : Toplevel
             }
         }
 
-        Application.RootKeyEvent += (k) =>
+        Application.KeyPressed += (s,k) =>
         {
             if (this.editting)
             {
-                return false;
+                return;
             }
 
             try
             {
-                return this.HandleKey(k);
+                if (this.HandleKey(k.KeyEvent))
+                {
+                    k.Handled = true;
+                }
             }
             catch (System.Exception ex)
             {
                 ExceptionViewer.ShowException("Error processing keystroke", ex);
-                return false;
             }
         };
 
-        Application.RootMouseEvent += (m) =>
+        Application.MouseEvent += (s,m) =>
         {
             // if another window is showing don't respond to mouse
             if (!this.IsCurrentTop)
@@ -156,7 +158,7 @@ public class Editor : Toplevel
             }
 
             // If disabling drag we suppress all but right click (button 3)
-            if (!m.Flags.HasFlag(MouseFlags.Button3Clicked) && !this.enableDrag)
+            if (!m.MouseEvent.Flags.HasFlag(MouseFlags.Button3Clicked) && !this.enableDrag)
             {
                 return;
             }
@@ -168,10 +170,10 @@ public class Editor : Toplevel
 
             try
             {
-                this.mouseManager.HandleMouse(m, this.viewBeingEdited);
+                this.mouseManager.HandleMouse(m.MouseEvent, this.viewBeingEdited);
 
                 // right click
-                if (m.Flags.HasFlag(this.keyMap.RightClick))
+                if (m.MouseEvent.Flags.HasFlag(this.keyMap.RightClick))
                 {
                     var hit = this.viewBeingEdited.View.HitTest(m, out _, out _);
 
@@ -909,11 +911,11 @@ Ctrl+Q - Quit
             (t, o) =>
             {
                 // no longer loading
-                Application.MainLoop.Invoke(() => Application.RequestStop());
+                Application.Invoke(() => Application.RequestStop());
 
                 if (t.Exception != null)
                 {
-                    Application.MainLoop.Invoke(() =>
+                    Application.Invoke(() =>
                         ExceptionViewer.ShowException($"Failed to open '{toOpen.Name}'", t.Exception));
                     return;
                 }
@@ -1035,11 +1037,11 @@ Ctrl+Q - Quit
             (t, o) =>
             {
                 // no longer loading
-                Application.MainLoop.Invoke(() => Application.RequestStop());
+                Application.Invoke(() => Application.RequestStop());
 
                 if (t.Exception != null)
                 {
-                    Application.MainLoop.Invoke(() =>
+                    Application.Invoke(() =>
                         ExceptionViewer.ShowException($"Failed to create '{toOpen.Name}'", t.Exception));
                     return;
                 }
@@ -1057,7 +1059,7 @@ Ctrl+Q - Quit
 
     private void ReplaceViewBeingEdited(Design design)
     {
-        Application.MainLoop.Invoke(() =>
+        Application.Invoke(() =>
         {
             // remove the old view
             if (this.viewBeingEdited != null)

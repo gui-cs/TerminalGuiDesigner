@@ -293,7 +293,7 @@ public class Design
     {
         // we use this scheme if it is a known scheme
         return this.HasKnownColorScheme() &&
-            (this.View.ColorScheme.AreEqual(scheme) || (this.State.OriginalScheme?.AreEqual(scheme) ?? false));
+            (this.View.ColorScheme.Equals(scheme) || (this.State.OriginalScheme?.Equals(scheme) ?? false));
     }
 
     /// <summary>

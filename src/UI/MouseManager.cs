@@ -123,7 +123,9 @@ public class MouseManager
             // move selection box to new mouse position
             this.selectionEnd = new Point(m.X, m.Y);
             viewBeingEdited.View.SetNeedsDisplay();
-            Application.DoEvents();
+
+            // BUG: Method is gone, will this functionality work still without it?
+            // Application.DoEvents();
             return;
         }
 
@@ -136,7 +138,8 @@ public class MouseManager
             {
                 this.dragOperation.ContinueDrag(dest.Value);
                 viewBeingEdited.View.SetNeedsDisplay();
-                Application.DoEvents();
+                // BUG: Method is gone, will this functionality work still without it?
+                // Application.DoEvents();
             }
         }
 
@@ -150,7 +153,8 @@ public class MouseManager
             this.resizeOperation.ContinueResize(dest);
 
             viewBeingEdited.View.SetNeedsDisplay();
-            Application.DoEvents();
+            // BUG: Method is gone, will this functionality work still without it?
+            // Application.DoEvents();
         }
 
         // end things (because mouse released)
@@ -171,7 +175,8 @@ public class MouseManager
                 this.selectionEnd = null;
                 this.selectionContainer = null;
                 viewBeingEdited.View.SetNeedsDisplay();
-                Application.DoEvents();
+                // BUG: Method is gone, will this functionality work still without it?
+                // Application.DoEvents();
             }
 
             // end dragging

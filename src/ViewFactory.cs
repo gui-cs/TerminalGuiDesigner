@@ -142,7 +142,7 @@ public class ViewFactory
             {
                 Width = 20,
                 Height = 5,
-                GraphColor = Attribute.Make(Color.White, Color.Black),
+                GraphColor = new Attribute(Color.White, Color.Black),
             };
         }
 
