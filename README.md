@@ -207,6 +207,7 @@ italics are experimental and require passing the `-e` flag when starting applica
   - [x] TimeField
   - [x] TreeView
   - [x] View
+  - [ ] Slider
 
 ### Class Diagram
 -------------------------------

@@ -57,7 +57,7 @@ internal class PropertyTests : Tests
         colorProp.SetValue(new Attribute(Color.BrightMagenta, Color.Blue));
 
         rhs = (CodeSnippetExpression)colorProp.GetRhs();
-        ClassicAssert.AreEqual(rhs.Value, "Terminal.Gui.Attribute.Make(Color.BrightMagenta,Color.Blue)");
+        ClassicAssert.AreEqual(rhs.Value, "new Terminal.Gui.Attribute(Color.BrightMagenta,Color.Blue)");
     }
 
     [Test]

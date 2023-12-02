@@ -279,8 +279,8 @@ internal class ColorSchemeTests : Tests
             ?? throw new Exception("Expected lblIn to have an explicit ColorScheme")),
             "Expected designer to still know the name of lblIn ColorScheme");
 
-        ClassicAssert.AreEqual(Color.Cyan, lblIn.ColorScheme.Normal.Foreground, "Expected Label to be updated with the new color after being changed in designer");
-        ClassicAssert.AreEqual(Color.Cyan, lblInDesign.State.OriginalScheme?.Normal.Foreground, "Expected Label Design to also be updated with the new color");
+        ClassicAssert.AreEqual(new Color(Color.Cyan), lblIn.ColorScheme.Normal.Foreground, "Expected Label to be updated with the new color after being changed in designer");
+        ClassicAssert.AreEqual(new Color(Color.Cyan), lblInDesign.State.OriginalScheme?.Normal.Foreground, "Expected Label Design to also be updated with the new color");
     }
 
     class TestClass : View
