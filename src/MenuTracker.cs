@@ -8,7 +8,7 @@ namespace TerminalGuiDesigner;
 /// </summary>
 public class MenuTracker
 {
-    private HashSet<MenuBar> bars = new();
+    private readonly HashSet<MenuBar> bars = new();
 
     private MenuTracker()
     {
