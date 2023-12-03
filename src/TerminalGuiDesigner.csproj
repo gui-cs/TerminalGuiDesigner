@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<ItemGroup>
 		<AdditionalFiles Include="stylecop.json" />
 	</ItemGroup>
@@ -15,6 +15,7 @@
 	<PropertyGroup>
 		<TargetFrameworks>net7.0;net8.0</TargetFrameworks>
 		<DefineConstants>$(DefineConstants);Building_For_Dotnet_8</DefineConstants>
+		<LangVersion>11</LangVersion>
 		<OutputType>Exe</OutputType>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<PackAsTool>true</PackAsTool>
