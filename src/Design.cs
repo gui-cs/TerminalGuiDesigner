@@ -153,10 +153,7 @@ public class Design
         // HACK: if you don't pull the label out first it complains that you cant set Focusable to true
         // on the Label because its super is not focusable :(
         var super = subView.SuperView;
-        if (super != null)
-        {
-            super.Remove(subView);
-        }
+        super?.Remove(subView);
 
         // all views can be focused so that they can be edited
         // or deleted etc
@@ -236,10 +233,7 @@ public class Design
             }
         }
 
-        if (super != null)
-        {
-            super.Add(subView);
-        }
+        super?.Add(subView);
 
         var d = new Design(this.SourceCode, name, subView);
         return d;
