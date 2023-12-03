@@ -454,7 +454,7 @@ public class EditDialog : Window
         }
     }
 
-    private void List_KeyPress(object sender, KeyEventEventArgs obj)
+    private void List_KeyPress(object? sender, KeyEventEventArgs obj)
     {
         // TODO: Should really be using the _keyMap here
         if (obj.KeyEvent.Key == Key.DeleteChar)

@@ -579,7 +579,7 @@ Ctrl+Q - Quit
         this.Add(this.rootCommandsListView);
     }
 
-    private void Editor_Closing(object sender, ToplevelClosingEventArgs obj)
+    private void Editor_Closing(object? sender, ToplevelClosingEventArgs obj)
     {
         if (this.viewBeingEdited == null)
         {

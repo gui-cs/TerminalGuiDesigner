@@ -181,18 +181,18 @@ public class MenuTracker
         return toReturn;
     }
 
-    private void MenuClosing(object sender, MenuClosingEventArgs obj)
+    private void MenuClosing(object? sender, MenuClosingEventArgs obj)
     {
         this.CurrentlyOpenMenuItem = null;
     }
 
-    private void MenuOpened(object sender, MenuOpenedEventArgs obj)
+    private void MenuOpened(object? sender, MenuOpenedEventArgs obj)
     {
         this.CurrentlyOpenMenuItem = obj.MenuItem;
         this.ConvertEmptyMenus();
     }
 
-    private void MenuAllClosed(object sender, EventArgs e)
+    private void MenuAllClosed(object? sender, EventArgs e)
     {
         this.CurrentlyOpenMenuItem = null;
     }
