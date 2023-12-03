@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using Terminal.Gui;
 using Terminal.Gui.TextValidateProviders;
 using TerminalGuiDesigner.Operations;
@@ -270,11 +270,10 @@ public class EditDialog : Window
                                                .Select(o => o?.ToString())
                                                .ToArray();
 
-            if (Modals.GetArray(
+            if (Modals.TryGetArray<string>(
                 property.PropertyInfo.Name,
                 "New List Value",
-                typeof(string),
-                oldValueAsArrayOfStrings ?? Array.Empty<string>(),
+                oldValueAsArrayOfStrings,
                 out Array? resultArray))
             {
                 newValue = resultArray;

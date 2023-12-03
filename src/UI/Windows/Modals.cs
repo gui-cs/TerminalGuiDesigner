@@ -1,4 +1,4 @@
-﻿using Terminal.Gui;
+using Terminal.Gui;
 using YamlDotNet.Core.Tokens;
 using Key = Terminal.Gui.Key;
 
@@ -88,6 +88,44 @@ public class Modals
             for (int i = 0; i < newValues.Length; i++)
             {
                 result.SetValue(newValues[i].CastToReflected(arrayElement), i);
+            }
+
+            return true;
+        }
+
+        result = null;
+        return false;
+    }
+
+    internal static bool TryGetArray<T>(string windowTitle, string entryLabel, Array? initialValue, out Array? result)
+    {
+        var dlg = new GetTextDialog(
+            new ()
+            {
+                WindowTitle = windowTitle,
+                EntryLabel = entryLabel,
+                MultiLine = true,
+            },
+            initialValue == null ? string.Empty : string.Join('\n', initialValue.ToList().Select(v => v?.ToString() ?? string.Empty)));
+
+        if (dlg.ShowDialog())
+        {
+            var resultText = dlg.ResultText;
+
+            if (string.IsNullOrWhiteSpace(resultText))
+            {
+                result = Array.Empty<T>( );
+                return true;
+            }
+
+            resultText = resultText.Replace("\r\n", "\n");
+            var newValues = resultText.Split('\n');
+
+            result = new T[newValues.Length];
+
+            for (int i = 0; i < newValues.Length; i++)
+            {
+                result.SetValue(newValues[i].CastToReflected(typeof(T)), i);
             }
 
             return true;
