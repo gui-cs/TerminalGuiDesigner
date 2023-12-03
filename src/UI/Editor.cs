@@ -16,14 +16,14 @@ namespace TerminalGuiDesigner.UI;
 public class Editor : Toplevel
 {
     private readonly KeyMap keyMap;
+    private readonly KeyboardManager keyboardManager;
+    private readonly MouseManager mouseManager;
 
     private Design? viewBeingEdited;
     private bool enableDrag = true;
     private bool enableShowFocused = true;
     private bool editting = false;
 
-    private KeyboardManager keyboardManager;
-    private MouseManager mouseManager;
     private ListView? rootCommandsListView;
     private bool menuOpen;
 
@@ -579,7 +579,7 @@ Ctrl+Q - Quit
         this.Add(this.rootCommandsListView);
     }
 
-    private void Editor_Closing(object sender, ToplevelClosingEventArgs obj)
+    private void Editor_Closing(object? sender, ToplevelClosingEventArgs obj)
     {
         if (this.viewBeingEdited == null)
         {

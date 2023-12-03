@@ -13,28 +13,29 @@ public class BigListBox<T>
     private readonly string okText;
     private readonly bool addSearch;
     private readonly string prompt;
-    private IList<ListViewObject<T>> collection;
+    private readonly object taskCancellationLock = new();
+    private readonly ConcurrentBag<CancellationTokenSource> cancelFiltering = new();
+    private readonly Window win;
+    private readonly ListView listView;
+    private readonly bool addNull;
+    private readonly TextField? searchBox;
+    private readonly object callback;
 
     /// <summary>
     /// If the public constructor was used then this is the fixed list we were initialized with.
     /// </summary>
-    private IList<T> publicCollection;
+    private readonly IList<T> publicCollection;
 
-    private bool addNull;
+    private IList<ListViewObject<T>> collection;
+
 
     /// <summary>
     /// Ongoing filtering of a large collection should be cancelled when the user changes the filter even if it is not completed yet.
     /// </summary>
-    private ConcurrentBag<CancellationTokenSource> cancelFiltering = new();
-    private object taskCancellationLock = new();
-    private Window win;
-    private ListView listView;
     private bool changes;
 
-    private TextField? searchBox;
     private DateTime lastKeypress = DateTime.Now;
 
-    private object callback;
     private bool okClicked = false;
 
     /// <summary>
@@ -62,12 +63,7 @@ public class BigListBox<T>
 
         this.AspectGetter = displayMember ?? (arg => arg?.ToString() ?? string.Empty);
 
-        if (collection == null)
-        {
-            throw new ArgumentNullException(nameof(collection));
-        }
-
-        this.publicCollection = collection;
+        this.publicCollection = collection ?? throw new ArgumentNullException( nameof( collection ) );
         this.addNull = addNull;
 
         this.win = new Window()
@@ -201,7 +197,7 @@ public class BigListBox<T>
         this.Selected = this.collection[selected].Object;
     }
 
-    private void ListView_MouseClick(object sender, MouseEventEventArgs obj)
+    private void ListView_MouseClick(object? sender, MouseEventEventArgs obj)
     {
         if (obj.MouseEvent.Flags.HasFlag(MouseFlags.Button1DoubleClicked))
         {
@@ -210,7 +206,7 @@ public class BigListBox<T>
         }
     }
 
-    private void ListView_KeyPress(object sender, KeyEventEventArgs obj)
+    private void ListView_KeyPress(object? sender, KeyEventEventArgs obj)
     {
         // if user types in some text change the focus to the text box to enable searching
         var c = (char)obj.KeyEvent.KeyValue;

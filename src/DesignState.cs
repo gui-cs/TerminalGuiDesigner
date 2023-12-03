@@ -39,7 +39,7 @@ public class DesignState
     /// </summary>
     public Design Design { get; }
 
-    private void Enter(object sender, FocusEventArgs obj)
+    private void Enter(object? sender, FocusEventArgs obj)
     {
         // when tabbing or clicking into this View when nothing complicated is going on (e.g. Ctrl+Click multi select)
         if (SelectionManager.Instance.Selected.Count <= 1)
@@ -49,7 +49,7 @@ public class DesignState
         }
     }
 
-    private void DrawContent(object sender, DrawEventArgs r)
+    private void DrawContent(object? sender, DrawEventArgs r)
     {
         if (this.Design.View.IsBorderlessContainerView() && Editor.ShowBorders)
         {

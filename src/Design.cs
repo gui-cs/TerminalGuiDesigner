@@ -30,7 +30,7 @@ public class Design
     /// View Types for which <see cref="View.Text"/> does not make sense as a user
     /// configurable field (e.g. there is a Title field instead).
     /// </summary>
-    private HashSet<Type> excludeTextPropertyFor = new HashSet<Type>
+    private readonly HashSet<Type> excludeTextPropertyFor = new()
     {
         typeof(FrameView),
         typeof(TabView),
@@ -153,10 +153,7 @@ public class Design
         // HACK: if you don't pull the label out first it complains that you cant set Focusable to true
         // on the Label because its super is not focusable :(
         var super = subView.SuperView;
-        if (super != null)
-        {
-            super.Remove(subView);
-        }
+        super?.Remove(subView);
 
         // all views can be focused so that they can be edited
         // or deleted etc
@@ -236,10 +233,7 @@ public class Design
             }
         }
 
-        if (super != null)
-        {
-            super.Add(subView);
-        }
+        super?.Add(subView);
 
         var d = new Design(this.SourceCode, name, subView);
         return d;
@@ -599,7 +593,7 @@ public class Design
         }
     }
 
-    private void SuppressNativeClickEvents(object sender, MouseEventEventArgs obj)
+    private void SuppressNativeClickEvents(object? sender, MouseEventEventArgs obj)
     {
         // Suppress everything except single click (selection)
         obj.Handled = obj.MouseEvent.Flags != MouseFlags.Button1Clicked;
