@@ -15,7 +15,7 @@ public class EditDialog : Window
 {
     private readonly ListView list;
     private readonly Design design;
-    private List<Property> collection;
+    private readonly List<Property> collection = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="EditDialog"/> class.
@@ -24,16 +24,16 @@ public class EditDialog : Window
     public EditDialog(Design design)
     {
         this.design = design;
-        this.collection = this.design.GetDesignableProperties()
-            .OrderByDescending(p => p is NameProperty)
-            .ThenBy(p => p.ToString())
-            .ToList();
+        this.collection.Clear( );
+        this.collection.AddRange( this.design.GetDesignableProperties( )
+                                      .OrderByDescending( p => p is NameProperty )
+                                      .ThenBy( p => p.ToString( ) ) );
 
         // Don't let them rename the root view that would go badly
         // See `const string RootDesignName`
         if (design.IsRoot)
         {
-            this.collection = this.collection.Where(p => p is not NameProperty).ToList();
+            this.collection.RemoveAll( p => p is NameProperty );
         }
 
         this.list = new ListView(this.collection)
@@ -443,7 +443,7 @@ public class EditDialog : Window
                 }
 
                 var oldSelected = this.list.SelectedItem;
-                this.list.SetSource(this.collection = this.collection.ToList());
+                this.list.SetSource(this.collection);
                 this.list.SelectedItem = oldSelected;
                 this.list.EnsureSelectedItemVisible();
             }
