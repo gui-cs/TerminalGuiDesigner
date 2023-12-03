@@ -113,7 +113,7 @@ internal class GetTextDialog
         Application.RequestStop();
     }
 
-    private void TextField_KeyPress(object sender, KeyEventEventArgs obj)
+    private void TextField_KeyPress(object? sender, KeyEventEventArgs obj)
     {
         if (obj.KeyEvent.Key == Key.Enter && !this.args.MultiLine)
         {

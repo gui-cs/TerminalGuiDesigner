@@ -599,7 +599,7 @@ public class Design
         }
     }
 
-    private void SuppressNativeClickEvents(object sender, MouseEventEventArgs obj)
+    private void SuppressNativeClickEvents(object? sender, MouseEventEventArgs obj)
     {
         // Suppress everything except single click (selection)
         obj.Handled = obj.MouseEvent.Flags != MouseFlags.Button1Clicked;

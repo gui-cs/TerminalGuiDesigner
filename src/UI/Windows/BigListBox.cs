@@ -201,7 +201,7 @@ public class BigListBox<T>
         this.Selected = this.collection[selected].Object;
     }
 
-    private void ListView_MouseClick(object sender, MouseEventEventArgs obj)
+    private void ListView_MouseClick(object? sender, MouseEventEventArgs obj)
     {
         if (obj.MouseEvent.Flags.HasFlag(MouseFlags.Button1DoubleClicked))
         {
@@ -210,7 +210,7 @@ public class BigListBox<T>
         }
     }
 
-    private void ListView_KeyPress(object sender, KeyEventEventArgs obj)
+    private void ListView_KeyPress(object? sender, KeyEventEventArgs obj)
     {
         // if user types in some text change the focus to the text box to enable searching
         var c = (char)obj.KeyEvent.KeyValue;
