@@ -62,12 +62,7 @@ public class BigListBox<T>
 
         this.AspectGetter = displayMember ?? (arg => arg?.ToString() ?? string.Empty);
 
-        if (collection == null)
-        {
-            throw new ArgumentNullException(nameof(collection));
-        }
-
-        this.publicCollection = collection;
+        this.publicCollection = collection ?? throw new ArgumentNullException( nameof( collection ) );
         this.addNull = addNull;
 
         this.win = new Window()
