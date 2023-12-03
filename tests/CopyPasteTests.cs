@@ -5,7 +5,6 @@ using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.Operations.TabOperations;
 using TerminalGuiDesigner.ToCode;
-using Attribute = Terminal.Gui.Attribute;
 
 namespace UnitTests;
 
@@ -61,8 +60,7 @@ internal class CopyPasteTests : Tests
         dt.Columns.Add(columnName1, typeof(int));
         dt.Columns.Add(columnName2, typeof(DateTime));
 
-        // flip these flags to so we can check that it is
-        // properly cloned
+        // flip these flags, so we can check that it is properly cloned
         tv.Style.InvertSelectedCellFirstCharacter = true;
         tv.FullRowSelect = true;
 
@@ -235,7 +233,7 @@ internal class CopyPasteTests : Tests
         var selected = SelectionManager.Instance;
 
         ColorScheme green;
-        ColorSchemeManager.Instance.AddOrUpdateScheme("green", green = new ColorScheme { Normal = new Attribute(Color.Green, Color.Cyan) }, d);
+        ColorSchemeManager.Instance.AddOrUpdateScheme("green", green = new() { Normal = new(Color.Green, Color.Cyan) }, d);
         dtb.GetDesignableProperty(nameof(ColorScheme))?.SetValue(green);
         d.View.ColorScheme = green;
 
