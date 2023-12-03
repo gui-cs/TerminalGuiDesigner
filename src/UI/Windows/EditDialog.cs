@@ -13,9 +13,9 @@ namespace TerminalGuiDesigner.UI.Windows;
 /// </summary>
 public class EditDialog : Window
 {
+    private readonly ListView list;
+    private readonly Design design;
     private List<Property> collection;
-    private ListView list;
-    private Design design;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="EditDialog"/> class.

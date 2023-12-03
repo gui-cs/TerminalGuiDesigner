@@ -30,7 +30,7 @@ public class Design
     /// View Types for which <see cref="View.Text"/> does not make sense as a user
     /// configurable field (e.g. there is a Title field instead).
     /// </summary>
-    private HashSet<Type> excludeTextPropertyFor = new HashSet<Type>
+    private readonly HashSet<Type> excludeTextPropertyFor = new()
     {
         typeof(FrameView),
         typeof(TabView),
