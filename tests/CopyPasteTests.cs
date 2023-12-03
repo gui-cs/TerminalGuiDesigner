@@ -146,27 +146,27 @@ internal class CopyPasteTests : Tests
         new CopyOperation(SelectionManager.Instance.Selected.ToArray()).Do();
         var cmd = new PasteOperation(d);
 
-        ClassicAssert.IsFalse(cmd.IsImpossible);
+        Assert.That( cmd.IsImpossible, Is.False );
         OperationManager.Instance.Do(cmd);
 
         // (Root + 2 original + 2 cloned)
-        ClassicAssert.AreEqual(5, d.GetAllDesigns().Count());
+        Assert.That( d.GetAllDesigns().Count(), Is.EqualTo( 5 ) );
 
         var cloneLabelDesign = selected.Selected.ElementAt(0);
         var cloneTextFieldDesign = selected.Selected.ElementAt(1);
 
-        ClassicAssert.IsInstanceOf(typeof(Label), cloneLabelDesign.View);
-        ClassicAssert.IsInstanceOf(typeof(TextField), cloneTextFieldDesign.View);
+        Assert.That( cloneLabelDesign.View, Is.InstanceOf<Label>( ) );
+        Assert.That( cloneTextFieldDesign.View, Is.InstanceOf<TextField>( ) );
 
         cloneTextFieldDesign.View.X.GetPosType(
             d.GetAllDesigns().ToArray(),
             out var posType, out _, out var relativeTo, out var side, out var offset);
 
-        ClassicAssert.AreEqual(PosType.Relative, posType);
-        ClassicAssert.AreEqual(1, offset);
-        ClassicAssert.AreEqual(Side.Right, side);
+        Assert.That( posType, Is.EqualTo( PosType.Relative ) );
+        Assert.That( offset, Is.EqualTo( 1 ) );
+        Assert.That( side, Is.EqualTo( Side.Right ) );
 
-        ClassicAssert.AreSame(cloneLabelDesign, relativeTo, "Pasted clone should be relative to the also pasted label");
+        Assert.That( relativeTo, Is.SameAs( cloneLabelDesign ), "Pasted clone should be relative to the also pasted label");
     }
 
     /// <summary>
@@ -196,24 +196,24 @@ internal class CopyPasteTests : Tests
 
         var cmd = new PasteOperation(d);
 
-        ClassicAssert.IsFalse(cmd.IsImpossible);
+        Assert.That( cmd.IsImpossible, Is.False );
         OperationManager.Instance.Do(cmd);
 
         // (Root + 2 original + 1 cloned)
-        ClassicAssert.AreEqual(4, d.GetAllDesigns().Count());
+        Assert.That( d.GetAllDesigns().Count(), Is.EqualTo( 4 ) );
 
         var cloneTextFieldDesign = selected.Selected.ElementAt(0);
-        ClassicAssert.IsInstanceOf(typeof(TextField), cloneTextFieldDesign.View);
+        Assert.That( cloneTextFieldDesign.View, Is.InstanceOf<TextField>( ) );
 
         cloneTextFieldDesign.View.X.GetPosType(
             d.GetAllDesigns().ToArray(),
             out var posType, out _, out var relativeTo, out var side, out var offset);
 
-        ClassicAssert.AreEqual(PosType.Relative, posType);
-        ClassicAssert.AreEqual(1, offset);
-        ClassicAssert.AreEqual(Side.Right, side);
+        Assert.That( posType, Is.EqualTo( PosType.Relative ) );
+        Assert.That( offset, Is.EqualTo( 1 ) );
+        Assert.That( side, Is.EqualTo( Side.Right ) );
 
-        ClassicAssert.AreSame(lbl.Data, relativeTo, "Pasted clone should be relative to the original label");
+        Assert.That( relativeTo, Is.SameAs( lbl.Data ), "Pasted clone should be relative to the original label");
     }
 
     [Test]
