@@ -43,7 +43,7 @@ public class EditDialog : Window
             Width = Dim.Fill(2),
             Height = Dim.Fill(2),
         };
-        this.list.KeyPress += this.List_KeyPress;
+        this.list.KeyPressed += this.List_KeyPress;
 
         var btnSet = new Button("Set")
         {

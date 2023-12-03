@@ -17,22 +17,22 @@ namespace UnitTests
         {
             ClassicAssert.Contains(typeof(SpinnerView), ViewFactory.GetSupportedViews().ToArray());
 
-            ClassicAssert.IsEmpty(Application.MainLoop.timeouts);
+            ClassicAssert.IsEmpty(Application.MainLoop.Timeouts);
 
             var factory = new ViewFactory();
             var s = (SpinnerView)factory.Create(typeof(SpinnerView));
             
-            ClassicAssert.IsNotEmpty(Application.MainLoop.timeouts);
+            ClassicAssert.IsNotEmpty(Application.MainLoop.Timeouts);
             s.Dispose();
 
-            ClassicAssert.IsEmpty(Application.MainLoop.timeouts);
+            ClassicAssert.IsEmpty(Application.MainLoop.Timeouts);
         }
         [Test]
         public void TestNewSpinnerAutoSpins_AfterRoundTrip()
         {
             ClassicAssert.Contains(typeof(SpinnerView), ViewFactory.GetSupportedViews().ToArray());
 
-            ClassicAssert.IsEmpty(Application.MainLoop.timeouts);
+            ClassicAssert.IsEmpty(Application.MainLoop.Timeouts);
 
             RoundTrip<View, SpinnerView>((d,v) =>
             {
@@ -40,7 +40,7 @@ namespace UnitTests
             },out _);
 
             // Autospin original and the one that is read back in
-            ClassicAssert.AreEqual(2, Application.MainLoop.timeouts.Count);
+            ClassicAssert.AreEqual(2, Application.MainLoop.Timeouts.Count);
         }
 
         [Test]

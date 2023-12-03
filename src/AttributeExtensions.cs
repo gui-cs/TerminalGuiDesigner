@@ -12,6 +12,6 @@ public static class AttributeExtensions
     /// <returns>Code construct <paramref name="a"/>.</returns>
     public static string ToCode(this Terminal.Gui.Attribute a)
     {
-        return $"Terminal.Gui.Attribute.Make(Color.{a.Foreground},Color.{a.Background})";
+        return $"new Terminal.Gui.Attribute(Color.{a.Foreground},Color.{a.Background})";
     }
 }

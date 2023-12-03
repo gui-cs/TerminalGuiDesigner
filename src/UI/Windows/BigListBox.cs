@@ -91,7 +91,7 @@ public class BigListBox<T>
             SelectedItem = 0,
         };
 
-        this.listView.KeyPress += this.ListView_KeyPress;
+        this.listView.KeyPressed += this.ListView_KeyPress;
 
         this.listView.MouseClick += this.ListView_MouseClick;
         this.listView.SetSource((this.collection = this.BuildList(this.GetInitialSource())).ToList());
@@ -160,7 +160,7 @@ public class BigListBox<T>
             this.listView.SelectedItem = 0;
         }
 
-        this.callback = Application.MainLoop.AddTimeout(TimeSpan.FromMilliseconds(100), this.Timer);
+        this.callback = Application.AddTimeout(TimeSpan.FromMilliseconds(100), this.Timer);
 
         this.listView.FocusFirst();
     }
@@ -183,7 +183,7 @@ public class BigListBox<T>
     {
         Application.Run(this.win);
 
-        Application.MainLoop.RemoveTimeout(this.callback);
+        Application.RemoveTimeout(this.callback);
 
         return this.okClicked;
     }
@@ -222,7 +222,7 @@ public class BigListBox<T>
         }
     }
 
-    private bool Timer(MainLoop caller)
+    private bool Timer()
     {
         if (this.changes && DateTime.Now.Subtract(this.lastKeypress) > TimeSpan.FromMilliseconds(100))
         {

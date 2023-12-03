@@ -19,8 +19,8 @@ public class DefaultColorSchemes
         this.RedOnBlack = new NamedColorScheme("redOnBlack");
         this.RedOnBlack.Scheme.Normal = new Terminal.Gui.Attribute(Terminal.Gui.Color.Red, Terminal.Gui.Color.Black);
         this.RedOnBlack.Scheme.HotNormal = new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightRed, Terminal.Gui.Color.Black);
-        this.RedOnBlack.Scheme.Focus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Red, Terminal.Gui.Color.Brown);
-        this.RedOnBlack.Scheme.HotFocus = new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightRed, Terminal.Gui.Color.Brown);
+        this.RedOnBlack.Scheme.Focus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Red, Terminal.Gui.Color.Yellow);
+        this.RedOnBlack.Scheme.HotFocus = new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightRed, Terminal.Gui.Color.Yellow);
         this.RedOnBlack.Scheme.Disabled = new Terminal.Gui.Attribute(Terminal.Gui.Color.Gray, Terminal.Gui.Color.Black);
 
         this.GreenOnBlack = new NamedColorScheme("greenOnBlack");
@@ -52,7 +52,7 @@ public class DefaultColorSchemes
 
         // HACK : Keeping this foreground as Brown because otherwise designer will think this is legit
         // the real default and assume user has not chosen it.  See: https://github.com/gui-cs/TerminalGuiDesigner/issues/133
-        this.TerminalGuiDefault.Scheme.Disabled = new Terminal.Gui.Attribute(Color.Brown, Color.Blue);
+        this.TerminalGuiDefault.Scheme.Disabled = new Terminal.Gui.Attribute(Color.Yellow, Color.Blue);
     }
 
     /// <summary>

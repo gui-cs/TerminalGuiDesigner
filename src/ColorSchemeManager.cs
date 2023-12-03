@@ -94,7 +94,7 @@ public class ColorSchemeManager
     /// <returns>The name of the scheme or null if it is not known.</returns>
     public string? GetNameForColorScheme(ColorScheme s)
     {
-        var match = this.colorSchemes.Where(kvp => s.AreEqual(kvp.Scheme)).ToArray();
+        var match = this.colorSchemes.Where(kvp => s.Equals(kvp.Scheme)).ToArray();
 
         if (match.Length > 0)
         {

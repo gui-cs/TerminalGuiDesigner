@@ -224,7 +224,7 @@ internal class DragOperationTests : Tests
         rootDesign.View.X = 0;
         rootDesign.View.Y = 0;
 
-        rootDesign.View.ViewToScreen(0, 0, out var screenX, out var screenY);
+        rootDesign.View.BoundsToScreen(0, 0, out var screenX, out var screenY);
 
         // A window is positioned at 0,0 but its client area (to which controls are added) is 1,1 due to border
         ClassicAssert.AreEqual(1, screenX);
@@ -241,7 +241,7 @@ internal class DragOperationTests : Tests
 
         /*Window client area starts at (1,1) + (10,10 X/Y) + (1,1) for border of FrameView*/
 
-        frameView.ViewToScreen(0, 0, out screenX, out screenY);
+        frameView.BoundsToScreen(0, 0, out screenX, out screenY);
         ClassicAssert.AreEqual(12, screenX);
         ClassicAssert.AreEqual(12, screenY);
 
@@ -254,7 +254,7 @@ internal class DragOperationTests : Tests
         Application.Top.LayoutSubviews();
 
         // check screen coordinates are as expected
-        lblDesign.View.ViewToScreen(0, 0, out screenX, out screenY);
+        lblDesign.View.BoundsToScreen(0, 0, out screenX, out screenY);
         ClassicAssert.AreEqual(13, screenX, "Expected label X screen to be at its parents 0,0 (11,11) + 1");
         ClassicAssert.AreEqual(14, screenY, "Expected label Y screen to be at its parents 0,0 (11,11) + 2");
 

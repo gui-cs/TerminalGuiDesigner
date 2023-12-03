@@ -12,52 +12,52 @@ public class ColorSchemeBlueprint
     /// <summary>
     /// Gets or Sets the <see cref="Color"/> to use for <see cref="ColorScheme.Normal"/> <see cref="Attribute.Foreground"/>.
     /// </summary>
-    public Color NormalForeground { get; set; }
+    public ColorName NormalForeground { get; set; }
 
     /// <summary>
     /// Gets or Sets the <see cref="Color"/> to use for <see cref="ColorScheme.Normal"/> <see cref="Attribute.Background"/>.
     /// </summary>
-    public Color NormalBackground { get; set; }
+    public ColorName NormalBackground { get; set; }
 
     /// <summary>
     /// Gets or Sets the <see cref="Color"/> to use for <see cref="ColorScheme.HotNormal"/> <see cref="Attribute.Foreground"/>.
     /// </summary>
-    public Color HotNormalForeground { get; set; }
+    public ColorName HotNormalForeground { get; set; }
 
     /// <summary>
     /// Gets or Sets the <see cref="Color"/> to use for <see cref="ColorScheme.HotNormal"/> <see cref="Attribute.Background"/>.
     /// </summary>
-    public Color HotNormalBackground { get; set; }
+    public ColorName HotNormalBackground { get; set; }
 
     /// <summary>
     /// Gets or Sets the <see cref="Color"/> to use for <see cref="ColorScheme.Focus"/> <see cref="Attribute.Foreground"/>.
     /// </summary>
-    public Color FocusForeground { get; set; }
+    public ColorName FocusForeground { get; set; }
 
     /// <summary>
     /// Gets or Sets the <see cref="Color"/> to use for <see cref="ColorScheme.Focus"/> <see cref="Attribute.Background"/>.
     /// </summary>
-    public Color FocusBackground { get; set; }
+    public ColorName FocusBackground { get; set; }
 
     /// <summary>
     /// Gets or Sets the <see cref="Color"/> to use for <see cref="ColorScheme.HotFocus"/> <see cref="Attribute.Foreground"/>.
     /// </summary>
-    public Color HotFocusForeground { get; set; }
+    public ColorName HotFocusForeground { get; set; }
 
     /// <summary>
     /// Gets or Sets the <see cref="Color"/> to use for <see cref="ColorScheme.HotFocus"/> <see cref="Attribute.Background"/>.
     /// </summary>
-    public Color HotFocusBackground { get; set; }
+    public ColorName HotFocusBackground { get; set; }
 
     /// <summary>
     /// Gets or Sets the <see cref="Color"/> to use for <see cref="ColorScheme.Disabled"/> <see cref="Attribute.Foreground"/>.
     /// </summary>
-    public Color DisabledForeground { get; set; }
+    public ColorName DisabledForeground { get; set; }
 
     /// <summary>
     /// Gets or Sets the <see cref="Color"/> to use for <see cref="ColorScheme.Disabled"/> <see cref="Attribute.Background"/>.
     /// </summary>
-    public Color DisabledBackground { get; set; }
+    public ColorName DisabledBackground { get; set; }
 
     /// <summary>
     /// Gets a new <see cref="ColorScheme"/> from the blueprint.

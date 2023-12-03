@@ -38,6 +38,8 @@ public class ViewFactory
             typeof(ScrollBarView),
             typeof(TreeView<>),
 
+            typeof(Slider<>),
+
             // Theses are special types of view and shouldn't be added manually by user
             typeof(Frame),
 
@@ -142,7 +144,7 @@ public class ViewFactory
             {
                 Width = 20,
                 Height = 5,
-                GraphColor = Attribute.Make(Color.White, Color.Black),
+                GraphColor = new Attribute(Color.White, Color.Black),
             };
         }
 

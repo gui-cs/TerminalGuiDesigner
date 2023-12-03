@@ -103,7 +103,7 @@ public partial class ChoicesDialog
     {
         base.OnDrawContent(bounds);
 
-        Move(1, 0, false);
+        Move(1, 0);
         
         var padding = ((bounds.Width - _title.EnumerateRunes().Sum(v=>v.GetColumns())) / 2) - 1;
 

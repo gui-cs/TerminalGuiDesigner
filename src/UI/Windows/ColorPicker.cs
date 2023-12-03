@@ -72,6 +72,6 @@ public partial class ColorPicker
 
     private Attribute GetColor()
     {
-        return Attribute.Make((Color)radiogroup1.SelectedItem, (Color)radiogroup2.SelectedItem);
+        return new Attribute((Color)radiogroup1.SelectedItem, (Color)radiogroup2.SelectedItem);
     }
 }
