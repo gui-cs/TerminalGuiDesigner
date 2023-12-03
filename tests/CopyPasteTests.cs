@@ -71,6 +71,11 @@ internal class CopyPasteTests : Tests
         var copy = new CopyOperation(tvDesign);
         OperationManager.Instance.Do(copy);
 
+        // TODO: Remove this comment once addressed
+        // I think it would be a good idea to make the undoStack internal and then
+        // expose internals to the test project namespace, so we can actually inspect
+        // the collection itself.
+        // Using this proxy property only gives the test limited validity.
         Assert.That( OperationManager.Instance.UndoStackSize,
                      Is.Zero,
                      "Since you cannot Undo a Copy we expected undo stack to be empty" );
