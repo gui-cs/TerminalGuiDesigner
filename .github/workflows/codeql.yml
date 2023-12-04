@@ -28,7 +28,8 @@ jobs:
     steps:
     - name: Set up .net 8 SDK
       uses: actions/setup-dotnet@v3.2.0
-      dotnet-version: 8.0
+      with:
+        dotnet-version: 8.0
       
     - name: Checkout repository
       uses: actions/checkout@v3
