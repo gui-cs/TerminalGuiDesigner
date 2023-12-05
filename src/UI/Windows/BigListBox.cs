@@ -10,9 +10,7 @@ namespace TerminalGuiDesigner.UI.Windows;
 /// <typeparam name="T">Class Type for the objects the user is to pick from.</typeparam>
 public class BigListBox<T>
 {
-    private readonly string okText;
-    private readonly bool addSearch;
-    private readonly string prompt;
+    private static readonly string[ ] ErrorStringArray = new[] { "Error" };
     private readonly object taskCancellationLock = new();
     private readonly ConcurrentBag<CancellationTokenSource> cancelFiltering = new();
     private readonly Window win;
@@ -57,10 +55,6 @@ public class BigListBox<T>
         bool addNull,
         T? currentSelection)
     {
-        this.okText = okText;
-        this.addSearch = addSearch;
-        this.prompt = prompt;
-
         this.AspectGetter = displayMember ?? (arg => arg?.ToString() ?? string.Empty);
 
         this.publicCollection = collection ?? throw new ArgumentNullException( nameof( collection ) );
@@ -70,7 +64,7 @@ public class BigListBox<T>
         {
             X = 0,
             Y = 0,
-            Title = this.prompt,
+            Title = prompt,
 
             // By using Dim.Fill(), it will automatically resize without manual intervention
             Width = Dim.Fill(),
@@ -93,7 +87,7 @@ public class BigListBox<T>
         this.listView.SetSource((this.collection = this.BuildList(this.GetInitialSource())).ToList());
         this.win.Add(this.listView);
 
-        var btnOk = new Button(this.okText, true)
+        var btnOk = new Button(okText, true)
         {
             Y = Pos.Bottom(this.listView),
         };
@@ -108,7 +102,7 @@ public class BigListBox<T>
         };
         btnCancel.Clicked += (s, e) => Application.RequestStop();
 
-        if (this.addSearch)
+        if (addSearch)
         {
             var searchLabel = new Label("Search:")
             {
