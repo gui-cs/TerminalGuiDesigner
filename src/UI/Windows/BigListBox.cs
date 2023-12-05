@@ -72,7 +72,7 @@ public class BigListBox<T>
             Modal = true,
         };
 
-        this.listView = new ListView(new List<string>(new[] { "Error" }))
+        this.listView = new ListView(ErrorStringArray.ToList( ) )
         {
             X = 0,
             Y = 0,
