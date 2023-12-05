@@ -51,7 +51,7 @@ public class BigListBox<T>
     public BigListBox(
         string prompt,
         string okText,
-        bool addSearch,
+        in bool addSearch,
         IList<T> collection,
         Func<T?, string> displayMember,
         bool addNull,
