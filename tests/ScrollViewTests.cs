@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
@@ -43,9 +43,8 @@ class ScrollViewTests : Tests
     [Test]
     public void TestRoundTrip_ScrollViewInsideTabView_PreserveContentViews()
     {
-        var factory = new ViewFactory();
-        var scrollOut = factory.Create(typeof(ScrollView));
-        var buttonOut = factory.Create(typeof(Button));
+        var scrollOut = ViewFactory.Create(typeof(ScrollView));
+        var buttonOut = ViewFactory.Create(typeof(Button));
 
         var tabIn = this.RoundTrip<View, TabView>(
             (d, tab) =>

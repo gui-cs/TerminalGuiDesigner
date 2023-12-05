@@ -242,12 +242,11 @@ internal class PosTests : Tests
         designOut.View.Width = 100;
         designOut.View.Height = 100;
 
-        var factory = new ViewFactory();
-        var lbl = factory.Create(typeof(Label));
+        var lbl = ViewFactory.Create(typeof(Label));
         lbl.X = 50;
         lbl.Y = 50;
 
-        var btn = factory.Create(typeof(Button));
+        var btn = ViewFactory.Create(typeof(Button));
 
         new AddViewOperation(lbl, designOut, "label1").Do();
         new AddViewOperation(btn, designOut, "btn").Do();
@@ -304,8 +303,7 @@ internal class PosTests : Tests
         designOut.View.Width = 100;
         designOut.View.Height = 100;
 
-        var factory = new ViewFactory();
-        var lbl = factory.Create(typeof(Label));
+        var lbl = ViewFactory.Create(typeof(Label));
         lbl.X = Pos.AnchorEnd(1);
         lbl.Y = Pos.AnchorEnd(4); // length of "Heya"
 
@@ -340,8 +338,7 @@ internal class PosTests : Tests
         designOut.View.Width = 100;
         designOut.View.Height = 100;
 
-        var factory = new ViewFactory();
-        var lbl = factory.Create(typeof(Label));
+        var lbl = ViewFactory.Create(typeof(Label));
         lbl.X = Pos.AnchorEnd(1) + 5;
         lbl.Y = Pos.AnchorEnd(4) - 3; // length of "Heya"
 

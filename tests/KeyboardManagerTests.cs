@@ -11,8 +11,7 @@ internal class KeyboardManagerTests : Tests
     [Test]
     public void Backspace_WithDateFieldSelected()
     {
-        var vf = new ViewFactory();
-        var v = vf.Create(typeof(DateField));
+        var v = ViewFactory.Create(typeof(DateField));
         var d = new Design(new SourceCodeFile(new FileInfo("ff.cs")), "ff", v);
         v.Data = d;
 
@@ -27,8 +26,7 @@ internal class KeyboardManagerTests : Tests
     [Test]
     public void ButtonRename()
     {
-        var vf = new ViewFactory();
-        var v = (Button)vf.Create(typeof(Button));
+        var v = (Button)ViewFactory.Create(typeof(Button));
         var d = new Design(new SourceCodeFile(new FileInfo("ff.cs")), "ff", v);
         v.Data = d;
 

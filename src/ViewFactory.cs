@@ -1,9 +1,7 @@
-﻿using System.Data;
-
+using System.Data;
 using Terminal.Gui;
 using Terminal.Gui.TextValidateProviders;
 using TerminalGuiDesigner.Operations.MenuOperations;
-using TerminalGuiDesigner.Operations.TableViewOperations;
 using Attribute = Terminal.Gui.Attribute;
 
 namespace TerminalGuiDesigner;
@@ -13,7 +11,7 @@ namespace TerminalGuiDesigner;
 /// sensible dimensions and content for dragging/configuring in
 /// the designer.
 /// </summary>
-public class ViewFactory
+public static class ViewFactory
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewFactory"/> class.
@@ -63,26 +61,26 @@ public class ViewFactory
     /// full list of allowed Types.</param>
     /// <returns>A new instance of Type <paramref name="t"/>.</returns>
     /// <exception cref="Exception">Thrown if Type is not a subclass of <see cref="View"/>.</exception>
-    public View Create(Type t)
+    public static View Create(Type t)
     {
         if (typeof(TableView).IsAssignableFrom(t))
         {
-            return this.CreateTableView();
+            return CreateTableView( );
         }
 
         if (typeof(TabView).IsAssignableFrom(t))
         {
-            return this.CreateTabView();
+            return CreateTabView( );
         }
 
         if (typeof(RadioGroup).IsAssignableFrom(t))
         {
-            return this.CreateRadioGroup();
+            return CreateRadioGroup( );
         }
 
         if (typeof(MenuBar).IsAssignableFrom(t))
         {
-            return this.CreateMenuBar();
+            return CreateMenuBar( );
         }
 
         if (typeof(StatusBar).IsAssignableFrom(t))
@@ -207,7 +205,7 @@ public class ViewFactory
         return instance;
     }
 
-    private MenuBar CreateMenuBar()
+    private static MenuBar CreateMenuBar()
     {
         return new MenuBar(new MenuBarItem[]
         {
@@ -217,7 +215,7 @@ public class ViewFactory
         });
     }
 
-    private View CreateRadioGroup()
+    private static View CreateRadioGroup()
     {
         var group = new RadioGroup
         {
@@ -229,7 +227,7 @@ public class ViewFactory
         return group;
     }
 
-    private TableView CreateTableView()
+    private static TableView CreateTableView()
     {
         var dt = new DataTable();
         dt.Columns.Add("Column 0");
@@ -245,7 +243,7 @@ public class ViewFactory
         };
     }
 
-    private TabView CreateTabView()
+    private static TabView CreateTabView()
     {
         var tabView = new TabView
         {

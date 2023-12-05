@@ -20,8 +20,7 @@ class MenuBarTests : Tests
         var file = new FileInfo($"{nameof(this.TestRoundTrip_PreserveMenuItems)}.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
-        var factory = new ViewFactory();
-        var mbOut = (MenuBar)factory.Create(typeof(MenuBar));
+        var mbOut = (MenuBar)ViewFactory.Create(typeof(MenuBar));
 
         // 1 visible root menu (e.g. File)
         ClassicAssert.AreEqual(1, mbOut.Menus.Length);
@@ -51,8 +50,7 @@ class MenuBarTests : Tests
         var file = new FileInfo($"{nameof(this.TestRoundTrip_PreserveMenuItems_EvenSubmenus)}.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
-        var factory = new ViewFactory();
-        var mbOut = (MenuBar)factory.Create(typeof(MenuBar));
+        var mbOut = (MenuBar)ViewFactory.Create(typeof(MenuBar));
 
         OperationManager.Instance.Do(new AddViewOperation(mbOut, designOut, "myMenuBar"));
 
@@ -96,8 +94,7 @@ class MenuBarTests : Tests
         var file = new FileInfo($"{nameof(this.TestMenuOperations)}.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
-        var factory = new ViewFactory();
-        var mbOut = (MenuBar)factory.Create(typeof(MenuBar));
+        var mbOut = (MenuBar)ViewFactory.Create(typeof(MenuBar));
 
         MenuTracker.Instance.Register(mbOut);
 
@@ -176,7 +173,7 @@ class MenuBarTests : Tests
     {
         root = Get10By10View();
 
-        var bar = (MenuBar)new ViewFactory().Create(typeof(MenuBar));
+        var bar = (MenuBar)ViewFactory.Create(typeof(MenuBar));
         var addBarCmd = new AddViewOperation(bar, root, "mb");
         ClassicAssert.IsTrue(addBarCmd.Do());
 

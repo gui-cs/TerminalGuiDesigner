@@ -37,8 +37,7 @@ class TabViewTests : Tests
         var file = new FileInfo("TestGetTabView.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
-        var factory = new ViewFactory();
-        var tvOut = factory.Create(typeof(TabView));
+        var tvOut = ViewFactory.Create(typeof(TabView));
 
         OperationManager.Instance.Do(new AddViewOperation(tvOut, designOut, "myTabview"));
 
@@ -132,8 +131,7 @@ class TabViewTests : Tests
         var file = new FileInfo("TestRoundTrip_DuplicateTabNames.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
-        var factory = new ViewFactory();
-        var tvOut = (TabView)factory.Create(typeof(TabView));
+        var tvOut = (TabView)ViewFactory.Create(typeof(TabView));
 
         OperationManager.Instance.Do(new AddViewOperation(tvOut, designOut, "myTabview"));
 
@@ -164,12 +162,11 @@ class TabViewTests : Tests
         var file = new FileInfo("TestAddingSubcontrolToTab.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
-        var factory = new ViewFactory();
-        var tvOut = (TabView)factory.Create(typeof(TabView));
+        var tvOut = (TabView)ViewFactory.Create(typeof(TabView));
 
         OperationManager.Instance.Do(new AddViewOperation(tvOut, designOut, "myTabview"));
 
-        var label = factory.Create(typeof(Label));
+        var label = ViewFactory.Create(typeof(Label));
 
         OperationManager.Instance.Do(new AddViewOperation(label, (Design)tvOut.Data, "myLabel"));
         ClassicAssert.Contains(label, tvOut.SelectedTab.View.Subviews.ToArray(), "Expected currently selected tab to have the new label but it did not");

@@ -25,8 +25,7 @@ internal class AddViewTests : Tests
         var file = new FileInfo("TestAdd_Undo.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
-        var factory = new ViewFactory();
-        var lbl = factory.Create(typeof(Label));
+        var lbl = ViewFactory.Create(typeof(Label));
         var op = new AddViewOperation(lbl, designOut, "label1");
 
         OperationManager.Instance.Do(op);
@@ -51,8 +50,7 @@ internal class AddViewTests : Tests
         var file = new FileInfo("TestAddUndoRedo_RoundTrip.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
-        var factory = new ViewFactory();
-        var lbl = factory.Create(typeof(Label));
+        var lbl = ViewFactory.Create(typeof(Label));
         var op = new AddViewOperation(lbl, designOut, "label1");
 
         OperationManager.Instance.Do(op);
