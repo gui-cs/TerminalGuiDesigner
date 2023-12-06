@@ -19,8 +19,7 @@ class TextValidateFieldTests : Tests
         var file = new FileInfo("TestRoundTrip_PreserveProvider.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window));
 
-        var factory = new ViewFactory();
-        var tvfOut = (TextValidateField)factory.Create(typeof(TextValidateField));
+        var tvfOut = ViewFactory.Create<TextValidateField>();
 
         ClassicAssert.IsNotNull(tvfOut.Provider);
 

@@ -76,7 +76,7 @@ internal class MouseManagerTests : Tests
     {
         var d = Get10By10View();
 
-        var view = new ViewFactory().Create(t);
+        var view = ViewFactory.Create(t);
         view.Width = 8;
         view.Height = 1;
 
@@ -148,7 +148,7 @@ internal class MouseManagerTests : Tests
     {
         var d = Get10By10View();
 
-        var view = new ViewFactory().Create(t);
+        var view = ViewFactory.Create(t);
         view.Width = Dim.Fill();
         view.Height = 1;
 
@@ -236,7 +236,7 @@ internal class MouseManagerTests : Tests
     {
         var d = Get10By10View();
 
-        var view = new ViewFactory().Create(typeof(View));
+        var view = ViewFactory.Create(typeof(View));
         view.Width = Dim.Fill();
         view.X = locationOfViewX;
         view.Y = locationOfViewY;

@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using System.Linq;
 using NUnit.Framework;
 using Terminal.Gui;
@@ -31,8 +31,7 @@ internal class TableViewTests : Tests
             (d, v) =>
             {
                 // create a second TableView also on the root
-                var factory = new ViewFactory();
-                var tvOut2 = factory.Create(typeof(TableView));
+                var tvOut2 = ViewFactory.Create(typeof(TableView));
                 OperationManager.Instance.Do(new AddViewOperation(tvOut2, d.GetRootDesign(), "myTable2"));
             },
             out TableView tableOut);

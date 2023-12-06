@@ -1,9 +1,7 @@
-﻿using System.Data;
-
+using System.Data;
 using Terminal.Gui;
 using Terminal.Gui.TextValidateProviders;
 using TerminalGuiDesigner.Operations.MenuOperations;
-using TerminalGuiDesigner.Operations.TableViewOperations;
 using Attribute = Terminal.Gui.Attribute;
 
 namespace TerminalGuiDesigner;
@@ -13,14 +11,28 @@ namespace TerminalGuiDesigner;
 /// sensible dimensions and content for dragging/configuring in
 /// the designer.
 /// </summary>
-public class ViewFactory
+public static class ViewFactory
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ViewFactory"/> class.
-    /// </summary>
-    public ViewFactory()
-    {
-    }
+    private static readonly Type[] KnownUnsupportedTypes = new[] {
+        typeof( Toplevel ),
+        typeof( Dialog ),
+        typeof( FileDialog ),
+        typeof( SaveDialog ),
+        typeof( OpenDialog ),
+        typeof( ScrollBarView ),
+        typeof( TreeView<> ),
+
+        typeof( Slider<> ),
+
+        // Theses are special types of view and shouldn't be added manually by user
+        typeof( Frame ),
+
+        // BUG These seem to cause stack overflows in CreateSubControlDesigns (see TestAddView_RoundTrip)
+        typeof( Wizard ),
+        typeof( WizardStep ),
+    };
+
+    private static readonly Type ViewType = typeof(View);
 
     /// <summary>
     /// Returns all <see cref="View"/> Types that are supported by <see cref="ViewFactory"/>.
@@ -48,11 +60,56 @@ public class ViewFactory
             typeof(WizardStep),
         }; // The generic version of TreeView
 
-        return typeof(View).Assembly.DefinedTypes.Where(t =>
-                typeof(View).IsAssignableFrom(t) &&
-                !t.IsInterface && !t.IsAbstract && t.IsPublic)
-            .Except(exclude)
-            .OrderBy(t => t.Name).ToArray();
+        return ViewType.Assembly.DefinedTypes
+                       .Where(IsSupportedType)
+                       .OrderBy(t => t.Name).ToArray();
+
+        static bool IsSupportedType( Type candidateType )
+        {
+            return candidateType is
+                   {
+                       IsInterface: false, IsAbstract: false, IsPublic: true
+                   }
+                   && candidateType.IsAssignableTo( ViewType )
+                   & !KnownUnsupportedTypes.Any( candidateType.IsAssignableTo );
+        }
+    }
+
+    /// <summary>
+    /// Creates a new instance of <see cref="View"/> of Type <typeparamref name="T"/> with
+    /// size/placeholder values that make it easy to see and design in the editor.
+    /// </summary>
+    /// <typeparam name="T">A descendant of <see cref="View"/> that does not exist in the
+    /// <see cref="KnownUnsupportedTypes"/> collection.</typeparam>
+    /// <returns>A new instance of <paramref name="{T}"/>.</returns>
+    public static T Create<T>( )
+        where T : View, new( )
+    {
+        T newView = new()
+        {
+            Width = 10,
+            Height = 1
+        };
+
+        switch ( newView )
+        {
+            case TextValidateField tvf:
+                tvf.Provider = new TextRegexProvider( ".*" );
+                tvf.Text = "Heya";
+                break;
+            case TextField tf:
+                tf.Text = "Heya";
+                break;
+            case ProgressBar pb:
+                pb.Fraction = 1f;
+                break;
+            case Window:
+            default:
+                newView.Height = 5;
+                break;
+        }
+
+        return newView;
     }
 
     /// <summary>
@@ -63,26 +120,26 @@ public class ViewFactory
     /// full list of allowed Types.</param>
     /// <returns>A new instance of Type <paramref name="t"/>.</returns>
     /// <exception cref="Exception">Thrown if Type is not a subclass of <see cref="View"/>.</exception>
-    public View Create(Type t)
+    public static View Create(Type t)
     {
         if (typeof(TableView).IsAssignableFrom(t))
         {
-            return this.CreateTableView();
+            return CreateTableView( );
         }
 
         if (typeof(TabView).IsAssignableFrom(t))
         {
-            return this.CreateTabView();
+            return CreateTabView( );
         }
 
         if (typeof(RadioGroup).IsAssignableFrom(t))
         {
-            return this.CreateRadioGroup();
+            return CreateRadioGroup( );
         }
 
         if (typeof(MenuBar).IsAssignableFrom(t))
         {
-            return this.CreateMenuBar();
+            return CreateMenuBar( );
         }
 
         if (typeof(StatusBar).IsAssignableFrom(t))
@@ -207,7 +264,7 @@ public class ViewFactory
         return instance;
     }
 
-    private MenuBar CreateMenuBar()
+    private static MenuBar CreateMenuBar()
     {
         return new MenuBar(new MenuBarItem[]
         {
@@ -217,7 +274,7 @@ public class ViewFactory
         });
     }
 
-    private View CreateRadioGroup()
+    private static View CreateRadioGroup()
     {
         var group = new RadioGroup
         {
@@ -229,7 +286,7 @@ public class ViewFactory
         return group;
     }
 
-    private TableView CreateTableView()
+    private static TableView CreateTableView()
     {
         var dt = new DataTable();
         dt.Columns.Add("Column 0");
@@ -245,7 +302,7 @@ public class ViewFactory
         };
     }
 
-    private TabView CreateTabView()
+    private static TabView CreateTabView()
     {
         var tabView = new TabView
         {

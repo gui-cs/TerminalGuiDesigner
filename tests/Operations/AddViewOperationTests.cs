@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 using System.Linq;
 using Terminal.Gui;
 using TerminalGuiDesigner;
@@ -12,14 +12,13 @@ internal class AddViewOperationTests : Tests
     public void TestAddView_Do()
     {
         var d = Get10By10View();
-        var factory = new ViewFactory();
         
         int stackSize = 0;
 
         foreach(var type in ViewFactory.GetSupportedViews())
         {
             stackSize++;
-            var instance = factory.Create(type);
+            var instance = ViewFactory.Create(type);
             var op = new AddViewOperation(instance, d, "blah");
             op.Do();
 
@@ -41,7 +40,6 @@ internal class AddViewOperationTests : Tests
     public void TestAddView_RoundTrip()
     {
         int stackSize = 0;
-        var factory = new ViewFactory();
         var supportedViews = ViewFactory.GetSupportedViews()
             // Add MenuBar last so order is preserved in Assert check.
             .OrderBy(t=>t == typeof(MenuBar) ? int.MaxValue : 0).ToArray();
@@ -51,7 +49,7 @@ internal class AddViewOperationTests : Tests
             foreach (var type in supportedViews)
             {
                 stackSize++;
-                var instance = factory.Create(type);
+                var instance = ViewFactory.Create(type);
                 var op = new AddViewOperation(instance, d, "blah");
                 op.Do();
             }
@@ -70,14 +68,13 @@ internal class AddViewOperationTests : Tests
     public void TestAddView_UnDo()
     {
         var d = Get10By10View();
-        var factory = new ViewFactory();
 
         int stackSize = 0;
 
         foreach (var type in ViewFactory.GetSupportedViews())
         {
             stackSize++;
-            var instance = factory.Create(type);
+            var instance = ViewFactory.Create(type);
             var op = new AddViewOperation(instance, d, "blah");
             OperationManager.Instance.Do(op);
             ClassicAssert.AreEqual(

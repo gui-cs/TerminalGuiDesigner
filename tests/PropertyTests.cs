@@ -97,7 +97,7 @@ internal class PropertyTests : Tests
     public void TestChanging_LineViewOrientation()
     {
         var v = Get10By10View();
-        var lv = (LineView)new ViewFactory().Create(typeof(LineView));
+        var lv = (LineView)ViewFactory.Create(typeof(LineView));
         var d = new Design(v.SourceCode, "lv", lv);
 
         v.View.Add(lv);
