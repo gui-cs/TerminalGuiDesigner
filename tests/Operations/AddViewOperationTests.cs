@@ -17,21 +17,17 @@ internal class AddViewOperationTests : Tests
         var d = Get10By10View( );
 
         var instance = ViewFactory.Create( candidateType );
-        var op = new AddViewOperation( instance, d, "blah" );
-        op.Do( );
+        const string instanceFieldName = "blah";
+        var op = new AddViewOperation( instance, d, instanceFieldName );
+        Assert.That( op.Do, Throws.Nothing );
 
-        ClassicAssert.AreEqual(
-            1, d.View.Subviews.Count,
-            "Expected the count of views to increase to match the number we have added" );
+        IList<View> subviews = d.View.Subviews;
 
-        ClassicAssert.AreSame(
-            instance, d.View.Subviews.Last( ),
-            "Expected the view instance that was added to be the same we passed to operation constructor" );
-        ClassicAssert.AreEqual(
-            "blah",
-            ( (Design)d.View.Subviews.Last( ).Data ).FieldName,
-            "Expected field name duplicates to be automatically resolved"
-        );
+        Assert.That( subviews, Has.Count.EqualTo( 1 ) );
+
+        var theOnlySubView = subviews[ 0 ];
+        Assert.That( theOnlySubView, Is.SameAs( instance ) );
+        Assert.That( ( (Design)theOnlySubView.Data ).FieldName, Is.EqualTo( instanceFieldName ) );
     }
 
     [Test]
