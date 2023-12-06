@@ -77,7 +77,7 @@ internal class AddViewOperationTests : Tests
     }
 
     [Test]
-    public void TestAddView_UnDo()
+    public void UnDo_RemovesExpectedViews()
     {
         var d = Get10By10View();
 
