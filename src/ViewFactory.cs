@@ -13,6 +13,25 @@ namespace TerminalGuiDesigner;
 /// </summary>
 public static class ViewFactory
 {
+    private static readonly Type[] KnownUnsupportedTypes = new[] {
+        typeof( Toplevel ),
+        typeof( Dialog ),
+        typeof( FileDialog ),
+        typeof( SaveDialog ),
+        typeof( OpenDialog ),
+        typeof( ScrollBarView ),
+        typeof( TreeView<> ),
+
+        typeof( Slider<> ),
+
+        // Theses are special types of view and shouldn't be added manually by user
+        typeof( Frame ),
+
+        // BUG These seem to cause stack overflows in CreateSubControlDesigns (see TestAddView_RoundTrip)
+        typeof( Wizard ),
+        typeof( WizardStep ),
+    };
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ViewFactory"/> class.
     /// </summary>
