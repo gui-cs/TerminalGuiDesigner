@@ -12,7 +12,7 @@ namespace UnitTests.Operations;
 internal class AddViewOperationTests : Tests
 {
     [Test( Description = "Tests AddViewOperation against all SupportedViewTypes" )]
-    public void TestAddView_Do( [ValueSource( nameof( SupportedViewTypes ) )] Type candidateType )
+    public void Do_AddsExpectedSubview( [ValueSource( nameof( SupportedViewTypes ) )] Type candidateType )
     {
         var d = Get10By10View( );
 
