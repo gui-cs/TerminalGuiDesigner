@@ -93,9 +93,8 @@ internal class AddViewOperationTests : Tests
             var instance = ViewFactory.Create(type);
             var op = new AddViewOperation(instance, d, "blah");
             Assume.That( ( ) => OperationManager.Instance.Do( op ), Throws.Nothing );
-            ClassicAssert.AreEqual(
-                stackSize, d.View.Subviews.Count,
-                "Expected the count of views to increase to match the number we have added");
+
+            Assume.That( d.View.Subviews, Has.Count.EqualTo( stackSize ) );
         }
 
         for (int i = 1; i <= stackSize; i++)
