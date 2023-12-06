@@ -31,6 +31,36 @@ internal class AddViewOperationTests : Tests
     }
 
     [Test]
+    [TestCase( 1, "justOne" )]
+    [TestCase( 10, "multiple" )]
+    public void Do_SubviewNamesProperlyDeDuplicated( int numberOfViews, string baseName )
+    {
+        var d = Get10By10View( );
+
+        for ( int operationNumber = 1; operationNumber <= numberOfViews; operationNumber++ )
+        {
+            // Doesn't matter which type we use, here, because this isn't a type test
+            // Just needs to be a valid type, which is tested in Do_AddsExpectedSubview
+            var instance = ViewFactory.Create( typeof( TextField ) );
+            
+            var op = new AddViewOperation( instance, d, baseName );
+            Assert.That( op.Do, Throws.Nothing );
+
+            IList<View> subviews = d.View.Subviews;
+
+            Assert.That( subviews, Has.Count.EqualTo( operationNumber ) );
+
+            var lastSubview = subviews.Last( );
+
+            Assert.That( lastSubview, Is.SameAs( instance ) );
+
+            string expectedFieldName = operationNumber == 1 ? baseName : $"{baseName}{operationNumber}";
+            Assert.That( ( (Design)lastSubview.Data ).FieldName,
+                         Is.EqualTo( expectedFieldName ) );
+        }
+    }
+
+    [Test]
     public void TestAddView_RoundTrip()
     {
         int stackSize = 0;
