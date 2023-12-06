@@ -61,31 +61,19 @@ internal class AddViewOperationTests : Tests
     }
 
     [Test]
-    public void TestAddView_RoundTrip()
+    public void TestAddView_RoundTrip( [ValueSource( nameof( SupportedViewTypes ) )] Type type )
     {
-        int stackSize = 0;
-        var supportedViews = ViewFactory.GetSupportedViews()
-            // Add MenuBar last so order is preserved in Assert check.
-            .OrderBy(t=>t == typeof(MenuBar) ? int.MaxValue : 0).ToArray();
-
-        var windowIn = RoundTrip<Toplevel, Window>((d, v) =>
+        using var windowIn = RoundTrip<Toplevel, Window>( ( d, v ) =>
         {
-            foreach (var type in supportedViews)
-            {
-                stackSize++;
-                var instance = ViewFactory.Create(type);
-                var op = new AddViewOperation(instance, d, "blah");
-                op.Do();
-            }
-        }, out _);
-        
-        var roundTripViews = windowIn.GetActualSubviews();
-        ClassicAssert.AreEqual(stackSize, roundTripViews.Count);
+            var instance = ViewFactory.Create( type );
+            var op = new AddViewOperation( instance, d, "blah" );
+            op.Do( );
+        }, out _ );
 
-        for (int i = 0; i < stackSize; i++)
-        {
-            ClassicAssert.IsInstanceOf(supportedViews[i], roundTripViews[i]);
-        }
+        IList<View> roundTripViews = windowIn.GetActualSubviews( );
+
+        Assert.That( roundTripViews, Has.Count.EqualTo( 1 ) );
+        Assert.That( roundTripViews[ 0 ], Is.InstanceOf( type ) );
     }
 
     [Test]
