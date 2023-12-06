@@ -87,6 +87,8 @@ internal class AddViewOperationTests : Tests
 
         int stackSize = 0;
 
+        Assume.That( d.View.Subviews, Is.Empty );
+        
         foreach (var type in ViewFactory.GetSupportedViews())
         {
             stackSize++;
