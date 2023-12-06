@@ -43,18 +43,13 @@ public static class ViewFactory
         get
         {
             return ViewType.Assembly.DefinedTypes
-                           .Where( IsSupportedType )
+                           .Where( candidateType => candidateType is
+                                                    {
+                                                        IsInterface: false, IsAbstract: false, IsPublic: true
+                                                    }
+                                                    && candidateType.IsAssignableTo( ViewType )
+                                                    & !KnownUnsupportedTypes.Any( candidateType.IsAssignableTo ) )
                            .OrderBy( t => t.Name );
-
-            static bool IsSupportedType( Type candidateType )
-            {
-                return candidateType is
-                       {
-                           IsInterface: false, IsAbstract: false, IsPublic: true
-                       }
-                       && candidateType.IsAssignableTo( ViewType )
-                       & !KnownUnsupportedTypes.Any( candidateType.IsAssignableTo );
-            }
         }
     }
 
