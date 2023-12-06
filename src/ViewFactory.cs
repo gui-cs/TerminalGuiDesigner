@@ -32,12 +32,7 @@ public static class ViewFactory
         typeof( WizardStep ),
     };
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ViewFactory"/> class.
-    /// </summary>
-    public ViewFactory()
-    {
-    }
+
 
     /// <summary>
     /// Returns all <see cref="View"/> Types that are supported by <see cref="ViewFactory"/>.
