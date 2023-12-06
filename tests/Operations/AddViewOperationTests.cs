@@ -95,4 +95,8 @@ internal class AddViewOperationTests : Tests
 
         ClassicAssert.IsEmpty(d.View.Subviews);
     }
+    
+    private static Type[] SupportedViewTypes { get; } = ViewFactory.GetSupportedViews( ) // Add MenuBar last so order is preserved in Assert check.
+                                                                   .OrderBy( t => t == typeof( MenuBar ) ? int.MaxValue : 0 )
+                                                                   .ToArray( );
 }
