@@ -11,7 +11,7 @@ namespace UnitTests.Operations;
 [TestOf(typeof(AddViewOperation))]
 internal class AddViewOperationTests : Tests
 {
-    private static Type[] SupportedViewTypes { get; } = ViewFactory.GetSupportedViews( ) // Add MenuBar last so order is preserved in Assert check.
+    private static Type[] SupportedViewTypes { get; } = ViewFactory.SupportedViewTypes // Add MenuBar last so order is preserved in Assert check.
                                                                    .OrderBy( t => t == typeof( MenuBar ) ? int.MaxValue : 0 )
                                                                    .ToArray( );
 

@@ -35,23 +35,26 @@ public static class ViewFactory
     private static readonly Type ViewType = typeof(View);
 
     /// <summary>
-    /// Returns all <see cref="View"/> Types that are supported by <see cref="ViewFactory"/>.
+    /// Gets all <see cref="View"/> Types that are supported by <see cref="ViewFactory"/>.
     /// </summary>
-    /// <returns>All supported types.</returns>
-    public static IEnumerable<Type> GetSupportedViews()
+    /// <value>All types supported by <see cref="ViewFactory"/>.</value>
+    public static IEnumerable<Type> SupportedViewTypes
     {
-        return ViewType.Assembly.DefinedTypes
-                       .Where( IsSupportedType )
-                       .OrderBy( t => t.Name );
-
-        static bool IsSupportedType( Type candidateType )
+        get
         {
-            return candidateType is
-                   {
-                       IsInterface: false, IsAbstract: false, IsPublic: true
-                   }
-                   && candidateType.IsAssignableTo( ViewType )
-                   & !KnownUnsupportedTypes.Any( candidateType.IsAssignableTo );
+            return ViewType.Assembly.DefinedTypes
+                           .Where( IsSupportedType )
+                           .OrderBy( t => t.Name );
+
+            static bool IsSupportedType( Type candidateType )
+            {
+                return candidateType is
+                       {
+                           IsInterface: false, IsAbstract: false, IsPublic: true
+                       }
+                       && candidateType.IsAssignableTo( ViewType )
+                       & !KnownUnsupportedTypes.Any( candidateType.IsAssignableTo );
+            }
         }
     }
 

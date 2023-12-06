@@ -76,7 +76,7 @@ public class AddViewOperation : Operation
     {
         if (this.add == null)
         {
-            var selectable = ViewFactory.GetSupportedViews().ToArray();
+            var selectable = ViewFactory.SupportedViewTypes.ToArray();
 
             if (Modals.Get("Type of Control", "Add", true, selectable, static t => t?.Name ?? "Null", false, null, out var selected) && selected != null)
             {
