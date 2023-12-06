@@ -146,7 +146,7 @@ internal class Tests
     }
 
     [Test]
-    public void TesatCastTo()
+    public void TestCastToReflected()
     {
         var str = "cat";
         object obj = str.CastToReflected(typeof(object));
