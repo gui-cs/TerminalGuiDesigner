@@ -38,20 +38,15 @@ public static class ViewFactory
     /// Gets all <see cref="View"/> Types that are supported by <see cref="ViewFactory"/>.
     /// </summary>
     /// <value>All types supported by <see cref="ViewFactory"/>.</value>
-    public static IEnumerable<Type> SupportedViewTypes
-    {
-        get
-        {
-            return ViewType.Assembly.DefinedTypes
-                           .Where( candidateType => candidateType is
-                                                    {
-                                                        IsInterface: false, IsAbstract: false, IsPublic: true
-                                                    }
-                                                    && candidateType.IsAssignableTo( ViewType )
-                                                    & !KnownUnsupportedTypes.Any( candidateType.IsAssignableTo ) )
-                           .OrderBy( t => t.Name );
-        }
-    }
+    public static IEnumerable<Type> SupportedViewTypes { get; } =
+        ViewType.Assembly.DefinedTypes
+                .Where( candidateType => candidateType is
+                                         {
+                                             IsInterface: false, IsAbstract: false, IsPublic: true
+                                         }
+                                         && candidateType.IsAssignableTo( ViewType )
+                                         & !KnownUnsupportedTypes.Any( candidateType.IsAssignableTo ) )
+                .OrderBy( t => t.Name );
 
     /// <summary>
     /// Creates a new instance of <see cref="View"/> of Type <typeparamref name="T"/> with
