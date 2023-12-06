@@ -1,4 +1,5 @@
-using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Terminal.Gui;
 using TerminalGuiDesigner;
@@ -6,6 +7,8 @@ using TerminalGuiDesigner.Operations;
 
 namespace UnitTests.Operations;
 
+[TestFixture]
+[TestOf(typeof(AddViewOperation))]
 internal class AddViewOperationTests : Tests
 {
     [Test]
