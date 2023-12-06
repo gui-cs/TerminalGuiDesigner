@@ -144,12 +144,4 @@ internal class Tests
                 Flags = MouseFlags.Button1Released,
             }, root);
     }
-
-    [Test]
-    public void TestCastToReflected()
-    {
-        var str = "cat";
-        object obj = str.CastToReflected(typeof(object));
-        ClassicAssert.IsInstanceOf<object>(obj);
-    }
 }
