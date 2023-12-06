@@ -40,26 +40,6 @@ public static class ViewFactory
     /// <returns>All supported types.</returns>
     public static IEnumerable<Type> GetSupportedViews()
     {
-        Type[] exclude = new Type[]
-        {
-            typeof(Toplevel),
-            typeof(Dialog),
-            typeof(FileDialog),
-            typeof(SaveDialog),
-            typeof(OpenDialog),
-            typeof(ScrollBarView),
-            typeof(TreeView<>),
-
-            typeof(Slider<>),
-
-            // Theses are special types of view and shouldn't be added manually by user
-            typeof(Frame),
-
-            // These seem to cause stack overflows in CreateSubControlDesigns (see TestAddView_RoundTrip)
-            typeof(Wizard),
-            typeof(WizardStep),
-        }; // The generic version of TreeView
-
         return ViewType.Assembly.DefinedTypes
                        .Where(IsSupportedType)
                        .OrderBy(t => t.Name).ToArray();
