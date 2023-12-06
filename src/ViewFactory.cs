@@ -61,8 +61,8 @@ public static class ViewFactory
         }; // The generic version of TreeView
 
         return typeof(View).Assembly.DefinedTypes.Where(t =>
-                typeof(View).IsAssignableFrom(t) &&
-                !t.IsInterface && !t.IsAbstract && t.IsPublic)
+                t is { IsInterface: false, IsAbstract: false, IsPublic: true } &&
+                typeof(View).IsAssignableFrom(t))
             .Except(exclude)
             .OrderBy(t => t.Name).ToArray();
     }
