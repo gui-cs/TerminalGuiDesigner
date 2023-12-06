@@ -51,36 +51,61 @@ public static class ViewFactory
                 .Where( viewDescendantType => !KnownUnsupportedTypes.Any( viewDescendantType.IsAssignableTo ) );
 
     /// <summary>
-    /// Creates a new instance of <see cref="View"/> of Type <typeparamref name="T"/> with
+    /// Creates a new instance of a <see cref="View"/> of Type <typeparamref name="T"/> with
     /// size/placeholder values that make it easy to see and design in the editor.
     /// </summary>
     /// <typeparam name="T">A descendant of <see cref="View"/> that does not exist in the
     /// <see cref="KnownUnsupportedTypes"/> collection.</typeparam>
+    /// <param name="width">The width of the requested view.</param>
+    /// <param name="height">The height of the requested view.</param>
     /// <returns>A new instance of <paramref name="{T}"/>.</returns>
-    public static T Create<T>( )
+    /// <remarks>
+    /// <typeparamref name="T"/> must inherit from <see cref="View"/>,
+    /// must have a public constructor, and must not exist in the
+    /// <see cref="KnownUnsupportedTypes"/> collection, at run-time.
+    /// </remarks>
+    public static T Create<T>(int? width = null, int? height = null )
         where T : View, new( )
     {
-        T newView = new()
-        {
-            Width = 10,
-            Height = 1
-        };
+        T newView = new( );
 
         switch ( newView )
         {
+            case TableView tv:
+                var dt = new DataTable( );
+                dt.Columns.Add( "Column 0" );
+                dt.Columns.Add( "Column 1" );
+                dt.Columns.Add( "Column 2" );
+                dt.Columns.Add( "Column 3" );
+                tv.Width = width ?? 50;
+                tv.Height = height ?? 5;
+                tv.Table = new DataTableSource( dt );
+                break;
+            case TabView tv:
+                tv.AddEmptyTab("Tab1");
+                tv.AddEmptyTab("Tab2");
+                tv.Width = width ?? 50;
+                tv.Height = height ?? 5;
+                break;
             case TextValidateField tvf:
                 tvf.Provider = new TextRegexProvider( ".*" );
                 tvf.Text = "Heya";
-                break;
+                goto default;
             case TextField tf:
                 tf.Text = "Heya";
-                break;
+                goto default;
             case ProgressBar pb:
                 pb.Fraction = 1f;
+                pb.Width = width ?? 10;
+                pb.Height = height ?? 1;
                 break;
-            case Window:
+            case Window w:
+                w.Width = width ?? 10;
+                w.Height = height ?? 5;
+                break;
             default:
-                newView.Height = 5;
+                newView.Width = width ?? 5;
+                newView.Height = height ?? 1;
                 break;
         }
 
