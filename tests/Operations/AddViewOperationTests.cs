@@ -102,11 +102,11 @@ internal class AddViewOperationTests : Tests
         for (int i = 1; i <= stackSize; i++)
         {
             Assert.That( OperationManager.Instance.Undo, Throws.Nothing );
-            ClassicAssert.AreEqual(
-                stackSize-i, d.View.Subviews.Count,
-                "Expected the count of views to decrease once each time we Undo");
+            Assert.That( d.View.Subviews,
+                         Has.Count.EqualTo( stackSize - i ),
+                         "Expected the count of views to decrease once each time we Undo" );
         }
 
-        ClassicAssert.IsEmpty(d.View.Subviews);
+        Assert.That( d.View.Subviews, Is.Empty );
     }
 }
