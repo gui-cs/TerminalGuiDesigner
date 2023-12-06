@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Terminal.Gui;
 using YamlDotNet.Core.Tokens;
 using Key = Terminal.Gui.Key;
@@ -161,7 +162,7 @@ public class Modals
         return Get(prompt, okText, true, collection, o => o?.ToString() ?? "Null", false, currentSelection, out selected);
     }
 
-    internal static bool Get<T>( string prompt, string okText, in bool addSearch, T[] collection, Func<T?, string> displayMember, bool addNull, T? currentSelection, [NotNullWhen( true )] out T? selected )
+    internal static bool Get<T>( string prompt, string okText, in bool addSearch, T[] collection, Func<T?, string> displayMember, bool addNull, [NotNullWhen( true )]T? currentSelection, [NotNullWhen( true )] out T? selected )
     {
         var pick = new BigListBox<T>( prompt, okText, in addSearch, collection, displayMember, addNull, currentSelection );
         bool toReturn = pick.ShowDialog( );
