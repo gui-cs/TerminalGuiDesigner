@@ -11,34 +11,32 @@ namespace UnitTests.Operations;
 [TestOf(typeof(AddViewOperation))]
 internal class AddViewOperationTests : Tests
 {
-    [Test]
-    public void TestAddView_Do()
+    [Test( Description = "Tests AddViewOperation against all SupportedViewTypes" )]
+    public void TestAddView_Do( [ValueSource( nameof( SupportedViewTypes ) )] Type candidateType )
     {
-        var d = Get10By10View();
-        
+        var d = Get10By10View( );
+
         int stackSize = 0;
 
-        foreach(var type in ViewFactory.GetSupportedViews())
-        {
-            stackSize++;
-            var instance = ViewFactory.Create(type);
-            var op = new AddViewOperation(instance, d, "blah");
-            op.Do();
+        stackSize++;
+        var instance = ViewFactory.Create( candidateType );
+        var op = new AddViewOperation( instance, d, "blah" );
+        op.Do( );
 
-            ClassicAssert.AreEqual(
-                stackSize, d.View.Subviews.Count,
-                "Expected the count of views to increase to match the number we have added");
+        ClassicAssert.AreEqual(
+            stackSize, d.View.Subviews.Count,
+            "Expected the count of views to increase to match the number we have added" );
 
-            ClassicAssert.AreSame(
-                instance, d.View.Subviews.Last(),
-                "Expected the view instance that was added to be the same we passed to operation constructor");
-            ClassicAssert.AreEqual(
-                "blah" + (stackSize == 1 ? "" : stackSize.ToString()),
-                ((Design)d.View.Subviews.Last().Data).FieldName,
-                "Expected field name duplicates to be automatically resolved"
-                );
-        }
+        ClassicAssert.AreSame(
+            instance, d.View.Subviews.Last( ),
+            "Expected the view instance that was added to be the same we passed to operation constructor" );
+        ClassicAssert.AreEqual(
+            "blah" + ( stackSize == 1 ? "" : stackSize.ToString( ) ),
+            ( (Design)d.View.Subviews.Last( ).Data ).FieldName,
+            "Expected field name duplicates to be automatically resolved"
+        );
     }
+
     [Test]
     public void TestAddView_RoundTrip()
     {
