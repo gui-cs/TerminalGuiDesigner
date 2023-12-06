@@ -32,7 +32,7 @@ public static class ViewFactory
         typeof( WizardStep ),
     };
 
-
+    private static readonly Type ViewType = typeof(View);
 
     /// <summary>
     /// Returns all <see cref="View"/> Types that are supported by <see cref="ViewFactory"/>.
@@ -60,11 +60,19 @@ public static class ViewFactory
             typeof(WizardStep),
         }; // The generic version of TreeView
 
-        return typeof(View).Assembly.DefinedTypes.Where(t =>
-                t is { IsInterface: false, IsAbstract: false, IsPublic: true } &&
-                typeof(View).IsAssignableFrom(t))
-            .Except(exclude)
-            .OrderBy(t => t.Name).ToArray();
+        return ViewType.Assembly.DefinedTypes
+                       .Where(IsSupportedType)
+                       .OrderBy(t => t.Name).ToArray();
+
+        static bool IsSupportedType( Type candidateType )
+        {
+            return candidateType is
+                   {
+                       IsInterface: false, IsAbstract: false, IsEnum: false, IsValueType: false, IsClass: true
+                   }
+                   && candidateType.IsAssignableTo( ViewType )
+                   & !KnownUnsupportedTypes.Any( candidateType.IsAssignableTo );
+        }
     }
 
     /// <summary>
