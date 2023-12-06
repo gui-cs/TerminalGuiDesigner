@@ -74,6 +74,43 @@ public static class ViewFactory
                    & !KnownUnsupportedTypes.Any( candidateType.IsAssignableTo );
         }
     }
+    
+    /// <summary>
+    /// Creates a new instance of <see cref="View"/> of Type <typeparamref name="T"/> with
+    /// size/placeholder values that make it easy to see and design in the editor.
+    /// </summary>
+    /// <typeparam name="T">A descendant of <see cref="View"/> that does not exist in the
+    /// <see cref="KnownUnsupportedTypes"/> collection.</typeparam>
+    /// <returns>A new instance of <paramref name="{T}"/>.</returns>
+    public static T Create<T>( )
+        where T : View, new( )
+    {
+        T newView = new()
+        {
+            Width = 10,
+            Height = 1
+        };
+
+        switch ( newView )
+        {
+            case TextValidateField tvf:
+                tvf.Provider = new TextRegexProvider( ".*" );
+                tvf.Text = "Heya";
+                break;
+            case TextField tf:
+                tf.Text = "Heya";
+                break;
+            case ProgressBar pb:
+                pb.Fraction = 1f;
+                break;
+            case Window:
+            default:
+                newView.Height = 5;
+                break;
+        }
+
+        return newView;
+    }
 
     /// <summary>
     /// Creates a new instance of <see cref="View"/> of Type <paramref name="t"/> with
