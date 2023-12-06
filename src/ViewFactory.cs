@@ -41,8 +41,8 @@ public static class ViewFactory
     public static IEnumerable<Type> GetSupportedViews()
     {
         return ViewType.Assembly.DefinedTypes
-                       .Where(IsSupportedType)
-                       .OrderBy(t => t.Name).ToArray();
+                       .Where( IsSupportedType )
+                       .OrderBy( t => t.Name );
 
         static bool IsSupportedType( Type candidateType )
         {
