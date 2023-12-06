@@ -101,7 +101,7 @@ internal class AddViewOperationTests : Tests
 
         for (int i = 1; i <= stackSize; i++)
         {
-            OperationManager.Instance.Undo();
+            Assert.That( OperationManager.Instance.Undo, Throws.Nothing );
             ClassicAssert.AreEqual(
                 stackSize-i, d.View.Subviews.Count,
                 "Expected the count of views to decrease once each time we Undo");
