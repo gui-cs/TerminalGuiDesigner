@@ -68,13 +68,13 @@ public static class ViewFactory
         {
             return candidateType is
                    {
-                       IsInterface: false, IsAbstract: false, IsEnum: false, IsValueType: false, IsClass: true
+                       IsInterface: false, IsAbstract: false, IsPublic: true
                    }
                    && candidateType.IsAssignableTo( ViewType )
                    & !KnownUnsupportedTypes.Any( candidateType.IsAssignableTo );
         }
     }
-    
+
     /// <summary>
     /// Creates a new instance of <see cref="View"/> of Type <typeparamref name="T"/> with
     /// size/placeholder values that make it easy to see and design in the editor.
