@@ -69,6 +69,7 @@ public class CodeDomArgs
     /// so should have a capital letter at start. <see langword="false"/> for private members
     /// which should start with a lower case letter.</param>
     /// <returns><paramref name="name"/>.</returns>
+    /// TODO: Consider prefixing @ for reserved keywords, so casing rules can be preserved
     public static string MakeValidFieldName(string? name, bool isPublic = false)
     {
         name = string.IsNullOrWhiteSpace(name) ? "blank" : name;
