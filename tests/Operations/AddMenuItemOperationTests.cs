@@ -3,6 +3,9 @@ using TerminalGuiDesigner.Operations.MenuOperations;
 
 namespace UnitTests.Operations;
 
+[TestFixture]
+[TestOf(typeof(AddMenuItemOperation))]
+[Category("UI Operations")]
 internal class AddMenuItemOperationTests : Tests
 {
     [Test]
