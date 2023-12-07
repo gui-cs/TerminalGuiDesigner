@@ -34,6 +34,16 @@ public static class ViewFactory
 
     private static readonly Type ViewType = typeof(View);
 
+    private static MenuBarItem[] GetDefaultMenuBarItems( )
+    {
+        return new[]
+        {
+            new MenuBarItem(
+                "_File (F9)",
+                new[] { new MenuItem( AddMenuOperation.DefaultMenuItemText, string.Empty, ( ) => { } ) } )
+        };
+    }
+
     /// <summary>
     /// Gets all <see cref="View"/> Types that are supported by <see cref="ViewFactory"/>.
     /// </summary>
@@ -74,7 +84,7 @@ public static class ViewFactory
         {
             throw new NotSupportedException( $"Requested type {typeof( T ).Name} is not supported" );
         }
-
+        
         T newView = new( );
 
         switch ( newView )
@@ -110,6 +120,9 @@ public static class ViewFactory
                 pb.Fraction = 1f;
                 pb.Width = width ?? 10;
                 pb.Height = height ?? 1;
+                break;
+            case MenuBar mb:
+                mb.Menus = GetDefaultMenuBarItems( );
                 break;
             case Window w:
                 w.Width = width ?? 10;
@@ -283,12 +296,7 @@ public static class ViewFactory
 
     private static MenuBar CreateMenuBar()
     {
-        return new MenuBar(new MenuBarItem[]
-        {
-                new MenuBarItem(
-                    "_File (F9)",
-                    new MenuItem[] { new MenuItem(AddMenuOperation.DefaultMenuItemText, string.Empty, () => { }) }),
-        });
+        return new( GetDefaultMenuBarItems( ) );
     }
 
     private static View CreateRadioGroup()
