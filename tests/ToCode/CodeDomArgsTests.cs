@@ -1,63 +1,86 @@
+using System;
 using System.Collections.Generic;
 using TerminalGuiDesigner.ToCode;
 
 namespace UnitTests.ToCode;
 
 [TestFixture]
-[TestOf(typeof(CodeDomArgs))]
+[TestOf( typeof( CodeDomArgs ) )]
 internal class CodeDomArgsTests
 {
-    /// TODO
-    /// <remarks>
-    /// May be worth considering making these tests combinatorial
-    /// </remarks>
-    private static IEnumerable<TestCaseData> MakeValidFieldName_Cases()
-    { 
-        yield return new ( "fff", "fff" );
-        yield return new ( "33Dalmatians", "dalmatians" );
-        yield return new ( "Dalmatians33", "dalmatians33" );
-        yield return new ( "", "blank" );
-        yield return new ( "bob is great", "bobIsGreat" );
-        yield return new ( "\t", "blank" );
-        yield return new ( null, "blank" );
-        yield return new ( "test\r\nffish\r\n", "testFfish" );
-        yield return new ( "test\r\nffish\r\n", "testFfish" );
+    private static IEnumerable<TestCaseData> GetUniqueFieldName_GivesExpectedResultString_Cases( ) => MakeValidFieldName_GivesExpectedResultString_Cases( );
+
+    private static IEnumerable<TestCaseData> MakeValidFieldName_GivesExpectedResultString_Cases( )
+    {
+        yield return new( "fff" ) { HasExpectedResult = true, ExpectedResult = "fff" };
+        yield return new( "33Dalmatians" ) { HasExpectedResult = true, ExpectedResult = "dalmatians" };
+        yield return new( "Dalmatians33" ) { HasExpectedResult = true, ExpectedResult = "dalmatians33" };
+        yield return new( "" ) { HasExpectedResult = true, ExpectedResult = "blank" };
+        yield return new( "bob is great" ) { HasExpectedResult = true, ExpectedResult = "bobIsGreat" };
+        yield return new( "\t" ) { HasExpectedResult = true, ExpectedResult = "blank" };
+        yield return new( null ) { HasExpectedResult = true, ExpectedResult = "blank" };
+        yield return new( "test\r\nffish\r\n" ) { HasExpectedResult = true, ExpectedResult = "testFfish" };
+    }
+
+    private static IEnumerable<TestCaseData> MakeValidFieldName_CommonCases( )
+    {
+        yield return new( "fff" ) { HasExpectedResult = true, ExpectedResult = true };
+        yield return new( "33Damatians" ) { HasExpectedResult = true, ExpectedResult = true };
+        yield return new( "Dalmatians33" ) { HasExpectedResult = true, ExpectedResult = true };
+        yield return new( string.Empty ) { HasExpectedResult = true, ExpectedResult = true };
+        yield return new( "bob is great" ) { HasExpectedResult = true, ExpectedResult = true };
+        yield return new( "\t" ) { HasExpectedResult = true, ExpectedResult = true };
+        yield return new( Environment.NewLine ) { HasExpectedResult = true, ExpectedResult = true };
+        yield return new( null ) { HasExpectedResult = true, ExpectedResult = true };
+        yield return new( $"test{Environment.NewLine}ffish{Environment.NewLine}" ) { HasExpectedResult = true, ExpectedResult = true };
     }
 
     [Test]
-    [TestCaseSource(nameof( MakeValidFieldName_Cases ))]
-    public void MakeValidFieldName(string? input, string expectedOutput)
+    [TestCaseSource( nameof( MakeValidFieldName_GivesExpectedResultString_Cases ) )]
+    public string MakeValidFieldName_GivesExpectedResultString( string? input )
     {
-        ClassicAssert.AreEqual(expectedOutput, CodeDomArgs.MakeValidFieldName(input));
-
-        // when public we should start with an upper case letter
-        ClassicAssert.IsTrue(char.IsUpper(CodeDomArgs.MakeValidFieldName(name: input, isPublic: true)[0]));
-
-        // when private we should start with an upper case letter
-        ClassicAssert.IsFalse(char.IsUpper(CodeDomArgs.MakeValidFieldName(name: input, isPublic: false)[0]));
-
-        ClassicAssert.AreEqual(
-            CodeDomArgs.MakeValidFieldName(input, true).Substring(1),
-            CodeDomArgs.MakeValidFieldName(input, false).Substring(1),
-            "Expected public/private to only differ on first letter caps");
+        return CodeDomArgs.MakeValidFieldName( input );
     }
 
     [Test]
-    [TestCaseSource(nameof( MakeValidFieldName_Cases ))]
-    public void Test_GetUniqueFieldName(string? input, string expectOutput)
+    [TestCaseSource( nameof( MakeValidFieldName_CommonCases ) )]
+    public bool MakeValidFieldName_PublicStartsWithCaps( string? input )
     {
-        var args = new CodeDomArgs(new(), new());
-        ClassicAssert.AreEqual(expectOutput, args.GetUniqueFieldName(input), "Expected GetUniqueFieldName to sanitize input in the same way as MakeValidFieldName (see Test_MakeValidFieldName tests)");
+        return char.IsUpper( CodeDomArgs.MakeValidFieldName( input, true )[ 0 ] );
     }
 
     [Test]
-    [TestCase("bob", "bob", "bob2")]
-    [TestCase("blank","", "blank2")]
-    public void Test_GetUniqueFieldName_AfterAdding(string firstAdd, string? thenInput, string expectOutput)
+    [TestCaseSource( nameof( MakeValidFieldName_CommonCases ) )]
+    public bool MakeValidFieldName_NonPublicStartsWithLowerCase( string? input )
     {
-        var args = new CodeDomArgs(new(), new());
-        args.FieldNamesUsed.Add(firstAdd);
-        ClassicAssert.AreEqual(expectOutput,args.GetUniqueFieldName(thenInput));
+        return char.IsLower( CodeDomArgs.MakeValidFieldName( name: input, isPublic: false ), 0 );
+    }
+
+    [Test]
+    [TestCaseSource( nameof( MakeValidFieldName_CommonCases ) )]
+    public bool MakeValidFieldName_PublicAndPrivateSameAfterFirstChar( string? input )
+    {
+        string publicFieldName = CodeDomArgs.MakeValidFieldName( input, isPublic: true );
+        string privateFieldName = CodeDomArgs.MakeValidFieldName( input, isPublic: false );
+
+        return publicFieldName[ 1.. ] == privateFieldName[ 1.. ];
+    }
+
+    [Test]
+    [TestCaseSource( nameof( GetUniqueFieldName_GivesExpectedResultString_Cases ) )]
+    public string GetUniqueFieldName_GivesExpectedResultString( string? input )
+    {
+        return new CodeDomArgs( new( ), new( ) ).GetUniqueFieldName( input );
+    }
+
+    [Test]
+    [TestCase( "bob", "bob", "bob2" )]
+    [TestCase( "blank", "", "blank2" )]
+    public void Test_GetUniqueFieldName_AfterAdding( string firstAdd, string? thenInput, string expectOutput )
+    {
+        var args = new CodeDomArgs( new( ), new( ) );
+        args.FieldNamesUsed.Add( firstAdd );
+        ClassicAssert.AreEqual( expectOutput, args.GetUniqueFieldName( thenInput ) );
     }
 
     [Test]
