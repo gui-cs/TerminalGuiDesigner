@@ -1,6 +1,5 @@
 using System.IO;
 using System.Linq;
-using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.FromCode;
@@ -353,7 +352,7 @@ class MenuBarTests : Tests
         ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
         ClassicAssert.AreEqual(2, head2.Children.Length);
 
-        ClassicAssert.AreEqual(topChild.Title.ToString(), head2.Children[0].Title.ToString());
+        ClassicAssert.AreEqual(topChild.Title, head2.Children[0].Title);
         ClassicAssert.AreEqual(topChild.Data, head2.Children[0].Data);
         ClassicAssert.AreEqual(topChild.Shortcut, head2.Children[0].Shortcut);
         ClassicAssert.AreSame(topChild, head2.Children[0]);

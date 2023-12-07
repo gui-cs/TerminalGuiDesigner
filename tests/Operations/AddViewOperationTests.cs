@@ -45,7 +45,7 @@ internal class AddViewOperationTests : Tests
         {
             // Doesn't matter which type we use, here, because this isn't a type test
             // Just needs to be a valid type, which is tested in Do_AddsExpectedSubview
-            var instance = ViewFactory.Create( typeof( TextField ) );
+            var instance = ViewFactory.Create<TextField>( );
             
             var op = new AddViewOperation( instance, d, baseName );
             Assert.That( op.Do, Throws.Nothing );

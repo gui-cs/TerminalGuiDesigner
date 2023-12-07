@@ -1,5 +1,4 @@
-﻿using NUnit.Framework;
-using Terminal.Gui;
+﻿using Terminal.Gui;
 using TerminalGuiDesigner.Operations.MenuOperations;
 
 namespace UnitTests.Operations;
@@ -18,7 +17,7 @@ internal class AddMenuItemOperationTests : Tests
             ClassicAssert.IsNotNull(v.Menus[0].Children[0], "Expected a new MenuBar added in Designer to have a placeholder MenuItem entry");
             ClassicAssert.AreEqual(1, v.Menus[0].Children.Length);
             var first = v.Menus[0].Children[0];
-            firstMenuItemName = first.Title.ToString();
+            firstMenuItemName = first.Title;
 
             var add = new AddMenuItemOperation(first);
 
@@ -33,8 +32,8 @@ internal class AddMenuItemOperationTests : Tests
         }, out _);
 
         ClassicAssert.AreEqual(2, viewIn.Menus[0].Children.Length);
-        ClassicAssert.AreEqual(firstMenuItemName, viewIn.Menus[0].Children[0].Title.ToString(), "Expected save/reload to have no effect on menu names");
-        ClassicAssert.AreEqual("", viewIn.Menus[0].Children[1].Title.ToString());
+        ClassicAssert.AreEqual(firstMenuItemName, viewIn.Menus[0].Children[0].Title, "Expected save/reload to have no effect on menu names");
+        ClassicAssert.AreEqual("", viewIn.Menus[0].Children[1].Title);
     }
 
     [Test]
@@ -49,7 +48,7 @@ internal class AddMenuItemOperationTests : Tests
             ClassicAssert.IsNotNull(v.Menus[0].Children[0], "Expected a new MenuBar added in Designer to have a placeholder MenuItem entry");
             ClassicAssert.AreEqual(1, v.Menus[0].Children.Length);
             var first = v.Menus[0].Children[0];
-            firstMenuItemName = first.Title.ToString();
+            firstMenuItemName = first.Title;
 
             var add = new AddMenuItemOperation(first);
 
@@ -82,6 +81,6 @@ internal class AddMenuItemOperationTests : Tests
         }, out _);
 
         ClassicAssert.AreEqual(1, viewIn.Menus[0].Children.Length);
-        ClassicAssert.AreEqual(firstMenuItemName, viewIn.Menus[0].Children[0].Title.ToString(), "Expected save/reload to have no effect on menu names");
+        ClassicAssert.AreEqual(firstMenuItemName, viewIn.Menus[0].Children[0].Title, "Expected save/reload to have no effect on menu names");
     }
 }

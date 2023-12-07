@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.FromCode;
@@ -242,7 +241,7 @@ internal class PosTests : Tests
         designOut.View.Width = 100;
         designOut.View.Height = 100;
 
-        var lbl = ViewFactory.Create(typeof(Label));
+        var lbl = ViewFactory.Create<Label>( );
         lbl.X = 50;
         lbl.Y = 50;
 
@@ -303,7 +302,7 @@ internal class PosTests : Tests
         designOut.View.Width = 100;
         designOut.View.Height = 100;
 
-        var lbl = ViewFactory.Create(typeof(Label));
+        var lbl = ViewFactory.Create<Label>( );
         lbl.X = Pos.AnchorEnd(1);
         lbl.Y = Pos.AnchorEnd(4); // length of "Heya"
 
@@ -338,7 +337,7 @@ internal class PosTests : Tests
         designOut.View.Width = 100;
         designOut.View.Height = 100;
 
-        var lbl = ViewFactory.Create(typeof(Label));
+        var lbl = ViewFactory.Create<Label>( );
         lbl.X = Pos.AnchorEnd(1) + 5;
         lbl.Y = Pos.AnchorEnd(4) - 3; // length of "Heya"
 

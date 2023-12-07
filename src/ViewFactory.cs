@@ -50,6 +50,8 @@ public static class ViewFactory
                 .Where( filteredType => filteredType.IsSubclassOf( ViewType ) )
                 .Where( viewDescendantType => !KnownUnsupportedTypes.Any( viewDescendantType.IsAssignableTo ) );
 
+    private static bool IsSupportedType( this Type t ) => SupportedViewTypes.Contains( t );
+
     /// <summary>
     /// Creates a new instance of a <see cref="View"/> of Type <typeparamref name="T"/> with
     /// size/placeholder values that make it easy to see and design in the editor.
@@ -58,6 +60,7 @@ public static class ViewFactory
     /// <see cref="KnownUnsupportedTypes"/> collection.</typeparam>
     /// <param name="width">The width of the requested view.</param>
     /// <param name="height">The height of the requested view.</param>
+    /// <exception cref="NotSupportedException">If an unsupported type is requested</exception>
     /// <returns>A new instance of <paramref name="{T}"/>.</returns>
     /// <remarks>
     /// <typeparamref name="T"/> must inherit from <see cref="View"/>,
@@ -67,6 +70,11 @@ public static class ViewFactory
     public static T Create<T>(int? width = null, int? height = null )
         where T : View, new( )
     {
+        if ( !IsSupportedType( typeof( T ) ) )
+        {
+            throw new NotSupportedException( $"Requested type {typeof( T ).Name} is not supported" );
+        }
+
         T newView = new( );
 
         switch ( newView )
@@ -90,9 +98,13 @@ public static class ViewFactory
             case TextValidateField tvf:
                 tvf.Provider = new TextRegexProvider( ".*" );
                 tvf.Text = "Heya";
+                newView.Width = width ?? 5;
+                newView.Height = height ?? 1;
                 goto default;
             case TextField tf:
                 tf.Text = "Heya";
+                newView.Width = width ?? 5;
+                newView.Height = height ?? 1;
                 goto default;
             case ProgressBar pb:
                 pb.Fraction = 1f;
@@ -102,6 +114,11 @@ public static class ViewFactory
             case Window w:
                 w.Width = width ?? 10;
                 w.Height = height ?? 5;
+                break;
+            case Label l:
+                l.SetActualText("Heya");
+                newView.Width = width ?? 5;
+                newView.Height = height ?? 1;
                 break;
             default:
                 newView.Width = width ?? 5;

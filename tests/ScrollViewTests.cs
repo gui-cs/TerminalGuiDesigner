@@ -1,5 +1,4 @@
 using System.Linq;
-using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
@@ -11,7 +10,7 @@ class ScrollViewTests : Tests
     [Test]
     public void TestRoundTrip_PreserveContentSize()
     {
-        var scrollViewIn = this.RoundTrip<View, ScrollView>(
+        var scrollViewIn = RoundTrip<View, ScrollView>(
             (d, s) =>
                 s.ContentSize = new Size(10, 5),
             out var scrollViewOut);
@@ -24,7 +23,7 @@ class ScrollViewTests : Tests
     [Test]
     public void TestRoundTrip_PreserveContentViews()
     {
-        var scrollViewIn = this.RoundTrip<View, ScrollView>(
+        var scrollViewIn = RoundTrip<View, ScrollView>(
             (d, s) =>
                 {
                     var op = new AddViewOperation(new Label("blarggg"), d, "myLbl");
@@ -37,7 +36,7 @@ class ScrollViewTests : Tests
 
         var lblIn = (Design)child.Data;
         ClassicAssert.AreEqual("myLbl", lblIn.FieldName);
-        ClassicAssert.AreEqual("blarggg", lblIn.View.Text.ToString());
+        ClassicAssert.AreEqual("blarggg", lblIn.View.Text);
     }
 
     [Test]
@@ -46,7 +45,7 @@ class ScrollViewTests : Tests
         var scrollOut = ViewFactory.Create(typeof(ScrollView));
         var buttonOut = ViewFactory.Create(typeof(Button));
 
-        var tabIn = this.RoundTrip<View, TabView>(
+        var tabIn = RoundTrip<View, TabView>(
             (d, tab) =>
                 {
                     // Add a ScrollView to the first Tab

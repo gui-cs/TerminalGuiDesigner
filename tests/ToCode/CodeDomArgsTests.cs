@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using TerminalGuiDesigner.ToCode;
 
 namespace UnitTests.ToCode;

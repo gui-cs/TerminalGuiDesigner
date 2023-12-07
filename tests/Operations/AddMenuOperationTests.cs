@@ -1,5 +1,4 @@
-﻿using NUnit.Framework;
-using System;
+﻿using System;
 using System.IO;
 using Terminal.Gui;
 using TerminalGuiDesigner;
@@ -40,8 +39,8 @@ internal class AddMenuOperationTests : Tests
         }, out _);
 
         ClassicAssert.AreEqual(2, viewIn.Menus.Length);
-        ClassicAssert.AreEqual(expectedTopLevelMenuName, viewIn.Menus[0].Title.ToString());
-        ClassicAssert.AreEqual("Blarg", viewIn.Menus[1].Title.ToString());
+        ClassicAssert.AreEqual(expectedTopLevelMenuName, viewIn.Menus[0].Title);
+        ClassicAssert.AreEqual("Blarg", viewIn.Menus[1].Title);
     }
 
     [Test]
@@ -78,8 +77,8 @@ internal class AddMenuOperationTests : Tests
         }, out _);
 
         ClassicAssert.AreEqual(3, viewIn.Menus.Length);
-        ClassicAssert.AreEqual("Fish", viewIn.Menus[1].Title.ToString());
-        ClassicAssert.AreEqual("Fish2", viewIn.Menus[2].Title.ToString());
+        ClassicAssert.AreEqual("Fish", viewIn.Menus[1].Title);
+        ClassicAssert.AreEqual("Fish2", viewIn.Menus[2].Title);
 
         // Check that the .Designer.cs is producing sensible private field names
         FileAssert.Exists(((Design)viewIn.Data).SourceCode.DesignerFile);
@@ -134,6 +133,6 @@ internal class AddMenuOperationTests : Tests
         }, out _);
 
         ClassicAssert.AreEqual(1, viewIn.Menus.Length);
-        ClassicAssert.AreEqual(expectedTopLevelMenuName, viewIn.Menus[0].Title.ToString());
+        ClassicAssert.AreEqual(expectedTopLevelMenuName, viewIn.Menus[0].Title);
     }
 }

@@ -30,7 +30,7 @@ internal class CopyPasteTests : Tests
     {
         var d = Get10By10View();
 
-        var tv = (TableView)ViewFactory.Create(typeof(TableView));
+        var tv = ViewFactory.Create<TableView>( );
 
         Assert.That( new AddViewOperation(tv, d, "mytbl").Do() );
 

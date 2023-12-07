@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.FromCode;
@@ -25,7 +23,7 @@ internal class AddViewTests : Tests
         var file = new FileInfo("TestAdd_Undo.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
-        var lbl = ViewFactory.Create(typeof(Label));
+        var lbl = ViewFactory.Create<Label>( );
         var op = new AddViewOperation(lbl, designOut, "label1");
 
         OperationManager.Instance.Do(op);
@@ -50,7 +48,7 @@ internal class AddViewTests : Tests
         var file = new FileInfo("TestAddUndoRedo_RoundTrip.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
-        var lbl = ViewFactory.Create(typeof(Label));
+        var lbl = ViewFactory.Create<Label>( );
         var op = new AddViewOperation(lbl, designOut, "label1");
 
         OperationManager.Instance.Do(op);
@@ -79,7 +77,7 @@ internal class AddViewTests : Tests
     [Test]
     public void Test60Percent_RoundTrip([Values]bool? offset)
     {
-        var lblIn = this.RoundTrip<Dialog, Label>(
+        var lblIn = RoundTrip<Dialog, Label>(
             (d, lbl) =>
         {
             lbl.Width = offset == null ? Dim.Percent(60) : offset.Value ? Dim.Percent(60) + 1 : Dim.Percent(60) - 1;

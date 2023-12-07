@@ -1,4 +1,3 @@
-﻿using NUnit.Framework;
 using System;
 using Terminal.Gui;
 using TerminalGuiDesigner;

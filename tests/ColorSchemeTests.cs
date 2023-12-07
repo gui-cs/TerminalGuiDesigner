@@ -181,7 +181,7 @@ internal class ColorSchemeTests : Tests
     {
         var mgr = ColorSchemeManager.Instance;
 
-        var lblIn = this.RoundTrip<Dialog, Label>(
+        var lblIn = RoundTrip<Dialog, Label>(
             (d, l) =>
         {
             mgr.Clear();
@@ -233,7 +233,7 @@ internal class ColorSchemeTests : Tests
         var scheme = new ColorScheme();
 
         const string expectedSchemeName = "yarg";
-        var lblIn = this.RoundTrip<Dialog, Label>(
+        var lblIn = RoundTrip<Dialog, Label>(
             (d, _) =>
             {
                 // Clear known default colors
