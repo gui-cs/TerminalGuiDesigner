@@ -1,5 +1,4 @@
 using System.IO;
-using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.UI;
@@ -40,17 +39,17 @@ internal class KeyboardManagerTests : Tests
         mgr.HandleKey(v, new KeyEvent(Key.Backspace, new KeyModifiers()));
         mgr.HandleKey(v, new KeyEvent(Key.Backspace, new KeyModifiers()));
 
-        ClassicAssert.IsTrue(string.IsNullOrWhiteSpace(v.Text.ToString()));
+        ClassicAssert.IsTrue(string.IsNullOrWhiteSpace(v.Text));
 
         mgr.HandleKey(v, new KeyEvent(Key.B, new KeyModifiers { Shift = true }));
         mgr.HandleKey(v, new KeyEvent((Key)'a', new KeyModifiers()));
         mgr.HandleKey(v, new KeyEvent((Key)'d', new KeyModifiers()));
 
-        ClassicAssert.AreEqual("Bad", v.Text.ToString());
+        ClassicAssert.AreEqual("Bad", v.Text);
 
         mgr.HandleKey(v, new KeyEvent(Key.Backspace, new KeyModifiers()));
         mgr.HandleKey(v, new KeyEvent(Key.Backspace, new KeyModifiers()));
 
-        ClassicAssert.AreEqual("B", v.Text.ToString());
+        ClassicAssert.AreEqual("B", v.Text);
     }
 }

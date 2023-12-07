@@ -1,17 +1,11 @@
-﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Terminal.Gui;
-using TerminalGuiDesigner.ToCode;
 using TerminalGuiDesigner;
 
 namespace UnitTests
 {
-    class VisiblePropertyTests : Tests
+    [TestFixture]
+    internal class VisiblePropertyTests : Tests
     {
         [Test]
         public void TestSettingVisible_False()
@@ -22,7 +16,7 @@ namespace UnitTests
 
                 var prop = d.GetDesignableProperties().Single(
                     p => p.PropertyInfo.Name.Equals(nameof(View.Visible))
-                    );
+                );
                 
                 // Should start off visible
                 ClassicAssert.AreEqual(true, prop.GetValue());

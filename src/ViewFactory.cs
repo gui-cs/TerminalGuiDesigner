@@ -35,77 +35,94 @@ public static class ViewFactory
     private static readonly Type ViewType = typeof(View);
 
     /// <summary>
-    /// Returns all <see cref="View"/> Types that are supported by <see cref="ViewFactory"/>.
+    /// Gets all <see cref="View"/> Types that are supported by <see cref="ViewFactory"/>.
     /// </summary>
-    /// <returns>All supported types.</returns>
-    public static IEnumerable<Type> GetSupportedViews()
-    {
-        Type[] exclude = new Type[]
-        {
-            typeof(Toplevel),
-            typeof(Dialog),
-            typeof(FileDialog),
-            typeof(SaveDialog),
-            typeof(OpenDialog),
-            typeof(ScrollBarView),
-            typeof(TreeView<>),
+    /// <value>All types supported by <see cref="ViewFactory"/>.</value>
+    public static IEnumerable<Type> SupportedViewTypes { get; } =
+        ViewType.Assembly.DefinedTypes
+                .Where( unfilteredType => unfilteredType is
+                {
+                    IsInterface: false,
+                    IsAbstract: false,
+                    IsPublic: true,
+                    IsValueType: false
+                } )
+                .Where( filteredType => filteredType.IsSubclassOf( ViewType ) )
+                .Where( viewDescendantType => !KnownUnsupportedTypes.Any( viewDescendantType.IsAssignableTo ) );
 
-            typeof(Slider<>),
-
-            // Theses are special types of view and shouldn't be added manually by user
-            typeof(Frame),
-
-            // These seem to cause stack overflows in CreateSubControlDesigns (see TestAddView_RoundTrip)
-            typeof(Wizard),
-            typeof(WizardStep),
-        }; // The generic version of TreeView
-
-        return ViewType.Assembly.DefinedTypes
-                       .Where(IsSupportedType)
-                       .OrderBy(t => t.Name).ToArray();
-
-        static bool IsSupportedType( Type candidateType )
-        {
-            return candidateType is
-                   {
-                       IsInterface: false, IsAbstract: false, IsPublic: true
-                   }
-                   && candidateType.IsAssignableTo( ViewType )
-                   & !KnownUnsupportedTypes.Any( candidateType.IsAssignableTo );
-        }
-    }
+    private static bool IsSupportedType( this Type t ) => SupportedViewTypes.Contains( t );
 
     /// <summary>
-    /// Creates a new instance of <see cref="View"/> of Type <typeparamref name="T"/> with
+    /// Creates a new instance of a <see cref="View"/> of Type <typeparamref name="T"/> with
     /// size/placeholder values that make it easy to see and design in the editor.
     /// </summary>
     /// <typeparam name="T">A descendant of <see cref="View"/> that does not exist in the
     /// <see cref="KnownUnsupportedTypes"/> collection.</typeparam>
+    /// <param name="width">The width of the requested view.</param>
+    /// <param name="height">The height of the requested view.</param>
+    /// <exception cref="NotSupportedException">If an unsupported type is requested</exception>
     /// <returns>A new instance of <paramref name="{T}"/>.</returns>
-    public static T Create<T>( )
+    /// <remarks>
+    /// <typeparamref name="T"/> must inherit from <see cref="View"/>,
+    /// must have a public constructor, and must not exist in the
+    /// <see cref="KnownUnsupportedTypes"/> collection, at run-time.
+    /// </remarks>
+    public static T Create<T>(int? width = null, int? height = null )
         where T : View, new( )
     {
-        T newView = new()
+        if ( !IsSupportedType( typeof( T ) ) )
         {
-            Width = 10,
-            Height = 1
-        };
+            throw new NotSupportedException( $"Requested type {typeof( T ).Name} is not supported" );
+        }
+
+        T newView = new( );
 
         switch ( newView )
         {
+            case TableView tv:
+                var dt = new DataTable( );
+                dt.Columns.Add( "Column 0" );
+                dt.Columns.Add( "Column 1" );
+                dt.Columns.Add( "Column 2" );
+                dt.Columns.Add( "Column 3" );
+                tv.Width = width ?? 50;
+                tv.Height = height ?? 5;
+                tv.Table = new DataTableSource( dt );
+                break;
+            case TabView tv:
+                tv.AddEmptyTab("Tab1");
+                tv.AddEmptyTab("Tab2");
+                tv.Width = width ?? 50;
+                tv.Height = height ?? 5;
+                break;
             case TextValidateField tvf:
                 tvf.Provider = new TextRegexProvider( ".*" );
                 tvf.Text = "Heya";
-                break;
+                newView.Width = width ?? 5;
+                newView.Height = height ?? 1;
+                goto default;
             case TextField tf:
                 tf.Text = "Heya";
-                break;
+                newView.Width = width ?? 5;
+                newView.Height = height ?? 1;
+                goto default;
             case ProgressBar pb:
                 pb.Fraction = 1f;
+                pb.Width = width ?? 10;
+                pb.Height = height ?? 1;
                 break;
-            case Window:
+            case Window w:
+                w.Width = width ?? 10;
+                w.Height = height ?? 5;
+                break;
+            case Label l:
+                l.SetActualText("Heya");
+                newView.Width = width ?? 5;
+                newView.Height = height ?? 1;
+                break;
             default:
-                newView.Height = 5;
+                newView.Width = width ?? 5;
+                newView.Height = height ?? 1;
                 break;
         }
 

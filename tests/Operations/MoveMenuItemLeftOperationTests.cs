@@ -1,5 +1,4 @@
-﻿using NUnit.Framework;
-using Terminal.Gui;
+﻿using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations.MenuOperations;
 
@@ -11,12 +10,12 @@ internal class MoveMenuItemLeftOperationTests : Tests
     public void TestMoveMenuItemLeft_CannotForRootItems()
     {
         RoundTrip<Toplevel, MenuBar>((d,v)=>
-        {
-            var op = new MoveMenuItemLeftOperation(v.Menus[0].Children[0]);
-            ClassicAssert.IsTrue(op.IsImpossible, "Expected it to be impossible to move left a menu that is under a root MenuBar Item (e.g. items under File, Edit, View etc)");
-            ClassicAssert.IsFalse(op.Do());
-        }
-        ,out _);
+                                     {
+                                         var op = new MoveMenuItemLeftOperation(v.Menus[0].Children[0]);
+                                         ClassicAssert.IsTrue(op.IsImpossible, "Expected it to be impossible to move left a menu that is under a root MenuBar Item (e.g. items under File, Edit, View etc)");
+                                         ClassicAssert.IsFalse(op.Do());
+                                     }
+                                     ,out _);
     }
 
     [Test]
@@ -38,11 +37,11 @@ internal class MoveMenuItemLeftOperationTests : Tests
         var mb = GetDeepMenu();
 
         ClassicAssert.IsInstanceOf<MenuBarItem>(mb.Menus[0].Children[0]);
-        ClassicAssert.AreEqual("File", mb.Menus[0].Title.ToString());
-        ClassicAssert.AreEqual("New", ((MenuBarItem)mb.Menus[0].Children[0]).Title.ToString());
-        ClassicAssert.AreEqual("Document", ((MenuBarItem)mb.Menus[0].Children[0]).Children[0].Title.ToString());
-        ClassicAssert.AreEqual("Spreadsheet", ((MenuBarItem)mb.Menus[0].Children[0]).Children[1].Title.ToString());
-        ClassicAssert.AreEqual("Video Game", ((MenuBarItem)mb.Menus[0].Children[0]).Children[2].Title.ToString());
+        ClassicAssert.AreEqual("File", mb.Menus[0].Title);
+        ClassicAssert.AreEqual("New", ((MenuBarItem)mb.Menus[0].Children[0]).Title);
+        ClassicAssert.AreEqual("Document", ((MenuBarItem)mb.Menus[0].Children[0]).Children[0].Title);
+        ClassicAssert.AreEqual("Spreadsheet", ((MenuBarItem)mb.Menus[0].Children[0]).Children[1].Title);
+        ClassicAssert.AreEqual("Video Game", ((MenuBarItem)mb.Menus[0].Children[0]).Children[2].Title);
 
         var op = new MoveMenuItemLeftOperation(((MenuBarItem)mb.Menus[0].Children[0]).Children[indexToMove]);
         ClassicAssert.IsFalse(op.IsImpossible);
@@ -67,11 +66,11 @@ internal class MoveMenuItemLeftOperationTests : Tests
 
         // should now be back to the way we were before applying operation
         ClassicAssert.IsInstanceOf<MenuBarItem>(mb.Menus[0].Children[0]);
-        ClassicAssert.AreEqual("File", mb.Menus[0].Title.ToString());
-        ClassicAssert.AreEqual("New", ((MenuBarItem)mb.Menus[0].Children[0]).Title.ToString());
-        ClassicAssert.AreEqual("Document", ((MenuBarItem)mb.Menus[0].Children[0]).Children[0].Title.ToString());
-        ClassicAssert.AreEqual("Spreadsheet", ((MenuBarItem)mb.Menus[0].Children[0]).Children[1].Title.ToString());
-        ClassicAssert.AreEqual("Video Game", ((MenuBarItem)mb.Menus[0].Children[0]).Children[2].Title.ToString());
+        ClassicAssert.AreEqual("File", mb.Menus[0].Title);
+        ClassicAssert.AreEqual("New", ((MenuBarItem)mb.Menus[0].Children[0]).Title);
+        ClassicAssert.AreEqual("Document", ((MenuBarItem)mb.Menus[0].Children[0]).Children[0].Title);
+        ClassicAssert.AreEqual("Spreadsheet", ((MenuBarItem)mb.Menus[0].Children[0]).Children[1].Title);
+        ClassicAssert.AreEqual("Video Game", ((MenuBarItem)mb.Menus[0].Children[0]).Children[2].Title);
     }
     
     [Test]
@@ -80,11 +79,11 @@ internal class MoveMenuItemLeftOperationTests : Tests
         var mb = GetDeepMenu();
 
         ClassicAssert.IsInstanceOf<MenuBarItem>(mb.Menus[0].Children[0]);
-        ClassicAssert.AreEqual("File", mb.Menus[0].Title.ToString());
-        ClassicAssert.AreEqual("New", ((MenuBarItem)mb.Menus[0].Children[0]).Title.ToString());
-        ClassicAssert.AreEqual("Document", ((MenuBarItem)mb.Menus[0].Children[0]).Children[0].Title.ToString());
-        ClassicAssert.AreEqual("Spreadsheet", ((MenuBarItem)mb.Menus[0].Children[0]).Children[1].Title.ToString());
-        ClassicAssert.AreEqual("Video Game", ((MenuBarItem)mb.Menus[0].Children[0]).Children[2].Title.ToString());
+        ClassicAssert.AreEqual("File", mb.Menus[0].Title);
+        ClassicAssert.AreEqual("New", ((MenuBarItem)mb.Menus[0].Children[0]).Title);
+        ClassicAssert.AreEqual("Document", ((MenuBarItem)mb.Menus[0].Children[0]).Children[0].Title);
+        ClassicAssert.AreEqual("Spreadsheet", ((MenuBarItem)mb.Menus[0].Children[0]).Children[1].Title);
+        ClassicAssert.AreEqual("Video Game", ((MenuBarItem)mb.Menus[0].Children[0]).Children[2].Title);
 
         // Setup operations to remove all 3
         var op1 = new MoveMenuItemLeftOperation(((MenuBarItem)mb.Menus[0].Children[0]).Children[0]);

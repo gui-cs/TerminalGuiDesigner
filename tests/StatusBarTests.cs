@@ -1,5 +1,4 @@
-﻿using NUnit.Framework;
-using Terminal.Gui;
+﻿using Terminal.Gui;
 using TerminalGuiDesigner;
 
 namespace UnitTests
@@ -18,7 +17,7 @@ namespace UnitTests
 
             }, out _);
 
-            ClassicAssert.AreEqual(1, statusBarIn.Items.Length, $"Expected reloading StatusBar to create the same number of StatusItems");
+            ClassicAssert.AreEqual(1, statusBarIn.Items.Length, "Expected reloading StatusBar to create the same number of StatusItems");
             ClassicAssert.AreEqual(shortcutBefore, statusBarIn.Items[0].Shortcut);
         }
     }

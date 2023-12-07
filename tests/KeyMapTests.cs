@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using NUnit.Framework;
 using TerminalGuiDesigner.UI;
 using YamlDotNet.Serialization;
 

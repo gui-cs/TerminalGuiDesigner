@@ -1,9 +1,5 @@
-using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 using static Terminal.Gui.SpinnerStyle;
@@ -15,7 +11,7 @@ namespace UnitTests
         [Test]
         public void TestNewSpinnerAutoSpins()
         {
-            ClassicAssert.Contains(typeof(SpinnerView), ViewFactory.GetSupportedViews().ToArray());
+            ClassicAssert.Contains(typeof(SpinnerView), ViewFactory.SupportedViewTypes.ToArray());
 
             ClassicAssert.IsEmpty(Application.MainLoop.Timeouts);
 
@@ -29,7 +25,7 @@ namespace UnitTests
         [Test]
         public void TestNewSpinnerAutoSpins_AfterRoundTrip()
         {
-            ClassicAssert.Contains(typeof(SpinnerView), ViewFactory.GetSupportedViews().ToArray());
+            ClassicAssert.Contains(typeof(SpinnerView), ViewFactory.SupportedViewTypes.ToArray());
 
             ClassicAssert.IsEmpty(Application.MainLoop.Timeouts);
 

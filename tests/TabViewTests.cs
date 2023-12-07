@@ -1,6 +1,5 @@
 using System.IO;
 using System.Linq;
-using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.FromCode;
@@ -15,7 +14,7 @@ class TabViewTests : Tests
     [Test]
     public void TestRoundTrip_PreserveTabs()
     {
-        TabView tabIn = this.RoundTrip<Dialog, TabView>(
+        TabView tabIn = RoundTrip<Dialog, TabView>(
             (d, t) =>
             ClassicAssert.IsNotEmpty(t.Tabs, "Expected default TabView created by ViewFactory to have some placeholder Tabs"),
             out TabView tabOut);
@@ -119,8 +118,8 @@ class TabViewTests : Tests
         OperationManager.Instance.Undo();
 
         ClassicAssert.AreEqual(2, tv.Tabs.Count);
-        ClassicAssert.AreEqual("Tab1", tv.Tabs.ElementAt(0).Text.ToString());
-        ClassicAssert.AreEqual("Tab2", tv.Tabs.ElementAt(1).Text.ToString());
+        ClassicAssert.AreEqual("Tab1", tv.Tabs.ElementAt(0).Text);
+        ClassicAssert.AreEqual("Tab2", tv.Tabs.ElementAt(1).Text);
     }
 
     [Test]
@@ -131,7 +130,7 @@ class TabViewTests : Tests
         var file = new FileInfo("TestRoundTrip_DuplicateTabNames.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
-        var tvOut = (TabView)ViewFactory.Create(typeof(TabView));
+        var tvOut = ViewFactory.Create<TabView>( );
 
         OperationManager.Instance.Do(new AddViewOperation(tvOut, designOut, "myTabview"));
 
@@ -150,8 +149,8 @@ class TabViewTests : Tests
 
         ClassicAssert.AreEqual(2, tabIn.Tabs.Count());
 
-        ClassicAssert.AreEqual("MyTab", tabIn.Tabs.ElementAt(0).Text.ToString());
-        ClassicAssert.AreEqual("MyTab", tabIn.Tabs.ElementAt(1).Text.ToString());
+        ClassicAssert.AreEqual("MyTab", tabIn.Tabs.ElementAt(0).Text);
+        ClassicAssert.AreEqual("MyTab", tabIn.Tabs.ElementAt(1).Text);
     }
 
     [Test]
@@ -162,11 +161,11 @@ class TabViewTests : Tests
         var file = new FileInfo("TestAddingSubcontrolToTab.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
-        var tvOut = (TabView)ViewFactory.Create(typeof(TabView));
+        var tvOut = ViewFactory.Create<TabView>( );
 
         OperationManager.Instance.Do(new AddViewOperation(tvOut, designOut, "myTabview"));
 
-        var label = ViewFactory.Create(typeof(Label));
+        var label = ViewFactory.Create<Label>( );
 
         OperationManager.Instance.Do(new AddViewOperation(label, (Design)tvOut.Data, "myLabel"));
         ClassicAssert.Contains(label, tvOut.SelectedTab.View.Subviews.ToArray(), "Expected currently selected tab to have the new label but it did not");

@@ -1,5 +1,4 @@
-﻿using NUnit.Framework;
-using Terminal.Gui;
+﻿using Terminal.Gui;
 using TerminalGuiDesigner.Operations.MenuOperations;
 
 namespace UnitTests.Operations;

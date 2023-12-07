@@ -1,6 +1,5 @@
 using System.IO;
 using System.Linq;
-using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
@@ -18,8 +17,8 @@ internal class DeleteViewOperationTests : Tests
         var file = new FileInfo("TestDeletingObjectWithDependency_IsImpossible.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(View));
 
-        var lbl1 = (Label)ViewFactory.Create(typeof(Label));
-        var lbl2 = (Label)ViewFactory.Create(typeof(Label));
+        var lbl1 = ViewFactory.Create<Label>( );
+        var lbl2 = ViewFactory.Create<Label>( );
 
         // add 2 labels
         new AddViewOperation(lbl1, designOut, "lbl1").Do();
@@ -43,8 +42,8 @@ internal class DeleteViewOperationTests : Tests
         var file = new FileInfo("TestDeletingObjectWithDependency_IsImpossible.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(View));
 
-        var lbl1 = (Label)ViewFactory.Create(typeof(Label));
-        var lbl2 = (Label)ViewFactory.Create(typeof(Label));
+        var lbl1 = ViewFactory.Create<Label>( );
+        var lbl2 = ViewFactory.Create<Label>( );
 
         // add 2 labels
         new AddViewOperation(lbl1, designOut, "lbl1").Do();
@@ -75,7 +74,7 @@ internal class DeleteViewOperationTests : Tests
         var file = new FileInfo("TestDeletingObjectWithDependency_IsImpossible.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(View));
 
-        var lbl1 = (Label)ViewFactory.Create(typeof(Label));
+        var lbl1 = ViewFactory.Create<Label>( );
 
         new AddViewOperation(lbl1, designOut, "lbl1").Do();
 

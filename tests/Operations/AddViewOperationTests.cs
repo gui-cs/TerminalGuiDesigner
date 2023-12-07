@@ -11,7 +11,7 @@ namespace UnitTests.Operations;
 [TestOf(typeof(AddViewOperation))]
 internal class AddViewOperationTests : Tests
 {
-    private static Type[] SupportedViewTypes { get; } = ViewFactory.GetSupportedViews( ) // Add MenuBar last so order is preserved in Assert check.
+    private static Type[] SupportedViewTypes { get; } = ViewFactory.SupportedViewTypes // Add MenuBar last so order is preserved in Assert check.
                                                                    .OrderBy( t => t == typeof( MenuBar ) ? int.MaxValue : 0 )
                                                                    .ToArray( );
 
@@ -45,7 +45,7 @@ internal class AddViewOperationTests : Tests
         {
             // Doesn't matter which type we use, here, because this isn't a type test
             // Just needs to be a valid type, which is tested in Do_AddsExpectedSubview
-            var instance = ViewFactory.Create( typeof( TextField ) );
+            var instance = ViewFactory.Create<TextField>( );
             
             var op = new AddViewOperation( instance, d, baseName );
             Assert.That( op.Do, Throws.Nothing );

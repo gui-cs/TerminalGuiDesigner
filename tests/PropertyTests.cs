@@ -1,11 +1,9 @@
-using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.CSharp;
-using NUnit.Framework;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.ToCode;
