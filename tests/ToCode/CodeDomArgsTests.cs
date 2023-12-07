@@ -83,15 +83,84 @@ internal class CodeDomArgsTests
         ClassicAssert.AreEqual( expectOutput, args.GetUniqueFieldName( thenInput ) );
     }
 
-    [Test]
-    [TestCase("if", "_if")]
-    [TestCase("ref", "_ref")]
-    [TestCase("default", "_default")]
-    [TestCase("out", "_out")]
-    [TestCase("bool", "_bool")]
-    [TestCase("else", "_else")]
-    public void Test_MakeValidFieldName_ShouldPrependUnderscoreToReservedKeywords(string input, string expectedOutput)
+    private static readonly string[] ReservedKeywords =
     {
-        ClassicAssert.AreEqual(expectedOutput, CodeDomArgs.MakeValidFieldName(input));
+        "abstract",
+        "as",
+        "base",
+        "bool",
+        "break",
+        "byte",
+        "case",
+        "catch",
+        "char",
+        "checked",
+        "class",
+        "const",
+        "continue",
+        "decimal",
+        "default",
+        "delegate",
+        "do",
+        "double",
+        "event",
+        "explicit",
+        "extern",
+        "false",
+        "finally",
+        "fixed",
+        "float",
+        "for",
+        "foreach",
+        "goto",
+        "if",
+        "implicit",
+        "in",
+        "int",
+        "interface",
+        "internal",
+        "is",
+        "lock",
+        "new",
+        "null",
+        "object",
+        "operator",
+        "out",
+        "override",
+        "params",
+        "private",
+        "protected",
+        "public",
+        "readonly",
+        "ref",
+        "return",
+        "sbyte",
+        "sealed",
+        "short",
+        "sizeof",
+        "stackalloc",
+        "struct",
+        "switch",
+        "this",
+        "throw",
+        "true",
+        "try",
+        "typeof",
+        "uint",
+        "ulong",
+        "unchecked",
+        "unsafe",
+        "ushort",
+        "using",
+        "virtual",
+        "void",
+        "volatile",
+        "while"
+    };
+
+    [Test]
+    public void MakeValidFieldName_ShouldPrependUnderscoreToReservedKeywords( [ValueSource( nameof( ReservedKeywords ) )] string input )
+    {
+        Assert.That( CodeDomArgs.MakeValidFieldName( input ), Is.EqualTo( $"_{input}" ) );
     }
 }
