@@ -6,6 +6,7 @@ namespace UnitTests.ToCode;
 
 [TestFixture]
 [TestOf( typeof( CodeDomArgs ) )]
+[Category( "Code Generation" )]
 internal class CodeDomArgsTests
 {
     private static IEnumerable<TestCaseData> GetUniqueFieldName_GivesExpectedResultString_Cases( ) => MakeValidFieldName_GivesExpectedResultString_Cases( );
