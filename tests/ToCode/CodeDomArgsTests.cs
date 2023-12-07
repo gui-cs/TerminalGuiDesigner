@@ -1,24 +1,32 @@
+using System.Collections.Generic;
 using TerminalGuiDesigner.ToCode;
 
 namespace UnitTests.ToCode;
 
+[TestFixture]
+[TestOf(typeof(CodeDomArgs))]
 internal class CodeDomArgsTests
 {
+    /// TODO
+    /// <remarks>
+    /// May be worth considering making these tests combinatorial
+    /// </remarks>
+    private static IEnumerable<TestCaseData> MakeValidFieldName_Cases()
+    { 
+        yield return new ( "fff", "fff" );
+        yield return new ( "33Dalmatians", "dalmatians" );
+        yield return new ( "Dalmatians33", "dalmatians33" );
+        yield return new ( "", "blank" );
+        yield return new ( "bob is great", "bobIsGreat" );
+        yield return new ( "\t", "blank" );
+        yield return new ( null, "blank" );
+        yield return new ( "test\r\nffish\r\n", "testFfish" );
+        yield return new ( "test\r\nffish\r\n", "testFfish" );
+    }
 
-    public static object[] cases = new object[]{
-        new object[]{"fff", "fff"},
-        new object[]{ "33Dalmations", "dalmations"},
-        new object[]{ "Dalmations33", "dalmations33"},
-        new object[]{ "", "blank" },
-        new object[]{ "bob is great", "bobIsGreat" },
-        new object[]{ "\t", "blank" },
-        new object?[]{ null, "blank" },
-        new object[]{ "test\r\nffish\r\n", "testFfish" },
-        new object[]{ "test\r\nffish\r\n", "testFfish" },
-    };
-
-    [TestCaseSource("cases")]
-    public void Test_MakeValidFieldName(string? input, string expectedOutput)
+    [Test]
+    [TestCaseSource(nameof( MakeValidFieldName_Cases ))]
+    public void MakeValidFieldName(string? input, string expectedOutput)
     {
         ClassicAssert.AreEqual(expectedOutput, CodeDomArgs.MakeValidFieldName(input));
 
@@ -34,22 +42,25 @@ internal class CodeDomArgsTests
             "Expected public/private to only differ on first letter caps");
     }
 
-    [TestCaseSource("cases")]
+    [Test]
+    [TestCaseSource(nameof( MakeValidFieldName_Cases ))]
     public void Test_GetUniqueFieldName(string? input, string expectOutput)
     {
-        var args = new CodeDomArgs(new System.CodeDom.CodeTypeDeclaration(), new System.CodeDom.CodeMemberMethod());
+        var args = new CodeDomArgs(new(), new());
         ClassicAssert.AreEqual(expectOutput, args.GetUniqueFieldName(input), "Expected GetUniqueFieldName to sanitize input in the same way as MakeValidFieldName (see Test_MakeValidFieldName tests)");
     }
 
+    [Test]
     [TestCase("bob", "bob", "bob2")]
     [TestCase("blank","", "blank2")]
     public void Test_GetUniqueFieldName_AfterAdding(string firstAdd, string? thenInput, string expectOutput)
     {
-        var args = new CodeDomArgs(new System.CodeDom.CodeTypeDeclaration(), new System.CodeDom.CodeMemberMethod());
+        var args = new CodeDomArgs(new(), new());
         args.FieldNamesUsed.Add(firstAdd);
         ClassicAssert.AreEqual(expectOutput,args.GetUniqueFieldName(thenInput));
     }
 
+    [Test]
     [TestCase("if", "_if")]
     [TestCase("ref", "_ref")]
     [TestCase("default", "_default")]
