@@ -2,40 +2,50 @@ using Terminal.Gui;
 using TerminalGuiDesigner;
 
 namespace UnitTests;
-internal class DimTests
+
+[TestFixture]
+[TestOf(typeof(DimExtensions))]
+[Category("Core")]
+[Parallelizable( ParallelScope.Children )]
+internal class DimExtensionsTests
 {
     [Test]
-    public void TestIsAbsolute()
+    public void IsAbsolute_ReturnsTrue_IfSized([Range(-15,15,5)] int size )
     {
-        ClassicAssert.IsTrue(Dim.Sized(50).IsAbsolute());
-        this.AssertIsNotPercent(Dim.Sized(50));
-        ClassicAssert.IsFalse(Dim.Sized(50).IsFill());
-
-        ClassicAssert.IsTrue(Dim.Sized(50).IsAbsolute(out int size));
-        ClassicAssert.AreEqual(50, size);
-
-        ClassicAssert.IsTrue(Dim.Sized(50).GetDimType(out var type, out var val, out var offset));
-        ClassicAssert.AreEqual(DimType.Absolute, type);
-        ClassicAssert.AreEqual(50, val);
-        ClassicAssert.AreEqual(0, offset);
+        Assert.That( Dim.Sized( size ).IsAbsolute );
     }
 
     [Test]
-    public void TestIsAbsolute_FromInt()
+    public void IsFill_ReturnsFalse_IfSized( [Range( -10, 10, 5 )] int size )
     {
-        Dim d = 50;
-        ClassicAssert.IsTrue(d.IsAbsolute());
-        ClassicAssert.IsFalse(d.IsPercent());
-        ClassicAssert.IsFalse(d.IsFill());
-
-        ClassicAssert.IsTrue(d.IsAbsolute(out int size));
-        ClassicAssert.AreEqual(50, size);
-
-        ClassicAssert.IsTrue(d.GetDimType(out var type, out var val, out var offset));
-        ClassicAssert.AreEqual(DimType.Absolute, type);
-        ClassicAssert.AreEqual(50, val);
-        ClassicAssert.AreEqual(0, offset);
+        Assert.That( Dim.Sized( size ).IsFill( ), Is.False );
     }
+
+    [Test]
+    public void IsPercent_ReturnsExpectedValues_IfSized( [Range( -10, 10, 5 )] int size )
+    {
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( Dim.Sized( size ).IsPercent( out float percent ), Is.False );
+            Assert.That( percent, Is.Zero );
+        } );
+    }
+
+    [Test]
+    public void GetDimType_ReturnsExpectedValues_IfSized( [Range( -10, 10, 5 )] int size )
+    {
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( Dim.Sized( size ).GetDimType( out DimType type, out float val, out int offset ) );
+            Assert.That( type, Is.EqualTo( DimType.Absolute ) );
+            Assert.That( type, Is.Not.EqualTo( DimType.Percent ) );
+            Assert.That( type, Is.Not.EqualTo( DimType.Fill ) );
+            Assert.That( val, Is.EqualTo( size ) );
+            Assert.That( offset, Is.Zero );
+        } );
+    }
+
+
 
     [Test]
     public void TestIsPercent()
@@ -148,15 +158,5 @@ internal class DimTests
 
         d = Dim.Fill(5) - 2;
         ClassicAssert.AreEqual("Dim.Fill(5) - 2", d.ToCode());
-    }
-
-    private void AssertIsNotPercent(Dim dim)
-    {
-        ClassicAssert.IsFalse(dim.IsPercent());
-        ClassicAssert.IsFalse(dim.IsPercent(out var percent));
-        ClassicAssert.AreEqual(0, percent);
-
-        dim.GetDimType(out DimType type, out _, out _);
-        ClassicAssert.AreNotEqual(DimType.Percent, type);
     }
 }
