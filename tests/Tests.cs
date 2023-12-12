@@ -82,10 +82,16 @@ internal class Tests
     /// <param name="viewOut">The view created and passed to <paramref name="adjust"/></param>
     /// <param name="caller"></param>
     /// <returns>The read in object state after round trip (generate code file then read that code back in)</returns>
+    /// <exception cref="ArgumentNullException">If <paramref name="caller"/> is <see langword="null" />, empty, or whitespace</exception>
     protected static T2 RoundTrip<T1, T2>(Action<Design, T2> adjust, out T2 viewOut, [CallerMemberName] string? caller = null)
         where T1 : View, new()
         where T2 : View, new()
     {
+        if ( string.IsNullOrWhiteSpace( caller ) )
+        {
+            throw new ArgumentNullException( nameof( caller ), "Cannot create an item with no name." );
+        }
+
         const string fieldName = "myViewOut";
 
         var viewToCode = new ViewToCode();

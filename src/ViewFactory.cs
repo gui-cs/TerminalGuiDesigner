@@ -13,7 +13,7 @@ namespace TerminalGuiDesigner;
 /// </summary>
 public static class ViewFactory
 {
-    private static readonly Type[] KnownUnsupportedTypes = new[] {
+    internal static readonly Type[] KnownUnsupportedTypes = {
         typeof( Toplevel ),
         typeof( Dialog ),
         typeof( FileDialog ),
@@ -32,7 +32,15 @@ public static class ViewFactory
         typeof( WizardStep ),
     };
 
-    private static readonly Type ViewType = typeof(View);
+    internal static readonly Type ViewType = typeof(View);
+
+    internal static MenuBarItem[] DefaultMenuBarItems =>
+        new[]
+        {
+            new MenuBarItem(
+                "_File (F9)",
+                new[] { new MenuItem( DefaultMenuItemText, string.Empty, ( ) => { } ) } )
+        };
 
     /// <summary>
     /// Gets all <see cref="View"/> Types that are supported by <see cref="ViewFactory"/>.
@@ -74,7 +82,7 @@ public static class ViewFactory
         {
             throw new NotSupportedException( $"Requested type {typeof( T ).Name} is not supported" );
         }
-
+        
         T newView = new( );
 
         switch ( newView )
@@ -110,6 +118,9 @@ public static class ViewFactory
                 pb.Fraction = 1f;
                 pb.Width = width ?? 10;
                 pb.Height = height ?? 1;
+                break;
+            case MenuBar mb:
+                mb.Menus = DefaultMenuBarItems;
                 break;
             case Window w:
                 w.Width = width ?? 10;
@@ -283,12 +294,7 @@ public static class ViewFactory
 
     private static MenuBar CreateMenuBar()
     {
-        return new MenuBar(new MenuBarItem[]
-        {
-                new MenuBarItem(
-                    "_File (F9)",
-                    new MenuItem[] { new MenuItem(AddMenuOperation.DefaultMenuItemText, string.Empty, () => { }) }),
-        });
+        return new( DefaultMenuBarItems );
     }
 
     private static View CreateRadioGroup()
@@ -332,4 +338,18 @@ public static class ViewFactory
 
         return tabView;
     }
+
+    /// <summary>
+    /// <para>
+    /// <see cref="AddMenuOperation"/> adds a new top level menu (e.g. File, Edit etc).  In the designer
+    /// all menus must have at least 1 <see cref="MenuItem"/> under them so it will be
+    /// created with a single <see cref="MenuItem"/> in it already.  That item will
+    /// bear this text.
+    /// </para>
+    /// <para>
+    /// This string should be used by any other areas of code that want to create new <see cref="MenuItem"/> under
+    /// a top/sub menu (e.g. <see cref="ViewFactory"/>).
+    /// </para>
+    /// </summary>
+    public const string DefaultMenuItemText = "Edit Me";
 }
