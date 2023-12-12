@@ -46,7 +46,7 @@ public static class ViewFactory
     /// Gets all <see cref="View"/> Types that are supported by <see cref="ViewFactory"/>.
     /// </summary>
     /// <value>All types supported by <see cref="ViewFactory"/>.</value>
-    public static IEnumerable<Type> SupportedViewTypes { get; } =
+    internal static IEnumerable<Type> SupportedViewTypes { get; } =
         ViewType.Assembly.DefinedTypes
                 .Where( unfilteredType => unfilteredType is
                 {
