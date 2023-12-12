@@ -6,6 +6,7 @@ namespace UnitTests;
 [TestFixture]
 [TestOf(typeof(DimExtensions))]
 [Category("Core")]
+[Parallelizable( ParallelScope.Children )]
 internal class DimExtensionsTests
 {
     [Test]
