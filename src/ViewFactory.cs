@@ -68,7 +68,7 @@ public static class ViewFactory
     /// <see cref="KnownUnsupportedTypes"/> collection.</typeparam>
     /// <param name="width">The width of the requested view.</param>
     /// <param name="height">The height of the requested view.</param>
-    /// <exception cref="NotSupportedException">If an unsupported type is requested</exception>
+    /// <exception cref="NotSupportedException">If an unsupported type is requested.</exception>
     /// <returns>A new instance of <paramref name="{T}"/>.</returns>
     /// <remarks>
     /// <typeparamref name="T"/> must inherit from <see cref="View"/>,
@@ -82,7 +82,7 @@ public static class ViewFactory
         {
             throw new NotSupportedException( $"Requested type {typeof( T ).Name} is not supported" );
         }
-        
+
         T newView = new( );
 
         switch ( newView )
@@ -144,7 +144,7 @@ public static class ViewFactory
     /// Creates a new instance of <see cref="View"/> of Type <paramref name="t"/> with
     /// size/placeholder values that make it easy to see and design in the editor.
     /// </summary>
-    /// <param name="t">A Type of <see cref="View"/>.  See <see cref="GetSupportedViews"/> for the
+    /// <param name="t">A Type of <see cref="View"/>.  See <see cref="SupportedViewTypes"/> for the
     /// full list of allowed Types.</param>
     /// <returns>A new instance of Type <paramref name="t"/>.</returns>
     /// <exception cref="Exception">Thrown if Type is not a subclass of <see cref="View"/>.</exception>
