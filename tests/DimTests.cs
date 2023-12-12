@@ -2,6 +2,10 @@ using Terminal.Gui;
 using TerminalGuiDesigner;
 
 namespace UnitTests;
+
+[TestFixture]
+[TestOf(typeof(DimExtensions))]
+[Category("Core")]
 internal class DimTests
 {
     [Test]
