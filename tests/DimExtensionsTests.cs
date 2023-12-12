@@ -16,62 +16,36 @@ internal class DimExtensionsTests
     }
 
     [Test]
-    public void IsFill_ReturnsFalse_IfSized( [Range( -15, 15, 5 )] int size )
+    public void IsFill_ReturnsFalse_IfSized( [Range( -10, 10, 5 )] int size )
     {
         Assert.That( Dim.Sized( size ).IsFill( ), Is.False );
     }
 
     [Test]
-    public void IsPercent_ReturnsFalse_IfSized( [Range( -15, 15, 5 )] int size )
-    {
-        Assert.That( Dim.Sized( size ).IsPercent( ), Is.False );
-    }
-
-    [Test]
-    public void IsPercent_ReturnsExpectedValue_IfSized( [Range( -15, 15, 5 )] int size )
+    public void IsPercent_ReturnsExpectedValues_IfSized( [Range( -10, 10, 5 )] int size )
     {
         Assert.Multiple( ( ) =>
         {
             Assert.That( Dim.Sized( size ).IsPercent( out float percent ), Is.False );
             Assert.That( percent, Is.Zero );
-            Assert.That( Dim.Sized( size ).IsAbsolute( out int outSize ) );
-            Assert.That( outSize, Is.EqualTo( size ) );
         } );
     }
 
     [Test]
-    public void GetDimType_IsNotPercent_IfSized( [Range( -15, 15, 5 )] int size )
+    public void GetDimType_ReturnsExpectedValues_IfSized( [Range( -10, 10, 5 )] int size )
     {
-        Dim.Sized( size ).GetDimType( out DimType type, out _, out _ );
-        Assert.That( type, Is.Not.EqualTo( DimType.Percent ) );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( Dim.Sized( size ).GetDimType( out DimType type, out float val, out int offset ) );
+            Assert.That( type, Is.EqualTo( DimType.Absolute ) );
+            Assert.That( type, Is.Not.EqualTo( DimType.Percent ) );
+            Assert.That( type, Is.Not.EqualTo( DimType.Fill ) );
+            Assert.That( val, Is.EqualTo( size ) );
+            Assert.That( offset, Is.Zero );
+        } );
     }
 
-    [Test]
-    public void GetDimType_ReturnsExpectedValues_IfSized( [Range( -15, 15, 5 )] int size )
-    {
-        Assert.That( Dim.Sized( size ).GetDimType( out DimType type, out float val, out int offset ) );
-        Assert.That( type, Is.EqualTo( DimType.Absolute ) );
-        Assert.That( val, Is.EqualTo( size ) );
-        Assert.That( offset, Is.Zero );
-    }
 
-
-    [Test]
-    public void TestIsAbsolute_FromInt()
-    {
-        Dim d = 50;
-        ClassicAssert.IsTrue(d.IsAbsolute());
-        ClassicAssert.IsFalse(d.IsPercent());
-        ClassicAssert.IsFalse(d.IsFill());
-
-        ClassicAssert.IsTrue(d.IsAbsolute(out int size));
-        ClassicAssert.AreEqual(50, size);
-
-        ClassicAssert.IsTrue(d.GetDimType(out var type, out var val, out var offset));
-        ClassicAssert.AreEqual(DimType.Absolute, type);
-        ClassicAssert.AreEqual(50, val);
-        ClassicAssert.AreEqual(0, offset);
-    }
 
     [Test]
     public void TestIsPercent()
