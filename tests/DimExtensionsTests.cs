@@ -6,7 +6,7 @@ namespace UnitTests;
 [TestFixture]
 [TestOf(typeof(DimExtensions))]
 [Category("Core")]
-internal class DimTests
+internal class DimExtensionsTests
 {
     [Test]
     public void TestIsAbsolute()
