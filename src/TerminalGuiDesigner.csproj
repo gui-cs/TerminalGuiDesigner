@@ -154,4 +154,8 @@
 		<PackageReference Include="Basic.Reference.Assemblies.Net80" Version="1.4.5" />
 		<PackageReference Include="System.CodeDom" Version="8.0.0" />
 	</ItemGroup>
+	
+	<ItemGroup>
+		<InternalsVisibleTo Include="UnitTests" />
+	</ItemGroup>
 </Project>

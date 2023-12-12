@@ -9,20 +9,6 @@ namespace TerminalGuiDesigner.Operations.MenuOperations;
 public class AddMenuOperation : AddOperation<MenuBar, MenuBarItem>
 {
     /// <summary>
-    /// <para>
-    /// <see cref="AddMenuOperation"/> adds a new top level menu (e.g. File, Edit etc).  In the designer
-    /// all menus must have at least 1 <see cref="MenuItem"/> under them so it will be
-    /// created with a single <see cref="MenuItem"/> in it already.  That item will
-    /// bear this text.
-    /// </para>
-    /// <para>
-    /// This string should be used by any other areas of code that want to create new <see cref="MenuItem"/> under
-    /// a top/sub menu (e.g. <see cref="ViewFactory"/>).
-    /// </para>
-    /// </summary>
-    public const string DefaultMenuItemText = "Edit Me";
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="AddMenuOperation"/> class.
     /// Calling <see cref="Operation.Do"/> will add a new top level menu to the <see cref="MenuBar"/>
     /// wrapped by <paramref name="design"/>.
@@ -35,7 +21,7 @@ public class AddMenuOperation : AddOperation<MenuBar, MenuBarItem>
             (v) => v.Menus,
             (v, a) => v.Menus = a,
             (s) => s.Title.ToString() ?? "blank menu",
-            (v, n) => { return new MenuBarItem(n, new MenuItem[] { new MenuItem { Title = DefaultMenuItemText } }); },
+            (v, n) => new(n, new MenuItem[] { new() { Title = ViewFactory.DefaultMenuItemText } }),
             design,
             name)
     {
