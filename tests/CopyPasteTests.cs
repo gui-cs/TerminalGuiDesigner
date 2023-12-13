@@ -253,8 +253,12 @@ internal class CopyPasteTests : Tests
 
         SelectionManager selected = SelectionManager.Instance;
 
-        ColorScheme green;
-        ColorSchemeManager.Instance.AddOrUpdateScheme("green", green = new() { Normal = new(Color.Green, Color.Cyan) }, rootDesign);
+        ColorScheme green = new() { Normal = new(Color.Green, Color.Cyan) };
+        Assume.That( green, Is.Not.Null.And.InstanceOf<ColorScheme>( ) );
+        
+        ColorScheme addedScheme = ColorSchemeManager.Instance.AddOrUpdateScheme("green", green, rootDesign!);
+        Assume.That( addedScheme, Is.SameAs( green ) );
+        
         textFieldDesign.GetDesignableProperty(nameof(ColorScheme))?.SetValue(green);
         rootDesign.View.ColorScheme = green;
 
