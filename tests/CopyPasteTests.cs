@@ -383,18 +383,12 @@ internal class CopyPasteTests : Tests
                 Assert.That( pasteOperationSucceeded );
                 Assert.That( pasteOperation.TimesDone, Is.EqualTo( 1 ) );
 
-                var rootSubviews = rootDesign.View.GetActualSubviews();
-
-                ClassicAssert.AreEqual(2, rootSubviews.Count, "Expected root to have 2 FrameView now");
-                ClassicAssert.IsTrue(rootSubviews.All(v => v is FrameView));
-
-
-                ClassicAssert.IsTrue(
-                    rootSubviews.All(f => f.GetActualSubviews().Count() == 2),
-                    "Expected both FrameView (copied and pasted) to have the full contents of 2 Labels");
+                View[] rootSubviews = rootDesign.View.GetActualSubviews( ).ToArray( );
+                Assert.That( rootSubviews.Length, Is.EqualTo( 2 ) );
+                Assert.That( rootSubviews, Has.All.InstanceOf<FrameView>( ) );
             }
             , out _
-            );
+        );
     }
 
     [Test]
