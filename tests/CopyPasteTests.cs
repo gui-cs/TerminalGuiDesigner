@@ -224,10 +224,10 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPasteColorScheme()
     {
-        var d = Get10By10View();
+        Design d = Get10By10View();
 
-        var lbl = new Label("Name:");
-        var tb = new TextField();
+        Label lbl = new Label("Name:");
+        TextField tb = new TextField();
 
         bool addLabelOperationSucceeded = false;
         bool addTextFieldOperationSucceeded = false;
@@ -237,39 +237,39 @@ internal class CopyPasteTests : Tests
         Assume.That( addLabelOperationSucceeded );
         Assume.That( addTextFieldOperationSucceeded );
 
-        var dlbl = d.GetAllDesigns().Single(d => d.FieldName == "lbl");
-        var dtb = d.GetAllDesigns().Single(d => d.FieldName == "tb");
+        Design labelDesigner = d.GetAllDesigns().Single(d => d.FieldName == "lbl");
+        Design textFieldDesigner = d.GetAllDesigns().Single(d => d.FieldName == "tb");
 
-        var selected = SelectionManager.Instance;
+        SelectionManager selected = SelectionManager.Instance;
 
         ColorScheme green;
         ColorSchemeManager.Instance.AddOrUpdateScheme("green", green = new() { Normal = new(Color.Green, Color.Cyan) }, d);
-        dtb.GetDesignableProperty(nameof(ColorScheme))?.SetValue(green);
+        textFieldDesigner.GetDesignableProperty(nameof(ColorScheme))?.SetValue(green);
         d.View.ColorScheme = green;
 
         ClassicAssert.AreEqual(lbl.ColorScheme, green, "The label should inherit color scheme from the parent");
 
         ClassicAssert.AreEqual(
             "ColorScheme:(Inherited)",
-            dlbl.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
+            labelDesigner.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
             "Expected ColorScheme to be known to be inherited");
 
         ClassicAssert.AreEqual(
             "ColorScheme:green",
-            dtb.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
+            textFieldDesigner.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
             "TextBox inherits but also is explicitly marked as green");
 
-        SelectionManager.Instance.SetSelection(dlbl, dtb);
+        SelectionManager.Instance.SetSelection(labelDesigner, textFieldDesigner);
         new CopyOperation(SelectionManager.Instance.Selected.ToArray()).Do();
-        SelectionManager.Instance.SetSelection(dlbl, dtb);
+        SelectionManager.Instance.SetSelection(labelDesigner, textFieldDesigner);
 
         OperationManager.Instance.Do(new PasteOperation(d));
 
         // (Root + 2 original + 2 cloned)
         ClassicAssert.AreEqual(5, d.GetAllDesigns().Count());
 
-        var dlbl2 = d.GetAllDesigns().Single(d => d.FieldName == "lbl2");
-        var dtb2 = d.GetAllDesigns().Single(d => d.FieldName == "tb2");
+        Design dlbl2 = d.GetAllDesigns().Single(d => d.FieldName == "lbl2");
+        Design dtb2 = d.GetAllDesigns().Single(d => d.FieldName == "tb2");
 
         // clear whatever the current selection is (probably the pasted views)
         SelectionManager.Instance.Clear();
