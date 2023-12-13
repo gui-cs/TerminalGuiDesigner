@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Terminal.Gui;
 using TerminalGuiDesigner;
@@ -9,6 +10,9 @@ using TerminalGuiDesigner.ToCode;
 namespace UnitTests;
 
 [TestFixture]
+[TestOf( typeof( CopyOperation ) )]
+[TestOf( typeof( PasteOperation ) )]
+[Category( "UI Operations" )]
 internal class CopyPasteTests : Tests
 {
     [Test]
@@ -224,204 +228,379 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPasteColorScheme()
     {
-        var d = Get10By10View();
+        Design? rootDesign = null;
+        Label? lbl = null;
+        TextField? tb = null;
+        
+        Assume.That( ( ) => rootDesign = Get10By10View( ), Throws.Nothing );
+        Assume.That( ( ) => lbl = ViewFactory.Create<Label>( null, null, "Name:" ), Throws.Nothing );
+        Assume.That( ( ) =>  tb = ViewFactory.Create<TextField>( ), Throws.Nothing );
+        
+        Assume.That( rootDesign, Is.Not.Null.And.InstanceOf<Design>( ) );
+        Assume.That( lbl, Is.Not.Null.And.InstanceOf<Label>( ) );
+        Assume.That( tb, Is.Not.Null.And.InstanceOf<TextField>( ) );
 
-        var lbl = new Label("Name:");
-        var tb = new TextField();
+        bool addLabelOperationSucceeded = false;
+        bool addTextFieldOperationSucceeded = false;
+        
+        Assume.That( ( ) => addLabelOperationSucceeded = new AddViewOperation( lbl!, rootDesign!, "lbl" ).Do( ), Throws.Nothing );
+        Assume.That( ( ) => addTextFieldOperationSucceeded = new AddViewOperation( tb!, rootDesign!, "tb" ).Do( ), Throws.Nothing );
+        Assume.That( addLabelOperationSucceeded );
+        Assume.That( addTextFieldOperationSucceeded );
 
-        new AddViewOperation(lbl, d, "lbl").Do();
-        new AddViewOperation(tb, d, "tb").Do();
+        Design? labelDesign = null;
+        Design? textFieldDesign = null;
+        Assume.That( ( ) => labelDesign = rootDesign!.GetAllDesigns().SingleOrDefault(d => d.FieldName == "lbl"), Throws.Nothing );
+        Assume.That( ( ) => textFieldDesign = rootDesign!.GetAllDesigns().SingleOrDefault(d => d.FieldName == "tb"), Throws.Nothing );
+        Assume.That( labelDesign, Is.Not.Null.And.InstanceOf<Design>( ) );
+        Assume.That( textFieldDesign, Is.Not.Null.And.InstanceOf<Design>( ) );
 
-        var dlbl = d.GetAllDesigns().Single(d => d.FieldName == "lbl");
-        var dtb = d.GetAllDesigns().Single(d => d.FieldName == "tb");
+        SelectionManager selected = SelectionManager.Instance;
 
-        var selected = SelectionManager.Instance;
+        ColorScheme green = new() { Normal = new(Color.Green, Color.Cyan) };
+        Assume.That( green, Is.Not.Null.And.InstanceOf<ColorScheme>( ) );
 
-        ColorScheme green;
-        ColorSchemeManager.Instance.AddOrUpdateScheme("green", green = new() { Normal = new(Color.Green, Color.Cyan) }, d);
-        dtb.GetDesignableProperty(nameof(ColorScheme))?.SetValue(green);
-        d.View.ColorScheme = green;
+        Assume.That( labelDesign!.GetDesignableProperties( ).OfType<ColorSchemeProperty>( ).ToArray( ),
+                     Has.Length.EqualTo( 1 ),
+                     "Should only be one ColorScheme property" );
+        
+        ColorScheme addedScheme = ColorSchemeManager.Instance.AddOrUpdateScheme("green", green, rootDesign!);
+        Assume.That( addedScheme, Is.SameAs( green ) );
 
-        ClassicAssert.AreEqual(lbl.ColorScheme, green, "The label should inherit color scheme from the parent");
+        Assume.That( textFieldDesign!.TryGetDesignableProperty( nameof( ColorScheme ), out Property? colorSchemeProperty ) );
+        Assume.That( colorSchemeProperty, Is.Not.Null.And.InstanceOf<Property>( ) );
+        Assume.That( ( ) => colorSchemeProperty.SetValue( green ), Throws.Nothing );
+        
+        rootDesign!.View.ColorScheme = green;
 
-        ClassicAssert.AreEqual(
-            "ColorScheme:(Inherited)",
-            dlbl.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
-            "Expected ColorScheme to be known to be inherited");
+        Assume.That( lbl!.ColorScheme, Is.SameAs( green ), "The label should inherit color scheme from the parent" );
 
-        ClassicAssert.AreEqual(
-            "ColorScheme:green",
-            dtb.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
-            "TextBox inherits but also is explicitly marked as green");
+        Assume.That( labelDesign!.GetDesignableProperties( ).OfType<ColorSchemeProperty>( ).Single( ).ToString( ),
+                     Is.EqualTo( "ColorScheme:(Inherited)" ),
+                     "Expected ColorScheme to be known to be inherited" );
 
-        SelectionManager.Instance.SetSelection(dlbl, dtb);
-        new CopyOperation(SelectionManager.Instance.Selected.ToArray()).Do();
-        SelectionManager.Instance.SetSelection(dlbl, dtb);
+        Assume.That( textFieldDesign.GetDesignableProperties( ).OfType<ColorSchemeProperty>( ).Single( ).ToString( ),
+                     Is.EqualTo( "ColorScheme:green" ),
+                     "TextBox inherits but also is explicitly marked as green" );
 
-        OperationManager.Instance.Do(new PasteOperation(d));
+        SelectionManager.Instance.SetSelection(labelDesign, textFieldDesign);
+        Assume.That( SelectionManager.Instance.Selected, Does.Contain( labelDesign ).And.Contains( textFieldDesign ) );
+
+        CopyOperation copyOperation = new( SelectionManager.Instance.Selected.ToArray( ) );
+        Assert.That( copyOperation, Is.Not.Null.And.InstanceOf<CopyOperation>( ) );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( copyOperation.IsImpossible, Is.False );
+            Assert.That( copyOperation.SupportsUndo, Is.False, "What would it even mean to undo a copy?" );
+        } );
+
+        bool copyOperationSucceeded = false;
+        Assert.That( ( ) => copyOperationSucceeded = copyOperation.Do( ), Throws.Nothing );
+        Assert.That( copyOperationSucceeded );
+
+        SelectionManager.Instance.SetSelection(labelDesign, textFieldDesign);
+        Assume.That( SelectionManager.Instance.Selected, Does.Contain( labelDesign ).And.Contains( textFieldDesign ) );
+
+        PasteOperation pasteOperation = new (rootDesign);
+        Assume.That( pasteOperation, Is.Not.Null.And.InstanceOf<PasteOperation>( ) );
+
+        Assert.That(pasteOperation.IsImpossible, Is.False );
+        Assert.That(pasteOperation.SupportsUndo );
+        
+        bool pasteOperationSucceeded = false;
+        Assert.That( ( ) => pasteOperationSucceeded = pasteOperation.Do( ), Throws.Nothing );
+        Assert.That( pasteOperationSucceeded );
 
         // (Root + 2 original + 2 cloned)
-        ClassicAssert.AreEqual(5, d.GetAllDesigns().Count());
-
-        var dlbl2 = d.GetAllDesigns().Single(d => d.FieldName == "lbl2");
-        var dtb2 = d.GetAllDesigns().Single(d => d.FieldName == "tb2");
-
+        Design[] allDesigns = rootDesign.GetAllDesigns( ).ToArray( );
+        Assert.That( allDesigns, Has.Length.EqualTo( 5 ) );
+        
+        // Reference equality should be maintained through the copy/paste operation
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( allDesigns, Has.One.SameAs( labelDesign ) );
+            Assert.That( allDesigns, Has.One.SameAs( textFieldDesign ) );
+        } );
+        
         // clear whatever the current selection is (probably the pasted views)
         SelectionManager.Instance.Clear();
-
-        ClassicAssert.AreEqual(dlbl2.View.ColorScheme, green, "The newly pasted label should also inherit color scheme from the parent");
-
-        // but be known to inherit
-        ClassicAssert.AreEqual(
-            "ColorScheme:(Inherited)",
-            dlbl2.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
-            "Expected ColorScheme to be known to be inherited");
-
-        ClassicAssert.AreEqual(
-            "ColorScheme:green",
-            dtb2.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
-            "TextBox2 should have its copy pasted explicitly marked green");
     }
 
-    [TestCase(true)]
-    [TestCase(false)]
-    public void TestCopyPasteContainer(bool alsoSelectSubElements)
+    [Test]
+    public void CopyPasteContainer( [Values] bool alsoSelectSubElements )
     {
         RoundTrip<Window, FrameView>(
-            (d, v) =>
+            ( d, v ) =>
             {
-                new AddViewOperation(new Label(), d, "lbl1").Do();
-                new AddViewOperation(new Label(), d, "lbl2").Do();
-                
-                ClassicAssert.AreEqual(2,v.GetActualSubviews().Count(), "Expected the FrameView to have 2 children (lbl1 and lbl2)");
+                Label lbl1 = ViewFactory.Create<Label>( );
+                Label lbl2 = ViewFactory.Create<Label>( );
+                Assume.That( ( ) => new AddViewOperation( lbl1, d, "lbl1" ).Do( ), Throws.Nothing );
+                Assume.That( ( ) => new AddViewOperation( lbl2, d, "lbl2" ).Do( ), Throws.Nothing );
 
-                Design[] toCopy;
+                View[] actualSubviews = v.GetActualSubviews( ).ToArray( );
+                Assume.That( actualSubviews, Has.Length.EqualTo( 2 ) );
+                Assume.That( actualSubviews, Has.One.SameAs( lbl1 ) );
+                Assume.That( actualSubviews, Has.One.SameAs( lbl2 ) );
 
-                if(alsoSelectSubElements)
+                Design[]? toCopy;
+
+                if ( alsoSelectSubElements )
                 {
-                    var lbl1Design = (Design)d.View.GetActualSubviews().First().Data;
-                    ClassicAssert.AreEqual("lbl1", lbl1Design.FieldName);
+                    Design? lbl1Design = d.View.GetActualSubviews( ).First( ).Data as Design;
+                    Assume.That( lbl1Design, Is.Not.Null.And.InstanceOf<Design>( ) );
+                    Assume.That( lbl1Design!.FieldName, Is.EqualTo( "lbl1" ) );
 
-                    toCopy = new Design[] { d, lbl1Design};
+                    toCopy = new[] { d, lbl1Design };
                 }
                 else
                 {
                     toCopy = new[] { d };
                 }
 
-                // copy the FrameView
-                new CopyOperation(toCopy).Do();
+                CopyOperation copyOperation = new( toCopy );
+                Assume.That( copyOperation, Is.Not.Null.And.InstanceOf<CopyOperation>( ) );
+                Assume.That( copyOperation.SupportsUndo, Is.False );
+                Assume.That( copyOperation.IsImpossible, Is.False );
+                Assume.That( copyOperation.TimesDone, Is.Zero );
 
-                var rootDesign = d.GetRootDesign();
+                bool copyOperationSucceeded = false;
+                Assert.That( ( ) => copyOperationSucceeded = copyOperation.Do( ), Throws.Nothing );
+                Assert.That( copyOperationSucceeded );
+                Assert.That( copyOperation.TimesDone, Is.EqualTo( 1 ) );
 
-                ClassicAssert.IsTrue(new PasteOperation(rootDesign).Do());
+                var rootDesign = d.GetRootDesign( );
 
-                var rootSubviews = rootDesign.View.GetActualSubviews();
+                PasteOperation pasteOperation = new( rootDesign );
+                Assume.That( pasteOperation, Is.Not.Null.And.InstanceOf<PasteOperation>( ) );
+                Assume.That( pasteOperation.SupportsUndo );
+                Assume.That( pasteOperation.IsImpossible, Is.False );
+                Assume.That( pasteOperation.TimesDone, Is.Zero );
 
-                ClassicAssert.AreEqual(2, rootSubviews.Count, "Expected root to have 2 FrameView now");
-                ClassicAssert.IsTrue(rootSubviews.All(v => v is FrameView));
+                bool pasteOperationSucceeded = false;
+                Assert.That( ( ) => pasteOperationSucceeded = pasteOperation.Do( ), Throws.Nothing );
+                Assert.That( pasteOperationSucceeded );
+                Assert.That( pasteOperation.TimesDone, Is.EqualTo( 1 ) );
 
-
-                ClassicAssert.IsTrue(
-                    rootSubviews.All(f => f.GetActualSubviews().Count() == 2),
-                    "Expected both FrameView (copied and pasted) to have the full contents of 2 Labels");
+                View[] rootSubviews = rootDesign.View.GetActualSubviews( ).ToArray( );
+                Assert.That( rootSubviews.Length, Is.EqualTo( 2 ) );
+                Assert.That( rootSubviews, Has.All.InstanceOf<FrameView>( ) );
             }
             , out _
-            );
+        );
     }
 
     [Test]
-    public void TestCopyPasteContainer_Empty_ScrollView()
+    public void CopyPasteContainer_Empty_ScrollView_Into_Root()
     {
         RoundTrip<Window, ScrollView>(
-            (d, v) =>
+            ( d, v ) =>
             {
+                Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
+                Assume.That( v, Is.Not.Null.And.InstanceOf<ScrollView>( ) );
+                Assume.That( v.GetActualSubviews( ), Is.Empty );
+
                 // copy the ScrollView
-                new CopyOperation(d).Do();
+                CopyOperation copyOperation = new( d );
+                Assume.That( copyOperation, Is.Not.Null.And.InstanceOf<CopyOperation>( ) );
+                Assume.That( copyOperation.SupportsUndo, Is.False );
+                Assume.That( copyOperation.IsImpossible, Is.False );
+                Assume.That( copyOperation.TimesDone, Is.Zero );
 
-                var rootDesign = d.GetRootDesign();
+                bool copyOperationSucceeded = false;
+                Assert.That( ( ) => copyOperationSucceeded = copyOperation.Do( ), Throws.Nothing );
+                Assert.That( copyOperationSucceeded );
+                Assert.That( copyOperation.TimesDone, Is.EqualTo( 1 ) );
 
-                ClassicAssert.IsTrue(new PasteOperation(rootDesign).Do());
+                var rootDesign = d.GetRootDesign( );
 
-                var rootSubviews = rootDesign.View.GetActualSubviews();
+                // Paste into the root
+                PasteOperation pasteOperation = new( rootDesign );
+                Assume.That( pasteOperation, Is.Not.Null.And.InstanceOf<PasteOperation>( ) );
+                Assume.That( pasteOperation.SupportsUndo );
+                Assume.That( pasteOperation.IsImpossible, Is.False );
+                Assume.That( pasteOperation.TimesDone, Is.Zero );
 
-                ClassicAssert.AreEqual(2, rootSubviews.Count, "Expected root to have 2 ScrollView now");
-                ClassicAssert.IsTrue(rootSubviews.All(v => v is ScrollView));
+                bool pasteOperationSucceeded = false;
+                Assert.That( ( ) => pasteOperationSucceeded = pasteOperation.Do( ), Throws.Nothing );
+                Assert.That( pasteOperationSucceeded );
+                Assert.That( pasteOperation.TimesDone, Is.EqualTo( 1 ) );
+
+                var rootSubviews = rootDesign.View.GetActualSubviews( );
+                Assert.That( rootSubviews, Has.Count.EqualTo( 2 ) );
+                Assert.That( rootSubviews, Has.All.InstanceOf<ScrollView>( ) );
             }
             , out _
-            );
+        );
     }
+
     [Test]
-    public void TestCopyPasteContainer_EmptyScrollView_IntoItself_InsteadPastesToRoot()
+    public void CopyPasteContainer_EmptyScrollView_Into_Itself( )
     {
         RoundTrip<Window, ScrollView>(
-            (d, v) =>
+            ( d, v ) =>
             {
-                // copy the ScrollView
-                new CopyOperation(d).Do();
+                Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
+                Assume.That( v, Is.Not.Null.And.InstanceOf<ScrollView>( ) );
+                Assume.That( v.GetActualSubviews( ), Is.Empty );
 
-                var rootDesign = d.GetRootDesign();
+                CopyOperation copyOperation = new( d );
+                Assume.That( copyOperation, Is.Not.Null.And.InstanceOf<CopyOperation>( ) );
+                Assume.That( copyOperation.SupportsUndo, Is.False );
+                Assume.That( copyOperation.IsImpossible, Is.False );
+                Assume.That( copyOperation.TimesDone, Is.Zero );
 
-                ClassicAssert.IsTrue(new PasteOperation(d).Do());
+                bool copyOperationSucceeded = false;
+                Assert.That( ( ) => copyOperationSucceeded = copyOperation.Do( ), Throws.Nothing );
+                Assert.That( copyOperationSucceeded );
+                Assert.That( copyOperation.TimesDone, Is.EqualTo( 1 ) );
 
-                var rootSubviews = rootDesign.View.GetActualSubviews();
+                var rootDesign = d.GetRootDesign( );
 
-                ClassicAssert.AreEqual(2, rootSubviews.Count, "Expected root to have 2 ScrollView now");
-                ClassicAssert.IsTrue(rootSubviews.All(v => v is ScrollView));
+                // Paste into itself
+                PasteOperation pasteOperation = new( d );
+                Assume.That( pasteOperation, Is.Not.Null.And.InstanceOf<PasteOperation>( ) );
+                Assume.That( pasteOperation.SupportsUndo );
+                Assume.That( pasteOperation.IsImpossible, Is.False );
+                Assume.That( pasteOperation.TimesDone, Is.Zero );
+
+                bool pasteOperationSucceeded = false;
+                Assert.That( ( ) => pasteOperationSucceeded = pasteOperation.Do( ), Throws.Nothing );
+                Assert.That( pasteOperationSucceeded );
+                Assert.That( pasteOperation.TimesDone, Is.EqualTo( 1 ) );
+
+                var rootSubviews = rootDesign.View.GetActualSubviews( );
+                Assert.That( rootSubviews, Has.Count.EqualTo( 2 ) );
+                Assert.That( rootSubviews, Has.All.InstanceOf<ScrollView>( ) );
             }
             , out _
-            );
+        );
     }
 
     [Test]
-    public void TestCopyPasteContainer_TabView()
+    public void CopyPasteContainer_TabView()
     {
         RoundTrip<Window, TabView>(
-            (d, v) =>
+            ( d, v ) =>
             {
-                // Setup a TabView with 3 tabs each of which has 2 labels
-                v.SelectedTab = v.Tabs.ElementAt(0);
-                new AddViewOperation(new Label("lbl1"),d,"lbl1").Do();
-                new AddViewOperation(new Label("lbl2"), d, "lbl2").Do();
-                v.SelectedTab = v.Tabs.ElementAt(1);
-                new AddViewOperation(new Label("lbl3"), d, "lbl3").Do();
-                new AddViewOperation(new Label("lbl4"), d, "lbl4").Do();
-                
-                new AddTabOperation(d, "newTab").Do();
-                v.SelectedTab = v.Tabs.ElementAt(2);
-                new AddViewOperation(new Label("lbl5"), d, "lbl5").Do();
-                new AddViewOperation(new Label("lbl6"), d, "lbl6").Do();
+                Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
+                Assume.That( v, Is.Not.Null.And.InstanceOf<TabView>( ) );
+                Assume.That( v.GetActualSubviews( ), Has.Exactly( 2 ).InstanceOf<View>( ) );
+                Assume.That( v.Tabs, Has.Exactly( 2 ).Not.Null );
+                Assume.That( v.Tabs, Has.Exactly( 2 ).InstanceOf<Tab>( ) );
 
-                ClassicAssert.AreEqual(3, v.Tabs.Count);
-                ClassicAssert.AreEqual(2, v.Tabs.ElementAt(0).View.GetActualSubviews().Count);
-                ClassicAssert.AreEqual(2, v.Tabs.ElementAt(1).View.GetActualSubviews().Count);
-                ClassicAssert.AreEqual(2, v.Tabs.ElementAt(2).View.GetActualSubviews().Count);
+                // Set up a TabView with 3 tabs each of which has 2 labels
+                v.SelectedTab = v.Tabs.ElementAt( 0 );
+                Label lbl1 = ViewFactory.Create<Label>( null, null, $"lbl1" );
+                Label lbl2 = ViewFactory.Create<Label>( null, null, $"lbl2" );
+                AddViewOperation lbl1Add = new( lbl1, d, "lbl1" );
+                AddViewOperation lbl2Add = new( lbl2, d, "lbl2" );
+                Assume.That( lbl1Add.TimesDone, Is.Zero );
+                Assume.That( lbl2Add.TimesDone, Is.Zero );
+                bool lbl1AddSucceeded = false;
+                bool lbl2AddSucceeded = false;
+                Assume.That( ( ) => lbl1AddSucceeded = lbl1Add.Do( ), Throws.Nothing );
+                Assume.That( ( ) => lbl2AddSucceeded = lbl2Add.Do( ), Throws.Nothing );
+                Assume.That( lbl1AddSucceeded );
+                Assume.That( lbl2AddSucceeded );
+                Assume.That( lbl1Add.TimesDone, Is.EqualTo( 1 ) );
+                Assume.That( lbl2Add.TimesDone, Is.EqualTo( 1 ) );
+                IList<View> tab0Subviews = v.SelectedTab.View.GetActualSubviews( );
+                Assume.That( tab0Subviews, Has.Count.EqualTo( 2 ) );
+                Assume.That( tab0Subviews, Has.One.SameAs( lbl1 ) );
+                Assume.That( tab0Subviews, Has.One.SameAs( lbl2 ) );
+
+                v.SelectedTab = v.Tabs.ElementAt( 1 );
+                Label lbl3 = ViewFactory.Create<Label>( null, null, $"lbl3" );
+                Label lbl4 = ViewFactory.Create<Label>( null, null, $"lbl4" );
+                AddViewOperation lbl3Add = new( lbl3, d, "lbl3" );
+                AddViewOperation lbl4Add = new( lbl4, d, "lbl4" );
+                Assume.That( lbl3Add.TimesDone, Is.Zero );
+                Assume.That( lbl4Add.TimesDone, Is.Zero );
+                bool lbl3AddSucceeded = false;
+                bool lbl4AddSucceeded = false;
+                Assume.That( ( ) => lbl3AddSucceeded = lbl3Add.Do( ), Throws.Nothing );
+                Assume.That( ( ) => lbl4AddSucceeded = lbl4Add.Do( ), Throws.Nothing );
+                Assume.That( lbl3AddSucceeded );
+                Assume.That( lbl4AddSucceeded );
+                Assume.That( lbl3Add.TimesDone, Is.EqualTo( 1 ) );
+                Assume.That( lbl4Add.TimesDone, Is.EqualTo( 1 ) );
+                IList<View> tab1Subviews = v.SelectedTab.View.GetActualSubviews( );
+                Assume.That( tab1Subviews, Has.Count.EqualTo( 2 ) );
+                Assume.That( tab1Subviews, Has.One.SameAs( lbl3 ) );
+                Assume.That( tab1Subviews, Has.One.SameAs( lbl4 ) );
+
+                AddTabOperation tabAdd = new( d, "newTab" );
+                Assume.That( tabAdd.TimesDone, Is.Zero );
+                bool tabAddSucceeded = false;
+                Assume.That( ( ) => tabAddSucceeded = tabAdd.Do( ), Throws.Nothing );
+                Assume.That( tabAddSucceeded );
+                Assume.That( tabAdd.TimesDone, Is.EqualTo( 1 ) );
+                Assume.That( v.Tabs, Has.Exactly( 3 ).InstanceOf<Tab>( ) );
+
+                v.SelectedTab = v.Tabs.ElementAt( 2 );
+                Label lbl5 = ViewFactory.Create<Label>( null, null, $"lbl5" );
+                Label lbl6 = ViewFactory.Create<Label>( null, null, $"lbl6" );
+                AddViewOperation lbl5Add = new( lbl5, d, "lbl5" );
+                AddViewOperation lbl6Add = new( lbl6, d, "lbl6" );
+                Assume.That( lbl5Add.TimesDone, Is.Zero );
+                Assume.That( lbl6Add.TimesDone, Is.Zero );
+                bool lbl5AddSucceeded = false;
+                bool lbl6AddSucceeded = false;
+                Assume.That( ( ) => lbl5AddSucceeded = lbl5Add.Do( ), Throws.Nothing );
+                Assume.That( ( ) => lbl6AddSucceeded = lbl6Add.Do( ), Throws.Nothing );
+                Assume.That( lbl5AddSucceeded );
+                Assume.That( lbl6AddSucceeded );
+                Assume.That( lbl5Add.TimesDone, Is.EqualTo( 1 ) );
+                Assume.That( lbl6Add.TimesDone, Is.EqualTo( 1 ) );
+                IList<View> tab2Subviews = v.SelectedTab.View.GetActualSubviews( );
+                Assume.That( tab2Subviews, Has.Count.EqualTo( 2 ) );
+                Assume.That( tab2Subviews, Has.One.SameAs( lbl5 ) );
+                Assume.That( tab2Subviews, Has.One.SameAs( lbl6 ) );
 
                 // copy the TabView
-                new CopyOperation(d).Do();
+                CopyOperation copyOperation = new( d );
+                Assume.That( copyOperation, Is.Not.Null.And.InstanceOf<CopyOperation>( ) );
+                Assume.That( copyOperation.SupportsUndo, Is.False );
+                Assume.That( copyOperation.IsImpossible, Is.False );
+                Assume.That( copyOperation.TimesDone, Is.Zero );
 
-                var rootDesign = d.GetRootDesign();
-                ClassicAssert.IsTrue(new PasteOperation(rootDesign).Do());
+                bool copyOperationSucceeded = false;
+                Assert.That( ( ) => copyOperationSucceeded = copyOperation.Do( ), Throws.Nothing );
+                Assert.That( copyOperationSucceeded );
+                Assert.That( copyOperation.TimesDone, Is.EqualTo( 1 ) );
 
-                var rootSubviews = rootDesign.View.GetActualSubviews();
+                var rootDesign = d.GetRootDesign( );
 
-                ClassicAssert.AreEqual(2, rootSubviews.Count, "Expected root to have 2 TabView now");
-                ClassicAssert.IsTrue(rootSubviews.All(v => v is TabView));
+                PasteOperation pasteOperation = new( rootDesign );
+                Assume.That( pasteOperation, Is.Not.Null.And.InstanceOf<PasteOperation>( ) );
+                Assume.That( pasteOperation.SupportsUndo );
+                Assume.That( pasteOperation.IsImpossible, Is.False );
+                Assume.That( pasteOperation.TimesDone, Is.Zero );
 
-                var orig = (TabView)rootSubviews[0];
-                var pasted = (TabView)rootSubviews[1];
+                bool pasteOperationSucceeded = false;
+                Assert.That( ( ) => pasteOperationSucceeded = pasteOperation.Do( ), Throws.Nothing );
+                Assert.That( pasteOperationSucceeded );
+                Assert.That( pasteOperation.TimesDone, Is.EqualTo( 1 ) );
 
-                ClassicAssert.AreEqual(3, orig.Tabs.Count);
-                ClassicAssert.AreEqual(2, orig.Tabs.ElementAt(0).View.GetActualSubviews().Count);
-                ClassicAssert.AreEqual(2, orig.Tabs.ElementAt(1).View.GetActualSubviews().Count);
-                ClassicAssert.AreEqual(2, orig.Tabs.ElementAt(2).View.GetActualSubviews().Count);
+                var rootSubviews = rootDesign.View.GetActualSubviews( );
+                Assert.That( rootSubviews, Has.Count.EqualTo( 2 ) );
+                Assert.That( rootSubviews, Has.All.InstanceOf<TabView>( ) );
 
-                ClassicAssert.AreEqual(3, pasted.Tabs.Count);
-                ClassicAssert.AreEqual(2, pasted.Tabs.ElementAt(0).View.GetActualSubviews().Count);
-                ClassicAssert.AreEqual(2, pasted.Tabs.ElementAt(1).View.GetActualSubviews().Count);
-                ClassicAssert.AreEqual(2, pasted.Tabs.ElementAt(2).View.GetActualSubviews().Count);
+                var orig = (TabView)rootSubviews[ 0 ];
+                var pasted = (TabView)rootSubviews[ 1 ];
+
+                // Ensure none of the original tabs is in the pasted group, to ensure no references were copied
+                Assert.That( orig.Tabs, Has.None.AnyOf( pasted.Tabs ) );
+
+                // Check that orig has 3 tabs, each with 2 labels
+                Assert.That( orig.Tabs, Has.Exactly( 3 ).InstanceOf<Tab>( ) );
+                Assert.That( orig.Tabs.Select( origTab => origTab.View.GetActualSubviews( ) ), Has.All.Exactly( 2 ).InstanceOf<Label>( ) );
+
+                // Check that pasted has 3 tabs, each with 2 labels
+                Assert.That( pasted.Tabs, Has.Exactly( 3 ).InstanceOf<Tab>( ) );
+                Assert.That( pasted.Tabs.Select( origTab => origTab.View.GetActualSubviews( ) ), Has.All.Exactly( 2 ).InstanceOf<Label>( ) );
             }
             , out _
-            );
+        );
     }
 }

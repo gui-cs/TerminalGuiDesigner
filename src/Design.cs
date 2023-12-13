@@ -1,4 +1,5 @@
 using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml.Linq;
 using NLog;
 using Terminal.Gui;
@@ -128,6 +129,22 @@ public class Design
     public Property? GetDesignableProperty(string propertyName)
     {
         return this.GetDesignableProperties().SingleOrDefault(p => p.PropertyInfo.Name.Equals(propertyName));
+    }
+
+    /// <summary>
+    ///   Returns the named <see cref="Property" /> if designing is supported for it
+    ///   on the <see cref="View" /> Type.
+    /// </summary>
+    /// <param name="propertyName">Name of the designable <see cref="Property.PropertyInfo" /> you want to find.</param>
+    /// <param name="property">The retrieved property, if true, or null, if false.</param>
+    /// <returns>
+    ///   <see langword="true" /> if the <see cref="Property" /> exists and is designable or <see langword="false" /> if not found or not
+    ///   supported.
+    /// </returns>
+    public bool TryGetDesignableProperty(string propertyName, [NotNullWhen(true)] out Property? property)
+    {
+        property = this.GetDesignableProperties( ).SingleOrDefault( p => p.PropertyInfo.Name.Equals( propertyName ) );
+        return property is not null;
     }
 
     /// <summary>

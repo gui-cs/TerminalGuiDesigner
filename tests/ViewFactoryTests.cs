@@ -45,7 +45,7 @@ internal class ViewFactoryTests : Tests
 
         Assert.That( ( ) =>
                          createdView = viewFactoryCreateTConcrete
-                             .Invoke( null, new object?[] { null, null } ),
+                             .Invoke( null, Enumerable.Repeat<object?>( null, viewFactoryCreateTConcrete.GetParameters( ).Length ).ToArray( ) ),
                      Throws.Nothing );
 
         if ( createdView is IDisposable d )
@@ -62,7 +62,7 @@ internal class ViewFactoryTests : Tests
 
         MethodInfo viewFactoryCreateTConcrete = viewFactoryCreateTGeneric.MakeGenericMethod( supportedType );
 
-        object? createdView = viewFactoryCreateTConcrete.Invoke( null, new object?[] { null, null } );
+        object? createdView = viewFactoryCreateTConcrete.Invoke( null, Enumerable.Repeat<object?>( null, viewFactoryCreateTConcrete.GetParameters( ).Length ).ToArray( ) );
 
         Assert.That( createdView, Is.Not.Null.And.InstanceOf( supportedType ) );
 
@@ -83,7 +83,7 @@ internal class ViewFactoryTests : Tests
         MethodInfo viewFactoryCreateTConcrete = viewFactoryCreateTGeneric.MakeGenericMethod( unsupportedType );
 
         object? createdView = null;
-        object?[] methodParameters = { null, null };
+        object?[] methodParameters = Enumerable.Repeat<object?>( null, viewFactoryCreateTConcrete.GetParameters(  ).Length).ToArray( );
 
         Assert.That( ( ) => createdView = viewFactoryCreateTConcrete.Invoke( null, methodParameters ),
                      Throws.TypeOf<TargetInvocationException>( ).With.InnerException.TypeOf<NotSupportedException>( ) );

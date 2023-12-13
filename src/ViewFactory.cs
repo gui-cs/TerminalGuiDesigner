@@ -68,6 +68,7 @@ public static class ViewFactory
     /// <see cref="KnownUnsupportedTypes"/> collection.</typeparam>
     /// <param name="width">The width of the requested view.</param>
     /// <param name="height">The height of the requested view.</param>
+    /// <param name="text">Optional string to set the Text property of types that have one.</param>
     /// <exception cref="NotSupportedException">If an unsupported type is requested.</exception>
     /// <returns>A new instance of <paramref name="{T}"/>.</returns>
     /// <remarks>
@@ -75,7 +76,7 @@ public static class ViewFactory
     /// must have a public constructor, and must not exist in the
     /// <see cref="KnownUnsupportedTypes"/> collection, at run-time.
     /// </remarks>
-    public static T Create<T>(int? width = null, int? height = null )
+    public static T Create<T>(int? width = null, int? height = null, string? text = null )
         where T : View, new( )
     {
         if ( !IsSupportedType( typeof( T ) ) )
@@ -105,12 +106,12 @@ public static class ViewFactory
                 break;
             case TextValidateField tvf:
                 tvf.Provider = new TextRegexProvider( ".*" );
-                tvf.Text = "Heya";
+                tvf.Text = text ?? "Heya";
                 newView.Width = width ?? 5;
                 newView.Height = height ?? 1;
                 goto default;
             case TextField tf:
-                tf.Text = "Heya";
+                tf.Text = text ?? "Heya";
                 newView.Width = width ?? 5;
                 newView.Height = height ?? 1;
                 goto default;
@@ -127,7 +128,7 @@ public static class ViewFactory
                 w.Height = height ?? 5;
                 break;
             case Label l:
-                l.SetActualText("Heya");
+                l.SetActualText( text ?? "Heya" );
                 newView.Width = width ?? 5;
                 newView.Height = height ?? 1;
                 break;

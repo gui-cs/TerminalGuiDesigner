@@ -5,6 +5,8 @@
 /// </summary>
 public abstract class Operation : IOperation
 {
+    protected int _timesDone;
+
     /// <summary>
     /// The name to give to all objects which do not have a title/text etc.
     /// </summary>
@@ -16,6 +18,9 @@ public abstract class Operation : IOperation
     /// <inheritdoc/>
     /// <remarks>Defaults to true.</remarks>
     public bool SupportsUndo { get; protected set; } = true;
+
+    /// <inheritdoc />
+    public ref int TimesDone => ref _timesDone;
 
     /// <inheritdoc/>
     /// <remarks>Defaults to <see cref="Guid.NewGuid"/>.</remarks>
@@ -32,7 +37,7 @@ public abstract class Operation : IOperation
     }
 
     /// <inheritdoc/>
-    /// <remarks>Returns false if <see cref="IsImpossible"/>.</remarks>
+    /// <remarks>Returns false if <see cref="IsImpossible"/> or if <see cref="DoImpl" /> failed.</remarks>
     public bool Do()
     {
         if (this.IsImpossible)
@@ -40,7 +45,13 @@ public abstract class Operation : IOperation
             return false;
         }
 
-        return this.DoImpl();
+        if ( this.DoImpl( ) )
+        {
+            Interlocked.Increment( ref _timesDone );
+            return true;
+        }
+
+        return false;
     }
 
     /// <inheritdoc/>
