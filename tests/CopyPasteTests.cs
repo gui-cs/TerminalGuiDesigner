@@ -477,54 +477,130 @@ internal class CopyPasteTests : Tests
     }
 
     [Test]
-    public void TestCopyPasteContainer_TabView()
+    public void CopyPasteContainer_TabView()
     {
         RoundTrip<Window, TabView>(
-            (d, v) =>
+            ( d, v ) =>
             {
-                // Setup a TabView with 3 tabs each of which has 2 labels
-                v.SelectedTab = v.Tabs.ElementAt(0);
-                new AddViewOperation(new Label("lbl1"),d,"lbl1").Do();
-                new AddViewOperation(new Label("lbl2"), d, "lbl2").Do();
-                v.SelectedTab = v.Tabs.ElementAt(1);
-                new AddViewOperation(new Label("lbl3"), d, "lbl3").Do();
-                new AddViewOperation(new Label("lbl4"), d, "lbl4").Do();
-                
-                new AddTabOperation(d, "newTab").Do();
-                v.SelectedTab = v.Tabs.ElementAt(2);
-                new AddViewOperation(new Label("lbl5"), d, "lbl5").Do();
-                new AddViewOperation(new Label("lbl6"), d, "lbl6").Do();
+                Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
+                Assume.That( v, Is.Not.Null.And.InstanceOf<TabView>( ) );
+                Assume.That( v.GetActualSubviews( ), Has.Exactly( 2 ).InstanceOf<View>( ) );
+                Assume.That( v.Tabs, Has.Exactly( 2 ).Not.Null );
+                Assume.That( v.Tabs, Has.Exactly( 2 ).InstanceOf<Tab>( ) );
 
-                ClassicAssert.AreEqual(3, v.Tabs.Count);
-                ClassicAssert.AreEqual(2, v.Tabs.ElementAt(0).View.GetActualSubviews().Count);
-                ClassicAssert.AreEqual(2, v.Tabs.ElementAt(1).View.GetActualSubviews().Count);
-                ClassicAssert.AreEqual(2, v.Tabs.ElementAt(2).View.GetActualSubviews().Count);
+                // Set up a TabView with 3 tabs each of which has 2 labels
+                v.SelectedTab = v.Tabs.ElementAt( 0 );
+                Label lbl1 = ViewFactory.Create<Label>( null, null, $"lbl1" );
+                Label lbl2 = ViewFactory.Create<Label>( null, null, $"lbl2" );
+                AddViewOperation lbl1Add = new( lbl1, d, "lbl1" );
+                AddViewOperation lbl2Add = new( lbl2, d, "lbl2" );
+                Assume.That( lbl1Add.TimesDone, Is.Zero );
+                Assume.That( lbl2Add.TimesDone, Is.Zero );
+                bool lbl1AddSucceeded = false;
+                bool lbl2AddSucceeded = false;
+                Assume.That( ( ) => lbl1AddSucceeded = lbl1Add.Do( ), Throws.Nothing );
+                Assume.That( ( ) => lbl2AddSucceeded = lbl2Add.Do( ), Throws.Nothing );
+                Assume.That( lbl1AddSucceeded );
+                Assume.That( lbl2AddSucceeded );
+                Assume.That( lbl1Add.TimesDone, Is.EqualTo( 1 ) );
+                Assume.That( lbl2Add.TimesDone, Is.EqualTo( 1 ) );
+                IList<View> tab0Subviews = v.SelectedTab.View.GetActualSubviews( );
+                Assume.That( tab0Subviews, Has.Count.EqualTo( 2 ) );
+                Assume.That( tab0Subviews, Has.One.SameAs( lbl1 ) );
+                Assume.That( tab0Subviews, Has.One.SameAs( lbl2 ) );
+
+                v.SelectedTab = v.Tabs.ElementAt( 1 );
+                Label lbl3 = ViewFactory.Create<Label>( null, null, $"lbl3" );
+                Label lbl4 = ViewFactory.Create<Label>( null, null, $"lbl4" );
+                AddViewOperation lbl3Add = new( lbl3, d, "lbl3" );
+                AddViewOperation lbl4Add = new( lbl4, d, "lbl4" );
+                Assume.That( lbl3Add.TimesDone, Is.Zero );
+                Assume.That( lbl4Add.TimesDone, Is.Zero );
+                bool lbl3AddSucceeded = false;
+                bool lbl4AddSucceeded = false;
+                Assume.That( ( ) => lbl3AddSucceeded = lbl3Add.Do( ), Throws.Nothing );
+                Assume.That( ( ) => lbl4AddSucceeded = lbl4Add.Do( ), Throws.Nothing );
+                Assume.That( lbl3AddSucceeded );
+                Assume.That( lbl4AddSucceeded );
+                Assume.That( lbl3Add.TimesDone, Is.EqualTo( 1 ) );
+                Assume.That( lbl4Add.TimesDone, Is.EqualTo( 1 ) );
+                IList<View> tab1Subviews = v.SelectedTab.View.GetActualSubviews( );
+                Assume.That( tab1Subviews, Has.Count.EqualTo( 2 ) );
+                Assume.That( tab1Subviews, Has.One.SameAs( lbl3 ) );
+                Assume.That( tab1Subviews, Has.One.SameAs( lbl4 ) );
+
+                AddTabOperation tabAdd = new( d, "newTab" );
+                Assume.That( tabAdd.TimesDone, Is.Zero );
+                bool tabAddSucceeded = false;
+                Assume.That( ( ) => tabAddSucceeded = tabAdd.Do( ), Throws.Nothing );
+                Assume.That( tabAddSucceeded );
+                Assume.That( tabAdd.TimesDone, Is.EqualTo( 1 ) );
+                Assume.That( v.Tabs, Has.Exactly( 3 ).InstanceOf<Tab>( ) );
+
+                v.SelectedTab = v.Tabs.ElementAt( 2 );
+                Label lbl5 = ViewFactory.Create<Label>( null, null, $"lbl5" );
+                Label lbl6 = ViewFactory.Create<Label>( null, null, $"lbl6" );
+                AddViewOperation lbl5Add = new( lbl5, d, "lbl5" );
+                AddViewOperation lbl6Add = new( lbl6, d, "lbl6" );
+                Assume.That( lbl5Add.TimesDone, Is.Zero );
+                Assume.That( lbl6Add.TimesDone, Is.Zero );
+                bool lbl5AddSucceeded = false;
+                bool lbl6AddSucceeded = false;
+                Assume.That( ( ) => lbl5AddSucceeded = lbl5Add.Do( ), Throws.Nothing );
+                Assume.That( ( ) => lbl6AddSucceeded = lbl6Add.Do( ), Throws.Nothing );
+                Assume.That( lbl5AddSucceeded );
+                Assume.That( lbl6AddSucceeded );
+                Assume.That( lbl5Add.TimesDone, Is.EqualTo( 1 ) );
+                Assume.That( lbl6Add.TimesDone, Is.EqualTo( 1 ) );
+                IList<View> tab2Subviews = v.SelectedTab.View.GetActualSubviews( );
+                Assume.That( tab2Subviews, Has.Count.EqualTo( 2 ) );
+                Assume.That( tab2Subviews, Has.One.SameAs( lbl5 ) );
+                Assume.That( tab2Subviews, Has.One.SameAs( lbl6 ) );
 
                 // copy the TabView
-                new CopyOperation(d).Do();
+                CopyOperation copyOperation = new( d );
+                Assume.That( copyOperation, Is.Not.Null.And.InstanceOf<CopyOperation>( ) );
+                Assume.That( copyOperation.SupportsUndo, Is.False );
+                Assume.That( copyOperation.IsImpossible, Is.False );
+                Assume.That( copyOperation.TimesDone, Is.Zero );
 
-                var rootDesign = d.GetRootDesign();
-                ClassicAssert.IsTrue(new PasteOperation(rootDesign).Do());
+                bool copyOperationSucceeded = false;
+                Assert.That( ( ) => copyOperationSucceeded = copyOperation.Do( ), Throws.Nothing );
+                Assert.That( copyOperationSucceeded );
+                Assert.That( copyOperation.TimesDone, Is.EqualTo( 1 ) );
 
-                var rootSubviews = rootDesign.View.GetActualSubviews();
+                var rootDesign = d.GetRootDesign( );
 
-                ClassicAssert.AreEqual(2, rootSubviews.Count, "Expected root to have 2 TabView now");
-                ClassicAssert.IsTrue(rootSubviews.All(v => v is TabView));
+                PasteOperation pasteOperation = new( rootDesign );
+                Assume.That( pasteOperation, Is.Not.Null.And.InstanceOf<PasteOperation>( ) );
+                Assume.That( pasteOperation.SupportsUndo );
+                Assume.That( pasteOperation.IsImpossible, Is.False );
+                Assume.That( pasteOperation.TimesDone, Is.Zero );
 
-                var orig = (TabView)rootSubviews[0];
-                var pasted = (TabView)rootSubviews[1];
+                bool pasteOperationSucceeded = false;
+                Assert.That( ( ) => pasteOperationSucceeded = pasteOperation.Do( ), Throws.Nothing );
+                Assert.That( pasteOperationSucceeded );
+                Assert.That( pasteOperation.TimesDone, Is.EqualTo( 1 ) );
 
-                ClassicAssert.AreEqual(3, orig.Tabs.Count);
-                ClassicAssert.AreEqual(2, orig.Tabs.ElementAt(0).View.GetActualSubviews().Count);
-                ClassicAssert.AreEqual(2, orig.Tabs.ElementAt(1).View.GetActualSubviews().Count);
-                ClassicAssert.AreEqual(2, orig.Tabs.ElementAt(2).View.GetActualSubviews().Count);
+                var rootSubviews = rootDesign.View.GetActualSubviews( );
+                Assert.That( rootSubviews, Has.Count.EqualTo( 2 ) );
+                Assert.That( rootSubviews, Has.All.InstanceOf<TabView>( ) );
 
-                ClassicAssert.AreEqual(3, pasted.Tabs.Count);
-                ClassicAssert.AreEqual(2, pasted.Tabs.ElementAt(0).View.GetActualSubviews().Count);
-                ClassicAssert.AreEqual(2, pasted.Tabs.ElementAt(1).View.GetActualSubviews().Count);
-                ClassicAssert.AreEqual(2, pasted.Tabs.ElementAt(2).View.GetActualSubviews().Count);
+                var orig = (TabView)rootSubviews[ 0 ];
+                var pasted = (TabView)rootSubviews[ 1 ];
+
+                // Ensure none of the original tabs is in the pasted group, to ensure no references were copied
+                Assert.That( orig.Tabs, Has.None.AnyOf( pasted.Tabs ) );
+
+                // Check that orig has 3 tabs, each with 2 labels
+                Assert.That( orig.Tabs, Has.Exactly( 3 ).InstanceOf<Tab>( ) );
+                Assert.That( orig.Tabs.Select( origTab => origTab.View.GetActualSubviews( ) ), Has.All.Exactly( 2 ).InstanceOf<Label>( ) );
+
+                // Check that pasted has 3 tabs, each with 2 labels
+                Assert.That( pasted.Tabs, Has.Exactly( 3 ).InstanceOf<Tab>( ) );
+                Assert.That( pasted.Tabs.Select( origTab => origTab.View.GetActualSubviews( ) ), Has.All.Exactly( 2 ).InstanceOf<Label>( ) );
             }
             , out _
-            );
+        );
     }
 }
