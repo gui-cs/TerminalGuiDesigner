@@ -326,9 +326,8 @@ internal class CopyPasteTests : Tests
         SelectionManager.Instance.Clear();
     }
 
-    [TestCase(true)]
-    [TestCase(false)]
-    public void TestCopyPasteContainer(bool alsoSelectSubElements)
+    [Test]
+    public void CopyPasteContainer( [Values] bool alsoSelectSubElements )
     {
         RoundTrip<Window, FrameView>(
             (d, v) =>
