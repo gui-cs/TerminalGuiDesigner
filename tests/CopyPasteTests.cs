@@ -255,6 +255,10 @@ internal class CopyPasteTests : Tests
 
         ColorScheme green = new() { Normal = new(Color.Green, Color.Cyan) };
         Assume.That( green, Is.Not.Null.And.InstanceOf<ColorScheme>( ) );
+
+        Assume.That( labelDesign!.GetDesignableProperties( ).OfType<ColorSchemeProperty>( ).ToArray( ),
+                     Has.Length.EqualTo( 1 ),
+                     "Should only be one ColorScheme property" );
         
         ColorScheme addedScheme = ColorSchemeManager.Instance.AddOrUpdateScheme("green", green, rootDesign!);
         Assume.That( addedScheme, Is.SameAs( green ) );
