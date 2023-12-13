@@ -280,7 +280,20 @@ internal class CopyPasteTests : Tests
                      "TextBox inherits but also is explicitly marked as green" );
 
         SelectionManager.Instance.SetSelection(labelDesign, textFieldDesign);
-        new CopyOperation(SelectionManager.Instance.Selected.ToArray()).Do();
+        Assume.That( SelectionManager.Instance.Selected, Does.Contain( labelDesign ).And.Contains( textFieldDesign ) );
+
+        CopyOperation copyOperation = new( SelectionManager.Instance.Selected.ToArray( ) );
+        Assert.That( copyOperation, Is.Not.Null.And.InstanceOf<CopyOperation>( ) );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( copyOperation.IsImpossible, Is.False );
+            Assert.That( copyOperation.SupportsUndo, Is.False, "What would it even mean to undo a copy?" );
+        } );
+        
+        bool copyOperationSucceeded = false;
+        Assert.That( ( ) => copyOperationSucceeded = copyOperation.Do( ), Throws.Nothing );
+        Assert.That( copyOperationSucceeded );
+        
         SelectionManager.Instance.SetSelection(labelDesign, textFieldDesign);
 
         OperationManager.Instance.Do(new PasteOperation(rootDesign));
