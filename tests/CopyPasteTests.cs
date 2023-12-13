@@ -308,10 +308,15 @@ internal class CopyPasteTests : Tests
         Assert.That( pasteOperationSucceeded );
 
         // (Root + 2 original + 2 cloned)
-        ClassicAssert.AreEqual(5, rootDesign.GetAllDesigns().Count());
-
-        Design dlbl2 = rootDesign.GetAllDesigns().Single(d => d.FieldName == "lbl2");
-        Design dtb2 = rootDesign.GetAllDesigns().Single(d => d.FieldName == "tb2");
+        Design[] allDesigns = rootDesign.GetAllDesigns( ).ToArray( );
+        Assert.That( allDesigns, Has.Length.EqualTo( 5 ) );
+        
+        // Reference equality should be maintained through the copy/paste operation
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( allDesigns, Has.One.SameAs( labelDesign ) );
+            Assert.That( allDesigns, Has.One.SameAs( textFieldDesign ) );
+        } );
 
         // clear whatever the current selection is (probably the pasted views)
         SelectionManager.Instance.Clear();
