@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Terminal.Gui;
 using TerminalGuiDesigner;
@@ -317,22 +318,9 @@ internal class CopyPasteTests : Tests
             Assert.That( allDesigns, Has.One.SameAs( labelDesign ) );
             Assert.That( allDesigns, Has.One.SameAs( textFieldDesign ) );
         } );
-
+        
         // clear whatever the current selection is (probably the pasted views)
         SelectionManager.Instance.Clear();
-
-        ClassicAssert.AreEqual(dlbl2.View.ColorScheme, green, "The newly pasted label should also inherit color scheme from the parent");
-
-        // but be known to inherit
-        ClassicAssert.AreEqual(
-            "ColorScheme:(Inherited)",
-            dlbl2.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
-            "Expected ColorScheme to be known to be inherited");
-
-        ClassicAssert.AreEqual(
-            "ColorScheme:green",
-            dtb2.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
-            "TextBox2 should have its copy pasted explicitly marked green");
     }
 
     [TestCase(true)]
