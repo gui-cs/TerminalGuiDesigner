@@ -295,6 +295,7 @@ internal class CopyPasteTests : Tests
         Assert.That( copyOperationSucceeded );
         
         SelectionManager.Instance.SetSelection(labelDesign, textFieldDesign);
+        Assume.That( SelectionManager.Instance.Selected, Does.Contain( labelDesign ).And.Contains( textFieldDesign ) );
 
         OperationManager.Instance.Do(new PasteOperation(rootDesign));
 
