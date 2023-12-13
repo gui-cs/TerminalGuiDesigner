@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Reflection;
 using Terminal.Gui;
 using TerminalGuiDesigner;
@@ -117,10 +117,8 @@ public class ColorSchemeManager
     /// <returns>A reference to the <see cref="ColorScheme"/> that was added or updated.</returns>
     public ColorScheme AddOrUpdateScheme(string name, ColorScheme scheme, Design rootDesign)
     {
-        var oldScheme = this.colorSchemes.FirstOrDefault(c => c.Name.Equals(name));
-
         // if we don't currently know about this scheme
-        if (oldScheme == null)
+        if (this.colorSchemes.FirstOrDefault(c => c.Name.Equals(name)) is not { } oldScheme)
         {
             // simply record that we now know about it and exit
             NamedColorScheme newColorScheme = new (name, scheme);
