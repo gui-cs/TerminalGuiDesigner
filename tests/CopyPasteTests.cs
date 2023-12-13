@@ -330,19 +330,19 @@ internal class CopyPasteTests : Tests
     public void CopyPasteContainer( [Values] bool alsoSelectSubElements )
     {
         RoundTrip<Window, FrameView>(
-            (d, v) =>
+            ( d, v ) =>
             {
                 Label lbl1 = ViewFactory.Create<Label>( );
                 Label lbl2 = ViewFactory.Create<Label>( );
-                Assume.That( ( ) => new AddViewOperation(lbl1, d, "lbl1").Do(), Throws.Nothing );
-                Assume.That( ( ) => new AddViewOperation(lbl2, d, "lbl2").Do(), Throws.Nothing );
+                Assume.That( ( ) => new AddViewOperation( lbl1, d, "lbl1" ).Do( ), Throws.Nothing );
+                Assume.That( ( ) => new AddViewOperation( lbl2, d, "lbl2" ).Do( ), Throws.Nothing );
 
-                View[] actualSubviews = v.GetActualSubviews().ToArray();
+                View[] actualSubviews = v.GetActualSubviews( ).ToArray( );
                 Assume.That( actualSubviews, Has.Length.EqualTo( 2 ) );
                 Assume.That( actualSubviews, Has.One.SameAs( lbl1 ) );
                 Assume.That( actualSubviews, Has.One.SameAs( lbl2 ) );
-                
-                Design[]? toCopy = null;
+
+                Design[]? toCopy;
 
                 if ( alsoSelectSubElements )
                 {
@@ -357,7 +357,6 @@ internal class CopyPasteTests : Tests
                     toCopy = new[] { d };
                 }
 
-                // copy the View
                 CopyOperation copyOperation = new( toCopy );
                 Assume.That( copyOperation, Is.Not.Null.And.InstanceOf<CopyOperation>( ) );
                 Assume.That( copyOperation.SupportsUndo, Is.False );
@@ -365,13 +364,12 @@ internal class CopyPasteTests : Tests
                 Assume.That( copyOperation.TimesDone, Is.Zero );
 
                 bool copyOperationSucceeded = false;
-                Assert.That( ( ) => copyOperationSucceeded = copyOperation.Do(), Throws.Nothing );
+                Assert.That( ( ) => copyOperationSucceeded = copyOperation.Do( ), Throws.Nothing );
                 Assert.That( copyOperationSucceeded );
                 Assert.That( copyOperation.TimesDone, Is.EqualTo( 1 ) );
 
-                var rootDesign = d.GetRootDesign();
+                var rootDesign = d.GetRootDesign( );
 
-                // paste the View
                 PasteOperation pasteOperation = new( rootDesign );
                 Assume.That( pasteOperation, Is.Not.Null.And.InstanceOf<PasteOperation>( ) );
                 Assume.That( pasteOperation.SupportsUndo );
