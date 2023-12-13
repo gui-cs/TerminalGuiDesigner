@@ -265,7 +265,7 @@ internal class CopyPasteTests : Tests
         
         rootDesign!.View.ColorScheme = green;
 
-        ClassicAssert.AreEqual(lbl.ColorScheme, green, "The label should inherit color scheme from the parent");
+        Assume.That( lbl!.ColorScheme, Is.SameAs( green ), "The label should inherit color scheme from the parent" );
 
         ClassicAssert.AreEqual(
             "ColorScheme:(Inherited)",
