@@ -332,19 +332,25 @@ internal class CopyPasteTests : Tests
         RoundTrip<Window, FrameView>(
             (d, v) =>
             {
-                new AddViewOperation(new Label(), d, "lbl1").Do();
-                new AddViewOperation(new Label(), d, "lbl2").Do();
+                Label lbl1 = ViewFactory.Create<Label>( );
+                Label lbl2 = ViewFactory.Create<Label>( );
+                Assume.That( ( ) => new AddViewOperation(lbl1, d, "lbl1").Do(), Throws.Nothing );
+                Assume.That( ( ) => new AddViewOperation(lbl2, d, "lbl2").Do(), Throws.Nothing );
+
+                View[] actualSubviews = v.GetActualSubviews().ToArray();
+                Assume.That( actualSubviews, Has.Length.EqualTo( 2 ) );
+                Assume.That( actualSubviews, Has.One.SameAs( lbl1 ) );
+                Assume.That( actualSubviews, Has.One.SameAs( lbl2 ) );
                 
-                ClassicAssert.AreEqual(2,v.GetActualSubviews().Count(), "Expected the FrameView to have 2 children (lbl1 and lbl2)");
+                Design[]? toCopy = null;
 
-                Design[] toCopy;
-
-                if(alsoSelectSubElements)
+                if ( alsoSelectSubElements )
                 {
-                    var lbl1Design = (Design)d.View.GetActualSubviews().First().Data;
-                    ClassicAssert.AreEqual("lbl1", lbl1Design.FieldName);
+                    Design? lbl1Design = d.View.GetActualSubviews( ).First( ).Data as Design;
+                    Assume.That( lbl1Design, Is.Not.Null.And.InstanceOf<Design>( ) );
+                    Assume.That( lbl1Design!.FieldName, Is.EqualTo( "lbl1" ) );
 
-                    toCopy = new Design[] { d, lbl1Design};
+                    toCopy = new[] { d, lbl1Design };
                 }
                 else
                 {
