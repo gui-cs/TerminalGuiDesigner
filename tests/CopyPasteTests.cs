@@ -226,8 +226,8 @@ internal class CopyPasteTests : Tests
     {
         Design d = Get10By10View();
 
-        Label lbl = new Label("Name:");
-        TextField tb = new TextField();
+        Label lbl = ViewFactory.Create<Label>( null, null, "Name:" );
+        TextField tb = ViewFactory.Create<TextField>( );
 
         bool addLabelOperationSucceeded = false;
         bool addTextFieldOperationSucceeded = false;
