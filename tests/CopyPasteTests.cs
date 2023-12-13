@@ -224,52 +224,63 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPasteColorScheme()
     {
-        Design d = Get10By10View();
-
-        Label lbl = ViewFactory.Create<Label>( null, null, "Name:" );
-        TextField tb = ViewFactory.Create<TextField>( );
+        Design? rootDesign = null;
+        Label? lbl = null;
+        TextField? tb = null;
+        
+        Assume.That( ( ) => rootDesign = Get10By10View( ), Throws.Nothing );
+        Assume.That( ( ) => lbl = ViewFactory.Create<Label>( null, null, "Name:" ), Throws.Nothing );
+        Assume.That( ( ) =>  tb = ViewFactory.Create<TextField>( ), Throws.Nothing );
+        
+        Assume.That( rootDesign, Is.Not.Null.And.InstanceOf<Design>( ) );
+        Assume.That( lbl, Is.Not.Null.And.InstanceOf<Label>( ) );
+        Assume.That( tb, Is.Not.Null.And.InstanceOf<TextField>( ) );
 
         bool addLabelOperationSucceeded = false;
         bool addTextFieldOperationSucceeded = false;
         
-        Assume.That( ( ) => addLabelOperationSucceeded = new AddViewOperation( lbl, d, "lbl" ).Do( ), Throws.Nothing );
-        Assume.That( ( ) => addTextFieldOperationSucceeded = new AddViewOperation( tb, d, "tb" ).Do( ), Throws.Nothing );
+        Assume.That( ( ) => addLabelOperationSucceeded = new AddViewOperation( lbl, rootDesign, "lbl" ).Do( ), Throws.Nothing );
+        Assume.That( ( ) => addTextFieldOperationSucceeded = new AddViewOperation( tb, rootDesign, "tb" ).Do( ), Throws.Nothing );
         Assume.That( addLabelOperationSucceeded );
         Assume.That( addTextFieldOperationSucceeded );
 
-        Design labelDesigner = d.GetAllDesigns().Single(d => d.FieldName == "lbl");
-        Design textFieldDesigner = d.GetAllDesigns().Single(d => d.FieldName == "tb");
+        Design? labelDesign = null;
+        Design? textFieldDesign = null;
+        Assume.That( ( ) => labelDesign = rootDesign.GetAllDesigns().SingleOrDefault(d => d.FieldName == "lbl"), Throws.Nothing );
+        Assume.That( ( ) => textFieldDesign = rootDesign.GetAllDesigns().SingleOrDefault(d => d.FieldName == "tb"), Throws.Nothing );
+        Assume.That( labelDesign, Is.Not.Null.And.InstanceOf<Design>( ) );
+        Assume.That( textFieldDesign, Is.Not.Null.And.InstanceOf<Design>( ) );
 
         SelectionManager selected = SelectionManager.Instance;
 
         ColorScheme green;
-        ColorSchemeManager.Instance.AddOrUpdateScheme("green", green = new() { Normal = new(Color.Green, Color.Cyan) }, d);
-        textFieldDesigner.GetDesignableProperty(nameof(ColorScheme))?.SetValue(green);
-        d.View.ColorScheme = green;
+        ColorSchemeManager.Instance.AddOrUpdateScheme("green", green = new() { Normal = new(Color.Green, Color.Cyan) }, rootDesign);
+        textFieldDesign.GetDesignableProperty(nameof(ColorScheme))?.SetValue(green);
+        rootDesign.View.ColorScheme = green;
 
         ClassicAssert.AreEqual(lbl.ColorScheme, green, "The label should inherit color scheme from the parent");
 
         ClassicAssert.AreEqual(
             "ColorScheme:(Inherited)",
-            labelDesigner.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
+            labelDesign.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
             "Expected ColorScheme to be known to be inherited");
 
         ClassicAssert.AreEqual(
             "ColorScheme:green",
-            textFieldDesigner.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
+            textFieldDesign.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
             "TextBox inherits but also is explicitly marked as green");
 
-        SelectionManager.Instance.SetSelection(labelDesigner, textFieldDesigner);
+        SelectionManager.Instance.SetSelection(labelDesign, textFieldDesign);
         new CopyOperation(SelectionManager.Instance.Selected.ToArray()).Do();
-        SelectionManager.Instance.SetSelection(labelDesigner, textFieldDesigner);
+        SelectionManager.Instance.SetSelection(labelDesign, textFieldDesign);
 
-        OperationManager.Instance.Do(new PasteOperation(d));
+        OperationManager.Instance.Do(new PasteOperation(rootDesign));
 
         // (Root + 2 original + 2 cloned)
-        ClassicAssert.AreEqual(5, d.GetAllDesigns().Count());
+        ClassicAssert.AreEqual(5, rootDesign.GetAllDesigns().Count());
 
-        Design dlbl2 = d.GetAllDesigns().Single(d => d.FieldName == "lbl2");
-        Design dtb2 = d.GetAllDesigns().Single(d => d.FieldName == "tb2");
+        Design dlbl2 = rootDesign.GetAllDesigns().Single(d => d.FieldName == "lbl2");
+        Design dtb2 = rootDesign.GetAllDesigns().Single(d => d.FieldName == "tb2");
 
         // clear whatever the current selection is (probably the pasted views)
         SelectionManager.Instance.Clear();
