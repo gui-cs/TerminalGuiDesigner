@@ -271,15 +271,13 @@ internal class CopyPasteTests : Tests
 
         Assume.That( lbl!.ColorScheme, Is.SameAs( green ), "The label should inherit color scheme from the parent" );
 
-        ClassicAssert.AreEqual(
-            "ColorScheme:(Inherited)",
-            labelDesign.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
-            "Expected ColorScheme to be known to be inherited");
+        Assume.That( labelDesign!.GetDesignableProperties( ).OfType<ColorSchemeProperty>( ).Single( ).ToString( ),
+                     Is.EqualTo( "ColorScheme:(Inherited)" ),
+                     "Expected ColorScheme to be known to be inherited" );
 
-        ClassicAssert.AreEqual(
-            "ColorScheme:green",
-            textFieldDesign.GetDesignableProperties().OfType<ColorSchemeProperty>().Single().ToString(),
-            "TextBox inherits but also is explicitly marked as green");
+        Assume.That( textFieldDesign.GetDesignableProperties( ).OfType<ColorSchemeProperty>( ).Single( ).ToString( ),
+                     Is.EqualTo( "ColorScheme:green" ),
+                     "TextBox inherits but also is explicitly marked as green" );
 
         SelectionManager.Instance.SetSelection(labelDesign, textFieldDesign);
         new CopyOperation(SelectionManager.Instance.Selected.ToArray()).Do();
