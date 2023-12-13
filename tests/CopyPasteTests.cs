@@ -10,6 +10,9 @@ using TerminalGuiDesigner.ToCode;
 namespace UnitTests;
 
 [TestFixture]
+[TestOf( typeof( CopyOperation ) )]
+[TestOf( typeof( PasteOperation ) )]
+[Category( "UI Operations" )]
 internal class CopyPasteTests : Tests
 {
     [Test]
