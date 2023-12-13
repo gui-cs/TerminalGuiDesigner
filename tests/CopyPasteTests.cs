@@ -390,25 +390,46 @@ internal class CopyPasteTests : Tests
     }
 
     [Test]
-    public void TestCopyPasteContainer_Empty_ScrollView()
+    public void CopyPasteContainer_Empty_ScrollView()
     {
         RoundTrip<Window, ScrollView>(
-            (d, v) =>
+            ( d, v ) =>
             {
+                Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
+                Assume.That( v, Is.Not.Null.And.InstanceOf<ScrollView>( ) );
+                Assume.That( v.GetActualSubviews( ), Is.Empty );
+
                 // copy the ScrollView
-                new CopyOperation(d).Do();
+                CopyOperation copyOperation = new( d );
+                Assume.That( copyOperation, Is.Not.Null.And.InstanceOf<CopyOperation>( ) );
+                Assume.That( copyOperation.SupportsUndo, Is.False );
+                Assume.That( copyOperation.IsImpossible, Is.False );
+                Assume.That( copyOperation.TimesDone, Is.Zero );
 
-                var rootDesign = d.GetRootDesign();
+                bool copyOperationSucceeded = false;
+                Assert.That( ( ) => copyOperationSucceeded = copyOperation.Do( ), Throws.Nothing );
+                Assert.That( copyOperationSucceeded );
+                Assert.That( copyOperation.TimesDone, Is.EqualTo( 1 ) );
 
-                ClassicAssert.IsTrue(new PasteOperation(rootDesign).Do());
+                var rootDesign = d.GetRootDesign( );
 
-                var rootSubviews = rootDesign.View.GetActualSubviews();
+                PasteOperation pasteOperation = new( rootDesign );
+                Assume.That( pasteOperation, Is.Not.Null.And.InstanceOf<PasteOperation>( ) );
+                Assume.That( pasteOperation.SupportsUndo );
+                Assume.That( pasteOperation.IsImpossible, Is.False );
+                Assume.That( pasteOperation.TimesDone, Is.Zero );
 
-                ClassicAssert.AreEqual(2, rootSubviews.Count, "Expected root to have 2 ScrollView now");
-                ClassicAssert.IsTrue(rootSubviews.All(v => v is ScrollView));
+                bool pasteOperationSucceeded = false;
+                Assert.That( ( ) => pasteOperationSucceeded = pasteOperation.Do( ), Throws.Nothing );
+                Assert.That( pasteOperationSucceeded );
+                Assert.That( pasteOperation.TimesDone, Is.EqualTo( 1 ) );
+
+                var rootSubviews = rootDesign.View.GetActualSubviews( );
+                Assert.That( rootSubviews, Has.Count.EqualTo( 2 ) );
+                Assert.That( rootSubviews, Has.All.InstanceOf<ScrollView>( ) );
             }
             , out _
-            );
+        );
     }
     [Test]
     public void TestCopyPasteContainer_EmptyScrollView_IntoItself_InsteadPastesToRoot()
