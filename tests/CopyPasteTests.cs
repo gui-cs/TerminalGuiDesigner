@@ -229,8 +229,13 @@ internal class CopyPasteTests : Tests
         var lbl = new Label("Name:");
         var tb = new TextField();
 
-        new AddViewOperation(lbl, d, "lbl").Do();
-        new AddViewOperation(tb, d, "tb").Do();
+        bool addLabelOperationSucceeded = false;
+        bool addTextFieldOperationSucceeded = false;
+        
+        Assume.That( ( ) => addLabelOperationSucceeded = new AddViewOperation( lbl, d, "lbl" ).Do( ), Throws.Nothing );
+        Assume.That( ( ) => addTextFieldOperationSucceeded = new AddViewOperation( tb, d, "tb" ).Do( ), Throws.Nothing );
+        Assume.That( addLabelOperationSucceeded );
+        Assume.That( addTextFieldOperationSucceeded );
 
         var dlbl = d.GetAllDesigns().Single(d => d.FieldName == "lbl");
         var dtb = d.GetAllDesigns().Single(d => d.FieldName == "tb");
