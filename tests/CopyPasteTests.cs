@@ -289,15 +289,23 @@ internal class CopyPasteTests : Tests
             Assert.That( copyOperation.IsImpossible, Is.False );
             Assert.That( copyOperation.SupportsUndo, Is.False, "What would it even mean to undo a copy?" );
         } );
-        
+
         bool copyOperationSucceeded = false;
         Assert.That( ( ) => copyOperationSucceeded = copyOperation.Do( ), Throws.Nothing );
         Assert.That( copyOperationSucceeded );
-        
+
         SelectionManager.Instance.SetSelection(labelDesign, textFieldDesign);
         Assume.That( SelectionManager.Instance.Selected, Does.Contain( labelDesign ).And.Contains( textFieldDesign ) );
 
-        OperationManager.Instance.Do(new PasteOperation(rootDesign));
+        PasteOperation pasteOperation = new (rootDesign);
+        Assume.That( pasteOperation, Is.Not.Null.And.InstanceOf<PasteOperation>( ) );
+
+        Assert.That(pasteOperation.IsImpossible, Is.False );
+        Assert.That(pasteOperation.SupportsUndo );
+        
+        bool pasteOperationSucceeded = false;
+        Assert.That( ( ) => pasteOperationSucceeded = pasteOperation.Do( ), Throws.Nothing );
+        Assert.That( pasteOperationSucceeded );
 
         // (Root + 2 original + 2 cloned)
         ClassicAssert.AreEqual(5, rootDesign.GetAllDesigns().Count());
