@@ -1,4 +1,4 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using System.Reflection;
 using Terminal.Gui;
 using TerminalGuiDesigner;
@@ -114,7 +114,8 @@ public class ColorSchemeManager
     /// Will become <see cref="NamedColorScheme.Name"/>.</param>
     /// <param name="scheme">The new <see cref="ColorScheme"/> color values to use.</param>
     /// <param name="rootDesign">The topmost <see cref="Design"/> the user is editing (see <see cref="Design.GetRootDesign"/>).</param>
-    public void AddOrUpdateScheme(string name, ColorScheme scheme, Design rootDesign)
+    /// <returns>A reference to the <see cref="ColorScheme"/> that was added or updated.</returns>
+    public ColorScheme AddOrUpdateScheme(string name, ColorScheme scheme, Design rootDesign)
     {
         var oldScheme = this.colorSchemes.FirstOrDefault(c => c.Name.Equals(name));
 
@@ -122,8 +123,9 @@ public class ColorSchemeManager
         if (oldScheme == null)
         {
             // simply record that we now know about it and exit
-            this.colorSchemes.Add(new NamedColorScheme(name, scheme));
-            return;
+            NamedColorScheme newColorScheme = new (name, scheme);
+            this.colorSchemes.Add(newColorScheme);
+            return newColorScheme.Scheme;
         }
 
         // we know about this color already and people may be using it!
@@ -138,6 +140,7 @@ public class ColorSchemeManager
         }
 
         oldScheme.Scheme = scheme;
+        return scheme;
     }
 
     /// <summary>
