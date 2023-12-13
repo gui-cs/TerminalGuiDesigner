@@ -357,12 +357,31 @@ internal class CopyPasteTests : Tests
                     toCopy = new[] { d };
                 }
 
-                // copy the FrameView
-                new CopyOperation(toCopy).Do();
+                // copy the View
+                CopyOperation copyOperation = new( toCopy );
+                Assume.That( copyOperation, Is.Not.Null.And.InstanceOf<CopyOperation>( ) );
+                Assume.That( copyOperation.SupportsUndo, Is.False );
+                Assume.That( copyOperation.IsImpossible, Is.False );
+                Assume.That( copyOperation.TimesDone, Is.Zero );
+
+                bool copyOperationSucceeded = false;
+                Assert.That( ( ) => copyOperationSucceeded = copyOperation.Do(), Throws.Nothing );
+                Assert.That( copyOperationSucceeded );
+                Assert.That( copyOperation.TimesDone, Is.EqualTo( 1 ) );
 
                 var rootDesign = d.GetRootDesign();
 
-                ClassicAssert.IsTrue(new PasteOperation(rootDesign).Do());
+                // paste the View
+                PasteOperation pasteOperation = new( rootDesign );
+                Assume.That( pasteOperation, Is.Not.Null.And.InstanceOf<PasteOperation>( ) );
+                Assume.That( pasteOperation.SupportsUndo );
+                Assume.That( pasteOperation.IsImpossible, Is.False );
+                Assume.That( pasteOperation.TimesDone, Is.Zero );
+
+                bool pasteOperationSucceeded = false;
+                Assert.That( ( ) => pasteOperationSucceeded = pasteOperation.Do( ), Throws.Nothing );
+                Assert.That( pasteOperationSucceeded );
+                Assert.That( pasteOperation.TimesDone, Is.EqualTo( 1 ) );
 
                 var rootSubviews = rootDesign.View.GetActualSubviews();
 
