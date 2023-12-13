@@ -31,6 +31,11 @@ public interface IOperation
     bool SupportsUndo { get; }
 
     /// <summary>
+    ///   Gets the number of times this <see cref="IOperation"/> has been executed successfully
+    /// </summary>
+    ref int TimesDone { get; }
+
+    /// <summary>
     /// Performs the operation.
     /// </summary>
     /// <returns>True if the operation was successful.  False if it was canceled during
