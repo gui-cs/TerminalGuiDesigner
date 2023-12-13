@@ -239,15 +239,15 @@ internal class CopyPasteTests : Tests
         bool addLabelOperationSucceeded = false;
         bool addTextFieldOperationSucceeded = false;
         
-        Assume.That( ( ) => addLabelOperationSucceeded = new AddViewOperation( lbl, rootDesign, "lbl" ).Do( ), Throws.Nothing );
-        Assume.That( ( ) => addTextFieldOperationSucceeded = new AddViewOperation( tb, rootDesign, "tb" ).Do( ), Throws.Nothing );
+        Assume.That( ( ) => addLabelOperationSucceeded = new AddViewOperation( lbl!, rootDesign!, "lbl" ).Do( ), Throws.Nothing );
+        Assume.That( ( ) => addTextFieldOperationSucceeded = new AddViewOperation( tb!, rootDesign!, "tb" ).Do( ), Throws.Nothing );
         Assume.That( addLabelOperationSucceeded );
         Assume.That( addTextFieldOperationSucceeded );
 
         Design? labelDesign = null;
         Design? textFieldDesign = null;
-        Assume.That( ( ) => labelDesign = rootDesign.GetAllDesigns().SingleOrDefault(d => d.FieldName == "lbl"), Throws.Nothing );
-        Assume.That( ( ) => textFieldDesign = rootDesign.GetAllDesigns().SingleOrDefault(d => d.FieldName == "tb"), Throws.Nothing );
+        Assume.That( ( ) => labelDesign = rootDesign!.GetAllDesigns().SingleOrDefault(d => d.FieldName == "lbl"), Throws.Nothing );
+        Assume.That( ( ) => textFieldDesign = rootDesign!.GetAllDesigns().SingleOrDefault(d => d.FieldName == "tb"), Throws.Nothing );
         Assume.That( labelDesign, Is.Not.Null.And.InstanceOf<Design>( ) );
         Assume.That( textFieldDesign, Is.Not.Null.And.InstanceOf<Design>( ) );
 
@@ -258,9 +258,12 @@ internal class CopyPasteTests : Tests
         
         ColorScheme addedScheme = ColorSchemeManager.Instance.AddOrUpdateScheme("green", green, rootDesign!);
         Assume.That( addedScheme, Is.SameAs( green ) );
+
+        Assume.That( textFieldDesign!.TryGetDesignableProperty( nameof( ColorScheme ), out Property? colorSchemeProperty ) );
+        Assume.That( colorSchemeProperty, Is.Not.Null.And.InstanceOf<Property>( ) );
+        Assume.That( ( ) => colorSchemeProperty.SetValue( green ), Throws.Nothing );
         
-        textFieldDesign.GetDesignableProperty(nameof(ColorScheme))?.SetValue(green);
-        rootDesign.View.ColorScheme = green;
+        rootDesign!.View.ColorScheme = green;
 
         ClassicAssert.AreEqual(lbl.ColorScheme, green, "The label should inherit color scheme from the parent");
 
