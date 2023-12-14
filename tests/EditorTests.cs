@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Terminal.Gui;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.UI;
@@ -15,8 +15,8 @@ internal class EditorTests : Tests
     public void TestHasUnsavedChanges()
     {
         var e = new Editor();
-
-        ClassicAssert.IsFalse(e.HasUnsavedChanges(), "With nothing open there should not be any unsaved changes");
+        
+        Assert.That( e.HasUnsavedChanges(), Is.False, "With nothing open there should not be any unsaved changes" );
 
         OperationManager.Instance.Do(new DummyOperation());
 
@@ -27,13 +27,13 @@ internal class EditorTests : Tests
         var f = typeof(Editor).GetField("lastSavedOperation", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic) ?? throw new Exception("Missing field");
         f.SetValue(e, lastOp.UniqueIdentifier);
 
-        ClassicAssert.IsFalse(e.HasUnsavedChanges(), "Now that we have saved there should be no unsaved changes");
+        Assert.That(e.HasUnsavedChanges(), Is.False, "Now that we have saved there should be no unsaved changes");
 
         OperationManager.Instance.Do(new DummyOperation());
-        ClassicAssert.IsTrue(e.HasUnsavedChanges(), "When we perform an operation after saving we now have changes again");
+        Assert.That(e.HasUnsavedChanges(), "When we perform an operation after saving we now have changes again");
 
         OperationManager.Instance.Undo();
-        ClassicAssert.IsFalse(e.HasUnsavedChanges(), "Undoing the newly performed operation should mean that we are back where we were when we saved (i.e. no changes)");
+        Assert.That( e.HasUnsavedChanges( ), Is.False "Undoing the newly performed operation should mean that we are back where we were when we saved (i.e. no changes)" );
     }
 
     [Test]
