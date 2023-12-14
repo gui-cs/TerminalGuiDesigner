@@ -12,6 +12,7 @@ namespace UnitTests;
 [NonParallelizable]
 internal class EditorTests : Tests
 {
+    //TODO: Add more tests to flesh this out and cover Editor better
     [Test]
     public void TestHasUnsavedChanges( )
     {
@@ -59,7 +60,7 @@ internal class EditorTests : Tests
     public void DesignerCsIsAllowed()
     {
         var type = new AllowedType("designer", ".Designer.cs");
-        ClassicAssert.IsTrue(type.IsAllowed("MyView.Designer.cs"));
+        Assert.That( type.IsAllowed( "MyView.Designer.cs" ) );
     }
 
     private class DummyOperation : Operation
