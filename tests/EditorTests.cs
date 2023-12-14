@@ -19,7 +19,7 @@ internal class EditorTests : Tests
         Editor e = new Editor( );
         Assume.That( e, Is.Not.Null.And.InstanceOf<Editor>( ) );
 
-        Assert.That( e.HasUnsavedChanges( ), Is.False, "With nothing open there should not be any unsaved changes" );
+        Assert.That( e.HasUnsavedChanges, Is.False, "With nothing open there should not be any unsaved changes" );
 
         DummyOperation dummyOperation1 = new( );
         Assume.That( dummyOperation1, Is.Not.Null.And.InstanceOf<DummyOperation>( ) );
@@ -32,7 +32,7 @@ internal class EditorTests : Tests
         Assert.That( ( ) => dummyOperation1Succeeded = OperationManager.Instance.Do( dummyOperation1 ), Throws.Nothing );
         Assert.That( dummyOperation1Succeeded );
 
-        Assert.That( e.HasUnsavedChanges( ), "We have performed an operation and not yet saved" );
+        Assert.That( e.HasUnsavedChanges, "We have performed an operation and not yet saved" );
 
         // fake a save
         IOperation? saveMock = null;
@@ -40,7 +40,7 @@ internal class EditorTests : Tests
         Assert.That( saveMock, Is.Not.Null.And.InstanceOf<DummyOperation>( ), "Expected DummyOperation to be known as the last performed" );
 
         e.LastSavedOperation = saveMock!.UniqueIdentifier;
-        Assert.That( e.HasUnsavedChanges( ), Is.False, "Now that we have saved there should be no unsaved changes" );
+        Assert.That( e.HasUnsavedChanges, Is.False, "Now that we have saved there should be no unsaved changes" );
 
         DummyOperation dummyOperation2 = new( );
         Assume.That( dummyOperation2, Is.Not.Null.And.InstanceOf<DummyOperation>( ) );
@@ -49,10 +49,10 @@ internal class EditorTests : Tests
         bool dummyOperation2Succeeded = false;
         Assert.That( ( ) => dummyOperation2Succeeded = OperationManager.Instance.Do( dummyOperation2 ), Throws.Nothing );
         Assert.That( dummyOperation2Succeeded );
-        Assert.That( e.HasUnsavedChanges( ), "When we perform an operation after saving we now have changes again" );
+        Assert.That( e.HasUnsavedChanges, "When we perform an operation after saving we now have changes again" );
 
         Assert.That( ( ) => OperationManager.Instance.Undo( ), Throws.Nothing );
-        Assert.That( e.HasUnsavedChanges( ), Is.False, "Undoing the newly performed operation should mean that we are back where we were when we saved (i.e. no changes)" );
+        Assert.That( e.HasUnsavedChanges, Is.False, "Undoing the newly performed operation should mean that we are back where we were when we saved (i.e. no changes)" );
     }
 
     [Test]

@@ -474,25 +474,28 @@ public class Editor : Toplevel
     }
 
     /// <summary>
-    /// True if there have been <see cref="Operation"/> tracked by <see cref="OperationManager"/>
+    /// Gets a value indicating whether there have been any <see cref="Operation"/>s tracked by the <see cref="OperationManager"/>
     /// since the last save.
     /// </summary>
-    /// <returns>True if unsaved changes.</returns>
-    public bool HasUnsavedChanges()
+    /// <value><see langword="true" /> if unsaved changes exist.</value>
+    public bool HasUnsavedChanges
     {
-        var savedOp = this.LastSavedOperation;
-        var currentOp = OperationManager.Instance.GetLastAppliedOperation()?.UniqueIdentifier;
-
-        // if we have nothing saved
-        if (savedOp == null)
+        get
         {
-            // then we must save if we have done something
-            return currentOp != null;
-        }
+            var savedOp = this.LastSavedOperation;
+            var currentOp = OperationManager.Instance.GetLastAppliedOperation( )?.UniqueIdentifier;
 
-        // we must save if the head of the operations stack doesn't match what we saved
-        // this lets us save, perform action, undo action and then still consider us saved
-        return savedOp != currentOp;
+            // if we have nothing saved
+            if ( savedOp == null )
+            {
+                // then we must save if we have done something
+                return currentOp != null;
+            }
+
+            // we must save if the head of the operations stack doesn't match what we saved
+            // this lets us save, perform action, undo action and then still consider us saved
+            return savedOp != currentOp;
+        }
     }
 
     private string GetHelpWithEmptyFormLoaded()
@@ -586,7 +589,7 @@ Ctrl+Q - Quit
             return;
         }
 
-        if (this.HasUnsavedChanges())
+        if (this.HasUnsavedChanges)
         {
             int answer = ChoicesDialog.Query("Unsaved Changes", $"You have unsaved changes to {this.viewBeingEdited.SourceCode.DesignerFile.Name}", "Save", "Don't Save", "Cancel");
 
