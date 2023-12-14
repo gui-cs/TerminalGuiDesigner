@@ -1,10 +1,14 @@
-﻿using System;
+using System;
 using Terminal.Gui;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.UI;
 
 namespace UnitTests;
 
+[TestFixture]
+[TestOf(typeof(Editor))]
+[Category("UI")]
+[NonParallelizable]
 internal class EditorTests : Tests
 {
     [Test]

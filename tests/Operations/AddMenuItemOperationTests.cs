@@ -5,7 +5,7 @@ namespace UnitTests.Operations;
 
 [TestFixture]
 [TestOf(typeof(AddMenuItemOperation))]
-[Category("UI Operations")]
+[Category("UI")]
 internal class AddMenuItemOperationTests : Tests
 {
     [Test]
