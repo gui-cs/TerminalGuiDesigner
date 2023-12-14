@@ -162,7 +162,9 @@ internal class DimExtensionsTests
 
     [Test]
     [Sequential]
-    public void ToCode_ReturnsExpectedString( [Values( DimType.Percent, DimType.Fill )] DimType dimType, [Values( "Dim.Percent(50f)", "Dim.Fill(5)" )] string expectedCode )
+    public void ToCode_ReturnsExpectedString(
+        [Values( DimType.Percent, DimType.Fill )] DimType dimType,
+        [Values( "Dim.Percent(50f)", "Dim.Fill(5)" )] string expectedCode )
     {
         Assert.That(
             dimType switch
@@ -177,11 +179,9 @@ internal class DimExtensionsTests
     [Test]
     [Sequential]
     public void ToCode_ReturnsExpectedString_WithOffset(
-        [Values( DimType.Percent, DimType.Percent, DimType.Fill, DimType.Fill )]
-        DimType dimType,
+        [Values( DimType.Percent, DimType.Percent, DimType.Fill, DimType.Fill )] DimType dimType,
         [Values( 2, -2, 2, -2 )] int offset,
-        [Values( "Dim.Percent(50f) + 2", "Dim.Percent(50f) - 2", "Dim.Fill(5) + 2", "Dim.Fill(5) - 2" )]
-        string expectedCode )
+        [Values( "Dim.Percent(50f) + 2", "Dim.Percent(50f) - 2", "Dim.Fill(5) + 2", "Dim.Fill(5) - 2" )] string expectedCode )
     {
         Assert.That(
             dimType switch
