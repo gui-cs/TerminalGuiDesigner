@@ -22,7 +22,7 @@ public class Editor : Toplevel
     private Design? viewBeingEdited;
     private bool enableDrag = true;
     private bool enableShowFocused = true;
-    private bool editting = false;
+    private bool editing = false;
 
     private ListView? rootCommandsListView;
     private bool menuOpen;
@@ -38,7 +38,7 @@ public class Editor : Toplevel
     /// operation at the time of the last save or null if no save or last save
     /// was before applying any operations.
     /// </summary>
-    private Guid? lastSavedOperation;
+    internal Guid? LastSavedOperation;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Editor"/> class.
@@ -131,7 +131,7 @@ public class Editor : Toplevel
 
         Application.KeyPressed += (s,k) =>
         {
-            if (this.editting)
+            if (this.editing)
             {
                 return;
             }
@@ -163,7 +163,7 @@ public class Editor : Toplevel
                 return;
             }
 
-            if (this.editting || this.viewBeingEdited == null)
+            if (this.editing || this.viewBeingEdited == null)
             {
                 return;
             }
@@ -261,7 +261,7 @@ public class Editor : Toplevel
             return false;
         }
 
-        if (this.editting)
+        if (this.editing)
         {
             return false;
         }
@@ -277,7 +277,7 @@ public class Editor : Toplevel
 
         try
         {
-            this.editting = true;
+            this.editing = true;
             SelectionManager.Instance.LockSelection = true;
 
             if (keyEvent.Key == this.keyMap.ShowContextMenu && !this.menuOpen)
@@ -467,7 +467,7 @@ public class Editor : Toplevel
         finally
         {
             SelectionManager.Instance.LockSelection = false;
-            this.editting = false;
+            this.editing = false;
         }
 
         return false;
@@ -480,7 +480,7 @@ public class Editor : Toplevel
     /// <returns>True if unsaved changes.</returns>
     public bool HasUnsavedChanges()
     {
-        var savedOp = this.lastSavedOperation;
+        var savedOp = this.LastSavedOperation;
         var currentOp = OperationManager.Instance.GetLastAppliedOperation()?.UniqueIdentifier;
 
         // if we have nothing saved
@@ -1100,7 +1100,7 @@ Ctrl+Q - Quit
         this.flashMessage = $"Saved {this.viewBeingEdited.SourceCode.DesignerFile.Name}";
         this.SetNeedsDisplay();
 
-        this.lastSavedOperation = OperationManager.Instance.GetLastAppliedOperation()?.UniqueIdentifier;
+        this.LastSavedOperation = OperationManager.Instance.GetLastAppliedOperation()?.UniqueIdentifier;
     }
 
     private void ShowAddViewWindow()
