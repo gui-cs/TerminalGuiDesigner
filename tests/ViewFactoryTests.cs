@@ -34,6 +34,8 @@ internal class ViewFactoryTests : Tests
     private static IEnumerable<Type> ViewFactory_SupportedViewTypes => ViewFactory.SupportedViewTypes;
 
     [Test]
+    [RequiresThread]
+    [NonParallelizable]
     public void CreateT_DoesNotThrowOnSupportedTypes( [ValueSource( nameof( ViewFactory_SupportedViewTypes ) )] Type supportedType )
     {
         // NUnit does not natively support generic type parameters in test methods, so this is easiest to do via reflection
@@ -55,6 +57,8 @@ internal class ViewFactoryTests : Tests
     }
 
     [Test]
+    [RequiresThread]
+    [NonParallelizable]
     public void CreateT_ReturnsValidViewOfExpectedType( [ValueSource( nameof( ViewFactory_SupportedViewTypes ) )] Type supportedType )
     {
         // NUnit does not natively support generic type parameters in test methods, so this is easiest to do via reflection
@@ -73,6 +77,8 @@ internal class ViewFactoryTests : Tests
     }
 
     [Test]
+    [RequiresThread]
+    [NonParallelizable]
     public void CreateT_ThrowsOnUnsupportedTypes( [ValueSource( nameof( CreateT_ThrowsOnUnsupportedTypes_Cases ) )] Type unsupportedType )
     {
         Type[] a = ViewFactory_SupportedViewTypes.ToArray( );
@@ -96,6 +102,8 @@ internal class ViewFactoryTests : Tests
 
     [Test]
     [Category( "Change Control" )]
+    [RequiresThread]
+    [NonParallelizable]
     public void DefaultMenuBarItems_IsExactlyAsExpected( )
     {
         Assert.Multiple( ( ) =>
@@ -123,6 +131,8 @@ internal class ViewFactoryTests : Tests
     [Test]
     [Description( "Checks that no new types have been added that aren't tested" )]
     [Category( "Change Control" )]
+    [RequiresThread]
+    [NonParallelizable]
     public void KnownUnsupportedTypes_DoesNotContainUnexpectedItems( [ValueSource( nameof( ViewFactory_KnownUnsupportedTypes ) )] Type typeDeclaredUnsupportedInViewFactory )
     {
         Assert.That( KnownUnsupportedTypes_ExpectedTypes, Contains.Item( typeDeclaredUnsupportedInViewFactory ) );
