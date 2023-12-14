@@ -12,7 +12,7 @@ namespace UnitTests;
 [TestFixture]
 [TestOf( typeof( CopyOperation ) )]
 [TestOf( typeof( PasteOperation ) )]
-[Category( "UI Operations" )]
+[Category( "UI" )]
 internal class CopyPasteTests : Tests
 {
     [Test]
