@@ -15,7 +15,8 @@ internal class EditorTests : Tests
     public void TestHasUnsavedChanges()
     {
         var e = new Editor();
-        
+        Assume.That( e, Is.Not.Null.And.InstanceOf<Editor>( ) );
+
         Assert.That( e.HasUnsavedChanges(), Is.False, "With nothing open there should not be any unsaved changes" );
 
         OperationManager.Instance.Do(new DummyOperation());
