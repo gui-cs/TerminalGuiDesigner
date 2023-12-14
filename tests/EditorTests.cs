@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using Terminal.Gui;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.UI;
@@ -14,7 +15,7 @@ internal class EditorTests : Tests
     [Test]
     public void TestHasUnsavedChanges()
     {
-        var e = new Editor();
+        Editor e = new Editor();
         Assume.That( e, Is.Not.Null.And.InstanceOf<Editor>( ) );
 
         Assert.That( e.HasUnsavedChanges(), Is.False, "With nothing open there should not be any unsaved changes" );
@@ -25,6 +26,7 @@ internal class EditorTests : Tests
 
         //TODO: This is an inconsistency in the execution model.
         //Unsaved change tracking is dependent on calling Do on the OperationManager and will not work if called on the operation itself.
+        //See https://github.com/dodexahedron/TerminalGuiDesigner/issues/34
         bool dummyOperation1Succeeded = false;
         Assert.That( ( ) => dummyOperation1Succeeded = OperationManager.Instance.Do(dummyOperation1), Throws.Nothing );
         Assert.That( dummyOperation1Succeeded );
@@ -32,8 +34,8 @@ internal class EditorTests : Tests
         Assert.That(e.HasUnsavedChanges(), "We have performed an operation and not yet saved");
 
         // fake a save
-        var lastOp = OperationManager.Instance.GetLastAppliedOperation() ?? throw new Exception("Expected DummyOperation to be known as the last performed");
-        var f = typeof(Editor).GetField("lastSavedOperation", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic) ?? throw new Exception("Missing field");
+        IOperation lastOp = OperationManager.Instance.GetLastAppliedOperation() ?? throw new Exception("Expected DummyOperation to be known as the last performed");
+        FieldInfo f = typeof(Editor).GetField("lastSavedOperation", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic) ?? throw new Exception("Missing field");
         f.SetValue(e, lastOp.UniqueIdentifier);
 
         Assert.That(e.HasUnsavedChanges(), Is.False, "Now that we have saved there should be no unsaved changes");
