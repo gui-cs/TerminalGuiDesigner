@@ -1,5 +1,4 @@
 using System;
-using NUnit.Framework.Constraints;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 
@@ -14,153 +13,183 @@ namespace UnitTests;
 internal class DimExtensionsTests
 {
     [Test]
-    public void IsAbsolute_ReturnsTrue_IfSized([Range(-15,15,5)] int size )
+    public void GetDimType_GivesExpectedOutOffset( [Values] DimType dimType, [Values( -2, 0, 2, 36 )] int inOffset )
     {
-        Assert.That( Dim.Sized( size ).IsAbsolute );
+        Assert.That(
+            dimType switch
+            {
+                DimType.Absolute => ( Dim.Sized( 24 ) + inOffset ).GetDimType( out _, out _, out int outOffset ) && Is.Zero.ApplyTo( outOffset ).IsSuccess,
+                DimType.Percent => ( Dim.Percent( 24 ) + inOffset ).GetDimType( out _, out _, out int outOffset ) && Is.EqualTo( inOffset ).ApplyTo( outOffset ).IsSuccess,
+                DimType.Fill => ( Dim.Fill( 24 ) + inOffset ).GetDimType( out _, out _, out int outOffset ) && Is.EqualTo( inOffset ).ApplyTo( outOffset ).IsSuccess,
+                _ => throw new ArgumentOutOfRangeException( nameof( dimType ), dimType, "Test needs case for newly-added enum member" )
+            } );
     }
 
     [Test]
-    public void IsFill_ReturnsFalse_IfSized( [Range( -10, 10, 5 )] int size )
+    public void GetDimType_GivesExpectedOutType( [Values] DimType dimType )
     {
-        Assert.That( Dim.Sized( size ).IsFill( ), Is.False );
+        Assert.That(
+            dimType switch
+            {
+                DimType.Absolute => Dim.Sized( 24 ).GetDimType( out DimType outDimType, out _, out _ ) && outDimType == dimType,
+                DimType.Percent => Dim.Percent( 24 ).GetDimType( out DimType outDimType, out _, out _ ) && outDimType == dimType,
+                DimType.Fill => Dim.Fill( 24 ).GetDimType( out DimType outDimType, out _, out _ ) && outDimType == dimType,
+                _ => throw new ArgumentOutOfRangeException( nameof( dimType ), dimType, "Test needs case for newly-added enum member" )
+            } );
     }
 
     [Test]
-    public void IsPercent_ReturnsExpectedValues_IfSized( [Range( -10, 10, 5 )] int size )
+    public void GetDimType_GivesExpectedOutValue( [Values] DimType dimType )
     {
-        Assert.Multiple( ( ) =>
-        {
-            Assert.That( Dim.Sized( size ).IsPercent( out float percent ), Is.False );
-            Assert.That( percent, Is.Zero );
-        } );
+        Assert.That(
+            dimType switch
+            {
+                DimType.Absolute => Dim.Sized( 24 ).GetDimType( out _, out float outValue, out _ ) && Is.EqualTo( 24f ).ApplyTo( outValue ).IsSuccess,
+                DimType.Percent => Dim.Percent( 24 ).GetDimType( out _, out float outValue, out _ ) && Is.EqualTo( 24f ).ApplyTo( outValue ).IsSuccess,
+                DimType.Fill => Dim.Fill( 24 ).GetDimType( out _, out float outValue, out _ ) && Is.EqualTo( 24f ).ApplyTo( outValue ).IsSuccess,
+                _ => throw new ArgumentOutOfRangeException( nameof( dimType ), dimType, "Test needs case for newly-added enum member" )
+            } );
     }
 
     [Test]
-    public void GetDimType_ReturnsExpectedValues_IfSized( [Range( -10, 10, 5 )] int size )
+    public void IsAbsolute_AsExpected_WhenCreatedAs( [Values] DimType dimType, [Values( 1, 6, 24, 60 )] int requestedSize )
     {
-        Assert.Multiple( ( ) =>
-        {
-            Assert.That( Dim.Sized( size ).GetDimType( out DimType type, out float val, out int offset ) );
-            Assert.That( type, Is.EqualTo( DimType.Absolute ) );
-            Assert.That( type, Is.Not.EqualTo( DimType.Percent ) );
-            Assert.That( type, Is.Not.EqualTo( DimType.Fill ) );
-            Assert.That( val, Is.EqualTo( size ) );
-            Assert.That( offset, Is.Zero );
-        } );
-    }
-
-
-
-    [Test]
-    public void TestIsPercent()
-    {
-        ClassicAssert.IsFalse(Dim.Percent(24).IsAbsolute());
-        ClassicAssert.IsTrue(Dim.Percent(24).IsPercent());
-        ClassicAssert.IsFalse(Dim.Percent(24).IsFill());
-
-        ClassicAssert.IsTrue(Dim.Percent(24).IsPercent(out var size));
-        ClassicAssert.AreEqual(24f, size);
-
-        ClassicAssert.IsTrue(Dim.Percent(24).GetDimType(out var type, out var val, out var offset));
-        ClassicAssert.AreEqual(DimType.Percent, type);
-        ClassicAssert.AreEqual(24, val);
-        ClassicAssert.AreEqual(0, offset);
+        Assert.That(
+            dimType switch
+            {
+                DimType.Absolute => Dim.Sized( requestedSize ).IsAbsolute( ),
+                DimType.Percent => !Dim.Percent( requestedSize ).IsAbsolute( ),
+                DimType.Fill => !Dim.Fill( requestedSize ).IsAbsolute( ),
+                _ => throw new ArgumentOutOfRangeException( nameof( dimType ), dimType, "Test needs case for newly-added enum member" )
+            } );
     }
 
     [Test]
-    public void TestIsFill()
+    public void IsAbsolute_With_OutPercent_AsExpected_WhenCreatedAs( [Values] DimType dimType, [Values( 1, 6, 24, 60 )] int requestedSize )
     {
-        ClassicAssert.IsFalse(Dim.Fill(2).IsAbsolute());
-        ClassicAssert.IsFalse(Dim.Fill(2).IsPercent());
-        ClassicAssert.IsTrue(Dim.Fill(2).IsFill());
-
-        ClassicAssert.IsTrue(Dim.Fill(5).IsFill(out var margin));
-        ClassicAssert.AreEqual(5, margin);
-
-        ClassicAssert.IsTrue(Dim.Fill(5).GetDimType(out var type, out var val, out var offset));
-        ClassicAssert.AreEqual(DimType.Fill, type);
-        ClassicAssert.AreEqual(5, val);
-        ClassicAssert.AreEqual(0, offset);
+        Assert.That(
+            dimType switch
+            {
+                // With an and, because either one being false is a fail
+                DimType.Absolute => Dim.Sized( requestedSize ).IsAbsolute( out int size ) && Is.EqualTo( requestedSize ).ApplyTo( size ).IsSuccess,
+                // With an or, because either one being true is a fail
+                DimType.Percent => !( Dim.Percent( requestedSize ).IsAbsolute( out int size ) || Is.EqualTo( requestedSize ).ApplyTo( size ).IsSuccess ),
+                // With an or, because either one being true is a fail
+                DimType.Fill => !( Dim.Fill( requestedSize ).IsAbsolute( out int size ) || Is.EqualTo( requestedSize ).ApplyTo( size ).IsSuccess ),
+                _ => throw new ArgumentOutOfRangeException( nameof( dimType ), dimType, "Test needs case for newly-added enum member" )
+            } );
     }
 
     [Test]
-    public void TestNullDim()
+    public void IsFill_AsExpected_WhenCreatedAs( [Values] DimType dimType, [Values( 1, 6, 24, 60 )] int requestedMargin )
     {
-        var v = new View();
-
-        ClassicAssert.IsNull(v.Width, "As of v1.7.0 a new View started getting null for its Width, if this assert fails it means that behaviour was reverted and this test can be altered or suppressed");
-
-        ClassicAssert.IsTrue(v.Width.IsAbsolute());
-        ClassicAssert.IsTrue(v.Width.IsAbsolute(out int n));
-        ClassicAssert.AreEqual(0, n);
-
-        ClassicAssert.IsFalse(v.Width.IsFill());
-        ClassicAssert.IsFalse(v.Width.IsPercent());
-        ClassicAssert.IsFalse(v.Width.IsCombine());
-
-        ClassicAssert.IsTrue(v.Width.GetDimType(out var type, out var val, out _));
-
-        ClassicAssert.AreEqual(DimType.Absolute, type);
-        ClassicAssert.AreEqual(0, val);
+        Assert.That(
+            dimType switch
+            {
+                DimType.Absolute => !Dim.Sized( requestedMargin ).IsFill( ),
+                DimType.Percent => !Dim.Percent( requestedMargin ).IsFill( ),
+                DimType.Fill => Dim.Fill( requestedMargin ).IsFill( ),
+                _ => throw new ArgumentOutOfRangeException( nameof( dimType ), dimType, "Test needs case for newly-added enum member" )
+            } );
     }
 
     [Test]
-    public void TestGetDimType_WithOffset()
+    public void IsFill_With_OutPercent_AsExpected_WhenCreatedAs( [Values] DimType dimType, [Values( 1, 6, 24, 60 )] int requestedMargin )
     {
-        var d = Dim.Percent(50) + 2;
-        ClassicAssert.True(d.GetDimType(out DimType type, out float value, out int offset), $"Could not figure out DimType for '{d}'");
-        ClassicAssert.AreEqual(DimType.Percent, type);
-        ClassicAssert.AreEqual(50, value);
-        ClassicAssert.AreEqual(2, offset);
-
-        d = Dim.Percent(50) - 2;
-        ClassicAssert.True(d.GetDimType(out type, out value, out offset), $"Could not figure out DimType for '{d}'");
-        ClassicAssert.AreEqual(DimType.Percent, type);
-        ClassicAssert.AreEqual(50, value);
-        ClassicAssert.AreEqual(-2, offset);
-
-        d = Dim.Fill(5) + 2;
-        ClassicAssert.True(d.GetDimType(out type, out value, out offset), $"Could not figure out DimType for '{d}'");
-        ClassicAssert.AreEqual(DimType.Fill, type);
-        ClassicAssert.AreEqual(5, value);
-        ClassicAssert.AreEqual(2, offset);
-
-        d = Dim.Fill(5) - 2;
-        ClassicAssert.True(d.GetDimType(out type, out value, out offset), $"Could not figure out DimType for '{d}'");
-        ClassicAssert.AreEqual(DimType.Fill, type);
-        ClassicAssert.AreEqual(5, value);
-        ClassicAssert.AreEqual(-2, offset);
+        Assert.That(
+            dimType switch
+            {
+                // With an or, because either one being true is a fail
+                DimType.Absolute => !( Dim.Sized( requestedMargin ).IsFill( out int margin ) || Is.EqualTo( requestedMargin ).ApplyTo( margin ).IsSuccess ),
+                // With an or, because either one being true is a fail
+                DimType.Percent => !( Dim.Percent( requestedMargin ).IsFill( out int margin ) || Is.EqualTo( requestedMargin ).ApplyTo( margin ).IsSuccess ),
+                // With an and, because either one being false is a fail
+                DimType.Fill => Dim.Fill( requestedMargin ).IsFill( out int margin ) && Is.EqualTo( requestedMargin ).ApplyTo( margin ).IsSuccess,
+                _ => throw new ArgumentOutOfRangeException( nameof( dimType ), dimType, "Test needs case for newly-added enum member" )
+            } );
     }
 
     [Test]
-    public void TestGetCode_WithNoOffset()
+    public void IsPercent_AsExpected_WhenCreatedAs( [Values] DimType dimType, [Values( 1, 6, 24, 60 )] int requestedSize )
     {
-        var d = Dim.Percent(50);
-        ClassicAssert.AreEqual("Dim.Percent(50f)", d.ToCode());
-
-        d = Dim.Percent(50);
-        ClassicAssert.AreEqual("Dim.Percent(50f)", d.ToCode());
-
-        d = Dim.Fill(5);
-        ClassicAssert.AreEqual("Dim.Fill(5)", d.ToCode());
-
-        d = Dim.Fill(5);
-        ClassicAssert.AreEqual("Dim.Fill(5)", d.ToCode());
+        Assert.That(
+            dimType switch
+            {
+                DimType.Absolute => !Dim.Sized( requestedSize ).IsPercent( ),
+                DimType.Percent => Dim.Percent( requestedSize ).IsPercent( ),
+                DimType.Fill => !Dim.Fill( requestedSize ).IsPercent( ),
+                _ => throw new ArgumentOutOfRangeException( nameof( dimType ), dimType, "Test needs case for newly-added enum member" )
+            } );
     }
 
     [Test]
-    public void TestGetCode_WithOffset()
+    public void IsPercent_With_OutPercent_AsExpected_WhenCreatedAs( [Values] DimType dimType, [Values( 1, 6, 24, 60 )] int requestedSize )
     {
-        var d = Dim.Percent(50) + 2;
-        ClassicAssert.AreEqual("Dim.Percent(50f) + 2", d.ToCode());
+        Assert.That(
+            dimType switch
+            {
+                // With an or, because either one being true is a fail
+                DimType.Absolute => !( Dim.Sized( requestedSize ).IsPercent( out float percent ) || Is.EqualTo( requestedSize ).ApplyTo( percent ).IsSuccess ),
+                // With an and, because either one being false is a fail
+                DimType.Percent => Dim.Percent( requestedSize ).IsPercent( out float percent ) && Is.EqualTo( requestedSize ).ApplyTo( percent ).IsSuccess,
+                // With an or, because either one being true is a fail
+                DimType.Fill => !( Dim.Fill( requestedSize ).IsPercent( out float percent ) || Is.EqualTo( requestedSize ).ApplyTo( percent ).IsSuccess ),
+                _ => throw new ArgumentOutOfRangeException( nameof( dimType ), dimType, "Test needs case for newly-added enum member" )
+            } );
+    }
 
-        d = Dim.Percent(50) - 2;
-        ClassicAssert.AreEqual("Dim.Percent(50f) - 2", d.ToCode());
+    [Test]
+    [Category( "Change Control" )]
+    public void NullDim_ActsLikeAbsoluteZero( )
+    {
+        var v = new View( );
 
-        d = Dim.Fill(5) + 2;
-        ClassicAssert.AreEqual("Dim.Fill(5) + 2", d.ToCode());
+        Assert.That( v.Width, Is.Null, "As of v1.7.0 a new View started getting null for its Width, if this assert fails it means that behaviour was reverted and this test can be altered or suppressed" );
 
-        d = Dim.Fill(5) - 2;
-        ClassicAssert.AreEqual("Dim.Fill(5) - 2", d.ToCode());
+        Assert.That( v.Width.IsAbsolute( ) );
+        Assert.That( v.Width.IsAbsolute( out int n ) );
+        Assert.That( n, Is.Zero );
+
+        Assert.That( v.Width.IsFill( ), Is.False );
+        Assert.That( v.Width.IsPercent( ), Is.False );
+        Assert.That( v.Width.IsCombine( ), Is.False );
+
+        Assert.That( v.Width.GetDimType( out var type, out var val, out _ ) );
+
+        Assert.That( type, Is.EqualTo( DimType.Absolute ) );
+        Assert.That( val, Is.Zero );
+    }
+
+    [Test]
+    [Sequential]
+    public void ToCode_ReturnsExpectedString( [Values( DimType.Percent, DimType.Fill )] DimType dimType, [Values( "Dim.Percent(50f)", "Dim.Fill(5)" )] string expectedCode )
+    {
+        Assert.That(
+            dimType switch
+            {
+                DimType.Percent => Dim.Percent( 50 ).ToCode( ),
+                DimType.Fill => Dim.Fill( 5 ).ToCode( )
+            },
+            Is.EqualTo( expectedCode )
+        );
+    }
+
+    [Test]
+    [Sequential]
+    public void ToCode_ReturnsExpectedString_WithOffset(
+        [Values( DimType.Percent, DimType.Percent, DimType.Fill, DimType.Fill )]
+        DimType dimType,
+        [Values( 2, -2, 2, -2 )] int offset,
+        [Values( "Dim.Percent(50f) + 2", "Dim.Percent(50f) - 2", "Dim.Fill(5) + 2", "Dim.Fill(5) - 2" )]
+        string expectedCode )
+    {
+        Assert.That(
+            dimType switch
+            {
+                DimType.Percent => ( Dim.Percent( 50 ) + offset ).ToCode( ),
+                DimType.Fill => ( Dim.Fill( 5 ) + offset ).ToCode( )
+            },
+            Is.EqualTo( expectedCode )
+        );
     }
 }
