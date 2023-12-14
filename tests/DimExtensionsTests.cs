@@ -1,12 +1,16 @@
+using System;
+using NUnit.Framework.Constraints;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 
 namespace UnitTests;
 
 [TestFixture]
-[TestOf(typeof(DimExtensions))]
-[Category("Core")]
+[TestOf( typeof( DimExtensions ) )]
+[Category( "Core" )]
+[Category( "Terminal.Gui Extensions" )]
 [Parallelizable( ParallelScope.Children )]
+[DefaultFloatingPointTolerance( 0.00001f )]
 internal class DimExtensionsTests
 {
     [Test]
