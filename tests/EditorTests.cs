@@ -34,9 +34,12 @@ internal class EditorTests : Tests
         Assert.That(e.HasUnsavedChanges(), "We have performed an operation and not yet saved");
 
         // fake a save
-        IOperation lastOp = OperationManager.Instance.GetLastAppliedOperation() ?? throw new Exception("Expected DummyOperation to be known as the last performed");
+        IOperation? saveMock = null;
+        Assert.That( ( ) => saveMock = OperationManager.Instance.GetLastAppliedOperation( ), Throws.Nothing );
+        Assert.That( saveMock, Is.Not.Null, "Expected DummyOperation to be known as the last performed" );
+        
         FieldInfo f = typeof(Editor).GetField("lastSavedOperation", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic) ?? throw new Exception("Missing field");
-        f.SetValue(e, lastOp.UniqueIdentifier);
+        f.SetValue(e, saveMock.UniqueIdentifier);
 
         Assert.That(e.HasUnsavedChanges(), Is.False, "Now that we have saved there should be no unsaved changes");
 
