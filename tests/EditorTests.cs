@@ -19,9 +19,17 @@ internal class EditorTests : Tests
 
         Assert.That( e.HasUnsavedChanges(), Is.False, "With nothing open there should not be any unsaved changes" );
 
-        OperationManager.Instance.Do(new DummyOperation());
+        DummyOperation dummyOperation1 = new ();
+        Assume.That( dummyOperation1, Is.Not.Null.And.InstanceOf<DummyOperation>( ) );
+        Assume.That( dummyOperation1.IsImpossible, Is.False );
 
-        ClassicAssert.IsTrue(e.HasUnsavedChanges(), "We have performed an operation and not yet saved");
+        //TODO: This is an inconsistency in the execution model.
+        //Unsaved change tracking is dependent on calling Do on the OperationManager and will not work if called on the operation itself.
+        bool dummyOperation1Succeeded = false;
+        Assert.That( ( ) => dummyOperation1Succeeded = OperationManager.Instance.Do(dummyOperation1), Throws.Nothing );
+        Assert.That( dummyOperation1Succeeded );
+
+        Assert.That(e.HasUnsavedChanges(), "We have performed an operation and not yet saved");
 
         // fake a save
         var lastOp = OperationManager.Instance.GetLastAppliedOperation() ?? throw new Exception("Expected DummyOperation to be known as the last performed");
@@ -34,7 +42,7 @@ internal class EditorTests : Tests
         Assert.That(e.HasUnsavedChanges(), "When we perform an operation after saving we now have changes again");
 
         OperationManager.Instance.Undo();
-        Assert.That( e.HasUnsavedChanges( ), Is.False "Undoing the newly performed operation should mean that we are back where we were when we saved (i.e. no changes)" );
+        Assert.That( e.HasUnsavedChanges( ), Is.False, "Undoing the newly performed operation should mean that we are back where we were when we saved (i.e. no changes)" );
     }
 
     [Test]
@@ -44,8 +52,8 @@ internal class EditorTests : Tests
         ClassicAssert.IsTrue(type.IsAllowed("MyView.Designer.cs"));
     }
 
-    class DummyOperation : Operation
-    {
+    private class DummyOperation : Operation
+    { 
         protected override bool DoImpl()
         {
             return true;
