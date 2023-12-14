@@ -55,44 +55,21 @@ public static class ObjectExtensions
     /// but not absolute (i.e. cannot be converted to a value type - int).</exception>
     public static object? ToPrimitive(this object? value)
     {
-        if (value == null)
+        return value switch
         {
-            return null;
-        }
-
-        if (value is Pos p)
-        {
+            null => null,
             // Value is a position e.g. X=2
             // Pos can be many different subclasses all of which are public
             // lets deal with only PosAbsolute for now
-            if (p.IsAbsolute(out int n))
-            {
-                return n;
-            }
-            else
-            {
-                throw new ArgumentException("Only absolute positions are supported at the moment");
-            }
-        }
-        else if (value is Dim d)
-        {
+            Pos p when p.IsAbsolute( out int n ) => n,
+            Pos => throw new ArgumentException( "Only absolute positions are supported at the moment" ),
             // Value is a position e.g. X=2
             // Dim can be many different subclasses all of which are public
             // lets deal with only DimAbsolute for now
-            if (d.IsAbsolute(out int n))
-            {
-                return n;
-            }
-            else
-            {
-                throw new ArgumentException("Only absolute dimensions are convertible to primitives");
-            }
-        }
-        else
-        {
-            // assume it is already a primitive
-            return value;
-        }
+            Dim d when d.IsAbsolute( out int n ) => n,
+            Dim => throw new ArgumentException( "Only absolute dimensions are convertible to primitives" ),
+            _ => throw new ArgumentException( $"{value.GetType( ).Name} is not supported", nameof( value ) )
+        };
     }
 
     private static T CastTo<T>(this object o) => (T)o;
