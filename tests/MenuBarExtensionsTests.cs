@@ -30,10 +30,10 @@ internal class MenuBarExtensionsTests : Tests
                          "Expected Terminal.Gui MenuBar to have 1 unit of whitespace before any MenuBarItems (e.g. File) get rendered. This may change in future, if so then update this test." );
             
             // Clicks in the "test" region
-            ClassicAssert.AreEqual(v.Menus[0], v.ScreenToMenuBarItem(1));
-            ClassicAssert.AreEqual(v.Menus[0], v.ScreenToMenuBarItem(2));
-            ClassicAssert.AreEqual(v.Menus[0], v.ScreenToMenuBarItem(3));
-            ClassicAssert.AreEqual(v.Menus[0], v.ScreenToMenuBarItem(4));
+            Assert.That( v.ScreenToMenuBarItem( 1 ), Is.SameAs( v.Menus[ 0 ] ) );
+            Assert.That( v.ScreenToMenuBarItem( 2 ), Is.SameAs( v.Menus[ 0 ] ) );
+            Assert.That( v.ScreenToMenuBarItem( 3 ), Is.SameAs( v.Menus[ 0 ] ) );
+            Assert.That( v.ScreenToMenuBarItem( 4 ), Is.SameAs( v.Menus[ 0 ] ) );
 
             // Clicks in the whitespace after "test" but before any other menus (of which there are none in this test btw)
             ClassicAssert.AreEqual(v.Menus[0], v.ScreenToMenuBarItem(5));
