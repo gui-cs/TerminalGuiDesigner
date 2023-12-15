@@ -14,11 +14,15 @@ internal class MenuBarExtensionsTests : Tests
     [Test]
     public void TestScreenToMenuBarItem_AtOrigin_OneMenuItem()
     {
-        RoundTrip<View, MenuBar>((d, v) => 
+        RoundTrip<View, MenuBar>((d, v) =>
         {
+            Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
+            Assume.That( v, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
+            
             // Expect a MenuBar to be rendered that is 
             // ".test.." (with 1 unit of preceding whitespace and 2 after)
             // Note that this test is brittle and subject to changes in Terminal.Gui e.g. pushing menus closer together.
+            Assume.That( v.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
             v.Menus[0].Title = "test";
 
             ClassicAssert.IsNull(v.ScreenToMenuBarItem(0),
