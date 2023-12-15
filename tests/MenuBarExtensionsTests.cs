@@ -12,35 +12,58 @@ namespace UnitTests;
 internal class MenuBarExtensionsTests : Tests
 {
     [Test]
-    public void TestScreenToMenuBarItem_AtOrigin_OneMenuItem()
+    public void ScreenToMenuBarItem_AtOrigin_OneMenuItem_ReturnsNullBeforeAndAfterItems( [Values( 0, 7 )] int xCoordinate )
     {
-        RoundTrip<View, MenuBar>((d, v) =>
+        RoundTrip<View, MenuBar>( ( d, v ) =>
         {
             Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
             Assume.That( v, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
-            
+
             // Expect a MenuBar to be rendered that is 
             // ".test.." (with 1 unit of preceding whitespace and 2 after)
             // Note that this test is brittle and subject to changes in Terminal.Gui e.g. pushing menus closer together.
             Assume.That( v.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
-            v.Menus[0].Title = "test";
+            v.Menus[ 0 ].Title = "test";
 
-            Assert.That( v.ScreenToMenuBarItem( 0 ),
-                         Is.Null,
-                         "Expected Terminal.Gui MenuBar to have 1 unit of whitespace before any MenuBarItems (e.g. File) get rendered. This may change in future, if so then update this test." );
-            
-            // Clicks in the "test" region
-            Assert.That( v.ScreenToMenuBarItem( 1 ), Is.SameAs( v.Menus[ 0 ] ) );
-            Assert.That( v.ScreenToMenuBarItem( 2 ), Is.SameAs( v.Menus[ 0 ] ) );
-            Assert.That( v.ScreenToMenuBarItem( 3 ), Is.SameAs( v.Menus[ 0 ] ) );
-            Assert.That( v.ScreenToMenuBarItem( 4 ), Is.SameAs( v.Menus[ 0 ] ) );
+            Assert.That( v.ScreenToMenuBarItem( xCoordinate ), Is.Null,
+                         "Expected Terminal.Gui MenuBar to have 1 unit of whitespace before and 2 after any MenuBarItems (e.g. File) get rendered. This may change in future, if so then update this test." );
+        }, out _ );
+    }
 
-            // Clicks in the whitespace after "test" but before any other menus (of which there are none in this test btw)
-            ClassicAssert.AreEqual(v.Menus[0], v.ScreenToMenuBarItem(5));
-            ClassicAssert.AreEqual(v.Menus[0], v.ScreenToMenuBarItem(6));
+    [Test]
+    public void ScreenToMenuBarItem_AtOrigin_OneMenuItem_ReturnsExpectedMenuBarItem_IfItemClicked( [Range( 1, 4 )] int xCoordinate )
+    {
+        RoundTrip<View, MenuBar>( ( d, v ) =>
+        {
+            Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
+            Assume.That( v, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
 
-            ClassicAssert.IsNull(v.ScreenToMenuBarItem(7), "Expected a click here to be off the end of the Menu 'test' + 2 whitespace characters");
-        }, out _);
+            // Expect a MenuBar to be rendered that is 
+            // ".test.." (with 1 unit of preceding whitespace and 2 after)
+            // Note that this test is brittle and subject to changes in Terminal.Gui e.g. pushing menus closer together.
+            Assume.That( v.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
+            v.Menus[ 0 ].Title = "test";
+
+            Assert.That( v.ScreenToMenuBarItem( xCoordinate ), Is.SameAs( v.Menus[ 0 ] ) );
+        }, out _ );
+    }
+
+    [Test]
+    public void ScreenToMenuBarItem_AtOrigin_OneMenuItem_ReturnsExpectedMenuBarItem_IfClickedWithin2AfterItem( [Values( 5, 6 )] int xCoordinate )
+    {
+        RoundTrip<View, MenuBar>( ( d, v ) =>
+        {
+            Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
+            Assume.That( v, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
+
+            // Expect a MenuBar to be rendered that is 
+            // ".test.." (with 1 unit of preceding whitespace and 2 after)
+            // Note that this test is brittle and subject to changes in Terminal.Gui e.g. pushing menus closer together.
+            Assume.That( v.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
+            v.Menus[ 0 ].Title = "test";
+
+            Assert.That( v.ScreenToMenuBarItem( xCoordinate ), Is.SameAs( v.Menus[ 0 ] ) );
+        }, out _ );
     }
 
     [Test]
