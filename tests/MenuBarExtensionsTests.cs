@@ -4,6 +4,11 @@ using TerminalGuiDesigner.Operations.MenuOperations;
 
 namespace UnitTests;
 
+[TestFixture]
+[TestOf( typeof( MenuBarExtensions ) )]
+[Category( "Terminal.Gui Extensions" )]
+[Category( "UI" )]
+[NonParallelizable]
 internal class MenuBarExtensionsTests : Tests
 {
     [Test]
