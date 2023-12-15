@@ -81,8 +81,6 @@ internal class ViewFactoryTests : Tests
     [NonParallelizable]
     public void CreateT_ThrowsOnUnsupportedTypes( [ValueSource( nameof( CreateT_ThrowsOnUnsupportedTypes_Cases ) )] Type unsupportedType )
     {
-        Type[] a = ViewFactory_SupportedViewTypes.ToArray( );
-
         // NUnit does not natively support generic type parameters in test methods, so this is easiest to do via reflection
         MethodInfo viewFactoryCreateTGeneric = typeof( ViewFactory ).GetMethods( ).Single( m => m is { IsGenericMethod: true, IsPublic: true, IsStatic: true } );
 
