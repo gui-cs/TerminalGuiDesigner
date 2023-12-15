@@ -59,8 +59,6 @@ public static class ViewFactory
                 .Where( filteredType => filteredType.IsSubclassOf( ViewType ) )
                 .Where( viewDescendantType => !KnownUnsupportedTypes.Any( viewDescendantType.IsAssignableTo ) );
 
-    private static bool IsSupportedType( this Type t ) => SupportedViewTypes.Contains( t );
-
     /// <summary>
     /// Creates a new instance of a <see cref="View"/> of Type <typeparamref name="T"/> with
     /// size/placeholder values that make it easy to see and design in the editor.
@@ -80,7 +78,7 @@ public static class ViewFactory
     public static T Create<T>(int? width = null, int? height = null, string? text = null )
         where T : View, new( )
     {
-        if ( !IsSupportedType( typeof( T ) ) )
+        if ( !SupportedViewTypes.Contains( typeof( T ) ) )
         {
             throw new NotSupportedException( $"Requested type {typeof( T ).Name} is not supported" );
         }
