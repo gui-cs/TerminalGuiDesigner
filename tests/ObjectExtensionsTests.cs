@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 
@@ -8,6 +9,7 @@ namespace UnitTests;
 [TestOf( typeof( ObjectExtensions ) )]
 [Category( "Core" )]
 [Parallelizable( ParallelScope.All )]
+[Order( 1 )]
 internal class ObjectExtensionsTests
 {
     [Test]
@@ -23,6 +25,12 @@ internal class ObjectExtensionsTests
     }
 
     [Test]
+    public void ToCodePrimitiveExpression_DoesNotThrowForUnmanagedPrimitives( [ValueSource( nameof( Get_ToCodePrimitiveExpression_DoesNotThrowForUnmanagedPrimitives_Cases ) )] object testValue )
+    {
+        Assert.That( testValue.ToCodePrimitiveExpression, Throws.Nothing );
+    }
+
+    [Test]
     public void ToCodePrimitiveExpression_DoesNotThrowOnSupportedAbsoluteTypes( [ValueSource( nameof( Get_ToCodePrimitiveExpression_DoesNotThrowOnSupportedAbsoluteTypes_Cases ) )] object? testValue )
     {
         Assert.That( testValue.ToCodePrimitiveExpression, Throws.Nothing );
@@ -32,6 +40,17 @@ internal class ObjectExtensionsTests
     public void ToCodePrimitiveExpression_ThrowsOnUnsupportedNonAbsoluteTypes( [ValueSource( nameof( Get_ToCodePrimitiveExpression_ThrowsOnUnsupportedNonAbsoluteTypes_Cases ) )] object? testValue )
     {
         Assert.That( testValue.ToCodePrimitiveExpression, Throws.ArgumentException );
+    }
+
+    private static IEnumerable<object> Get_ToCodePrimitiveExpression_DoesNotThrowForUnmanagedPrimitives_Cases( )
+    {
+        yield return 1;
+        yield return 1L;
+        yield return 1F;
+        yield return 1D;
+        yield return 1M;
+        yield return new List<string>( );
+        yield return DateTimeOffset.UnixEpoch;
     }
 
     private static IEnumerable<object?> Get_ToCodePrimitiveExpression_DoesNotThrowOnSupportedAbsoluteTypes_Cases( )
