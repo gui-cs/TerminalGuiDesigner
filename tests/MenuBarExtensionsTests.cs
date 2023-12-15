@@ -72,6 +72,7 @@ internal class MenuBarExtensionsTests : Tests
     }
 
     [Test]
+    [Order( 3 )]
     public void ScreenToMenuBarItem_OneMenuItem_ReturnsExpectedMenuBarItem_IfClickedWithin2AfterItem(
         [Values( 5, 6 )] int clickXCoordinate,
         [Values( 0, 5 )] int xOffset,
@@ -96,6 +97,7 @@ internal class MenuBarExtensionsTests : Tests
     }
 
     [Test]
+    [Order( 2 )]
     public void ScreenToMenuBarItem_OneMenuItem_ReturnsExpectedMenuBarItem_IfItemClicked(
         [Range( 1, 4 )] int clickXCoordinate,
         [Values( 0, 5 )] int xOffset,
@@ -120,6 +122,7 @@ internal class MenuBarExtensionsTests : Tests
     }
 
     [Test]
+    [Order( 1 )]
     public void ScreenToMenuBarItem_OneMenuItem_ReturnsNull_IfClickedBeforeAndAfterItems(
         [Values( 0, 7 )] int clickXCoordinate,
         [Values( 0, 5 )] int xOffset,
