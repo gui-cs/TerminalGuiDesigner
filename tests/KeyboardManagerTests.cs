@@ -5,6 +5,9 @@ using TerminalGuiDesigner.UI;
 
 namespace UnitTests;
 
+[TestFixture]
+[TestOf( typeof( KeyboardManager ) )]
+[Category( "UI" )]
 internal class KeyboardManagerTests : Tests
 {
     [Test]
