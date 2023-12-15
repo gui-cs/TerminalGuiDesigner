@@ -12,20 +12,23 @@ namespace UnitTests;
 [Category( "Core" )]
 internal class ViewFactoryTests : Tests
 {
-    private static readonly Type[] KnownUnsupportedTypes_ExpectedTypes =
+    private static Type[] KnownUnsupportedTypes_ExpectedTypes( )
     {
-        typeof( Toplevel ),
-        typeof( Dialog ),
-        typeof( FileDialog ),
-        typeof( SaveDialog ),
-        typeof( OpenDialog ),
-        typeof( ScrollBarView ),
-        typeof( TreeView<> ),
-        typeof( Slider<> ),
-        typeof( Frame ),
-        typeof( Wizard ),
-        typeof( WizardStep )
-    };
+        return new[]
+        {
+            typeof( Toplevel ),
+            typeof( Dialog ),
+            typeof( FileDialog ),
+            typeof( SaveDialog ),
+            typeof( OpenDialog ),
+            typeof( ScrollBarView ),
+            typeof( TreeView<> ),
+            typeof( Slider<> ),
+            typeof( Frame ),
+            typeof( Wizard ),
+            typeof( WizardStep )
+        };
+    }
 
     private static MenuBarItem[] ViewFactory_DefaultMenuBarItems => ViewFactory.DefaultMenuBarItems;
 

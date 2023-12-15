@@ -11,6 +11,7 @@ using TerminalGuiDesigner.UI;
 
 namespace UnitTests;
 
+[RequiresThread]
 internal class Tests
 {
     [ThreadStatic]
