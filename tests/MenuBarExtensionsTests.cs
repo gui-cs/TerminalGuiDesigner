@@ -12,7 +12,7 @@ namespace UnitTests;
 internal class MenuBarExtensionsTests : Tests
 {
     [Test]
-    public void ScreenToMenuBarItem_AtOrigin_OneMenuItem_ReturnsNullBeforeAndAfterItems( [Values( 0, 7 )] int xCoordinate )
+    public void ScreenToMenuBarItem_AtOrigin_OneMenuItem_ReturnsNull_IfClickedBeforeAndAfterItems( [Values( 0, 7 )] int xCoordinate )
     {
         RoundTrip<View, MenuBar>( ( d, v ) =>
         {
@@ -67,48 +67,51 @@ internal class MenuBarExtensionsTests : Tests
     }
 
     [Test]
-    public void TestScreenToMenuBarItem_AtOrigin_MultipleMenuItem()
+    public void ScreenToMenuBarItem_AtOrigin_MultipleMenuItems_ReturnsNull_IfClickedBeforeAndAfterItems( [Values( 0, 19 )] int xCoordinate )
     {
-        RoundTrip<View, MenuBar>((d, v) =>
+        RoundTrip<View, MenuBar>( ( d, v ) =>
         {
+            Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
+            Assume.That( v, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
+
             // Expect a MenuBar to be rendered that is 
             // ".test..next..more.." (with 1 unit of preceding whitespace and 2 after each)
             // Note that this test is brittle and subject to changes in Terminal.Gui e.g. pushing menus closer together.
-            v.Menus[0].Title = "test";
+            v.Menus[ 0 ].Title = "test";
 
-            new AddMenuOperation(d, "next").Do();
-            new AddMenuOperation(d, "more").Do();
+            Assume.That( ( ) => new AddMenuOperation( d, "next" ).Do( ), Throws.Nothing );
+            Assume.That( ( ) => new AddMenuOperation( d, "more" ).Do( ), Throws.Nothing );
 
-            ClassicAssert.IsNull(v.ScreenToMenuBarItem(0));
+            Assume.That( v.Menus, Has.Exactly( 3 ).InstanceOf<MenuBarItem>( ) );
+
+            Assert.That( v.ScreenToMenuBarItem( xCoordinate ), Is.Null );
+        }, out _ );
+    }
+
+    [Test]
+    [NonParallelizable]
+    public void ScreenToMenuBarItem_AtOrigin_MultipleMenuItems_ReturnsExpectedItem_IfItemsClicked(
+        [Range( 1, 18 )] int xCoordinate,
+        [Values( 6 )] int expectedItemWidth )
+    {
+        RoundTrip<View, MenuBar>( ( d, v ) =>
+        {
+            Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
+            Assume.That( v, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
+
+            // Expect a MenuBar to be rendered that is 
+            // ".test..next..more.." (with 1 unit of preceding whitespace and 2 after each)
+            // Note that this test is brittle and subject to changes in Terminal.Gui e.g. pushing menus closer together.
+            v.Menus[ 0 ].Title = "test";
+
+            Assume.That( ( ) => new AddMenuOperation( d, "next" ).Do( ), Throws.Nothing );
+            Assume.That( ( ) => new AddMenuOperation( d, "more" ).Do( ), Throws.Nothing );
+
+            Assume.That( v.Menus, Has.Exactly( 3 ).InstanceOf<MenuBarItem>( ) );
 
             // Clicks in the "test" region
-            ClassicAssert.AreEqual(v.Menus[0], v.ScreenToMenuBarItem(1));
-            ClassicAssert.AreEqual(v.Menus[0], v.ScreenToMenuBarItem(2));
-            ClassicAssert.AreEqual(v.Menus[0], v.ScreenToMenuBarItem(3));
-            ClassicAssert.AreEqual(v.Menus[0], v.ScreenToMenuBarItem(4));
-            ClassicAssert.AreEqual(v.Menus[0], v.ScreenToMenuBarItem(5));
-            ClassicAssert.AreEqual(v.Menus[0], v.ScreenToMenuBarItem(6));
-
-            // Clicks in the "next" region
-            ClassicAssert.AreEqual(v.Menus[1], v.ScreenToMenuBarItem(7));
-            ClassicAssert.AreEqual(v.Menus[1], v.ScreenToMenuBarItem(8));
-            ClassicAssert.AreEqual(v.Menus[1], v.ScreenToMenuBarItem(9));
-            ClassicAssert.AreEqual(v.Menus[1], v.ScreenToMenuBarItem(10));
-            ClassicAssert.AreEqual(v.Menus[1], v.ScreenToMenuBarItem(11));
-            ClassicAssert.AreEqual(v.Menus[1], v.ScreenToMenuBarItem(12));
-
-
-            // Clicks in the "more" region
-            ClassicAssert.AreEqual(v.Menus[2], v.ScreenToMenuBarItem(13));
-            ClassicAssert.AreEqual(v.Menus[2], v.ScreenToMenuBarItem(14));
-            ClassicAssert.AreEqual(v.Menus[2], v.ScreenToMenuBarItem(15));
-            ClassicAssert.AreEqual(v.Menus[2], v.ScreenToMenuBarItem(16));
-            ClassicAssert.AreEqual(v.Menus[2], v.ScreenToMenuBarItem(17));
-            ClassicAssert.AreEqual(v.Menus[2], v.ScreenToMenuBarItem(18));
-
-            // clicks off the end of the right
-            ClassicAssert.IsNull(v.ScreenToMenuBarItem(19));
-        }, out _);
+            Assert.That( v.ScreenToMenuBarItem( xCoordinate ), Is.SameAs( v.Menus[ ( xCoordinate - 1 ) / expectedItemWidth ] ) );
+        }, out _ );
     }
 
     [Test]
