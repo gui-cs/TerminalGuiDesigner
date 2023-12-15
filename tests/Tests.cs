@@ -13,12 +13,14 @@ namespace UnitTests;
 
 internal class Tests
 {
-    private static bool _init;
+    [ThreadStatic]
+    private static bool? _init;
 
     [SetUp]
     public virtual void SetUp()
     {
-        if (_init)
+        _init ??= false;
+        if (_init.Value)
         {
             throw new InvalidOperationException("After did not run.");
         }
