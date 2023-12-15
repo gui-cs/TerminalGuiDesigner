@@ -13,7 +13,8 @@ namespace TerminalGuiDesigner;
 /// </summary>
 public static class ViewFactory
 {
-    internal static readonly Type[] KnownUnsupportedTypes = {
+    internal static Type[] KnownUnsupportedTypes => new[]
+    {
         typeof( Toplevel ),
         typeof( Dialog ),
         typeof( FileDialog ),
