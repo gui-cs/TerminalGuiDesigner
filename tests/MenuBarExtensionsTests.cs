@@ -25,8 +25,9 @@ internal class MenuBarExtensionsTests : Tests
             Assume.That( v.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
             v.Menus[0].Title = "test";
 
-            ClassicAssert.IsNull(v.ScreenToMenuBarItem(0),
-                "Expected Terminal.Gui MenuBar to have 1 unit of whitespace before any MenuBarItems (e.g. File) get rendered. This may change in future, if so then update this test.");
+            Assert.That( v.ScreenToMenuBarItem( 0 ),
+                         Is.Null,
+                         "Expected Terminal.Gui MenuBar to have 1 unit of whitespace before any MenuBarItems (e.g. File) get rendered. This may change in future, if so then update this test." );
             
             // Clicks in the "test" region
             ClassicAssert.AreEqual(v.Menus[0], v.ScreenToMenuBarItem(1));
