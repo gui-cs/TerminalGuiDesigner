@@ -68,7 +68,7 @@ public static class ObjectExtensions
             // lets deal with only DimAbsolute for now
             Dim d when d.IsAbsolute( out int n ) => n,
             Dim => throw new ArgumentException( "Only absolute dimensions are convertible to primitives" ),
-            _ => throw new ArgumentException( $"{value.GetType( ).Name} is not supported", nameof( value ) )
+            _ => value
         };
     }
 
