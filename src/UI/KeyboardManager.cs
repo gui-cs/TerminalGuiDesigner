@@ -170,7 +170,7 @@ public class KeyboardManager
                         return true;
                     }
 
-                    // convert keystroke to left
+                    // convert keystroke to left,
                     // so we move to the next menu
                     keystroke.Key = Key.CursorLeft;
                     return false;
@@ -271,14 +271,14 @@ public class KeyboardManager
         return true;
     }
 
-    private bool ApplyKeystrokeToString(string str, KeyEvent keystroke, out string newString)
+    private bool ApplyKeystrokeToString(string? str, KeyEvent keystroke, out string newString)
     {
         newString = str;
 
         if (keystroke.Key == Key.Backspace)
         {
             // no change
-            if (str == null || str.Length == 0)
+            if ( string.IsNullOrEmpty( str ) )
             {
                 return false;
             }

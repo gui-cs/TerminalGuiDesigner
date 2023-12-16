@@ -1,4 +1,9 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.UI;
@@ -8,6 +13,8 @@ namespace UnitTests;
 [TestFixture]
 [TestOf( typeof( KeyboardManager ) )]
 [Category( "UI" )]
+[NonParallelizable]
+[FixtureLifeCycle(LifeCycle.SingleInstance)]
 internal class KeyboardManagerTests : Tests
 {
     [Test]
