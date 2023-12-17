@@ -5,6 +5,11 @@ using YamlDotNet.Serialization;
 
 namespace UnitTests;
 
+[TestFixture]
+[TestOf( typeof( KeyMap ) )]
+[Category( "Core" )]
+[Category( "UI" )]
+[Parallelizable( ParallelScope.All )]
 internal class KeyMapTests : Tests
 {
     [Test]
