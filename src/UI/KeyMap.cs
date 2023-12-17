@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Terminal.Gui;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
@@ -10,6 +11,18 @@ namespace TerminalGuiDesigner.UI;
 /// </summary>
 public class KeyMap
 {
+    /// <summary>
+    /// Builds a configuration from the specified yaml file and returns a new instance of a corresponding <see cref="KeyMap"/>
+    /// </summary>
+    /// <param name="configurationFile">Relative or absolute path to the configuration file to load.</param>
+    /// <returns>A new instance of a <see cref="KeyMap"/> from the specified file.</returns>
+    /// <exception cref="ArgumentException">If <paramref name="configurationFile"/> is a null or empty string</exception>
+    public static KeyMap LoadFromConfiguration( string configurationFile )
+    {
+        ArgumentException.ThrowIfNullOrEmpty( configurationFile, nameof( configurationFile ) );
+        return new ConfigurationBuilder( ).AddYamlFile( configurationFile, false, false ).Build( ).Get<KeyMap>( )!;
+    }
+
     /// <summary>
     /// Gets or Sets key for editing all <see cref="Property"/> of selected <see cref="Design"/>.
     /// </summary>

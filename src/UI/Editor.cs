@@ -1,10 +1,10 @@
 ﻿using System.Text;
+using Microsoft.Extensions.Configuration;
 using Terminal.Gui;
 using TerminalGuiDesigner.FromCode;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 using TerminalGuiDesigner.UI.Windows;
-using YamlDotNet.Serialization;
 
 namespace TerminalGuiDesigner.UI;
 
@@ -50,10 +50,9 @@ public class Editor : Toplevel
         // If there are custom keybindings read those
         if (File.Exists("Keys.yaml"))
         {
-            var d = new Deserializer();
             try
             {
-                this.keyMap = d.Deserialize<KeyMap>(File.ReadAllText("Keys.yaml"));
+                this.keyMap = new ConfigurationBuilder( ).AddYamlFile( "Keys.yaml", true ).Build( ).Get<KeyMap>( ) ?? new( );
 
                 if (this.keyMap.SelectionColor != null)
                 {
