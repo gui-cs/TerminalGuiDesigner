@@ -8,7 +8,7 @@ namespace UnitTests;
 [Category( "Core" )]
 [Category( "UI" )]
 [Parallelizable( ParallelScope.All )]
-internal class KeyMapTests : Tests
+internal class KeyMapTests
 {
     private const string _expectedKeysYamlContent =
         @"EditProperties: F4
@@ -71,5 +71,13 @@ SelectionColor:
         Assert.That( File.ReadAllText( defaultKeyMapFileName ),
                      Is.EqualTo( _expectedKeysYamlContent ),
                      "Content of Keys.yaml, including newline style, must match expected input." );
+    }
+
+    [Test]
+    public void Constructor_ReturnsValidInstance( )
+    {
+        KeyMap? k = null;
+        Assert.That( ( ) => k = new ( ), Throws.Nothing );
+        Assert.That( k, Is.Not.Null.And.InstanceOf<KeyMap>( ) );
     }
 }
