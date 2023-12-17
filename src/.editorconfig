@@ -1,0 +1,4 @@
+root = true
+
+[*Keys.yaml]
+end_of_line = lf

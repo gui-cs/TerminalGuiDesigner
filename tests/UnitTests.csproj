@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net7.0;net8.0</TargetFrameworks>
@@ -7,6 +7,12 @@
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<LangVersion>11</LangVersion>
 	</PropertyGroup>
+	
+	<ItemGroup>
+		<Content Include="..\src\Keys.yaml">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
@@ -22,8 +28,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\TerminalGuiDesigner.csproj" />
-		<Using Include="NUnit.Framework"/>
-		<Using Include="NUnit.Framework.Legacy"/>
+		<Using Include="NUnit.Framework" />
+		<Using Include="NUnit.Framework.Legacy" />
   </ItemGroup>
 
 </Project>
