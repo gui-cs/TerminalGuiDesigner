@@ -6,7 +6,7 @@ using TerminalGuiDesigner.UI.Windows;
 namespace TerminalGuiDesigner.UI;
 
 /// <summary>
-/// Serializeable settings class for user keybinding/accessibility tailoring.
+/// Serializable settings class for user keybinding/accessibility tailoring.
 /// </summary>
 public class KeyMap
 {
