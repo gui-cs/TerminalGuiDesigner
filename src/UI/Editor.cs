@@ -54,10 +54,7 @@ public class Editor : Toplevel
             {
                 this.keyMap = new ConfigurationBuilder( ).AddYamlFile( "Keys.yaml", true ).Build( ).Get<KeyMap>( ) ?? new( );
 
-                if (this.keyMap.SelectionColor != null)
-                {
-                    SelectionManager.Instance.SelectedScheme = this.keyMap.SelectionColor.Scheme;
-                }
+                SelectionManager.Instance.SelectedScheme = this.keyMap.SelectionColor.Scheme;
             }
             catch (Exception ex)
             {
