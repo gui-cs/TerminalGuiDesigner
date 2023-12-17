@@ -47,25 +47,16 @@ public class Editor : Toplevel
     {
         this.CanFocus = true;
 
-        // If there are custom keybindings read those
-        if (File.Exists("Keys.yaml"))
+        try
         {
-            try
-            {
-                this.keyMap = new ConfigurationBuilder( ).AddYamlFile( "Keys.yaml", true ).Build( ).Get<KeyMap>( ) ?? new( );
+            this.keyMap = new ConfigurationBuilder( ).AddYamlFile( "Keys.yaml", true ).Build( ).Get<KeyMap>( ) ?? new( );
 
-                SelectionManager.Instance.SelectedScheme = this.keyMap.SelectionColor.Scheme;
-            }
-            catch (Exception ex)
-            {
-                // if there is bad yaml use the defaults
-                ExceptionViewer.ShowException("Failed to read keybindings", ex);
-                this.keyMap = new KeyMap();
-            }
+            SelectionManager.Instance.SelectedScheme = this.keyMap.SelectionColor.Scheme;
         }
-        else
+        catch (Exception ex)
         {
-            // otherwise use the defaults
+            // if there is bad yaml use the defaults
+            ExceptionViewer.ShowException("Failed to read keybindings from configuration file", ex);
             this.keyMap = new KeyMap();
         }
 
