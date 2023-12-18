@@ -815,7 +815,7 @@ public class Editor : Toplevel
         }
     }
 
-    private void DoForSelectedViews(Func<Design, Operation> operationFuc, bool allowOnRoot = false)
+    private void DoForSelectedViews(Func<Design, Operation> operationFunc, bool allowOnRoot = false)
     {
         if (this.viewBeingEdited == null)
         {
@@ -828,7 +828,7 @@ public class Editor : Toplevel
         {
             var op = new CompositeOperation(
                 SelectionManager.Instance.Selected
-                .Select(operationFuc).ToArray());
+                .Select(operationFunc).ToArray());
 
             OperationManager.Instance.Do(op);
         }
@@ -837,16 +837,12 @@ public class Editor : Toplevel
             var viewDesign = selected.Single();
 
             // don't delete the root view
-            if (viewDesign != null)
+            if (viewDesign.IsRoot && !allowOnRoot)
             {
-                if (viewDesign.IsRoot && !allowOnRoot)
-                {
-                    return;
-                }
-
-                OperationManager.Instance.Do(
-                    operationFuc(viewDesign));
+                return;
             }
+
+            OperationManager.Instance.Do(operationFunc(viewDesign));
         }
     }
 
