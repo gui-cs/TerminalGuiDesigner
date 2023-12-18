@@ -70,12 +70,12 @@ public class Editor : Toplevel
     /// <summary>
     /// Gets or Sets a value indicating whether <see cref="View"/> that do not have borders
     /// (e.g. <see cref="ScrollView"/>) should have a dotted line rendered around them so
-    /// users don't loose track of where they are on a same colored background.
+    /// users don't lose track of where they are on a same-colored background.
     /// </summary>
     public static bool ShowBorders { get; set; } = true;
 
     /// <summary>
-    /// Gets a value indicating whether true to enable experimental features.
+    /// Gets a value indicating whether to enable experimental features.
     /// </summary>
     public static bool Experimental { get; internal set; }
 
@@ -492,10 +492,11 @@ public class Editor : Toplevel
 
     private string GetHelp()
     {
-        return @$"
-{this.keyMap.ShowHelp} - Show Help
-{this.keyMap.New} - New Window/Class
-{this.keyMap.Open} - Open a .Designer.cs file
+        return $"""
+
+                {this.keyMap.ShowHelp} - Show Help
+                {this.keyMap.New} - New Window/Class
+                {this.keyMap.Open} - Open a .Designer.cs file
 {this.keyMap.Save} - Save an opened .Designer.cs file
 {this.keyMap.ShowContextMenu} - Show right click context menu;
 {this.keyMap.AddView} - Add View
@@ -508,17 +509,18 @@ public class Editor : Toplevel
 {this.keyMap.EditRootProperties} - Edit Root Properties
 {this.keyMap.Delete} - Delete selected View
 Shift+Cursor - Move focused View
-Ctrl+Cursor - Move focused View quickly
-Ctrl+Q - Quit
-{this.keyMap.Undo} - Undo
-{this.keyMap.Redo} - Redo";
+                Ctrl+Cursor - Move focused View quickly
+                Ctrl+Q - Quit
+                {this.keyMap.Undo} - Undo
+                {this.keyMap.Redo} - Redo
+                """;
     }
 
     private void BuildRootMenu()
     {
         /* setup views for when we are not editing a
          * view (nothing is loaded) so show the generic
-         * help (open, new etc) in the center of the
+         * help (open, new etc.) in the center of the
          * screen
          */
 
