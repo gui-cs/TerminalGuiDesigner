@@ -1,10 +1,10 @@
-﻿using System.Text;
+using System.Text;
+using Microsoft.Extensions.Configuration;
 using Terminal.Gui;
 using TerminalGuiDesigner.FromCode;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 using TerminalGuiDesigner.UI.Windows;
-using YamlDotNet.Serialization;
 
 namespace TerminalGuiDesigner.UI;
 
@@ -47,29 +47,16 @@ public class Editor : Toplevel
     {
         this.CanFocus = true;
 
-        // If there are custom keybindings read those
-        if (File.Exists("Keys.yaml"))
+        try
         {
-            var d = new Deserializer();
-            try
-            {
-                this.keyMap = d.Deserialize<KeyMap>(File.ReadAllText("Keys.yaml"));
+            this.keyMap = new ConfigurationBuilder( ).AddYamlFile( "Keys.yaml", true ).Build( ).Get<KeyMap>( ) ?? new( );
 
-                if (this.keyMap.SelectionColor != null)
-                {
-                    SelectionManager.Instance.SelectedScheme = this.keyMap.SelectionColor.Scheme;
-                }
-            }
-            catch (Exception ex)
-            {
-                // if there is bad yaml use the defaults
-                ExceptionViewer.ShowException("Failed to read keybindings", ex);
-                this.keyMap = new KeyMap();
-            }
+            SelectionManager.Instance.SelectedScheme = this.keyMap.SelectionColor.Scheme;
         }
-        else
+        catch (Exception ex)
         {
-            // otherwise use the defaults
+            // if there is bad yaml use the defaults
+            ExceptionViewer.ShowException("Failed to read keybindings from configuration file", ex);
             this.keyMap = new KeyMap();
         }
 
@@ -249,7 +236,7 @@ public class Editor : Toplevel
     }
 
     /// <summary>
-    /// Event handler for <see cref="Application.RootKeyEvent"/>.
+    /// Event handler for <see cref="Application.KeyPressed"/>.
     /// </summary>
     /// <param name="keyEvent">The key pressed.</param>
     /// <returns>True if key is handled.</returns>

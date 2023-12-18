@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Terminal.Gui;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
@@ -8,164 +9,231 @@ namespace TerminalGuiDesigner.UI;
 /// <summary>
 /// Serializable settings class for user keybinding/accessibility tailoring.
 /// </summary>
-public class KeyMap
+public record KeyMap(
+    Key EditProperties,
+    Key ShowContextMenu,
+    Key ViewSpecificOperations,
+    Key EditRootProperties,
+    Key ShowHelp,
+    Key New,
+    Key Open,
+    Key Save,
+    Key Redo,
+    Key Undo,
+    Key Delete,
+    Key ToggleDragging,
+    Key AddView,
+    Key ToggleShowFocused,
+    Key ToggleShowBorders,
+    MouseFlags RightClick,
+    Key Copy,
+    Key Paste,
+    Key Rename,
+    Key SetShortcut,
+    Key SelectAll,
+    Key MoveRight,
+    Key MoveLeft,
+    Key MoveUp,
+    Key MoveDown,
+    Key ShowColorSchemes )
 {
-    /// <summary>
-    /// Gets or Sets key for editing all <see cref="Property"/> of selected <see cref="Design"/>.
-    /// </summary>
-    public Key EditProperties { get; set; } = Key.F4;
+    /// <summary>Initializes a new instance of the <see cref="KeyMap"/> class.</summary>
+    public KeyMap( )
+        : this(
+            Key.F4,
+            Key.Enter,
+            Key.ShiftMask | Key.F4,
+            Key.F5,
+            Key.F1,
+            Key.CtrlMask | Key.N,
+            Key.CtrlMask | Key.O,
+            Key.CtrlMask | Key.S,
+            Key.CtrlMask | Key.Y,
+            Key.CtrlMask | Key.Z,
+            Key.DeleteChar,
+            Key.F3,
+            Key.F2,
+            Key.CtrlMask | Key.L,
+            Key.CtrlMask | Key.B,
+            MouseFlags.Button3Clicked,
+            Key.CtrlMask | Key.C,
+            Key.CtrlMask | Key.V,
+            Key.CtrlMask | Key.R,
+            Key.CtrlMask | Key.T,
+            Key.CtrlMask | Key.A,
+            Key.ShiftMask | Key.CursorRight,
+            Key.ShiftMask | Key.CursorLeft,
+            Key.ShiftMask | Key.CursorUp,
+            Key.ShiftMask | Key.CursorDown,
+            Key.F6 )
+    {
+        // Empty - returns default instance from primary constructor.
+    }
 
     /// <summary>
-    /// Gets or Sets the key to pop up the right click context menu.
+    /// Gets the key for editing all <see cref="Property"/> of selected <see cref="Design"/>s.
     /// </summary>
-    public Key ShowContextMenu { get; set; } = Key.Enter;
+    public Key EditProperties { get; init; } = EditProperties;
 
     /// <summary>
-    /// Gets or Sets the key to pop up view specific operations (e.g. add column to <see cref="TableView"/>).
+    /// Gets the key to pop up the right click context menu.
     /// </summary>
-    public Key ViewSpecificOperations { get; set; } = Key.ShiftMask | Key.F4;
+    public Key ShowContextMenu { get; init; } = ShowContextMenu;
 
     /// <summary>
-    /// Gets or Sets the key to edit the <see cref="Property"/> of the root view being edited.
+    /// Gets the key to pop up view specific operations (e.g. add column to <see cref="TableView"/>).
     /// </summary>
-    public Key EditRootProperties { get; set; } = Key.F5;
+    public Key ViewSpecificOperations { get; init; } = ViewSpecificOperations;
 
     /// <summary>
-    /// Gets or Sets the key to show pop up help.
+    /// Gets the key to edit the <see cref="Property"/> of the root view being edited.
     /// </summary>
-    public Key ShowHelp { get; set; } = Key.F1;
+    public Key EditRootProperties { get; init; } = EditRootProperties;
 
     /// <summary>
-    /// Gets or Sets the key to create a new .Designer.cs and .cs file.
+    /// Gets the key to show pop up help.
     /// </summary>
-    public Key New { get; set; } = Key.CtrlMask | Key.N;
+    public Key ShowHelp { get; init; } = ShowHelp;
 
     /// <summary>
-    /// Gets or Sets the key to open an existing .Designer.cs file.
+    /// Gets the key to create a new .Designer.cs and .cs file.
     /// </summary>
-    public Key Open { get; set; } = Key.CtrlMask | Key.O;
+    public Key New { get; init; } = New;
 
     /// <summary>
-    /// Gets or Sets the key to save the current changes to disk.
+    /// Gets the key to open an existing .Designer.cs file.
     /// </summary>
-    public Key Save { get; set; } = Key.CtrlMask | Key.S;
+    public Key Open { get; init; } = Open;
 
     /// <summary>
-    /// Gets or Sets the key to <see cref="Operation.Redo"/> the last undone operation.
+    /// Gets the key to save the current changes to disk.
     /// </summary>
-    public Key Redo { get; set; } = Key.CtrlMask | Key.Y;
+    public Key Save { get; init; } = Save;
 
     /// <summary>
-    /// Gets or Sets the key to <see cref="Operation.Undo"/> the last performed operation.
+    /// Gets the key to <see cref="Operation.Redo"/> the last undone operation.
     /// </summary>
-    public Key Undo { get; set; } = Key.CtrlMask | Key.Z;
+    public Key Redo { get; init; } = Redo;
 
     /// <summary>
-    /// Gets or Sets the key to delete the currently selected <see cref="Design"/>.
+    /// Gets the key to <see cref="Operation.Undo"/> the last performed operation.
     /// </summary>
-    public Key Delete { get; set; } = Key.DeleteChar;
+    public Key Undo { get; init; } = Undo;
 
     /// <summary>
-    /// Gets or Sets the key to turn mouse dragging on/of.
+    /// Gets the key to delete the currently selected <see cref="Design"/>.
     /// </summary>
-    public Key ToggleDragging { get; set; } = Key.F3;
+    public Key Delete { get; init; } = Delete;
 
     /// <summary>
-    /// Gets or Sets the key to add a new <see cref="View"/> (and its <see cref="Design"/> wrapper)
+    /// Gets the key to turn mouse dragging on/of.
+    /// </summary>
+    public Key ToggleDragging { get; init; } = ToggleDragging;
+
+    /// <summary>
+    /// Gets the key to add a new <see cref="View"/> (and its <see cref="Design"/> wrapper)
     /// to the currently focused container view (or root).
     /// </summary>
-    public Key AddView { get; set; } = Key.F2;
+    public Key AddView { get; init; } = AddView;
 
     /// <summary>
-    /// Gets or Sets the key to toggle showing an overlay with a description of the currently focused
+    /// Gets the key to toggle showing an overlay with a description of the currently focused
     /// view(s).
     /// </summary>
-    public Key ToggleShowFocused { get; set; } = Key.CtrlMask | Key.L;
+    public Key ToggleShowFocused { get; init; } = ToggleShowFocused;
 
     /// <summary>
-    /// Gets or Sets the key to toggle showing dotted borders around views that otherwise do not have
-    /// visible borders (e.g. <see cref="ScrollView"/>.
+    /// Gets the key to toggle showing dotted borders around views that otherwise do not have
+    /// visible borders (e.g. <see cref="ScrollView"/>).
     /// </summary>
-    public Key ToggleShowBorders { get; set; } = Key.CtrlMask | Key.B;
+    public Key ToggleShowBorders { get; init; } = ToggleShowBorders;
 
     /// <summary>
-    /// Gets or Sets the mouse button that opens the right click context menu.
+    /// Gets the mouse button that opens the right click context menu.
     /// Defaults to <see cref="MouseFlags.Button3Clicked"/> which is the right
     /// mouse button.
     /// </summary>
-    public MouseFlags RightClick { get; set; } = MouseFlags.Button3Clicked;
+    public MouseFlags RightClick { get; init; } = RightClick;
 
     /// <summary>
-    /// Gets or Sets the key to copy currently selected views.
+    /// Gets the key to copy currently selected views.
     /// </summary>
-    public Key Copy { get; set; } = Key.CtrlMask | Key.C;
+    public Key Copy { get; init; } = Copy;
 
     /// <summary>
-    /// Gets or Sets the key to paste the last copied views.
+    /// Gets the key to paste the last copied views.
     /// </summary>
-    public Key Paste { get; set; } = Key.CtrlMask | Key.V;
+    public Key Paste { get; init; } = Paste;
 
     /// <summary>
-    /// Gets or Sets the key to rename the field name (when written to .Designer.cs) of
+    /// Gets the key to rename the field name (when written to .Designer.cs) of
     /// the currently selected <see cref="View"/> or <see cref="MenuItem"/>.
     /// </summary>
-    public Key Rename { get; set; } = Key.CtrlMask | Key.R;
+    public Key Rename { get; init; } = Rename;
 
     /// <summary>
-    /// Gets or Sets the key to assign a new shortcut to a <see cref="MenuItem"/>.
+    /// Gets the key to assign a new shortcut to a <see cref="MenuItem"/>.
     /// </summary>
-    public Key SetShortcut { get; set; } = Key.CtrlMask | Key.T;
+    public Key SetShortcut { get; init; } = SetShortcut;
 
     /// <summary>
-    /// Gets or Sets the key to select all <see cref="Design"/> in the <see cref="Editor"/>.
+    /// Gets the key to select all <see cref="Design"/> in the <see cref="Editor"/>.
     /// </summary>
-    public Key SelectAll { get; set; } = Key.CtrlMask | Key.A;
+    public Key SelectAll { get; init; } = SelectAll;
 
     /// <summary>
-    /// Gets or Sets the key to nudge the currently focused view right one unit.
+    /// Gets the key to nudge the currently focused view right one unit.
     /// </summary>
-    public Key MoveRight { get; set; } = Key.ShiftMask | Key.CursorRight;
+    public Key MoveRight { get; init; } = MoveRight;
 
     /// <summary>
-    /// Gets or Sets the key to nudge the currently focused view left one unit.
+    /// Gets the key to nudge the currently focused view left one unit.
     /// </summary>
-    public Key MoveLeft { get; set; } = Key.ShiftMask | Key.CursorLeft;
+    public Key MoveLeft { get; init; } = MoveLeft;
 
     /// <summary>
-    /// Gets or Sets the key to nudge the currently focused view up one unit.
+    /// Gets the key to nudge the currently focused view up one unit.
     /// </summary>
-    public Key MoveUp { get; set; } = Key.ShiftMask | Key.CursorUp;
+    public Key MoveUp { get; init; } = MoveUp;
 
     /// <summary>
-    /// Gets or Sets the key to nudge the currently focused view down one unit.
+    /// Gets the key to nudge the currently focused view down one unit.
     /// </summary>
-    public Key MoveDown { get; set; } = Key.ShiftMask | Key.CursorDown;
+    public Key MoveDown { get; init; } = MoveDown;
 
     /// <summary>
-    /// Gets or Sets the key to open the <see cref="ColorSchemesUI"/> window for
+    /// Gets the key to open the <see cref="ColorSchemesUI"/> window for
     /// creating/deleting <see cref="ColorScheme"/> that can be used in the <see cref="Editor"/>.
     /// </summary>
-    public Key ShowColorSchemes { get; set; } = Key.F6;
+    public Key ShowColorSchemes { get; init; } = ShowColorSchemes;
 
     /// <summary>
-    /// Gets or Sets a custom <see cref="ColorScheme"/> to apply to multi
+    /// Gets a custom <see cref="ColorScheme"/> to apply to multi
     /// selections in designer.
     /// <remarks>Default color is green, this is useful if you have a heavily
     /// green theme where it could get confusing what is multi selected and what
     /// just has focus/uses your custom scheme</remarks>
     /// </summary>
-    public ColorSchemeBlueprint SelectionColor { get; set; } = new
-        ColorSchemeBlueprint
+    public ColorSchemeBlueprint SelectionColor { get; init; } = new(
+        Color.BrightGreen,
+        Color.Green,
+        Color.BrightGreen,
+        Color.Green,
+        Color.BrightYellow,
+        Color.Green,
+        Color.BrightYellow,
+        Color.Green,
+        Color.BrightGreen,
+        Color.Green );
+
+    /// <summary>
+    /// Builds a configuration from the specified yaml file and returns a new instance of a corresponding <see cref="KeyMap"/>.
+    /// </summary>
+    /// <param name="configurationFile">Relative or absolute path to the configuration file to load.</param>
+    /// <returns>A new instance of a <see cref="KeyMap"/> from the specified file.</returns>
+    /// <exception cref="ArgumentException">If <paramref name="configurationFile"/> is a null or empty string.</exception>
+    public static KeyMap LoadFromConfiguration( string? configurationFile = "Keys.yaml" )
     {
-        NormalForeground = Color.BrightGreen,
-        NormalBackground = Color.Green,
-        HotNormalForeground = Color.BrightGreen,
-        HotNormalBackground = Color.Green,
-        FocusForeground = Color.BrightYellow,
-        FocusBackground = Color.Green,
-        HotFocusForeground = Color.BrightYellow,
-        HotFocusBackground = Color.Green,
-        DisabledForeground = Color.BrightGreen,
-        DisabledBackground = Color.Green,
-    };
+        return new ConfigurationBuilder( ).AddYamlFile( configurationFile, false, false ).Build( ).Get<KeyMap>( ) ?? new KeyMap( );
+    }
 }
