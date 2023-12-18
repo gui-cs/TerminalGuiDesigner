@@ -104,7 +104,8 @@ public class Editor : Toplevel
 
                     if (!string.IsNullOrWhiteSpace(options.ViewType))
                     {
-                        toCreate = this.GetSupportedRootViews().FirstOrDefault(v => v.Name.Equals(options.ViewType)) ?? toCreate;
+                        // TODO: We should probably use something like IsAssignableTo instead
+                        toCreate = GetSupportedRootViews().FirstOrDefault(v => v.Name.Equals(options.ViewType)) ?? toCreate;
                     }
 
                     this.New(toLoadOrCreate, toCreate, options.Namespace);
