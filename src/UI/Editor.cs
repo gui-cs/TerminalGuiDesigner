@@ -132,7 +132,7 @@ public class Editor : Toplevel
                     k.Handled = true;
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 ExceptionViewer.ShowException("Error processing keystroke", ex);
             }
@@ -176,7 +176,7 @@ public class Editor : Toplevel
                     }
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 ExceptionViewer.ShowException("Error processing mouse", ex);
             }
@@ -449,7 +449,7 @@ public class Editor : Toplevel
                     return true;
             }
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             ExceptionViewer.ShowException("Error", ex);
         }
