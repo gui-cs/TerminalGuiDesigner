@@ -10,7 +10,7 @@ namespace TerminalGuiDesigner;
 /// </summary>
 public class SelectionManager
 {
-    private List<Design> selection = new();
+    private readonly List<Design> selection = new();
     private ColorScheme? selectedScheme;
 
     private SelectionManager()
@@ -144,7 +144,8 @@ public class SelectionManager
         this.Clear(respectLock);
 
         // create a new selection based on these
-        this.selection = new List<Design>(designs.Distinct().Where(d => !d.IsRoot));
+        this.selection.Clear();
+        this.selection.AddRange(designs.Distinct().Where(d => d is { IsRoot: false }));
 
         foreach (var d in this.selection)
         {
