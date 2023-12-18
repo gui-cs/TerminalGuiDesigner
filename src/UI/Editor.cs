@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using Microsoft.Extensions.Configuration;
 using Terminal.Gui;
 using TerminalGuiDesigner.FromCode;
@@ -236,7 +236,7 @@ public class Editor : Toplevel
     }
 
     /// <summary>
-    /// Event handler for <see cref="Application.RootKeyEvent"/>.
+    /// Event handler for <see cref="Application.KeyPressed"/>.
     /// </summary>
     /// <param name="keyEvent">The key pressed.</param>
     /// <returns>True if key is handled.</returns>
