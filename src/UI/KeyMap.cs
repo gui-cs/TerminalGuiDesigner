@@ -234,6 +234,6 @@ public record KeyMap(
     /// <exception cref="ArgumentException">If <paramref name="configurationFile"/> is a null or empty string.</exception>
     public static KeyMap LoadFromConfiguration( string? configurationFile = "Keys.yaml" )
     {
-        return new ConfigurationBuilder( ).AddYamlFile( configurationFile, false, false ).Build( ).Get<KeyMap>( ) ?? new KeyMap( );
+        return new ConfigurationBuilder().AddYamlFile( configurationFile, false, false ).Build().Get<KeyMap>() ?? new KeyMap();
     }
 }
