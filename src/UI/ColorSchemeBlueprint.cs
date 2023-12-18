@@ -1,68 +1,66 @@
 ﻿using Terminal.Gui;
-using YamlDotNet.Serialization;
 using Attribute = Terminal.Gui.Attribute;
 
 namespace TerminalGuiDesigner.UI;
 
 /// <summary>
-/// Serialize-able version of <see cref="ColorScheme"/>.
+/// Serializable version of <see cref="ColorScheme"/>.
 /// </summary>
-public class ColorSchemeBlueprint
+public record ColorSchemeBlueprint( ColorName NormalForeground, ColorName NormalBackground, ColorName HotNormalForeground, ColorName HotNormalBackground, ColorName FocusForeground, ColorName FocusBackground, ColorName HotFocusForeground, ColorName HotFocusBackground, ColorName DisabledForeground, ColorName DisabledBackground )
 {
     /// <summary>
-    /// Gets or Sets the <see cref="Color"/> to use for <see cref="ColorScheme.Normal"/> <see cref="Attribute.Foreground"/>.
+    /// Gets the <see cref="Color"/> to use for <see cref="ColorScheme.Normal"/> <see cref="Attribute.Foreground"/>.
     /// </summary>
-    public ColorName NormalForeground { get; set; }
+    public ColorName NormalForeground { get; init; } = NormalForeground;
 
     /// <summary>
-    /// Gets or Sets the <see cref="Color"/> to use for <see cref="ColorScheme.Normal"/> <see cref="Attribute.Background"/>.
+    /// Gets the <see cref="Color"/> to use for <see cref="ColorScheme.Normal"/> <see cref="Attribute.Background"/>.
     /// </summary>
-    public ColorName NormalBackground { get; set; }
+    public ColorName NormalBackground { get; init; } = NormalBackground;
 
     /// <summary>
-    /// Gets or Sets the <see cref="Color"/> to use for <see cref="ColorScheme.HotNormal"/> <see cref="Attribute.Foreground"/>.
+    /// Gets the <see cref="Color"/> to use for <see cref="ColorScheme.HotNormal"/> <see cref="Attribute.Foreground"/>.
     /// </summary>
-    public ColorName HotNormalForeground { get; set; }
+    public ColorName HotNormalForeground { get; init; } = HotNormalForeground;
 
     /// <summary>
-    /// Gets or Sets the <see cref="Color"/> to use for <see cref="ColorScheme.HotNormal"/> <see cref="Attribute.Background"/>.
+    /// Gets the <see cref="Color"/> to use for <see cref="ColorScheme.HotNormal"/> <see cref="Attribute.Background"/>.
     /// </summary>
-    public ColorName HotNormalBackground { get; set; }
+    public ColorName HotNormalBackground { get; init; } = HotNormalBackground;
 
     /// <summary>
-    /// Gets or Sets the <see cref="Color"/> to use for <see cref="ColorScheme.Focus"/> <see cref="Attribute.Foreground"/>.
+    /// Gets the <see cref="Color"/> to use for <see cref="ColorScheme.Focus"/> <see cref="Attribute.Foreground"/>.
     /// </summary>
-    public ColorName FocusForeground { get; set; }
+    public ColorName FocusForeground { get; init; } = FocusForeground;
 
     /// <summary>
-    /// Gets or Sets the <see cref="Color"/> to use for <see cref="ColorScheme.Focus"/> <see cref="Attribute.Background"/>.
+    /// Gets the <see cref="Color"/> to use for <see cref="ColorScheme.Focus"/> <see cref="Attribute.Background"/>.
     /// </summary>
-    public ColorName FocusBackground { get; set; }
+    public ColorName FocusBackground { get; init; } = FocusBackground;
 
     /// <summary>
-    /// Gets or Sets the <see cref="Color"/> to use for <see cref="ColorScheme.HotFocus"/> <see cref="Attribute.Foreground"/>.
+    /// Gets the <see cref="Color"/> to use for <see cref="ColorScheme.HotFocus"/> <see cref="Attribute.Foreground"/>.
     /// </summary>
-    public ColorName HotFocusForeground { get; set; }
+    public ColorName HotFocusForeground { get; init; } = HotFocusForeground;
 
     /// <summary>
-    /// Gets or Sets the <see cref="Color"/> to use for <see cref="ColorScheme.HotFocus"/> <see cref="Attribute.Background"/>.
+    /// Gets the <see cref="Color"/> to use for <see cref="ColorScheme.HotFocus"/> <see cref="Attribute.Background"/>.
     /// </summary>
-    public ColorName HotFocusBackground { get; set; }
+    public ColorName HotFocusBackground { get; init; } = HotFocusBackground;
 
     /// <summary>
-    /// Gets or Sets the <see cref="Color"/> to use for <see cref="ColorScheme.Disabled"/> <see cref="Attribute.Foreground"/>.
+    /// Gets the <see cref="Color"/> to use for <see cref="ColorScheme.Disabled"/> <see cref="Attribute.Foreground"/>.
     /// </summary>
-    public ColorName DisabledForeground { get; set; }
+    public ColorName DisabledForeground { get; init; } = DisabledForeground;
 
     /// <summary>
-    /// Gets or Sets the <see cref="Color"/> to use for <see cref="ColorScheme.Disabled"/> <see cref="Attribute.Background"/>.
+    /// Gets the <see cref="Color"/> to use for <see cref="ColorScheme.Disabled"/> <see cref="Attribute.Background"/>.
     /// </summary>
-    public ColorName DisabledBackground { get; set; }
+    public ColorName DisabledBackground { get; init; } = DisabledBackground;
 
     /// <summary>
     /// Gets a new <see cref="ColorScheme"/> from the blueprint.
     /// </summary>
-    [YamlIgnore]
     public ColorScheme Scheme => new ColorScheme
     {
         Normal = new Attribute(this.NormalForeground, this.NormalBackground),

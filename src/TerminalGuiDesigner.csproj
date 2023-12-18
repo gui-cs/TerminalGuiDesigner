@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<ItemGroup>
 		<AdditionalFiles Include="stylecop.json" />
 	</ItemGroup>
@@ -144,13 +144,15 @@
 		<PackageReference Include="Basic.Reference.Assemblies.Net70" Version="1.4.5" />
 		<PackageReference Include="CommandLineParser" Version="2.9.1" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.7.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.0" />
+		<PackageReference Include="NetEscapades.Configuration.Yaml" Version="3.1.0" />
 		<PackageReference Include="nlog" Version="5.2.3" />
 		<PackageReference Include="StyleCop.Analyzers.Unstable" Version="1.2.0.507">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Terminal.Gui" Version="2.0.0-pre.220" />
-		<PackageReference Include="YamlDotNet" Version="13.3.1" />
 		<PackageReference Include="Basic.Reference.Assemblies.Net80" Version="1.4.5" />
 		<PackageReference Include="System.CodeDom" Version="8.0.0" />
 	</ItemGroup>

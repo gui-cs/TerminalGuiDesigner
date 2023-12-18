@@ -1,0 +1,7 @@
+root = true
+
+[*Keys.yaml]
+end_of_line = lf
+
+[*KeyMapTests.cs]
+end_of_line = lf

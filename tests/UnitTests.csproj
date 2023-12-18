@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net7.0;net8.0</TargetFrameworks>
@@ -9,10 +9,22 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Keys_Alternate.yaml" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<Content Include="..\src\Keys.yaml">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Keys_Alternate.yaml">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
 		<PackageReference Include="NUnit" Version="4.0.0" />
 		<PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
-		<PackageReference Include="YamlDotNet" Version="13.3.1" />
 		<PackageReference Include="ReportGenerator" Version="5.1.24" />
 		<PackageReference Include="coverlet.collector" Version="6.0.0">
 			<PrivateAssets>all</PrivateAssets>
@@ -22,8 +34,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\TerminalGuiDesigner.csproj" />
-		<Using Include="NUnit.Framework"/>
-		<Using Include="NUnit.Framework.Legacy"/>
+		<Using Include="NUnit.Framework" />
+		<Using Include="NUnit.Framework.Legacy" />
   </ItemGroup>
 
 </Project>
