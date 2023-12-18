@@ -920,7 +920,7 @@ public class Editor : Toplevel
 
     private void New()
     {
-        if (!Modals.Get("Create New View", "Ok", this.GetSupportedRootViews(), null, out var selected))
+        if (!Modals.Get("Create New View", "Ok", GetSupportedRootViews(), null, out var selected))
         {
             return;
         }
@@ -980,7 +980,7 @@ public class Editor : Toplevel
         }
     }
 
-    private Type[] GetSupportedRootViews()
+    private static Type[] GetSupportedRootViews()
     {
         return new Type[] { typeof(Window), typeof(Dialog), typeof(View), typeof(Toplevel) };
     }
