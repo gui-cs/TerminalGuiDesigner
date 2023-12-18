@@ -487,7 +487,7 @@ public class Editor : Toplevel
 
     private string GetHelpWithEmptyFormLoaded()
     {
-        return @$"{this.keyMap.AddView} to Add a View";
+        return $"{this.keyMap.AddView} to Add a View";
     }
 
     private string GetHelp()
