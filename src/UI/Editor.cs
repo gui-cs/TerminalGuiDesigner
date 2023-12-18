@@ -118,7 +118,7 @@ public class Editor : Toplevel
             }
         }
 
-        Application.KeyPressed += (s, k) =>
+        Application.KeyPressed += (_, k) =>
         {
             if (this.editing)
             {
@@ -549,7 +549,7 @@ public class Editor : Toplevel
             ColorScheme = new DefaultColorSchemes().GetDefaultScheme("greyOnBlack").Scheme,
         };
 
-        this.rootCommandsListView.KeyDown += (s, e) =>
+        this.rootCommandsListView.KeyDown += (_, e) =>
         {
             if (e.KeyEvent.Key == Key.Enter)
             {
@@ -684,7 +684,7 @@ public class Editor : Toplevel
         this.menuOpen = true;
         SelectionManager.Instance.LockSelection = true;
         menu.Show();
-        menu.MenuBar.MenuAllClosed += (s, e) =>
+        menu.MenuBar.MenuAllClosed += (_, _) =>
         {
             this.menuOpen = false;
             SelectionManager.Instance.LockSelection = false;
@@ -899,7 +899,7 @@ public class Editor : Toplevel
             var decompiler = new CodeToView(new SourceCodeFile(toOpen));
             instance = decompiler.CreateInstance();
         }).ContinueWith(
-            (t, o) =>
+            (t, _) =>
             {
                 // no longer loading
                 Application.Invoke(() => Application.RequestStop());
