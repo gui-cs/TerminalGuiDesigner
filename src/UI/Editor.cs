@@ -185,7 +185,7 @@ public class Editor : Toplevel
     }
 
     /// <summary>
-    /// Tailors redrawing to add overlays (e.g. showing what is selected etc).
+    /// Tailors redrawing to add overlays (e.g. showing what is selected etc.).
     /// </summary>
     /// <param name="bounds">The view bounds.</param>
     public override void OnDrawContent(Rect bounds)
@@ -662,7 +662,7 @@ Shift+Cursor - Move focused View
             }
         }
 
-        // theres nothing we can do
+        // there's nothing we can do
         if (all.Count == 0)
         {
             return;
