@@ -118,7 +118,7 @@ public class Editor : Toplevel
             }
         }
 
-        Application.KeyPressed += (s,k) =>
+        Application.KeyPressed += (s, k) =>
         {
             if (this.editing)
             {
@@ -138,7 +138,7 @@ public class Editor : Toplevel
             }
         };
 
-        Application.MouseEvent += (s,m) =>
+        Application.MouseEvent += (s, m) =>
         {
             // if another window is showing don't respond to mouse
             if (!this.IsCurrentTop)
@@ -499,18 +499,18 @@ public class Editor : Toplevel
                 {this.keyMap.ShowHelp} - Show Help
                 {this.keyMap.New} - New Window/Class
                 {this.keyMap.Open} - Open a .Designer.cs file
-{this.keyMap.Save} - Save an opened .Designer.cs file
-{this.keyMap.ShowContextMenu} - Show right click context menu;
-{this.keyMap.AddView} - Add View
-{this.keyMap.ShowColorSchemes} - Color Schemes
-{this.keyMap.ToggleDragging} - Toggle mouse dragging on/off
-{this.keyMap.ToggleShowFocused} - Toggle show focused view field name
-{this.keyMap.ToggleShowBorders} - Toggle dotted borders for frameless views
-{this.keyMap.EditProperties} - Edit View Properties
-{this.keyMap.ViewSpecificOperations} - View Specific Operations
-{this.keyMap.EditRootProperties} - Edit Root Properties
-{this.keyMap.Delete} - Delete selected View
-Shift+Cursor - Move focused View
+                {this.keyMap.Save} - Save an opened .Designer.cs file
+                {this.keyMap.ShowContextMenu} - Show right click context menu;
+                {this.keyMap.AddView} - Add View
+                {this.keyMap.ShowColorSchemes} - Color Schemes
+                {this.keyMap.ToggleDragging} - Toggle mouse dragging on/off
+                {this.keyMap.ToggleShowFocused} - Toggle show focused view field name
+                {this.keyMap.ToggleShowBorders} - Toggle dotted borders for frameless views
+                {this.keyMap.EditProperties} - Edit View Properties
+                {this.keyMap.ViewSpecificOperations} - View Specific Operations
+                {this.keyMap.EditRootProperties} - Edit Root Properties
+                {this.keyMap.Delete} - Delete selected View
+                Shift+Cursor - Move focused View
                 Ctrl+Cursor - Move focused View quickly
                 Ctrl+Q - Quit
                 {this.keyMap.Undo} - Undo
@@ -1027,7 +1027,7 @@ Shift+Cursor - Move focused View
             // Create the view files and compile
             instance = viewToCode.GenerateNewView(toOpen, ns ?? "YourNamespace", typeToCreate);
         }).ContinueWith(
-            (t, o) =>
+            (t, _) =>
             {
                 // no longer loading
                 Application.Invoke(() => Application.RequestStop());
