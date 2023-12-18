@@ -938,7 +938,7 @@ public class Editor : Toplevel
         {
             try
             {
-                var path = ofd.Path.ToString();
+                var path = ofd.Path;
 
                 if (string.IsNullOrWhiteSpace(path) || selected == null)
                 {
