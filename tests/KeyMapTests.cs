@@ -1,4 +1,5 @@
 using System.IO;
+using Terminal.Gui;
 using TerminalGuiDesigner.UI;
 
 namespace UnitTests;
@@ -52,6 +53,28 @@ SelectionColor:
 ";
 
     [Test]
+    public void Configuration_LoadingAndBinding( )
+    {
+        KeyMap defaultKeyMap = KeyMap.LoadFromConfiguration( "Keys.yaml" );
+        KeyMap nullOrMissingFileKeyMap = KeyMap.LoadFromConfiguration( );
+        KeyMap alternateKeyMap = KeyMap.LoadFromConfiguration( "Keys_Alternate.yaml" );
+        
+        Assert.That( defaultKeyMap, Is.Not.Null.And.InstanceOf<KeyMap>( ) );
+        Assert.That( defaultKeyMap.EditProperties, Is.EqualTo( Key.F4 ) );
+
+        Assert.That( alternateKeyMap, Is.Not.Null.And.InstanceOf<KeyMap>( ) );
+        Assert.That( alternateKeyMap.EditProperties, Is.EqualTo( Key.F1 ) );
+    }
+
+    [Test]
+    public void Constructor_ReturnsValidInstance( )
+    {
+        KeyMap? k = null;
+        Assert.That( ( ) => k = new( ), Throws.Nothing );
+        Assert.That( k, Is.Not.Null.And.InstanceOf<KeyMap>( ) );
+    }
+
+    [Test]
     [Category( "Change Control" )]
     [Description( "Ensures the default keymap file is present and as expected for testing, with allowances for line ending changes." )]
     [Order( 1 )]
@@ -71,13 +94,5 @@ SelectionColor:
         Assert.That( File.ReadAllText( defaultKeyMapFileName ),
                      Is.EqualTo( _expectedKeysYamlContent ),
                      "Content of Keys.yaml, including newline style, must match expected input." );
-    }
-
-    [Test]
-    public void Constructor_ReturnsValidInstance( )
-    {
-        KeyMap? k = null;
-        Assert.That( ( ) => k = new ( ), Throws.Nothing );
-        Assert.That( k, Is.Not.Null.And.InstanceOf<KeyMap>( ) );
     }
 }

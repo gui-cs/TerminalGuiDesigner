@@ -1,0 +1,38 @@
+﻿EditProperties: F1
+ShowContextMenu: Enter
+ViewSpecificOperations: F2, ShiftMask
+EditRootProperties: F3
+ShowHelp: F4
+New: N, CtrlMask
+Open: O, CtrlMask
+Save: S, CtrlMask
+Redo: Y, CtrlMask
+Undo: Z, CtrlMask
+Delete: DeleteChar
+ToggleDragging: F5
+AddView: F6
+ToggleShowFocused: L, CtrlMask
+ToggleShowBorders: B, CtrlMask
+RightClick: Button3Clicked
+Copy: C, CtrlMask
+Paste: V, CtrlMask
+Rename: R, CtrlMask
+SetShortcut: T, CtrlMask
+SelectAll: A, CtrlMask
+MoveRight: CursorRight, ShiftMask
+MoveLeft: CursorLeft, ShiftMask
+MoveUp: CursorUp, ShiftMask
+MoveDown: CursorDown, ShiftMask
+ShowColorSchemes: F7
+SelectionColor:
+  NormalForeground: BrightGreen
+  NormalBackground: Green
+  HotNormalForeground: BrightGreen
+  HotNormalBackground: Green
+  FocusForeground: BrightYellow
+  FocusBackground: Green
+  HotFocusForeground: BrightYellow
+  HotFocusBackground: Green
+  DisabledForeground: BrightGreen
+  DisabledBackground: Green
+    
