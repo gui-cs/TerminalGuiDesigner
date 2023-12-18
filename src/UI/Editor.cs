@@ -611,11 +611,7 @@ Shift+Cursor - Move focused View
 
         // BUG: This is an improper exception here and could have unexpected behavior if this method is ever called asynchronously.
         var factory = new OperationFactory(
-                (p, v) =>
-                {
-                    return EditDialog.GetNewValue(p.Design, p, v, out var newValue) ? newValue
-                    : throw new OperationCanceledException();
-                });
+                (p, v) => EditDialog.GetNewValue(p.Design, p, v, out var newValue) ? newValue : throw new OperationCanceledException() );
 
         var operations = factory
             .CreateOperations(selected, m, rightClicked, out string name)
