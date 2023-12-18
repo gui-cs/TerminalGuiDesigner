@@ -692,15 +692,14 @@ public class Editor : Toplevel
         };
     }
 
-    private MenuItem ToMenuItem(IOperation operation)
+    private static MenuItem ToMenuItem(IOperation operation)
     {
-        return new MenuItem(operation.ToString(), string.Empty, () => this.Try(() => OperationManager.Instance.Do(operation)));
-    }
+        return new MenuItem(operation.ToString(), string.Empty, () => Try(() => OperationManager.Instance.Do(operation)));
 
-    private void Try(Action action)
-    {
-        try
+        static void Try(Action action)
         {
+            try
+            {
             SelectionManager.Instance.LockSelection = true;
             action();
         }
@@ -708,11 +707,13 @@ public class Editor : Toplevel
         {
             ExceptionViewer.ShowException("Operation failed", ex);
         }
-        finally
-        {
-            SelectionManager.Instance.LockSelection = false;
+            finally
+            {
+                SelectionManager.Instance.LockSelection = false;
+            }
         }
     }
+
 
     private string? GetLowerRightTextIfAny()
     {
