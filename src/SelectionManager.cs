@@ -31,6 +31,8 @@ public class SelectionManager
     /// Gets or Sets a value indicating whether to prevent changes to the current <see cref="Selected"/>
     /// collection (e.g. if running a modal dialog / context menu).
     /// </summary>
+    // BUG: Thread-safety
+    // This is not a valid synchronization method and is prone to a bunch of different issues at runtime.
     public bool LockSelection { get; set; }
 
     /// <summary>

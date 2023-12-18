@@ -45,6 +45,7 @@ public class Editor : Toplevel
     /// </summary>
     public Editor()
     {
+        // Bug: This will have strange inheritance behavior if Editor is inherited from.
         this.CanFocus = true;
 
         try
@@ -700,13 +701,15 @@ public class Editor : Toplevel
         {
             try
             {
-            SelectionManager.Instance.LockSelection = true;
-            action();
-        }
-        catch (Exception ex)
-        {
-            ExceptionViewer.ShowException("Operation failed", ex);
-        }
+                // BUG: Thread-safety
+                // Race conditions because this is not a valid synchronization mechanism
+                SelectionManager.Instance.LockSelection = true;
+                action();
+            }
+            catch (Exception ex)
+            {
+                ExceptionViewer.ShowException("Operation failed", ex);
+            }
             finally
             {
                 SelectionManager.Instance.LockSelection = false;
