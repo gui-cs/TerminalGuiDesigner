@@ -72,11 +72,13 @@ public class Editor : Toplevel
     /// (e.g. <see cref="ScrollView"/>) should have a dotted line rendered around them so
     /// users don't lose track of where they are on a same-colored background.
     /// </summary>
+    // BUG: Thread-safety
     public static bool ShowBorders { get; set; } = true;
 
     /// <summary>
     /// Gets a value indicating whether to enable experimental features.
     /// </summary>
+    // BUG: Thread-safety
     public static bool Experimental { get; internal set; }
 
     /// <summary>
@@ -607,6 +609,7 @@ Shift+Cursor - Move focused View
 
         var selected = SelectionManager.Instance.Selected.ToArray();
 
+        // BUG: This is an improper exception here and could have unexpected behavior if this method is ever called asynchronously.
         var factory = new OperationFactory(
                 (p, v) =>
                 {
@@ -995,6 +998,7 @@ Shift+Cursor - Move focused View
         var viewToCode = new ViewToCode();
         string? ns = explicitNamespace;
 
+        // TODO: The following two if statements can be combined and run in a loop until the user either cancels or gets it right
         // if no explicit one
         if (string.IsNullOrWhiteSpace(ns))
         {
@@ -1021,6 +1025,7 @@ Shift+Cursor - Move focused View
 
         var open = new LoadingDialog(toOpen);
 
+        // BUG: If this is not awaited, exceptions at any point of it can be thrown at an indeterminate place and time.
         Task.Run(() =>
         {
             // Create the view files and compile
