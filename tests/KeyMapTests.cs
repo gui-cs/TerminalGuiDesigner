@@ -15,7 +15,7 @@ internal class KeyMapTests
         """
         EditProperties: F4
         ShowContextMenu: Enter
-        ViewSpecificOperations: F4, ShiftMask
+        ViewSpecificOperations: ShiftMask, F4
         EditRootProperties: F5
         ShowHelp: F1
         New: N, CtrlMask

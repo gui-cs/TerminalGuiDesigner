@@ -184,8 +184,8 @@ public class KeyboardManager
             }
         }
 
-        // Allow typing but also Enter to create a new subitem
-        if (!this.IsActionableKey(keystroke))
+        // Allow typing but also Enter to create a new sub-item
+        if ( !this.IsActionableKey( keystroke ) )
         {
             return false;
         }
