@@ -623,9 +623,9 @@ public class Editor : Toplevel
         var setProps = operations.OfType<SetPropertyOperation>();
         var others = operations
             .Except(setProps)
-            .GroupBy(k => k.Category, this.ToMenuItem);
+            .GroupBy(k => k.Category, ToMenuItem);
 
-        var setPropsItems = setProps.Select(this.ToMenuItem).ToArray();
+        var setPropsItems = setProps.Select(ToMenuItem).ToArray();
         bool hasPropsItems = setPropsItems.Any();
 
         var all = new List<MenuItem>();
