@@ -1011,7 +1011,7 @@ Shift+Cursor - Move focused View
         }
 
         // Validate the namespace
-        if (string.IsNullOrWhiteSpace(ns) || ns.Contains(" ") || char.IsDigit(ns.First()))
+        if (string.IsNullOrWhiteSpace(ns) || ns.Contains(' ') || char.IsDigit(ns.First()))
         {
             MessageBox.ErrorQuery("Invalid Namespace", "Namespace must not contain spaces, be empty or begin with a number", "Ok");
             return;
