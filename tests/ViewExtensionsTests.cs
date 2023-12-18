@@ -4,6 +4,10 @@ using TerminalGuiDesigner;
 
 namespace UnitTests;
 
+[TestFixture]
+[TestOf( typeof( ViewExtensions ) )]
+[Category( "Core" )]
+[Category( "UI" )]
 internal class ViewExtensionsTests : Tests
 {
     // upper left corner tests
