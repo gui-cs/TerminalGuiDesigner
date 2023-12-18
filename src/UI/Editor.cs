@@ -650,7 +650,7 @@ public class Editor : Toplevel
             if (string.IsNullOrWhiteSpace(g.Key))
             {
                 // add the operations with no category in alphabetical order
-                all.AddRange(g.OrderBy(g => g.Title));
+                all.AddRange(g.OrderBy(mi => mi.Title));
             }
             else
             {
