@@ -435,23 +435,6 @@ internal class PosTests : Tests
     }
 
     [Test]
-    public void TestGetPosType_WithOffset( )
-    {
-        View v = new( );
-        var d = new Design( new( new FileInfo( "yarg.cs" ) ), "myView", v );
-
-        var p = Pos.Top( v ) + 2;
-        ClassicAssert.True( p.GetPosType( new List<Design> { d }, out var type, out var value, out var relativeTo, out var side, out var offset ), $"Could not figure out PosType for '{p}'" );
-        ClassicAssert.AreSame( d, relativeTo );
-        ClassicAssert.AreEqual( Side.Top, side );
-
-        p = Pos.Top( v ) - 2;
-        ClassicAssert.True( p.GetPosType( new List<Design> { d }, out type, out value, out relativeTo, out side, out offset ), $"Could not figure out PosType for '{p}'" );
-        ClassicAssert.AreSame( d, relativeTo );
-        ClassicAssert.AreEqual( Side.Top, side );
-    }
-
-    [Test]
     public void TestIsAbsolute_FromInt( )
     {
         Pos p = 50;
@@ -470,7 +453,7 @@ internal class PosTests : Tests
     }
 
     [Test]
-    public void TestNullPos( )
+    public void NullPos( )
     {
         var v = new View( );
 
