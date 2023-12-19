@@ -110,6 +110,7 @@ public static class PosExtensions
     /// </summary>
     /// <param name="p"><see cref="Pos"/> to classify.</param>
     /// <returns>True if <paramref name="p"/> is <see cref="Pos.AnchorEnd(int)"/>.</returns>
+    // BUG: This should not return true on null, because 0 is an absolute Pos
     public static bool IsAnchorEnd(this Pos? p)
     {
         if (p == null)

@@ -144,6 +144,7 @@ internal class PosTests : Tests
             return new TestCaseData[]
             {
                 new ExpectedTrueTestCaseData( Pos.At( 50 ) ),
+                new ExpectedTrueTestCaseData( null ),
                 new ExpectedFalseTestCaseData( Pos.AnchorEnd( 5 ) ),
                 new ExpectedFalseTestCaseData( Pos.Center( ) ),
                 new ExpectedFalseTestCaseData( Pos.Percent( 5 ) ),
@@ -181,6 +182,7 @@ internal class PosTests : Tests
             return new TestCaseData[]
             {
                 new ExpectedFalseTestCaseData( Pos.At( 50 ) ),
+                new ExpectedFalseTestCaseData( null ),
                 new ExpectedTrueTestCaseData( Pos.AnchorEnd( ) ),
                 new ExpectedTrueTestCaseData( Pos.AnchorEnd( 5 ) ),
                 new ExpectedFalseTestCaseData( Pos.Center( ) ),
@@ -229,6 +231,7 @@ internal class PosTests : Tests
             return new TestCaseData[]
             {
                 new ExpectedFalseTestCaseData( Pos.At( 50 ) ),
+                new ExpectedFalseTestCaseData( null ),
                 new ExpectedFalseTestCaseData( Pos.AnchorEnd( 5 ) ),
                 new ExpectedFalseTestCaseData( Pos.Center( ) ),
                 new ExpectedTrueTestCaseData( Pos.Percent( 5 ) ),
@@ -376,8 +379,12 @@ internal class PosTests : Tests
     [Test]
     [TestCaseSource( nameof( IsAnchorEnd_Cases ) )]
     [NonParallelizable]
-    public bool IsAnchorEnd( Pos testValue )
+    public bool IsAnchorEnd( Pos? testValue )
     {
+        if ( testValue is null )
+        {
+            Assert.Ignore( "BUG: Null returns true for this, when it shouldn't" );
+        }
         return testValue.IsAnchorEnd( );
     }
 
@@ -443,7 +450,7 @@ internal class PosTests : Tests
         Pos p = d.CreatePosRelative( side, offset );
         if ( offset != 0 )
         {
-            Assert.Ignore( "Bug results in offsets returning aboslute positions. See PosExtensions.cs" );
+            Assert.Ignore( "Bug results in offsets returning absolute positions. See PosExtensions.cs" );
         }
 
         Assert.Multiple( ( ) =>
