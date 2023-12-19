@@ -196,6 +196,31 @@ internal class PosTests : Tests
             };
         }
     }
+    
+    private static IEnumerable<TestCaseData> IsCenter_Cases
+    {
+        get
+        {
+            View v = new( );
+            _ = new Design( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+
+            return new TestCaseData[]
+            {
+                new ExpectedFalseTestCaseData( Pos.At( 50 ) ),
+                new ExpectedFalseTestCaseData( null ),
+                new ExpectedFalseTestCaseData( Pos.AnchorEnd( ) ),
+                new ExpectedFalseTestCaseData( Pos.AnchorEnd( 5 ) ),
+                new ExpectedTrueTestCaseData( Pos.Center( ) ),
+                new ExpectedFalseTestCaseData( Pos.Percent( 5 ) ),
+                new ExpectedFalseTestCaseData( Pos.Top( v ) ),
+                new ExpectedFalseTestCaseData( Pos.Bottom( v ) ),
+                new ExpectedFalseTestCaseData( Pos.Left( v ) ),
+                new ExpectedFalseTestCaseData( Pos.Right( v ) ),
+                new ExpectedFalseTestCaseData( Pos.Y( v ) ),
+                new ExpectedFalseTestCaseData( Pos.X( v ) )
+            };
+        }
+    }
 
     private static IEnumerable<TestCaseData> IsAnchorEnd_WithOutParam_Cases
     {
@@ -269,6 +294,7 @@ internal class PosTests : Tests
             return new TestCaseData[]
             {
                 new ExpectedFalseTestCaseData( Pos.At( 50 ) ),
+                new ExpectedFalseTestCaseData( null ),
                 new ExpectedFalseTestCaseData( Pos.AnchorEnd( 5 ) ),
                 new ExpectedFalseTestCaseData( Pos.Center( ) ),
                 new ExpectedFalseTestCaseData( Pos.Percent( 5 ) ),
@@ -399,6 +425,19 @@ internal class PosTests : Tests
     }
 
     [Test]
+    [TestCaseSource( nameof( IsCenter_Cases ) )]
+    [NonParallelizable]
+    public bool IsCenter( Pos? testValue )
+    {
+        if ( testValue is null )
+        {
+            Assert.Warn( "BUG: Null returns true for this, when it shouldn't" );
+            Assert.Ignore( "BUG: Null returns true for this, when it shouldn't" );
+        }
+        return testValue.IsCenter( );
+    }
+
+    [Test]
     [TestCaseSource( nameof( IsPercent_Cases ) )]
     [NonParallelizable]
     public bool IsPercent( Pos testValue )
@@ -419,8 +458,13 @@ internal class PosTests : Tests
     [Test]
     [TestCaseSource( nameof( IsRelative_Cases ) )]
     [NonParallelizable]
-    public bool IsRelative( Pos testValue )
+    public bool IsRelative( Pos? testValue )
     {
+        if ( testValue is null )
+        {
+            Assert.Ignore( "BUG: Null returns true for this, when it shouldn't" );
+        }
+
         return testValue.IsRelative( );
     }
 
