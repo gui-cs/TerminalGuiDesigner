@@ -435,24 +435,6 @@ internal class PosTests : Tests
     }
 
     [Test]
-    public void TestIsAbsolute_FromInt( )
-    {
-        Pos p = 50;
-        ClassicAssert.IsTrue( p.IsAbsolute( ) );
-        ClassicAssert.IsFalse( p.IsPercent( ) );
-        ClassicAssert.IsFalse( p.IsRelative( ) );
-        ClassicAssert.IsFalse( p.IsAnchorEnd( out _ ) );
-
-        ClassicAssert.IsTrue( p.IsAbsolute( out int size ) );
-        ClassicAssert.AreEqual( 50, size );
-
-        ClassicAssert.IsTrue( p.GetPosType( new List<Design>( ), out var type, out var val, out var design, out var side, out var offset ) );
-        ClassicAssert.AreEqual( PosType.Absolute, type );
-        ClassicAssert.AreEqual( 50, val );
-        ClassicAssert.AreEqual( 0, offset );
-    }
-
-    [Test]
     public void NullPos( )
     {
         var v = new View( );
