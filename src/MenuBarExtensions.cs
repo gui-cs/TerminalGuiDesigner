@@ -17,7 +17,7 @@ public static class MenuBarExtensions
     /// <returns>Selected <see cref="MenuItem"/> or null if none.</returns>
     public static MenuBarItem? GetSelectedMenuItem(this MenuBar menuBar)
     {
-        var selected = (int)GetNonNullPrivateFieldValue("selected", menuBar, typeof(MenuBar));
+        int selected = menuBar.GetNonNullPrivateFieldValue<int,>( "selected" );
 
         if (selected < 0 || selected >= menuBar.Menus.Length)
         {
@@ -74,30 +74,5 @@ public static class MenuBarExtensions
 
         // Return the last menu item that begins rendering before this X point
         return menuXLocations.Last(m => m.Key <= clientPoint.X).Value;
-    }
-
-    /// <summary>
-    /// Changes the <see cref="StatusItem.Shortcut"/> even though it has no setter in Terminal.Gui.
-    /// </summary>
-    /// <param name="item"><see cref="StatusItem"/> to change <see cref="StatusItem.Shortcut"/> on.</param>
-    /// <param name="newShortcut">The new value for <see cref="StatusItem.Shortcut"/>.</param>
-    public static void SetShortcut(this StatusItem item, Key newShortcut)
-    {
-        // See: https://stackoverflow.com/a/40917899/4824531
-        const string backingFieldName = "<Shortcut>k__BackingField";
-
-        var field =
-            typeof(StatusItem).GetField(backingFieldName, BindingFlags.Instance | BindingFlags.NonPublic)
-            ?? throw new Exception($"Could not find auto backing field '{backingFieldName}'");
-
-        field.SetValue(item, newShortcut);
-    }
-
-    private static object GetNonNullPrivateFieldValue(string fieldName, object item, Type type)
-    {
-        var selectedField = type.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance)
-            ?? throw new Exception($"Expected private field {fieldName} was not present on {type.Name}");
-        return selectedField.GetValue(item)
-            ?? throw new Exception($"Private field {fieldName} was unexpectedly null on {type.Name}");
     }
 }
