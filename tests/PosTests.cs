@@ -13,49 +13,34 @@ namespace UnitTests;
 [DefaultFloatingPointTolerance( 0.0001D )]
 internal class PosTests : Tests
 {
-    private static IEnumerable<TestCaseData> GetPosType_OutputsCorrectType_Cases
+    private static IEnumerable<TestCaseData> GetCode_Cases
     {
         get
         {
             View v = new( );
             Design d = new( new( new FileInfo( "yarg.cs" ) ), "myView", v );
-
-            return new TestCaseData[]
+            return new[] { -10, -1, 0, 1, 10 }.SelectMany( offset =>
             {
-                new ExpectedTrueTestCaseData( Pos.At( 50 ), PosType.Absolute, null ),
-                new ExpectedTrueTestCaseData( Pos.AnchorEnd( 5 ), PosType.AnchorEnd, null ),
-                new ExpectedTrueTestCaseData( Pos.Center( ), PosType.Center, null ),
-                new ExpectedTrueTestCaseData( Pos.Percent( 5 ), PosType.Percent, null ),
-                new ExpectedTrueTestCaseData( Pos.Top( v ), PosType.Relative, d ),
-                new ExpectedTrueTestCaseData( Pos.Bottom( v ), PosType.Relative, d ),
-                new ExpectedTrueTestCaseData( Pos.Left( v ), PosType.Relative, d ),
-                new ExpectedTrueTestCaseData( Pos.Right( v ), PosType.Relative, d ),
-                new ExpectedTrueTestCaseData( Pos.Y( v ), PosType.Relative, d ),
-                new ExpectedTrueTestCaseData( Pos.X( v ), PosType.Relative, d )
-            };
-        }
-    }
-
-    private static IEnumerable<TestCaseData> GetPosType_OutputsCorrectValue_Cases
-    {
-        get
-        {
-            View v = new( );
-            Design d = new( new( new FileInfo( "yarg.cs" ) ), "myView", v );
-
-            return new TestCaseData[]
-            {
-                new ExpectedTrueTestCaseData( Pos.At( 50 ), 50, null ),
-                new ExpectedTrueTestCaseData( Pos.AnchorEnd( 5 ), 5, null ),
-                new ExpectedTrueTestCaseData( Pos.Center( ), 0, null ),
-                new ExpectedTrueTestCaseData( Pos.Percent( 5 ), 5, null ),
-                new ExpectedTrueTestCaseData( Pos.Top( v ), 0, d ),
-                new ExpectedTrueTestCaseData( Pos.Bottom( v ), 0, d ),
-                new ExpectedTrueTestCaseData( Pos.Left( v ), 0, d ),
-                new ExpectedTrueTestCaseData( Pos.Right( v ), 0, d ),
-                new ExpectedTrueTestCaseData( Pos.Y( v ), 0, d ),
-                new ExpectedTrueTestCaseData( Pos.X( v ), 0, d )
-            };
+                string offsetString = offset switch
+                {
+                    < 0 => $" - {-offset}",
+                    0 => string.Empty,
+                    > 0 => $" + {offset}"
+                };
+                return new TestCaseData[]
+                {
+                    new( Pos.At( 50 ) + offset, $"{50 + offset}", d, v ),
+                    new( Pos.AnchorEnd( 5 ) + offset, $"Pos.AnchorEnd(5){offsetString}", d, v ),
+                    new( Pos.Center( ) + offset, $"Pos.Center(){offsetString}", d, v ),
+                    new( Pos.Percent( 50 ) + offset, $"Pos.Percent(50f){offsetString}", d, v ),
+                    new( Pos.Top( v ) + offset, $"Pos.Top(myView){offsetString}", d, v ),
+                    new( Pos.Bottom( v ) + offset, $"Pos.Bottom(myView){offsetString}", d, v ),
+                    new( Pos.Left( v ) + offset, $"Pos.Left(myView){offsetString}", d, v ),
+                    new( Pos.Right( v ) + offset, $"Pos.Right(myView){offsetString}", d, v ),
+                    new( Pos.X( v ) + offset, $"Pos.Left(myView){offsetString}", d, v ),
+                    new( Pos.Y( v ) + offset, $"Pos.Top(myView){offsetString}", d, v )
+                };
+            } );
         }
     }
 
@@ -103,6 +88,52 @@ internal class PosTests : Tests
         }
     }
 
+    private static IEnumerable<TestCaseData> GetPosType_OutputsCorrectType_Cases
+    {
+        get
+        {
+            View v = new( );
+            Design d = new( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+
+            return new TestCaseData[]
+            {
+                new ExpectedTrueTestCaseData( Pos.At( 50 ), PosType.Absolute, null ),
+                new ExpectedTrueTestCaseData( Pos.AnchorEnd( 5 ), PosType.AnchorEnd, null ),
+                new ExpectedTrueTestCaseData( Pos.Center( ), PosType.Center, null ),
+                new ExpectedTrueTestCaseData( Pos.Percent( 5 ), PosType.Percent, null ),
+                new ExpectedTrueTestCaseData( Pos.Top( v ), PosType.Relative, d ),
+                new ExpectedTrueTestCaseData( Pos.Bottom( v ), PosType.Relative, d ),
+                new ExpectedTrueTestCaseData( Pos.Left( v ), PosType.Relative, d ),
+                new ExpectedTrueTestCaseData( Pos.Right( v ), PosType.Relative, d ),
+                new ExpectedTrueTestCaseData( Pos.Y( v ), PosType.Relative, d ),
+                new ExpectedTrueTestCaseData( Pos.X( v ), PosType.Relative, d )
+            };
+        }
+    }
+
+    private static IEnumerable<TestCaseData> GetPosType_OutputsCorrectValue_Cases
+    {
+        get
+        {
+            View v = new( );
+            Design d = new( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+
+            return new TestCaseData[]
+            {
+                new ExpectedTrueTestCaseData( Pos.At( 50 ), 50, null ),
+                new ExpectedTrueTestCaseData( Pos.AnchorEnd( 5 ), 5, null ),
+                new ExpectedTrueTestCaseData( Pos.Center( ), 0, null ),
+                new ExpectedTrueTestCaseData( Pos.Percent( 5 ), 5, null ),
+                new ExpectedTrueTestCaseData( Pos.Top( v ), 0, d ),
+                new ExpectedTrueTestCaseData( Pos.Bottom( v ), 0, d ),
+                new ExpectedTrueTestCaseData( Pos.Left( v ), 0, d ),
+                new ExpectedTrueTestCaseData( Pos.Right( v ), 0, d ),
+                new ExpectedTrueTestCaseData( Pos.Y( v ), 0, d ),
+                new ExpectedTrueTestCaseData( Pos.X( v ), 0, d )
+            };
+        }
+    }
+
     private static IEnumerable<TestCaseData> IsAbsolute_Cases
     {
         get
@@ -122,31 +153,6 @@ internal class PosTests : Tests
                 new ExpectedFalseTestCaseData( Pos.Right( v ) ),
                 new ExpectedFalseTestCaseData( Pos.Y( v ) ),
                 new ExpectedFalseTestCaseData( Pos.X( v ) )
-
-            };
-        }
-    }
-
-    private static IEnumerable<TestCaseData> IsAnchorEnd_Cases
-    {
-        get
-        {
-            View v = new( );
-            _ = new Design( new( new FileInfo( "yarg.cs" ) ), "myView", v );
-            
-            return new TestCaseData[]
-            {
-                new ExpectedFalseTestCaseData( Pos.At( 50 ) ),
-                new ExpectedTrueTestCaseData( Pos.AnchorEnd( 5 ) ),
-                new ExpectedFalseTestCaseData( Pos.Center( ) ),
-                new ExpectedFalseTestCaseData( Pos.Percent( 5 ) ),
-                new ExpectedFalseTestCaseData( Pos.Top( v ) ),
-                new ExpectedFalseTestCaseData( Pos.Bottom( v ) ),
-                new ExpectedFalseTestCaseData( Pos.Left( v ) ),
-                new ExpectedFalseTestCaseData( Pos.Right( v ) ),
-                new ExpectedFalseTestCaseData( Pos.Y( v ) ),
-                new ExpectedFalseTestCaseData( Pos.X( v ) )
-
             };
         }
     }
@@ -165,25 +171,48 @@ internal class PosTests : Tests
         }
     }
 
+    private static IEnumerable<TestCaseData> IsAnchorEnd_Cases
+    {
+        get
+        {
+            View v = new( );
+            _ = new Design( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+
+            return new TestCaseData[]
+            {
+                new ExpectedFalseTestCaseData( Pos.At( 50 ) ),
+                new ExpectedTrueTestCaseData( Pos.AnchorEnd( 5 ) ),
+                new ExpectedFalseTestCaseData( Pos.Center( ) ),
+                new ExpectedFalseTestCaseData( Pos.Percent( 5 ) ),
+                new ExpectedFalseTestCaseData( Pos.Top( v ) ),
+                new ExpectedFalseTestCaseData( Pos.Bottom( v ) ),
+                new ExpectedFalseTestCaseData( Pos.Left( v ) ),
+                new ExpectedFalseTestCaseData( Pos.Right( v ) ),
+                new ExpectedFalseTestCaseData( Pos.Y( v ) ),
+                new ExpectedFalseTestCaseData( Pos.X( v ) )
+            };
+        }
+    }
+
     private static IEnumerable<TestCaseData> IsPercent_Cases
     {
         get
         {
             View v = new( );
             _ = new Design( new( new FileInfo( "yarg.cs" ) ), "myView", v );
-            
+
             return new TestCaseData[]
             {
                 new ExpectedFalseTestCaseData( Pos.At( 50 ) ),
                 new ExpectedFalseTestCaseData( Pos.AnchorEnd( 5 ) ),
                 new ExpectedFalseTestCaseData( Pos.Center( ) ),
                 new ExpectedTrueTestCaseData( Pos.Percent( 5 ) ),
-                new ExpectedFalseTestCaseData(Pos.Top(v)),
-                new ExpectedFalseTestCaseData(Pos.Bottom(v)),
-                new ExpectedFalseTestCaseData(Pos.Left(v)),
-                new ExpectedFalseTestCaseData(Pos.Right(v)),
-                new ExpectedFalseTestCaseData(Pos.Y(v)),
-                new ExpectedFalseTestCaseData(Pos.X(v))
+                new ExpectedFalseTestCaseData( Pos.Top( v ) ),
+                new ExpectedFalseTestCaseData( Pos.Bottom( v ) ),
+                new ExpectedFalseTestCaseData( Pos.Left( v ) ),
+                new ExpectedFalseTestCaseData( Pos.Right( v ) ),
+                new ExpectedFalseTestCaseData( Pos.Y( v ) ),
+                new ExpectedFalseTestCaseData( Pos.X( v ) )
             };
         }
     }
@@ -249,6 +278,29 @@ internal class PosTests : Tests
     }
 
     [Test]
+    [Category( "Code Generation" )]
+    [TestCaseSource( nameof( GetCode_Cases ) )]
+    public void GetCode( Pos testPos, string expectedCodeString, Design d, View v )
+    {
+        Assert.That( testPos.ToCode( new( ) { d } ), Is.EqualTo( expectedCodeString ) );
+    }
+
+    [Test]
+    [TestCaseSource( nameof( GetPosType_OutputsCorrectOffset_Cases ) )]
+    public bool GetPosType_OutputsCorrectOffset( Pos testValue, int expectedOffset, Design? d )
+    {
+        List<Design> knownDesigns = new( );
+        if ( d is not null )
+        {
+            knownDesigns.Add( d );
+        }
+
+        bool getPosTypeSucceeded = testValue.GetPosType( knownDesigns, out _, out _, out _, out _, out int actualOffset );
+        Assert.That( actualOffset, Is.EqualTo( expectedOffset ) );
+        return getPosTypeSucceeded;
+    }
+
+    [Test]
     [TestCaseSource( nameof( GetPosType_OutputsCorrectType_Cases ) )]
     public bool GetPosType_OutputsCorrectType( Pos testValue, PosType expectedPosType, Design? d )
     {
@@ -279,34 +331,11 @@ internal class PosTests : Tests
     }
 
     [Test]
-    [TestCaseSource( nameof( GetPosType_OutputsCorrectOffset_Cases ) )]
-    public bool GetPosType_OutputsCorrectOffset( Pos testValue, int expectedOffset, Design? d )
-    {
-        List<Design> knownDesigns = new( );
-        if ( d is not null )
-        {
-            knownDesigns.Add( d );
-        }
-
-        bool getPosTypeSucceeded = testValue.GetPosType( knownDesigns, out _, out _, out _, out _, out int actualOffset );
-        Assert.That( actualOffset, Is.EqualTo( expectedOffset ) );
-        return getPosTypeSucceeded;
-    }
-
-    [Test]
     [TestCaseSource( nameof( IsAbsolute_Cases ) )]
     [NonParallelizable]
     public bool IsAbsolute( Pos testValue )
     {
         return testValue.IsAbsolute( );
-    }
-
-    [Test]
-    [TestCaseSource( nameof( IsAnchorEnd_Cases ) )]
-    [NonParallelizable]
-    public bool IsAnchorEnd( Pos testValue )
-    {
-        return testValue.IsAnchorEnd( );
     }
 
     [Test]
@@ -317,6 +346,14 @@ internal class PosTests : Tests
         bool isAbsolute = testValue.IsAbsolute( out int actualOutValue );
         Assert.That( actualOutValue, Is.EqualTo( expectedOutValue ) );
         return isAbsolute;
+    }
+
+    [Test]
+    [TestCaseSource( nameof( IsAnchorEnd_Cases ) )]
+    [NonParallelizable]
+    public bool IsAnchorEnd( Pos testValue )
+    {
+        return testValue.IsAnchorEnd( );
     }
 
     [Test]
@@ -360,44 +397,6 @@ internal class PosTests : Tests
         Assert.That( actualOutDesign, Is.SameAs( expectedOutDesign ) );
         Assert.That( actualOutSide, Is.EqualTo( expectedOutSide ) );
         return isRelative;
-    }
-
-    [Test]
-    public void TestGetCode_WithNoOffset( )
-    {
-        View v = new( );
-        var d = new Design( new( new FileInfo( "yarg.cs" ) ), "myView", v );
-
-        var p = Pos.Percent( 50 );
-        ClassicAssert.AreEqual( "Pos.Percent(50f)", p.ToCode( new( ) { d } ) );
-
-        p = Pos.Left( v );
-        ClassicAssert.AreEqual( "Pos.Left(myView)", p.ToCode( new( ) { d } ) );
-        p = Pos.Right( v );
-        ClassicAssert.AreEqual( "Pos.Right(myView)", p.ToCode( new( ) { d } ) );
-        p = Pos.Bottom( v );
-        ClassicAssert.AreEqual( "Pos.Bottom(myView)", p.ToCode( new( ) { d } ) );
-        p = Pos.Top( v );
-        ClassicAssert.AreEqual( "Pos.Top(myView)", p.ToCode( new( ) { d } ) );
-    }
-
-    [Test]
-    public void TestGetCode_WithOffset( )
-    {
-        View v = new( );
-        var d = new Design( new( new FileInfo( "yarg.cs" ) ), "myView", v );
-
-        var p = Pos.Percent( 50 ) + 2;
-        ClassicAssert.AreEqual( "Pos.Percent(50f) + 2", p.ToCode( new( ) { d } ) );
-
-        p = Pos.Percent( 50 ) - 2;
-        ClassicAssert.AreEqual( "Pos.Percent(50f) - 2", p.ToCode( new( ) { d } ) );
-
-        p = Pos.Right( v ) + 2;
-        ClassicAssert.AreEqual( "Pos.Right(myView) + 2", p.ToCode( new( ) { d } ) );
-
-        p = Pos.Right( v ) - 2;
-        ClassicAssert.AreEqual( "Pos.Right(myView) - 2", p.ToCode( new( ) { d } ) );
     }
 
     [Test]
