@@ -165,6 +165,7 @@ public static class PosExtensions
     /// or null if <paramref name="p"/> is not <see cref="PosType.Relative"/>.</param>
     /// <param name="side"><see cref="Enum"/> representing the method that was used e.g. <see cref="Pos.Right(View)"/>, <see cref="Pos.Left(View)"/> etc.</param>
     /// <returns></returns>
+    // BUG: Side should be nullable, because it gets an explicit value in all cases
     public static bool IsRelative(this Pos p, IList<Design> knownDesigns, out Design? relativeTo, out Side side)
     {
         relativeTo = null;
