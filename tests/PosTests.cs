@@ -181,6 +181,8 @@ internal class PosTests : Tests
             return new TestCaseData[]
             {
                 new ExpectedFalseTestCaseData( Pos.At( 50 ) ),
+                new ExpectedTrueTestCaseData( Pos.AnchorEnd( -5 ) ),
+                new ExpectedTrueTestCaseData( Pos.AnchorEnd( ) ),
                 new ExpectedTrueTestCaseData( Pos.AnchorEnd( 5 ) ),
                 new ExpectedFalseTestCaseData( Pos.Center( ) ),
                 new ExpectedFalseTestCaseData( Pos.Percent( 5 ) ),
@@ -190,6 +192,30 @@ internal class PosTests : Tests
                 new ExpectedFalseTestCaseData( Pos.Right( v ) ),
                 new ExpectedFalseTestCaseData( Pos.Y( v ) ),
                 new ExpectedFalseTestCaseData( Pos.X( v ) )
+            };
+        }
+    }
+
+    private static IEnumerable<TestCaseData> IsAnchorEnd_WithOutParam_Cases
+    {
+        get
+        {
+            View v = new( );
+            _ = new Design( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+
+            return new TestCaseData[]
+            {
+                new ExpectedFalseTestCaseData( Pos.At( 50 ), 0 ),
+                new ExpectedTrueTestCaseData( Pos.AnchorEnd( ), 0 ),
+                new ExpectedTrueTestCaseData( Pos.AnchorEnd( 5 ), 5 ),
+                new ExpectedFalseTestCaseData( Pos.Center( ), 0 ),
+                new ExpectedFalseTestCaseData( Pos.Percent( 5 ), 0 ),
+                new ExpectedFalseTestCaseData( Pos.Top( v ), 0 ),
+                new ExpectedFalseTestCaseData( Pos.Bottom( v ), 0 ),
+                new ExpectedFalseTestCaseData( Pos.Left( v ), 0 ),
+                new ExpectedFalseTestCaseData( Pos.Right( v ), 0 ),
+                new ExpectedFalseTestCaseData( Pos.Y( v ), 0 ),
+                new ExpectedFalseTestCaseData( Pos.X( v ), 0 )
             };
         }
     }
@@ -357,6 +383,16 @@ internal class PosTests : Tests
     }
 
     [Test]
+    [TestCaseSource( nameof( IsAnchorEnd_WithOutParam_Cases ) )]
+    [NonParallelizable]
+    public bool IsAnchorEnd_WithOutParam( Pos testValue, int expectedOutValue )
+    {
+        bool isAnchorEnd = testValue.IsAnchorEnd( out int actualOutValue );
+        Assert.That( actualOutValue, Is.EqualTo( expectedOutValue ) );
+        return isAnchorEnd;
+    }
+
+    [Test]
     [TestCaseSource( nameof( IsPercent_Cases ) )]
     [NonParallelizable]
     public bool IsPercent( Pos testValue )
@@ -432,37 +468,6 @@ internal class PosTests : Tests
         ClassicAssert.AreEqual( PosType.Absolute, type );
         ClassicAssert.AreEqual( 50, val );
         ClassicAssert.AreEqual( 0, offset );
-    }
-
-    [Test]
-    public void TestIsAnchorEnd_WithMargin( )
-    {
-        ClassicAssert.IsFalse( Pos.AnchorEnd( 2 ).IsAbsolute( ) );
-        ClassicAssert.IsFalse( Pos.AnchorEnd( 2 ).IsPercent( ) );
-        ClassicAssert.IsFalse( Pos.AnchorEnd( 2 ).IsRelative( ) );
-        ClassicAssert.IsTrue( Pos.AnchorEnd( 2 ).IsAnchorEnd( out _ ) );
-
-        ClassicAssert.IsTrue( Pos.AnchorEnd( 2 ).IsAnchorEnd( out var margin ) );
-        ClassicAssert.AreEqual( 2, margin );
-
-        ClassicAssert.IsTrue( Pos.AnchorEnd( 2 ).GetPosType( new List<Design>( ), out var type, out var val, out var design, out var side, out var offset ) );
-        ClassicAssert.AreEqual( PosType.AnchorEnd, type );
-        ClassicAssert.AreEqual( 2, val );
-        ClassicAssert.AreEqual( 0, offset );
-    }
-
-    [Test]
-    public void TestIsAnchorEnd_WithOffset( )
-    {
-        ClassicAssert.IsTrue( ( Pos.AnchorEnd( 1 ) + 2 ).GetPosType( new List<Design>( ), out var type, out var val, out var design, out var side, out var offset ) );
-        ClassicAssert.AreEqual( PosType.AnchorEnd, type );
-        ClassicAssert.AreEqual( 1, val );
-        ClassicAssert.AreEqual( 2, offset );
-
-        ClassicAssert.IsTrue( ( Pos.AnchorEnd( 1 ) - 2 ).GetPosType( new List<Design>( ), out type, out val, out design, out side, out offset ) );
-        ClassicAssert.AreEqual( PosType.AnchorEnd, type );
-        ClassicAssert.AreEqual( 1, val );
-        ClassicAssert.AreEqual( -2, offset );
     }
 
     [Test]
