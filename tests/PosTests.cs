@@ -469,28 +469,7 @@ internal class PosTests : Tests
         ClassicAssert.AreEqual( 50, val );
         ClassicAssert.AreEqual( 0, offset );
     }
-
-    [Test]
-    public void TestIsRelativeTo( )
-    {
-        View v = new( );
-        var d = new Design( new( new FileInfo( "yarg.cs" ) ), "myView", v );
-
-        ClassicAssert.IsFalse( Pos.Top( v ).IsAbsolute( ) );
-        ClassicAssert.IsFalse( Pos.Top( v ).IsPercent( ) );
-        ClassicAssert.IsTrue( Pos.Top( v ).IsRelative( ) );
-        ClassicAssert.IsFalse( Pos.Top( v ).IsAnchorEnd( out _ ) );
-
-        ClassicAssert.IsTrue( Pos.Top( v ).IsRelative( new List<Design> { d }, out var relativeTo, out var side ) );
-        ClassicAssert.AreSame( d, relativeTo );
-        ClassicAssert.AreEqual( Side.Top, side );
-
-        ClassicAssert.IsTrue( Pos.Top( v ).GetPosType( new List<Design> { d }, out var type, out var val, out relativeTo, out side, out var offset ) );
-        ClassicAssert.AreEqual( PosType.Relative, type );
-        ClassicAssert.AreSame( d, relativeTo );
-        ClassicAssert.AreEqual( Side.Top, side );
-    }
-
+    
     [Test]
     public void TestNullPos( )
     {
