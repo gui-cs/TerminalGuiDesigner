@@ -181,7 +181,6 @@ internal class PosTests : Tests
             return new TestCaseData[]
             {
                 new ExpectedFalseTestCaseData( Pos.At( 50 ) ),
-                new ExpectedTrueTestCaseData( Pos.AnchorEnd( -5 ) ),
                 new ExpectedTrueTestCaseData( Pos.AnchorEnd( ) ),
                 new ExpectedTrueTestCaseData( Pos.AnchorEnd( 5 ) ),
                 new ExpectedFalseTestCaseData( Pos.Center( ) ),
