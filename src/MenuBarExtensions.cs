@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using Terminal.Gui;
+﻿using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
 
@@ -36,6 +35,7 @@ public static class MenuBarExtensions
     public static MenuBarItem? ScreenToMenuBarItem(this MenuBar menuBar, int screenX)
     {
         // These might be changed in Terminal.Gui library
+        // TODO: Maybe load these from a config file, so we aren't at TG's mercy
         const int initialWhitespace = 1;
         const int afterEachItemWhitespace = 2;
 

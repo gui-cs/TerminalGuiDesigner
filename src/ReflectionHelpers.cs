@@ -46,21 +46,4 @@ public static class ReflectionHelpers
         return (TOut)( selectedField.GetValue( item )
                        ?? throw new InvalidOperationException( $"Private instance field {fieldName} was unexpectedly null on {typeof( TIn ).Name}" ) );
     }
-
-    /// <summary>
-    /// Changes the <see cref="StatusItem.Shortcut"/> even though it has no setter in Terminal.Gui.
-    /// </summary>
-    /// <param name="item"><see cref="StatusItem"/> to change <see cref="StatusItem.Shortcut"/> on.</param>
-    /// <param name="newShortcut">The new value for <see cref="StatusItem.Shortcut"/>.</param>
-    public static void SetShortcut( this StatusItem item, Key newShortcut )
-    {
-        // See: https://stackoverflow.com/a/40917899/4824531
-        const string backingFieldName = "<Shortcut>k__BackingField";
-
-        var field =
-            typeof( StatusItem ).GetField( backingFieldName, BindingFlags.Instance | BindingFlags.NonPublic )
-            ?? throw new Exception( $"Could not find auto backing field '{backingFieldName}'" );
-
-        field.SetValue( item, newShortcut );
-    }
 }
