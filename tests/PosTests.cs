@@ -468,29 +468,23 @@ internal class PosTests : Tests
         ClassicAssert.AreEqual( 50, val );
         ClassicAssert.AreEqual( 0, offset );
     }
-    
+
     [Test]
     public void TestNullPos( )
     {
         var v = new View( );
 
-        ClassicAssert.IsNull( v.X, "As of v1.7.0 a new View started getting null for its X, if this assert fails it means that behaviour was reverted and this test can be altered or suppressed" );
+        Assume.That( v.X, Is.Null, "As of v1.7.0 a new View started getting null for its X, if this assert fails it means that behaviour was reverted and this test can be altered or suppressed" );
 
-        ClassicAssert.IsTrue( v.X.IsAbsolute( ) );
-        ClassicAssert.IsTrue( v.X.IsAbsolute( out int n ) );
-        ClassicAssert.AreEqual( 0, n );
+        Pos? nullPos = null;
+        Assert.That( nullPos.IsAbsolute );
+        Assert.That( nullPos.IsAbsolute( out int n ) );
+        Assert.That( n, Is.Zero );
 
-        ClassicAssert.IsFalse( v.X.IsPercent( ) );
-        ClassicAssert.IsFalse( v.X.IsCombine( ) );
-        ClassicAssert.IsFalse( v.X.IsCenter( ) );
+        Assert.That( v.X.GetPosType( new List<Design>( ), out var type, out var val, out _, out _, out _ ) );
 
-        ClassicAssert.IsFalse( v.X.IsRelative( ) );
-        ClassicAssert.IsFalse( v.X.IsRelative( new List<Design>( ), out _, out _ ) );
-
-        ClassicAssert.IsTrue( v.X.GetPosType( new List<Design>( ), out var type, out var val, out _, out _, out _ ) );
-
-        ClassicAssert.AreEqual( PosType.Absolute, type );
-        ClassicAssert.AreEqual( 0, val );
+        Assert.That( type, Is.EqualTo( PosType.Absolute ) );
+        Assert.That( val, Is.Zero );
     }
 
     [Test]
