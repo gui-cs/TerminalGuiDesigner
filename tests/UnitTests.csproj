@@ -34,6 +34,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\src\TerminalGuiDesigner.csproj" />
+    <Using Include="System" />
+    <Using Include="System.Collections.Generic" />
+    <Using Include="Terminal.Gui" />
+    <Using Include="TerminalGuiDesigner" />
+    <Using Include="UnitTests.TestSupportTypes" />
 		<Using Include="NUnit.Framework" />
 		<Using Include="NUnit.Framework.Legacy" />
   </ItemGroup>
