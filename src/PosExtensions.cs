@@ -410,7 +410,9 @@ public static class PosExtensions
     /// <param name="offset">The offset if any to use e.g. if you want:
     /// <code>Pos.Left(myView) + 5</code></param>
     /// <returns>The resulting <see cref="Pos"/> of the invoked method (e.g. <see cref="Pos.Right(View)"/>.</returns>
-    public static Pos CreatePosRelative(Design relativeTo, Side side, int offset)
+    // BUG: This returns absolute positions when offsets are applied
+    // It's a Terminal.Gui issue, but we can probably work around it.
+    public static Pos CreatePosRelative(this Design relativeTo, Side side, int offset)
     {
         Pos pos;
         switch (side)

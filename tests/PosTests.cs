@@ -435,6 +435,27 @@ internal class PosTests : Tests
     }
 
     [Test]
+    public void CreatePosRelative( [Values] Side side, [Values( -10, -5, 0, 5, 10 )] int offset )
+    {
+        View v = new( );
+        Design d = new( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+
+        Pos p = d.CreatePosRelative( side, offset );
+        if ( offset != 0 )
+        {
+            Assert.Ignore( "Bug results in offsets returning aboslute positions. See PosExtensions.cs" );
+        }
+
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( p.IsRelative );
+            Assert.That( p.IsRelative( new List<Design> { d }, out Design outDesign, out Side outSide ) );
+            Assert.That( outDesign, Is.SameAs( d ) );
+            Assert.That( outSide, Is.EqualTo( side ) );
+        } );
+    }
+
+    [Test]
     public void NullPos( )
     {
         var v = new View( );
