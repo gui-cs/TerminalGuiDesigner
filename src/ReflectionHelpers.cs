@@ -7,7 +7,7 @@ namespace TerminalGuiDesigner;
 public static class ReflectionHelpers
 {
     /// <summary>
-    ///   Gets a private field value from a non-null <typeparamref name="TIn" /> inheriting from <see cref="View" /> as a
+    ///   Gets a non-public field value from a non-null <typeparamref name="TIn" /> inheriting from <see cref="View" /> as a
     ///   <typeparamref name="TOut" />.
     /// </summary>
     /// <typeparam name="TOut">The type of the field. Must pass a <see langword="notnull" /> constraint.</typeparam>
@@ -28,7 +28,7 @@ public static class ReflectionHelpers
     /// <exception cref="InvalidOperationException">
     ///   If the value of the requested <paramref name="fieldName" /> on <paramref name="item" /> was null.
     /// </exception>
-    internal static TOut GetNonNullPrivateFieldValue<TOut, TIn>( this TIn? item, string fieldName )
+    internal static TOut GetNonNullNonPublicFieldValue<TOut, TIn>( this TIn? item, string fieldName )
         where TIn : View
         where TOut : notnull
     {
@@ -36,7 +36,7 @@ public static class ReflectionHelpers
         ArgumentException.ThrowIfNullOrEmpty( fieldName, nameof( fieldName ) );
 
         FieldInfo selectedField = typeof( TIn ).GetField( fieldName, BindingFlags.NonPublic | BindingFlags.Instance )
-                                  ?? throw new MissingFieldException( $"Expected private instance field {fieldName} was not present on {typeof( TIn ).Name}" );
+                                  ?? throw new MissingFieldException( $"Expected non-public instance field {fieldName} was not present on {typeof( TIn ).Name}" );
 
         if ( selectedField.FieldType != typeof( TOut ) )
         {
@@ -44,6 +44,6 @@ public static class ReflectionHelpers
         }
 
         return (TOut)( selectedField.GetValue( item )
-                       ?? throw new InvalidOperationException( $"Private instance field {fieldName} was unexpectedly null on {typeof( TIn ).Name}" ) );
+                       ?? throw new InvalidOperationException( $"Non-public instance field {fieldName} was unexpectedly null on {typeof( TIn ).Name}" ) );
     }
 }
