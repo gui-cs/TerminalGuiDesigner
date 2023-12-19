@@ -16,7 +16,7 @@ public static class MenuBarExtensions
     /// <returns>Selected <see cref="MenuItem"/> or null if none.</returns>
     public static MenuBarItem? GetSelectedMenuItem(this MenuBar menuBar)
     {
-        int selected = menuBar.GetNonNullNonPublicFieldValue<int,>( "selected" );
+        int selected = menuBar.GetNonNullNonPublicFieldValue<int, MenuBar>( "selected" );
 
         if (selected < 0 || selected >= menuBar.Menus.Length)
         {

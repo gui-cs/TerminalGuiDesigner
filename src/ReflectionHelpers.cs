@@ -12,7 +12,7 @@ public static class ReflectionHelpers
     /// </summary>
     /// <typeparam name="TOut">The type of the field. Must pass a <see langword="notnull" /> constraint.</typeparam>
     /// <typeparam name="TIn">
-    ///   The type of the <see cref="View" /> to get the field on. Can be inferred from usage.
+    ///   The type of the <see cref="View" /> to get the field on.
     /// </typeparam>
     /// <param name="item">The <see cref="View" /> to reflect on.</param>
     /// <param name="fieldName">The name of the field to get via reflection.</param>
