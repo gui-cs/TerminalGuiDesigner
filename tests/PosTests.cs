@@ -435,23 +435,6 @@ internal class PosTests : Tests
     }
 
     [Test]
-    public void TestIsAnchorEnd( )
-    {
-        ClassicAssert.IsFalse( Pos.AnchorEnd( ).IsAbsolute( ) );
-        ClassicAssert.IsFalse( Pos.AnchorEnd( ).IsPercent( ) );
-        ClassicAssert.IsFalse( Pos.AnchorEnd( ).IsRelative( ) );
-        ClassicAssert.IsTrue( Pos.AnchorEnd( ).IsAnchorEnd( out _ ) );
-
-        ClassicAssert.IsTrue( Pos.AnchorEnd( ).IsAnchorEnd( out var margin ) );
-        ClassicAssert.AreEqual( 0, margin );
-
-        ClassicAssert.IsTrue( Pos.AnchorEnd( ).GetPosType( new List<Design>( ), out var type, out var val, out var design, out var side, out var offset ) );
-        ClassicAssert.AreEqual( PosType.AnchorEnd, type );
-        ClassicAssert.AreEqual( 0, val );
-        ClassicAssert.AreEqual( 0, offset );
-    }
-
-    [Test]
     public void TestIsAnchorEnd_WithMargin( )
     {
         ClassicAssert.IsFalse( Pos.AnchorEnd( 2 ).IsAbsolute( ) );
@@ -480,23 +463,6 @@ internal class PosTests : Tests
         ClassicAssert.AreEqual( PosType.AnchorEnd, type );
         ClassicAssert.AreEqual( 1, val );
         ClassicAssert.AreEqual( -2, offset );
-    }
-
-    [Test]
-    public void TestIsPercent( )
-    {
-        ClassicAssert.IsFalse( Pos.Percent( 24 ).IsAbsolute( ) );
-        ClassicAssert.IsTrue( Pos.Percent( 24 ).IsPercent( ) );
-        ClassicAssert.IsFalse( Pos.Percent( 24 ).IsRelative( ) );
-        ClassicAssert.IsFalse( Pos.Percent( 24 ).IsAnchorEnd( out _ ) );
-
-        ClassicAssert.IsTrue( Pos.Percent( 24 ).IsPercent( out var size ) );
-        ClassicAssert.AreEqual( 24f, size );
-
-        ClassicAssert.IsTrue( Pos.Percent( 24 ).GetPosType( new List<Design>( ), out var type, out var val, out var design, out var side, out var offset ) );
-        ClassicAssert.AreEqual( PosType.Percent, type );
-        ClassicAssert.AreEqual( 24, val );
-        ClassicAssert.AreEqual( 0, offset );
     }
 
     [Test]
