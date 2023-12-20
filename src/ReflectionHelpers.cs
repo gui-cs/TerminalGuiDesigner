@@ -46,4 +46,20 @@ public static class ReflectionHelpers
         return (TOut)( selectedField.GetValue( item )
                        ?? throw new InvalidOperationException( $"Non-public instance field {fieldName} was unexpectedly null on {typeof( TIn ).Name}" ) );
     }
+
+    public static View GetDefaultViewInstance( Type t )
+    {
+        if ( !t.IsAssignableTo( typeof(View) ) )
+        {
+            throw new ArgumentOutOfRangeException( nameof( t ), $"{t.Name} must be assignable to the View type" );
+        }
+
+        var instance = Activator.CreateInstance( t ) as View ?? throw new Exception( $"CreateInstance returned null for Type '{t.Name}'" );
+        instance.SetActualText( "Heya" );
+
+        instance.Width = Math.Max( instance.Bounds.Width, 4 );
+        instance.Height = Math.Max( instance.Bounds.Height, 1 );
+
+        return instance;
+    }
 }
