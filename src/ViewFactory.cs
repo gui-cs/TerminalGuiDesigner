@@ -110,9 +110,10 @@ public static class ViewFactory
     ///   An optional height of the requested view. Default values are dependent on the requested
     ///   type, if not supplied.
     /// </param>
+    /// <param name="text">Initial text for the new view. Only used if it is relevant.</param>
     /// <exception cref="NotSupportedException">If an unsupported type is requested</exception>
     /// <returns>
-    ///   A new instance of <paramref name="{T}" /> with the specified dimensions or defaults, if not provided.
+    ///   A new instance of <typeparamref name="T" /> with the specified dimensions or defaults, if not provided.
     /// </returns>
     /// <remarks>
     ///   <typeparamref name="T" /> must inherit from <see cref="View" />, must have a public constructor, and must
