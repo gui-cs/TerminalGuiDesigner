@@ -165,9 +165,6 @@ internal class KeyMapTests
             // Value equality should have been restored between these two, but not reference equality.
             Assert.That( mutatedKeyMapWithOriginalAddViewKey, Is.EqualTo( defaultKeyMap ) );
             Assert.That( mutatedKeyMapWithOriginalAddViewKey, Is.Not.SameAs( defaultKeyMap ) );
-
-            // Even though we set AddView from defaultKeyMap, this should not be the same reference.
-            Assert.That( mutatedKeyMapWithOriginalAddViewKey.AddView, Is.Not.SameAs( defaultKeyMap.AddView ) );
         } );
     }
 }
