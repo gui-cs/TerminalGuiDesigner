@@ -1,4 +1,4 @@
-namespace UnitTests;
+﻿namespace UnitTests;
 
 [TestFixture]
 [TestOf( typeof( OperationManager ) )]
@@ -8,7 +8,7 @@ namespace UnitTests;
 internal class LabelTests : Tests
 {
     [Test]
-    public void Test_ChangingLabelX()
+    public void ChangingLabelProperty([Values("X")]string propertyName)
     {
         var file = new FileInfo("Test_ChangingLabelX.cs");
         var viewToCode = new ViewToCode();
@@ -17,20 +17,54 @@ internal class LabelTests : Tests
         var op = new AddViewOperation(new Label("Hello World"), designOut, "myLabel");
         op.Do();
 
+        Assume.That( designOut, Is.Not.Null.And.InstanceOf<Design>( ) );
+        Assume.That( designOut.View, Is.Not.Null.And.InstanceOf<Window>( ) );
+        
         // the Hello world label
-        var lblDesign = designOut.GetAllDesigns().Single(d => d.View is Label);
-        var xProp = lblDesign.GetDesignableProperties().Single(p => p.PropertyInfo.Name.Equals("X"));
+        var lblDesign = designOut.GetAllDesigns( ).SingleOrDefault( d => d.View is Label );
+        Assume.That( lblDesign, Is.Not.Null.And.InstanceOf<Design>( ) );
+        Assume.That( lblDesign!.View, Is.Not.Null.And.InstanceOf<Label>( ) );
 
-        OperationManager.Instance.Do(new SetPropertyOperation(lblDesign, xProp, xProp.GetValue(), Pos.At(10)));
-        OperationManager.Instance.Do(new SetPropertyOperation(lblDesign, xProp, xProp.GetValue(), Pos.Percent(50)));
-        OperationManager.Instance.Do(new SetPropertyOperation(lblDesign, xProp, xProp.GetValue(), Pos.At(10)));
-        OperationManager.Instance.Do(new SetPropertyOperation(lblDesign, xProp, xProp.GetValue(), Pos.Percent(50)));
-        OperationManager.Instance.Undo();
-        OperationManager.Instance.Undo();
-        OperationManager.Instance.Redo();
-        OperationManager.Instance.Redo();
+        var propertyBeingChanged = lblDesign.GetDesignableProperties( ).SingleOrDefault( p => p.PropertyInfo.Name.Equals( propertyName ) );
+        Assume.That( propertyBeingChanged, Is.Not.Null.And.InstanceOf<Property>( ) );
+        Assume.That( propertyBeingChanged!.PropertyInfo.Name, Is.EqualTo( propertyName ) );
 
-        ClassicAssert.AreEqual($"Factor({0.5})",lblDesign.View.X.ToString());
+        Assume.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+        Assume.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+        
+        OperationManager.Instance.Do( new SetPropertyOperation( lblDesign, propertyBeingChanged, propertyBeingChanged.GetValue( ), Pos.At( 10 ) ) );
+        Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
+        Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+        
+        OperationManager.Instance.Do(new SetPropertyOperation(lblDesign, propertyBeingChanged, propertyBeingChanged.GetValue(), Pos.Percent(50)));
+        Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 2 ) );
+        Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+        
+        OperationManager.Instance.Do(new SetPropertyOperation(lblDesign, propertyBeingChanged, propertyBeingChanged.GetValue(), Pos.At(10)));
+        Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 3 ) );
+        Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+        
+        OperationManager.Instance.Do(new SetPropertyOperation(lblDesign, propertyBeingChanged, propertyBeingChanged.GetValue(), Pos.Percent(50)));
+        Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 4 ) );
+        Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+
+        OperationManager.Instance.Undo();
+        Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 3 ) );
+        Assert.That( OperationManager.Instance.RedoStackSize, Is.EqualTo( 1 ) );
+
+        OperationManager.Instance.Undo();
+        Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 2 ) );
+        Assert.That( OperationManager.Instance.RedoStackSize, Is.EqualTo( 2 ) );
+        
+        OperationManager.Instance.Redo();
+        Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 3 ) );
+        Assert.That( OperationManager.Instance.RedoStackSize, Is.EqualTo( 1 ) );
+        
+        OperationManager.Instance.Redo();
+        Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 4 ) );
+        Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+
+        Assert.That( lblDesign.View.X.ToString( ), Is.EqualTo( $"Factor({0.5})" ) );
     }
 
     [Test]
