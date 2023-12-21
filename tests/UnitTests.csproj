@@ -40,6 +40,7 @@
     <Using Include="System.Collections.Generic" />
     <Using Include="Terminal.Gui" />
     <Using Include="TerminalGuiDesigner" />
+    <Using Include="TerminalGuiDesigner.FromCode" />
     <Using Include="TerminalGuiDesigner.Operations" />
     <Using Include="TerminalGuiDesigner.ToCode" />
     <Using Include="UnitTests.TestSupportTypes" />

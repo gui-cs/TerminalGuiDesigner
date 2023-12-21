@@ -1,16 +1,10 @@
-
-using System;
-using System.IO;
-using System.Linq;
-using Terminal.Gui;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.FromCode;
-using TerminalGuiDesigner.Operations;
-using TerminalGuiDesigner.ToCode;
-
 namespace UnitTests;
 
-class ListViewTests : Tests
+[TestFixture]
+[TestOf( typeof( ListView ) )]
+[Category( "Core" )]
+[Category( "Code Generation" )]
+internal class ListViewTests : Tests
 {
     [Test]
     public void TestRoundTrip_PreserveList()
