@@ -415,23 +415,14 @@ public static class PosExtensions
     // It's a Terminal.Gui issue, but we can probably work around it.
     public static Pos CreatePosRelative(this Design relativeTo, Side side, int offset)
     {
-        Pos pos;
-        switch (side)
+        Pos pos = side switch
         {
-            case Side.Top:
-                pos = Pos.Top(relativeTo.View);
-                break;
-            case Side.Bottom:
-                pos = Pos.Bottom(relativeTo.View);
-                break;
-            case Side.Left:
-                pos = Pos.Left(relativeTo.View);
-                break;
-            case Side.Right:
-                pos = Pos.Right(relativeTo.View);
-                break;
-            default: throw new ArgumentOutOfRangeException(nameof(side));
-        }
+            Side.Top => Pos.Top( relativeTo.View ),
+            Side.Bottom => Pos.Bottom( relativeTo.View ),
+            Side.Left => Pos.Left( relativeTo.View ),
+            Side.Right => Pos.Right( relativeTo.View ),
+            _ => throw new ArgumentOutOfRangeException( nameof( side ) )
+        };
 
         if (offset != 0)
         {
