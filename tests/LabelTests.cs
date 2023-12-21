@@ -1,5 +1,10 @@
 namespace UnitTests;
 
+[TestFixture]
+[TestOf( typeof( OperationManager ) )]
+[TestOf( typeof( Label ) )]
+[Category( "Core" )]
+[Category( "UI" )]
 internal class LabelTests : Tests
 {
     [Test]
