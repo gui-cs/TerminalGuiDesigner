@@ -1,19 +1,54 @@
-using System;
 using System.IO;
 using System.Linq;
-using Terminal.Gui;
-using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 using Attribute = Terminal.Gui.Attribute;
 
 namespace UnitTests;
 
+[TestFixture]
+[TestOf(typeof(ColorSchemeManager))]
+[Category("Core")]
 internal class ColorSchemeTests : Tests
 {
-    [TestCase(true)]
-    [TestCase(false)]
-    public void TestHasColorScheme(bool whenMultiSelected)
+    [Test]
+    public void RenameScheme( )
+    {
+        var window = new Window( );
+        var d = new Design( new SourceCodeFile( new FileInfo( "TenByTen.cs" ) ), Design.RootDesignName, window );
+        window.Data = d;
+
+        var state = Application.Begin( window );
+
+        Assume.That( d.View.ColorScheme, Is.Not.Null.And.SameAs( Colors.Base ) );
+        Assume.That( d.HasKnownColorScheme( ), Is.False );
+
+        var scheme = new ColorScheme( );
+        var prop = new SetPropertyOperation( d, d.GetDesignableProperty( nameof( View.ColorScheme ) )
+                                                ?? throw new Exception( "Expected Property did not exist or was not designable" ), null, scheme );
+
+        prop.Do( );
+
+        // we still don't know about this scheme yet
+        Assume.That( d.HasKnownColorScheme( ), Is.False );
+
+        const string oldName = "fff";
+        ColorSchemeManager.Instance.AddOrUpdateScheme( oldName, scheme, d );
+        var originalNamedColorScheme = ColorSchemeManager.Instance.GetNamedColorScheme( oldName );
+        Assume.That( d.HasKnownColorScheme );
+
+        // Now rename it and verify
+
+        const string newName = "FancyNewName";
+        ColorSchemeManager.Instance.RenameScheme( oldName, newName );
+        Assert.That( d.HasKnownColorScheme );
+        NamedColorScheme renamedColorScheme = ColorSchemeManager.Instance.GetNamedColorScheme( newName );
+        Assert.That( renamedColorScheme, Is.SameAs( originalNamedColorScheme ) );
+        Assert.That( renamedColorScheme.Name, Is.EqualTo( newName ) );
+    }
+
+    [Test]
+    public void HasColorScheme([Values]bool whenMultiSelected)
     {
         var window = new Window();
         var d = new Design(new SourceCodeFile(new FileInfo("TenByTen.cs")), Design.RootDesignName, window);
@@ -177,6 +212,7 @@ internal class ColorSchemeTests : Tests
     /// </summary>
     /// <param name="multiSelectBeforeSaving"></param>
     [Test]
+    [Category( "Code Generation" )]
     public void TestColorScheme_RoundTrip([Values]bool multiSelectBeforeSaving)
     {
         var mgr = ColorSchemeManager.Instance;
@@ -228,6 +264,7 @@ internal class ColorSchemeTests : Tests
     }
 
     [Test]
+    [Category( "Code Generation" )]
     public void TestEditingSchemeAfterLoad([Values]bool withSelection)
     {
         var scheme = new ColorScheme();

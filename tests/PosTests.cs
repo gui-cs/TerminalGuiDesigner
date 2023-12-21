@@ -432,7 +432,6 @@ internal class PosTests : Tests
         if ( testValue is null )
         {
             Assert.Warn( "BUG: Null returns true for this, when it shouldn't" );
-            Assert.Ignore( "BUG: Null returns true for this, when it shouldn't" );
         }
         return testValue.IsCenter( );
     }

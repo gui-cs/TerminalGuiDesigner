@@ -390,47 +390,54 @@ public class Design
 
         yield return new DeleteViewOperation(this);
 
-        if (this.View is TabView tabView)
+        switch ( this.View )
         {
-            yield return new AddTabOperation(this, null);
-
-            if (tabView.SelectedTab != null)
+            case TabView tabView:
             {
-                yield return new RemoveTabOperation(this, tabView.SelectedTab);
-                yield return new RenameTabOperation(this, tabView.SelectedTab, null);
-                yield return new MoveTabOperation(this, tabView.SelectedTab, -1);
-                yield return new MoveTabOperation(this, tabView.SelectedTab, 1);
+                yield return new AddTabOperation(this, null);
+
+                if (tabView.SelectedTab != null)
+                {
+                    yield return new RemoveTabOperation(this, tabView.SelectedTab);
+                    yield return new RenameTabOperation(this, tabView.SelectedTab, null);
+                    yield return new MoveTabOperation(this, tabView.SelectedTab, -1);
+                    yield return new MoveTabOperation(this, tabView.SelectedTab, 1);
+                }
+
+                break;
             }
-        }
-
-        if (this.View is MenuBar mb)
-        {
-            yield return new AddMenuOperation(this, null);
-
-            var menu = pos.IsEmpty ? mb.GetSelectedMenuItem() : mb.ScreenToMenuBarItem(pos.X);
-
-            if (menu != null)
+            case MenuBar mb:
             {
-                yield return new RemoveMenuOperation(this, menu);
-                yield return new RenameMenuOperation(this, menu, null);
-                yield return new MoveMenuOperation(this, menu, -1);
-                yield return new MoveMenuOperation(this, menu, 1);
+                yield return new AddMenuOperation(this, null);
+
+                var menu = pos.IsEmpty ? mb.GetSelectedMenuItem() : mb.ScreenToMenuBarItem(pos.X);
+
+                if (menu != null)
+                {
+                    yield return new RemoveMenuOperation(this, menu);
+                    yield return new RenameMenuOperation(this, menu, null);
+                    yield return new MoveMenuOperation(this, menu, -1);
+                    yield return new MoveMenuOperation(this, menu, 1);
+                }
+
+                break;
             }
-        }
-
-        if (this.View is StatusBar sb)
-        {
-            yield return new AddStatusItemOperation(this, null);
-
-            var item = sb.ScreenToMenuBarItem(pos.X);
-
-            if (item != null)
+            case StatusBar sb:
             {
-                yield return new RemoveStatusItemOperation(this, item);
-                yield return new RenameStatusItemOperation(this, item, null);
-                yield return new SetShortcutOperation(this, item, null);
-                yield return new MoveStatusItemOperation(this, item, -1);
-                yield return new MoveStatusItemOperation(this, item, 1);
+                yield return new AddStatusItemOperation(this, null);
+
+                var item = sb.ScreenToMenuBarItem(pos.X);
+
+                if (item != null)
+                {
+                    yield return new RemoveStatusItemOperation(this, item);
+                    yield return new RenameStatusItemOperation(this, item, null);
+                    yield return new SetShortcutOperation(this, item, null);
+                    yield return new MoveStatusItemOperation(this, item, -1);
+                    yield return new MoveStatusItemOperation(this, item, 1);
+                }
+
+                break;
             }
         }
     }
