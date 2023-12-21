@@ -411,34 +411,18 @@ public static class PosExtensions
     /// <param name="offset">The offset if any to use e.g. if you want:
     /// <code>Pos.Left(myView) + 5</code></param>
     /// <returns>The resulting <see cref="Pos"/> of the invoked method (e.g. <see cref="Pos.Right(View)"/>.</returns>
-    // BUG: This returns absolute positions when offsets are applied
+    // BUG: This returns absolute positions when offsets are non-zero
     // It's a Terminal.Gui issue, but we can probably work around it.
-    public static Pos CreatePosRelative(this Design relativeTo, Side side, int offset)
+    public static Pos CreatePosRelative(this Design relativeTo, Side side, int offset = 0)
     {
-        Pos pos;
-        switch (side)
+        return side switch
         {
-            case Side.Top:
-                pos = Pos.Top(relativeTo.View);
-                break;
-            case Side.Bottom:
-                pos = Pos.Bottom(relativeTo.View);
-                break;
-            case Side.Left:
-                pos = Pos.Left(relativeTo.View);
-                break;
-            case Side.Right:
-                pos = Pos.Right(relativeTo.View);
-                break;
-            default: throw new ArgumentOutOfRangeException(nameof(side));
-        }
-
-        if (offset != 0)
-        {
-            return pos + offset;
-        }
-
-        return pos;
+            Side.Top => Pos.Top( relativeTo.View ) + offset,
+            Side.Bottom => Pos.Bottom( relativeTo.View ) + offset,
+            Side.Left => Pos.Left( relativeTo.View ) + offset,
+            Side.Right => Pos.Right( relativeTo.View ) + offset,
+            _ => throw new ArgumentOutOfRangeException( nameof( side ) )
+        };
     }
 
     private static bool IsRelative(this Pos? p, out Pos posView)

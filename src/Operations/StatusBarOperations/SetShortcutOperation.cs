@@ -39,13 +39,13 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
                 return;
             }
 
-            this.OperateOn.SetShortcut(this.shortcut.Value);
+            this.OperateOn.Shortcut = this.shortcut.Value;
         }
 
         /// <inheritdoc/>
         public override void Undo()
         {
-            this.OperateOn.SetShortcut(this.originalShortcut);
+            this.OperateOn.Shortcut = this.originalShortcut;
         }
 
         /// <inheritdoc/>
@@ -56,7 +56,7 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
                 this.shortcut = Modals.GetShortcut();
             }
 
-            this.OperateOn.SetShortcut(this.shortcut.Value);
+            this.OperateOn.Shortcut = this.shortcut.Value;
             return true;
         }
     }

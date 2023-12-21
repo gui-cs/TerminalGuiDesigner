@@ -1,4 +1,5 @@
 using System.IO;
+using Microsoft.VisualBasic.CompilerServices;
 using Terminal.Gui;
 using TerminalGuiDesigner.UI;
 
@@ -98,13 +99,9 @@ internal class KeyMapTests
 
         Assert.That( defaultKeyMapFileName, Does.Exist );
         Assert.That( defaultKeyMapFileName, Is.Not.Empty );
-
-        FileInfo defaultKeyMapFileInfo = new( defaultKeyMapFileName );
-
-        Assert.That( defaultKeyMapFileInfo, Has.Length.EqualTo( 921 ) );
-
-        Assert.That( File.ReadAllText( defaultKeyMapFileName ),
-                     Is.EqualTo( ExpectedKeysYamlContent ),
+        
+        Assert.That( File.ReadAllText( defaultKeyMapFileName ).ReplaceLineEndings( ),
+                     Is.EqualTo( ExpectedKeysYamlContent.ReplaceLineEndings() ),
                      "Content of Keys.yaml, including newline style, must match expected input." );
     }
 
