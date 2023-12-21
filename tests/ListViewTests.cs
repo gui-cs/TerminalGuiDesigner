@@ -14,7 +14,7 @@ internal class ListViewTests : Tests
         var file = new FileInfo("TestRoundTrip_PreserveList.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window));
 
-        var lvOut = (ListView)ViewFactory.Create(typeof(ListView));
+        ListView lvOut = ViewFactory.Create<ListView>( );
 
         ClassicAssert.AreEqual(3, lvOut.Source.Count);
 
