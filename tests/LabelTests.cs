@@ -1,9 +1,3 @@
-﻿using System.IO;
-using System.Linq;
-using Terminal.Gui;
-using TerminalGuiDesigner.Operations;
-using TerminalGuiDesigner.ToCode;
-
 namespace UnitTests;
 
 internal class LabelTests : Tests
