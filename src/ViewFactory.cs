@@ -46,11 +46,6 @@ public static class ViewFactory
     };
 
     /// <summary>
-    ///   A static reference to <see langword="typeof" />(<see cref="View" />)
-    /// </summary>
-    internal static readonly Type ViewType = typeof(View);
-
-    /// <summary>
     ///   Gets a new instance of a default <see cref="MenuBarItem" />[], to include as the default initial
     ///   <see cref="MenuBar.Menus" />
     ///   collection of a new <see cref="MenuBar" />
@@ -77,17 +72,17 @@ public static class ViewFactory
     /// </summary>
     /// <value>An <see cref="IEnumerable{T}" /> of <see cref="Type" />s supported by <see cref="ViewFactory" />.</value>
     public static IEnumerable<Type> SupportedViewTypes { get; } =
-        ViewType.Assembly.DefinedTypes
-                .Where( unfilteredType => unfilteredType is
-                {
-                    IsInterface: false,
-                    IsAbstract: false,
-                    IsPublic: true,
-                    IsValueType: false
-                } )
-                .Where( filteredType => filteredType.IsSubclassOf( ViewType ) )
-                .Where( viewDescendantType => !KnownUnsupportedTypes.Any( viewDescendantType.IsAssignableTo )
-                                              || viewDescendantType == typeof( Window ) );
+        typeof(View).Assembly.DefinedTypes
+                    .Where( unfilteredType => unfilteredType is
+                    {
+                        IsInterface: false,
+                        IsAbstract: false,
+                        IsPublic: true,
+                        IsValueType: false
+                    } )
+                    .Where( filteredType => filteredType.IsSubclassOf( typeof(View) ) )
+                    .Where( viewDescendantType => !KnownUnsupportedTypes.Any( viewDescendantType.IsAssignableTo )
+                                                  || viewDescendantType == typeof( Window ) );
 
     private static bool IsSupportedType( this Type t )
     {

@@ -139,13 +139,6 @@ internal class ViewFactoryTests : Tests
         Assert.That( KnownUnsupportedTypes_ExpectedTypes, Contains.Item( typeDeclaredUnsupportedInViewFactory ) );
     }
 
-    [Test]
-    [Category( "Change Control" )]
-    public void ViewType_IsTerminalGuiView( )
-    {
-        Assert.That( ViewFactory.ViewType, Is.EqualTo( typeof( View ) ) );
-    }
-
     private static IEnumerable<Type> CreateT_ThrowsOnUnsupportedTypes_Cases( )
     {
         // Filtering generics out because they'll still throw, but a different exception
