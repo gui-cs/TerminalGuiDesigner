@@ -203,8 +203,8 @@ public static class ViewFactory
                 SetDefaultDimensions(newView, width ?? 10, height ?? 5 );
                 break;
             case Label l:
-                l.SetActualText( text ?? "Heya" );
                 SetDefaultDimensions( newView, width ?? 4, height ?? 1 );
+                l.SetActualText( text ?? "Heya" );
                 break;
             case SpinnerView sv:
                 sv.AutoSpin = true;
