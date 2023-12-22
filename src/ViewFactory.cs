@@ -224,6 +224,7 @@ public static class ViewFactory
                 SetDefaultDimensions( newView, width ?? 5, height ?? 1 );
                 break;
             case { }:
+                newView.SetActualText( text ?? "Heya" );
                 SetDefaultDimensions(newView, 10, 5);
                 break;
             case null:
