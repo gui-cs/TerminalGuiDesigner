@@ -126,9 +126,18 @@ public static class ViewFactory
 
         switch ( newView )
         {
-            case Button b:
+            case Button:
+            case CheckBox:
+            case ColorPicker:
+            case ComboBox:
+            case TextView:
+                newView.SetActualText( text ?? "Heya" );
                 SetDefaultDimensions( newView, width ?? 4, height ?? 1 );
-                b.SetActualText( text ?? "Heya" );
+                break;
+            case Line:
+            case Slider:
+            case TileView:
+                SetDefaultDimensions( newView, width ?? 4, height ?? 1 );
                 break;
             case TableView tv:
                 var dt = new DataTable( );
@@ -150,7 +159,7 @@ public static class ViewFactory
                 SetDefaultDimensions( newView, width ?? 5, height ?? 1 );
                 break;
             case DateField df:
-                df.Date = DateTime.Now;
+                df.Date = DateTime.Today;
                 SetDefaultDimensions( newView, width ?? 20, height ?? 1 );
                 break;
             case TextField tf:
@@ -252,6 +261,13 @@ public static class ViewFactory
         return requestedType switch
         {
             null => throw new ArgumentNullException( nameof( requestedType ) ),
+            { } t when t == typeof( DateField ) => Create<DateField>( ),
+            { } t when t == typeof( Button ) => Create<Button>( ),
+            { } t when t == typeof( ComboBox ) => Create<ComboBox>( ),
+            { } t when t == typeof( Line ) => Create<Line>( ),
+            { } t when t == typeof( Slider ) => Create<Slider>( ),
+            { } t when t == typeof( TileView ) => Create<TileView>( ),
+            { } t when t.IsAssignableTo( typeof( CheckBox ) ) => Create<CheckBox>( ),
             { } t when t.IsAssignableTo( typeof( TableView ) ) => Create<TableView>( ),
             { } t when t.IsAssignableTo( typeof( TabView ) ) => Create<TabView>( ),
             { } t when t.IsAssignableTo( typeof( RadioGroup ) ) => Create<RadioGroup>( ),
