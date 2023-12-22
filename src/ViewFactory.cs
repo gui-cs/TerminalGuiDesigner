@@ -131,6 +131,10 @@ public static class ViewFactory
 
         switch ( newView )
         {
+            case Button b:
+                SetDefaultDimensions( newView, width ?? 4, height ?? 1 );
+                b.SetActualText( text ?? "Heya" );
+                break;
             case TableView tv:
                 var dt = new DataTable( );
                 dt.Columns.Add( "Column 0" );
