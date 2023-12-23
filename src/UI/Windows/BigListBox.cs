@@ -81,7 +81,7 @@ public class BigListBox<T>
             SelectedItem = 0,
         };
 
-        this.listView.KeyPressed += this.ListView_KeyPress;
+        this.listView.KeyDown += this.ListView_KeyPress;
 
         this.listView.MouseClick += this.ListView_MouseClick;
         this.listView.SetSource((this.collection = this.BuildList(this.GetInitialSource())).ToList());
@@ -200,15 +200,17 @@ public class BigListBox<T>
         }
     }
 
-    private void ListView_KeyPress(object? sender, KeyEventEventArgs obj)
+    private void ListView_KeyPress(object? sender, Key key)
     {
         // if user types in some text change the focus to the text box to enable searching
-        var c = (char)obj.KeyEvent.KeyValue;
+        var c = (char)key;
 
         // backspace or letter/numbers
-        if (obj.KeyEvent.Key == Key.Backspace || char.IsLetterOrDigit(c))
+        if (key == Key.Backspace || char.IsLetterOrDigit(c))
         {
             this.searchBox?.FocusFirst();
+            this.searchBox?.OnKeyDown(key);
+            key.Handled = true;
         }
     }
 

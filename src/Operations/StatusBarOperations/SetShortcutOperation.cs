@@ -1,4 +1,4 @@
-﻿using Terminal.Gui;
+using Terminal.Gui;
 using TerminalGuiDesigner.Operations.Generics;
 using TerminalGuiDesigner.UI.Windows;
 

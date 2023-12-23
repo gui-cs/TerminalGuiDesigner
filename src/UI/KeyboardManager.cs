@@ -30,9 +30,9 @@ public class KeyboardManager
     /// to the rest of the regular Terminal.Gui API layer.
     /// </summary>
     /// <param name="focusedView">The <see cref="View"/> that currently holds focus in <see cref="Editor"/>.</param>
-    /// <param name="keystroke">The key that has been reported by <see cref="Application.RootKeyEvent"/>.</param>
+    /// <param name="keystroke">The key that has been reported by <see cref="Application.RootKey"/>.</param>
     /// <returns><see langword="true"/> if <paramref name="keystroke"/> should be suppressed.</returns>
-    public bool HandleKey(View focusedView, KeyEvent keystroke)
+    public bool HandleKey(View focusedView, Key keystroke)
     {
         var menuItem = MenuTracker.Instance.CurrentlyOpenMenuItem;
 
@@ -63,7 +63,7 @@ public class KeyboardManager
             this.FinishOperation();
         }
 
-        if (keystroke.Key == this.keyMap.Rename)
+        if (keystroke == this.keyMap.Rename)
         {
             var nameProp = d.GetDesignableProperties().OfType<NameProperty>().FirstOrDefault();
             if (nameProp != null)
@@ -91,69 +91,69 @@ public class KeyboardManager
         return false;
     }
 
-    private bool HandleKeyPressInMenu(View focusedView, MenuItem menuItem, KeyEvent keystroke)
+    private bool HandleKeyPressInMenu(View focusedView, MenuItem menuItem, Key keystroke)
     {
-        if (keystroke.Key == this.keyMap.Rename)
+        if (keystroke == this.keyMap.Rename)
         {
             OperationManager.Instance.Do(
                     new RenameMenuItemOperation(menuItem));
             return true;
         }
 
-        if (keystroke.Key == Key.Enter)
+        if (keystroke == Key.Enter)
         {
             OperationManager.Instance.Do(
                     new AddMenuItemOperation(menuItem));
 
-            keystroke.Key = Key.CursorDown;
+            ChangeKeyTo(keystroke, Key.CursorDown);
             return false;
         }
 
-        if (keystroke.Key == this.keyMap.SetShortcut)
+        if (keystroke == this.keyMap.SetShortcut)
         {
-            menuItem.Shortcut = Modals.GetShortcut();
+            menuItem.Shortcut = Modals.GetShortcut().KeyCode;
 
             focusedView.SetNeedsDisplay();
             return false;
         }
 
-        if (keystroke.Key == this.keyMap.MoveRight)
+        if (keystroke == this.keyMap.MoveRight)
         {
             OperationManager.Instance.Do(
                 new MoveMenuItemRightOperation(menuItem));
 
-            keystroke.Key = Key.CursorUp;
+            ChangeKeyTo(keystroke, Key.CursorUp);
             return true;
         }
 
-        if (keystroke.Key == this.keyMap.MoveLeft)
+        if (keystroke == this.keyMap.MoveLeft)
         {
             OperationManager.Instance.Do(
                 new MoveMenuItemLeftOperation(menuItem));
 
-            keystroke.Key = Key.CursorDown;
+            ChangeKeyTo(keystroke, Key.CursorDown);
             return false;
         }
 
-        if (keystroke.Key == this.keyMap.MoveUp)
+        if (keystroke == this.keyMap.MoveUp)
         {
             OperationManager.Instance.Do(
                 new MoveMenuItemOperation(menuItem, true));
-            keystroke.Key = Key.CursorUp;
+            ChangeKeyTo(keystroke, Key.CursorUp);
             return false;
         }
 
-        if (keystroke.Key == this.keyMap.MoveDown)
+        if (keystroke == this.keyMap.MoveDown)
         {
             OperationManager.Instance.Do(
                 new MoveMenuItemOperation(menuItem, false));
-            keystroke.Key = Key.CursorDown;
+            ChangeKeyTo(keystroke, Key.CursorDown);
             return false;
         }
 
-        if ((keystroke.Key == Key.DeleteChar)
+        if ((keystroke == Key.DeleteChar)
             ||
-            (keystroke.Key == Key.Backspace && string.IsNullOrWhiteSpace(menuItem.Title.ToString())))
+            (keystroke == Key.Backspace && string.IsNullOrWhiteSpace(menuItem.Title.ToString())))
         {
             // deleting the menu item using backspace to
             // remove all characters in the title or the Del key
@@ -172,14 +172,14 @@ public class KeyboardManager
 
                     // convert keystroke to left,
                     // so we move to the next menu
-                    keystroke.Key = Key.CursorLeft;
+                    ChangeKeyTo(keystroke, Key.CursorLeft);
                     return false;
                 }
 
                 // otherwise convert keystroke to up
                 // so that focus now sits nicely on the
                 // menu item above the deleted one
-                keystroke.Key = Key.CursorUp;
+                ChangeKeyTo(keystroke, Key.CursorUp);
                 return false;
             }
         }
@@ -219,6 +219,13 @@ public class KeyboardManager
         return false;
     }
 
+    private void ChangeKeyTo(Key keystroke, Key newKey)
+    {
+        Type t = typeof(Key);
+        var p = t.GetProperty("KeyCode") ?? throw new Exception("Property somehow doesn't exist");
+        p.SetValue(keystroke, newKey.KeyCode);
+    }
+
     private void StartOperation(Design d)
     {
         // these can already handle editing themselves
@@ -247,7 +254,7 @@ public class KeyboardManager
         this.currentOperation = null;
     }
 
-    private bool ApplyKeystrokeToTextProperty(KeyEvent keystroke)
+    private bool ApplyKeystrokeToTextProperty(Key keystroke)
     {
         if (this.currentOperation == null || this.currentOperation.Designs.Count != 1)
         {
@@ -271,11 +278,11 @@ public class KeyboardManager
         return true;
     }
 
-    private bool ApplyKeystrokeToString(string? str, KeyEvent keystroke, out string newString)
+    private bool ApplyKeystrokeToString(string? str, Key keystroke, out string newString)
     {
         newString = str;
 
-        if (keystroke.Key == Key.Backspace)
+        if (keystroke == Key.Backspace)
         {
             // no change
             if ( string.IsNullOrEmpty( str ) )
@@ -289,29 +296,29 @@ public class KeyboardManager
         }
         else
         {
-            var ch = (char)keystroke.KeyValue;
+            var ch = (char)keystroke;
             newString += ch;
 
             return true;
         }
     }
 
-    private bool IsActionableKey(KeyEvent keystroke)
+    private bool IsActionableKey(Key keystroke)
     {
-        if (keystroke.Key == Key.Backspace)
+        if (keystroke == Key.Backspace)
         {
             return true;
         }
 
         // Don't let Ctrl+Q add a Q!
-        if (keystroke.Key.HasFlag(Key.CtrlMask))
+        if (keystroke.IsCtrl)
         {
             return false;
         }
 
         var punctuation = "\"\\/':;%^&*~`!@#.,? ()-+{}<>=_][|";
 
-        var ch = (char)keystroke.KeyValue;
+        var ch = (char)keystroke;
 
         return punctuation.Contains(ch) || char.IsLetterOrDigit(ch);
     }

@@ -1,4 +1,4 @@
-﻿using Terminal.Gui;
+using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
 

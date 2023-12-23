@@ -45,8 +45,8 @@ public class StatusBarItemsToCode : ToCodeBase
             this.AddFieldToClass(args, typeof(StatusItem), name);
 
             var param1 = new CodeCastExpression(
-                        new CodeTypeReference(typeof(Key)),
-                        new CodePrimitiveExpression((uint)child.Shortcut));
+                        new CodeTypeReference(typeof(KeyCode)),
+                        new CodePrimitiveExpression((uint)child.Shortcut.KeyCode));
             var param2 = child.Title.ToCodePrimitiveExpression();
             var param3 = new CodePrimitiveExpression(/*null*/);
 

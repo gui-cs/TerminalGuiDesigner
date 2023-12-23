@@ -627,7 +627,7 @@ public class Design
     {
         // prevent space toggling the checkbox
         // (gives better typing experience e.g. "my lovely checkbox")
-        cb.ClearKeyBinding(Key.Space);
+        cb.KeyBindings.Remove(Key.Space);
         cb.MouseClick += (s, e) =>
         {
             if (e.MouseEvent.Flags.HasFlag(MouseFlags.Button1Clicked))

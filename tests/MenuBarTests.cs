@@ -232,7 +232,7 @@ class MenuBarTests : Tests
 
         var mi = bar.Menus[0].Children[0];
         mi.Data = "yarg";
-        mi.Shortcut = Key.Y | Key.CtrlMask;
+        mi.Shortcut = Key.Y.WithCtrl.KeyCode;
         var addAnother = new AddMenuItemOperation(mi);
         ClassicAssert.True(addAnother.Do());
 
@@ -304,12 +304,12 @@ class MenuBarTests : Tests
                 topChild = new MenuItem("Child1", null, () => { })
                 {
                     Data = "Child1",
-                    Shortcut = Key.J | Key.CtrlMask,
+                    Shortcut = Key.J.WithCtrl.KeyCode,
                 },
                 new MenuItem("Child2", null, () => { })
                 {
                     Data = "Child2",
-                    Shortcut = Key.F | Key.CtrlMask,
+                    Shortcut = Key.F.WithCtrl.KeyCode,
                 },
             })
             {
