@@ -200,7 +200,7 @@ public class Modals
     {
         Key key = KeyCode.Null;
         var dlg = new LoadingDialog("Press Shortcut or Del");
-        dlg.KeyUp += (s, e) =>
+        dlg.KeyDown += (s, e) =>
         {
             key = e;
             Application.RequestStop();

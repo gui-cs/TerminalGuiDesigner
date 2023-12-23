@@ -92,7 +92,7 @@ public static class MenuBarExtensions
 
         field.SetValue(item, newShortcut);
     }
-
+ 
     private static object GetNonNullPrivateFieldValue(string fieldName, object item, Type type)
     {
         var selectedField = type.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance)

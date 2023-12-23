@@ -50,7 +50,7 @@ public partial class PosEditor : Dialog {
         Title = "Pos Designer";
         Border.BorderStyle = LineStyle.Double;
 
-        rgPosType.KeyUp += RgPosType_KeyPress;
+        rgPosType.KeyDown += RgPosType_KeyPress;
 
         btnOk.Clicked += BtnOk_Clicked;
         btnCancel.Clicked += BtnCancel_Clicked;

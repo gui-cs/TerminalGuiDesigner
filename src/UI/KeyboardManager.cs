@@ -221,8 +221,9 @@ public class KeyboardManager
 
     private void ChangeKeyTo(Key keystroke, Key newKey)
     {
-        // TODO: BUGBUG, how do we do this?
-        //keystroke.KeyCode = newKey;
+        Type t = typeof(Key);
+        var p = t.GetProperty("KeyCode") ?? throw new Exception("Property somehow doesn't exist");
+        p.SetValue(keystroke, newKey.KeyCode);
     }
 
     private void StartOperation(Design d)

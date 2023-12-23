@@ -51,7 +51,7 @@ public partial class DimEditor : Dialog
         btnCancel.Clicked += BtnCancel_Clicked;
         Cancelled = true;
         Modal = true;
-        rgDimType.KeyUp += RgDimType_KeyPress;
+        rgDimType.KeyDown += RgDimType_KeyPress;
         
 
         var val = (Dim)property.GetValue();

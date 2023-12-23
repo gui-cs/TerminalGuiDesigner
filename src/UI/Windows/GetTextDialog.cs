@@ -51,7 +51,7 @@ internal class GetTextDialog
             Text = this.initialValue ?? string.Empty,
             AllowsTab = false,
         };
-        this.textField.KeyUp += this.TextField_KeyPress;
+        this.textField.KeyDown += this.TextField_KeyPress;
 
         // make it easier for user to replace this text with something else
         // by directly selecting it all so next keypress replaces text

@@ -43,7 +43,7 @@ public class EditDialog : Window
             Width = Dim.Fill(2),
             Height = Dim.Fill(2),
         };
-        this.list.KeyUp += this.List_KeyPress;
+        this.list.KeyDown += this.List_KeyPress;
 
         var btnSet = new Button("Set")
         {
@@ -70,7 +70,7 @@ public class EditDialog : Window
     }
 
     /// <inheritdoc/>
-    public override bool OnKeyUp(Key Key)
+    public override bool OnKeyDown(Key Key)
     {
         if (Key == Key.Enter && this.list.HasFocus)
         {
@@ -78,7 +78,7 @@ public class EditDialog : Window
             return true;
         }
 
-        return base.OnKeyUp(Key);
+        return base.OnKeyDown(Key);
     }
 
     internal static bool SetPropertyToNewValue(Design design, Property p, object? oldValue)
