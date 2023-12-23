@@ -47,6 +47,13 @@ public static class ReflectionHelpers
                        ?? throw new InvalidOperationException( $"Non-public instance field {fieldName} was unexpectedly null on {typeof( TIn ).Name}" ) );
     }
 
+    /// <summary>
+    /// Creates an instance of type <paramref name="t"/>, using its reflected parameterless constructor.
+    /// </summary>
+    /// <param name="t">The type of <see cref="View"/> to create. Must be a descendant of <see cref="View"/> and must have a valid parameterless constructor.</param>
+    /// <returns>A new instance of a <paramref name="t"/>.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">If the requested type is not a valid <see cref="View"/> as determined by <see cref="Type.IsAssignableTo"/> where targetType is <see cref="View"/>.</exception>
+    /// <exception cref="InvalidOperationException">If the attempt to call the reflected constructor returns <see langword="null" />.</exception>
     public static View GetDefaultViewInstance( Type t )
     {
         if ( !t.IsAssignableTo( typeof(View) ) )
@@ -54,7 +61,7 @@ public static class ReflectionHelpers
             throw new ArgumentOutOfRangeException( nameof( t ), $"{t.Name} must be assignable to the View type" );
         }
 
-        var instance = Activator.CreateInstance( t ) as View ?? throw new Exception( $"CreateInstance returned null for Type '{t.Name}'" );
+        var instance = Activator.CreateInstance( t ) as View ?? throw new InvalidOperationException( $"CreateInstance returned null for Type '{t.Name}'" );
         instance.SetActualText( "Heya" );
 
         instance.Width = Math.Max( instance.Bounds.Width, 4 );
