@@ -50,7 +50,7 @@ public partial class PosEditor : Dialog {
         Title = "Pos Designer";
         Border.BorderStyle = LineStyle.Double;
 
-        rgPosType.KeyPressed += RgPosType_KeyPress;
+        rgPosType.KeyUp += RgPosType_KeyPress;
 
         btnOk.Clicked += BtnOk_Clicked;
         btnCancel.Clicked += BtnCancel_Clicked;
@@ -60,10 +60,10 @@ public partial class PosEditor : Dialog {
         var siblings = design.GetSiblings().ToList();
 
         ddRelativeTo.SetSource(siblings);
-        ddRelativeTo.AddKeyBinding(Key.CursorDown, Command.Expand);
+        ddRelativeTo.KeyBindings.Add(Key.CursorDown, Command.Expand);
 
         ddSide.SetSource(Enum.GetValues(typeof(Side)).Cast<Enum>().ToList());
-        ddSide.AddKeyBinding(Key.CursorDown, Command.Expand);
+        ddSide.KeyBindings.Add(Key.CursorDown, Command.Expand);
 
         var val = (Pos)property.GetValue();
         if(val.GetPosType(siblings,out var type,out var value,out var relativeTo,out var side, out var offset))
@@ -100,12 +100,12 @@ public partial class PosEditor : Dialog {
 
     }
 
-    private void RgPosType_KeyPress(object sender, KeyEventEventArgs obj)
+    private void RgPosType_KeyPress(object sender, Key key)
     {
-        var c = (char)obj.KeyEvent.KeyValue;
+        var c = (char)key;
         
         // if user types in some text change the focus to the text box to enable entering digits
-        if ((obj.KeyEvent.Key == Key.Backspace || char.IsDigit(c)) && tbValue.Visible)
+        if ((key == Key.Backspace || char.IsDigit(c)) && tbValue.Visible)
         {
             tbValue?.FocusFirst();
         }            

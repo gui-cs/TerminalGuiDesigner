@@ -13,7 +13,7 @@ namespace UnitTests;
 internal class KeyboardManagerTests : Tests
 {
 
-    private readonly KeyEvent backspace = new( Key.Backspace, new( ) );
+    private readonly Key backspace = Key.Backspace;
 
     /// <summary>
     /// This test runs first and will leave behind a KeyboardManager we can reuse in the rest of these tests.
@@ -108,9 +108,9 @@ internal class KeyboardManagerTests : Tests
 
         Assert.That( string.IsNullOrEmpty( v.Text ) );
 
-        mgr!.HandleKey( v, new( Key.B, new( ) { Shift = true } ) );
-        mgr.HandleKey( v, new( (Key)'a', new( ) ) );
-        mgr.HandleKey( v, new( (Key)'d', new( ) ) );
+        mgr!.HandleKey( v, Key.B.WithShift);
+        mgr.HandleKey( v, (Key)'a');
+        mgr.HandleKey( v, (Key)'d');
 
         Assert.That( v.Text, Is.EqualTo( "Bad" ) );
 
@@ -142,7 +142,7 @@ internal class KeyboardManagerTests : Tests
         Assume.That( new AddViewOperation( testView, d, "testView" ).Do() );
         testView.SetFocus();
 
-        Assert.That( () => mgr!.HandleKey( testView, new( (Key)k, new() ) ), Throws.Nothing );
+        Assert.That( () => mgr!.HandleKey( testView,  (Key)k), Throws.Nothing );
 
         Assert.That( testView.Text, Is.Not.Null );
         Assert.That( testView.Text[ ^1 ], Is.EqualTo( k ) );

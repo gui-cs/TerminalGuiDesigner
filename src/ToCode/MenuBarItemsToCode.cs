@@ -98,7 +98,7 @@ public class MenuBarItemsToCode : ToCodeBase
                 this.AddPropertyAssignment(args, $"this.{subFieldName}.{nameof(MenuItem.Title)}", sub.Title);
                 this.AddPropertyAssignment(args, $"this.{subFieldName}.{nameof(MenuItem.Data)}", subFieldName);
 
-                if (sub.Shortcut != Key.Null)
+                if (sub.Shortcut != KeyCode.Null)
                 {
                     this.AddPropertyAssignment(
                     args,

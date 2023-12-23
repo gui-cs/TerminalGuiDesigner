@@ -39,7 +39,7 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
                 return;
             }
 
-            this.OperateOn.SetShortcut(this.shortcut.Value);
+            this.OperateOn.SetShortcut(this.shortcut);
         }
 
         /// <inheritdoc/>
@@ -56,7 +56,7 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
                 this.shortcut = Modals.GetShortcut();
             }
 
-            this.OperateOn.SetShortcut(this.shortcut.Value);
+            this.OperateOn.SetShortcut(this.shortcut);
             return true;
         }
     }

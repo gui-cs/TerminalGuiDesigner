@@ -198,15 +198,15 @@ public class Modals
 
     internal static Terminal.Gui.Key GetShortcut()
     {
-        Key key = 0;
+        Key key = KeyCode.Null;
         var dlg = new LoadingDialog("Press Shortcut or Del");
-        dlg.KeyPressed += (s, e) =>
+        dlg.KeyUp += (s, e) =>
         {
-            key = e.KeyEvent.Key;
+            key = e;
             Application.RequestStop();
         };
         Application.Run(dlg);
 
-        return key == Key.DeleteChar ? 0 : key;
+        return key == Key.DeleteChar ? KeyCode.Null : key;
     }
 }
