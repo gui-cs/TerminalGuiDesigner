@@ -15,7 +15,7 @@ internal class ViewFactoryTests : Tests
     /// </summary>
     private static IEnumerable<TestCaseData> Create_And_CreateT_Type_Provider
     {
-        get { return ViewFactory_SupportedViewTypes.Select( t => new TestCaseData( FormatterServices.GetUninitializedObject( t ) ) ); }
+        get { return ViewFactory_SupportedViewTypes.Select( static t => new TestCaseData( FormatterServices.GetUninitializedObject( t ) ) ); }
     }
 
     private static MenuBarItem[] ViewFactory_DefaultMenuBarItems => ViewFactory.DefaultMenuBarItems;
@@ -38,7 +38,7 @@ internal class ViewFactoryTests : Tests
         T createdByGeneric = ViewFactory.Create<T>( );
         Assume.That( createdByGeneric, Is.Not.Null.And.InstanceOf<T>( ) );
 
-        PropertyInfo[] publicPropertiesOfType = typeof( T ).GetProperties( BindingFlags.Instance | BindingFlags.Public ).Where( p => p.CanRead ).ToArray( );
+        PropertyInfo[] publicPropertiesOfType = typeof( T ).GetProperties( BindingFlags.Instance | BindingFlags.Public ).Where( static p => p.CanRead ).ToArray( );
         Assert.Multiple( ( ) =>
         {
             foreach ( PropertyInfo property in publicPropertiesOfType )
@@ -113,7 +113,7 @@ internal class ViewFactoryTests : Tests
     [TestCaseSource( nameof( Create_And_CreateT_Type_Provider ) )]
     [Category( "Change Control" )]
     [Description( "This test makes sure that both the generic and non-generic Create methods return non-null instances of the same type" )]
-#pragma warning disable CS0618 // Type or member is obsolete
+#pragma warning disable CS0618  // Type or member is obsolete
 #pragma warning disable IDE0060 // Remove unused parameter
     public void Create_And_CreateT_ReturnExpectedTypeForSameInputs<T>( T dummyTypeForNUnit )
         where T : View, new( )
@@ -125,7 +125,7 @@ internal class ViewFactoryTests : Tests
         Assert.That( createdByGeneric, Is.Not.Null.And.InstanceOf<T>( ) );
     }
 #pragma warning restore IDE0060 // Remove unused parameter
-#pragma warning restore CS0618 // Type or member is obsolete
+#pragma warning restore CS0618  // Type or member is obsolete
 
     [Test]
     [RequiresThread]
@@ -133,7 +133,7 @@ internal class ViewFactoryTests : Tests
     public void CreateT_DoesNotThrowOnSupportedTypes( [ValueSource( nameof( ViewFactory_SupportedViewTypes ) )] Type supportedType )
     {
         // NUnit does not natively support generic type parameters in test methods, so this is easiest to do via reflection
-        MethodInfo viewFactoryCreateTGeneric = typeof( ViewFactory ).GetMethods( ).Single( m => m is { IsGenericMethod: true, IsPublic: true, IsStatic: true } );
+        MethodInfo viewFactoryCreateTGeneric = typeof( ViewFactory ).GetMethods( ).Single( static m => m is { IsGenericMethod: true, IsPublic: true, IsStatic: true } );
 
         MethodInfo viewFactoryCreateTConcrete = viewFactoryCreateTGeneric.MakeGenericMethod( supportedType );
 
@@ -156,7 +156,7 @@ internal class ViewFactoryTests : Tests
     public void CreateT_ReturnsValidViewOfExpectedType( [ValueSource( nameof( ViewFactory_SupportedViewTypes ) )] Type supportedType )
     {
         // NUnit does not natively support generic type parameters in test methods, so this is easiest to do via reflection
-        MethodInfo viewFactoryCreateTGeneric = typeof( ViewFactory ).GetMethods( ).Single( m => m is { IsGenericMethod: true, IsPublic: true, IsStatic: true } );
+        MethodInfo viewFactoryCreateTGeneric = typeof( ViewFactory ).GetMethods( ).Single( static m => m is { IsGenericMethod: true, IsPublic: true, IsStatic: true } );
 
         MethodInfo viewFactoryCreateTConcrete = viewFactoryCreateTGeneric.MakeGenericMethod( supportedType );
 
@@ -176,7 +176,7 @@ internal class ViewFactoryTests : Tests
     public void CreateT_ThrowsOnUnsupportedTypes( [ValueSource( nameof( CreateT_ThrowsOnUnsupportedTypes_Cases ) )] Type unsupportedType )
     {
         // NUnit does not natively support generic type parameters in test methods, so this is easiest to do via reflection
-        MethodInfo viewFactoryCreateTGeneric = typeof( ViewFactory ).GetMethods( ).Single( m => m is { IsGenericMethod: true, IsPublic: true, IsStatic: true } );
+        MethodInfo viewFactoryCreateTGeneric = typeof( ViewFactory ).GetMethods( ).Single( static m => m is { IsGenericMethod: true, IsPublic: true, IsStatic: true } );
 
         MethodInfo viewFactoryCreateTConcrete = viewFactoryCreateTGeneric.MakeGenericMethod( unsupportedType );
 
@@ -198,13 +198,13 @@ internal class ViewFactoryTests : Tests
     [NonParallelizable]
     public void DefaultMenuBarItems_IsExactlyAsExpected( )
     {
-        Assert.Multiple( ( ) =>
+        Assert.Multiple( static ( ) =>
         {
             Assert.That( ViewFactory_DefaultMenuBarItems, Has.Length.EqualTo( 1 ) );
             Assert.That( ViewFactory_DefaultMenuBarItems[ 0 ].Title, Is.EqualTo( "_File (F9)" ) );
         } );
 
-        Assert.Multiple( ( ) =>
+        Assert.Multiple( static ( ) =>
         {
             Assert.That( ViewFactory_DefaultMenuBarItems[ 0 ].Children, Has.Length.EqualTo( 1 ) );
             Assert.That( ViewFactory_DefaultMenuBarItems[ 0 ].Children[ 0 ].Title, Is.EqualTo( ViewFactory.DefaultMenuItemText ) );
@@ -239,7 +239,7 @@ internal class ViewFactoryTests : Tests
     private static IEnumerable<Type> CreateT_ThrowsOnUnsupportedTypes_Cases( )
     {
         // Filtering generics out because they'll still throw, but a different exception
-        return ViewFactory_KnownUnsupportedTypes.Where( t => !t.IsGenericType );
+        return ViewFactory_KnownUnsupportedTypes.Where( static t => !t.IsGenericType );
     }
 
     private static Type[] KnownUnsupportedTypes_ExpectedTypes( )
