@@ -51,7 +51,7 @@ internal class MoveMenuItemRightOperationTests : Tests
         {
             new AddMenuItemOperation(v.Menus[0].Children[0]).Do();
             var toMove = v.Menus[0].Children[1];
-
+            
             v.Menus[0].Children[0].Data = "yarg";
             v.Menus[0].Children[0].Shortcut = Key.Y.WithCtrl.KeyCode;
             v.Menus[0].Children[1].Data = "blarg";
@@ -62,7 +62,7 @@ internal class MoveMenuItemRightOperationTests : Tests
             op.Do();
 
             ClassicAssert.AreEqual("yarg", v.Menus[0].Children[0].Data);
-            ClassicAssert.AreEqual(Key.Y.WithCtrl, v.Menus[0].Children[0].Shortcut);
+            ClassicAssert.AreEqual(Key.Y.WithCtrl.KeyCode, v.Menus[0].Children[0].Shortcut);
             ClassicAssert.AreEqual("blarg", ((MenuBarItem)v.Menus[0].Children[0]).Children[0].Data);
             ClassicAssert.AreEqual(Key.B.WithCtrl.KeyCode, ((MenuBarItem)v.Menus[0].Children[0]).Children[0].Shortcut);
 

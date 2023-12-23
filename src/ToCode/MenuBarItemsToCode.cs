@@ -104,7 +104,7 @@ public class MenuBarItemsToCode : ToCodeBase
                     args,
                     $"this.{subFieldName}.{nameof(MenuItem.Shortcut)}",
                     new CodeCastExpression(
-                        new CodeTypeReference(typeof(Key)),
+                        new CodeTypeReference(typeof(KeyCode)),
                         new CodePrimitiveExpression((uint)sub.Shortcut)));
                 }
 
