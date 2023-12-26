@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Terminal.Gui;
 
@@ -167,7 +168,7 @@ public static class PosExtensions
     /// <param name="side"><see cref="Enum"/> representing the method that was used e.g. <see cref="Pos.Right(View)"/>, <see cref="Pos.Left(View)"/> etc.</param>
     /// <returns></returns>
     // BUG: Side should be nullable, because it gets an explicit value in all cases but isn't meaningful if return value was false
-    public static bool IsRelative(this Pos? p, IList<Design> knownDesigns, out Design? relativeTo, out Side side)
+    public static bool IsRelative(this Pos? p, IList<Design> knownDesigns, [NotNullWhen(true)]out Design? relativeTo, out Side side)
     {
         relativeTo = null;
         side = default;
@@ -212,14 +213,14 @@ public static class PosExtensions
     /// </summary>
     /// <param name="p"><see cref="Pos"/> to classify.</param>
     /// <returns>True if <paramref name="p"/> is a PosCombine.</returns>
-    public static bool IsCombine(this Pos? p)
+    public static bool IsCombine( [NotNullWhen( true )] Pos? p )
     {
-        if (p == null)
+        if ( p == null )
         {
             return false;
         }
 
-        return p.GetType().Name == "PosCombine";
+        return p.GetType( ).Name == "PosCombine";
     }
 
     /// <inheritdoc cref="IsCombine(Pos)"/>
@@ -230,7 +231,7 @@ public static class PosExtensions
     /// <returns>True if <paramref name="p"/> is PosCombine.</returns>
     public static bool IsCombine(this Pos? p, out Pos left, out Pos right, out bool add)
     {
-        if (p.IsCombine())
+        if (IsCombine(p))
         {
             var fLeft = p.GetType().GetField("left", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field missing from PosCombine");
             left = fLeft.GetValue(p) as Pos ?? throw new Exception("Expected field 'left' of PosCombine to be a Pos");
