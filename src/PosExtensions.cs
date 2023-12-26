@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
@@ -106,7 +106,7 @@ public static class PosExtensions
     }
 
     /// <summary>
-    /// Returns true if <paramref name="p"/> is the result of an <see cref="Pos.AnchorEnd(int)"/>.
+    /// Returns true if <paramref name="p"/> is the result of a <see cref="Pos.AnchorEnd(int)"/>.
     /// </summary>
     /// <param name="p"><see cref="Pos"/> to classify.</param>
     /// <returns>True if <paramref name="p"/> is <see cref="Pos.AnchorEnd(int)"/>.</returns>
@@ -123,8 +123,8 @@ public static class PosExtensions
 
     /// <inheritdoc cref="IsAnchorEnd(Pos)"/>
     /// <param name="p"><see cref="Pos"/> to classify.</param>
-    /// <param name="margin">The margin passed to <see cref="Pos.AnchorEnd(int)"/>.  Typically should
-    /// be 1 or more otherwise things tend to drift off screen.</param>
+    /// <param name="margin">The margin passed to <see cref="Pos.AnchorEnd(int)"/>. Should typically
+    /// be 1 or more otherwise things tend to drift off-screen.</param>
     /// <returns></returns>
     public static bool IsAnchorEnd(this Pos? p, out int margin)
     {
@@ -166,7 +166,7 @@ public static class PosExtensions
     /// or null if <paramref name="p"/> is not <see cref="PosType.Relative"/>.</param>
     /// <param name="side"><see cref="Enum"/> representing the method that was used e.g. <see cref="Pos.Right(View)"/>, <see cref="Pos.Left(View)"/> etc.</param>
     /// <returns></returns>
-    // BUG: Side should be nullable, because it gets an explicit value in all cases
+    // BUG: Side should be nullable, because it gets an explicit value in all cases but isn't meaningful if return value was false
     public static bool IsRelative(this Pos? p, IList<Design> knownDesigns, out Design? relativeTo, out Side side)
     {
         relativeTo = null;
