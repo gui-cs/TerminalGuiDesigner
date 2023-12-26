@@ -7,6 +7,7 @@ namespace UnitTests;
 [TestOf( typeof( AddViewOperation ) )]
 [Category( "Core" )]
 [Category( "UI" )]
+[Category("Code Generation")]
 [NonParallelizable]
 internal class AddViewTests : Tests
 {
