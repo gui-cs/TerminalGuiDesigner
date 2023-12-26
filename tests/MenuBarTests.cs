@@ -19,7 +19,7 @@ class MenuBarTests : Tests
         var file = new FileInfo($"{nameof(this.TestRoundTrip_PreserveMenuItems)}.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
-        var mbOut = (MenuBar)ViewFactory.Create(typeof(MenuBar));
+        var mbOut = ViewFactory.Create<MenuBar>( );
 
         // 1 visible root menu (e.g. File)
         ClassicAssert.AreEqual(1, mbOut.Menus.Length);
@@ -49,7 +49,7 @@ class MenuBarTests : Tests
         var file = new FileInfo($"{nameof(this.TestRoundTrip_PreserveMenuItems_EvenSubmenus)}.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
-        var mbOut = (MenuBar)ViewFactory.Create(typeof(MenuBar));
+        var mbOut = ViewFactory.Create<MenuBar>( );
 
         OperationManager.Instance.Do(new AddViewOperation(mbOut, designOut, "myMenuBar"));
 
@@ -93,7 +93,7 @@ class MenuBarTests : Tests
         var file = new FileInfo($"{nameof(this.TestMenuOperations)}.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
-        var mbOut = (MenuBar)ViewFactory.Create(typeof(MenuBar));
+        var mbOut = ViewFactory.Create<MenuBar>( );
 
         MenuTracker.Instance.Register(mbOut);
 
@@ -172,7 +172,7 @@ class MenuBarTests : Tests
     {
         root = Get10By10View();
 
-        var bar = (MenuBar)ViewFactory.Create(typeof(MenuBar));
+        var bar = ViewFactory.Create<MenuBar>( );
         var addBarCmd = new AddViewOperation(bar, root, "mb");
         ClassicAssert.IsTrue(addBarCmd.Do());
 
@@ -384,7 +384,7 @@ class MenuBarTests : Tests
     }
 
     [Test]
-    public void TestDeletingMenuItemFromSubmenu_AllSubmenChild()
+    public void TestDeletingMenuItemFromSubmenu_AllSubmenuChild()
     {
         var bar = this.GetMenuBarWithSubmenuItems(out var head2, out var topChild);
         var bottomChild = head2.Children[1];
