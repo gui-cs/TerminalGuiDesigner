@@ -28,7 +28,7 @@ internal class ViewFactoryTests : Tests
     [TestCaseSource( nameof( Create_And_CreateT_Type_Provider ) )]
     [Category( "Change Control" )]
     [Description( "This test makes sure that both the generic and non-generic Create methods return objects with the same property values" )]
-#pragma warning disable CS0618 // Type or member is obsolete
+    [Obsolete("Can be removed once non-generic ViewFactory.Create method is no longer in use.")]
     public void Create_And_CreateT_ReturnEquivalentInstancesForSameInputs<T>( T dummyInvalidObject )
         where T : View, new( )
     {
@@ -107,7 +107,6 @@ internal class ViewFactoryTests : Tests
             }
         } );
     }
-#pragma warning restore CS0618 // Type or member is obsolete
 
     [Test]
     [TestCaseSource( nameof( Create_And_CreateT_Type_Provider ) )]
