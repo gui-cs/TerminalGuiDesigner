@@ -289,4 +289,10 @@ public static class ViewFactory
             _ => ReflectionHelpers.GetDefaultViewInstance( requestedType )
         };
     }
+
+    public static T CreateAnother<T>( T oneOfThese )
+        where T : View, new( )
+    {
+        return Create<T>( );
+    }
 }

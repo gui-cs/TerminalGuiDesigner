@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -8,8 +9,32 @@ namespace UnitTests;
 [TestOf( typeof( ViewFactory ) )]
 [Category( "Core" )]
 [Order( 1 )]
-internal class ViewFactoryTests : Tests
+[Parallelizable(ParallelScope.Children)]
+internal class ViewFactoryTests
 {
+    [ThreadStatic]
+    private static bool? _init;
+
+    [OneTimeSetUp]
+    public virtual void SetUp()
+    {
+        _init ??= false;
+        if (_init.Value)
+        {
+            throw new InvalidOperationException("After did not run.");
+        }
+
+        Application.Init(new FakeDriver());
+        _init = true;
+    }
+
+    [OneTimeTearDown]
+    public virtual void TearDown()
+    {
+        Application.Shutdown();
+        _init = false;
+    }
+
     /// <summary>
     ///   Gets every known supported <see cref="View" /> type as an uninitialized object of the corresponding type for testing of generic methods.
     /// </summary>
@@ -26,6 +51,7 @@ internal class ViewFactoryTests : Tests
 
     [Test]
     [TestCaseSource( nameof( Create_And_CreateT_Type_Provider ) )]
+    [Parallelizable(ParallelScope.Children)]
     [Category( "Change Control" )]
     [Description( "This test makes sure that both the generic and non-generic Create methods return objects with the same property values" )]
     [Obsolete("Can be removed once non-generic ViewFactory.Create method is no longer in use.")]
@@ -43,6 +69,28 @@ internal class ViewFactoryTests : Tests
         {
             foreach ( PropertyInfo property in publicPropertiesOfType )
             {
+                switch ( dummyInvalidObject, property )
+                {
+                    case (ComboBox, { Name: "Subviews" }):
+                    case (MenuBar, { Name: "Menus" }):
+                    case (TableView, { Name: "Table" }):
+                    case (TabView, { Name: "Tabs" }):
+                    case (TabView, { Name: "SelectedTab" }):
+                    case (TabView, { Name: "Subviews" }):
+                        // Warn about these, until they are implemented (WIP)
+                        Assert.Warn( $"{property.Name} not yet checked on {typeof( T ).Name}" );
+                        continue;
+                    case (ScrollView, { Name: "Subviews" }):
+                    case (TileView, { Name: "Subviews" }):
+                    case (TileView, { Name: "Tiles" }):
+                    case (_, { Name: "ContextMenu" }):
+                    case (_, { Name: "OverlappedTop" }):
+                        continue;
+                    case (Window, _):
+                        // Safe to skip these, as we don't set them in Create
+                        continue;
+                }
+
                 object? nonGenericPropertyValue = property.GetValue( createdByNonGeneric );
                 object? genericPropertyValue = property.GetValue( createdByGeneric );
 
@@ -62,7 +110,7 @@ internal class ViewFactoryTests : Tests
                 // Special cases for certain properties by property type, property name, and/or tested view type.
                 // In general, we could actually skip basically everything that isn't explicitly in Create,
                 // but doing it this way allows us to just test everything and only skip what we absolutely have to.
-                switch ( dummyInvalidOject: dummyInvalidObject, property )
+                switch ( dummyInvalidObject, property )
                 {
                     case (_, not null) when property.PropertyType == typeof( Frame ):
                         Assert.That( nonGenericPropertyValue!.ToString( ), Is.EqualTo( genericPropertyValue!.ToString( ) ) );
@@ -83,21 +131,6 @@ internal class ViewFactoryTests : Tests
                             Is.EquivalentTo( genericTabIndexes )
                               .Using<View, View>( CompareTwoViews ) );
                         continue;
-                    case (ComboBox, { Name: "Subviews" }):
-                    case (ScrollView, { Name: "Subviews" }):
-                    case (MenuBar, { Name: "Menus" }):
-                    case (TableView, { Name: "Table" }):
-                    case (TabView, { Name: "Tabs" }):
-                    case (TabView, { Name: "SelectedTab" }):
-                    case (TabView, { Name: "Subviews" }):
-                    case (TileView, { Name: "Subviews" }):
-                    case (TileView, { Name: "Tiles" }):
-                        // Warn about these, until they are implemented (WIP)
-                        Assert.Warn( $"{property.Name} not yet checked on {typeof( T ).Name}" );
-                        continue;
-                    case (_, { Name: "ContextMenu" }):
-                        // Safe to skip these, as we don't set them in Create
-                        continue;
                 }
 
                 Assert.That(
@@ -110,10 +143,11 @@ internal class ViewFactoryTests : Tests
 
     [Test]
     [TestCaseSource( nameof( Create_And_CreateT_Type_Provider ) )]
+    [Parallelizable(ParallelScope.Children)]
     [Category( "Change Control" )]
     [Description( "This test makes sure that both the generic and non-generic Create methods return non-null instances of the same type" )]
-#pragma warning disable CS0618  // Type or member is obsolete
-#pragma warning disable IDE0060 // Remove unused parameter
+    [Obsolete("Can be removed once non-generic ViewFactory.Create method is no longer in use.")]
+    [SuppressMessage( "Style", "IDE0060:Remove unused parameter", Justification = "It is expected" )]
     public void Create_And_CreateT_ReturnExpectedTypeForSameInputs<T>( T dummyTypeForNUnit )
         where T : View, new( )
     {
@@ -123,25 +157,17 @@ internal class ViewFactoryTests : Tests
         T createdByGeneric = ViewFactory.Create<T>( );
         Assert.That( createdByGeneric, Is.Not.Null.And.InstanceOf<T>( ) );
     }
-#pragma warning restore IDE0060 // Remove unused parameter
-#pragma warning restore CS0618  // Type or member is obsolete
 
     [Test]
-    [RequiresThread]
-    [NonParallelizable]
-    public void CreateT_DoesNotThrowOnSupportedTypes( [ValueSource( nameof( ViewFactory_SupportedViewTypes ) )] Type supportedType )
+    [Parallelizable(ParallelScope.Children)]
+    [TestCaseSource( nameof( Create_And_CreateT_Type_Provider ) )]
+    [SuppressMessage( "Style", "IDE0060:Remove unused parameter", Justification = "It is expected" )]
+    public void CreateT_DoesNotThrowOnSupportedTypes<T>(T dummyObject  )
+        where T : View, new( )
     {
-        // NUnit does not natively support generic type parameters in test methods, so this is easiest to do via reflection
-        MethodInfo viewFactoryCreateTGeneric = typeof( ViewFactory ).GetMethods( ).Single( static m => m is { IsGenericMethod: true, IsPublic: true, IsStatic: true } );
+        T createdView = ViewFactory.Create<T>( );
 
-        MethodInfo viewFactoryCreateTConcrete = viewFactoryCreateTGeneric.MakeGenericMethod( supportedType );
-
-        object? createdView = null;
-
-        Assert.That( ( ) =>
-                         createdView = viewFactoryCreateTConcrete
-                             .Invoke( null, Enumerable.Repeat<object?>( null, viewFactoryCreateTConcrete.GetParameters( ).Length ).ToArray( ) ),
-                     Throws.Nothing );
+        Assert.That( ( ) => createdView = ViewFactory.Create<T>( ), Throws.Nothing );
 
         if ( createdView is IDisposable d )
         {
@@ -150,18 +176,15 @@ internal class ViewFactoryTests : Tests
     }
 
     [Test]
-    [RequiresThread]
-    [NonParallelizable]
-    public void CreateT_ReturnsValidViewOfExpectedType( [ValueSource( nameof( ViewFactory_SupportedViewTypes ) )] Type supportedType )
+    [Parallelizable(ParallelScope.Children)]
+    [TestCaseSource( nameof( Create_And_CreateT_Type_Provider ) )]
+    [SuppressMessage( "Style", "IDE0060:Remove unused parameter", Justification = "It is expected" )]
+    public void CreateT_ReturnsValidViewOfExpectedType<T>( T dummyObject )
+        where T : View, new( )
     {
-        // NUnit does not natively support generic type parameters in test methods, so this is easiest to do via reflection
-        MethodInfo viewFactoryCreateTGeneric = typeof( ViewFactory ).GetMethods( ).Single( static m => m is { IsGenericMethod: true, IsPublic: true, IsStatic: true } );
+        T createdView = ViewFactory.Create<T>( );
 
-        MethodInfo viewFactoryCreateTConcrete = viewFactoryCreateTGeneric.MakeGenericMethod( supportedType );
-
-        object? createdView = viewFactoryCreateTConcrete.Invoke( null, Enumerable.Repeat<object?>( null, viewFactoryCreateTConcrete.GetParameters( ).Length ).ToArray( ) );
-
-        Assert.That( createdView, Is.Not.Null.And.InstanceOf( supportedType ) );
+        Assert.That( createdView, Is.Not.Null.And.InstanceOf<T>( ) );
 
         if ( createdView is IDisposable d )
         {
@@ -170,12 +193,10 @@ internal class ViewFactoryTests : Tests
     }
 
     [Test]
-    [RequiresThread]
-    [NonParallelizable]
+    [Parallelizable(ParallelScope.Children)]
     public void CreateT_ThrowsOnUnsupportedTypes( [ValueSource( nameof( CreateT_ThrowsOnUnsupportedTypes_Cases ) )] Type unsupportedType )
     {
-        // NUnit does not natively support generic type parameters in test methods, so this is easiest to do via reflection
-        MethodInfo viewFactoryCreateTGeneric = typeof( ViewFactory ).GetMethods( ).Single( static m => m is { IsGenericMethod: true, IsPublic: true, IsStatic: true } );
+        MethodInfo viewFactoryCreateTGeneric = typeof( ViewFactory ).GetMethods( ).Single( static m => m is { IsGenericMethod: true, IsPublic: true, IsStatic: true, Name: "Create" } );
 
         MethodInfo viewFactoryCreateTConcrete = viewFactoryCreateTGeneric.MakeGenericMethod( unsupportedType );
 
@@ -193,8 +214,6 @@ internal class ViewFactoryTests : Tests
 
     [Test]
     [Category( "Change Control" )]
-    [RequiresThread]
-    [NonParallelizable]
     public void DefaultMenuBarItems_IsExactlyAsExpected( )
     {
         Assert.Multiple( static ( ) =>
@@ -214,6 +233,7 @@ internal class ViewFactoryTests : Tests
     [Test]
     [Description( "Checks that all tested types exist in the collection in ViewFactory" )]
     [Category( "Change Control" )]
+    [Parallelizable(ParallelScope.Children)]
     public void KnownUnsupportedTypes_ContainsExpectedItems( [ValueSource( nameof( KnownUnsupportedTypes_ExpectedTypes ) )] Type expectedType )
     {
         Assert.That( ViewFactory.KnownUnsupportedTypes, Contains.Item( expectedType ) );
@@ -222,8 +242,7 @@ internal class ViewFactoryTests : Tests
     [Test]
     [Description( "Checks that no new types have been added that aren't tested" )]
     [Category( "Change Control" )]
-    [RequiresThread]
-    [NonParallelizable]
+    [Parallelizable(ParallelScope.Children)]
     public void KnownUnsupportedTypes_DoesNotContainUnexpectedItems( [ValueSource( nameof( ViewFactory_KnownUnsupportedTypes ) )] Type typeDeclaredUnsupportedInViewFactory )
     {
         Assert.That( KnownUnsupportedTypes_ExpectedTypes, Contains.Item( typeDeclaredUnsupportedInViewFactory ) );
