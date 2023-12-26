@@ -122,7 +122,7 @@ internal class KeyboardManagerTests : Tests
 
 
     [Test]
-    public void HandleKey_AddsExpectedCharactersToView_AsciiAlphanumeric<T>( [ValueSource( nameof( Get_HandleKey_AddsExpectedCharactersToView_AsciiAlphanumeric_TestViews ) )] T testView, [ValueSource( nameof( GetAsciiAlphanumerics ) )] char k )
+    public void HandleKey_AddsExpectedCharactersToView_AsciiAlphanumeric<T>( [ValueSource( nameof( Get_HandleKey_AddsExpectedCharactersToView_AsciiAlphanumeric_TestViews ) )] T testView, [ValueSource( nameof( GetAsciiAlphanumerics ) )] char keyChar )
         where T : View
     {
 
@@ -142,10 +142,12 @@ internal class KeyboardManagerTests : Tests
         Assume.That( new AddViewOperation( testView, d, "testView" ).Do() );
         testView.SetFocus();
 
-        Assert.That( () => mgr!.HandleKey( testView,  (Key)k), Throws.Nothing );
+        Assert.That( Key.TryParse( keyChar.ToString(), out Key k ) );
+
+        Assert.That( () => mgr!.HandleKey( testView,  k), Throws.Nothing );
 
         Assert.That( testView.Text, Is.Not.Null );
-        Assert.That( testView.Text[ ^1 ], Is.EqualTo( k ) );
+        Assert.That( testView.Text[ ^1 ], Is.EqualTo( keyChar ) );
     }
 
     private static IEnumerable<View> Get_HandleKey_AddsExpectedCharactersToView_AsciiAlphanumeric_TestViews()
