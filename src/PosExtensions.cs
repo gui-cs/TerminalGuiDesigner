@@ -338,7 +338,7 @@ public static class PosExtensions
 
         return type switch
         {
-            PosType.Absolute => val.ToString( "N" ),
+            PosType.Absolute => val.ToString( "N0" ),
             PosType.Relative when relativeTo is null => throw new InvalidOperationException( "Pos was Relative but 'relativeTo' was null.  What is the Pos relative to?!" ),
             PosType.Relative when offset > 0 => $"Pos.{GetMethodNameFor( side )}({relativeTo.FieldName}) + {offset}",
             PosType.Relative when offset < 0 => $"Pos.{GetMethodNameFor( side )}({relativeTo.FieldName}) - {Math.Abs( offset )}",
