@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Terminal.Gui;
 
@@ -339,65 +339,33 @@ public static class PosExtensions
         switch (type)
         {
             case PosType.Absolute:
-                return val.ToString();
+                return val.ToString("N");
+            case PosType.Relative when relativeTo is null:
+                throw new InvalidOperationException( "Pos was Relative but 'relativeTo' was null.  What is the Pos relative to?!" );
+            case PosType.Relative when offset > 0:
+                return $"Pos.{GetMethodNameFor(side)}({relativeTo.FieldName}) + {offset}";
+            case PosType.Relative when offset < 0:
+                return $"Pos.{GetMethodNameFor(side)}({relativeTo.FieldName}) - {Math.Abs(offset)}";
             case PosType.Relative:
-
-                if (relativeTo == null)
-                {
-                    throw new Exception("Pos was Relative but 'relativeTo' was null.  What is the Pos relative to?!");
-                }
-
-                if (offset > 0)
-                {
-                    return $"Pos.{GetMethodNameFor(side)}({relativeTo.FieldName}) + {offset}";
-                }
-
-                if (offset < 0)
-                {
-                    return $"Pos.{GetMethodNameFor(side)}({relativeTo.FieldName}) - {Math.Abs(offset)}";
-                }
-
                 return $"Pos.{GetMethodNameFor(side)}({relativeTo.FieldName})";
-
+            case PosType.Percent when offset > 0:
+                return $"Pos.Percent({val:G5}f) + {offset}";
+            case PosType.Percent when offset < 0:
+                return $"Pos.Percent({val:G5}f) - {Math.Abs(offset)}";
             case PosType.Percent:
-                if (offset > 0)
-                {
-                    return $"Pos.Percent({val:G5}f) + {offset}";
-                }
-
-                if (offset < 0)
-                {
-                    return $"Pos.Percent({val:G5}f) - {Math.Abs(offset)}";
-                }
-
                 return $"Pos.Percent({val:G5}f)";
-
+            case PosType.Center when offset > 0:
+                return $"Pos.Center() + {offset}";
+            case PosType.Center when offset < 0:
+                return $"Pos.Center() - {Math.Abs(offset)}";
             case PosType.Center:
-                if (offset > 0)
-                {
-                    return $"Pos.Center() + {offset}";
-                }
-
-                if (offset < 0)
-                {
-                    return $"Pos.Center() - {Math.Abs(offset)}";
-                }
-
                 return $"Pos.Center()";
-
+            case PosType.AnchorEnd when offset > 0:
+                return $"Pos.AnchorEnd({(int)val}) + {offset}";
+            case PosType.AnchorEnd when offset < 0:
+                return $"Pos.AnchorEnd({(int)val}) - {Math.Abs(offset)}";
             case PosType.AnchorEnd:
-                if (offset > 0)
-                {
-                    return $"Pos.AnchorEnd({(int)val}) + {offset}";
-                }
-
-                if (offset < 0)
-                {
-                    return $"Pos.AnchorEnd({(int)val}) - {Math.Abs(offset)}";
-                }
-
                 return $"Pos.AnchorEnd({(int)val})";
-
             default: throw new ArgumentOutOfRangeException(nameof(type));
         }
     }
