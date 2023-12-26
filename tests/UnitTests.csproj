@@ -9,6 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+    <None Remove="Keys.json" />
 	  <None Remove="Keys_Alternate.yaml" />
 	</ItemGroup>
 	
@@ -16,6 +17,9 @@
 		<Content Include="..\src\Keys.yaml">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
+    <Content Include="Keys.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
 		<Content Include="Keys_Alternate.yaml">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
