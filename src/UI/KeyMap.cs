@@ -9,7 +9,7 @@ using TerminalGuiDesigner.UI.Windows;
 namespace TerminalGuiDesigner.UI;
 
 /// <summary>Serializable settings class for user keybinding/accessibility tailoring.</summary>
-[JsonSourceGenerationOptions(JsonSerializerDefaults.General, Converters = new[] {typeof(JsonStringEnumConverter<MouseFlags> )})]
+[JsonSourceGenerationOptions( JsonSerializerDefaults.General, Converters = new[] { typeof( JsonStringEnumConverter<MouseFlags> ), typeof( JsonStringEnumConverter<ColorName> ) } )]
 public sealed record KeyMap(
     string EditProperties,
     string ShowContextMenu,
