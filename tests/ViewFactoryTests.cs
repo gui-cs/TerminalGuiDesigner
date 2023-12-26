@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Reflection;
-using System.Runtime.Serialization;
+using System.Runtime.CompilerServices;
 
 namespace UnitTests;
 
@@ -15,7 +15,7 @@ internal class ViewFactoryTests : Tests
     /// </summary>
     private static IEnumerable<TestCaseData> Create_And_CreateT_Type_Provider
     {
-        get { return ViewFactory_SupportedViewTypes.Select( static t => new TestCaseData( FormatterServices.GetUninitializedObject( t ) ) ); }
+        get { return ViewFactory_SupportedViewTypes.Select( static t => new TestCaseData( RuntimeHelpers.GetUninitializedObject( t ) ) ); }
     }
 
     private static MenuBarItem[] ViewFactory_DefaultMenuBarItems => ViewFactory.DefaultMenuBarItems;
