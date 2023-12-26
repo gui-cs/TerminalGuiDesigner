@@ -5,7 +5,7 @@
 		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<LangVersion>11</LangVersion>
+    <LangVersion>12</LangVersion>
 	</PropertyGroup>
 
 	<ItemGroup>

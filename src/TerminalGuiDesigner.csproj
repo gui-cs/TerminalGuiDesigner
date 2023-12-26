@@ -11,8 +11,8 @@
 	</ItemGroup>
 	<PropertyGroup>
 		<TargetFrameworks>net8.0</TargetFrameworks>
-		<DefineConstants>$(DefineConstants);Building_For_Dotnet_8</DefineConstants>
-		<LangVersion>11</LangVersion>
+		<DefineConstants>$(DefineConstants)</DefineConstants>
+		<LangVersion>12</LangVersion>
 		<OutputType>Exe</OutputType>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<PackAsTool>true</PackAsTool>
