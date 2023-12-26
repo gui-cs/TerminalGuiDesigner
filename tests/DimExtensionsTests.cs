@@ -1,7 +1,3 @@
-using System;
-using Terminal.Gui;
-using TerminalGuiDesigner;
-
 namespace UnitTests;
 
 [TestFixture]
@@ -163,14 +159,16 @@ internal class DimExtensionsTests
     [Test]
     [Sequential]
     public void ToCode_ReturnsExpectedString(
-        [Values( DimType.Percent, DimType.Fill )] DimType dimType,
-        [Values( "Dim.Percent(50f)", "Dim.Fill(5)" )] string expectedCode )
+        [Values( DimType.Percent, DimType.Fill, DimType.Absolute )] DimType dimType,
+        [Values( "Dim.Percent(50f)", "Dim.Fill(5)", "5" )] string expectedCode )
     {
         Assert.That(
             dimType switch
             {
                 DimType.Percent => Dim.Percent( 50 ).ToCode( ),
-                DimType.Fill => Dim.Fill( 5 ).ToCode( )
+                DimType.Fill => Dim.Fill( 5 ).ToCode( ),
+                DimType.Absolute => new Dim.DimAbsolute( 5 ).ToCode( ),
+                _ => throw new ArgumentOutOfRangeException( nameof( dimType ), dimType, null )
             },
             Is.EqualTo( expectedCode )
         );
@@ -179,15 +177,17 @@ internal class DimExtensionsTests
     [Test]
     [Sequential]
     public void ToCode_ReturnsExpectedString_WithOffset(
-        [Values( DimType.Percent, DimType.Percent, DimType.Fill, DimType.Fill )] DimType dimType,
-        [Values( 2, -2, 2, -2 )] int offset,
-        [Values( "Dim.Percent(50f) + 2", "Dim.Percent(50f) - 2", "Dim.Fill(5) + 2", "Dim.Fill(5) - 2" )] string expectedCode )
+        [Values( DimType.Percent, DimType.Percent, DimType.Fill, DimType.Fill, DimType.Absolute, DimType.Absolute )] DimType dimType,
+        [Values( 2, -2, 2, -2, 2, -2 )] int offset,
+        [Values( "Dim.Percent(50f) + 2", "Dim.Percent(50f) - 2", "Dim.Fill(5) + 2", "Dim.Fill(5) - 2", "7","3" )] string expectedCode )
     {
         Assert.That(
             dimType switch
             {
                 DimType.Percent => ( Dim.Percent( 50 ) + offset ).ToCode( ),
-                DimType.Fill => ( Dim.Fill( 5 ) + offset ).ToCode( )
+                DimType.Fill => ( Dim.Fill( 5 ) + offset ).ToCode( ),
+                DimType.Absolute => (new Dim.DimAbsolute( 5 )+ offset).ToCode( ),
+                _ => throw new ArgumentOutOfRangeException( nameof( dimType ), dimType, null )
             },
             Is.EqualTo( expectedCode )
         );
