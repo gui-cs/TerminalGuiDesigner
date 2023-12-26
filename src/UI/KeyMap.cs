@@ -213,6 +213,7 @@ public sealed record KeyMap(
     /// </summary>
     /// <param name="configurationFile">Relative or absolute path to the configuration file to load.</param>
     /// <param name="optional">Whether this file is optional and can be ignored if missing.</param>
+    /// <param name="section">An optional section to load the KeyMap configuration from, in the given file. If null or empty, the root node will be used.</param>
     /// <returns>A new instance of a <see cref="KeyMap" /> from the specified file.</returns>
     /// <exception cref="ArgumentException">If <paramref name="configurationFile" /> is a null or empty string.</exception>
     public static KeyMap LoadFromJsonConfigurationFile( string configurationFile = "Keys.json", bool optional = true, string? section = null )
