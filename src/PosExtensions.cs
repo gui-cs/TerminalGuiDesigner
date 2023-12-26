@@ -336,38 +336,24 @@ public static class PosExtensions
             return null;
         }
 
-        switch (type)
+        return type switch
         {
-            case PosType.Absolute:
-                return val.ToString("N");
-            case PosType.Relative when relativeTo is null:
-                throw new InvalidOperationException( "Pos was Relative but 'relativeTo' was null.  What is the Pos relative to?!" );
-            case PosType.Relative when offset > 0:
-                return $"Pos.{GetMethodNameFor(side)}({relativeTo.FieldName}) + {offset}";
-            case PosType.Relative when offset < 0:
-                return $"Pos.{GetMethodNameFor(side)}({relativeTo.FieldName}) - {Math.Abs(offset)}";
-            case PosType.Relative:
-                return $"Pos.{GetMethodNameFor(side)}({relativeTo.FieldName})";
-            case PosType.Percent when offset > 0:
-                return $"Pos.Percent({val:G5}f) + {offset}";
-            case PosType.Percent when offset < 0:
-                return $"Pos.Percent({val:G5}f) - {Math.Abs(offset)}";
-            case PosType.Percent:
-                return $"Pos.Percent({val:G5}f)";
-            case PosType.Center when offset > 0:
-                return $"Pos.Center() + {offset}";
-            case PosType.Center when offset < 0:
-                return $"Pos.Center() - {Math.Abs(offset)}";
-            case PosType.Center:
-                return $"Pos.Center()";
-            case PosType.AnchorEnd when offset > 0:
-                return $"Pos.AnchorEnd({(int)val}) + {offset}";
-            case PosType.AnchorEnd when offset < 0:
-                return $"Pos.AnchorEnd({(int)val}) - {Math.Abs(offset)}";
-            case PosType.AnchorEnd:
-                return $"Pos.AnchorEnd({(int)val})";
-            default: throw new ArgumentOutOfRangeException(nameof(type));
-        }
+            PosType.Absolute => val.ToString( "N" ),
+            PosType.Relative when relativeTo is null => throw new InvalidOperationException( "Pos was Relative but 'relativeTo' was null.  What is the Pos relative to?!" ),
+            PosType.Relative when offset > 0 => $"Pos.{GetMethodNameFor( side )}({relativeTo.FieldName}) + {offset}",
+            PosType.Relative when offset < 0 => $"Pos.{GetMethodNameFor( side )}({relativeTo.FieldName}) - {Math.Abs( offset )}",
+            PosType.Relative => $"Pos.{GetMethodNameFor( side )}({relativeTo.FieldName})",
+            PosType.Percent when offset > 0 => $"Pos.Percent({val:G5}f) + {offset}",
+            PosType.Percent when offset < 0 => $"Pos.Percent({val:G5}f) - {Math.Abs( offset )}",
+            PosType.Percent => $"Pos.Percent({val:G5}f)",
+            PosType.Center when offset > 0 => $"Pos.Center() + {offset}",
+            PosType.Center when offset < 0 => $"Pos.Center() - {Math.Abs( offset )}",
+            PosType.Center => $"Pos.Center()",
+            PosType.AnchorEnd when offset > 0 => $"Pos.AnchorEnd({(int)val}) + {offset}",
+            PosType.AnchorEnd when offset < 0 => $"Pos.AnchorEnd({(int)val}) - {Math.Abs( offset )}",
+            PosType.AnchorEnd => $"Pos.AnchorEnd({(int)val})",
+            _ => throw new ArgumentOutOfRangeException( nameof( type ) )
+        };
     }
 
     /// <summary>
