@@ -63,7 +63,7 @@ public class KeyboardManager
             this.FinishOperation();
         }
 
-        if (keystroke == this.keyMap.Rename)
+        if (keystroke.ToString( ) == this.keyMap.Rename)
         {
             var nameProp = d.GetDesignableProperties().OfType<NameProperty>().FirstOrDefault();
             if (nameProp != null)
@@ -93,7 +93,7 @@ public class KeyboardManager
 
     private bool HandleKeyPressInMenu(View focusedView, MenuItem menuItem, Key keystroke)
     {
-        if (keystroke == this.keyMap.Rename)
+        if (keystroke.ToString( ) == this.keyMap.Rename)
         {
             OperationManager.Instance.Do(
                     new RenameMenuItemOperation(menuItem));
@@ -109,7 +109,7 @@ public class KeyboardManager
             return false;
         }
 
-        if (keystroke == this.keyMap.SetShortcut)
+        if (keystroke.ToString( ) == this.keyMap.SetShortcut)
         {
             menuItem.Shortcut = Modals.GetShortcut().KeyCode;
 
@@ -117,7 +117,7 @@ public class KeyboardManager
             return false;
         }
 
-        if (keystroke == this.keyMap.MoveRight)
+        if (keystroke.ToString( ) == this.keyMap.MoveRight)
         {
             OperationManager.Instance.Do(
                 new MoveMenuItemRightOperation(menuItem));
@@ -126,7 +126,7 @@ public class KeyboardManager
             return true;
         }
 
-        if (keystroke == this.keyMap.MoveLeft)
+        if (keystroke.ToString( ) == this.keyMap.MoveLeft)
         {
             OperationManager.Instance.Do(
                 new MoveMenuItemLeftOperation(menuItem));
@@ -135,7 +135,7 @@ public class KeyboardManager
             return false;
         }
 
-        if (keystroke == this.keyMap.MoveUp)
+        if (keystroke.ToString( ) == this.keyMap.MoveUp)
         {
             OperationManager.Instance.Do(
                 new MoveMenuItemOperation(menuItem, true));
@@ -143,7 +143,7 @@ public class KeyboardManager
             return false;
         }
 
-        if (keystroke == this.keyMap.MoveDown)
+        if (keystroke.ToString( ) == this.keyMap.MoveDown)
         {
             OperationManager.Instance.Do(
                 new MoveMenuItemOperation(menuItem, false));

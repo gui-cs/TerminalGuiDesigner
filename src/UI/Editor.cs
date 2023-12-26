@@ -271,43 +271,44 @@ public class Editor : Toplevel
             this.editing = true;
             SelectionManager.Instance.LockSelection = true;
 
-            if (key.KeyCode == this.keyMap.ShowContextMenu && !this.menuOpen)
+            string keyString = key.ToString( );
+            if (keyString == this.keyMap.ShowContextMenu && !this.menuOpen)
             {
                 this.CreateAndShowContextMenu(null, null);
                 return true;
             }
 
-            if (key == this.keyMap.EditProperties)
+            if (keyString == this.keyMap.EditProperties)
             {
                 this.ShowEditProperties();
                 return true;
             }
 
-            if (key == this.keyMap.ShowColorSchemes)
+            if (keyString == this.keyMap.ShowColorSchemes)
             {
                 this.ShowColorSchemes();
                 return true;
             }
 
-            if (key == this.keyMap.Copy)
+            if (keyString == this.keyMap.Copy)
             {
                 this.Copy();
                 return true;
             }
 
-            if (key == this.keyMap.Paste)
+            if (keyString == this.keyMap.Paste)
             {
                 this.Paste();
                 return true;
             }
 
-            if (key == this.keyMap.ViewSpecificOperations)
+            if (keyString == this.keyMap.ViewSpecificOperations)
             {
                 this.ShowViewSpecificOperations();
                 return true;
             }
 
-            if (key == this.keyMap.EditRootProperties)
+            if (keyString == this.keyMap.EditRootProperties)
             {
                 if (this.viewBeingEdited == null)
                 {
@@ -318,117 +319,117 @@ public class Editor : Toplevel
                 return true;
             }
 
-            if (key == this.keyMap.Open)
+            if (keyString == this.keyMap.Open)
             {
                 this.Open();
                 return true;
             }
 
-            if (key == this.keyMap.Save)
+            if (keyString == this.keyMap.Save)
             {
                 this.Save();
                 return true;
             }
 
-            if (key == this.keyMap.New)
+            if (keyString == this.keyMap.New)
             {
                 this.New();
                 return true;
             }
 
-            if (key == this.keyMap.ShowHelp)
+            if (keyString == this.keyMap.ShowHelp)
             {
                 this.ShowHelp();
                 return true;
             }
 
-            if (key == this.keyMap.AddView)
+            if (keyString == this.keyMap.AddView)
             {
                 this.ShowAddViewWindow();
                 return true;
             }
 
-            if (key == this.keyMap.ToggleDragging)
+            if (keyString == this.keyMap.ToggleDragging)
             {
                 this.enableDrag = !this.enableDrag;
                 return true;
             }
 
-            if (key == this.keyMap.Undo)
+            if (keyString == this.keyMap.Undo)
             {
                 OperationManager.Instance.Undo();
                 return true;
             }
 
-            if (key == this.keyMap.Redo)
+            if (keyString == this.keyMap.Redo)
             {
                 OperationManager.Instance.Redo();
                 return true;
             }
 
-            if (key == this.keyMap.Delete)
+            if (keyString == this.keyMap.Delete)
             {
                 this.Delete();
                 return true;
             }
 
-            if (key == this.keyMap.ToggleShowFocused)
+            if (keyString == this.keyMap.ToggleShowFocused)
             {
                 this.enableShowFocused = !this.enableShowFocused;
                 this.SetNeedsDisplay();
                 return true;
             }
 
-            if (key == this.keyMap.ToggleShowBorders)
+            if (keyString == this.keyMap.ToggleShowBorders)
             {
                 ShowBorders = !ShowBorders;
                 this.SetNeedsDisplay();
                 return true;
             }
 
-            if (key == this.keyMap.SelectAll)
+            if (keyString == this.keyMap.SelectAll)
             {
                 this.SelectAll();
                 return true;
             }
 
-            if (key == this.keyMap.MoveUp)
+            if (keyString == this.keyMap.MoveUp)
             {
                 this.MoveControl(0, -1);
                 return true;
             }
 
-            if (key == this.keyMap.MoveDown)
+            if (keyString == this.keyMap.MoveDown)
             {
                 this.MoveControl(0, 1);
                 return true;
             }
 
-            if (key == this.keyMap.MoveLeft)
+            if (keyString == this.keyMap.MoveLeft)
             {
                 this.MoveControl(-1, 0);
                 return true;
             }
 
-            if (key == this.keyMap.MoveRight)
+            if (keyString == this.keyMap.MoveRight)
             {
                 this.MoveControl(1, 0);
                 return true;
             }
 
-            if (key == this.keyMap.MoveDown)
+            if (keyString == this.keyMap.MoveDown)
             {
                 this.MoveControl(0, 1);
                 return true;
             }
 
-            if (key == this.keyMap.MoveLeft)
+            if (keyString == this.keyMap.MoveLeft)
             {
                 this.MoveControl(-1, 0);
                 return true;
             }
 
-            if (key == this.keyMap.MoveRight)
+            if (keyString == this.keyMap.MoveRight)
             {
                 this.MoveControl(1, 0);
                 return true;
