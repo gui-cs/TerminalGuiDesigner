@@ -60,47 +60,87 @@ internal class MenuBarTests : Tests
     }
 
     [Test]
-    public void TestRoundTrip_PreserveMenuItems_EvenSubmenus()
+    [TestOf( typeof( AddMenuItemOperation ) )]
+    public void RoundTrip_PreserveMenuItems_WithSubmenus( )
     {
-        var viewToCode = new ViewToCode();
+        ViewToCode viewToCode = new( );
 
-        var file = new FileInfo($"{nameof(this.TestRoundTrip_PreserveMenuItems_EvenSubmenus)}.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
+        FileInfo file = new( $"{nameof( RoundTrip_PreserveMenuItems_WithSubmenus )}.cs" );
+        Design designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Dialog ) );
 
-        var mbOut = ViewFactory.Create<MenuBar>( );
+        MenuBar mbOut = ViewFactory.Create<MenuBar>( );
+        Assume.That( mbOut, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
 
-        OperationManager.Instance.Do(new AddViewOperation(mbOut, designOut, "myMenuBar"));
+        AddViewOperation addViewOperation = new( mbOut, designOut, "myMenuBar" );
+        Assume.That( addViewOperation, Is.Not.Null.And.InstanceOf<AddViewOperation>( ) );
+
+        bool addViewOperationSucceeded = false;
+        Assert.That( ( ) => addViewOperationSucceeded = OperationManager.Instance.Do( addViewOperation ), Throws.Nothing );
+        Assert.That( addViewOperationSucceeded );
 
         // create some more children in the menu
-        new AddMenuItemOperation(mbOut.Menus[0].Children[0]).Do();
-        new AddMenuItemOperation(mbOut.Menus[0].Children[0]).Do();
-        new AddMenuItemOperation(mbOut.Menus[0].Children[0]).Do();
+        AddMenuItemOperation addChildMenuOperation1 = new( mbOut.Menus[ 0 ].Children[ 0 ] );
+        AddMenuItemOperation addChildMenuOperation2 = new( mbOut.Menus[ 0 ].Children[ 0 ] );
+        AddMenuItemOperation addChildMenuOperation3 = new( mbOut.Menus[ 0 ].Children[ 0 ] );
 
-        // move the last child to
-        new MoveMenuItemRightOperation(mbOut.Menus[0].Children[1]).Do();
+        Assert.Multiple( ( ) =>
+        {
+            bool addChildMenuOperation1Succeeded = false;
+            bool addChildMenuOperation2Succeeded = false;
+            bool addChildMenuOperation3Succeeded = false;
+            Assert.That( ( ) => addChildMenuOperation1Succeeded = addChildMenuOperation1.Do( ), Throws.Nothing );
+            Assert.That( addChildMenuOperation1Succeeded );
+            Assert.That( ( ) => addChildMenuOperation2Succeeded = addChildMenuOperation2.Do( ), Throws.Nothing );
+            Assert.That( addChildMenuOperation2Succeeded );
+            Assert.That( ( ) => addChildMenuOperation3Succeeded = addChildMenuOperation3.Do( ), Throws.Nothing );
+            Assert.That( addChildMenuOperation3Succeeded );
+        } );
+
+        // move the last child
+        MoveMenuItemRightOperation moveMenuItemOperation = new( mbOut.Menus[ 0 ].Children[ 1 ] );
+        Assert.That( ( ) => moveMenuItemOperation.Do( ), Throws.Nothing );
 
         // 1 visible root menu (e.g. File)
-        ClassicAssert.AreEqual(1, mbOut.Menus.Length);
+        Assert.That( mbOut.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
+
         // 3 child menu item (original one + 3 we added -1 because we moved it to submenu)
-        ClassicAssert.AreEqual(3, mbOut.Menus[0].Children.Length);
+        Assert.That( mbOut.Menus[ 0 ].Children, Has.Exactly( 3 ).InstanceOf<MenuItem>( ) );
 
         // should be 1 submenu item (the one we moved)
-        ClassicAssert.AreEqual(1, ((MenuBarItem)mbOut.Menus[0].Children[0]).Children.Length);
+        Assert.That( mbOut.Menus[ 0 ].Children[ 0 ], Is.InstanceOf<MenuBarItem>( ) );
+        Assert.That( ( (MenuBarItem)mbOut.Menus[ 0 ].Children[ 0 ] ).Children, Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
 
-        viewToCode.GenerateDesignerCs(designOut, typeof(Dialog));
+        Assume.That( ( ) => viewToCode.GenerateDesignerCs( designOut, typeof( Dialog ) ), Throws.Nothing );
+        Assume.That( designOut, Is.Not.Null.And.InstanceOf<Design>( ) );
 
-        var codeToView = new CodeToView(designOut.SourceCode);
-        var designBackIn = codeToView.CreateInstance();
+        CodeToView? codeToView = null;
+        Assume.That( ( ) => codeToView = new( designOut.SourceCode ), Throws.Nothing );
+        Assume.That( codeToView, Is.Not.Null.And.InstanceOf<CodeToView>( ) );
 
-        var mbIn = designBackIn.View.GetActualSubviews().OfType<MenuBar>().Single();
+        Design? designBackIn = null;
+
+        Assume.That( ( ) => designBackIn = codeToView.CreateInstance( ), Throws.Nothing );
+        Assume.That( designBackIn, Is.Not.Null.And.InstanceOf<Design>( ) );
+
+        MenuBar? mbIn = null;
+        Assume.That( designBackIn!.View, Is.Not.Null.And.InstanceOf<View>( ) );
+
+        IList<View> actualSubviews = designBackIn.View.GetActualSubviews( );
+        Assert.That( actualSubviews, Has.Exactly( 1 ).InstanceOf<MenuBar>( ) );
+        Assert.That( ( ) => mbIn = actualSubviews.OfType<MenuBar>( ).Single( ), Throws.Nothing );
+        Assert.That( mbIn, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
 
         // 1 visible root menu (e.g. File)
-        ClassicAssert.AreEqual(1, mbIn.Menus.Length);
+        Assert.That( mbIn.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
         // 3 child menu item (original one + 3 we added -1 because we moved it to submenu)
-        ClassicAssert.AreEqual(3, mbIn.Menus[0].Children.Length);
+        Assert.That( mbIn.Menus[ 0 ].Children, Has.Exactly( 3 ).InstanceOf<MenuItem>( ) );
+        Assert.That( mbIn.Menus[ 0 ].Children, Has.All.Not.Null );
 
         // should be 1 submenu item (the one we moved)
-        ClassicAssert.AreEqual(1, ((MenuBarItem)mbIn.Menus[0].Children[0]).Children.Length);
+        Assert.That( ( (MenuBarItem)mbIn.Menus[ 0 ].Children[ 0 ] ).Children, Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
+        Assert.That(
+            ( (MenuBarItem)mbIn.Menus[ 0 ].Children[ 0 ] ).Children[ 0 ].Title,
+            Is.EqualTo( ( (MenuBarItem)mbOut.Menus[ 0 ].Children[ 0 ] ).Children[ 0 ].Title ) );
     }
 
     [Test]
