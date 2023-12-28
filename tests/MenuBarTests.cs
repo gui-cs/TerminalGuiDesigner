@@ -1,15 +1,11 @@
-using System.IO;
-using System.Linq;
-using Terminal.Gui;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.FromCode;
-using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.Operations.MenuOperations;
-using TerminalGuiDesigner.ToCode;
 
 namespace UnitTests;
 
-class MenuBarTests : Tests
+[TestFixture]
+[TestOf(typeof(OperationManager))]
+[Category("UI")]
+internal class MenuBarTests : Tests
 {
     [Test]
     public void TestRoundTrip_PreserveMenuItems()
