@@ -8,33 +8,55 @@ namespace UnitTests;
 internal class MenuBarTests : Tests
 {
     [Test]
-    public void TestRoundTrip_PreserveMenuItems()
+    public void RoundTrip_PreserveMenuItems()
     {
         var viewToCode = new ViewToCode();
 
-        var file = new FileInfo($"{nameof(this.TestRoundTrip_PreserveMenuItems)}.cs");
+        var file = new FileInfo($"{nameof(RoundTrip_PreserveMenuItems)}.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
-        var mbOut = ViewFactory.Create<MenuBar>( );
+        using MenuBar mbOut = ViewFactory.Create<MenuBar>( );
+
+        Assume.That( mbOut, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
 
         // 1 visible root menu (e.g. File)
-        ClassicAssert.AreEqual(1, mbOut.Menus.Length);
+        Assert.That( mbOut.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
+
         // 1 child menu item (e.g. Open)
-        ClassicAssert.AreEqual(1, mbOut.Menus[0].Children.Length);
+        Assert.That( mbOut.Menus[ 0 ].Children, Is.Not.Null.And.Not.Empty );
+        Assert.That( mbOut.Menus[ 0 ].Children, Has.Exactly(1).InstanceOf<MenuItem>(  ) );
 
-        OperationManager.Instance.Do(new AddViewOperation(mbOut, designOut, "myMenuBar"));
+        AddViewOperation? addViewOperation = null;
+        Assume.That( ( ) => addViewOperation = new ( mbOut, designOut, "myMenuBar" ), Throws.Nothing );
+        Assume.That( addViewOperation, Is.Not.Null.And.InstanceOf<AddViewOperation>( ) );
 
-        viewToCode.GenerateDesignerCs(designOut, typeof(Dialog));
+        bool addViewOperationSucceeded = false;
+        Assert.That( ( ) => addViewOperationSucceeded = OperationManager.Instance.Do( addViewOperation ), Throws.Nothing );
+        Assert.That( addViewOperationSucceeded );
 
-        var codeToView = new CodeToView(designOut.SourceCode);
-        var designBackIn = codeToView.CreateInstance();
+        Assume.That( ( ) => viewToCode.GenerateDesignerCs( designOut, typeof( Dialog ) ), Throws.Nothing );
 
-        var mbIn = designBackIn.View.GetActualSubviews().OfType<MenuBar>().Single();
+        CodeToView? codeToView = null;
+        Assert.That( ( ) => codeToView = new( designOut.SourceCode ), Throws.Nothing );
+        Assert.That( codeToView, Is.Not.Null.And.InstanceOf<CodeToView>( ) );
+
+        Design? designBackIn = null;
+        Assert.That( ( ) => designBackIn = codeToView.CreateInstance( ), Throws.Nothing );
+        Assert.That( designBackIn, Is.Not.Null.And.InstanceOf<Design>( ) );
 
         // 1 visible root menu (e.g. File)
-        ClassicAssert.AreEqual(1, mbIn.Menus.Length);
+        MenuBar? mbIn = null;
+        Assert.That( designBackIn.View, Is.Not.Null.And.InstanceOf<View>( ) );
+        IList<View> actualSubviews = designBackIn.View.GetActualSubviews();
+        Assert.That( actualSubviews, Has.Exactly( 1 ).InstanceOf<MenuBar>( ) );
+        Assert.That( ( ) => mbIn = actualSubviews.OfType<MenuBar>(  ).Single( ), Throws.Nothing );
+        Assert.That( mbIn, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
+
         // 1 child menu item (e.g. Open)
-        ClassicAssert.AreEqual(1, mbIn.Menus[0].Children.Length);
+        Assert.That( mbIn.Menus, Is.Not.Null.And.Not.Empty );
+        Assert.That( mbIn.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
+        Assert.That( mbIn.Menus[ 0 ].Children, Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
+        Assert.That( mbIn.Menus[ 0 ].Children[ 0 ].Title, Is.EqualTo( mbOut.Menus[ 0 ].Children[ 0 ].Title ) );
     }
 
     [Test]
