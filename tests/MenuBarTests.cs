@@ -79,9 +79,12 @@ internal class MenuBarTests : Tests
         Assert.That( addViewOperationSucceeded );
 
         // create some more children in the menu
-        AddMenuItemOperation addChildMenuOperation1 = new( mbOut.Menus[ 0 ].Children[ 0 ] );
-        AddMenuItemOperation addChildMenuOperation2 = new( mbOut.Menus[ 0 ].Children[ 0 ] );
-        AddMenuItemOperation addChildMenuOperation3 = new( mbOut.Menus[ 0 ].Children[ 0 ] );
+        AddMenuItemOperation? addChildMenuOperation1 = null;
+        AddMenuItemOperation? addChildMenuOperation2 = null;
+        AddMenuItemOperation? addChildMenuOperation3 = null;
+        Assert.That( ( ) => addChildMenuOperation1 = new( mbOut.Menus[ 0 ].Children[ 0 ] ), Throws.Nothing );
+        Assert.That( ( ) => addChildMenuOperation2 = new( mbOut.Menus[ 0 ].Children[ 0 ] ), Throws.Nothing );
+        Assert.That( ( ) => addChildMenuOperation3 = new( mbOut.Menus[ 0 ].Children[ 0 ] ), Throws.Nothing );
 
         Assert.Multiple( ( ) =>
         {
