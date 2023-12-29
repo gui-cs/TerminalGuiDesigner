@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
@@ -80,6 +81,20 @@ public class MenuTracker
 
         hostBar = null;
         return null;
+    }
+
+    public bool TryGetParent(MenuItem item, [NotNullWhen(true)]out MenuBar? hostBar, [NotNullWhen(true)] out MenuBarItem? parentItem)
+    {
+        var parentCandidate = GetParent( item, out hostBar );
+        if ( parentCandidate is null )
+        {
+            hostBar = null;
+            parentItem = null;
+            return false;
+        }
+
+        parentItem = parentCandidate;
+        return true;
     }
 
     /// <summary>
