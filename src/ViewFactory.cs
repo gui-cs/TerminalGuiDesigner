@@ -23,8 +23,6 @@ public static class ViewFactory
         typeof( ScrollBarView ),
         typeof( TreeView<> ),
 
-        typeof( Slider<> ),
-
         // Theses are special types of view and shouldn't be added manually by user
         typeof( Frame ),
 
