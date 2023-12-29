@@ -122,7 +122,7 @@ public class MenuTracker
     /// <param name="added">The result of the conversion (same text, same index etc but
     /// <see cref="MenuItem"/> instead of <see cref="MenuBarItem"/>).</param>
     /// <returns><see langword="true"/> if conversion was possible (menu was empty and belonged to tracked menu).</returns>
-    public bool ConvertMenuBarItemToRegularItemIfEmpty(MenuBarItem bar, out MenuItem? added)
+    internal static bool ConvertMenuBarItemToRegularItemIfEmpty(MenuBarItem bar, out MenuItem? added)
     {
         added = null;
 
@@ -132,7 +132,7 @@ public class MenuTracker
             return false;
         }
 
-        var parent = MenuTracker.Instance.GetParent(bar, out _);
+        var parent = Instance.GetParent(bar, out _);
 
         if (parent == null)
         {
@@ -168,7 +168,7 @@ public class MenuTracker
         foreach (var c in mbi.Children.OfType<MenuBarItem>())
         {
             this.ConvertEmptyMenus(bar, c);
-            if (this.ConvertMenuBarItemToRegularItemIfEmpty(c, out var added))
+            if ( ConvertMenuBarItemToRegularItemIfEmpty( c, out var added))
             {
                 if (added != null)
                 {
