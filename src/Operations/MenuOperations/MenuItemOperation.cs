@@ -16,11 +16,9 @@ public abstract class MenuItemOperation : Operation
     {
         // if taking a new line add an extra menu item
         // menuItem.Parent doesn't work for root menu items
-        var parent = MenuTracker.Instance.GetParent(operateOn, out var bar);
-
-        if (parent == null || bar == null)
+        if ( !MenuTracker.Instance.TryGetParent( operateOn, out MenuBar? bar, out MenuBarItem? parent ) )
         {
-            this.IsImpossible = true;
+            IsImpossible = true;
             return;
         }
 
