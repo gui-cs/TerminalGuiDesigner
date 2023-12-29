@@ -19,16 +19,25 @@ namespace TerminalGuiDesigner.UI.Windows {
         /// </summary>
         public bool Cancelled { get; private set; } = true;
 
+        private Type elementType;
+
         /// <summary>
         /// The new array 
         /// </summary>
-        public IList Result { get; private set; }
+        public object[] Result { get; private set; }
 
         public ArrayEditor(ToCode.Property property) {
             InitializeComponent();
 
+            this.elementType = property.GetElementType();
+
+
+            var list = ((IList)property.GetValue());
+            var array = new object[list.Count];
+            list.CopyTo(array, 0);
+
             // TODO: implement
-            Result = new int[] { 1, 2, 3 };
+            Result = array;
 
             lvElements.SetSource(Result);
             btnOk.Clicked += BtnOk_Clicked;
@@ -39,7 +48,12 @@ namespace TerminalGuiDesigner.UI.Windows {
         private void BtnAddElement_Clicked(object sender, EventArgs e)
         {
             // TODO: implement
-            Result.Add(32);
+            object toAdd = new SliderOption<string>();
+            var list = Result.ToList();
+            list.Add(toAdd);
+
+            Result = list.ToArray();
+            lvElements.SetSource(Result);
             lvElements.SetNeedsDisplay();
         }
 

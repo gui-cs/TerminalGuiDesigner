@@ -416,7 +416,7 @@ public class Property : ToCodeBase
     /// Returns the element type for collections (IList or Array) or <see langword="null"/> if it is not.
     /// </summary>
     /// <returns>Element type of collection or <see langword="null"/>.</returns>
-    public Type GetElementType()
+    public Type? GetElementType()
     {
         var propertyType = this.PropertyInfo.PropertyType;
         var elementType = propertyType.GetElementType();
@@ -428,7 +428,7 @@ public class Property : ToCodeBase
 
         if (propertyType.IsAssignableTo(typeof(IList)) && propertyType.IsGenericType)
         {
-            return propertyType.GetGenericTypeDefinition().GetGenericArguments().Single();
+            return propertyType.GetGenericArguments().Single();
         }
 
         return null;
