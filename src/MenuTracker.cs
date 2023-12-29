@@ -1,4 +1,5 @@
-﻿using Terminal.Gui;
+﻿using System.Collections.Concurrent;
+using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
 
@@ -8,7 +9,7 @@ namespace TerminalGuiDesigner;
 /// </summary>
 public class MenuTracker
 {
-    private readonly HashSet<MenuBar> bars = new();
+    private readonly ConcurrentBag<MenuBar> bars = new( );
 
     private MenuTracker()
     {
