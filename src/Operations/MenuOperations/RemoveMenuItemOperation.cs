@@ -64,10 +64,12 @@ public class RemoveMenuItemOperation : MenuItemOperation
             return;
         }
 
-        var children = this.Parent.Children.ToList<MenuItem>();
-
-        children.Insert(this.removedAtIdx, this.OperateOn);
-        this.Parent.Children = children.ToArray();
+        this.Parent.Children =
+        [
+            .. Parent.Children[ .. removedAtIdx ],
+            this.OperateOn,
+            .. Parent.Children[ removedAtIdx .. ]
+        ];
         this.Bar?.SetNeedsDisplay();
 
         // if any MenuBarItem were converted to vanilla MenuItem
