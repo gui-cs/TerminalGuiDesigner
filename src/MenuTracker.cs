@@ -147,9 +147,7 @@ public class MenuTracker
             return false;
         }
 
-        var parent = Instance.GetParent(bar, out _);
-
-        if (parent == null)
+        if ( !Instance.TryGetParent( bar, out _, out MenuBarItem? parent ) )
         {
             return false;
         }
