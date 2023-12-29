@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
@@ -59,9 +59,10 @@ public class MenuTracker
     /// <param name="item">The item whose parent you want to find.</param>
     /// <param name="hostBar">The <see cref="MenuBar"/> that owns <paramref name="item"/> or.
     /// null if not found or parent not registered (see <see cref="Register(MenuBar)"/>).</param>
-    /// <returns>The immediate parent of <paramref name="item"/>.  May be a top level menu (e.g. File, View)
-    /// or a sub-menu parent (e.g. View=>Windows).</returns>
-    public MenuBarItem? GetParent(MenuItem item, out MenuBar? hostBar)
+    /// <returns>The immediate parent of <paramref name="item"/>.</returns>
+    /// <remarks>Result may be a top level menu (e.g. File, View)
+    /// or a sub-menu parent (e.g. View=>Windows).</remarks>
+    public MenuBarItem? GetParent( MenuItem item, out MenuBar? hostBar )
     {
         foreach (var bar in this.bars)
         {
