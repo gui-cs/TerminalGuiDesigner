@@ -83,7 +83,7 @@ public class AddViewOperation : Operation
                 if (selected.IsGenericType)
                 {
                     // TODO: Move to some kind of helper class and allow more options later
-                    var allowedTTypes = new[] { typeof(int), typeof(string), typeof(float) };
+                    var allowedTTypes = new[] { typeof(int), typeof(string), typeof(float), typeof(double) };
 
                     if(Modals.Get("Enter a Type for <T>", "Choose", true, allowedTTypes, this.TypeNameDelegate, false, null, out var selectedTType) && selectedTType != null)
                     {
