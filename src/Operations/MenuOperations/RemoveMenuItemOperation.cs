@@ -125,12 +125,12 @@ public class RemoveMenuItemOperation : MenuItemOperation
             return false;
         }
 
-        var children = this.Parent.Children.ToList<MenuItem>();
-
-        this.removedAtIdx = Math.Max(0, children.IndexOf(this.OperateOn));
-
-        children.Remove(this.OperateOn);
-        this.Parent.Children = children.ToArray();
+        this.removedAtIdx = Math.Max( 0, Array.IndexOf( Parent.Children, OperateOn ) );
+        this.Parent.Children =
+        [
+            .. Parent.Children[ ..removedAtIdx ],
+            .. Parent.Children[ ( removedAtIdx + 1 ).. ]
+        ];
         this.Bar?.SetNeedsDisplay();
 
         if (this.Bar != null)
