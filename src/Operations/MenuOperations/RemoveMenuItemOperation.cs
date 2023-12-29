@@ -77,8 +77,7 @@ public class RemoveMenuItemOperation : MenuItemOperation
         {
             foreach (var converted in this.convertedMenuBars)
             {
-                var grandparent = MenuTracker.Instance.GetParent(converted.Value, out _);
-                if (grandparent != null)
+                if(MenuTracker.Instance.TryGetParent(converted.Value,out _, out MenuBarItem? grandparent))
                 {
                     var popIdx = Array.IndexOf(grandparent.Children, converted.Value);
                     var newParents = grandparent.Children.ToList<MenuItem>();
