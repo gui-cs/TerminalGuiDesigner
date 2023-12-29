@@ -247,16 +247,27 @@ public class EditDialog : Window
         else
         if (property.PropertyInfo.PropertyType.IsArray)
         {
-            if (Modals.GetArray(
-                property.PropertyInfo.Name,
-                "New Array Value",
-                property.PropertyInfo.PropertyType.GetElementType() ?? throw new Exception("Property was an Array but GetElementType returned null"),
-                (Array?)oldValue,
-                out Array? resultArray))
+            var elementType = property.PropertyInfo.PropertyType.GetElementType()
+                ?? throw new Exception($"Property {property.GetHumanReadableName()} was array but had no element type");
+
+            if (elementType.IsValueType)
             {
-                newValue = resultArray;
-                return true;
+                if (Modals.GetArray(
+                    property.PropertyInfo.Name,
+                    "New Array Value",
+                    property.PropertyInfo.PropertyType.GetElementType() ?? throw new Exception("Property was an Array but GetElementType returned null"),
+                    (Array?)oldValue,
+                    out Array? resultArray))
+                {
+                    newValue = resultArray;
+                    return true;
+                }
             }
+            else
+            {
+
+            }
+
         }
         else
         if (property.PropertyInfo.PropertyType == typeof(IListDataSource))
