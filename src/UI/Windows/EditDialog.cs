@@ -275,8 +275,7 @@ public class EditDialog : Window
 
                 if (!designer.Cancelled)
                 {
-                    // TODO: BUG: this creates a System.Collections.Generic.List<object> not the element type
-                    newValue = designer.Result.ToList().Select(e => e.CastToReflected(property.GetElementType())).ToList();
+                    newValue = designer.Result;
                     return true;
                 }
                 else

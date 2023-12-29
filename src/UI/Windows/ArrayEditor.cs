@@ -24,7 +24,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         /// <summary>
         /// The new array 
         /// </summary>
-        public object[] Result { get; private set; }
+        public IList Result { get; private set; }
 
         public ArrayEditor(ToCode.Property property) {
             InitializeComponent();
@@ -32,12 +32,15 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.elementType = property.GetElementType();
 
 
-            var list = ((IList)property.GetValue());
-            var array = new object[list.Count];
-            list.CopyTo(array, 0);
 
-            // TODO: implement
-            Result = array;
+            Type listType = typeof(List<>).MakeGenericType(property.GetElementType());
+            Result = (IList)Activator.CreateInstance(listType);
+         
+            
+            foreach(var e in (IList)property.GetValue())
+            {
+                Result.Add(e);
+            }
 
             lvElements.SetSource(Result);
             btnOk.Clicked += BtnOk_Clicked;
@@ -49,10 +52,9 @@ namespace TerminalGuiDesigner.UI.Windows {
         {
             // TODO: implement
             object toAdd = new SliderOption<string>();
-            var list = Result.ToList();
-            list.Add(toAdd);
 
-            Result = list.ToArray();
+            Result.Add(toAdd);
+
             lvElements.SetSource(Result);
             lvElements.SetNeedsDisplay();
         }
