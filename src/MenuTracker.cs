@@ -108,7 +108,7 @@ public class MenuTracker
     /// for more information.</returns>
     public Dictionary<MenuBarItem, MenuItem> ConvertEmptyMenus( )
     {
-        Dictionary<MenuBarItem, MenuItem> dictionary = new( );
+        Dictionary<MenuBarItem, MenuItem> dictionary = [];
         foreach (var b in this.bars)
         {
             foreach (var bi in b.Menus)
