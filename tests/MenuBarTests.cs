@@ -147,23 +147,32 @@ internal class MenuBarTests : Tests
     }
 
     [Test]
+    [TestOf(typeof(MenuTracker))]
     public void TestMenuOperations()
     {
-        var viewToCode = new ViewToCode();
+        ViewToCode viewToCode = new ();
 
-        var file = new FileInfo($"{nameof(this.TestMenuOperations)}.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
+        FileInfo file = new ($"{nameof(TestMenuOperations)}.cs");
+        Design designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Dialog ) );
+        Assume.That( designOut, Is.Not.Null.And.InstanceOf<Design>( ) );
+        Assume.That( designOut.View, Is.Not.Null.And.InstanceOf<Dialog>( ) );
 
-        var mbOut = ViewFactory.Create<MenuBar>( );
+        MenuBar mbOut = ViewFactory.Create<MenuBar>( );
+        Assume.That( mbOut, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
 
-        MenuTracker.Instance.Register(mbOut);
+        Assert.Warn( "MenuTracker.Instance.CurrentlyOpenMenuItem cannot be guaranteed null at this time. See https://github.com/gui-cs/TerminalGuiDesigner/issues/270" );
+        // TODO: Enable this pre-condition once MenuTracker changes are implemented.
+        // See https://github.com/gui-cs/TerminalGuiDesigner/issues/270
+        //Assume.That( MenuTracker.Instance.CurrentlyOpenMenuItem, Is.Null );
+
+        MenuTracker.Instance.Register( mbOut );
 
         // 1 visible root menu (e.g. File)
         ClassicAssert.AreEqual(1, mbOut.Menus.Length);
         // 1 child menu item (e.g. Open)
         ClassicAssert.AreEqual(1, mbOut.Menus[0].Children.Length);
 
-        var orig = mbOut.Menus[0].Children[0];
+        MenuItem? orig = mbOut.Menus[0].Children[0];
 
         OperationManager.Instance.Do(
             new AddMenuItemOperation(mbOut.Menus[0].Children[0]));
@@ -185,10 +194,10 @@ internal class MenuBarTests : Tests
         ClassicAssert.AreSame(orig, mbOut.Menus[0].Children[0]); // original is still at top
 
         // Now test moving an item around
-        var toMove = mbOut.Menus[0].Children[1];
+        MenuItem? toMove = mbOut.Menus[0].Children[1];
 
         // Move second menu item up
-        var up = new MoveMenuItemOperation(toMove, true);
+        MoveMenuItemOperation up = new MoveMenuItemOperation(toMove, true);
         ClassicAssert.IsFalse(up.IsImpossible);
         OperationManager.Instance.Do(up);
 
@@ -206,10 +215,10 @@ internal class MenuBarTests : Tests
         ClassicAssert.AreSame(orig, mbOut.Menus[0].Children[0]);
 
         // test moving the top one down
-        var toMove2 = mbOut.Menus[0].Children[1];
+        MenuItem? toMove2 = mbOut.Menus[0].Children[1];
 
         // Move first menu item down
-        var down = new MoveMenuItemOperation(toMove2, true);
+        MoveMenuItemOperation down = new MoveMenuItemOperation(toMove2, true);
         ClassicAssert.IsFalse(down.IsImpossible);
         OperationManager.Instance.Do(down);
 
