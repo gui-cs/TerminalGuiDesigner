@@ -63,7 +63,7 @@ public class MenuTracker
     /// <returns>The immediate parent of <paramref name="item"/>.</returns>
     /// <remarks>Result may be a top level menu (e.g. File, View)
     /// or a sub-menu parent (e.g. View=>Windows).</remarks>
-    public MenuBarItem? GetParent( MenuItem item, out MenuBar? hostBar )
+    private MenuBarItem? GetParent( MenuItem item, out MenuBar? hostBar )
     {
         foreach (var bar in this.bars)
         {
