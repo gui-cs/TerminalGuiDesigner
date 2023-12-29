@@ -80,7 +80,10 @@ public class RemoveMenuItemOperation : MenuItemOperation
                 if(MenuTracker.Instance.TryGetParent(converted.Value,out _, out MenuBarItem? grandparent))
                 {
                     int replacementIndex = Array.IndexOf(grandparent.Children, converted.Value);
-                    grandparent.Children[ replacementIndex ] = converted.Key;
+                    if(replacementIndex >=0 && replacementIndex < grandparent.Children.Length)
+                    {
+                        grandparent.Children[ replacementIndex ] = converted.Key;
+                    }
                 }
             }
         }
