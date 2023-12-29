@@ -137,7 +137,7 @@ public class MenuTracker
     /// <param name="added">The result of the conversion (same text, same index etc but
     /// <see cref="MenuItem"/> instead of <see cref="MenuBarItem"/>).</param>
     /// <returns><see langword="true"/> if conversion was possible (menu was empty and belonged to tracked menu).</returns>
-    internal static bool ConvertMenuBarItemToRegularItemIfEmpty(MenuBarItem bar, out MenuItem? added)
+    internal static bool ConvertMenuBarItemToRegularItemIfEmpty( MenuBarItem bar, [NotNullWhen( true )] out MenuItem? added )
     {
         added = null;
 
