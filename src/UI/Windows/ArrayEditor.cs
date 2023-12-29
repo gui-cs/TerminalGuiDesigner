@@ -51,7 +51,12 @@ namespace TerminalGuiDesigner.UI.Windows {
         private void BtnAddElement_Clicked(object sender, EventArgs e)
         {
             // TODO: implement
-            object toAdd = new SliderOption<string>();
+            object toAdd = new SliderOption<string>()
+            {
+                Legend = "test",
+                LegendAbbr = new System.Text.Rune('t'),
+                Data = "test"
+            };
 
             Result.Add(toAdd);
 
