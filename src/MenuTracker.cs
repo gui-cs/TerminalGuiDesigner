@@ -151,8 +151,7 @@ public class MenuTracker
             return false;
         }
 
-        var children = parent.Children.ToList<MenuItem>();
-        var idx = children.IndexOf(bar);
+        int idx = Array.IndexOf( parent.Children, bar );
 
         if (idx < 0)
         {
@@ -160,14 +159,12 @@ public class MenuTracker
         }
 
         // bar has no children so convert to MenuItem
-        added = new MenuItem { Title = bar.Title };
-        added.Data = bar.Data;
-        added.Shortcut = bar.Shortcut;
-
-        children.RemoveAt(idx);
-        children.Insert(idx, added);
-
-        parent.Children = children.ToArray();
+        parent.Children[ idx ] = added = new( )
+        {
+            Title = bar.Title,
+            Data = bar.Data,
+            Shortcut = bar.Shortcut
+        };
 
         return true;
     }
