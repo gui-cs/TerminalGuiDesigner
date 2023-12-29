@@ -83,7 +83,23 @@ public class MenuTracker
         return null;
     }
 
-    public bool TryGetParent(MenuItem item, [NotNullWhen(true)]out MenuBar? hostBar, [NotNullWhen(true)] out MenuBarItem? parentItem)
+    /// <summary>
+    ///   Searches child items of all MenuBars tracked by this class to try and find the parent of the item passed.
+    /// </summary>
+    /// <param name="item">The item whose parent you want to find.</param>
+    /// <param name="hostBar">
+    ///   When this method returns true, the <see cref="MenuBar" /> that owns <paramref name="item" />.<br /> Otherwise, <see langword="null" /> if
+    ///   not found or parent not registered (see <see cref="Register(MenuBar)" />).
+    /// </param>
+    /// <param name="parentItem">
+    ///   When this method returns <see langword="true" />, the immediate parent of <paramref name="item" />.<br /> Otherwise,
+    ///   <see langword="null" />
+    /// </param>
+    /// <remarks>
+    ///   Search is recursive and dips into sub-menus.<br /> For sub-menus it is the immediate parent that is returned.
+    /// </remarks>
+    /// <returns>A <see langword="bool" /> indicating if the search was successful or not.</returns>
+    public bool TryGetParent( MenuItem item, [NotNullWhen( true )] out MenuBar? hostBar, [NotNullWhen( true )] out MenuBarItem? parentItem )
     {
         var parentCandidate = GetParent( item, out hostBar );
         if ( parentCandidate is null )
