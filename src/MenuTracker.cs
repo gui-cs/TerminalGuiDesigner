@@ -106,22 +106,21 @@ public class MenuTracker
     /// the substitution object (<see cref="MenuItem"/>).  See
     /// <see cref="ConvertMenuBarItemToRegularItemIfEmpty(MenuBarItem, out MenuItem?)"/>
     /// for more information.</returns>
-    public Dictionary<MenuBarItem, MenuItem> ConvertEmptyMenus()
+    public Dictionary<MenuBarItem, MenuItem> ConvertEmptyMenus( )
     {
-        var toReturn = new Dictionary<MenuBarItem, MenuItem>();
-
+        Dictionary<MenuBarItem, MenuItem> dictionary = new( );
         foreach (var b in this.bars)
         {
             foreach (var bi in b.Menus)
             {
-                foreach (var converted in this.ConvertEmptyMenus(b, bi))
+                foreach (var converted in this.ConvertEmptyMenus(dictionary, b, bi))
                 {
-                    toReturn.Add(converted.Key, converted.Value);
+                    dictionary.TryAdd( converted.Key, converted.Value );
                 }
             }
         }
 
-        return toReturn;
+        return dictionary;
     }
 
     /// <summary>
@@ -174,18 +173,16 @@ public class MenuTracker
     }
 
     /// <inheritdoc cref="ConvertEmptyMenus()"/>
-    private Dictionary<MenuBarItem, MenuItem> ConvertEmptyMenus(MenuBar bar, MenuBarItem mbi)
+    private Dictionary<MenuBarItem, MenuItem> ConvertEmptyMenus(Dictionary<MenuBarItem,MenuItem> dictionary, MenuBar bar, MenuBarItem mbi)
     {
-        var toReturn = new Dictionary<MenuBarItem, MenuItem>();
-
         foreach (var c in mbi.Children.OfType<MenuBarItem>())
         {
-            this.ConvertEmptyMenus(bar, c);
+            this.ConvertEmptyMenus(dictionary,bar, c);
             if ( ConvertMenuBarItemToRegularItemIfEmpty( c, out var added))
             {
                 if (added != null)
                 {
-                    toReturn.Add(c, added);
+                    dictionary.TryAdd(c, added);
                 }
 
                 bar.CloseMenu();
@@ -193,7 +190,7 @@ public class MenuTracker
             }
         }
 
-        return toReturn;
+        return dictionary;
     }
 
     private void MenuClosing(object? sender, MenuClosingEventArgs obj)
@@ -204,7 +201,7 @@ public class MenuTracker
     private void MenuOpened(object? sender, MenuOpenedEventArgs obj)
     {
         this.CurrentlyOpenMenuItem = obj.MenuItem;
-        this.ConvertEmptyMenus();
+        this.ConvertEmptyMenus( );
     }
 
     private void MenuAllClosed(object? sender, EventArgs e)
