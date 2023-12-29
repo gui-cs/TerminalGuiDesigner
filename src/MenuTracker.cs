@@ -113,9 +113,9 @@ public class MenuTracker
         {
             foreach (var bi in b.Menus)
             {
-                foreach (var converted in this.ConvertEmptyMenus(dictionary, b, bi))
+                foreach ( ( MenuBarItem? convertedMenuBarItem, MenuItem? convertedMenuItem ) in this.ConvertEmptyMenus( dictionary, b, bi ) )
                 {
-                    dictionary.TryAdd( converted.Key, converted.Value );
+                    dictionary.TryAdd( convertedMenuBarItem, convertedMenuItem );
                 }
             }
         }
