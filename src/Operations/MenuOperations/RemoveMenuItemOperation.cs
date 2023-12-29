@@ -139,27 +139,24 @@ public class RemoveMenuItemOperation : MenuItemOperation
         }
 
         // if a top level menu now has no children
-        if (this.Bar != null)
+        var empty = this.Bar?.Menus.Where(bi => bi.Children.Length == 0).ToArray();
+        if (empty?.Any() == true)
         {
-            var empty = this.Bar.Menus.Where(bi => bi.Children.Length == 0).ToArray();
-            if (empty.Any())
-            {
-                // remember where they were
-                this.prunedEmptyTopLevelMenus = empty.ToDictionary(e => Array.IndexOf(this.Bar.Menus, e), v => v);
+            // remember where they were
+            this.prunedEmptyTopLevelMenus = empty.ToDictionary(e => Array.IndexOf(this.Bar.Menus, e), v => v);
 
-                // and remove them
-                this.Bar.Menus = this.Bar.Menus.Except(this.prunedEmptyTopLevelMenus.Values).ToArray();
-            }
+            // and remove them
+            this.Bar.Menus = this.Bar.Menus.Except(this.prunedEmptyTopLevelMenus.Values).ToArray();
+        }
 
-            // if we just removed the last menu header
-            // leaving a completely blank menu bar
-            if (this.Bar.Menus.Length == 0 && this.Bar.SuperView != null)
-            {
-                // remove the bar completely
-                this.Bar.CloseMenu();
-                this.barRemovedFrom = this.Bar.SuperView;
-                this.barRemovedFrom.Remove(this.Bar);
-            }
+        // if we just removed the last menu header
+        // leaving a completely blank menu bar
+        if (this.Bar?.Menus.Length == 0 && this.Bar.SuperView != null)
+        {
+            // remove the bar completely
+            this.Bar.CloseMenu();
+            this.barRemovedFrom = this.Bar.SuperView;
+            this.barRemovedFrom.Remove(this.Bar);
         }
 
         return true;
