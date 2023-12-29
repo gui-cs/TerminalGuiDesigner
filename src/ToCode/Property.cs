@@ -5,6 +5,7 @@ using System.Text;
 using Terminal.Gui;
 using Terminal.Gui.TextValidateProviders;
 using TerminalGuiDesigner;
+using YamlDotNet.Core.Tokens;
 using Attribute = Terminal.Gui.Attribute;
 
 namespace TerminalGuiDesigner.ToCode;
@@ -178,7 +179,7 @@ public class Property : ToCodeBase
             else
             {
                 throw new Exception($"Unexpected unicode character size.  Rune was {rune}");
-            }            
+            }
         }
 
         if (val is Attribute attribute)
@@ -264,7 +265,35 @@ public class Property : ToCodeBase
                 values.Select(v => v.ToCodePrimitiveExpression()).ToArray());
         }
 
+        if (val is IList valList)
+        {
+            var elementType = this.GetElementType()
+                ?? throw new Exception($"Type {type} was an IList but {nameof(Type.GetElementType)} returned null");
+
+            return new CodeObjectCreateExpression(
+                new CodeTypeReference(val.GetType()),
+                    new CodeArrayCreateExpression(
+                        elementType,
+                        valList.Cast<object>().Select(this.ValueFactory).ToArray())
+                );
+        }
+
         return val.ToCodePrimitiveExpression();
+    }
+
+    private CodeExpression ValueFactory(object val)
+    {
+        // TODO: Could move lots of logic in GetRHS into here
+        if (val.GetType().GetGenericTypeDefinition() == typeof(SliderOption<>))
+        {
+            // TODO: Cannot call initializers :(
+            return new CodeObjectCreateExpression(
+                new CodeTypeReference(val.GetType()));
+        }
+        else
+        {
+            throw new NotSupportedException($"Cannot generate code for value '{val}'");
+        }
     }
 
     /// <summary>

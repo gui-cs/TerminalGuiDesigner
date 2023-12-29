@@ -16,7 +16,6 @@ namespace UnitTests
         {
             RoundTrip<Dialog, Slider<string>>((d, v) =>
             {
-
                 v.Options.Add(new SliderOption<string> { Legend = "l1", LegendAbbr = new Rune('1'), Data = "Fun1" });
                 v.Options.Add(new SliderOption<string> { Legend = "l2", LegendAbbr = new Rune('2'), Data = "Fun2" });
 

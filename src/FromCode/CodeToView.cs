@@ -1,5 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System.Collections;
+using System.ComponentModel;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Basic.Reference.Assemblies;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -157,7 +159,7 @@ public class CodeToView
         };
 
         var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary);
-
+        
         var compilation = CSharpCompilation.Create(
                 Guid.NewGuid().ToString() + ".dll",
                 new CSharpSyntaxTree[] { csTree, designerTree },
