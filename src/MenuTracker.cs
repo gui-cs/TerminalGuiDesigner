@@ -178,12 +178,9 @@ public class MenuTracker
         foreach (var c in mbi.Children.OfType<MenuBarItem>())
         {
             this.ConvertEmptyMenus(dictionary,bar, c);
-            if ( ConvertMenuBarItemToRegularItemIfEmpty( c, out var added))
+            if ( ConvertMenuBarItemToRegularItemIfEmpty( c, out MenuItem? added))
             {
-                if (added != null)
-                {
-                    dictionary.TryAdd(c, added);
-                }
+                dictionary.TryAdd( c, added );
 
                 bar.CloseMenu();
                 bar.OpenMenu();
