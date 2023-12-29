@@ -8,13 +8,51 @@
 //  </auto-generated>
 // -----------------------------------------------------------------------------
 namespace TerminalGuiDesigner.UI.Windows {
+    using System.Collections;
     using Terminal.Gui;
-    
-    
+
+
     public partial class ArrayEditor {
-        
-        public ArrayEditor() {
+
+        /// <summary>
+        /// True if the editing was aborted.
+        /// </summary>
+        public bool Cancelled { get; private set; } = true;
+
+        /// <summary>
+        /// The new array 
+        /// </summary>
+        public IList Result { get; private set; }
+
+        public ArrayEditor(ToCode.Property property) {
             InitializeComponent();
+
+            // TODO: implement
+            Result = new int[] { 1, 2, 3 };
+
+            lvElements.SetSource(Result);
+            btnOk.Clicked += BtnOk_Clicked;
+            btnCancel.Clicked += BtnCancel_Clicked;
+            btnAddElement.Clicked += BtnAddElement_Clicked;
+        }
+
+        private void BtnAddElement_Clicked(object sender, EventArgs e)
+        {
+            // TODO: implement
+            Result.Add(32);
+            lvElements.SetNeedsDisplay();
+        }
+
+        private void BtnCancel_Clicked(object sender, EventArgs e)
+        {
+            Cancelled = true;
+            Application.RequestStop();
+        }
+
+        private void BtnOk_Clicked(object sender, EventArgs e)
+        {
+            Cancelled = false;
+            Application.RequestStop();
         }
     }
 }

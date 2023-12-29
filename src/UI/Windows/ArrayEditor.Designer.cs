@@ -26,7 +26,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         private Terminal.Gui.Button btnOk;
         
         private Terminal.Gui.Button btnCancel;
-        
+
         private void InitializeComponent() {
             this.btnCancel = new Terminal.Gui.Button();
             this.btnOk = new Terminal.Gui.Button();

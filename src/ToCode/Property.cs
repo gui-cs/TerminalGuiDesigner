@@ -1,4 +1,5 @@
 ﻿using System.CodeDom;
+using System.Collections;
 using System.Reflection;
 using System.Text;
 using Terminal.Gui;
@@ -409,5 +410,27 @@ public class Property : ToCodeBase
         }
 
         this.Design.View.SetNeedsDisplay();
+    }
+
+    /// <summary>
+    /// Returns the element type for collections (IList or Array) or <see langword="null"/> if it is not.
+    /// </summary>
+    /// <returns>Element type of collection or <see langword="null"/>.</returns>
+    public Type GetElementType()
+    {
+        var propertyType = this.PropertyInfo.PropertyType;
+        var elementType = propertyType.GetElementType();
+
+        if(elementType != null)
+        {
+            return elementType;
+        }
+
+        if (propertyType.IsAssignableTo(typeof(IList)) && propertyType.IsGenericType)
+        {
+            return propertyType.GetGenericTypeDefinition().GetGenericArguments().Single();
+        }
+
+        return null;
     }
 }

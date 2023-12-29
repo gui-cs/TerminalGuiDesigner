@@ -1,3 +1,5 @@
+using System.Collections;
+using System.ComponentModel.Design;
 using System.Text;
 using Terminal.Gui;
 using Terminal.Gui.TextValidateProviders;
@@ -245,10 +247,13 @@ public class EditDialog : Window
             return answer != -1;
         }
         else
-        if (property.PropertyInfo.PropertyType.IsArray)
+        if (
+            // TODO: I just changed this from IsArray to IList assignable, need to worry about conversions a bit more
+            property.PropertyInfo.PropertyType.IsAssignableTo(typeof(IList))
+            )
         {
-            var elementType = property.PropertyInfo.PropertyType.GetElementType()
-                ?? throw new Exception($"Property {property.GetHumanReadableName()} was array but had no element type");
+            var elementType = property.GetElementType()
+                ?? throw new Exception($"Property {property.GetHumanReadableName()} was array but had no element type"); ;
 
             if (elementType.IsValueType)
             {
@@ -265,7 +270,20 @@ public class EditDialog : Window
             }
             else
             {
+                var designer = new ArrayEditor(property);
+                Application.Run(designer);
 
+                if (!designer.Cancelled)
+                {
+                    newValue = designer.Result;
+                    return true;
+                }
+                else
+                {
+                    // user cancelled designing the Dim
+                    newValue = null;
+                    return false;
+                }
             }
 
         }
