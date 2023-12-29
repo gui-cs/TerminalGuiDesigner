@@ -142,7 +142,7 @@ public class MenuTracker
         added = null;
 
         // bar still has more children so don't convert
-        if (bar.Children.Any())
+        if ( bar.Children.Length != 0 )
         {
             return false;
         }
