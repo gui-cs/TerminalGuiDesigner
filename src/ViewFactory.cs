@@ -296,4 +296,19 @@ public static class ViewFactory
     {
         return Create<T>( );
     }
+
+    /// <summary>
+    /// Returns all Types which can be used with generic view of the given <paramref name="viewType"/>.
+    /// </summary>
+    /// <param name="viewType">A generic view type e.g. <see langword="typeof"/>(Slider&lt;&gt;)</param>
+    /// <returns></returns>
+    public static IEnumerable<Type> GetSupportedTTypesForGenericViewOfType(Type viewType)
+    {
+        if(viewType == typeof(Slider<>))
+        {
+            return new[] { typeof(int), typeof(string), typeof(float), typeof(double), typeof(bool) };
+        }
+
+        throw new NotSupportedException($"Generic View {viewType} is not yet supported");
+    }
 }
