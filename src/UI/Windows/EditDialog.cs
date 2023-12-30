@@ -45,7 +45,7 @@ public class EditDialog : Window
             Width = Dim.Fill(2),
             Height = Dim.Fill(2),
         };
-        this.list.KeyPressed += this.List_KeyPress;
+        this.list.KeyDown += this.List_KeyPress;
 
         var btnSet = new Button("Set")
         {
@@ -72,15 +72,15 @@ public class EditDialog : Window
     }
 
     /// <inheritdoc/>
-    public override bool ProcessHotKey(KeyEvent keyEvent)
+    public override bool OnKeyDown(Key Key)
     {
-        if (keyEvent.Key == Key.Enter && this.list.HasFocus)
+        if (Key == Key.Enter && this.list.HasFocus)
         {
             this.SetProperty(false);
             return true;
         }
 
-        return base.ProcessHotKey(keyEvent);
+        return base.OnKeyDown(Key);
     }
 
     internal static bool SetPropertyToNewValue(Design design, Property p, object? oldValue)
@@ -482,10 +482,10 @@ public class EditDialog : Window
         }
     }
 
-    private void List_KeyPress(object? sender, KeyEventEventArgs obj)
+    private void List_KeyPress(object? sender, Key obj)
     {
         // TODO: Should really be using the _keyMap here
-        if (obj.KeyEvent.Key == Key.DeleteChar)
+        if (obj == Key.DeleteChar)
         {
             int rly = ChoicesDialog.Query("Clear", "Clear Property Value?", "Yes", "Cancel");
             obj.Handled = true;

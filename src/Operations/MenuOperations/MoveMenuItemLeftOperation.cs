@@ -66,9 +66,7 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
             return false;
         }
 
-        var parentsParent = MenuTracker.Instance.GetParent(this.Parent, out var bar);
-
-        if (parentsParent == null)
+        if ( !MenuTracker.Instance.TryGetParent( Parent, out _, out MenuBarItem? parentsParent ) )
         {
             return false;
         }
@@ -83,7 +81,7 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
         if (new RemoveMenuItemOperation(this.OperateOn).Do())
         {
             // We are the parent but parents children don't contain
-            // us.  Thats bad. TODO: log this
+            // us.  That's bad. TODO: log this
             if (parentsIdx == -1)
             {
                 return false;

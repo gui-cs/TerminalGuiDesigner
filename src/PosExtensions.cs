@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
@@ -106,7 +107,7 @@ public static class PosExtensions
     }
 
     /// <summary>
-    /// Returns true if <paramref name="p"/> is the result of an <see cref="Pos.AnchorEnd(int)"/>.
+    /// Returns true if <paramref name="p"/> is the result of a <see cref="Pos.AnchorEnd(int)"/>.
     /// </summary>
     /// <param name="p"><see cref="Pos"/> to classify.</param>
     /// <returns>True if <paramref name="p"/> is <see cref="Pos.AnchorEnd(int)"/>.</returns>
@@ -123,8 +124,8 @@ public static class PosExtensions
 
     /// <inheritdoc cref="IsAnchorEnd(Pos)"/>
     /// <param name="p"><see cref="Pos"/> to classify.</param>
-    /// <param name="margin">The margin passed to <see cref="Pos.AnchorEnd(int)"/>.  Typically should
-    /// be 1 or more otherwise things tend to drift off screen.</param>
+    /// <param name="margin">The margin passed to <see cref="Pos.AnchorEnd(int)"/>. Should typically
+    /// be 1 or more otherwise things tend to drift off-screen.</param>
     /// <returns></returns>
     public static bool IsAnchorEnd(this Pos? p, out int margin)
     {
@@ -166,8 +167,8 @@ public static class PosExtensions
     /// or null if <paramref name="p"/> is not <see cref="PosType.Relative"/>.</param>
     /// <param name="side"><see cref="Enum"/> representing the method that was used e.g. <see cref="Pos.Right(View)"/>, <see cref="Pos.Left(View)"/> etc.</param>
     /// <returns></returns>
-    // BUG: Side should be nullable, because it gets an explicit value in all cases
-    public static bool IsRelative(this Pos? p, IList<Design> knownDesigns, out Design? relativeTo, out Side side)
+    // BUG: Side should be nullable, because it gets an explicit value in all cases but isn't meaningful if return value was false
+    public static bool IsRelative(this Pos? p, IList<Design> knownDesigns, [NotNullWhen(true)]out Design? relativeTo, out Side side)
     {
         relativeTo = null;
         side = default;
@@ -212,14 +213,14 @@ public static class PosExtensions
     /// </summary>
     /// <param name="p"><see cref="Pos"/> to classify.</param>
     /// <returns>True if <paramref name="p"/> is a PosCombine.</returns>
-    public static bool IsCombine(this Pos? p)
+    public static bool IsCombine( [NotNullWhen( true )] Pos? p )
     {
-        if (p == null)
+        if ( p == null )
         {
             return false;
         }
 
-        return p.GetType().Name == "PosCombine";
+        return p.GetType( ).Name == "PosCombine";
     }
 
     /// <inheritdoc cref="IsCombine(Pos)"/>
@@ -230,7 +231,7 @@ public static class PosExtensions
     /// <returns>True if <paramref name="p"/> is PosCombine.</returns>
     public static bool IsCombine(this Pos? p, out Pos left, out Pos right, out bool add)
     {
-        if (p.IsCombine())
+        if (IsCombine(p))
         {
             var fLeft = p.GetType().GetField("left", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field missing from PosCombine");
             left = fLeft.GetValue(p) as Pos ?? throw new Exception("Expected field 'left' of PosCombine to be a Pos");
@@ -335,70 +336,24 @@ public static class PosExtensions
             return null;
         }
 
-        switch (type)
+        return type switch
         {
-            case PosType.Absolute:
-                return val.ToString();
-            case PosType.Relative:
-
-                if (relativeTo == null)
-                {
-                    throw new Exception("Pos was Relative but 'relativeTo' was null.  What is the Pos relative to?!");
-                }
-
-                if (offset > 0)
-                {
-                    return $"Pos.{GetMethodNameFor(side)}({relativeTo.FieldName}) + {offset}";
-                }
-
-                if (offset < 0)
-                {
-                    return $"Pos.{GetMethodNameFor(side)}({relativeTo.FieldName}) - {Math.Abs(offset)}";
-                }
-
-                return $"Pos.{GetMethodNameFor(side)}({relativeTo.FieldName})";
-
-            case PosType.Percent:
-                if (offset > 0)
-                {
-                    return $"Pos.Percent({val:G5}f) + {offset}";
-                }
-
-                if (offset < 0)
-                {
-                    return $"Pos.Percent({val:G5}f) - {Math.Abs(offset)}";
-                }
-
-                return $"Pos.Percent({val:G5}f)";
-
-            case PosType.Center:
-                if (offset > 0)
-                {
-                    return $"Pos.Center() + {offset}";
-                }
-
-                if (offset < 0)
-                {
-                    return $"Pos.Center() - {Math.Abs(offset)}";
-                }
-
-                return $"Pos.Center()";
-
-            case PosType.AnchorEnd:
-                if (offset > 0)
-                {
-                    return $"Pos.AnchorEnd({(int)val}) + {offset}";
-                }
-
-                if (offset < 0)
-                {
-                    return $"Pos.AnchorEnd({(int)val}) - {Math.Abs(offset)}";
-                }
-
-                return $"Pos.AnchorEnd({(int)val})";
-
-            default: throw new ArgumentOutOfRangeException(nameof(type));
-        }
+            PosType.Absolute => val.ToString( "N0" ),
+            PosType.Relative when relativeTo is null => throw new InvalidOperationException( "Pos was Relative but 'relativeTo' was null.  What is the Pos relative to?!" ),
+            PosType.Relative when offset > 0 => $"Pos.{GetMethodNameFor( side )}({relativeTo.FieldName}) + {offset}",
+            PosType.Relative when offset < 0 => $"Pos.{GetMethodNameFor( side )}({relativeTo.FieldName}) - {Math.Abs( offset )}",
+            PosType.Relative => $"Pos.{GetMethodNameFor( side )}({relativeTo.FieldName})",
+            PosType.Percent when offset > 0 => $"Pos.Percent({val:G5}f) + {offset}",
+            PosType.Percent when offset < 0 => $"Pos.Percent({val:G5}f) - {Math.Abs( offset )}",
+            PosType.Percent => $"Pos.Percent({val:G5}f)",
+            PosType.Center when offset > 0 => $"Pos.Center() + {offset}",
+            PosType.Center when offset < 0 => $"Pos.Center() - {Math.Abs( offset )}",
+            PosType.Center => $"Pos.Center()",
+            PosType.AnchorEnd when offset > 0 => $"Pos.AnchorEnd({(int)val}) + {offset}",
+            PosType.AnchorEnd when offset < 0 => $"Pos.AnchorEnd({(int)val}) - {Math.Abs( offset )}",
+            PosType.AnchorEnd => $"Pos.AnchorEnd({(int)val})",
+            _ => throw new ArgumentOutOfRangeException( nameof( type ) )
+        };
     }
 
     /// <summary>
@@ -411,34 +366,18 @@ public static class PosExtensions
     /// <param name="offset">The offset if any to use e.g. if you want:
     /// <code>Pos.Left(myView) + 5</code></param>
     /// <returns>The resulting <see cref="Pos"/> of the invoked method (e.g. <see cref="Pos.Right(View)"/>.</returns>
-    // BUG: This returns absolute positions when offsets are applied
+    // BUG: This returns absolute positions when offsets are non-zero
     // It's a Terminal.Gui issue, but we can probably work around it.
-    public static Pos CreatePosRelative(this Design relativeTo, Side side, int offset)
+    public static Pos CreatePosRelative(this Design relativeTo, Side side, int offset = 0)
     {
-        Pos pos;
-        switch (side)
+        return side switch
         {
-            case Side.Top:
-                pos = Pos.Top(relativeTo.View);
-                break;
-            case Side.Bottom:
-                pos = Pos.Bottom(relativeTo.View);
-                break;
-            case Side.Left:
-                pos = Pos.Left(relativeTo.View);
-                break;
-            case Side.Right:
-                pos = Pos.Right(relativeTo.View);
-                break;
-            default: throw new ArgumentOutOfRangeException(nameof(side));
-        }
-
-        if (offset != 0)
-        {
-            return pos + offset;
-        }
-
-        return pos;
+            Side.Top => Pos.Top( relativeTo.View ) + offset,
+            Side.Bottom => Pos.Bottom( relativeTo.View ) + offset,
+            Side.Left => Pos.Left( relativeTo.View ) + offset,
+            Side.Right => Pos.Right( relativeTo.View ) + offset,
+            _ => throw new ArgumentOutOfRangeException( nameof( side ) )
+        };
     }
 
     private static bool IsRelative(this Pos? p, out Pos posView)

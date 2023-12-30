@@ -1,108 +1,178 @@
-using System.IO;
-using System.Linq;
-using Terminal.Gui;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.FromCode;
-using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.Operations.MenuOperations;
-using TerminalGuiDesigner.ToCode;
 
 namespace UnitTests;
 
-class MenuBarTests : Tests
+[TestFixture]
+[TestOf(typeof(OperationManager))]
+[Category("UI")]
+internal class MenuBarTests : Tests
 {
     [Test]
-    public void TestRoundTrip_PreserveMenuItems()
+    public void RoundTrip_PreserveMenuItems()
     {
         var viewToCode = new ViewToCode();
 
-        var file = new FileInfo($"{nameof(this.TestRoundTrip_PreserveMenuItems)}.cs");
+        var file = new FileInfo($"{nameof(RoundTrip_PreserveMenuItems)}.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
-        var mbOut = (MenuBar)ViewFactory.Create(typeof(MenuBar));
+        using MenuBar mbOut = ViewFactory.Create<MenuBar>( );
+
+        Assume.That( mbOut, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
 
         // 1 visible root menu (e.g. File)
-        ClassicAssert.AreEqual(1, mbOut.Menus.Length);
+        Assert.That( mbOut.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
+
         // 1 child menu item (e.g. Open)
-        ClassicAssert.AreEqual(1, mbOut.Menus[0].Children.Length);
+        Assert.That( mbOut.Menus[ 0 ].Children, Is.Not.Null.And.Not.Empty );
+        Assert.That( mbOut.Menus[ 0 ].Children, Has.Exactly(1).InstanceOf<MenuItem>(  ) );
 
-        OperationManager.Instance.Do(new AddViewOperation(mbOut, designOut, "myMenuBar"));
+        AddViewOperation? addViewOperation = null;
+        Assume.That( ( ) => addViewOperation = new ( mbOut, designOut, "myMenuBar" ), Throws.Nothing );
+        Assume.That( addViewOperation, Is.Not.Null.And.InstanceOf<AddViewOperation>( ) );
 
-        viewToCode.GenerateDesignerCs(designOut, typeof(Dialog));
+        bool addViewOperationSucceeded = false;
+        Assert.That( ( ) => addViewOperationSucceeded = OperationManager.Instance.Do( addViewOperation ), Throws.Nothing );
+        Assert.That( addViewOperationSucceeded );
 
-        var codeToView = new CodeToView(designOut.SourceCode);
-        var designBackIn = codeToView.CreateInstance();
+        Assume.That( ( ) => viewToCode.GenerateDesignerCs( designOut, typeof( Dialog ) ), Throws.Nothing );
 
-        var mbIn = designBackIn.View.GetActualSubviews().OfType<MenuBar>().Single();
+        CodeToView? codeToView = null;
+        Assert.That( ( ) => codeToView = new( designOut.SourceCode ), Throws.Nothing );
+        Assert.That( codeToView, Is.Not.Null.And.InstanceOf<CodeToView>( ) );
+
+        Design? designBackIn = null;
+        Assert.That( ( ) => designBackIn = codeToView.CreateInstance( ), Throws.Nothing );
+        Assert.That( designBackIn, Is.Not.Null.And.InstanceOf<Design>( ) );
 
         // 1 visible root menu (e.g. File)
-        ClassicAssert.AreEqual(1, mbIn.Menus.Length);
+        MenuBar? mbIn = null;
+        Assert.That( designBackIn.View, Is.Not.Null.And.InstanceOf<View>( ) );
+        IList<View> actualSubviews = designBackIn.View.GetActualSubviews();
+        Assert.That( actualSubviews, Has.Exactly( 1 ).InstanceOf<MenuBar>( ) );
+        Assert.That( ( ) => mbIn = actualSubviews.OfType<MenuBar>(  ).Single( ), Throws.Nothing );
+        Assert.That( mbIn, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
+
         // 1 child menu item (e.g. Open)
-        ClassicAssert.AreEqual(1, mbIn.Menus[0].Children.Length);
+        Assert.That( mbIn.Menus, Is.Not.Null.And.Not.Empty );
+        Assert.That( mbIn.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
+        Assert.That( mbIn.Menus[ 0 ].Children, Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
+        Assert.That( mbIn.Menus[ 0 ].Children[ 0 ].Title, Is.EqualTo( mbOut.Menus[ 0 ].Children[ 0 ].Title ) );
     }
 
     [Test]
-    public void TestRoundTrip_PreserveMenuItems_EvenSubmenus()
+    [TestOf( typeof( AddMenuItemOperation ) )]
+    public void RoundTrip_PreserveMenuItems_WithSubmenus( )
     {
-        var viewToCode = new ViewToCode();
+        ViewToCode viewToCode = new( );
 
-        var file = new FileInfo($"{nameof(this.TestRoundTrip_PreserveMenuItems_EvenSubmenus)}.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
+        FileInfo file = new( $"{nameof( RoundTrip_PreserveMenuItems_WithSubmenus )}.cs" );
+        Design designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Dialog ) );
 
-        var mbOut = (MenuBar)ViewFactory.Create(typeof(MenuBar));
+        MenuBar mbOut = ViewFactory.Create<MenuBar>( );
+        Assume.That( mbOut, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
 
-        OperationManager.Instance.Do(new AddViewOperation(mbOut, designOut, "myMenuBar"));
+        AddViewOperation addViewOperation = new( mbOut, designOut, "myMenuBar" );
+        Assume.That( addViewOperation, Is.Not.Null.And.InstanceOf<AddViewOperation>( ) );
+
+        bool addViewOperationSucceeded = false;
+        Assert.That( ( ) => addViewOperationSucceeded = OperationManager.Instance.Do( addViewOperation ), Throws.Nothing );
+        Assert.That( addViewOperationSucceeded );
 
         // create some more children in the menu
-        new AddMenuItemOperation(mbOut.Menus[0].Children[0]).Do();
-        new AddMenuItemOperation(mbOut.Menus[0].Children[0]).Do();
-        new AddMenuItemOperation(mbOut.Menus[0].Children[0]).Do();
+        AddMenuItemOperation? addChildMenuOperation1 = null;
+        AddMenuItemOperation? addChildMenuOperation2 = null;
+        AddMenuItemOperation? addChildMenuOperation3 = null;
+        Assert.That( ( ) => addChildMenuOperation1 = new( mbOut.Menus[ 0 ].Children[ 0 ] ), Throws.Nothing );
+        Assert.That( ( ) => addChildMenuOperation2 = new( mbOut.Menus[ 0 ].Children[ 0 ] ), Throws.Nothing );
+        Assert.That( ( ) => addChildMenuOperation3 = new( mbOut.Menus[ 0 ].Children[ 0 ] ), Throws.Nothing );
 
-        // move the last child to
-        new MoveMenuItemRightOperation(mbOut.Menus[0].Children[1]).Do();
+        Assert.Multiple( ( ) =>
+        {
+            bool addChildMenuOperation1Succeeded = false;
+            bool addChildMenuOperation2Succeeded = false;
+            bool addChildMenuOperation3Succeeded = false;
+            Assert.That( ( ) => addChildMenuOperation1Succeeded = addChildMenuOperation1.Do( ), Throws.Nothing );
+            Assert.That( addChildMenuOperation1Succeeded );
+            Assert.That( ( ) => addChildMenuOperation2Succeeded = addChildMenuOperation2.Do( ), Throws.Nothing );
+            Assert.That( addChildMenuOperation2Succeeded );
+            Assert.That( ( ) => addChildMenuOperation3Succeeded = addChildMenuOperation3.Do( ), Throws.Nothing );
+            Assert.That( addChildMenuOperation3Succeeded );
+        } );
+
+        // move the last child
+        MoveMenuItemRightOperation moveMenuItemOperation = new( mbOut.Menus[ 0 ].Children[ 1 ] );
+        Assert.That( ( ) => moveMenuItemOperation.Do( ), Throws.Nothing );
 
         // 1 visible root menu (e.g. File)
-        ClassicAssert.AreEqual(1, mbOut.Menus.Length);
+        Assert.That( mbOut.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
+
         // 3 child menu item (original one + 3 we added -1 because we moved it to submenu)
-        ClassicAssert.AreEqual(3, mbOut.Menus[0].Children.Length);
+        Assert.That( mbOut.Menus[ 0 ].Children, Has.Exactly( 3 ).InstanceOf<MenuItem>( ) );
 
         // should be 1 submenu item (the one we moved)
-        ClassicAssert.AreEqual(1, ((MenuBarItem)mbOut.Menus[0].Children[0]).Children.Length);
+        Assert.That( mbOut.Menus[ 0 ].Children[ 0 ], Is.InstanceOf<MenuBarItem>( ) );
+        Assert.That( ( (MenuBarItem)mbOut.Menus[ 0 ].Children[ 0 ] ).Children, Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
 
-        viewToCode.GenerateDesignerCs(designOut, typeof(Dialog));
+        Assume.That( ( ) => viewToCode.GenerateDesignerCs( designOut, typeof( Dialog ) ), Throws.Nothing );
+        Assume.That( designOut, Is.Not.Null.And.InstanceOf<Design>( ) );
 
-        var codeToView = new CodeToView(designOut.SourceCode);
-        var designBackIn = codeToView.CreateInstance();
+        CodeToView? codeToView = null;
+        Assume.That( ( ) => codeToView = new( designOut.SourceCode ), Throws.Nothing );
+        Assume.That( codeToView, Is.Not.Null.And.InstanceOf<CodeToView>( ) );
 
-        var mbIn = designBackIn.View.GetActualSubviews().OfType<MenuBar>().Single();
+        Design? designBackIn = null;
+
+        Assume.That( ( ) => designBackIn = codeToView.CreateInstance( ), Throws.Nothing );
+        Assume.That( designBackIn, Is.Not.Null.And.InstanceOf<Design>( ) );
+
+        MenuBar? mbIn = null;
+        Assume.That( designBackIn!.View, Is.Not.Null.And.InstanceOf<View>( ) );
+
+        IList<View> actualSubviews = designBackIn.View.GetActualSubviews( );
+        Assert.That( actualSubviews, Has.Exactly( 1 ).InstanceOf<MenuBar>( ) );
+        Assert.That( ( ) => mbIn = actualSubviews.OfType<MenuBar>( ).Single( ), Throws.Nothing );
+        Assert.That( mbIn, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
 
         // 1 visible root menu (e.g. File)
-        ClassicAssert.AreEqual(1, mbIn.Menus.Length);
+        Assert.That( mbIn.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
         // 3 child menu item (original one + 3 we added -1 because we moved it to submenu)
-        ClassicAssert.AreEqual(3, mbIn.Menus[0].Children.Length);
+        Assert.That( mbIn.Menus[ 0 ].Children, Has.Exactly( 3 ).InstanceOf<MenuItem>( ) );
+        Assert.That( mbIn.Menus[ 0 ].Children, Has.All.Not.Null );
 
         // should be 1 submenu item (the one we moved)
-        ClassicAssert.AreEqual(1, ((MenuBarItem)mbIn.Menus[0].Children[0]).Children.Length);
+        Assert.That( ( (MenuBarItem)mbIn.Menus[ 0 ].Children[ 0 ] ).Children, Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
+        Assert.That(
+            ( (MenuBarItem)mbIn.Menus[ 0 ].Children[ 0 ] ).Children[ 0 ].Title,
+            Is.EqualTo( ( (MenuBarItem)mbOut.Menus[ 0 ].Children[ 0 ] ).Children[ 0 ].Title ) );
     }
 
     [Test]
+    [TestOf(typeof(MenuTracker))]
     public void TestMenuOperations()
     {
-        var viewToCode = new ViewToCode();
+        ViewToCode viewToCode = new ();
 
-        var file = new FileInfo($"{nameof(this.TestMenuOperations)}.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
+        FileInfo file = new ($"{nameof(TestMenuOperations)}.cs");
+        Design designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Dialog ) );
+        Assume.That( designOut, Is.Not.Null.And.InstanceOf<Design>( ) );
+        Assume.That( designOut.View, Is.Not.Null.And.InstanceOf<Dialog>( ) );
 
-        var mbOut = (MenuBar)ViewFactory.Create(typeof(MenuBar));
+        MenuBar mbOut = ViewFactory.Create<MenuBar>( );
+        Assume.That( mbOut, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
 
-        MenuTracker.Instance.Register(mbOut);
+        Assert.Warn( "MenuTracker.Instance.CurrentlyOpenMenuItem cannot be guaranteed null at this time. See https://github.com/gui-cs/TerminalGuiDesigner/issues/270" );
+        // TODO: Enable this pre-condition once MenuTracker changes are implemented.
+        // See https://github.com/gui-cs/TerminalGuiDesigner/issues/270
+        //Assume.That( MenuTracker.Instance.CurrentlyOpenMenuItem, Is.Null );
+
+        MenuTracker.Instance.Register( mbOut );
 
         // 1 visible root menu (e.g. File)
         ClassicAssert.AreEqual(1, mbOut.Menus.Length);
         // 1 child menu item (e.g. Open)
         ClassicAssert.AreEqual(1, mbOut.Menus[0].Children.Length);
 
-        var orig = mbOut.Menus[0].Children[0];
+        MenuItem? orig = mbOut.Menus[0].Children[0];
 
         OperationManager.Instance.Do(
             new AddMenuItemOperation(mbOut.Menus[0].Children[0]));
@@ -124,10 +194,10 @@ class MenuBarTests : Tests
         ClassicAssert.AreSame(orig, mbOut.Menus[0].Children[0]); // original is still at top
 
         // Now test moving an item around
-        var toMove = mbOut.Menus[0].Children[1];
+        MenuItem? toMove = mbOut.Menus[0].Children[1];
 
         // Move second menu item up
-        var up = new MoveMenuItemOperation(toMove, true);
+        MoveMenuItemOperation up = new MoveMenuItemOperation(toMove, true);
         ClassicAssert.IsFalse(up.IsImpossible);
         OperationManager.Instance.Do(up);
 
@@ -145,10 +215,10 @@ class MenuBarTests : Tests
         ClassicAssert.AreSame(orig, mbOut.Menus[0].Children[0]);
 
         // test moving the top one down
-        var toMove2 = mbOut.Menus[0].Children[1];
+        MenuItem? toMove2 = mbOut.Menus[0].Children[1];
 
         // Move first menu item down
-        var down = new MoveMenuItemOperation(toMove2, true);
+        MoveMenuItemOperation down = new MoveMenuItemOperation(toMove2, true);
         ClassicAssert.IsFalse(down.IsImpossible);
         OperationManager.Instance.Do(down);
 
@@ -172,7 +242,7 @@ class MenuBarTests : Tests
     {
         root = Get10By10View();
 
-        var bar = (MenuBar)ViewFactory.Create(typeof(MenuBar));
+        var bar = ViewFactory.Create<MenuBar>( );
         var addBarCmd = new AddViewOperation(bar, root, "mb");
         ClassicAssert.IsTrue(addBarCmd.Do());
 
@@ -232,7 +302,7 @@ class MenuBarTests : Tests
 
         var mi = bar.Menus[0].Children[0];
         mi.Data = "yarg";
-        mi.Shortcut = Key.Y | Key.CtrlMask;
+        mi.Shortcut = Key.Y.WithCtrl.KeyCode;
         var addAnother = new AddMenuItemOperation(mi);
         ClassicAssert.True(addAnother.Do());
 
@@ -304,12 +374,12 @@ class MenuBarTests : Tests
                 topChild = new MenuItem("Child1", null, () => { })
                 {
                     Data = "Child1",
-                    Shortcut = Key.J | Key.CtrlMask,
+                    Shortcut = Key.J.WithCtrl.KeyCode,
                 },
                 new MenuItem("Child2", null, () => { })
                 {
                     Data = "Child2",
-                    Shortcut = Key.F | Key.CtrlMask,
+                    Shortcut = Key.F.WithCtrl.KeyCode,
                 },
             })
             {
@@ -384,7 +454,7 @@ class MenuBarTests : Tests
     }
 
     [Test]
-    public void TestDeletingMenuItemFromSubmenu_AllSubmenChild()
+    public void TestDeletingMenuItemFromSubmenu_AllSubmenuChild()
     {
         var bar = this.GetMenuBarWithSubmenuItems(out var head2, out var topChild);
         var bottomChild = head2.Children[1];

@@ -61,7 +61,7 @@ public class ColorSchemeManager
     /// schemes.
     /// </summary>
     /// <param name="viewBeingEdited">View to find color schemes in, must be the root design (i.e. <see cref="Design.IsRoot"/>).</param>
-    /// <exception cref="ArgumentException">Thrown if passed a non root <see cref="Design"/>.</exception>
+    /// <exception cref="ArgumentException">Thrown if passed a non-root <see cref="Design"/>.</exception>
     public void FindDeclaredColorSchemes(Design viewBeingEdited)
     {
         if (!viewBeingEdited.IsRoot)

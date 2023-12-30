@@ -1,4 +1,6 @@
-﻿using Terminal.Gui;
+using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
+using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
 
@@ -8,7 +10,7 @@ namespace TerminalGuiDesigner;
 /// </summary>
 public class MenuTracker
 {
-    private readonly HashSet<MenuBar> bars = new();
+    private readonly ConcurrentBag<MenuBar> bars = new( );
 
     private MenuTracker()
     {
@@ -58,9 +60,10 @@ public class MenuTracker
     /// <param name="item">The item whose parent you want to find.</param>
     /// <param name="hostBar">The <see cref="MenuBar"/> that owns <paramref name="item"/> or.
     /// null if not found or parent not registered (see <see cref="Register(MenuBar)"/>).</param>
-    /// <returns>The immediate parent of <paramref name="item"/>.  May be a top level menu (e.g. File, View)
-    /// or a sub-menu parent (e.g. View=>Windows).</returns>
-    public MenuBarItem? GetParent(MenuItem item, out MenuBar? hostBar)
+    /// <returns>The immediate parent of <paramref name="item"/>.</returns>
+    /// <remarks>Result may be a top level menu (e.g. File, View)
+    /// or a sub-menu parent (e.g. View=>Windows).</remarks>
+    public MenuBarItem? GetParent( MenuItem item, out MenuBar? hostBar )
     {
         foreach (var bar in this.bars)
         {
@@ -78,6 +81,20 @@ public class MenuTracker
 
         hostBar = null;
         return null;
+    }
+
+    public bool TryGetParent(MenuItem item, [NotNullWhen(true)]out MenuBar? hostBar, [NotNullWhen(true)] out MenuBarItem? parentItem)
+    {
+        var parentCandidate = GetParent( item, out hostBar );
+        if ( parentCandidate is null )
+        {
+            hostBar = null;
+            parentItem = null;
+            return false;
+        }
+
+        parentItem = parentCandidate;
+        return true;
     }
 
     /// <summary>
@@ -120,7 +137,7 @@ public class MenuTracker
     /// <param name="added">The result of the conversion (same text, same index etc but
     /// <see cref="MenuItem"/> instead of <see cref="MenuBarItem"/>).</param>
     /// <returns><see langword="true"/> if conversion was possible (menu was empty and belonged to tracked menu).</returns>
-    public bool ConvertMenuBarItemToRegularItemIfEmpty(MenuBarItem bar, out MenuItem? added)
+    internal static bool ConvertMenuBarItemToRegularItemIfEmpty(MenuBarItem bar, out MenuItem? added)
     {
         added = null;
 
@@ -130,9 +147,7 @@ public class MenuTracker
             return false;
         }
 
-        var parent = MenuTracker.Instance.GetParent(bar, out _);
-
-        if (parent == null)
+        if ( !Instance.TryGetParent( bar, out _, out MenuBarItem? parent ) )
         {
             return false;
         }
@@ -166,7 +181,7 @@ public class MenuTracker
         foreach (var c in mbi.Children.OfType<MenuBarItem>())
         {
             this.ConvertEmptyMenus(bar, c);
-            if (this.ConvertMenuBarItemToRegularItemIfEmpty(c, out var added))
+            if ( ConvertMenuBarItemToRegularItemIfEmpty( c, out var added))
             {
                 if (added != null)
                 {

@@ -146,14 +146,4 @@ internal class MenuBarExtensionsTests : Tests
                          "Expected Terminal.Gui MenuBar to have 1 unit of whitespace before and 2 after any MenuBarItems (e.g. File) get rendered. This may change in future, if so then update this test." );
         }, out _ );
     }
-
-    [Test]
-    public void SetShortcut_SetsExpectedKeyCode( )
-    {
-        var si = new StatusItem( Key.F, "ff", ( ) => { } );
-        Assert.That( si.Shortcut, Is.EqualTo( Key.F ) );
-
-        si.SetShortcut( Key.B );
-        Assert.That( si.Shortcut, Is.EqualTo( Key.B ) );
-    }
 }

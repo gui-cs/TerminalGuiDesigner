@@ -8,7 +8,7 @@ namespace UnitTests
         [Test]
         public void TestItemsArePreserved()
         {
-            Key shortcutBefore = Key.Null;
+            Key shortcutBefore = KeyCode.Null;
 
             var statusBarIn = RoundTrip<Toplevel, StatusBar>((d, v) =>
             {

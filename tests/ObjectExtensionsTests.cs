@@ -9,7 +9,7 @@ namespace UnitTests;
 [TestOf( typeof( ObjectExtensions ) )]
 [Category( "Core" )]
 [Parallelizable( ParallelScope.All )]
-[Order( 1 )]
+[Order( 10 )]
 internal class ObjectExtensionsTests
 {
     [Test]
