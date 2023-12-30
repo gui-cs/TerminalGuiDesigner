@@ -81,7 +81,9 @@ public static class ViewFactory
                     } )
                     .Where( filteredType => filteredType.IsSubclassOf( typeof(View) ) )
                     .Where( viewDescendantType => !KnownUnsupportedTypes.Any( viewDescendantType.IsAssignableTo )
-                                                  || viewDescendantType == typeof( Window ) );
+                                                  || viewDescendantType == typeof( Window ))
+                    // Slider is an alias of Slider<object> so don't offer that
+                    .Where(vt=>vt != typeof(Slider));
 
     private static bool IsSupportedType( this Type t )
     {

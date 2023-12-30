@@ -668,6 +668,7 @@ public class Design
         if (isGenericType && viewType.GetGenericTypeDefinition() == typeof(Slider<>))
         {
             yield return this.CreateProperty(nameof(Slider.Options));
+            yield return this.CreateProperty(nameof(Slider.Orientation));
         }
 
         if (this.View is SpinnerView)
