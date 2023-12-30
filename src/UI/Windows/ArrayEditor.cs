@@ -50,13 +50,28 @@ namespace TerminalGuiDesigner.UI.Windows {
 
         private void BtnAddElement_Clicked(object sender, EventArgs e)
         {
-            // TODO: implement
-            object toAdd = new SliderOption<string>()
+            object toAdd;
+            if(this.elementType.IsGenericType && this.elementType.GetGenericTypeDefinition() == typeof(SliderOption<>))
             {
-                Legend = "test",
-                LegendAbbr = new System.Text.Rune('t'),
-                Data = "test"
-            };
+                var designer = new SliderOptionEditor(this.elementType.GetGenericArguments()[0]);
+                Application.Run(designer);
+
+                if (!designer.Cancelled)
+                {
+                    toAdd = designer.Result;
+                }
+                else
+                {
+                    // user canceled designing the Option
+                    return;
+                }
+            }
+            else
+            {
+                // TODO: Handle other cases here
+                return;
+                //toAdd = default;
+            }
 
             Result.Add(toAdd);
 

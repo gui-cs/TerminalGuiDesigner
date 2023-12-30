@@ -12,9 +12,43 @@ namespace TerminalGuiDesigner.UI.Windows {
     
     
     public partial class SliderOptionEditor {
-        
-        public SliderOptionEditor() {
+        private readonly Type genericTypeArgument;
+
+        public bool Cancelled { get; internal set; } = true;
+        public object Result { get; internal set; }
+
+        /// <summary>
+        /// Creates a new instance of the Designer to create an instance of <see cref="SliderOption{T}"/>
+        /// where T is of <see cref="Type"/> <paramref name="genericTypeArgument"/>.
+        /// </summary>
+        /// <param name="genericTypeArgument">The T Type of the <see cref="SliderOption{T}"/> you want to design</param>
+        public SliderOptionEditor(Type genericTypeArgument) {
             InitializeComponent();
+
+            // TODO: implement
+            Result = new SliderOption<string>()
+            {
+                Legend = "test",
+                LegendAbbr = new System.Text.Rune('t'),
+                Data = "test"
+            };
+
+            this.genericTypeArgument = genericTypeArgument;
+
+            btnOk.Clicked += BtnOk_Clicked;
+            btnCancel.Clicked += BtnCancel_Clicked;
+        }
+
+        private void BtnCancel_Clicked(object sender, EventArgs e)
+        {
+            this.Cancelled = true;
+            Application.RequestStop();
+        }
+
+        private void BtnOk_Clicked(object sender, EventArgs e)
+        {
+            this.Cancelled = false;
+            Application.RequestStop();
         }
     }
 }
