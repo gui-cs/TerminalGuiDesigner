@@ -1,14 +1,15 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net7.0;net8.0</TargetFrameworks>
+		<TargetFrameworks>net8.0</TargetFrameworks>
 		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<LangVersion>11</LangVersion>
+    <LangVersion>12</LangVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
+    <None Remove="Keys.json" />
 	  <None Remove="Keys_Alternate.yaml" />
 	</ItemGroup>
 	
@@ -16,6 +17,9 @@
 		<Content Include="..\src\Keys.yaml">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
+    <Content Include="Keys.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
 		<Content Include="Keys_Alternate.yaml">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
@@ -35,9 +39,15 @@
   <ItemGroup>
     <ProjectReference Include="..\src\TerminalGuiDesigner.csproj" />
     <Using Include="System" />
+    <Using Include="System.IO" />
+    <Using Include="System.Linq" />
+    <Using Include="System.Collections" />
     <Using Include="System.Collections.Generic" />
     <Using Include="Terminal.Gui" />
     <Using Include="TerminalGuiDesigner" />
+    <Using Include="TerminalGuiDesigner.FromCode" />
+    <Using Include="TerminalGuiDesigner.Operations" />
+    <Using Include="TerminalGuiDesigner.ToCode" />
     <Using Include="UnitTests.TestSupportTypes" />
 		<Using Include="NUnit.Framework" />
 		<Using Include="NUnit.Framework.Legacy" />

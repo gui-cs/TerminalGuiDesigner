@@ -120,7 +120,7 @@ public class Editor : Toplevel
             }
         }
 
-        Application.KeyPressed += (_, k) =>
+        Application.KeyUp += (_, k) =>
         {
             if (this.editing)
             {
@@ -129,7 +129,7 @@ public class Editor : Toplevel
 
             try
             {
-                if (this.HandleKey(k.KeyEvent))
+                if (this.HandleKey(k))
                 {
                     k.Handled = true;
                 }
@@ -242,9 +242,9 @@ public class Editor : Toplevel
     /// <summary>
     /// Event handler for <see cref="Application.KeyPressed"/>.
     /// </summary>
-    /// <param name="keyEvent">The key pressed.</param>
+    /// <param name="key">The key pressed.</param>
     /// <returns>True if key is handled.</returns>
-    public bool HandleKey(KeyEvent keyEvent)
+    public bool HandleKey(Key key)
     {
         // if another window is showing don't respond to hotkeys
         if (!this.IsCurrentTop)
@@ -261,7 +261,7 @@ public class Editor : Toplevel
         // this key e.g. for typing into menus / reordering menus
         // etc
         if (this.keyboardManager.HandleKey(
-            SelectionManager.Instance.GetSingleSelectionOrNull()?.View ?? this, keyEvent))
+            SelectionManager.Instance.GetSingleSelectionOrNull()?.View ?? this, key))
         {
             return true;
         }
@@ -271,43 +271,44 @@ public class Editor : Toplevel
             this.editing = true;
             SelectionManager.Instance.LockSelection = true;
 
-            if (keyEvent.Key == this.keyMap.ShowContextMenu && !this.menuOpen)
+            string keyString = key.ToString( );
+            if (keyString == this.keyMap.ShowContextMenu && !this.menuOpen)
             {
                 this.CreateAndShowContextMenu(null, null);
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.EditProperties)
+            if (keyString == this.keyMap.EditProperties)
             {
                 this.ShowEditProperties();
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.ShowColorSchemes)
+            if (keyString == this.keyMap.ShowColorSchemes)
             {
                 this.ShowColorSchemes();
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.Copy)
+            if (keyString == this.keyMap.Copy)
             {
                 this.Copy();
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.Paste)
+            if (keyString == this.keyMap.Paste)
             {
                 this.Paste();
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.ViewSpecificOperations)
+            if (keyString == this.keyMap.ViewSpecificOperations)
             {
                 this.ShowViewSpecificOperations();
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.EditRootProperties)
+            if (keyString == this.keyMap.EditRootProperties)
             {
                 if (this.viewBeingEdited == null)
                 {
@@ -318,135 +319,135 @@ public class Editor : Toplevel
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.Open)
+            if (keyString == this.keyMap.Open)
             {
                 this.Open();
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.Save)
+            if (keyString == this.keyMap.Save)
             {
                 this.Save();
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.New)
+            if (keyString == this.keyMap.New)
             {
                 this.New();
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.ShowHelp)
+            if (keyString == this.keyMap.ShowHelp)
             {
                 this.ShowHelp();
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.AddView)
+            if (keyString == this.keyMap.AddView)
             {
                 this.ShowAddViewWindow();
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.ToggleDragging)
+            if (keyString == this.keyMap.ToggleDragging)
             {
                 this.enableDrag = !this.enableDrag;
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.Undo)
+            if (keyString == this.keyMap.Undo)
             {
                 OperationManager.Instance.Undo();
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.Redo)
+            if (keyString == this.keyMap.Redo)
             {
                 OperationManager.Instance.Redo();
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.Delete)
+            if (keyString == this.keyMap.Delete)
             {
                 this.Delete();
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.ToggleShowFocused)
+            if (keyString == this.keyMap.ToggleShowFocused)
             {
                 this.enableShowFocused = !this.enableShowFocused;
                 this.SetNeedsDisplay();
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.ToggleShowBorders)
+            if (keyString == this.keyMap.ToggleShowBorders)
             {
                 ShowBorders = !ShowBorders;
                 this.SetNeedsDisplay();
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.SelectAll)
+            if (keyString == this.keyMap.SelectAll)
             {
                 this.SelectAll();
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.MoveUp)
+            if (keyString == this.keyMap.MoveUp)
             {
                 this.MoveControl(0, -1);
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.MoveDown)
+            if (keyString == this.keyMap.MoveDown)
             {
                 this.MoveControl(0, 1);
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.MoveLeft)
+            if (keyString == this.keyMap.MoveLeft)
             {
                 this.MoveControl(-1, 0);
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.MoveRight)
+            if (keyString == this.keyMap.MoveRight)
             {
                 this.MoveControl(1, 0);
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.MoveDown)
+            if (keyString == this.keyMap.MoveDown)
             {
                 this.MoveControl(0, 1);
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.MoveLeft)
+            if (keyString == this.keyMap.MoveLeft)
             {
                 this.MoveControl(-1, 0);
                 return true;
             }
 
-            if (keyEvent.Key == this.keyMap.MoveRight)
+            if (keyString == this.keyMap.MoveRight)
             {
                 this.MoveControl(1, 0);
                 return true;
             }
 
             // Fast moving things
-            switch (keyEvent.Key)
+            switch (key.KeyCode)
             {
-                case Key.CursorUp | Key.CtrlMask:
+                case KeyCode.CursorUp | KeyCode.CtrlMask:
                     this.MoveControl(0, -3);
                     return true;
-                case Key.CursorDown | Key.CtrlMask:
+                case KeyCode.CursorDown | KeyCode.CtrlMask:
                     this.MoveControl(0, 3);
                     return true;
-                case Key.CursorLeft | Key.CtrlMask:
+                case KeyCode.CursorLeft | KeyCode.CtrlMask:
                     this.MoveControl(-5, 0);
                     return true;
-                case Key.CursorRight | Key.CtrlMask:
+                case KeyCode.CursorRight | KeyCode.CtrlMask:
                     this.MoveControl(5, 0);
                     return true;
             }
@@ -553,7 +554,7 @@ public class Editor : Toplevel
 
         this.rootCommandsListView.KeyDown += (_, e) =>
         {
-            if (e.KeyEvent.Key == Key.Enter)
+            if (e == Key.Enter)
             {
                 e.Handled = true;
 

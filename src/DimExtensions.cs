@@ -237,6 +237,8 @@ public static class DimExtensions
     {
         if (!d.GetDimType(out var type, out var val, out var offset))
         {
+            // TODO: This is currently unreachable (though a TG change could make it not so)
+            // Would it maybe be a better idea to throw an exception, so generated code isn't silently incorrect?
             // could not determine the type
             return null;
         }

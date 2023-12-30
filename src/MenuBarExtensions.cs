@@ -1,4 +1,3 @@
-﻿using System.Reflection;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner;
@@ -17,7 +16,7 @@ public static class MenuBarExtensions
     /// <returns>Selected <see cref="MenuItem"/> or null if none.</returns>
     public static MenuBarItem? GetSelectedMenuItem(this MenuBar menuBar)
     {
-        var selected = (int)GetNonNullPrivateFieldValue("selected", menuBar, typeof(MenuBar));
+        int selected = menuBar.GetNonNullNonPublicFieldValue<int, MenuBar>( "selected" );
 
         if (selected < 0 || selected >= menuBar.Menus.Length)
         {
@@ -36,6 +35,7 @@ public static class MenuBarExtensions
     public static MenuBarItem? ScreenToMenuBarItem(this MenuBar menuBar, int screenX)
     {
         // These might be changed in Terminal.Gui library
+        // TODO: Maybe load these from a config file, so we aren't at TG's mercy
         const int initialWhitespace = 1;
         const int afterEachItemWhitespace = 2;
 
@@ -74,30 +74,5 @@ public static class MenuBarExtensions
 
         // Return the last menu item that begins rendering before this X point
         return menuXLocations.Last(m => m.Key <= clientPoint.X).Value;
-    }
-
-    /// <summary>
-    /// Changes the <see cref="StatusItem.Shortcut"/> even though it has no setter in Terminal.Gui.
-    /// </summary>
-    /// <param name="item"><see cref="StatusItem"/> to change <see cref="StatusItem.Shortcut"/> on.</param>
-    /// <param name="newShortcut">The new value for <see cref="StatusItem.Shortcut"/>.</param>
-    public static void SetShortcut(this StatusItem item, Key newShortcut)
-    {
-        // See: https://stackoverflow.com/a/40917899/4824531
-        const string backingFieldName = "<Shortcut>k__BackingField";
-
-        var field =
-            typeof(StatusItem).GetField(backingFieldName, BindingFlags.Instance | BindingFlags.NonPublic)
-            ?? throw new Exception($"Could not find auto backing field '{backingFieldName}'");
-
-        field.SetValue(item, newShortcut);
-    }
-
-    private static object GetNonNullPrivateFieldValue(string fieldName, object item, Type type)
-    {
-        var selectedField = type.GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance)
-            ?? throw new Exception($"Expected private field {fieldName} was not present on {type.Name}");
-        return selectedField.GetValue(item)
-            ?? throw new Exception($"Private field {fieldName} was unexpectedly null on {type.Name}");
     }
 }

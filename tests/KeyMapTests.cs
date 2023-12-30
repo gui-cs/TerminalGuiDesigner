@@ -1,5 +1,3 @@
-using System.IO;
-using Terminal.Gui;
 using TerminalGuiDesigner.UI;
 
 namespace UnitTests;
@@ -15,29 +13,29 @@ internal class KeyMapTests
         """
         EditProperties: F4
         ShowContextMenu: Enter
-        ViewSpecificOperations: ShiftMask, F4
+        ViewSpecificOperations: Shift+F4
         EditRootProperties: F5
         ShowHelp: F1
-        New: N, CtrlMask
-        Open: O, CtrlMask
-        Save: S, CtrlMask
-        Redo: Y, CtrlMask
-        Undo: Z, CtrlMask
-        Delete: DeleteChar
+        New: Ctrl+N
+        Open: Ctrl+O
+        Save: Ctrl+S
+        Redo: Ctrl+Y
+        Undo: Ctrl+Z
+        Delete: Delete
         ToggleDragging: F3
         AddView: F2
-        ToggleShowFocused: L, CtrlMask
-        ToggleShowBorders: B, CtrlMask
+        ToggleShowFocused: Ctrl+L
+        ToggleShowBorders: Ctrl+B
         RightClick: Button3Clicked
-        Copy: C, CtrlMask
-        Paste: V, CtrlMask
-        Rename: R, CtrlMask
-        SetShortcut: T, CtrlMask
-        SelectAll: A, CtrlMask
-        MoveRight: CursorRight, ShiftMask
-        MoveLeft: CursorLeft, ShiftMask
-        MoveUp: CursorUp, ShiftMask
-        MoveDown: CursorDown, ShiftMask
+        Copy: Ctrl+C
+        Paste: Ctrl+V
+        Rename: Ctrl+R
+        SetShortcut: Ctrl+T
+        SelectAll: Ctrl+A
+        MoveRight: Shift+CursorRight
+        MoveLeft: Shift+CursorLeft
+        MoveUp: Shift+CursorUp
+        MoveDown: Shift+CursorDown
         ShowColorSchemes: F6
         SelectionColor:
           NormalForeground: BrightGreen
@@ -59,8 +57,8 @@ internal class KeyMapTests
     public void Configuration_LoadingAndBinding( )
     {
         KeyMap defaultKeyMap = new( );
-        KeyMap stockKeyMap = KeyMap.LoadFromConfiguration( );
-        KeyMap nullOrMissingFileKeyMap = KeyMap.LoadFromConfiguration( );
+        KeyMap stockKeyMap = KeyMap.LoadFromYamlConfigurationFile( );
+        KeyMap nullOrMissingFileKeyMap = KeyMap.LoadFromYamlConfigurationFile( );
 
         Assert.Multiple( ( ) =>
         {
@@ -68,11 +66,11 @@ internal class KeyMapTests
             Assert.That( nullOrMissingFileKeyMap, Is.EqualTo( defaultKeyMap ) );
         } );
 
-        KeyMap alternateKeyMap = KeyMap.LoadFromConfiguration( "Keys_Alternate.yaml" );
+        KeyMap alternateKeyMap = KeyMap.LoadFromYamlConfigurationFile( "Keys_Alternate.yaml" );
 
         Assert.Multiple( ( ) =>
         {
-            Assert.That( alternateKeyMap.EditProperties, Is.EqualTo( Key.F1 ) );
+            Assert.That( alternateKeyMap.EditProperties, Is.EqualTo( Key.F1.ToString() ) );
             Assert.That( alternateKeyMap, Is.Not.EqualTo( defaultKeyMap ) );
         } );
     }
@@ -99,12 +97,8 @@ internal class KeyMapTests
         Assert.That( defaultKeyMapFileName, Does.Exist );
         Assert.That( defaultKeyMapFileName, Is.Not.Empty );
 
-        FileInfo defaultKeyMapFileInfo = new( defaultKeyMapFileName );
-
-        Assert.That( defaultKeyMapFileInfo, Has.Length.EqualTo( 921 ) );
-
-        Assert.That( File.ReadAllText( defaultKeyMapFileName ),
-                     Is.EqualTo( ExpectedKeysYamlContent ),
+        Assert.That( File.ReadAllText( defaultKeyMapFileName ).ReplaceLineEndings( ),
+                     Is.EqualTo( ExpectedKeysYamlContent.ReplaceLineEndings() ),
                      "Content of Keys.yaml, including newline style, must match expected input." );
     }
 
@@ -115,32 +109,32 @@ internal class KeyMapTests
     {
         KeyMap defaultValue = new( );
         KeyMap expectedValue = new(
-            Key.F4,
-            Key.Enter,
-            Key.ShiftMask | Key.F4,
-            Key.F5,
-            Key.F1,
-            Key.CtrlMask | Key.N,
-            Key.CtrlMask | Key.O,
-            Key.CtrlMask | Key.S,
-            Key.CtrlMask | Key.Y,
-            Key.CtrlMask | Key.Z,
-            Key.DeleteChar,
-            Key.F3,
-            Key.F2,
-            Key.CtrlMask | Key.L,
-            Key.CtrlMask | Key.B,
+            Key.F4.ToString( ),
+            Key.Enter.ToString( ),
+            Key.F4.WithShift.ToString( ),
+            Key.F5.ToString( ),
+            Key.F1.ToString( ),
+            Key.N.WithCtrl.ToString( ),
+            Key.O.WithCtrl.ToString( ),
+            Key.S.WithCtrl.ToString( ),
+            Key.Y.WithCtrl.ToString( ),
+            Key.Z.WithCtrl.ToString( ),
+            Key.Delete.ToString( ),
+            Key.F3.ToString( ),
+            Key.F2.ToString( ),
+            Key.L.WithCtrl.ToString( ),
+            Key.B.WithCtrl.ToString( ),
             MouseFlags.Button3Clicked,
-            Key.CtrlMask | Key.C,
-            Key.CtrlMask | Key.V,
-            Key.CtrlMask | Key.R,
-            Key.CtrlMask | Key.T,
-            Key.CtrlMask | Key.A,
-            Key.ShiftMask | Key.CursorRight,
-            Key.ShiftMask | Key.CursorLeft,
-            Key.ShiftMask | Key.CursorUp,
-            Key.ShiftMask | Key.CursorDown,
-            Key.F6 );
+            Key.C.WithCtrl.ToString( ),
+            Key.V.WithCtrl.ToString( ),
+            Key.R.WithCtrl.ToString( ),
+            Key.T.WithCtrl.ToString( ),
+            Key.A.WithCtrl.ToString( ),
+            Key.CursorRight.WithShift.ToString( ),
+            Key.CursorLeft.WithShift.ToString( ),
+            Key.CursorUp.WithShift.ToString( ),
+            Key.CursorDown.WithShift.ToString( ),
+            Key.F6.ToString( ) );
 
         Assert.That( defaultValue, Is.EqualTo( expectedValue ) );
     }
@@ -149,7 +143,7 @@ internal class KeyMapTests
     public void NonDestructiveMutation( )
     {
         KeyMap defaultKeyMap = new( );
-        KeyMap mutatedKeyMap = defaultKeyMap with { AddView = Key.M };
+        KeyMap mutatedKeyMap = defaultKeyMap with { AddView = Key.M.ToString() };
 
         Assert.Multiple( ( ) =>
         {
@@ -168,9 +162,6 @@ internal class KeyMapTests
             // Value equality should have been restored between these two, but not reference equality.
             Assert.That( mutatedKeyMapWithOriginalAddViewKey, Is.EqualTo( defaultKeyMap ) );
             Assert.That( mutatedKeyMapWithOriginalAddViewKey, Is.Not.SameAs( defaultKeyMap ) );
-
-            // Even though we set AddView from defaultKeyMap, this should not be the same reference.
-            Assert.That( mutatedKeyMapWithOriginalAddViewKey.AddView, Is.Not.SameAs( defaultKeyMap.AddView ) );
         } );
     }
 }

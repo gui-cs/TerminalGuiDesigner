@@ -51,7 +51,7 @@ internal class GetTextDialog
             Text = this.initialValue ?? string.Empty,
             AllowsTab = false,
         };
-        this.textField.KeyPressed += this.TextField_KeyPress;
+        this.textField.KeyDown += this.TextField_KeyPress;
 
         // make it easier for user to replace this text with something else
         // by directly selecting it all so next keypress replaces text
@@ -113,12 +113,12 @@ internal class GetTextDialog
         Application.RequestStop();
     }
 
-    private void TextField_KeyPress(object? sender, KeyEventEventArgs obj)
+    private void TextField_KeyPress(object? sender, Key key)
     {
-        if (obj.KeyEvent.Key == Key.Enter && !this.args.MultiLine)
+        if (key == Key.Enter && !this.args.MultiLine)
         {
             this.Accept();
-            obj.Handled = true;
+            key.Handled = true;
         }
     }
 }

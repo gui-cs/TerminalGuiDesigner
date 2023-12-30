@@ -51,7 +51,7 @@ public partial class DimEditor : Dialog
         btnCancel.Clicked += BtnCancel_Clicked;
         Cancelled = true;
         Modal = true;
-        rgDimType.KeyPressed += RgDimType_KeyPress;
+        rgDimType.KeyDown += RgDimType_KeyPress;
         
 
         var val = (Dim)property.GetValue();
@@ -79,12 +79,12 @@ public partial class DimEditor : Dialog
         rgDimType.SelectedItemChanged += DdType_SelectedItemChanged;
     }
 
-    private void RgDimType_KeyPress(object sender, KeyEventEventArgs obj)
+    private void RgDimType_KeyPress(object sender, Key obj)
     {
-        var c = (char)obj.KeyEvent.KeyValue;
+        var c = (char)obj;
 
         // if user types in some text change the focus to the text box to enable entering digits
-        if ((obj.KeyEvent.Key == Key.Backspace || char.IsDigit(c)) && tbValue.Visible)
+        if ((obj == Key.Backspace || char.IsDigit(c)) && tbValue.Visible)
         {
             tbValue?.FocusFirst();
         }

@@ -11,7 +11,7 @@ internal class StringExtensionTests
     [TestCase("  ", "blank", new[] { "fish1", "fish2" })]
     [TestCase("bob", "bob3", new[] { "bob", "bob2" })]
     [TestCase("Fish1", "Fish1", new[] { "fish1"})] // default behavior is case sensitive
-    public void TestMakeUnique_DefaultComparer(string stringIn, string expectedOut, string[] whenCollection)
+    public void TestMakeUnique_DefaultComparer(string? stringIn, string expectedOut, string[] whenCollection)
     {
         ClassicAssert.AreEqual(expectedOut, stringIn.MakeUnique(whenCollection));
     }
