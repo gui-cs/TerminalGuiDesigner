@@ -11,11 +11,15 @@
 namespace TerminalGuiDesigner.UI.Windows {
     using System;
     using Terminal.Gui;
+    using System.Collections;
+    using System.Collections.Generic;
     
     
     public partial class SliderOptionEditor : Terminal.Gui.Dialog {
         
         private Terminal.Gui.ColorScheme redOnBlack;
+        
+        private Terminal.Gui.ColorScheme tgDefault;
         
         private Terminal.Gui.Label label;
         
@@ -25,11 +29,13 @@ namespace TerminalGuiDesigner.UI.Windows {
         
         private Terminal.Gui.TextField tfLegendAbbr;
         
+        private Terminal.Gui.Label lblOneChar;
+        
         private Terminal.Gui.Label label3;
         
         private Terminal.Gui.TextField tfData;
         
-        private Terminal.Gui.Label lblError;
+        private Terminal.Gui.Label lblType;
         
         private Terminal.Gui.Button btnOk;
         
@@ -38,9 +44,10 @@ namespace TerminalGuiDesigner.UI.Windows {
         private void InitializeComponent() {
             this.btnCancel = new Terminal.Gui.Button();
             this.btnOk = new Terminal.Gui.Button();
-            this.lblError = new Terminal.Gui.Label();
+            this.lblType = new Terminal.Gui.Label();
             this.tfData = new Terminal.Gui.TextField();
             this.label3 = new Terminal.Gui.Label();
+            this.lblOneChar = new Terminal.Gui.Label();
             this.tfLegendAbbr = new Terminal.Gui.TextField();
             this.label2 = new Terminal.Gui.Label();
             this.tfLegend = new Terminal.Gui.TextField();
@@ -51,8 +58,14 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.redOnBlack.Focus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Red, Terminal.Gui.Color.Yellow);
             this.redOnBlack.HotFocus = new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightRed, Terminal.Gui.Color.Yellow);
             this.redOnBlack.Disabled = new Terminal.Gui.Attribute(Terminal.Gui.Color.Gray, Terminal.Gui.Color.Black);
+            this.tgDefault = new Terminal.Gui.ColorScheme();
+            this.tgDefault.Normal = new Terminal.Gui.Attribute(Terminal.Gui.Color.White, Terminal.Gui.Color.Blue);
+            this.tgDefault.HotNormal = new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightCyan, Terminal.Gui.Color.Blue);
+            this.tgDefault.Focus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.Gray);
+            this.tgDefault.HotFocus = new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightBlue, Terminal.Gui.Color.Gray);
+            this.tgDefault.Disabled = new Terminal.Gui.Attribute(Terminal.Gui.Color.Yellow, Terminal.Gui.Color.Blue);
             this.Width = 50;
-            this.Height = 7;
+            this.Height = 8;
             this.X = Pos.Center();
             this.Y = Pos.Center();
             this.Visible = true;
@@ -61,7 +74,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Title = "OptionEditor";
             this.label.Width = 4;
             this.label.Height = 1;
-            this.label.X = 5;
+            this.label.X = 6;
             this.label.Y = 0;
             this.label.Visible = true;
             this.label.Data = "label";
@@ -70,7 +83,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Add(this.label);
             this.tfLegend.Width = Dim.Fill(0);
             this.tfLegend.Height = 1;
-            this.tfLegend.X = 12;
+            this.tfLegend.X = 14;
             this.tfLegend.Y = 0;
             this.tfLegend.Visible = true;
             this.tfLegend.Secret = false;
@@ -84,12 +97,12 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.label2.Y = 1;
             this.label2.Visible = true;
             this.label2.Data = "label2";
-            this.label2.Text = "Abbreviated:";
+            this.label2.Text = "Abbreviation:";
             this.label2.TextAlignment = Terminal.Gui.TextAlignment.Left;
             this.Add(this.label2);
-            this.tfLegendAbbr.Width = Dim.Fill(0);
+            this.tfLegendAbbr.Width = 1;
             this.tfLegendAbbr.Height = 1;
-            this.tfLegendAbbr.X = 12;
+            this.tfLegendAbbr.X = 14;
             this.tfLegendAbbr.Y = 1;
             this.tfLegendAbbr.Visible = true;
             this.tfLegendAbbr.Secret = false;
@@ -97,10 +110,19 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.tfLegendAbbr.Text = "";
             this.tfLegendAbbr.TextAlignment = Terminal.Gui.TextAlignment.Left;
             this.Add(this.tfLegendAbbr);
+            this.lblOneChar.Width = 10;
+            this.lblOneChar.Height = 1;
+            this.lblOneChar.X = 0;
+            this.lblOneChar.Y = 2;
+            this.lblOneChar.Visible = true;
+            this.lblOneChar.Data = "lblOneChar";
+            this.lblOneChar.Text = "(Single Char)  ";
+            this.lblOneChar.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+            this.Add(this.lblOneChar);
             this.label3.Width = 4;
             this.label3.Height = 1;
             this.label3.X = 7;
-            this.label3.Y = 2;
+            this.label3.Y = 3;
             this.label3.Visible = true;
             this.label3.Data = "label3";
             this.label3.Text = "Data:";
@@ -108,28 +130,27 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Add(this.label3);
             this.tfData.Width = Dim.Fill(0);
             this.tfData.Height = 1;
-            this.tfData.X = 12;
-            this.tfData.Y = 2;
+            this.tfData.X = 14;
+            this.tfData.Y = 3;
             this.tfData.Visible = true;
             this.tfData.Secret = false;
             this.tfData.Data = "tfData";
             this.tfData.Text = "";
             this.tfData.TextAlignment = Terminal.Gui.TextAlignment.Left;
             this.Add(this.tfData);
-            this.lblError.Width = Dim.Fill(0);
-            this.lblError.Height = 1;
-            this.lblError.X = 0;
-            this.lblError.Y = 3;
-            this.lblError.Visible = false;
-            this.lblError.ColorScheme = this.redOnBlack;
-            this.lblError.Data = "lblError";
-            this.lblError.Text = "Heya";
-            this.lblError.TextAlignment = Terminal.Gui.TextAlignment.Centered;
-            this.Add(this.lblError);
+            this.lblType.Width = Dim.Fill(0);
+            this.lblType.Height = 1;
+            this.lblType.X = 0;
+            this.lblType.Y = 4;
+            this.lblType.Visible = true;
+            this.lblType.Data = "lblType";
+            this.lblType.Text = "( Type ) ";
+            this.lblType.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+            this.Add(this.lblType);
             this.btnOk.Width = 8;
             this.btnOk.Height = 1;
             this.btnOk.X = 11;
-            this.btnOk.Y = 4;
+            this.btnOk.Y = 5;
             this.btnOk.Visible = true;
             this.btnOk.Data = "btnOk";
             this.btnOk.Text = "Ok";
@@ -139,7 +160,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnCancel.Width = 8;
             this.btnCancel.Height = 1;
             this.btnCancel.X = 23;
-            this.btnCancel.Y = 4;
+            this.btnCancel.Y = 5;
             this.btnCancel.Visible = true;
             this.btnCancel.Data = "btnCancel";
             this.btnCancel.Text = "Cancel";

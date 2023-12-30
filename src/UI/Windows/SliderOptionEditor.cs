@@ -31,6 +31,8 @@ namespace TerminalGuiDesigner.UI.Windows {
 
             btnOk.Clicked += BtnOk_Clicked;
             btnCancel.Clicked += BtnCancel_Clicked;
+
+            lblType.Text = $"({genericTypeArgument.Name})";
         }
 
         private void BtnCancel_Clicked(object sender, EventArgs e)
