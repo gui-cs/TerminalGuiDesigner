@@ -8,6 +8,8 @@
 //  </auto-generated>
 // -----------------------------------------------------------------------------
 namespace TerminalGuiDesigner.UI.Windows {
+    using System.Reflection;
+    using System.Text;
     using Terminal.Gui;
     
     
@@ -25,14 +27,6 @@ namespace TerminalGuiDesigner.UI.Windows {
         public SliderOptionEditor(Type genericTypeArgument) {
             InitializeComponent();
 
-            // TODO: implement
-            Result = new SliderOption<string>()
-            {
-                Legend = "test",
-                LegendAbbr = new System.Text.Rune('t'),
-                Data = "test"
-            };
-
             this.genericTypeArgument = genericTypeArgument;
 
             btnOk.Clicked += BtnOk_Clicked;
@@ -47,8 +41,43 @@ namespace TerminalGuiDesigner.UI.Windows {
 
         private void BtnOk_Clicked(object sender, EventArgs e)
         {
+            try
+            {
+                this.BuildResult();
+            }
+            catch(Exception ex)
+            {
+                ExceptionViewer.ShowException("Could not build result", ex);
+                return;
+            }
+
             this.Cancelled = false;
             Application.RequestStop();
+        }
+
+        private void BuildResult()
+        {
+
+            Type sliderOptionType = typeof(SliderOption<>).MakeGenericType(this.genericTypeArgument);
+            Result = Activator.CreateInstance(sliderOptionType);
+
+            var p = sliderOptionType.GetProperty("Legend");
+            p.SetValue(Result, tfLegend.Text);
+
+            p = sliderOptionType.GetProperty("LegendAbbr");
+            p.SetValue(Result, new Rune(tfLegendAbbr.Text[0]));
+
+            p = sliderOptionType.GetProperty("Data");
+
+            if(this.genericTypeArgument == typeof(string))
+            {
+                p.SetValue(Result, tfData.Text);
+            }
+            else
+            {
+                p.SetValue(Result, Convert.ChangeType(tfData.Text, this.genericTypeArgument));
+            }
+
         }
     }
 }
