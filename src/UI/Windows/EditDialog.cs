@@ -255,7 +255,7 @@ public class EditDialog : Window
             var elementType = property.GetElementType()
                 ?? throw new Exception($"Property {property.GetHumanReadableName()} was array but had no element type"); ;
 
-            if (elementType.IsValueType)
+            if (elementType.IsValueType || elementType == typeof(string))
             {
                 if (Modals.GetArray(
                     property.PropertyInfo.Name,
