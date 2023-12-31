@@ -258,9 +258,9 @@ internal class MenuBarTests : Tests
     {
         using MenuBarWithSubmenuItems m = GetMenuBarWithSubmenuItems( );
 
-        ClassicAssert.AreEqual( 3, m.Bar.Menus[ 0 ].Children.Length );
-        ClassicAssert.AreEqual( 2, m.Head2.Children.Length );
-        ClassicAssert.AreSame( m.TopChild, m.Head2.Children[ 0 ] );
+        Assume.That( m.Bar.Menus[ 0 ].Children, Has.Exactly( 3 ).InstanceOf<MenuItem>(  ) );
+        Assume.That( m.Head2.Children, Has.Exactly( 2 ).InstanceOf<MenuItem>(  ) );
+        Assume.That( m.Head2.Children[ 0 ], Is.SameAs( m.TopChild ) );
 
         var cmd = new RemoveMenuItemOperation( m.TopChild );
         ClassicAssert.IsTrue( cmd.Do( ) );
