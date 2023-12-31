@@ -3,8 +3,8 @@ using TerminalGuiDesigner.Operations.MenuOperations;
 namespace UnitTests;
 
 [TestFixture]
-[TestOf(typeof(OperationManager))]
-[Category("UI")]
+[TestOf( typeof( OperationManager ) )]
+[Category( "UI" )]
 internal class MenuBarTests : Tests
 {
     [Test]
@@ -147,18 +147,21 @@ internal class MenuBarTests : Tests
     }
 
     [Test]
-    [TestOf(typeof(MenuTracker))]
+    [TestOf( typeof( MenuTracker ) )]
+    // TODO: Break this one up into smaller units at some point.
     public void TestMenuOperations()
     {
         ViewToCode viewToCode = new ();
 
-        FileInfo file = new ($"{nameof(TestMenuOperations)}.cs");
+        FileInfo file = new( $"{nameof( TestMenuOperations )}.cs" );
         Design designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Dialog ) );
         Assume.That( designOut, Is.Not.Null.And.InstanceOf<Design>( ) );
         Assume.That( designOut.View, Is.Not.Null.And.InstanceOf<Dialog>( ) );
 
         MenuBar mbOut = ViewFactory.Create<MenuBar>( );
         Assume.That( mbOut, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
+        Assume.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+        Assume.That( OperationManager.Instance.RedoStackSize, Is.Zero );
 
         Assert.Warn( "MenuTracker.Instance.CurrentlyOpenMenuItem cannot be guaranteed null at this time. See https://github.com/gui-cs/TerminalGuiDesigner/issues/270" );
         // TODO: Enable this pre-condition once MenuTracker changes are implemented.
@@ -168,69 +171,171 @@ internal class MenuBarTests : Tests
         MenuTracker.Instance.Register( mbOut );
 
         // 1 visible root menu (e.g. File)
-        ClassicAssert.AreEqual(1, mbOut.Menus.Length);
+        Assert.That( mbOut.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
         // 1 child menu item (e.g. Open)
-        ClassicAssert.AreEqual(1, mbOut.Menus[0].Children.Length);
+        Assert.That( mbOut.Menus[ 0 ].Children, Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
 
-        MenuItem? orig = mbOut.Menus[0].Children[0];
+        MenuItem? orig = mbOut.Menus[ 0 ].Children[ 0 ];
+        Assert.That( orig, Is.Not.Null.And.InstanceOf<MenuItem>( ) );
 
-        OperationManager.Instance.Do(
-            new AddMenuItemOperation(mbOut.Menus[0].Children[0]));
+        AddMenuItemOperation? addMenuItemOperation = null;
+        Assert.That( ( ) => addMenuItemOperation = new( mbOut.Menus[ 0 ].Children[ 0 ] ), Throws.Nothing );
+        Assert.That( addMenuItemOperation, Is.Not.Null.And.InstanceOf<AddMenuItemOperation>( ) );
+
+        bool addMenuItemOperationSucceeded = false;
+        Assert.That( ( ) => addMenuItemOperationSucceeded = OperationManager.Instance.Do( addMenuItemOperation! ), Throws.Nothing );
+        Assert.That( addMenuItemOperationSucceeded );
 
         // Now 2 child menu item
-        ClassicAssert.AreEqual(2, mbOut.Menus[0].Children.Length);
-        ClassicAssert.AreSame(orig, mbOut.Menus[0].Children[0]); // original is still at top
+        Assert.That( mbOut.Menus[ 0 ].Children, Has.Exactly( 2 ).InstanceOf<MenuItem>( ) );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( mbOut.Menus[ 0 ].Children[ 0 ], Is.Not.Null.And.SameAs( orig ) ); // original is still at top
+            Assert.That( mbOut.Menus[ 0 ].Children[ 1 ], Is.Not.Null.And.Not.SameAs( orig ) );
+        } );
+
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
+            Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+        } );
 
         OperationManager.Instance.Undo();
 
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+            Assert.That( OperationManager.Instance.RedoStackSize, Is.EqualTo( 1 ) );
+        } );
+
         // Now only 1 child menu item
-        ClassicAssert.AreEqual(1, mbOut.Menus[0].Children.Length);
-        ClassicAssert.AreSame(orig, mbOut.Menus[0].Children[0]); // original is still at top
+        Assert.That( mbOut.Menus[ 0 ].Children, Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
+        Assert.That( mbOut.Menus[ 0 ].Children[ 0 ], Is.Not.Null.And.SameAs( orig ) ); // original is still at top
 
         OperationManager.Instance.Redo();
 
-        // Now 2 child menu item
-        ClassicAssert.AreEqual(2, mbOut.Menus[0].Children.Length);
-        ClassicAssert.AreSame(orig, mbOut.Menus[0].Children[0]); // original is still at top
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
+            Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+        } );
+
+        // Now 2 child menu items again
+        Assert.That( mbOut.Menus[ 0 ].Children, Has.Exactly( 2 ).InstanceOf<MenuItem>( ) );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( mbOut.Menus[ 0 ].Children[ 0 ], Is.Not.Null.And.SameAs( orig ) );     // original is still at top
+            Assert.That( mbOut.Menus[ 0 ].Children[ 1 ], Is.Not.Null.And.Not.SameAs( orig ) ); // original is still at top
+        } );
 
         // Now test moving an item around
-        MenuItem? toMove = mbOut.Menus[0].Children[1];
+        MenuItem? toMove = mbOut.Menus[ 0 ].Children[ 1 ];
+        Assume.That( toMove, Is.Not.Null.And.InstanceOf<MenuItem>( ) );
 
         // Move second menu item up
-        MoveMenuItemOperation up = new MoveMenuItemOperation(toMove, true);
-        ClassicAssert.IsFalse(up.IsImpossible);
-        OperationManager.Instance.Do(up);
+        MoveMenuItemOperation? up = null;
+        Assert.That( ( ) => up = new( toMove, true ), Throws.Nothing );
+        Assert.That( up, Is.Not.Null.And.InstanceOf<MoveMenuItemOperation>( ) );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( up!.Bar, Is.SameAs( mbOut ) );
+            Assert.That( up.IsImpossible, Is.False );
+        } );
+
+        bool moveUpSucceeded = false;
+        Assert.That( ( ) => moveUpSucceeded = OperationManager.Instance.Do( up ), Throws.Nothing );
+        Assert.That( moveUpSucceeded );
+
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 2 ) );
+            Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+        } );
 
         // Original one should now be bottom
-        ClassicAssert.AreSame(orig, mbOut.Menus[0].Children[1]);
+        Assume.That( orig, Is.Not.SameAs( toMove ) );
+        Assert.That( mbOut.Menus[ 0 ].Children, Has.Exactly( 2 ).InstanceOf<MenuItem>( ) );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( mbOut.Menus[ 0 ].Children[ 0 ], Is.Not.Null.And.Not.SameAs( orig ) );
+            Assert.That( mbOut.Menus[ 0 ].Children[ 0 ], Is.Not.Null.And.SameAs( toMove ) );
+            Assert.That( mbOut.Menus[ 0 ].Children[ 1 ], Is.SameAs( orig ) );
+        } );
 
         // can't move top one up
-        ClassicAssert.IsTrue(new MoveMenuItemOperation(toMove, true).IsImpossible);
-        // cant move bottom one down
-        ClassicAssert.IsTrue(new MoveMenuItemOperation(mbOut.Menus[0].Children[1], false).IsImpossible);
+        MoveMenuItemOperation? impossibleMoveUpOperation = null;
+        Assert.That( ( ) => impossibleMoveUpOperation = new( toMove, true ), Throws.Nothing );
+        Assert.That( impossibleMoveUpOperation, Is.Not.Null.And.InstanceOf<MoveMenuItemOperation>( ) );
+        Assert.That( impossibleMoveUpOperation!.IsImpossible );
 
-        OperationManager.Instance.Undo();
+        // cant move bottom one down
+        MoveMenuItemOperation? impossibleMoveDownOperation = null;
+        Assert.That( ( ) => impossibleMoveDownOperation = new( mbOut.Menus[ 0 ].Children[ 1 ], false ), Throws.Nothing );
+        Assert.That( impossibleMoveDownOperation, Is.Not.Null.And.InstanceOf<MoveMenuItemOperation>( ) );
+        Assert.That( impossibleMoveDownOperation!.IsImpossible );
+
+        Assert.That( static ( ) => OperationManager.Instance.Undo( ), Throws.Nothing );
 
         // Original one should be back on top
-        ClassicAssert.AreSame(orig, mbOut.Menus[0].Children[0]);
+        Assert.That( mbOut.Menus[ 0 ].Children, Has.Exactly( 2 ).InstanceOf<MenuItem>( ) );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( mbOut.Menus[ 0 ].Children[ 0 ], Is.SameAs( orig ) );
+            Assert.That( mbOut.Menus[ 0 ].Children[ 0 ], Is.Not.SameAs( toMove ) );
+            Assert.That( mbOut.Menus[ 0 ].Children[ 1 ], Is.SameAs( toMove ) );
+        } );
 
         // test moving the top one down
-        MenuItem? toMove2 = mbOut.Menus[0].Children[1];
+        MenuItem? toMove2 = mbOut.Menus[ 0 ].Children[ 1 ];
 
         // Move first menu item down
-        MoveMenuItemOperation down = new MoveMenuItemOperation(toMove2, true);
-        ClassicAssert.IsFalse(down.IsImpossible);
-        OperationManager.Instance.Do(down);
+        MoveMenuItemOperation? down = null;
+        Assert.That( ( ) => down = new( toMove2, true ), Throws.Nothing );
+        Assert.That( down, Is.Not.Null.And.InstanceOf<MoveMenuItemOperation>( ) );
+        Assert.That( down!.IsImpossible, Is.False );
+
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( OperationManager.Instance.RedoStackSize, Is.EqualTo( 1 ) );
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
+        } );
+
+        bool moveDownSucceeded = false;
+        Assert.That( ( ) => moveDownSucceeded = OperationManager.Instance.Do( down ), Throws.Nothing );
+        Assert.That( moveDownSucceeded );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 2 ) );
+        } );
 
         // Original one should now be bottom
-        ClassicAssert.AreSame(orig, mbOut.Menus[0].Children[1]);
-        ClassicAssert.AreNotSame(orig, mbOut.Menus[0].Children[0]);
+        Assert.That( mbOut.Menus[ 0 ].Children, Has.Exactly( 2 ).InstanceOf<MenuItem>( ) );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( mbOut.Menus[ 0 ].Children[ 0 ], Is.SameAs( toMove2 ) );
+            Assert.That( mbOut.Menus[ 0 ].Children[ 0 ], Is.Not.SameAs( orig ) );
+            Assert.That( mbOut.Menus[ 0 ].Children[ 1 ], Is.SameAs( orig ) );
+        } );
 
-        OperationManager.Instance.Undo();
+        Assert.That( static ( ) => OperationManager.Instance.Undo( ), Throws.Nothing );
+
+        Assert.Multiple( static ( ) =>
+        {
+            Assert.That( OperationManager.Instance.RedoStackSize, Is.EqualTo( 1 ) );
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
+        } );
+
 
         // should be back to how we started now
-        ClassicAssert.AreSame(orig, mbOut.Menus[0].Children[0]);
-        ClassicAssert.AreNotSame(orig, mbOut.Menus[0].Children[1]);
+        Assert.That( mbOut.Menus[ 0 ].Children, Has.Exactly( 2 ).InstanceOf<MenuItem>( ) );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( mbOut.Menus[ 0 ].Children[ 0 ], Is.SameAs( orig ) );
+            Assert.That( mbOut.Menus[ 0 ].Children[ 0 ], Is.Not.SameAs( toMove2 ) );
+            Assert.That( mbOut.Menus[ 0 ].Children[ 1 ], Is.SameAs( toMove2 ) );
+        } );
+
     }
 
     private MenuBar GetMenuBar()
