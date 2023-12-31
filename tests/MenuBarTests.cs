@@ -481,16 +481,20 @@ internal class MenuBarTests : Tests
     }
 
     [Test]
-    public void TestMoveMenuItemLeft_CannotMoveRootItems()
+    [TestOf( typeof( MoveMenuItemLeftOperation ) )]
+    public void MoveMenuItemLeft_CannotMoveRootItems( )
     {
-        var bar = this.GetMenuBar();
+        using MenuBar bar = GetMenuBar( );
 
-        var mi = bar.Menus[0].Children[0];
+        MenuItem? mi = bar.Menus[ 0 ].Children[ 0 ];
+        Assume.That( mi, Is.Not.Null.And.InstanceOf<MenuItem>( ) );
 
         // cannot move a root item
-        ClassicAssert.IsFalse(new MoveMenuItemLeftOperation(
-            bar.Menus[0].Children[0])
-        .Do());
+        MoveMenuItemLeftOperation moveMenuItemLeftOperation = new( bar.Menus[ 0 ].Children[ 0 ] );
+        Assert.That( moveMenuItemLeftOperation.IsImpossible );
+        bool moveMenuItemLeftOperationSucceeded = false;
+        Assert.That( ( ) => moveMenuItemLeftOperationSucceeded = moveMenuItemLeftOperation.Do( ), Throws.Nothing );
+        Assert.That( moveMenuItemLeftOperationSucceeded, Is.False );
     }
 
     [Test]
