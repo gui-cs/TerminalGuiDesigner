@@ -160,6 +160,8 @@ internal class MenuBarTests : Tests
         Assume.That( bar.Menus[ 0 ], Is.Not.Null.And.InstanceOf<MenuBarItem>( ) );
         Assume.That( bar.Menus[ 0 ].Children, Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
         Assume.That( bar.Menus[ 0 ].Children[ 0 ], Is.Not.Null.And.InstanceOf<MenuItem>( ) );
+        Assume.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+        Assume.That( OperationManager.Instance.RedoStackSize, Is.Zero );
 
         MenuItem mi = bar.Menus[ 0 ].Children[ 0 ];
 
@@ -170,6 +172,11 @@ internal class MenuBarTests : Tests
         bool removeMenuItemOperationSucceeded = false;
         Assert.That( ( ) => removeMenuItemOperationSucceeded = removeMenuItemOperation!.Do( ), Throws.Nothing );
         Assert.That( removeMenuItemOperationSucceeded );
+        Assert.Multiple( static ( ) =>
+        {
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
+            Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+        } );
 
         Assert.Multiple( ( ) =>
         {
@@ -177,7 +184,12 @@ internal class MenuBarTests : Tests
             Assert.That( root.View.Subviews, Has.None.InstanceOf<MenuBar>( ) );
         } );
 
-        removeMenuItemOperation.Undo();
+        Assert.That( removeMenuItemOperation!.Undo, Throws.Nothing );
+        Assert.Multiple( static ( ) =>
+        {
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+            Assert.That( OperationManager.Instance.RedoStackSize, Is.EqualTo( 1 ) );
+        } );
 
         ClassicAssert.Contains(bar, root.View.Subviews.ToArray(),
                 "Undo should put the MenuBar back on the view again");
