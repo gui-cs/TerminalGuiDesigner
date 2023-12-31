@@ -519,11 +519,7 @@ internal class MenuBarTests : Tests
         Assert.That( m.Head2.Children[ 0 ], Is.Not.SameAs( m.TopChild ) );
 
         // it should be pulled out underneath its parent
-        // and preserve its (Name) and Shortcuts
-        ClassicAssert.AreEqual(topChild.Title, bar.Menus[0].Children[2].Title);
-        ClassicAssert.AreEqual(topChild.Data, bar.Menus[0].Children[2].Data);
-        ClassicAssert.AreEqual(topChild.Shortcut, bar.Menus[0].Children[2].Shortcut);
-        ClassicAssert.AreSame(topChild, bar.Menus[0].Children[2]);
+        Assert.That( m.Bar.Menus[ 0 ].Children[ 2 ], Is.SameAs( m.TopChild ) );
 
         // undoing command should return us to
         // previous state
