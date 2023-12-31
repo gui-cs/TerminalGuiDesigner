@@ -158,7 +158,7 @@ internal class MenuBarTests : Tests
         Assume.That( designOut, Is.Not.Null.And.InstanceOf<Design>( ) );
         Assume.That( designOut.View, Is.Not.Null.And.InstanceOf<Dialog>( ) );
 
-        MenuBar mbOut = ViewFactory.Create<MenuBar>( );
+        using MenuBar mbOut = ViewFactory.Create<MenuBar>( );
         Assume.That( mbOut, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
         Assume.That( OperationManager.Instance.UndoStackSize, Is.Zero );
         Assume.That( OperationManager.Instance.RedoStackSize, Is.Zero );
