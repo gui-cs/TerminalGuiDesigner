@@ -10,7 +10,7 @@
 namespace TerminalGuiDesigner.UI.Windows {
     using System.Collections;
     using Terminal.Gui;
-
+    using TerminalGuiDesigner.ToCode;
 
     public partial class ArrayEditor {
 
@@ -20,13 +20,14 @@ namespace TerminalGuiDesigner.UI.Windows {
         public bool Cancelled { get; private set; } = true;
 
         private Type elementType;
+        private readonly Property property;
 
         /// <summary>
         /// The new array 
         /// </summary>
         public IList Result { get; private set; }
 
-        public ArrayEditor(ToCode.Property property) {
+        public ArrayEditor(Property property) {
             InitializeComponent();
 
             this.elementType = property.GetElementType();
@@ -46,34 +47,16 @@ namespace TerminalGuiDesigner.UI.Windows {
             btnOk.Clicked += BtnOk_Clicked;
             btnCancel.Clicked += BtnCancel_Clicked;
             btnAddElement.Clicked += BtnAddElement_Clicked;
+            this.property = property;
         }
 
         private void BtnAddElement_Clicked(object sender, EventArgs e)
         {
-            object toAdd;
-            if(this.elementType.IsGenericType && this.elementType.GetGenericTypeDefinition() == typeof(SliderOption<>))
-            {
-                var designer = new SliderOptionEditor(this.elementType.GetGenericArguments()[0]);
-                Application.Run(designer);
 
-                if (!designer.Cancelled)
-                {
-                    toAdd = designer.Result;
-                }
-                else
-                {
-                    // user canceled designing the Option
-                    return;
-                }
-            }
-            else
+            if(ValueFactory.GetNewValue(this.elementType,out var newValue))
             {
-                // TODO: Handle other cases here
-                return;
-                //toAdd = default;
+                Result.Add(newValue);                
             }
-
-            Result.Add(toAdd);
 
             lvElements.SetSource(Result);
             lvElements.SetNeedsDisplay();
