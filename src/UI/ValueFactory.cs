@@ -11,7 +11,7 @@ namespace TerminalGuiDesigner.UI
 {
     static class ValueFactory
     {
-        internal static bool GetNewValue(Type type, out object? newValue)
+        internal static bool GetNewValue(string propertyName, Design design, Type type, object? oldValue, out object? newValue, bool allowMultiLine)
         {
             newValue = null;
 
@@ -32,24 +32,16 @@ namespace TerminalGuiDesigner.UI
                 }
             }
             else
+            if (type== typeof(ColorScheme))
             {
-                // TODO: Handle other cases here
-                return false;
-                //toAdd = default;
-            }
-        }
-        internal static bool GetNewValue(Design design, Property property, object? oldValue, out object? newValue)
-        {
-            if (property.PropertyInfo.PropertyType == typeof(ColorScheme))
-            {
-                return GetNewColorSchemeValue(design, property, out newValue);
+                return GetNewColorSchemeValue(design, out newValue);
             }
             else
-            if (property.PropertyInfo.PropertyType == typeof(Attribute) ||
-                property.PropertyInfo.PropertyType == typeof(Attribute?))
+            if (type == typeof(Attribute) ||
+                type == typeof(Attribute?))
             {
                 // if its an Attribute or nullableAttribute
-                var picker = new ColorPicker((Attribute?)property.GetValue());
+                var picker = new ColorPicker((Attribute?)oldValue);
                 Application.Run(picker);
 
                 if (!picker.Cancelled)
@@ -65,7 +57,7 @@ namespace TerminalGuiDesigner.UI
                 }
             }
             else
-            if (property.PropertyInfo.PropertyType == typeof(ITextValidateProvider))
+            if (type== typeof(ITextValidateProvider))
             {
                 string? oldPattern = oldValue is TextRegexProvider r ? (string?)r.Pattern.ToPrimitive() : null;
                 if (Modals.GetString("New Validation Pattern", "Regex Pattern", oldPattern, out var newPattern))
@@ -79,10 +71,10 @@ namespace TerminalGuiDesigner.UI
                 return false;
             }
             else
-            if (property.PropertyInfo.PropertyType == typeof(Pos))
+            if (type== typeof(Pos))
             {
                 // user is editing a Pos
-                var designer = new PosEditor(design, property);
+                var designer = new PosEditor(design, (Pos)oldValue?? throw new Exception("Pos property was unexpectedly null"));
 
                 Application.Run(designer);
 
@@ -99,10 +91,10 @@ namespace TerminalGuiDesigner.UI
                 }
             }
             else
-            if (property.PropertyInfo.PropertyType == typeof(Size))
+            if (type== typeof(Size))
             {
                 // user is editing a Size
-                var oldSize = (Size)(oldValue ?? throw new Exception($"Property {property.PropertyInfo.Name} is of Type Size but it's current value is null"));
+                var oldSize = (Size)(oldValue ?? throw new Exception($"Property {propertyName} is of Type Size but it's current value is null"));
                 var designer = new SizeEditor(oldSize);
 
                 Application.Run(designer);
@@ -120,10 +112,10 @@ namespace TerminalGuiDesigner.UI
                 }
             }
             else
-            if (property.PropertyInfo.PropertyType == typeof(PointF))
+            if (type== typeof(PointF))
             {
                 // user is editing a PointF
-                var oldPointF = (PointF)(oldValue ?? throw new Exception($"Property {property.PropertyInfo.Name} is of Type PointF but it's current value is null"));
+                var oldPointF = (PointF)(oldValue ?? throw new Exception($"Property {propertyName} is of Type PointF but it's current value is null"));
                 var designer = new PointEditor(oldPointF.X, oldPointF.Y);
 
                 Application.Run(designer);
@@ -141,7 +133,7 @@ namespace TerminalGuiDesigner.UI
                 }
             }
             else
-            if (property.PropertyInfo.PropertyType == typeof(Dim))
+            if (type== typeof(Dim))
             {
                 // user is editing a Dim
                 var designer = new DimEditor(design, property);
@@ -160,29 +152,9 @@ namespace TerminalGuiDesigner.UI
                 }
             }
             else
-            if (property is InstanceOfProperty inst)
+            if (type== typeof(bool))
             {
-                if (Modals.Get<Type>(
-                    property.PropertyInfo.Name,
-                    "New Value",
-                    typeof(Label).Assembly.GetTypes().Where(inst.MustBeDerrivedFrom.IsAssignableFrom).ToArray(),
-                    inst.GetValue()?.GetType(),
-                    out Type? typeChosen))
-                {
-                    if (typeChosen == null)
-                    {
-                        newValue = null;
-                        return false;
-                    }
-
-                    newValue = Activator.CreateInstance(typeChosen);
-                    return true;
-                }
-            }
-            else
-            if (property.PropertyInfo.PropertyType == typeof(bool))
-            {
-                int answer = ChoicesDialog.Query(property.PropertyInfo.Name, $"New value for {property.PropertyInfo.PropertyType}", "Yes", "No");
+                int answer = ChoicesDialog.Query(propertyName, $"New value for {type}", "Yes", "No");
 
                 newValue = answer == 0 ? true : false;
                 return answer != -1;
@@ -190,18 +162,18 @@ namespace TerminalGuiDesigner.UI
             else
             if (
                 // TODO: I just changed this from IsArray to IList assignable, need to worry about conversions a bit more
-                property.PropertyInfo.PropertyType.IsAssignableTo(typeof(IList))
+                type.IsAssignableTo(typeof(IList))
                 )
             {
                 var elementType = property.GetElementType()
-                    ?? throw new Exception($"Property {property.GetHumanReadableName()} was array but had no element type"); ;
+                    ?? throw new Exception($"Property {propertyName} was array but had no element type"); ;
 
                 if (elementType.IsValueType || elementType == typeof(string))
                 {
                     if (Modals.GetArray(
-                        property.PropertyInfo.Name,
+                        propertyName,
                         "New Array Value",
-                        property.PropertyInfo.PropertyType.GetElementType() ?? throw new Exception("Property was an Array but GetElementType returned null"),
+                        type.GetElementType() ?? throw new Exception("Property was an Array but GetElementType returned null"),
                         (Array?)oldValue,
                         out Array? resultArray))
                     {
@@ -229,7 +201,7 @@ namespace TerminalGuiDesigner.UI
 
             }
             else
-            if (property.PropertyInfo.PropertyType == typeof(IListDataSource))
+            if (type== typeof(IListDataSource))
             {
                 // TODO : Make this work with non strings e.g.
                 // if user types a bunch of numbers in or dates
@@ -241,7 +213,7 @@ namespace TerminalGuiDesigner.UI
                                                    .ToArray();
 
                 if (Modals.TryGetArray<string>(
-                    property.PropertyInfo.Name,
+                    propertyName,
                     "New List Value",
                     oldValueAsArrayOfStrings,
                     out Array? resultArray))
@@ -251,62 +223,62 @@ namespace TerminalGuiDesigner.UI
                 }
             }
             else
-            if (property.PropertyInfo.PropertyType.IsEnum)
+            if (type.IsEnum)
             {
-                if (Modals.GetEnum(property.PropertyInfo.Name, "New Enum Value", property.PropertyInfo.PropertyType, (Enum?)property.GetValue(), out var resultEnum))
+                if (Modals.GetEnum(propertyName, "New Enum Value", type, (Enum?)oldValue, out var resultEnum))
                 {
                     newValue = resultEnum;
                     return true;
                 }
             }
             else
-            if (property.PropertyInfo.PropertyType == typeof(int)
-                || property.PropertyInfo.PropertyType == typeof(int?)
-                || property.PropertyInfo.PropertyType == typeof(uint)
-                || property.PropertyInfo.PropertyType == typeof(uint?))
+            if (type== typeof(int)
+                || type== typeof(int?)
+                || type== typeof(uint)
+                || type== typeof(uint?))
             {
                 // deals with null, int and uint
                 var v = oldValue == null ? null : (int?)Convert.ToInt32(oldValue);
 
-                if (Modals.GetInt(property.PropertyInfo.Name, "New Int Value", v, out var resultInt))
+                if (Modals.GetInt(propertyName, "New Int Value", v, out var resultInt))
                 {
                     // change back to uint/int/null
-                    newValue = resultInt == null ? null : Convert.ChangeType(resultInt, property.PropertyInfo.PropertyType);
+                    newValue = resultInt == null ? null : Convert.ChangeType(resultInt, type);
                     return true;
                 }
             }
             else
-            if (property.PropertyInfo.PropertyType == typeof(float)
-                || property.PropertyInfo.PropertyType == typeof(float?))
+            if (type== typeof(float)
+                || type== typeof(float?))
             {
-                if (Modals.GetFloat(property.PropertyInfo.Name, "New Float Value", (float?)oldValue, out var resultInt))
+                if (Modals.GetFloat(propertyName, "New Float Value", (float?)oldValue, out var resultInt))
                 {
                     newValue = resultInt;
                     return true;
                 }
             }
             else
-            if (property.PropertyInfo.PropertyType == typeof(char?)
-                || property.PropertyInfo.PropertyType == typeof(char))
+            if (type== typeof(char?)
+                || type== typeof(char))
             {
-                if (Modals.GetChar(property.PropertyInfo.Name, "New Single Character", oldValue is null ? null : (char?)oldValue.ToPrimitive() ?? null, out var resultChar))
+                if (Modals.GetChar(propertyName, "New Single Character", oldValue is null ? null : (char?)oldValue.ToPrimitive() ?? null, out var resultChar))
                 {
                     newValue = resultChar;
                     return true;
                 }
             }
             else
-            if (property.PropertyInfo.PropertyType == typeof(Rune)
-                || property.PropertyInfo.PropertyType == typeof(Rune?))
+            if (type== typeof(Rune)
+                || type== typeof(Rune?))
             {
-                if (Modals.GetChar(property.PropertyInfo.Name, "New Single Character", oldValue is null ? null : (char?)oldValue.ToPrimitive() ?? null, out var resultChar))
+                if (Modals.GetChar(propertyName, "New Single Character", oldValue is null ? null : (char?)oldValue.ToPrimitive() ?? null, out var resultChar))
                 {
                     newValue = resultChar == null ? null : new Rune(resultChar.Value);
                     return true;
                 }
             }
             else
-            if (Modals.GetString(property.PropertyInfo.Name, "New String Value", oldValue?.ToString(), out var result, AllowMultiLine(property)))
+            if (Modals.GetString(propertyName, "New String Value", oldValue?.ToString(), out var result, allowMultiLine))
             {
                 newValue = result;
                 return true;
@@ -315,7 +287,38 @@ namespace TerminalGuiDesigner.UI
             newValue = null;
             return false;
         }
-        private static bool AllowMultiLine(Property property)
+        internal static bool GetNewValue(Design design, Property property, object? oldValue, out object? newValue)
+        {
+            if (property is InstanceOfProperty inst)
+            {
+                if (Modals.Get<Type>(
+                    property.PropertyInfo.Name,
+                    "New Value",
+                    typeof(Label).Assembly.GetTypes().Where(inst.MustBeDerrivedFrom.IsAssignableFrom).ToArray(),
+                    inst.GetValue()?.GetType(),
+                    out Type? typeChosen))
+                {
+                    if (typeChosen == null)
+                    {
+                        newValue = null;
+                        return false;
+                    }
+
+                    newValue = Activator.CreateInstance(typeChosen);
+                    return true;
+                }
+
+                // User cancelled dialog
+                newValue = null;
+                return false;
+            }
+            else
+            {
+                return GetNewValue(property.PropertyInfo.Name, design, property.PropertyInfo.PropertyType,oldValue, out newValue, ValueFactory.AllowMultiLine(property));
+            }
+
+        }
+        public static bool AllowMultiLine(Property property)
         {
             // for the text editor control let them put multiple lines in
             if (property.PropertyInfo.Name.Equals("Text") && property.Design.View is TextView tv && tv.Multiline)
@@ -326,7 +329,7 @@ namespace TerminalGuiDesigner.UI
             return false;
         }
 
-        private static bool GetNewColorSchemeValue(Design design, Property property, out object? newValue)
+        private static bool GetNewColorSchemeValue(Design design, out object? newValue)
         {
             const string custom = "Edit Color Schemes...";
             List<object> offer = new();

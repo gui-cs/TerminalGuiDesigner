@@ -52,8 +52,7 @@ namespace TerminalGuiDesigner.UI.Windows {
 
         private void BtnAddElement_Clicked(object sender, EventArgs e)
         {
-
-            if(ValueFactory.GetNewValue(this.elementType,out var newValue))
+            if(ValueFactory.GetNewValue(property.PropertyInfo.Name, this.property.Design, this.elementType,null, out var newValue, ValueFactory.AllowMultiLine(property)))
             {
                 Result.Add(newValue);                
             }
