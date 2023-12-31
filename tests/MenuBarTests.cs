@@ -336,6 +336,7 @@ internal class MenuBarTests : Tests
             Assert.That( mbOut.Menus[ 0 ].Children[ 1 ], Is.SameAs( toMove2 ) );
         } );
 
+        MenuTracker.Instance.UnregisterMenuBar( mbOut );
     }
 
     private MenuBar GetMenuBar()
