@@ -254,7 +254,8 @@ internal class MenuBarTests : Tests
     }
 
     [Test]
-    public void TestDeletingMenuItemFromSubmenu_TopChild( )
+    [TestOf( typeof( RemoveMenuItemOperation ) )]
+    public void DeletingMenuItemFromSubmenu_TopChild( )
     {
         using MenuBarWithSubmenuItems m = GetMenuBarWithSubmenuItems( );
 
@@ -262,20 +263,28 @@ internal class MenuBarTests : Tests
         Assume.That( m.Head2.Children, Has.Exactly( 2 ).InstanceOf<MenuItem>(  ) );
         Assume.That( m.Head2.Children[ 0 ], Is.SameAs( m.TopChild ) );
 
-        var cmd = new RemoveMenuItemOperation( m.TopChild );
-        ClassicAssert.IsTrue( cmd.Do( ) );
+        RemoveMenuItemOperation cmd = new ( m.TopChild );
+        bool cmdSucceeded = false;
+        Assert.That( ( ) => cmdSucceeded = cmd.Do( ), Throws.Nothing );
+        Assert.That( cmdSucceeded );
 
         // Delete the top child should leave only 1 in submenu
-        ClassicAssert.AreEqual( 3, m.Bar.Menus[ 0 ].Children.Length );
-        ClassicAssert.AreEqual( 1, m.Head2.Children.Length );
-        ClassicAssert.AreNotSame( m.TopChild, m.Head2.Children[ 0 ] );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( m.Bar.Menus[ 0 ].Children, Has.Exactly( 3 ).InstanceOf<MenuItem>(  ) );
+            Assert.That( m.Head2.Children, Has.Exactly( 1 ).InstanceOf<MenuItem>(  ) );
+            Assert.That( m.Head2.Children[ 0 ], Is.Not.SameAs( m.TopChild ) );
+        } );
 
-        cmd.Undo( );
+        Assert.That( cmd.Undo, Throws.Nothing );
 
-        // should come back now
-        ClassicAssert.AreEqual( 3, m.Bar.Menus[ 0 ].Children.Length );
-        ClassicAssert.AreEqual( 2, m.Head2.Children.Length );
-        ClassicAssert.AreSame( m.TopChild, m.Head2.Children[ 0 ] );
+        Assert.Multiple( ( ) =>
+        {
+            // should come back now
+            Assert.That( m.Bar.Menus[ 0 ].Children, Has.Exactly( 3 ).InstanceOf<MenuItem>( ) );
+            Assert.That( m.Head2.Children, Has.Exactly( 2 ).InstanceOf<MenuItem>( ) );
+            Assert.That( m.Head2.Children[ 0 ], Is.SameAs( m.TopChild ) );
+        } );
     }
 
     [Test]
