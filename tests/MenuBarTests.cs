@@ -506,8 +506,11 @@ internal class MenuBarTests : Tests
         Assume.That( m.Head2.Children, Has.Exactly( 2 ).InstanceOf<MenuItem>( ) );
         Assume.That( m.Head2.Children[ 0 ], Is.SameAs( m.TopChild ) );
 
-        var cmd = new MoveMenuItemLeftOperation(topChild);
-        ClassicAssert.IsTrue(cmd.Do());
+        MoveMenuItemLeftOperation moveMenuItemLeftOperation = new ( m.TopChild );
+        Assert.That( moveMenuItemLeftOperation.IsImpossible, Is.False );
+        bool moveMenuItemLeftOperationSucceeded = false;
+        Assert.That( ( ) => moveMenuItemLeftOperationSucceeded = moveMenuItemLeftOperation.Do( ), Throws.Nothing );
+        Assert.That( moveMenuItemLeftOperationSucceeded );
 
         // move the top child left should pull
         // it out of the submenu and onto the root
