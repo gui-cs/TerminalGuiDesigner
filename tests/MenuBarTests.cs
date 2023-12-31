@@ -205,7 +205,8 @@ internal class MenuBarTests : Tests
     }
 
     [Test]
-    public void TestDeletingMenuItemFromSubmenu_AllSubmenuChild()
+    [TestOf( typeof( RemoveMenuItemOperation ) )]
+    public void DeletingMenuItemFromSubmenu_AllSubmenuChild()
     {
         var bar = this.GetMenuBarWithSubmenuItems(out var head2, out var topChild);
         var bottomChild = head2.Children[1];
