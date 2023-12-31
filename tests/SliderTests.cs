@@ -21,7 +21,7 @@ namespace UnitTests
         {
             var sliderIn = RoundTrip<Dialog, Slider<string>>((d, v) =>
             {
-                v.Options.Add(new SliderOption<string> { Legend = "l1", LegendAbbr = new Rune('1'), Data = "Fun1" });
+                v.Options.Add(new SliderOption<string>("l1", new Rune('1'), "Fun1"));
                 v.Options.Add(new SliderOption<string> { Legend = "l2", LegendAbbr = new Rune('2'), Data = "Fun2" });
 
                 Assert.That(v.Options.Count, Is.EqualTo(2));
@@ -29,7 +29,6 @@ namespace UnitTests
 
             Assert.That(sliderIn.Options.Count, Is.EqualTo(2));
 
-            // TODO: Will pass tests when https://github.com/gui-cs/Terminal.Gui/issues/3100 is merged and nuget package drawn down.  And relevant constructor called in our CodeDOM
             Assert.That(sliderIn.Options[0].Legend, Is.EqualTo("l1"));
             Assert.That(sliderIn.Options[0].LegendAbbr, Is.EqualTo(new Rune('1')));
             Assert.That(sliderIn.Options[0].Data, Is.EqualTo("Fun1"));

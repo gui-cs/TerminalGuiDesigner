@@ -43,10 +43,10 @@ public static class PosExtensions
                 return TreatNullPosAs0;
             }
 
-            var nField = p.GetType().GetField("n", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?? throw new Exception("Expected private field 'n' of PosAbsolute was missing");
+            var nField = p.GetType().GetField("_n", BindingFlags.NonPublic | BindingFlags.Instance)
+                ?? throw new Exception("Expected private field '_n' of PosAbsolute was missing");
             n = (int?)nField.GetValue(p)
-                ?? throw new Exception("Expected private field 'n' of PosAbsolute to be int");
+                ?? throw new Exception("Expected private field '_n' of PosAbsolute to be int");
             return true;
         }
 
