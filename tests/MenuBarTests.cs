@@ -648,20 +648,30 @@ internal class MenuBarTests : Tests
         {
             return new( new[]
             {
-                toReturn.TopChild = new( "Child1", null, static ( ) => { } )
-                {
-                    Data = "Child1",
-                    Shortcut = Key.J.WithCtrl.KeyCode,
-                },
-                new MenuItem( "Child2", null, static ( ) => { } )
-                {
-                    Data = "Child2",
-                    Shortcut = Key.F.WithCtrl.KeyCode,
-                }
+                toReturn.TopChild = CreateHead2Child1Item( ),
+                CreateHead2Child2Item( )
             } )
             {
                 Title = "Head2",
             };
+
+            static MenuItem CreateHead2Child1Item( )
+            {
+                return new( "Child1", null, static ( ) => { } )
+                {
+                    Data = "Child1",
+                    Shortcut = Key.J.WithCtrl.KeyCode,
+                };
+            }
+
+            static MenuItem CreateHead2Child2Item( )
+            {
+                return new MenuItem( "Child2", null, static ( ) => { } )
+                {
+                    Data = "Child2",
+                    Shortcut = Key.F.WithCtrl.KeyCode,
+                };
+            }
         }
     }
 }
