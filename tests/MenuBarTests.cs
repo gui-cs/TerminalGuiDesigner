@@ -672,16 +672,88 @@ internal class MenuBarTests : Tests
         var bar = ViewFactory.Create<MenuBar>( );
         var addBarCmd = new AddViewOperation(bar, root, "mb");
         ClassicAssert.IsTrue(addBarCmd.Do());
-
-        // Expect ViewFactory to have created a single
-        // placeholder menu item
-        ClassicAssert.AreEqual(1, bar.Menus.Length);
-        ClassicAssert.AreEqual(1, bar.Menus[0].Children.Length);
-
-        return bar;
+    [Test]
+    [TestOf( typeof( MenuBarTests ) )]
+    [Category( "Change Control" )]
+    [Order( 1 )]
+    [Repeat( 10 )]
+    [Description( "Ensures that the GetMenuBar helper method returns the expected objects and doesn't fail even if used multiple times." )]
+    public void GetMenuBar_BehavesAsExpected( )
+    {
+        using MenuBar bar = GetMenuBar( out Design root );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( bar, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
+            Assert.That( root, Is.Not.Null.And.InstanceOf<Design>( ) );
+        } );
+        Assert.That( root.View.Subviews, Has.Exactly( 1 ).InstanceOf<MenuBar>( ) );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( root.View.Subviews[ 0 ], Is.Not.Null.And.SameAs( bar ) );
+            Assert.That( bar.Menus, Is.Not.Null );
+        } );
+        Assert.That( bar.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
+        Assert.That( bar.Menus[ 0 ], Is.Not.Null.And.InstanceOf<MenuBarItem>( ) );
+        Assert.That( bar.Menus[ 0 ].Children, Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( bar.Menus[ 0 ].Children[ 0 ], Is.Not.Null.And.InstanceOf<MenuItem>( ) );
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+            Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+        } );
     }
 
-    private MenuBarWithSubmenuItems GetMenuBarWithSubmenuItems( )
+    [Test]
+    [TestOf( typeof( MenuBarWithSubmenuItems ) )]
+    [Category( "Change Control" )]
+    [Order( 2 )]
+    [Repeat( 10 )]
+    [Description( "Ensures that the GetMenuBarWithSubmenuItems helper method returns the expected objects and doesn't fail even if used multiple times." )]
+    public void GetMenuBarWithSubmenuItems_BehavesAsExpected( )
+    {
+        using MenuBarWithSubmenuItems m = GetMenuBarWithSubmenuItems( );
+
+        Assert.That( m.Bar.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
+
+        MenuBarItem menu0 = m.Bar.Menus[ 0 ];
+        Assert.That( menu0.Children, Has.Exactly( 3 ).InstanceOf<MenuItem>( ) );
+
+        // First item
+        MenuItem menu0Child0 = menu0.Children[ 0 ];
+        Assert.That( menu0Child0.Title, Is.EqualTo( "Head1" ) );
+
+        // Second item and its children
+        Assert.That( menu0.Children[ 1 ], Is.Not.Null.And.InstanceOf<MenuBarItem>( ) );
+        MenuBarItem menu0Child1 = (MenuBarItem)menu0.Children[ 1 ];
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( menu0Child1.Title, Is.EqualTo( "Head2" ) );
+            Assert.That( menu0Child1.Children, Has.Exactly( 2 ).InstanceOf<MenuItem>( ) );
+        } );
+        MenuItem menu0Child1Leaf0 = menu0Child1.Children[ 0 ];
+        MenuItem menu0Child1Leaf1 = menu0Child1.Children[ 1 ];
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( menu0Child1Leaf0.Title, Is.EqualTo( "Child1" ) );
+            Assert.That( menu0Child1Leaf0.Shortcut, Is.EqualTo( Key.J.WithCtrl.KeyCode ) );
+            Assert.That( menu0Child1Leaf1.Title, Is.EqualTo( "Child2" ) );
+            Assert.That( menu0Child1Leaf1.Shortcut, Is.EqualTo( Key.F.WithCtrl.KeyCode ) );
+        } );
+
+        // Third item
+        Assert.That( menu0.Children[ 2 ], Is.Not.Null.And.InstanceOf<MenuItem>( ) );
+        MenuItem menu0Child2 = menu0.Children[ 2 ];
+        Assert.That( menu0Child2.Title, Is.EqualTo( "Head3" ) );
+
+        //Now just make sure the record properties were set to the right references
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( m.Head2, Is.SameAs( menu0Child1 ) );
+            Assert.That( m.TopChild, Is.SameAs( menu0Child1Leaf0 ) );
+        } );
+    }
+
+    private static MenuBarWithSubmenuItems GetMenuBarWithSubmenuItems( )
     {
         MenuBarWithSubmenuItems toReturn = new( GetMenuBar( ), null!, null! )
         {
