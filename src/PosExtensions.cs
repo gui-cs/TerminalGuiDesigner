@@ -79,10 +79,10 @@ public static class PosExtensions
     {
         if (p != null && p.IsPercent())
         {
-            var nField = p.GetType().GetField("factor", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?? throw new Exception("Expected private field 'factor' was missing from PosFactor");
+            var nField = p.GetType().GetField("_factor", BindingFlags.NonPublic | BindingFlags.Instance)
+                ?? throw new Exception("Expected private field '_factor' was missing from PosFactor");
             percent = ((float?)nField.GetValue(p)
-                ?? throw new Exception("Expected private field 'factor' of PosFactor to be float"))
+                ?? throw new Exception("Expected private field '_factor' of PosFactor to be float"))
                 * 100f;
             return true;
         }
@@ -137,10 +137,10 @@ public static class PosExtensions
                 return TreatNullPosAs0;
             }
 
-            var nField = p.GetType().GetField("n", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?? throw new Exception("Expected private field 'n' of PosAbsolute was missing");
+            var nField = p.GetType().GetField("_offset", BindingFlags.NonPublic | BindingFlags.Instance)
+                ?? throw new Exception("Expected private field '_offset' of PosAbsolute was missing.  Fields were:" + string.Join(",", p.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Select(f=>f.Name).ToArray()));
             margin = (int?)nField.GetValue(p)
-                ?? throw new Exception("Expected private field 'n' of PosAbsolute to be int");
+                ?? throw new Exception("Expected private field '_offset' of PosAbsolute to be int");
             return true;
         }
 
@@ -233,14 +233,14 @@ public static class PosExtensions
     {
         if (IsCombine(p))
         {
-            var fLeft = p.GetType().GetField("left", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field missing from PosCombine");
-            left = fLeft.GetValue(p) as Pos ?? throw new Exception("Expected field 'left' of PosCombine to be a Pos");
+            var fLeft = p.GetType().GetField("_left", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field missing from PosCombine");
+            left = fLeft.GetValue(p) as Pos ?? throw new Exception("Expected field '_left' of PosCombine to be a Pos");
 
-            var fRight = p.GetType().GetField("right", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field missing from PosCombine");
-            right = fRight.GetValue(p) as Pos ?? throw new Exception("Expected field 'right' of PosCombine to be a Pos");
+            var fRight = p.GetType().GetField("_right", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field missing from PosCombine");
+            right = fRight.GetValue(p) as Pos ?? throw new Exception("Expected field '_right' of PosCombine to be a Pos");
 
-            var fAdd = p.GetType().GetField("add", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field missing from PosCombine");
-            add = fAdd.GetValue(p) as bool? ?? throw new Exception("Expected field 'add' of PosCombine to be a bool");
+            var fAdd = p.GetType().GetField("_add", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field missing from PosCombine");
+            add = fAdd.GetValue(p) as bool? ?? throw new Exception("Expected field '_add' of PosCombine to be a bool");
 
             return true;
         }
