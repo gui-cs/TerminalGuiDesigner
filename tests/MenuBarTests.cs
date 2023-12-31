@@ -147,6 +147,7 @@ internal class MenuBarTests : Tests
     }
 
     [Test]
+    [TestOf( typeof( RemoveMenuItemOperation ) )]
     public void TestDeletingLastMenuItem_ShouldRemoveWholeBar()
     {
         var bar = this.GetMenuBar(out Design root);
