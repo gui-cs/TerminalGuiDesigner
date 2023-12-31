@@ -622,13 +622,15 @@ internal class MenuBarTests : Tests
     /// that it cannot be moved into a submenu
     /// </summary>
     [Test]
-    public void TestMoveMenuItemRight_CannotMoveLast()
+    [TestOf( typeof( MoveMenuItemRightOperation ) )]
+    public void MoveMenuItemRight_CannotMoveLast( )
     {
-        var bar = this.GetMenuBar();
+        MenuBar bar = GetMenuBar( );
 
-        var mi = bar.Menus[0].Children[0];
-        var cmd = new MoveMenuItemRightOperation(mi);
-        ClassicAssert.IsFalse(cmd.Do());
+        MenuItem? mi = bar.Menus[ 0 ].Children[ 0 ];
+        MoveMenuItemRightOperation cmd = new( mi );
+        Assert.That( cmd.IsImpossible );
+        Assert.That( cmd.Do, Is.False );
     }
 
     /// <summary>
