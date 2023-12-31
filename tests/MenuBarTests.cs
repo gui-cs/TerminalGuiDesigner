@@ -171,11 +171,11 @@ internal class MenuBarTests : Tests
         Assert.That( ( ) => removeMenuItemOperationSucceeded = removeMenuItemOperation!.Do( ), Throws.Nothing );
         Assert.That( removeMenuItemOperationSucceeded );
 
-        ClassicAssert.IsEmpty(bar.Menus, "Expected menu bar header (File) to be removed along with it's last (only) child");
-
-        ClassicAssert.IsFalse(
-            root.View.Subviews.Contains(bar),
-            "Now that the MenuBar is completely empty it should be automatically removed");
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( bar.Menus, Is.Empty );
+            Assert.That( root.View.Subviews, Has.None.InstanceOf<MenuBar>( ) );
+        } );
 
         removeMenuItemOperation.Undo();
 
