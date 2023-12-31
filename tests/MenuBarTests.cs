@@ -210,12 +210,13 @@ internal class MenuBarTests : Tests
     public void DeletingMenuItemFromSubmenu_AllSubmenuChild()
     {
         ( MenuBar bar, MenuBarItem head2, MenuItem topChild ) = GetMenuBarWithSubmenuItems( );
-        MenuItem? bottomChild = head2.Children[1];
 
-        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
-        ClassicAssert.AreEqual(typeof(MenuBarItem), bar.Menus[0].Children[1].GetType());
-        ClassicAssert.AreEqual(2, head2.Children.Length);
-        ClassicAssert.AreSame(topChild, head2.Children[0]);
+        MenuItem? bottomChild = head2.Children[ 1 ];
+
+        Assume.That( bar.Menus[ 0 ].Children, Has.Exactly( 3 ).InstanceOf<MenuItem>( ) );
+        Assume.That( bar.Menus[ 0 ].Children[ 1 ], Is.Not.Null.And.InstanceOf<MenuBarItem>( ) );
+        Assume.That( head2.Children, Has.Exactly( 2 ).InstanceOf<MenuItem>( ) );
+        Assume.That( head2.Children[ 0 ], Is.SameAs( topChild ) );
 
         var cmd1 = new RemoveMenuItemOperation(topChild);
         ClassicAssert.IsTrue(cmd1.Do());
