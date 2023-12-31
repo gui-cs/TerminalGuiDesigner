@@ -150,7 +150,7 @@ internal class MenuBarTests : Tests
     [TestOf( typeof( RemoveMenuItemOperation ) )]
     public void DeletingLastMenuItem_ShouldRemoveWholeBar( )
     {
-        MenuBar bar = this.GetMenuBar( out Design root );
+        using MenuBar bar = this.GetMenuBar( out Design root );
         Assume.That( bar, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
         Assume.That( root, Is.Not.Null.And.InstanceOf<Design>( ) );
         Assume.That( root.View.Subviews, Has.Exactly( 1 ).InstanceOf<MenuBar>( ) );
@@ -189,6 +189,7 @@ internal class MenuBarTests : Tests
         {
             Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
             Assert.That( OperationManager.Instance.RedoStackSize, Is.EqualTo( 1 ) );
+            // TODO: This needs to clean up after itself in a safe fashion
         } );
 
         // Same conditions as at the start
