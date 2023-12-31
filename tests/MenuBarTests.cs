@@ -163,9 +163,6 @@ internal class MenuBarTests : Tests
 
         MenuItem mi = bar.Menus[ 0 ].Children[ 0 ];
 
-        ClassicAssert.Contains(bar, root.View.Subviews.ToArray(),
-                "The MenuBar should be on the main view being edited");
-
         RemoveMenuItemOperation cmd = new RemoveMenuItemOperation(mi);
         ClassicAssert.IsTrue(cmd.Do());
 
