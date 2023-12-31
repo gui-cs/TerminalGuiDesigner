@@ -209,8 +209,8 @@ internal class MenuBarTests : Tests
     [TestOf( typeof( RemoveMenuItemOperation ) )]
     public void DeletingMenuItemFromSubmenu_AllSubmenuChild()
     {
-        var bar = this.GetMenuBarWithSubmenuItems(out var head2, out var topChild);
-        var bottomChild = head2.Children[1];
+        ( MenuBar bar, MenuBarItem head2, MenuItem topChild ) = GetMenuBarWithSubmenuItems( );
+        MenuItem? bottomChild = head2.Children[1];
 
         ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
         ClassicAssert.AreEqual(typeof(MenuBarItem), bar.Menus[0].Children[1].GetType());
@@ -247,7 +247,7 @@ internal class MenuBarTests : Tests
     [Test]
     public void TestDeletingMenuItemFromSubmenu_TopChild()
     {
-        var bar = this.GetMenuBarWithSubmenuItems(out var head2, out var topChild);
+        ( MenuBar bar, MenuBarItem head2, MenuItem topChild ) = GetMenuBarWithSubmenuItems( );
 
         ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
         ClassicAssert.AreEqual(2, head2.Children.Length);
@@ -478,7 +478,7 @@ internal class MenuBarTests : Tests
     [Test]
     public void TestMoveMenuItemLeft_MoveTopChild()
     {
-        var bar = this.GetMenuBarWithSubmenuItems(out var head2, out var topChild);
+        ( MenuBar bar, MenuBarItem head2, MenuItem topChild ) = GetMenuBarWithSubmenuItems( );
 
         ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
         ClassicAssert.AreEqual(2, head2.Children.Length);
