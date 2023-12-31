@@ -514,8 +514,9 @@ internal class MenuBarTests : Tests
 
         // move the top child left should pull
         // it out of the submenu and onto the root
-        ClassicAssert.AreEqual(4, bar.Menus[0].Children.Length);
-        ClassicAssert.AreEqual(1, head2.Children.Length);
+        Assert.That( m.Bar.Menus[ 0 ].Children, Has.Exactly( 4 ).InstanceOf<MenuItem>( ) );
+        Assert.That( m.Head2.Children, Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
+        Assert.That( m.Head2.Children[ 0 ], Is.Not.SameAs( m.TopChild ) );
 
         // it should be pulled out underneath its parent
         // and preserve its (Name) and Shortcuts
