@@ -28,7 +28,7 @@ public static class ViewFactory
     internal const string DefaultMenuItemText = "Edit Me";
 
     internal static readonly Type[] KnownUnsupportedTypes =
-    {
+    [
         typeof( Toplevel ),
         typeof( Dialog ),
         typeof( FileDialog ),
@@ -43,7 +43,7 @@ public static class ViewFactory
         // BUG These seem to cause stack overflows in CreateSubControlDesigns (see TestAddView_RoundTrip)
         typeof( Wizard ),
         typeof( WizardStep )
-    };
+    ];
 
     /// <summary>
     ///   Gets a new instance of a default <see cref="MenuBarItem" />[], to include as the default initial
@@ -58,12 +58,11 @@ public static class ViewFactory
     {
         get
         {
-            return new[]
-            {
-                new MenuBarItem(
-                    "_File (F9)",
-                    new[] { new MenuItem( DefaultMenuItemText, string.Empty, ( ) => { } ) } )
-            };
+            return
+            [
+                new( "_File (F9)",
+                     [ new MenuItem( DefaultMenuItemText, string.Empty, static ( ) => { } ) ] )
+            ];
         }
     }
 
