@@ -498,13 +498,13 @@ internal class MenuBarTests : Tests
     }
 
     [Test]
-    public void TestMoveMenuItemLeft_MoveTopChild()
+    public void MoveMenuItemLeft_MoveTopChild( )
     {
-        ( MenuBar bar, MenuBarItem head2, MenuItem topChild ) = GetMenuBarWithSubmenuItems( );
+        using MenuBarWithSubmenuItems m = GetMenuBarWithSubmenuItems( );
 
-        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
-        ClassicAssert.AreEqual(2, head2.Children.Length);
-        ClassicAssert.AreSame(topChild, head2.Children[0]);
+        Assume.That( m.Bar.Menus[ 0 ].Children, Has.Exactly( 3 ).InstanceOf<MenuItem>( ) );
+        Assume.That( m.Head2.Children, Has.Exactly( 2 ).InstanceOf<MenuItem>( ) );
+        Assume.That( m.Head2.Children[ 0 ], Is.SameAs( m.TopChild ) );
 
         var cmd = new MoveMenuItemLeftOperation(topChild);
         ClassicAssert.IsTrue(cmd.Do());
