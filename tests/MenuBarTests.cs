@@ -530,46 +530,91 @@ internal class MenuBarTests : Tests
     }
 
     [Test]
-    public void TestMoveMenuItemRight_CannotMoveElementZero()
+    [TestOf( typeof( AddMenuItemOperation ) )]
+    public void TestMoveMenuItemRight_CannotMoveElementZero( )
     {
-        var bar = this.GetMenuBar();
+        using MenuBar bar = GetMenuBar( );
 
-        var mi = bar.Menus[0].Children[0];
+        MenuItem? mi = bar.Menus[ 0 ].Children[ 0 ];
         mi.Data = "yarg";
         mi.Shortcut = Key.Y.WithCtrl.KeyCode;
-        var addAnother = new AddMenuItemOperation(mi);
-        ClassicAssert.True(addAnother.Do());
+
+        AddMenuItemOperation addAnother = new( mi );
+        Assert.That( addAnother.IsImpossible, Is.False );
+        bool addAnotherSucceeded = false;
+        Assert.That( ( ) => addAnotherSucceeded = addAnother.Do( ), Throws.Nothing );
+        Assert.That( addAnotherSucceeded );
 
         // should have added below us
-        ClassicAssert.AreSame(mi, bar.Menus[0].Children[0]);
-        ClassicAssert.AreNotSame(mi, bar.Menus[0].Children[1]);
-        ClassicAssert.AreEqual(2, bar.Menus[0].Children.Length);
+        Assert.That( bar.Menus[ 0 ].Children, Has.Exactly( 2 ).InstanceOf<MenuItem>( ) );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( bar.Menus[ 0 ].Children[ 0 ], Is.SameAs( mi ) );
+            Assert.That( bar.Menus[ 0 ].Children[ 1 ], Is.Not.SameAs( mi ) );
+        } );
 
         // cannot move element 0
-        ClassicAssert.IsFalse(new MoveMenuItemRightOperation(
-            bar.Menus[0].Children[0])
-        .Do());
-
-        var cmd = new MoveMenuItemRightOperation(
-                    bar.Menus[0].Children[1]);
+        MoveMenuItemRightOperation impossibleMoveRightOp = new( bar.Menus[ 0 ].Children[ 0 ] );
+        Assert.That( impossibleMoveRightOp.IsImpossible );
+        bool impossibleMoveRightOpSucceeded = false;
+        Assert.That( ( ) => impossibleMoveRightOpSucceeded = impossibleMoveRightOp.Do( ), Throws.Nothing );
+        Assert.That( impossibleMoveRightOpSucceeded, Is.False );
 
         // can move element 1
-        ClassicAssert.IsTrue(cmd.Do());
+        // This is a destructive action, so references will change.
+        MoveMenuItemRightOperation validMoveRightOp = new( bar.Menus[ 0 ].Children[ 1 ] );
+        Assert.That( validMoveRightOp.IsImpossible, Is.False );
+        bool validMoveRightOpSucceeded = false;
+        Assert.That( ( ) => validMoveRightOpSucceeded = validMoveRightOp.Do( ), Throws.Nothing );
+        Assert.That( validMoveRightOpSucceeded );
 
         // We will have changed from a MenuItem to a MenuBarItem
         // so element 0 will not be us.  In Terminal.Gui there is
-        // a different class for a menu item and one with submenus
-        ClassicAssert.AreNotSame(mi, bar.Menus[0].Children[0]);
-        ClassicAssert.AreEqual(mi.Title, bar.Menus[0].Children[0].Title);
-        ClassicAssert.AreEqual(mi.Data, bar.Menus[0].Children[0].Data);
-        ClassicAssert.AreEqual(1, bar.Menus[0].Children.Length);
+        // a different class for a menu item and one with submenus.
+        Assert.That( bar.Menus[ 0 ].Children[ 0 ], Is.Not.Null.And.InstanceOf<MenuBarItem>( ) );
+        MenuBarItem miConvertedToMenuBarItem = (MenuBarItem)bar.Menus[ 0 ].Children[ 0 ];
 
-        cmd.Undo();
+        // Check that the references are unequal but values are equal
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( miConvertedToMenuBarItem, Is.Not.SameAs( mi ) );
+            Assert.That( miConvertedToMenuBarItem.Title, Is.EqualTo( mi.Title ) );
+            Assert.That( miConvertedToMenuBarItem.Data, Is.EqualTo( mi.Data ) );
+            Assert.That( miConvertedToMenuBarItem.Children, Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
+        } );
 
-        ClassicAssert.AreEqual(mi.Title, bar.Menus[0].Children[0].Title);
-        ClassicAssert.AreEqual(mi.Data, bar.Menus[0].Children[0].Data);
-        ClassicAssert.AreEqual(mi.Shortcut, bar.Menus[0].Children[0].Shortcut);
-        ClassicAssert.AreNotSame(mi, bar.Menus[0].Children[1]);
+        // Now undo it.
+        // This is destructive as well.
+        Assert.That( validMoveRightOp.Undo, Throws.Nothing );
+
+        Assert.That( bar.Menus[ 0 ].Children, Has.Exactly( 2 ).InstanceOf<MenuItem>( ) );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( bar.Menus[ 0 ].Children[ 0 ], Is.Not.Null.And.InstanceOf<MenuItem>( ) );
+            Assert.That( bar.Menus[ 0 ].Children[ 1 ], Is.Not.Null.And.InstanceOf<MenuItem>( ) );
+        } );
+        MenuItem firstChildAfterUndo = bar.Menus[ 0 ].Children[ 0 ];
+        MenuItem secondChildAfterUndo = bar.Menus[ 0 ].Children[ 1 ];
+
+        Assert.Multiple( ( ) =>
+        {
+            // All the previous references are gone forever through this process.
+            // So, neither element should be mi.
+            Assert.That( firstChildAfterUndo, Is.Not.SameAs( mi ) );
+            Assert.That( secondChildAfterUndo, Is.Not.SameAs( mi ) );
+
+            // Neither element should be miConvertedToMenuBarItem either
+            Assert.That( firstChildAfterUndo, Is.Not.SameAs( miConvertedToMenuBarItem ) );
+            Assert.That( secondChildAfterUndo, Is.Not.SameAs( miConvertedToMenuBarItem ) );
+
+            // And mi still should not be miConvertedToMenuBarItem
+            Assert.That( mi, Is.Not.SameAs( miConvertedToMenuBarItem ) );
+
+            // But the values need to be preserved
+            Assert.That( firstChildAfterUndo.Title, Is.EqualTo( mi.Title ) );
+            Assert.That( firstChildAfterUndo.Data, Is.EqualTo( mi.Data ) );
+            Assert.That( firstChildAfterUndo.Shortcut, Is.EqualTo( mi.Shortcut ) );
+        } );
     }
 
     /// <summary>
