@@ -1,11 +1,4 @@
-using System;
-using System.Linq;
-using Terminal.Gui;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.Operations;
-using TerminalGuiDesigner.UI;
-
-namespace UnitTests;
+namespace UnitTests.UI;
 
 internal class MouseManagerTests : Tests
 {
@@ -193,7 +186,7 @@ internal class MouseManagerTests : Tests
         ClassicAssert.AreEqual(0, view.Bounds.Y);
         ClassicAssert.AreEqual(10, view.Bounds.Width, "Expected Width to remain constant because it is Dim.Fill()");
         ClassicAssert.AreEqual(4, view.Bounds.Height, "Expected resize to update Y component");
-        ClassicAssert.AreEqual(Dim.Fill(),view.Width);
+        ClassicAssert.AreEqual(Dim.Fill(), view.Width);
         ClassicAssert.AreEqual(Dim.Sized(4), view.Height);
 
         // we still haven't committed to anything
@@ -224,13 +217,13 @@ internal class MouseManagerTests : Tests
         ClassicAssert.AreEqual(0, view.Bounds.X);
         ClassicAssert.AreEqual(0, view.Bounds.Y);
         ClassicAssert.AreEqual(10, view.Bounds.Width);
-        ClassicAssert.AreEqual(1, view.Bounds.Height); 
+        ClassicAssert.AreEqual(1, view.Bounds.Height);
         ClassicAssert.AreEqual(Dim.Fill(), view.Width);
         ClassicAssert.AreEqual(Dim.Sized(1), view.Height);
 
     }
 
-    [TestCase(0,0)]
+    [TestCase(0, 0)]
     [TestCase(3, 3)]
     public void TestDragResizeView_CannotResize_1By1View(int locationOfViewX, int locationOfViewY)
     {
@@ -246,7 +239,7 @@ internal class MouseManagerTests : Tests
         var design = new Design(d.SourceCode, "myView", view);
         view.Data = design;
         d.View.Add(view);
-        
+
         d.View.LayoutSubviews();
 
         var mgr = new MouseManager();
@@ -269,7 +262,7 @@ internal class MouseManagerTests : Tests
         var hit = view.HitTest(e, out var isBorder, out var isLowerRight);
         ClassicAssert.AreSame(view, hit);
         ClassicAssert.IsTrue(isBorder);
-        ClassicAssert.IsFalse(isLowerRight,"Upper left should never be considered lower right even if view is 1x1");
+        ClassicAssert.IsFalse(isLowerRight, "Upper left should never be considered lower right even if view is 1x1");
 
         mgr.HandleMouse(e, d);
 
