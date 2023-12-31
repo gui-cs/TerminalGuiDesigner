@@ -136,7 +136,7 @@ namespace TerminalGuiDesigner.UI
             if (type== typeof(Dim))
             {
                 // user is editing a Dim
-                var designer = new DimEditor(design, property);
+                var designer = new DimEditor(design, (Dim)oldValue);
                 Application.Run(designer);
 
                 if (!designer.Cancelled)
@@ -165,7 +165,7 @@ namespace TerminalGuiDesigner.UI
                 type.IsAssignableTo(typeof(IList))
                 )
             {
-                var elementType = property.GetElementType()
+                var elementType = type.GetElementTypeEx()
                     ?? throw new Exception($"Property {propertyName} was array but had no element type"); ;
 
                 if (elementType.IsValueType || elementType == typeof(string))
@@ -183,7 +183,7 @@ namespace TerminalGuiDesigner.UI
                 }
                 else
                 {
-                    var designer = new ArrayEditor(property);
+                    var designer = new ArrayEditor(design,type.GetElementTypeEx(), (IList)oldValue);
                     Application.Run(designer);
 
                     if (!designer.Cancelled)

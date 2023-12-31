@@ -19,26 +19,23 @@ namespace TerminalGuiDesigner.UI.Windows {
         /// </summary>
         public bool Cancelled { get; private set; } = true;
 
+        private readonly Design design;
         private Type elementType;
-        private readonly Property property;
 
         /// <summary>
         /// The new array 
         /// </summary>
         public IList Result { get; private set; }
 
-        public ArrayEditor(Property property) {
+        public ArrayEditor(Design design, Type elementType, IList oldValue) {
             InitializeComponent();
+            this.design = design;
+            this.elementType = elementType;
 
-            this.elementType = property.GetElementType();
-
-
-
-            Type listType = typeof(List<>).MakeGenericType(property.GetElementType());
+            Type listType = typeof(List<>).MakeGenericType(elementType);
             Result = (IList)Activator.CreateInstance(listType);
          
-            
-            foreach(var e in (IList)property.GetValue())
+            foreach(var e in oldValue)
             {
                 Result.Add(e);
             }
@@ -47,12 +44,11 @@ namespace TerminalGuiDesigner.UI.Windows {
             btnOk.Clicked += BtnOk_Clicked;
             btnCancel.Clicked += BtnCancel_Clicked;
             btnAddElement.Clicked += BtnAddElement_Clicked;
-            this.property = property;
         }
 
         private void BtnAddElement_Clicked(object sender, EventArgs e)
         {
-            if(ValueFactory.GetNewValue(property.PropertyInfo.Name, this.property.Design, this.elementType,null, out var newValue, ValueFactory.AllowMultiLine(property)))
+            if(ValueFactory.GetNewValue("Element Value", design, this.elementType,null, out var newValue,true))
             {
                 Result.Add(newValue);                
             }
