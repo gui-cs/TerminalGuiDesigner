@@ -147,6 +147,94 @@ internal class MenuBarTests : Tests
     }
 
     [Test]
+    public void TestDeletingLastMenuItem_ShouldRemoveWholeBar()
+    {
+        var bar = this.GetMenuBar(out Design root);
+
+        var mi = bar.Menus[0].Children[0];
+
+        ClassicAssert.Contains(bar, root.View.Subviews.ToArray(),
+                "The MenuBar should be on the main view being edited");
+
+        var cmd = new RemoveMenuItemOperation(mi);
+        ClassicAssert.IsTrue(cmd.Do());
+
+        ClassicAssert.IsEmpty(bar.Menus, "Expected menu bar header (File) to be removed along with it's last (only) child");
+
+        ClassicAssert.IsFalse(
+            root.View.Subviews.Contains(bar),
+            "Now that the MenuBar is completely empty it should be automatically removed");
+
+        cmd.Undo();
+
+        ClassicAssert.Contains(bar, root.View.Subviews.ToArray(),
+                "Undo should put the MenuBar back on the view again");
+    }
+
+    [Test]
+    public void TestDeletingMenuItemFromSubmenu_AllSubmenuChild()
+    {
+        var bar = this.GetMenuBarWithSubmenuItems(out var head2, out var topChild);
+        var bottomChild = head2.Children[1];
+
+        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
+        ClassicAssert.AreEqual(typeof(MenuBarItem), bar.Menus[0].Children[1].GetType());
+        ClassicAssert.AreEqual(2, head2.Children.Length);
+        ClassicAssert.AreSame(topChild, head2.Children[0]);
+
+        var cmd1 = new RemoveMenuItemOperation(topChild);
+        ClassicAssert.IsTrue(cmd1.Do());
+
+        var cmd2 = new RemoveMenuItemOperation(bottomChild);
+        ClassicAssert.IsTrue(cmd2.Do());
+
+        // Deleting both children should convert us from
+        // a dropdown submenu to just a regular MenuItem
+        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
+        ClassicAssert.AreEqual(typeof(MenuItem), bar.Menus[0].Children[1].GetType());
+
+        cmd2.Undo();
+
+        // should bring the bottom one back
+        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
+        ClassicAssert.AreEqual(typeof(MenuBarItem), bar.Menus[0].Children[1].GetType());
+        ClassicAssert.AreSame(bottomChild, ((MenuBarItem)bar.Menus[0].Children[1]).Children[0]);
+
+        cmd1.Undo();
+
+        // Both submenu items should now be back
+        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
+        ClassicAssert.AreEqual(typeof(MenuBarItem), bar.Menus[0].Children[1].GetType());
+        ClassicAssert.AreSame(topChild, ((MenuBarItem)bar.Menus[0].Children[1]).Children[0]);
+        ClassicAssert.AreSame(bottomChild, ((MenuBarItem)bar.Menus[0].Children[1]).Children[1]);
+    }
+
+    [Test]
+    public void TestDeletingMenuItemFromSubmenu_TopChild()
+    {
+        var bar = this.GetMenuBarWithSubmenuItems(out var head2, out var topChild);
+
+        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
+        ClassicAssert.AreEqual(2, head2.Children.Length);
+        ClassicAssert.AreSame(topChild, head2.Children[0]);
+
+        var cmd = new RemoveMenuItemOperation(topChild);
+        ClassicAssert.IsTrue(cmd.Do());
+
+        // Delete the top child should leave only 1 in submenu
+        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
+        ClassicAssert.AreEqual(1, head2.Children.Length);
+        ClassicAssert.AreNotSame(topChild, head2.Children[0]);
+
+        cmd.Undo();
+
+        // should come back now
+        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
+        ClassicAssert.AreEqual(2, head2.Children.Length);
+        ClassicAssert.AreSame(topChild, head2.Children[0]);
+    }
+
+    [Test]
     [TestOf( typeof( MenuTracker ) )]
     // TODO: Break this one up into smaller units at some point.
     public void TestMenuOperations()
@@ -339,66 +427,54 @@ internal class MenuBarTests : Tests
         MenuTracker.Instance.UnregisterMenuBar( mbOut );
     }
 
-    private MenuBar GetMenuBar()
-    {
-        return this.GetMenuBar(out _);
-    }
-
-    private MenuBar GetMenuBar(out Design root)
-    {
-        root = Get10By10View();
-
-        var bar = ViewFactory.Create<MenuBar>( );
-        var addBarCmd = new AddViewOperation(bar, root, "mb");
-        ClassicAssert.IsTrue(addBarCmd.Do());
-
-        // Expect ViewFactory to have created a single
-        // placeholder menu item
-        ClassicAssert.AreEqual(1, bar.Menus.Length);
-        ClassicAssert.AreEqual(1, bar.Menus[0].Children.Length);
-
-        return bar;
-    }
-
-    /// <summary>
-    /// Tests removing the last menu item (i.e. 'Do Something')
-    /// under the only remaining menu header (e.g. 'File F9')
-    /// should result in a completely empty menu bar and be undoable
-    /// </summary>
     [Test]
-    public void TestRemoveFinalMenuItemOnBar()
-    {
-        var bar = this.GetMenuBar();
-
-        var fileMenu = bar.Menus[0];
-        var placeholderMenuItem = fileMenu.Children[0];
-
-        var remove = new RemoveMenuItemOperation(placeholderMenuItem);
-
-        // we are able to remove the last one
-        ClassicAssert.IsTrue(remove.Do());
-        ClassicAssert.IsEmpty(bar.Menus, "menu bar should now be completely empty");
-
-        remove.Undo();
-
-        // should be back to where we started
-        ClassicAssert.AreEqual(1, bar.Menus.Length);
-        ClassicAssert.AreEqual(1, bar.Menus[0].Children.Length);
-        ClassicAssert.AreSame(placeholderMenuItem, bar.Menus[0].Children[0]);
-    }
-
-    /// <summary>
-    /// Tests that when there is only one menu item
-    /// that it cannot be moved into a submenu
-    /// </summary>
-    [Test]
-    public void TestMoveMenuItemRight_CannotMoveLast()
+    public void TestMoveMenuItemLeft_CannotMoveRootItems()
     {
         var bar = this.GetMenuBar();
 
         var mi = bar.Menus[0].Children[0];
-        var cmd = new MoveMenuItemRightOperation(mi);
-        ClassicAssert.IsFalse(cmd.Do());
+
+        // cannot move a root item
+        ClassicAssert.IsFalse(new MoveMenuItemLeftOperation(
+            bar.Menus[0].Children[0])
+        .Do());
+    }
+
+    [Test]
+    public void TestMoveMenuItemLeft_MoveTopChild()
+    {
+        var bar = this.GetMenuBarWithSubmenuItems(out var head2, out var topChild);
+
+        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
+        ClassicAssert.AreEqual(2, head2.Children.Length);
+        ClassicAssert.AreSame(topChild, head2.Children[0]);
+
+        var cmd = new MoveMenuItemLeftOperation(topChild);
+        ClassicAssert.IsTrue(cmd.Do());
+
+        // move the top child left should pull
+        // it out of the submenu and onto the root
+        ClassicAssert.AreEqual(4, bar.Menus[0].Children.Length);
+        ClassicAssert.AreEqual(1, head2.Children.Length);
+
+        // it should be pulled out underneath its parent
+        // and preserve its (Name) and Shortcuts
+        ClassicAssert.AreEqual(topChild.Title, bar.Menus[0].Children[2].Title);
+        ClassicAssert.AreEqual(topChild.Data, bar.Menus[0].Children[2].Data);
+        ClassicAssert.AreEqual(topChild.Shortcut, bar.Menus[0].Children[2].Shortcut);
+        ClassicAssert.AreSame(topChild, bar.Menus[0].Children[2]);
+
+        // undoing command should return us to
+        // previous state
+        cmd.Undo();
+
+        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
+        ClassicAssert.AreEqual(2, head2.Children.Length);
+
+        ClassicAssert.AreEqual(topChild.Title, head2.Children[0].Title);
+        ClassicAssert.AreEqual(topChild.Data, head2.Children[0].Data);
+        ClassicAssert.AreEqual(topChild.Shortcut, head2.Children[0].Shortcut);
+        ClassicAssert.AreSame(topChild, head2.Children[0]);
     }
 
     [Test]
@@ -444,17 +520,66 @@ internal class MenuBarTests : Tests
         ClassicAssert.AreNotSame(mi, bar.Menus[0].Children[1]);
     }
 
+    /// <summary>
+    /// Tests that when there is only one menu item
+    /// that it cannot be moved into a submenu
+    /// </summary>
     [Test]
-    public void TestMoveMenuItemLeft_CannotMoveRootItems()
+    public void TestMoveMenuItemRight_CannotMoveLast()
     {
         var bar = this.GetMenuBar();
 
         var mi = bar.Menus[0].Children[0];
+        var cmd = new MoveMenuItemRightOperation(mi);
+        ClassicAssert.IsFalse(cmd.Do());
+    }
 
-        // cannot move a root item
-        ClassicAssert.IsFalse(new MoveMenuItemLeftOperation(
-            bar.Menus[0].Children[0])
-        .Do());
+    /// <summary>
+    /// Tests removing the last menu item (i.e. 'Do Something')
+    /// under the only remaining menu header (e.g. 'File F9')
+    /// should result in a completely empty menu bar and be undoable
+    /// </summary>
+    [Test]
+    public void TestRemoveFinalMenuItemOnBar()
+    {
+        var bar = this.GetMenuBar();
+
+        var fileMenu = bar.Menus[0];
+        var placeholderMenuItem = fileMenu.Children[0];
+
+        var remove = new RemoveMenuItemOperation(placeholderMenuItem);
+
+        // we are able to remove the last one
+        ClassicAssert.IsTrue(remove.Do());
+        ClassicAssert.IsEmpty(bar.Menus, "menu bar should now be completely empty");
+
+        remove.Undo();
+
+        // should be back to where we started
+        ClassicAssert.AreEqual(1, bar.Menus.Length);
+        ClassicAssert.AreEqual(1, bar.Menus[0].Children.Length);
+        ClassicAssert.AreSame(placeholderMenuItem, bar.Menus[0].Children[0]);
+    }
+
+    private MenuBar GetMenuBar()
+    {
+        return this.GetMenuBar(out _);
+    }
+
+    private MenuBar GetMenuBar(out Design root)
+    {
+        root = Get10By10View();
+
+        var bar = ViewFactory.Create<MenuBar>( );
+        var addBarCmd = new AddViewOperation(bar, root, "mb");
+        ClassicAssert.IsTrue(addBarCmd.Do());
+
+        // Expect ViewFactory to have created a single
+        // placeholder menu item
+        ClassicAssert.AreEqual(1, bar.Menus.Length);
+        ClassicAssert.AreEqual(1, bar.Menus[0].Children.Length);
+
+        return bar;
     }
 
     private MenuBar GetMenuBarWithSubmenuItems(out MenuBarItem head2, out MenuItem topChild)
@@ -495,130 +620,5 @@ internal class MenuBarTests : Tests
         };
 
         return bar;
-    }
-
-    [Test]
-    public void TestMoveMenuItemLeft_MoveTopChild()
-    {
-        var bar = this.GetMenuBarWithSubmenuItems(out var head2, out var topChild);
-
-        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
-        ClassicAssert.AreEqual(2, head2.Children.Length);
-        ClassicAssert.AreSame(topChild, head2.Children[0]);
-
-        var cmd = new MoveMenuItemLeftOperation(topChild);
-        ClassicAssert.IsTrue(cmd.Do());
-
-        // move the top child left should pull
-        // it out of the submenu and onto the root
-        ClassicAssert.AreEqual(4, bar.Menus[0].Children.Length);
-        ClassicAssert.AreEqual(1, head2.Children.Length);
-
-        // it should be pulled out underneath its parent
-        // and preserve its (Name) and Shortcuts
-        ClassicAssert.AreEqual(topChild.Title, bar.Menus[0].Children[2].Title);
-        ClassicAssert.AreEqual(topChild.Data, bar.Menus[0].Children[2].Data);
-        ClassicAssert.AreEqual(topChild.Shortcut, bar.Menus[0].Children[2].Shortcut);
-        ClassicAssert.AreSame(topChild, bar.Menus[0].Children[2]);
-
-        // undoing command should return us to
-        // previous state
-        cmd.Undo();
-
-        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
-        ClassicAssert.AreEqual(2, head2.Children.Length);
-
-        ClassicAssert.AreEqual(topChild.Title, head2.Children[0].Title);
-        ClassicAssert.AreEqual(topChild.Data, head2.Children[0].Data);
-        ClassicAssert.AreEqual(topChild.Shortcut, head2.Children[0].Shortcut);
-        ClassicAssert.AreSame(topChild, head2.Children[0]);
-    }
-
-    [Test]
-    public void TestDeletingMenuItemFromSubmenu_TopChild()
-    {
-        var bar = this.GetMenuBarWithSubmenuItems(out var head2, out var topChild);
-
-        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
-        ClassicAssert.AreEqual(2, head2.Children.Length);
-        ClassicAssert.AreSame(topChild, head2.Children[0]);
-
-        var cmd = new RemoveMenuItemOperation(topChild);
-        ClassicAssert.IsTrue(cmd.Do());
-
-        // Delete the top child should leave only 1 in submenu
-        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
-        ClassicAssert.AreEqual(1, head2.Children.Length);
-        ClassicAssert.AreNotSame(topChild, head2.Children[0]);
-
-        cmd.Undo();
-
-        // should come back now
-        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
-        ClassicAssert.AreEqual(2, head2.Children.Length);
-        ClassicAssert.AreSame(topChild, head2.Children[0]);
-    }
-
-    [Test]
-    public void TestDeletingMenuItemFromSubmenu_AllSubmenuChild()
-    {
-        var bar = this.GetMenuBarWithSubmenuItems(out var head2, out var topChild);
-        var bottomChild = head2.Children[1];
-
-        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
-        ClassicAssert.AreEqual(typeof(MenuBarItem), bar.Menus[0].Children[1].GetType());
-        ClassicAssert.AreEqual(2, head2.Children.Length);
-        ClassicAssert.AreSame(topChild, head2.Children[0]);
-
-        var cmd1 = new RemoveMenuItemOperation(topChild);
-        ClassicAssert.IsTrue(cmd1.Do());
-
-        var cmd2 = new RemoveMenuItemOperation(bottomChild);
-        ClassicAssert.IsTrue(cmd2.Do());
-
-        // Deleting both children should convert us from
-        // a dropdown submenu to just a regular MenuItem
-        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
-        ClassicAssert.AreEqual(typeof(MenuItem), bar.Menus[0].Children[1].GetType());
-
-        cmd2.Undo();
-
-        // should bring the bottom one back
-        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
-        ClassicAssert.AreEqual(typeof(MenuBarItem), bar.Menus[0].Children[1].GetType());
-        ClassicAssert.AreSame(bottomChild, ((MenuBarItem)bar.Menus[0].Children[1]).Children[0]);
-
-        cmd1.Undo();
-
-        // Both submenu items should now be back
-        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
-        ClassicAssert.AreEqual(typeof(MenuBarItem), bar.Menus[0].Children[1].GetType());
-        ClassicAssert.AreSame(topChild, ((MenuBarItem)bar.Menus[0].Children[1]).Children[0]);
-        ClassicAssert.AreSame(bottomChild, ((MenuBarItem)bar.Menus[0].Children[1]).Children[1]);
-    }
-
-    [Test]
-    public void TestDeletingLastMenuItem_ShouldRemoveWholeBar()
-    {
-        var bar = this.GetMenuBar(out Design root);
-
-        var mi = bar.Menus[0].Children[0];
-
-        ClassicAssert.Contains(bar, root.View.Subviews.ToArray(),
-                "The MenuBar should be on the main view being edited");
-
-        var cmd = new RemoveMenuItemOperation(mi);
-        ClassicAssert.IsTrue(cmd.Do());
-
-        ClassicAssert.IsEmpty(bar.Menus, "Expected menu bar header (File) to be removed along with it's last (only) child");
-
-        ClassicAssert.IsFalse(
-            root.View.Subviews.Contains(bar),
-            "Now that the MenuBar is completely empty it should be automatically removed");
-
-        cmd.Undo();
-
-        ClassicAssert.Contains(bar, root.View.Subviews.ToArray(),
-                "Undo should put the MenuBar back on the view again");
     }
 }
