@@ -320,7 +320,7 @@ internal class MenuBarTests : Tests
             Assert.That( mbOut.Menus[ 0 ].Children[ 1 ], Is.Not.Null.And.Not.SameAs( orig ) );
         } );
 
-        Assert.Multiple( ( ) =>
+        Assert.Multiple( static ( ) =>
         {
             Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
             Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
@@ -328,7 +328,7 @@ internal class MenuBarTests : Tests
 
         OperationManager.Instance.Undo();
 
-        Assert.Multiple( ( ) =>
+        Assert.Multiple( static ( ) =>
         {
             Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
             Assert.That( OperationManager.Instance.RedoStackSize, Is.EqualTo( 1 ) );
@@ -340,7 +340,7 @@ internal class MenuBarTests : Tests
 
         OperationManager.Instance.Redo();
 
-        Assert.Multiple( ( ) =>
+        Assert.Multiple( static ( ) =>
         {
             Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
             Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
@@ -372,7 +372,7 @@ internal class MenuBarTests : Tests
         Assert.That( ( ) => moveUpSucceeded = OperationManager.Instance.Do( up! ), Throws.Nothing );
         Assert.That( moveUpSucceeded );
 
-        Assert.Multiple( ( ) =>
+        Assert.Multiple( static ( ) =>
         {
             Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 2 ) );
             Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
@@ -420,7 +420,7 @@ internal class MenuBarTests : Tests
         Assert.That( down, Is.Not.Null.And.InstanceOf<MoveMenuItemOperation>( ) );
         Assert.That( down!.IsImpossible, Is.False );
 
-        Assert.Multiple( ( ) =>
+        Assert.Multiple( static ( ) =>
         {
             Assert.That( OperationManager.Instance.RedoStackSize, Is.EqualTo( 1 ) );
             Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
@@ -429,7 +429,7 @@ internal class MenuBarTests : Tests
         bool moveDownSucceeded = false;
         Assert.That( ( ) => moveDownSucceeded = OperationManager.Instance.Do( down ), Throws.Nothing );
         Assert.That( moveDownSucceeded );
-        Assert.Multiple( ( ) =>
+        Assert.Multiple( static ( ) =>
         {
             Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
             Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 2 ) );
