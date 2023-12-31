@@ -48,6 +48,22 @@ public class MenuTracker
     }
 
     /// <summary>
+    /// Unregisters listeners for <paramref name="mb"/>.
+    /// </summary>
+    /// <param name="mb"><see cref="MenuBar"/> to stop tracking.</param>
+    public void UnregisterMenuBar( MenuBar? mb )
+    {
+        if ( !bars.TryTake( out mb ) )
+        {
+            return;
+        }
+
+        mb.MenuAllClosed -= MenuAllClosed;
+        mb.MenuOpened -= MenuOpened;
+        mb.MenuClosing -= MenuClosing;
+    }
+
+    /// <summary>
     /// <para>
     /// Searches child items of all MenuBars tracked by this class
     /// to try and find the parent of the item passed.
