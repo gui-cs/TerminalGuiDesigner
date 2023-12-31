@@ -207,7 +207,7 @@ internal class MenuBarTests : Tests
 
     [Test]
     [TestOf( typeof( RemoveMenuItemOperation ) )]
-    public void DeletingMenuItemFromSubmenu_AllSubmenuChild()
+    public void DeletingMenuItemFromSubmenu_AllSubmenuChild( )
     {
         ( MenuBar bar, MenuBarItem head2, MenuItem topChild ) = GetMenuBarWithSubmenuItems( );
 
@@ -218,31 +218,39 @@ internal class MenuBarTests : Tests
         Assume.That( head2.Children, Has.Exactly( 2 ).InstanceOf<MenuItem>( ) );
         Assume.That( head2.Children[ 0 ], Is.SameAs( topChild ) );
 
-        RemoveMenuItemOperation cmd1 = new (topChild);
+        RemoveMenuItemOperation cmd1 = new( topChild );
         Assert.That( cmd1.Do, Throws.Nothing );
 
-        RemoveMenuItemOperation cmd2 = new (bottomChild);
+        RemoveMenuItemOperation cmd2 = new( bottomChild );
         Assert.That( cmd2.Do, Throws.Nothing );
 
         // Deleting both children should convert us from
         // a dropdown submenu to just a regular MenuItem
-        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
-        ClassicAssert.AreEqual(typeof(MenuItem), bar.Menus[0].Children[1].GetType());
+        Assert.That( bar.Menus[ 0 ].Children, Has.Exactly( 3 ).InstanceOf<MenuItem>( ) );
+        Assert.That( bar.Menus[ 0 ].Children[ 1 ], Is.Not.Null.And.InstanceOf<MenuItem>( ) );
 
-        cmd2.Undo();
+        Assert.That( cmd2.Undo, Throws.Nothing );
 
         // should bring the bottom one back
-        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
-        ClassicAssert.AreEqual(typeof(MenuBarItem), bar.Menus[0].Children[1].GetType());
-        ClassicAssert.AreSame(bottomChild, ((MenuBarItem)bar.Menus[0].Children[1]).Children[0]);
+        Assert.That( bar.Menus[ 0 ].Children, Has.Exactly( 3 ).InstanceOf<MenuItem>( ) );
+        Assert.That( bar.Menus[ 0 ].Children[ 1 ], Is.Not.Null.And.InstanceOf<MenuBarItem>( ) );
+        Assert.That( ( (MenuBarItem)bar.Menus[ 0 ].Children[ 1 ] ).Children[ 0 ], Is.SameAs( bottomChild ) );
 
-        cmd1.Undo();
+        Assert.That( cmd1.Undo, Throws.Nothing );
 
         // Both submenu items should now be back
-        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
-        ClassicAssert.AreEqual(typeof(MenuBarItem), bar.Menus[0].Children[1].GetType());
-        ClassicAssert.AreSame(topChild, ((MenuBarItem)bar.Menus[0].Children[1]).Children[0]);
-        ClassicAssert.AreSame(bottomChild, ((MenuBarItem)bar.Menus[0].Children[1]).Children[1]);
+        Assert.That( bar.Menus[ 0 ].Children, Has.Exactly( 3 ).InstanceOf<MenuItem>( ) );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( bar.Menus[ 0 ].Children[ 1 ], Is.Not.Null.And.InstanceOf<MenuBarItem>( ) );
+            Assert.That( head2.Children, Has.Exactly( 2 ).InstanceOf<MenuItem>( ) );
+        } );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( head2.Children[ 0 ], Is.SameAs( topChild ) );
+            Assert.That( ( (MenuBarItem)bar.Menus[ 0 ].Children[ 1 ] ).Children[ 0 ], Is.SameAs( topChild ) );
+            Assert.That( ( (MenuBarItem)bar.Menus[ 0 ].Children[ 1 ] ).Children[ 1 ], Is.SameAs( bottomChild ) );
+        } );
     }
 
     [Test]
