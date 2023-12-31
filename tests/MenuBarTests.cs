@@ -248,10 +248,6 @@ internal class MenuBarTests : Tests
     {
         using MenuBarWithSubmenuItems m = GetMenuBarWithSubmenuItems( );
 
-        Assume.That( m.Bar.Menus[ 0 ].Children, Has.Exactly( 3 ).InstanceOf<MenuItem>(  ) );
-        Assume.That( m.Head2.Children, Has.Exactly( 2 ).InstanceOf<MenuItem>(  ) );
-        Assume.That( m.Head2.Children[ 0 ], Is.SameAs( m.TopChild ) );
-
         RemoveMenuItemOperation cmd = new ( m.TopChild );
         bool cmdSucceeded = false;
         Assert.That( ( ) => cmdSucceeded = cmd.Do( ), Throws.Nothing );
