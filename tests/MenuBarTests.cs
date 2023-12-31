@@ -635,22 +635,18 @@ internal class MenuBarTests : Tests
         var mi = toReturn.Bar.Menus[0].Children[0];
         mi.Title = "Head1";
 
-        toReturn.Bar.Menus[ 0 ].Children = new[]
-        {
+        toReturn.Bar.Menus[ 0 ].Children =
+        [
             toReturn.Bar.Menus[ 0 ].Children[ 0 ],
             toReturn.Head2 = CreateHead2Item( ),
-            new MenuItem( "Head3", null, static ( ) => { } ),
-        };
+            new ( "Head3", null, static ( ) => { } ),
+        ];
 
         return toReturn;
 
         MenuBarItem CreateHead2Item( )
         {
-            return new( new[]
-            {
-                toReturn.TopChild = CreateHead2Child1Item( ),
-                CreateHead2Child2Item( )
-            } )
+            return new( [ toReturn.TopChild = CreateHead2Child1Item( ), CreateHead2Child2Item( )] )
             {
                 Title = "Head2",
             };
@@ -666,7 +662,7 @@ internal class MenuBarTests : Tests
 
             static MenuItem CreateHead2Child2Item( )
             {
-                return new MenuItem( "Child2", null, static ( ) => { } )
+                return new ( "Child2", null, static ( ) => { } )
                 {
                     Data = "Child2",
                     Shortcut = Key.F.WithCtrl.KeyCode,
