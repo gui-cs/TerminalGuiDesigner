@@ -209,16 +209,16 @@ internal class MenuBarTests : Tests
     [TestOf( typeof( RemoveMenuItemOperation ) )]
     public void DeletingMenuItemFromSubmenu_AllSubmenuChild( )
     {
-        ( MenuBar bar, MenuBarItem head2, MenuItem topChild ) = GetMenuBarWithSubmenuItems( );
+        using MenuBarWithSubmenuItems m = GetMenuBarWithSubmenuItems( );
 
-        MenuItem? bottomChild = head2.Children[ 1 ];
+        MenuItem? bottomChild = m.Head2.Children[ 1 ];
 
-        Assume.That( bar.Menus[ 0 ].Children, Has.Exactly( 3 ).InstanceOf<MenuItem>( ) );
-        Assume.That( bar.Menus[ 0 ].Children[ 1 ], Is.Not.Null.And.InstanceOf<MenuBarItem>( ) );
-        Assume.That( head2.Children, Has.Exactly( 2 ).InstanceOf<MenuItem>( ) );
-        Assume.That( head2.Children[ 0 ], Is.SameAs( topChild ) );
+        Assume.That( m.Bar.Menus[ 0 ].Children, Has.Exactly( 3 ).InstanceOf<MenuItem>( ) );
+        Assume.That( m.Bar.Menus[ 0 ].Children[ 1 ], Is.Not.Null.And.InstanceOf<MenuBarItem>( ) );
+        Assume.That( m.Head2.Children, Has.Exactly( 2 ).InstanceOf<MenuItem>( ) );
+        Assume.That( m.Head2.Children[ 0 ], Is.SameAs( m.TopChild ) );
 
-        RemoveMenuItemOperation cmd1 = new( topChild );
+        RemoveMenuItemOperation cmd1 = new( m.TopChild );
         Assert.That( cmd1.Do, Throws.Nothing );
 
         RemoveMenuItemOperation cmd2 = new( bottomChild );
@@ -226,64 +226,64 @@ internal class MenuBarTests : Tests
 
         // Deleting both children should convert us from
         // a dropdown submenu to just a regular MenuItem
-        Assert.That( bar.Menus[ 0 ].Children, Has.Exactly( 3 ).InstanceOf<MenuItem>( ) );
-        Assert.That( bar.Menus[ 0 ].Children[ 1 ], Is.Not.Null.And.InstanceOf<MenuItem>( ) );
+        Assert.That( m.Bar.Menus[ 0 ].Children, Has.Exactly( 3 ).InstanceOf<MenuItem>( ) );
+        Assert.That( m.Bar.Menus[ 0 ].Children[ 1 ], Is.Not.Null.And.InstanceOf<MenuItem>( ) );
 
         Assert.That( cmd2.Undo, Throws.Nothing );
 
         // should bring the bottom one back
-        Assert.That( bar.Menus[ 0 ].Children, Has.Exactly( 3 ).InstanceOf<MenuItem>( ) );
-        Assert.That( bar.Menus[ 0 ].Children[ 1 ], Is.Not.Null.And.InstanceOf<MenuBarItem>( ) );
-        Assert.That( ( (MenuBarItem)bar.Menus[ 0 ].Children[ 1 ] ).Children[ 0 ], Is.SameAs( bottomChild ) );
+        Assert.That( m.Bar.Menus[ 0 ].Children, Has.Exactly( 3 ).InstanceOf<MenuItem>( ) );
+        Assert.That( m.Bar.Menus[ 0 ].Children[ 1 ], Is.Not.Null.And.InstanceOf<MenuBarItem>( ) );
+        Assert.That( ( (MenuBarItem)m.Bar.Menus[ 0 ].Children[ 1 ] ).Children[ 0 ], Is.SameAs( bottomChild ) );
 
         Assert.That( cmd1.Undo, Throws.Nothing );
 
         // Both submenu items should now be back
-        Assert.That( bar.Menus[ 0 ].Children, Has.Exactly( 3 ).InstanceOf<MenuItem>( ) );
+        Assert.That( m.Bar.Menus[ 0 ].Children, Has.Exactly( 3 ).InstanceOf<MenuItem>( ) );
         Assert.Multiple( ( ) =>
         {
-            Assert.That( bar.Menus[ 0 ].Children[ 1 ], Is.Not.Null.And.InstanceOf<MenuBarItem>( ) );
-            Assert.That( head2.Children, Has.Exactly( 2 ).InstanceOf<MenuItem>( ) );
+            Assert.That( m.Bar.Menus[ 0 ].Children[ 1 ], Is.Not.Null.And.InstanceOf<MenuBarItem>( ) );
+            Assert.That( m.Head2.Children, Has.Exactly( 2 ).InstanceOf<MenuItem>( ) );
         } );
         Assert.Multiple( ( ) =>
         {
-            Assert.That( head2.Children[ 0 ], Is.SameAs( topChild ) );
-            Assert.That( ( (MenuBarItem)bar.Menus[ 0 ].Children[ 1 ] ).Children[ 0 ], Is.SameAs( topChild ) );
-            Assert.That( ( (MenuBarItem)bar.Menus[ 0 ].Children[ 1 ] ).Children[ 1 ], Is.SameAs( bottomChild ) );
+            Assert.That( m.Head2.Children[ 0 ], Is.SameAs( m.TopChild ) );
+            Assert.That( ( (MenuBarItem)m.Bar.Menus[ 0 ].Children[ 1 ] ).Children[ 0 ], Is.SameAs( m.TopChild ) );
+            Assert.That( ( (MenuBarItem)m.Bar.Menus[ 0 ].Children[ 1 ] ).Children[ 1 ], Is.SameAs( bottomChild ) );
         } );
     }
 
     [Test]
-    public void TestDeletingMenuItemFromSubmenu_TopChild()
+    public void TestDeletingMenuItemFromSubmenu_TopChild( )
     {
-        ( MenuBar bar, MenuBarItem head2, MenuItem topChild ) = GetMenuBarWithSubmenuItems( );
+        using MenuBarWithSubmenuItems m = GetMenuBarWithSubmenuItems( );
 
-        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
-        ClassicAssert.AreEqual(2, head2.Children.Length);
-        ClassicAssert.AreSame(topChild, head2.Children[0]);
+        ClassicAssert.AreEqual( 3, m.Bar.Menus[ 0 ].Children.Length );
+        ClassicAssert.AreEqual( 2, m.Head2.Children.Length );
+        ClassicAssert.AreSame( m.TopChild, m.Head2.Children[ 0 ] );
 
-        var cmd = new RemoveMenuItemOperation(topChild);
-        ClassicAssert.IsTrue(cmd.Do());
+        var cmd = new RemoveMenuItemOperation( m.TopChild );
+        ClassicAssert.IsTrue( cmd.Do( ) );
 
         // Delete the top child should leave only 1 in submenu
-        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
-        ClassicAssert.AreEqual(1, head2.Children.Length);
-        ClassicAssert.AreNotSame(topChild, head2.Children[0]);
+        ClassicAssert.AreEqual( 3, m.Bar.Menus[ 0 ].Children.Length );
+        ClassicAssert.AreEqual( 1, m.Head2.Children.Length );
+        ClassicAssert.AreNotSame( m.TopChild, m.Head2.Children[ 0 ] );
 
-        cmd.Undo();
+        cmd.Undo( );
 
         // should come back now
-        ClassicAssert.AreEqual(3, bar.Menus[0].Children.Length);
-        ClassicAssert.AreEqual(2, head2.Children.Length);
-        ClassicAssert.AreSame(topChild, head2.Children[0]);
+        ClassicAssert.AreEqual( 3, m.Bar.Menus[ 0 ].Children.Length );
+        ClassicAssert.AreEqual( 2, m.Head2.Children.Length );
+        ClassicAssert.AreSame( m.TopChild, m.Head2.Children[ 0 ] );
     }
 
     [Test]
     [TestOf( typeof( MenuTracker ) )]
     // TODO: Break this one up into smaller units at some point.
-    public void TestMenuOperations()
+    public void TestMenuOperations( )
     {
-        ViewToCode viewToCode = new ();
+        ViewToCode viewToCode = new( );
 
         FileInfo file = new( $"{nameof( TestMenuOperations )}.cs" );
         Design designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Dialog ) );
@@ -626,9 +626,9 @@ internal class MenuBarTests : Tests
         return bar;
     }
 
-    private (MenuBar Bar, MenuBarItem Head2, MenuItem TopChild) GetMenuBarWithSubmenuItems()
+    private MenuBarWithSubmenuItems GetMenuBarWithSubmenuItems( )
     {
-        (MenuBar Bar, MenuBarItem Head2, MenuItem TopChild) toReturn = new( )
+        MenuBarWithSubmenuItems toReturn = new( GetMenuBar( ), null!, null! )
         {
             Bar = GetMenuBar( )
         };
@@ -671,7 +671,7 @@ internal class MenuBarTests : Tests
 
             static MenuItem CreateHead2Child2Item( )
             {
-                return new ( "Child2", null, static ( ) => { } )
+                return new( "Child2", null, static ( ) => { } )
                 {
                     Data = "Child2",
                     Shortcut = Key.F.WithCtrl.KeyCode,
@@ -679,4 +679,17 @@ internal class MenuBarTests : Tests
             }
         }
     }
+
+    internal record MenuBarWithSubmenuItems( MenuBar Bar, MenuBarItem Head2, MenuItem TopChild ) : IDisposable
+    {
+        /// <inheritdoc />
+        public void Dispose( )
+        {
+            Bar.Dispose( );
+        }
+
+        public MenuBarItem Head2 { get; set; } = Head2;
+        public MenuItem TopChild { get; set; } = TopChild;
+    }
+
 }
