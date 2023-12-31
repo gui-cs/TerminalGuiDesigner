@@ -148,7 +148,7 @@ internal class MenuBarTests : Tests
 
     [Test]
     [TestOf( typeof( RemoveMenuItemOperation ) )]
-    public void DeletingLastMenuItem_ShouldRemoveWholeBar()
+    public void DeletingLastMenuItem_ShouldRemoveWholeBar( )
     {
         MenuBar bar = this.GetMenuBar( out Design root );
         Assume.That( bar, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
@@ -170,7 +170,7 @@ internal class MenuBarTests : Tests
         Assert.That( removeMenuItemOperation, Is.Not.Null.And.InstanceOf<RemoveMenuItemOperation>( ) );
 
         bool removeMenuItemOperationSucceeded = false;
-        Assert.That( ( ) => removeMenuItemOperationSucceeded = removeMenuItemOperation!.Do( ), Throws.Nothing );
+        Assert.That( ( ) => removeMenuItemOperationSucceeded = OperationManager.Instance.Do( removeMenuItemOperation! ), Throws.Nothing );
         Assert.That( removeMenuItemOperationSucceeded );
         Assert.Multiple( static ( ) =>
         {
@@ -184,15 +184,24 @@ internal class MenuBarTests : Tests
             Assert.That( root.View.Subviews, Has.None.InstanceOf<MenuBar>( ) );
         } );
 
-        Assert.That( removeMenuItemOperation!.Undo, Throws.Nothing );
+        Assert.That( OperationManager.Instance.Undo, Throws.Nothing );
         Assert.Multiple( static ( ) =>
         {
             Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
             Assert.That( OperationManager.Instance.RedoStackSize, Is.EqualTo( 1 ) );
         } );
 
-        ClassicAssert.Contains(bar, root.View.Subviews.ToArray(),
-                "Undo should put the MenuBar back on the view again");
+        // Same conditions as at the start
+        // The MenuBar should be back in the root view...
+        Assert.That( root.View.Subviews, Has.Exactly( 1 ).InstanceOf<MenuBar>( ) );
+        Assert.That( root.View.Subviews[ 0 ], Is.Not.Null.And.SameAs( bar ) );
+
+        // ...And the original MenuBar should be back as it was at the start.
+        Assert.That( bar.Menus, Is.Not.Null );
+        Assert.That( bar.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
+        Assert.That( bar.Menus[ 0 ], Is.Not.Null.And.InstanceOf<MenuBarItem>( ) );
+        Assert.That( bar.Menus[ 0 ].Children, Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
+        Assert.That( bar.Menus[ 0 ].Children[ 0 ], Is.Not.Null.And.InstanceOf<MenuItem>( ) );
     }
 
     [Test]
