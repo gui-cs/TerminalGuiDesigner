@@ -218,11 +218,11 @@ internal class MenuBarTests : Tests
         Assume.That( head2.Children, Has.Exactly( 2 ).InstanceOf<MenuItem>( ) );
         Assume.That( head2.Children[ 0 ], Is.SameAs( topChild ) );
 
-        var cmd1 = new RemoveMenuItemOperation(topChild);
-        ClassicAssert.IsTrue(cmd1.Do());
+        RemoveMenuItemOperation cmd1 = new (topChild);
+        Assert.That( cmd1.Do, Throws.Nothing );
 
-        var cmd2 = new RemoveMenuItemOperation(bottomChild);
-        ClassicAssert.IsTrue(cmd2.Do());
+        RemoveMenuItemOperation cmd2 = new (bottomChild);
+        Assert.That( cmd2.Do, Throws.Nothing );
 
         // Deleting both children should convert us from
         // a dropdown submenu to just a regular MenuItem
