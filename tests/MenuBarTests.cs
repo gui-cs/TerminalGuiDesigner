@@ -163,8 +163,13 @@ internal class MenuBarTests : Tests
 
         MenuItem mi = bar.Menus[ 0 ].Children[ 0 ];
 
-        RemoveMenuItemOperation cmd = new RemoveMenuItemOperation(mi);
-        ClassicAssert.IsTrue(cmd.Do());
+        RemoveMenuItemOperation? removeMenuItemOperation = null;
+        Assert.That( ( ) => removeMenuItemOperation = new( mi ), Throws.Nothing );
+        Assert.That( removeMenuItemOperation, Is.Not.Null.And.InstanceOf<RemoveMenuItemOperation>( ) );
+
+        bool removeMenuItemOperationSucceeded = false;
+        Assert.That( ( ) => removeMenuItemOperationSucceeded = removeMenuItemOperation!.Do( ), Throws.Nothing );
+        Assert.That( removeMenuItemOperationSucceeded );
 
         ClassicAssert.IsEmpty(bar.Menus, "Expected menu bar header (File) to be removed along with it's last (only) child");
 
@@ -172,7 +177,7 @@ internal class MenuBarTests : Tests
             root.View.Subviews.Contains(bar),
             "Now that the MenuBar is completely empty it should be automatically removed");
 
-        cmd.Undo();
+        removeMenuItemOperation.Undo();
 
         ClassicAssert.Contains(bar, root.View.Subviews.ToArray(),
                 "Undo should put the MenuBar back on the view again");
