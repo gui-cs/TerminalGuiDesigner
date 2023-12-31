@@ -150,18 +150,7 @@ internal class MenuBarTests : Tests
     [TestOf( typeof( RemoveMenuItemOperation ) )]
     public void DeletingLastMenuItem_ShouldRemoveWholeBar( )
     {
-        using MenuBar bar = this.GetMenuBar( out Design root );
-        Assume.That( bar, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
-        Assume.That( root, Is.Not.Null.And.InstanceOf<Design>( ) );
-        Assume.That( root.View.Subviews, Has.Exactly( 1 ).InstanceOf<MenuBar>( ) );
-        Assume.That( root.View.Subviews[ 0 ], Is.Not.Null.And.SameAs( bar ) );
-        Assume.That( bar.Menus, Is.Not.Null );
-        Assume.That( bar.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
-        Assume.That( bar.Menus[ 0 ], Is.Not.Null.And.InstanceOf<MenuBarItem>( ) );
-        Assume.That( bar.Menus[ 0 ].Children, Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
-        Assume.That( bar.Menus[ 0 ].Children[ 0 ], Is.Not.Null.And.InstanceOf<MenuItem>( ) );
-        Assume.That( OperationManager.Instance.UndoStackSize, Is.Zero );
-        Assume.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+        using MenuBar bar = GetMenuBar( out Design root );
 
         MenuItem mi = bar.Menus[ 0 ].Children[ 0 ];
 
@@ -486,9 +475,6 @@ internal class MenuBarTests : Tests
     {
         using MenuBar bar = GetMenuBar( );
 
-        MenuItem? mi = bar.Menus[ 0 ].Children[ 0 ];
-        Assume.That( mi, Is.Not.Null.And.InstanceOf<MenuItem>( ) );
-
         // cannot move a root item
         MoveMenuItemLeftOperation moveMenuItemLeftOperation = new( bar.Menus[ 0 ].Children[ 0 ] );
         Assert.That( moveMenuItemLeftOperation.IsImpossible );
@@ -501,10 +487,6 @@ internal class MenuBarTests : Tests
     public void MoveMenuItemLeft_MoveTopChild( )
     {
         using MenuBarWithSubmenuItems m = GetMenuBarWithSubmenuItems( );
-
-        Assume.That( m.Bar.Menus[ 0 ].Children, Has.Exactly( 3 ).InstanceOf<MenuItem>( ) );
-        Assume.That( m.Head2.Children, Has.Exactly( 2 ).InstanceOf<MenuItem>( ) );
-        Assume.That( m.Head2.Children[ 0 ], Is.SameAs( m.TopChild ) );
 
         MoveMenuItemLeftOperation moveMenuItemLeftOperation = new ( m.TopChild );
         Assert.That( moveMenuItemLeftOperation.IsImpossible, Is.False );
@@ -641,7 +623,7 @@ internal class MenuBarTests : Tests
     [Test]
     public void TestRemoveFinalMenuItemOnBar()
     {
-        var bar = this.GetMenuBar();
+        var bar = GetMenuBar( );
 
         var fileMenu = bar.Menus[0];
         var placeholderMenuItem = fileMenu.Children[0];
@@ -660,18 +642,22 @@ internal class MenuBarTests : Tests
         ClassicAssert.AreSame(placeholderMenuItem, bar.Menus[0].Children[0]);
     }
 
-    private MenuBar GetMenuBar()
+    private static MenuBar GetMenuBar( )
     {
-        return this.GetMenuBar(out _);
+        return GetMenuBar( out _ );
     }
 
-    private MenuBar GetMenuBar(out Design root)
+    private static MenuBar GetMenuBar( out Design root )
     {
-        root = Get10By10View();
+        root = Get10By10View( );
 
         var bar = ViewFactory.Create<MenuBar>( );
-        var addBarCmd = new AddViewOperation(bar, root, "mb");
-        ClassicAssert.IsTrue(addBarCmd.Do());
+        var addBarCmd = new AddViewOperation( bar, root, "mb" );
+        addBarCmd.Do( );
+
+        return bar;
+    }
+
     [Test]
     [TestOf( typeof( MenuBarTests ) )]
     [Category( "Change Control" )]
