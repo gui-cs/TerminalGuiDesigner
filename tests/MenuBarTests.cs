@@ -617,25 +617,29 @@ internal class MenuBarTests : Tests
     /// should result in a completely empty menu bar and be undoable
     /// </summary>
     [Test]
-    public void TestRemoveFinalMenuItemOnBar()
+    [TestOf( typeof( RemoveMenuItemOperation ) )]
+    public void RemoveFinalMenuItemOnBar( )
     {
-        var bar = GetMenuBar( );
+        using MenuBar bar = GetMenuBar( );
 
-        var fileMenu = bar.Menus[0];
-        var placeholderMenuItem = fileMenu.Children[0];
+        MenuBarItem? fileMenu = bar.Menus[ 0 ];
+        MenuItem? placeholderMenuItem = fileMenu.Children[ 0 ];
 
-        var remove = new RemoveMenuItemOperation(placeholderMenuItem);
+        RemoveMenuItemOperation removeOp = new( placeholderMenuItem );
 
         // we are able to remove the last one
-        ClassicAssert.IsTrue(remove.Do());
-        ClassicAssert.IsEmpty(bar.Menus, "menu bar should now be completely empty");
+        Assert.That( removeOp.IsImpossible, Is.False );
+        bool removeOpSucceeded = false;
+        Assert.That( ( ) => removeOpSucceeded = removeOp.Do( ), Throws.Nothing );
+        Assert.That( removeOpSucceeded );
+        Assert.That( bar.Menus, Is.Empty );
 
-        remove.Undo();
+        Assert.That( removeOp.Undo, Throws.Nothing );
 
         // should be back to where we started
-        ClassicAssert.AreEqual(1, bar.Menus.Length);
-        ClassicAssert.AreEqual(1, bar.Menus[0].Children.Length);
-        ClassicAssert.AreSame(placeholderMenuItem, bar.Menus[0].Children[0]);
+        Assert.That( bar.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
+        Assert.That( bar.Menus[ 0 ].Children, Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
+        Assert.That( bar.Menus[ 0 ].Children[ 0 ], Is.SameAs( placeholderMenuItem ) );
     }
 
     private static MenuBar GetMenuBar( )
