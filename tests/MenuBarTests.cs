@@ -31,7 +31,7 @@ internal class MenuBarTests : Tests
         Assume.That( addViewOperation, Is.Not.Null.And.InstanceOf<AddViewOperation>( ) );
 
         bool addViewOperationSucceeded = false;
-        Assert.That( ( ) => addViewOperationSucceeded = OperationManager.Instance.Do( addViewOperation ), Throws.Nothing );
+        Assert.That( ( ) => addViewOperationSucceeded = OperationManager.Instance.Do( addViewOperation! ), Throws.Nothing );
         Assert.That( addViewOperationSucceeded );
 
         Assume.That( ( ) => viewToCode.GenerateDesignerCs( designOut, typeof( Dialog ) ), Throws.Nothing );
@@ -41,19 +41,19 @@ internal class MenuBarTests : Tests
         Assert.That( codeToView, Is.Not.Null.And.InstanceOf<CodeToView>( ) );
 
         Design? designBackIn = null;
-        Assert.That( ( ) => designBackIn = codeToView.CreateInstance( ), Throws.Nothing );
+        Assert.That( ( ) => designBackIn = codeToView!.CreateInstance( ), Throws.Nothing );
         Assert.That( designBackIn, Is.Not.Null.And.InstanceOf<Design>( ) );
 
         // 1 visible root menu (e.g. File)
         MenuBar? mbIn = null;
-        Assert.That( designBackIn.View, Is.Not.Null.And.InstanceOf<View>( ) );
+        Assert.That( designBackIn!.View, Is.Not.Null.And.InstanceOf<View>( ) );
         IList<View> actualSubviews = designBackIn.View.GetActualSubviews();
         Assert.That( actualSubviews, Has.Exactly( 1 ).InstanceOf<MenuBar>( ) );
         Assert.That( ( ) => mbIn = actualSubviews.OfType<MenuBar>(  ).Single( ), Throws.Nothing );
         Assert.That( mbIn, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
 
         // 1 child menu item (e.g. Open)
-        Assert.That( mbIn.Menus, Is.Not.Null.And.Not.Empty );
+        Assert.That( mbIn!.Menus, Is.Not.Null.And.Not.Empty );
         Assert.That( mbIn.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
         Assert.That( mbIn.Menus[ 0 ].Children, Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
         Assert.That( mbIn.Menus[ 0 ].Children[ 0 ].Title, Is.EqualTo( mbOut.Menus[ 0 ].Children[ 0 ].Title ) );
@@ -91,11 +91,11 @@ internal class MenuBarTests : Tests
             bool addChildMenuOperation1Succeeded = false;
             bool addChildMenuOperation2Succeeded = false;
             bool addChildMenuOperation3Succeeded = false;
-            Assert.That( ( ) => addChildMenuOperation1Succeeded = addChildMenuOperation1.Do( ), Throws.Nothing );
+            Assert.That( ( ) => addChildMenuOperation1Succeeded = addChildMenuOperation1!.Do( ), Throws.Nothing );
             Assert.That( addChildMenuOperation1Succeeded );
-            Assert.That( ( ) => addChildMenuOperation2Succeeded = addChildMenuOperation2.Do( ), Throws.Nothing );
+            Assert.That( ( ) => addChildMenuOperation2Succeeded = addChildMenuOperation2!.Do( ), Throws.Nothing );
             Assert.That( addChildMenuOperation2Succeeded );
-            Assert.That( ( ) => addChildMenuOperation3Succeeded = addChildMenuOperation3.Do( ), Throws.Nothing );
+            Assert.That( ( ) => addChildMenuOperation3Succeeded = addChildMenuOperation3!.Do( ), Throws.Nothing );
             Assert.That( addChildMenuOperation3Succeeded );
         } );
 
@@ -122,7 +122,7 @@ internal class MenuBarTests : Tests
 
         Design? designBackIn = null;
 
-        Assume.That( ( ) => designBackIn = codeToView.CreateInstance( ), Throws.Nothing );
+        Assume.That( ( ) => designBackIn = codeToView!.CreateInstance( ), Throws.Nothing );
         Assume.That( designBackIn, Is.Not.Null.And.InstanceOf<Design>( ) );
 
         MenuBar? mbIn = null;
@@ -134,7 +134,7 @@ internal class MenuBarTests : Tests
         Assert.That( mbIn, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
 
         // 1 visible root menu (e.g. File)
-        Assert.That( mbIn.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
+        Assert.That( mbIn!.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
         // 3 child menu item (original one + 3 we added -1 because we moved it to submenu)
         Assert.That( mbIn.Menus[ 0 ].Children, Has.Exactly( 3 ).InstanceOf<MenuItem>( ) );
         Assert.That( mbIn.Menus[ 0 ].Children, Has.All.Not.Null );
@@ -369,7 +369,7 @@ internal class MenuBarTests : Tests
         } );
 
         bool moveUpSucceeded = false;
-        Assert.That( ( ) => moveUpSucceeded = OperationManager.Instance.Do( up ), Throws.Nothing );
+        Assert.That( ( ) => moveUpSucceeded = OperationManager.Instance.Do( up! ), Throws.Nothing );
         Assert.That( moveUpSucceeded );
 
         Assert.Multiple( ( ) =>
