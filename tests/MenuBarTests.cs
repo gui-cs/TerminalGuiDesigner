@@ -161,7 +161,7 @@ internal class MenuBarTests : Tests
         Assume.That( bar.Menus[ 0 ].Children, Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
         Assume.That( bar.Menus[ 0 ].Children[ 0 ], Is.Not.Null.And.InstanceOf<MenuItem>( ) );
 
-        MenuItem? mi = bar.Menus[ 0 ].Children[ 0 ];
+        MenuItem mi = bar.Menus[ 0 ].Children[ 0 ];
 
         ClassicAssert.Contains(bar, root.View.Subviews.ToArray(),
                 "The MenuBar should be on the main view being edited");
