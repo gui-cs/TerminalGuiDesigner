@@ -148,16 +148,25 @@ internal class MenuBarTests : Tests
 
     [Test]
     [TestOf( typeof( RemoveMenuItemOperation ) )]
-    public void TestDeletingLastMenuItem_ShouldRemoveWholeBar()
+    public void DeletingLastMenuItem_ShouldRemoveWholeBar()
     {
-        var bar = this.GetMenuBar(out Design root);
+        MenuBar bar = this.GetMenuBar( out Design root );
+        Assume.That( bar, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
+        Assume.That( root, Is.Not.Null.And.InstanceOf<Design>( ) );
+        Assume.That( root.View.Subviews, Has.Exactly( 1 ).InstanceOf<MenuBar>( ) );
+        Assume.That( root.View.Subviews[ 0 ], Is.Not.Null.And.SameAs( bar ) );
+        Assume.That( bar.Menus, Is.Not.Null );
+        Assume.That( bar.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
+        Assume.That( bar.Menus[ 0 ], Is.Not.Null.And.InstanceOf<MenuBarItem>( ) );
+        Assume.That( bar.Menus[ 0 ].Children, Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
+        Assume.That( bar.Menus[ 0 ].Children[ 0 ], Is.Not.Null.And.InstanceOf<MenuItem>( ) );
 
-        var mi = bar.Menus[0].Children[0];
+        MenuItem? mi = bar.Menus[ 0 ].Children[ 0 ];
 
         ClassicAssert.Contains(bar, root.View.Subviews.ToArray(),
                 "The MenuBar should be on the main view being edited");
 
-        var cmd = new RemoveMenuItemOperation(mi);
+        RemoveMenuItemOperation cmd = new RemoveMenuItemOperation(mi);
         ClassicAssert.IsTrue(cmd.Do());
 
         ClassicAssert.IsEmpty(bar.Menus, "Expected menu bar header (File) to be removed along with it's last (only) child");
