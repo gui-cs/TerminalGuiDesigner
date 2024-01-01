@@ -1,5 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System.Collections;
+using System.ComponentModel;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Basic.Reference.Assemblies;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -153,11 +155,14 @@ public class CodeToView
             MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
             MetadataReference.CreateFromFile(typeof(MarshalByValueComponent).Assembly.Location),
             MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "mscorlib.dll"),
-            MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "System.Runtime.dll")
+            MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "System.Runtime.dll"),
+            MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "System.Collections.dll"),
         };
 
-        var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary);
-
+        var options = new CSharpCompilationOptions(
+            OutputKind.DynamicallyLinkedLibrary
+            );
+        
         var compilation = CSharpCompilation.Create(
                 Guid.NewGuid().ToString() + ".dll",
                 new CSharpSyntaxTree[] { csTree, designerTree },

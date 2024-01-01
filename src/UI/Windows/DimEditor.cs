@@ -36,8 +36,7 @@ public partial class DimEditor : Dialog
     /// Creates a new instance of the <see cref="DimEditor"/> class.
     /// </summary>
     /// <param name="design"></param>
-    /// <param name="property"></param>
-    public DimEditor(Design design, Property property) {
+    public DimEditor(Design design, Dim oldValue) {
         InitializeComponent();
         
         this.design = design;
@@ -53,9 +52,7 @@ public partial class DimEditor : Dialog
         Modal = true;
         rgDimType.KeyDown += RgDimType_KeyPress;
         
-
-        var val = (Dim)property.GetValue();
-        if(val.GetDimType(out var type,out var value, out var offset))
+        if(oldValue.GetDimType(out var type,out var value, out var offset))
         {
             switch(type)
             {

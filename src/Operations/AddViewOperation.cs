@@ -78,8 +78,22 @@ public class AddViewOperation : Operation
         {
             var selectable = ViewFactory.SupportedViewTypes.ToArray();
 
-            if (Modals.Get("Type of Control", "Add", true, selectable, static t => t?.Name ?? "Null", false, null, out var selected) && selected != null)
+            if (Modals.Get("Type of Control", "Add", true, selectable, this.TypeNameDelegate, false, null, out var selected) && selected != null)
             {
+                if (selected.IsGenericType)
+                {
+                    var allowedTTypes = ViewFactory.GetSupportedTTypesForGenericViewOfType(selected).ToArray();
+
+                    if(Modals.Get("Enter a Type for <T>", "Choose", true, allowedTTypes, this.TypeNameDelegate, false, null, out var selectedTType) && selectedTType != null)
+                    {
+                        selected = selected.MakeGenericType(new[] { selectedTType });
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
                 this.add = ViewFactory.Create(selected);
                 this.fieldName = this.to.GetUniqueFieldName(selected);
             }
@@ -106,6 +120,16 @@ public class AddViewOperation : Operation
 
         v.SetNeedsDisplay();
         return true;
+    }
+
+    private string TypeNameDelegate(Type? t)
+    {
+        if (t == null)
+        {
+            return "Null";
+        }
+
+        return t.Name.Replace("`1", "<T>");
     }
 
     private View GetViewToAddTo()

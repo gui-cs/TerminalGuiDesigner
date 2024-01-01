@@ -40,8 +40,8 @@ public static class DimExtensions
     {
         if (d != null && d.IsPercent())
         {
-            var nField = d.GetType().GetField("factor", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?? throw new Exception("Expected private field 'factor' of DimPercent was missing");
+            var nField = d.GetType().GetField("_factor", BindingFlags.NonPublic | BindingFlags.Instance)
+                ?? throw new Exception("Expected private field '_factor' of DimPercent was missing");
             percent = ((float?)nField.GetValue(d) ?? throw new Exception("Expected private field 'factor' to be a float")) * 100f;
             return true;
         }
@@ -72,8 +72,8 @@ public static class DimExtensions
     {
         if (d != null && d.IsFill())
         {
-            var nField = d.GetType().GetField("margin", BindingFlags.NonPublic | BindingFlags.Instance)
-                 ?? throw new Exception("Expected private field 'margin' of DimFill was missing");
+            var nField = d.GetType().GetField("_margin", BindingFlags.NonPublic | BindingFlags.Instance)
+                 ?? throw new Exception("Expected private field '_margin' of DimFill was missing");
             margin = (int?)nField.GetValue(d) ?? throw new Exception("Expected private field 'margin' of DimFill had unexpected Type");
             return true;
         }
@@ -110,7 +110,7 @@ public static class DimExtensions
                 return TreatNullDimAs0;
             }
 
-            var nField = d.GetType().GetField("n", BindingFlags.NonPublic | BindingFlags.Instance)
+            var nField = d.GetType().GetField("_n", BindingFlags.NonPublic | BindingFlags.Instance)
                 ?? throw new Exception("Expected private field was missing from DimAbsolute");
             n = (int?)nField.GetValue(d)
                 ?? throw new Exception("Expected private field 'n' to be in int for DimAbsolute");
@@ -151,13 +151,13 @@ public static class DimExtensions
     {
         if (d.IsCombine())
         {
-            var fLeft = d.GetType().GetField("left", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field was missing from Dim.Combine");
+            var fLeft = d.GetType().GetField("_left", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field was missing from Dim.Combine");
             left = fLeft.GetValue(d) as Dim ?? throw new Exception("Expected private field in DimCombine to be of Type Dim");
 
-            var fRight = d.GetType().GetField("right", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field was missing from Dim.Combine");
+            var fRight = d.GetType().GetField("_right", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field was missing from Dim.Combine");
             right = fRight.GetValue(d) as Dim ?? throw new Exception("Expected private field in DimCombine to be of Type Dim");
 
-            var fAdd = d.GetType().GetField("add", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field was missing from Dim.Combine");
+            var fAdd = d.GetType().GetField("_add", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field was missing from Dim.Combine");
             add = fAdd.GetValue(d) as bool? ?? throw new Exception("Expected private field in DimCombine to be of Type bool");
 
             return true;

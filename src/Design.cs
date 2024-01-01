@@ -640,6 +640,9 @@ public class Design
 
     private IEnumerable<Property> LoadDesignableProperties()
     {
+        var viewType = this.View.GetType();
+        var isGenericType = viewType.IsGenericType;
+
         yield return this.CreateProperty(nameof(this.View.Width));
         yield return this.CreateProperty(nameof(this.View.Height));
 
@@ -662,13 +665,27 @@ public class Design
             yield return this.CreateProperty(nameof(TextField.Secret));
         }
 
+        if (isGenericType && viewType.GetGenericTypeDefinition() == typeof(Slider<>))
+        {
+            yield return this.CreateProperty(nameof(Slider.Options));
+            yield return this.CreateProperty(nameof(Slider.Orientation));
+            yield return this.CreateProperty(nameof(Slider.RangeAllowSingle));
+            yield return this.CreateProperty(nameof(Slider.AllowEmpty));
+            yield return this.CreateProperty(nameof(Slider.AutoSize));
+            yield return this.CreateProperty(nameof(Slider.InnerSpacing));
+            yield return this.CreateProperty(nameof(Slider.LegendsOrientation));
+            yield return this.CreateProperty(nameof(Slider.ShowLegends));
+            yield return this.CreateProperty(nameof(Slider.ShowSpacing));
+            yield return this.CreateProperty(nameof(Slider.Type));
+        }
+
         if (this.View is SpinnerView)
         {
             yield return this.CreateProperty(nameof(SpinnerView.AutoSpin));
 
             yield return new InstanceOfProperty(
                 this,
-                this.View.GetType().GetProperty(nameof(SpinnerView.Style)) ?? throw new Exception($"Could not find expected Property SpinnerView.Style on View of Type '{this.View.GetType()}'"));
+                viewType.GetProperty(nameof(SpinnerView.Style)) ?? throw new Exception($"Could not find expected Property SpinnerView.Style on View of Type '{this.View.GetType()}'"));
         }
 
         if (this.View is ScrollView)

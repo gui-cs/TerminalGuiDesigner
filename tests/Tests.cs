@@ -156,4 +156,15 @@ internal class Tests
                 Flags = MouseFlags.Button1Released,
             }, root);
     }
+
+    public static Type PickFirstTTypeForGenerics(Type type)
+    {
+        if (type.IsGenericTypeDefinition)
+        {
+            var tType = ViewFactory.GetSupportedTTypesForGenericViewOfType(type).First();
+            return type.MakeGenericType(tType);
+        }
+
+        return type;
+    }
 }
