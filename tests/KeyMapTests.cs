@@ -21,7 +21,7 @@ internal class KeyMapTests
         Save: Ctrl+S
         Redo: Ctrl+Y
         Undo: Ctrl+Z
-        Delete: Delete
+        Delete: DeleteChar
         ToggleDragging: F3
         AddView: F2
         ToggleShowFocused: Ctrl+L
@@ -119,7 +119,7 @@ internal class KeyMapTests
             Key.S.WithCtrl.ToString( ),
             Key.Y.WithCtrl.ToString( ),
             Key.Z.WithCtrl.ToString( ),
-            Key.Delete.ToString( ),
+            Key.DeleteChar.ToString( ),
             Key.F3.ToString( ),
             Key.F2.ToString( ),
             Key.L.WithCtrl.ToString( ),
