@@ -119,7 +119,7 @@ internal class KeyMapTests
             Key.S.WithCtrl.ToString( ),
             Key.Y.WithCtrl.ToString( ),
             Key.Z.WithCtrl.ToString( ),
-            Key.Delete.ToString( ),
+            Key.DeleteChar.ToString( ),
             Key.F3.ToString( ),
             Key.F2.ToString( ),
             Key.L.WithCtrl.ToString( ),

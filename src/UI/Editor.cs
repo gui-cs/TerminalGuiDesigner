@@ -120,7 +120,7 @@ public class Editor : Toplevel
             }
         }
 
-        Application.KeyUp += (_, k) =>
+        Application.KeyDown += (_, k) =>
         {
             if (this.editing)
             {
