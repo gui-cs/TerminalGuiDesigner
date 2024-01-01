@@ -13,7 +13,19 @@ internal class AddViewOperationTests : Tests
 {
     private static Type[] SupportedViewTypes { get; } = ViewFactory.SupportedViewTypes // Add MenuBar last so order is preserved in Assert check.
                                                                    .OrderBy( t => t == typeof( MenuBar ) ? int.MaxValue : 0 )
+                                                                   .Select(PickFirstTTypeForGenerics)
                                                                    .ToArray( );
+
+    private static Type PickFirstTTypeForGenerics(Type type)
+    {
+        if (type.IsGenericTypeDefinition)
+        {
+            var tType = ViewFactory.GetSupportedTTypesForGenericViewOfType(type).First();
+            return type.MakeGenericType(tType);
+        }
+
+        return type;
+    }
 
     [Test( Description = "Tests AddViewOperation against all SupportedViewTypes" )]
     public void Do_AddsExpectedSubview( [ValueSource( nameof( SupportedViewTypes ) )] Type candidateType )
