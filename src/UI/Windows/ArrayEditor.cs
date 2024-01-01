@@ -41,9 +41,74 @@ namespace TerminalGuiDesigner.UI.Windows {
             }
 
             lvElements.SetSource(Result);
+            lvElements.KeyUp += LvElements_KeyUp;
             btnOk.Clicked += BtnOk_Clicked;
             btnCancel.Clicked += BtnCancel_Clicked;
             btnAddElement.Clicked += BtnAddElement_Clicked;
+            btnDelete.Clicked += (s, e) => DeleteSelectedItem();
+            btnMoveDown.Clicked += BtnMoveDown_Clicked;
+            btnMoveUp.Clicked += BtnMoveUp_Clicked;
+            btnEdit.Clicked += BtnEdit_Clicked;
+        }
+
+
+        private void BtnMoveUp_Clicked(object sender, EventArgs e)
+        {
+            // Moving up means reducing the index by 1
+            var idx = lvElements.SelectedItem;
+
+            if (idx >= 1 && idx < Result.Count)
+            { 
+                var toMove = Result[idx];
+                var newIndex = idx - 1;
+                Result.RemoveAt(idx);
+                Result.Insert(newIndex, toMove);
+
+                lvElements.SetSource(Result);
+                lvElements.SelectedItem = newIndex;
+                lvElements.SetNeedsDisplay();
+            }
+        }
+
+        private void BtnMoveDown_Clicked(object sender, EventArgs e)
+        {
+            // Moving up means increasing the index by 1
+            var idx = lvElements.SelectedItem;
+
+            if (idx >= 0 && idx < Result.Count-1)
+            {
+                var toMove = Result[idx];
+                var newIndex = idx + 1;
+                Result.RemoveAt(idx);
+                Result.Insert(newIndex, toMove);
+
+                lvElements.SetSource(Result);
+                lvElements.SelectedItem = newIndex;
+                lvElements.SetNeedsDisplay();
+            }
+        }
+
+        private void LvElements_KeyUp(object sender, Key e)
+        {
+            if(e == Key.DeleteChar)
+            {
+                DeleteSelectedItem();
+                e.Handled = true;
+            }
+        }
+
+        private void DeleteSelectedItem()
+        {
+            var idx = lvElements.SelectedItem;
+
+            if (idx >= 0 && idx < Result.Count)
+            {
+                Result.RemoveAt(idx);
+
+                lvElements.SetSource(Result);
+                lvElements.SetNeedsDisplay();
+                lvElements.SelectedItem = 0;
+            }
         }
 
         private void BtnAddElement_Clicked(object sender, EventArgs e)
@@ -54,7 +119,28 @@ namespace TerminalGuiDesigner.UI.Windows {
             }
 
             lvElements.SetSource(Result);
+            lvElements.SelectedItem = Result.Count - 1;
             lvElements.SetNeedsDisplay();
+        }
+        private void BtnEdit_Clicked(object sender, EventArgs e)
+        {
+            var idx = lvElements.SelectedItem;
+
+            if (idx >= 0 && idx < Result.Count)
+            {
+                var toEdit = Result[idx];
+
+                if (ValueFactory.GetNewValue("Element Value", design, this.elementType, toEdit, out var newValue, true))
+                {
+                    // Replace old with new
+                    Result.RemoveAt(idx);
+                    Result.Insert(idx, newValue);
+                }
+
+                lvElements.SetSource(Result);
+                lvElements.SelectedItem = idx;
+                lvElements.SetNeedsDisplay();
+            }
         }
 
         private void BtnCancel_Clicked(object sender, EventArgs e)

@@ -15,6 +15,7 @@ namespace TerminalGuiDesigner.UI.Windows {
     
     public partial class SliderOptionEditor {
         private readonly Type genericTypeArgument;
+        private readonly Type sliderOptionType;
 
         public bool Cancelled { get; internal set; } = true;
         public object Result { get; internal set; }
@@ -24,15 +25,36 @@ namespace TerminalGuiDesigner.UI.Windows {
         /// where T is of <see cref="Type"/> <paramref name="genericTypeArgument"/>.
         /// </summary>
         /// <param name="genericTypeArgument">The T Type of the <see cref="SliderOption{T}"/> you want to design</param>
-        public SliderOptionEditor(Type genericTypeArgument) {
+        public SliderOptionEditor(Type genericTypeArgument, object? oldValue) {
             InitializeComponent();
 
             this.genericTypeArgument = genericTypeArgument;
+            this.sliderOptionType = typeof(SliderOption<>).MakeGenericType(this.genericTypeArgument);
 
             btnOk.Clicked += BtnOk_Clicked;
             btnCancel.Clicked += BtnCancel_Clicked;
 
             lblType.Text = $"({genericTypeArgument.Name})";
+
+            if(oldValue != null)
+            {
+                var p = sliderOptionType.GetProperty("Legend");
+                tfLegend.Text = (string)p.GetValue(oldValue);
+
+                p = sliderOptionType.GetProperty("LegendAbbr");
+                tfLegendAbbr.Text = ((Rune)p.GetValue(oldValue)).ToString();
+
+                p = sliderOptionType.GetProperty("Data");
+
+                if (this.genericTypeArgument == typeof(string))
+                {
+                    tfData.Text = (string)p.GetValue(oldValue);
+                }
+                else
+                {
+                    tfData.Text = p.GetValue(oldValue)?.ToString() ?? "";
+                }
+            }
         }
 
         private void BtnCancel_Clicked(object sender, EventArgs e)
@@ -59,8 +81,6 @@ namespace TerminalGuiDesigner.UI.Windows {
 
         private void BuildResult()
         {
-
-            Type sliderOptionType = typeof(SliderOption<>).MakeGenericType(this.genericTypeArgument);
             Result = Activator.CreateInstance(sliderOptionType);
 
             var p = sliderOptionType.GetProperty("Legend");

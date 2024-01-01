@@ -17,7 +17,7 @@ namespace TerminalGuiDesigner.UI
 
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(SliderOption<>))
             {
-                var designer = new SliderOptionEditor(type.GetGenericArguments()[0]);
+                var designer = new SliderOptionEditor(type.GetGenericArguments()[0], oldValue);
                 Application.Run(designer);
 
                 if (!designer.Cancelled)

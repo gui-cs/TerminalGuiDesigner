@@ -11,6 +11,8 @@
 namespace TerminalGuiDesigner.UI.Windows {
     using System;
     using Terminal.Gui;
+    using System.Collections;
+    using System.Collections.Generic;
     
     
     public partial class ArrayEditor : Terminal.Gui.Dialog {
@@ -21,16 +23,28 @@ namespace TerminalGuiDesigner.UI.Windows {
         
         private Terminal.Gui.Button btnAddElement;
         
+        private Terminal.Gui.Button btnDelete;
+        
+        private Terminal.Gui.Button btnMoveUp;
+        
+        private Terminal.Gui.Button btnMoveDown;
+        
+        private Terminal.Gui.Button btnEdit;
+        
         private Terminal.Gui.LineView lineView;
         
         private Terminal.Gui.Button btnOk;
         
         private Terminal.Gui.Button btnCancel;
-
+        
         private void InitializeComponent() {
             this.btnCancel = new Terminal.Gui.Button();
             this.btnOk = new Terminal.Gui.Button();
             this.lineView = new Terminal.Gui.LineView();
+            this.btnEdit = new Terminal.Gui.Button();
+            this.btnMoveDown = new Terminal.Gui.Button();
+            this.btnMoveUp = new Terminal.Gui.Button();
+            this.btnDelete = new Terminal.Gui.Button();
             this.btnAddElement = new Terminal.Gui.Button();
             this.lvElements = new Terminal.Gui.ListView();
             this.frameView = new Terminal.Gui.FrameView();
@@ -75,6 +89,46 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnAddElement.TextAlignment = Terminal.Gui.TextAlignment.Centered;
             this.btnAddElement.IsDefault = false;
             this.Add(this.btnAddElement);
+            this.btnDelete.Width = 8;
+            this.btnDelete.Height = 1;
+            this.btnDelete.X = 9;
+            this.btnDelete.Y = Pos.AnchorEnd(3);
+            this.btnDelete.Visible = true;
+            this.btnDelete.Data = "btnDelete";
+            this.btnDelete.Text = "Delete";
+            this.btnDelete.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+            this.btnDelete.IsDefault = false;
+            this.Add(this.btnDelete);
+            this.btnMoveUp.Width = 8;
+            this.btnMoveUp.Height = 1;
+            this.btnMoveUp.X = 20;
+            this.btnMoveUp.Y = Pos.AnchorEnd(3);
+            this.btnMoveUp.Visible = true;
+            this.btnMoveUp.Data = "btnMoveUp";
+            this.btnMoveUp.Text = "Move Up";
+            this.btnMoveUp.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+            this.btnMoveUp.IsDefault = false;
+            this.Add(this.btnMoveUp);
+            this.btnMoveDown.Width = 8;
+            this.btnMoveDown.Height = 1;
+            this.btnMoveDown.X = 32;
+            this.btnMoveDown.Y = Pos.AnchorEnd(3);
+            this.btnMoveDown.Visible = true;
+            this.btnMoveDown.Data = "btnMoveDown";
+            this.btnMoveDown.Text = "Move Down";
+            this.btnMoveDown.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+            this.btnMoveDown.IsDefault = false;
+            this.Add(this.btnMoveDown);
+            this.btnEdit.Width = 8;
+            this.btnEdit.Height = 1;
+            this.btnEdit.X = 46;
+            this.btnEdit.Y = Pos.AnchorEnd(3);
+            this.btnEdit.Visible = true;
+            this.btnEdit.Data = "btnEdit";
+            this.btnEdit.Text = "Edit";
+            this.btnEdit.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+            this.btnEdit.IsDefault = false;
+            this.Add(this.btnEdit);
             this.lineView.Width = Dim.Fill(1);
             this.lineView.Height = 1;
             this.lineView.X = -1;
