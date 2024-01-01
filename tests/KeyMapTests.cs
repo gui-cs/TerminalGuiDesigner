@@ -21,7 +21,7 @@ internal class KeyMapTests
         Save: Ctrl+S
         Redo: Ctrl+Y
         Undo: Ctrl+Z
-        Delete: Delete
+        Delete: DeleteChar
         ToggleDragging: F3
         AddView: F2
         ToggleShowFocused: Ctrl+L

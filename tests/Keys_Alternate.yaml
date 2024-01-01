@@ -8,7 +8,7 @@ Open: Ctrl+O
 Save: Ctrl+S
 Redo: Ctrl+Y
 Undo: Ctrl+Z
-Delete: Delete
+Delete: DeleteChar
 ToggleDragging: F5
 AddView: F6
 ToggleShowFocused: Ctrl+L
