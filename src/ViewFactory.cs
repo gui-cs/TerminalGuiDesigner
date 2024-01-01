@@ -259,6 +259,14 @@ public static class ViewFactory
     [Obsolete( "Migrate to using generic Create<T> method" )]
     public static View Create( Type requestedType )
     {
+        if (requestedType.IsGenericType)
+        {
+            var method = typeof(ViewFactory).GetMethods().Single(m=>m.Name=="Create" && m.IsGenericMethodDefinition);
+            method = method.MakeGenericMethod(requestedType) ?? throw new Exception("Could not find Create<T> method on ViewFactory");
+
+            return (View)(method.Invoke(null, new object?[] { null, null, null }) ?? throw new Exception("ViewFactory.Create resulted in null"));
+        }
+
         return requestedType switch
         {
             null => throw new ArgumentNullException( nameof( requestedType ) ),
