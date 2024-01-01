@@ -16,16 +16,7 @@ internal class AddViewOperationTests : Tests
                                                                    .Select(PickFirstTTypeForGenerics)
                                                                    .ToArray( );
 
-    private static Type PickFirstTTypeForGenerics(Type type)
-    {
-        if (type.IsGenericTypeDefinition)
-        {
-            var tType = ViewFactory.GetSupportedTTypesForGenericViewOfType(type).First();
-            return type.MakeGenericType(tType);
-        }
-
-        return type;
-    }
+    
 
     [Test( Description = "Tests AddViewOperation against all SupportedViewTypes" )]
     public void Do_AddsExpectedSubview( [ValueSource( nameof( SupportedViewTypes ) )] Type candidateType )
