@@ -86,9 +86,7 @@ public class KeyboardManager
             this.StartOperation(d);
         }
 
-        this.ApplyKeystrokeToTextProperty(keystroke);
-
-        return false;
+        return this.ApplyKeystrokeToTextProperty(keystroke);
     }
 
     private bool HandleKeyPressInMenu(View focusedView, MenuItem menuItem, Key keystroke)
