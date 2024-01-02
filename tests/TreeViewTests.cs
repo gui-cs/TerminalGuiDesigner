@@ -19,23 +19,26 @@ namespace UnitTests
             {
                 var objectsProperty = d.GetDesignableProperty("Objects");
                 Assert.That(objectsProperty,Is.InstanceOf<TreeObjectsProperty<FileSystemInfo>>());
+                
                 objectsProperty.SetValue(
                     new List<FileSystemInfo>(
                         new FileSystemInfo[] {
                             new DirectoryInfo("/"),
                             new FileInfo("/blah.txt")
                         }));
+
+
+                Assert.That(v.Objects.Count, Is.EqualTo(2));
+
             }, out var viewAfter);
 
-            
-
             Assert.That(viewAfter.Objects.Count, Is.EqualTo(2));
 
             Assert.That(viewAfter.Objects.Count, Is.EqualTo(2));
             Assert.That(viewAfter.Objects.Count, Is.EqualTo(2));
 
-            Assert.That(viewAfter.Objects.ElementAt(0), Is.EqualTo(new DirectoryInfo("/")));
-            Assert.That(viewAfter.Objects.ElementAt(1), Is.EqualTo(new FileInfo("/blah.txt")));
+            Assert.That(viewAfter.Objects.ElementAt(0).ToString(), Is.EqualTo(new DirectoryInfo("/").ToString()));
+            Assert.That(viewAfter.Objects.ElementAt(1).ToString(), Is.EqualTo(new FileInfo("/blah.txt").ToString()));
         }
 
     }

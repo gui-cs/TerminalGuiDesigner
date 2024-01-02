@@ -9,6 +9,7 @@ namespace TerminalGuiDesigner.ToCode;
 public class TreeObjectsProperty<T> : Property where T : class
 {
     public List<T> Value { get; private set; } = new List<T>();
+    readonly TreeView<T> treeView;
 
     public TreeObjectsProperty(Design design)
         : base(
@@ -16,6 +17,7 @@ public class TreeObjectsProperty<T> : Property where T : class
         typeof(TreeView<T>).GetProperty(nameof(TreeView<T>.Objects)) 
               ?? throw new MissingFieldException("Expected property was missing from TreeView"))
     {
+        treeView = (TreeView<T>)design.View;
     }
 
     public override string GetHumanReadableName()
@@ -32,6 +34,10 @@ public class TreeObjectsProperty<T> : Property where T : class
     public override void SetValue(object? value)
     {
         this.Value = (List<T>)(value ?? new List<T>());
+
+        treeView.ClearObjects();
+        treeView.AddObjects(this.Value);
+
     }
 
     public override object GetValue()
@@ -44,18 +50,17 @@ public class TreeObjectsProperty<T> : Property where T : class
         // Create statement like this
         //tree1.AddObjects(new List<FileSystemInfo>() { new DirectoryInfo("c:\\") });
 
-
         var call = new CodeMethodInvokeExpression();
         call.Method.TargetObject = new CodeFieldReferenceExpression(
             new CodeThisReferenceExpression(),
-            $"this.{this.Design.FieldName}");
+            this.Design.FieldName);
 
         call.Method.MethodName = nameof(TreeView.AddObjects);
 
-        var newListStatement = new CodeObjectCreateExpression(typeof(T),
+        var newListStatement = 
              new CodeArrayCreateExpression(
-            new CodeTypeReference(typeof(string)),
-            Value.Select(v => TTypes.ToCode(args, Design, v)).ToArray()));
+            new CodeTypeReference(typeof(T[])),
+            Value.Select(v => TTypes.ToCode(args, Design, v)).ToArray());
 
         call.Parameters.Add(newListStatement);
 
