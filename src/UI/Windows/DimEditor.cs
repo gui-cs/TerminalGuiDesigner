@@ -36,6 +36,7 @@ public partial class DimEditor : Dialog
     /// Creates a new instance of the <see cref="DimEditor"/> class.
     /// </summary>
     /// <param name="design"></param>
+    /// <param name="oldValue">Old value (if editing an existing instance)</param>
     public DimEditor(Design design, Dim oldValue) {
         InitializeComponent();
         

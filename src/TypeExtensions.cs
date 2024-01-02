@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terminal.Gui;
 
 namespace TerminalGuiDesigner
 {
+    /// <summary>
+    /// Extensions for the <see cref="Type"/> class.
+    /// </summary>
     public static class TypeExtensions
     {
         /// <summary>

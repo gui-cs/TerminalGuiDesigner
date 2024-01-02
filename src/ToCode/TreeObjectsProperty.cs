@@ -9,7 +9,7 @@ namespace TerminalGuiDesigner.ToCode;
 /// <typeparam name="T"></typeparam>
 public class TreeObjectsProperty<T> : Property, ITreeObjectsProperty where T : class
 {
-    public List<T> Value { get; private set; }
+    private List<T> value;
     readonly TreeView<T> treeView;
 
     Dictionary<Type,Func<CodeExpression>> treeBuilders = new Dictionary<Type, Func<CodeExpression>>()
@@ -17,7 +17,11 @@ public class TreeObjectsProperty<T> : Property, ITreeObjectsProperty where T : c
         { typeof(FileSystemInfo),TreeBuilderForFileSystemInfo} 
     };
 
-
+    /// <summary>
+    /// Creates a new instance
+    /// </summary>
+    /// <param name="design"></param>
+    /// <exception cref="MissingFieldException"></exception>
     public TreeObjectsProperty(Design design)
         : base(
         design,
@@ -25,9 +29,10 @@ public class TreeObjectsProperty<T> : Property, ITreeObjectsProperty where T : c
               ?? throw new MissingFieldException("Expected property was missing from TreeView"))
     {
         treeView = (TreeView<T>)design.View;
-        Value = new List<T>(treeView.Objects);
+        value = new List<T>(treeView.Objects);
     }
 
+    /// <inheritdoc/>
     public override string GetHumanReadableName()
     {
         return "Objects";
@@ -36,23 +41,29 @@ public class TreeObjectsProperty<T> : Property, ITreeObjectsProperty where T : c
     /// <inheritdoc/>
     public override string ToString()
     {
-        return $"{this.GetHumanReadableName()}:{this.Value.Count} objects";
+        return $"{this.GetHumanReadableName()}:{this.value.Count} objects";
     }
 
+    /// <inheritdoc/>
     public override void SetValue(object? value)
     {
-        this.Value = (List<T>)(value ?? new List<T>());
+        this.value = (List<T>)(value ?? new List<T>());
 
         treeView.ClearObjects();
-        treeView.AddObjects(this.Value);
+        treeView.AddObjects(this.value);
 
     }
 
+    /// <inheritdoc/>
     public override object GetValue()
     {
-        return this.Value;
+        return this.value;
     }
 
+    /// <summary>
+    /// Adds code to init method to populate TreeView Options and optionally TreeBuilder
+    /// (Depending on T type).
+    /// </summary>
     public override void ToCode(CodeDomArgs args)
     {
         // Create statement like this
@@ -68,7 +79,7 @@ public class TreeObjectsProperty<T> : Property, ITreeObjectsProperty where T : c
         var newListStatement = 
              new CodeArrayCreateExpression(
             new CodeTypeReference(typeof(T[])),
-            Value.Select(v => TTypes.ToCode(args, Design, v)).ToArray());
+            value.Select(v => TTypes.ToCode(args, Design, v)).ToArray());
 
         call.Parameters.Add(newListStatement);
 
@@ -99,13 +110,19 @@ public class TreeObjectsProperty<T> : Property, ITreeObjectsProperty where T : c
                                             """);
                     }
 
+    /// <summary>
+    /// Not implemented by this class
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="NotSupportedException">Always thrown</exception>
     public override string GetLhs()
     {
         throw new NotSupportedException("This property requires ");
     }
 
+    /// <inheritdoc/>
     public bool IsEmpty()
     {
-        return !Value.Any();
+        return !value.Any();
     }
 }

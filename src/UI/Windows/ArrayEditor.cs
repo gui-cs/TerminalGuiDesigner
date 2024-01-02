@@ -27,6 +27,13 @@ namespace TerminalGuiDesigner.UI.Windows {
         /// </summary>
         public IList Result { get; private set; }
 
+        /// <summary>
+        /// Creates a new instance of the editor configured to build lists of <paramref name="elementType"/>
+        /// and showing initial values held in <paramref name="oldValue"/> (if any).
+        /// </summary>
+        /// <param name="design"></param>
+        /// <param name="elementType"></param>
+        /// <param name="oldValue"></param>
         public ArrayEditor(Design design, Type elementType, IList oldValue) {
             InitializeComponent();
             this.design = design;

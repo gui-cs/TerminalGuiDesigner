@@ -17,7 +17,14 @@ namespace TerminalGuiDesigner.UI.Windows {
         private readonly Type genericTypeArgument;
         private readonly Type sliderOptionType;
 
+        /// <summary>
+        /// True if the dialog was canceled before completing
+        /// </summary>
         public bool Cancelled { get; internal set; } = true;
+        
+        /// <summary>
+        /// The resulting value as configured by the user
+        /// </summary>
         public object Result { get; internal set; }
 
         /// <summary>
@@ -25,6 +32,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         /// where T is of <see cref="Type"/> <paramref name="genericTypeArgument"/>.
         /// </summary>
         /// <param name="genericTypeArgument">The T Type of the <see cref="SliderOption{T}"/> you want to design</param>
+        /// <param name="oldValue">Previous value (if editing an existing instance).</param>
         public SliderOptionEditor(Type genericTypeArgument, object? oldValue) {
             InitializeComponent();
 
