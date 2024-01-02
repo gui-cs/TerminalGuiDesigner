@@ -32,11 +32,18 @@ namespace TerminalGuiDesigner
                 throw new NotSupportedException("Expected Tree View Type to be an implementation of generic class TreeView<>");
             }
 
+
+
             var d = tv.Data as Design ?? throw new NotSupportedException("View does not have a Design");
-            var prop = (ITreeObjectsProperty)(
-                    d.GetDesignableProperty(nameof(TreeView.Objects))
-                    ?? throw new Exception("View did not have expected Designable property")
-                );
+
+            var prop = (ITreeObjectsProperty?)d.GetDesignableProperty(nameof(TreeView.Objects));
+
+            if(prop == null)
+            {
+                // Options are not designable for this T type so TreeView must be empty
+                return true;
+            }
+
             return prop.IsEmpty();
         }
     }
