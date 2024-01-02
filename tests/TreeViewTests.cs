@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UnitTests
+﻿namespace UnitTests
 {
     internal class TreeViewTests : Tests
     {
@@ -29,8 +23,10 @@ namespace UnitTests
 
 
                 Assert.That(v.Objects.Count, Is.EqualTo(2));
+                Assert.That(v.TreeBuilder, Is.Not.Null);
 
             }, out var viewAfter);
+
 
             Assert.That(viewAfter.Objects.Count, Is.EqualTo(2));
 
@@ -39,7 +35,7 @@ namespace UnitTests
 
             Assert.That(viewAfter.Objects.ElementAt(0).ToString(), Is.EqualTo(new DirectoryInfo("/").ToString()));
             Assert.That(viewAfter.Objects.ElementAt(1).ToString(), Is.EqualTo(new FileInfo("/blah.txt").ToString()));
+            Assert.That(viewAfter.TreeBuilder, Is.Not.Null);
         }
-
     }
 }

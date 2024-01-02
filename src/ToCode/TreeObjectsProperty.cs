@@ -1,8 +1,5 @@
 ﻿using System.CodeDom;
-using System.Reflection;
-using System.Runtime.Intrinsics;
 using Terminal.Gui;
-using TerminalGuiDesigner.FromCode;
 
 namespace TerminalGuiDesigner.ToCode;
 
@@ -10,6 +7,12 @@ public class TreeObjectsProperty<T> : Property where T : class
 {
     public List<T> Value { get; private set; } = new List<T>();
     readonly TreeView<T> treeView;
+
+    Dictionary<Type,Func<CodeExpression>> treeBuilders = new Dictionary<Type, Func<CodeExpression>>()
+    {
+        { typeof(FileSystemInfo),TreeBuilderForFileSystemInfo} 
+    };
+
 
     public TreeObjectsProperty(Design design)
         : base(
@@ -65,7 +68,33 @@ public class TreeObjectsProperty<T> : Property where T : class
         call.Parameters.Add(newListStatement);
 
         args.InitMethod.Statements.Add(call);
+
+
+
+        // Now also create TreeBuilder if its a known Type we can handle
+        if(treeBuilders.ContainsKey(typeof(T)))
+        {
+
+            var setBuilderLhs = new CodeFieldReferenceExpression(
+                new CodeThisReferenceExpression(), $"{this.Design.FieldName}.{nameof(TreeView<T>.TreeBuilder)}");
+            var setBuilderRhs = treeBuilders[typeof(T)]();
+
+            var assignStatement = new CodeAssignStatement
+            {
+                Left = setBuilderLhs,
+                Right = setBuilderRhs
+            };
+            args.InitMethod.Statements.Add(assignStatement);
+        }
     }
+
+    private static CodeExpression TreeBuilderForFileSystemInfo()
+    {
+        return new CodeSnippetExpression("""
+                                            new Terminal.Gui.DelegateTreeBuilder<System.IO.FileSystemInfo>(
+                                                (p) => p is System.IO.DirectoryInfo d ? d.GetFileSystemInfos() : System.Linq.Enumerable.Empty<System.IO.FileSystemInfo>())
+                                            """);
+                    }
 
     public override string GetLhs()
     {
