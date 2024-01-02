@@ -161,7 +161,7 @@ namespace TerminalGuiDesigner.UI
             }
             else
             if (
-                type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>) ||
+                type.IsGenericType(typeof(IEnumerable<>)) ||
                 type.IsAssignableTo(typeof(IList))
                 )
             {

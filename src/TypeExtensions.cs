@@ -27,7 +27,7 @@ namespace TerminalGuiDesigner
                 return type.GetGenericArguments().Single();
             }
             
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+            if (type.IsGenericType(typeof(IEnumerable<>)))
             {
                 return type.GetGenericArguments().Single();
             }
