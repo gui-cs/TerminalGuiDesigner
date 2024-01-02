@@ -117,7 +117,17 @@ public class TreeObjectsProperty<T> : Property, ITreeObjectsProperty where T : c
     /// <exception cref="NotSupportedException">Always thrown</exception>
     public override string GetLhs()
     {
-        throw new NotSupportedException("This property requires ");
+        throw new NotSupportedException("This property does its own code gen in ToCode");
+    }
+
+    /// <summary>
+    /// Not implemented by this class
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="NotSupportedException">Always thrown</exception>
+    public override CodeExpression GetRhs()
+    {
+        throw new NotSupportedException("This property does its own code gen in ToCode");
     }
 
     /// <inheritdoc/>
