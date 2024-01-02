@@ -161,7 +161,7 @@ namespace TerminalGuiDesigner.UI
             }
             else
             if (
-                // TODO: I just changed this from IsArray to IList assignable, need to worry about conversions a bit more
+                type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>) ||
                 type.IsAssignableTo(typeof(IList))
                 )
             {
@@ -278,6 +278,24 @@ namespace TerminalGuiDesigner.UI
                 }
             }
             else
+            if (type == typeof(FileSystemInfo))
+            {
+                var fd = new FileDialog();
+                fd.AllowsMultipleSelection = false;
+
+                Application.Run(fd);
+                if (fd.Canceled || string.IsNullOrWhiteSpace(fd.Path))
+                {
+                    return false;
+                }
+                else
+                {
+                    newValue = IsPathDirectory(fd.Path) ?
+                        new DirectoryInfo(fd.Path) : new FileInfo(fd.Path);
+                    return true;
+                }
+            }
+            else
             if (Modals.GetString(propertyName, "New String Value", oldValue?.ToString(), out var result, allowMultiLine))
             {
                 newValue = result;
@@ -387,6 +405,34 @@ namespace TerminalGuiDesigner.UI
                 newValue = null;
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Returns true if path is to a directory.
+        /// Thanks: https://stackoverflow.com/a/19596821/4824531
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        static bool IsPathDirectory(string path)
+        {
+            if (path == null) throw new ArgumentNullException("path");
+            path = path.Trim();
+
+            if (Directory.Exists(path))
+                return true;
+
+            if (File.Exists(path))
+                return false;
+
+            // neither file nor directory exists. guess intention
+
+            // if has trailing slash then it's a directory
+            if (new[] { Path.DirectorySeparatorChar,Path.AltDirectorySeparatorChar}.Any(x => path.EndsWith(x)))
+                return true; // ends with slash
+
+            // if has extension then its a file; directory otherwise
+            return string.IsNullOrWhiteSpace(Path.GetExtension(path));
         }
     }
 }
