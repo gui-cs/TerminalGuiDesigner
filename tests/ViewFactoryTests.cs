@@ -275,7 +275,6 @@ internal class ViewFactoryTests
             typeof( SaveDialog ),
             typeof( OpenDialog ),
             typeof( ScrollBarView ),
-            typeof( TreeView<> ),
             typeof( Frame ),
             typeof( Wizard ),
             typeof( WizardStep )

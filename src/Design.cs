@@ -48,7 +48,6 @@ public class Design
         typeof(TableView),
         typeof(TabView),
         typeof(TreeView),
-        typeof(TreeView<>),
         typeof(Dialog),
     };
 

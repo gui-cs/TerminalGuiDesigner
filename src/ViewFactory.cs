@@ -35,7 +35,6 @@ public static class ViewFactory
         typeof( SaveDialog ),
         typeof( OpenDialog ),
         typeof( ScrollBarView ),
-        typeof( TreeView<> ),
 
         // Theses are special types of view and shouldn't be added manually by user
         typeof( Frame ),
@@ -305,18 +304,4 @@ public static class ViewFactory
         return Create<T>( );
     }
 
-    /// <summary>
-    /// Returns all Types which can be used with generic view of the given <paramref name="viewType"/>.
-    /// </summary>
-    /// <param name="viewType">A generic view type e.g. <see langword="typeof"/>(Slider&lt;&gt;)</param>
-    /// <returns></returns>
-    public static IEnumerable<Type> GetSupportedTTypesForGenericViewOfType(Type viewType)
-    {
-        if(viewType == typeof(Slider<>))
-        {
-            return new[] { typeof(int), typeof(string), typeof(float), typeof(double), typeof(bool) };
-        }
-
-        throw new NotSupportedException($"Generic View {viewType} is not yet supported");
-    }
 }
