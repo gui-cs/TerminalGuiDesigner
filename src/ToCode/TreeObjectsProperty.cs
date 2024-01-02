@@ -6,14 +6,15 @@ using TerminalGuiDesigner.FromCode;
 
 namespace TerminalGuiDesigner.ToCode;
 
-public class TreeObjectsProperty<T> : Property
+public class TreeObjectsProperty<T> : Property where T : class
 {
     public List<T> Value { get; private set; } = new List<T>();
 
     public TreeObjectsProperty(Design design)
         : base(
         design,
-        typeof(Design).GetProperty(nameof(TreeView.Objects)) ?? throw new MissingFieldException("Expected property was missing from TreeView"))
+        typeof(TreeView<T>).GetProperty(nameof(TreeView<T>.Objects)) 
+              ?? throw new MissingFieldException("Expected property was missing from TreeView"))
     {
     }
 
