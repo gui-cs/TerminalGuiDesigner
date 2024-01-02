@@ -24,7 +24,7 @@
   <Class Name="TerminalGuiDesigner.Design">
     <Position X="3.75" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AhABQBACACKBADAHCAAAAEIQAECJhAAgARAABAAAgAg=</HashCode>
+      <HashCode>AxABQBACAiKBADAnCAAAAEIQAECJhAAgARAABAAAgAg=</HashCode>
       <FileName>Design.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -39,7 +39,7 @@
   <Class Name="TerminalGuiDesigner.Operations.AddViewOperation" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="10.75" Y="3.5" Width="2" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAABAAAAAAAAIhBABAAAAAAAAAAAAACAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAIhBABABAAAAAAAAAAACAAA=</HashCode>
       <FileName>Operations\AddViewOperation.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -84,14 +84,14 @@
   <Class Name="TerminalGuiDesigner.UI.Editor">
     <Position X="0.5" Y="0.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>IQRiB4gQACICNCQgCABAAAIBigMAQAgBEAFAIQAACAI=</HashCode>
+      <HashCode>IQRiB4gQACICJCQgKABAAAIBigMAQAgBAAEAIQAACAo=</HashCode>
       <FileName>UI\Editor.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TerminalGuiDesigner.ToCode.Property" Collapsed="true">
     <Position X="6.5" Y="0.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAEAAAKAABChAEAAAAAAAAAABCAEABAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAEAAAKAABChAFAAAAAAEAAABCAEABAAAAAAAAAAA=</HashCode>
       <FileName>ToCode\Property.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -112,7 +112,7 @@
   <Class Name="TerminalGuiDesigner.ToCode.CodeDomArgs">
     <Position X="17.25" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAgAAABAAAAIAAAAAAAAAAAQAEAACAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAgAAABAAAAIEAAAAAAAAAAQAEAACAAAAAAA=</HashCode>
       <FileName>ToCode\CodeDomArgs.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -192,10 +192,62 @@
       <FileName>Operations\OperationFactory.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="TerminalGuiDesigner.TTypes">
+    <Position X="11.5" Y="7.75" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>TTypes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TerminalGuiDesigner.ToCode.TreeObjectsProperty&lt;T&gt;">
+    <Position X="8.75" Y="7.75" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="TerminalGuiDesigner.ToCode.Property" ManuallyRouted="true">
+      <Path>
+        <Point X="7.375" Y="1.191" />
+        <Point X="7.375" Y="1.345" />
+        <Point X="8.398" Y="1.345" />
+        <Point X="8.398" Y="7.159" />
+        <Point X="9.875" Y="7.159" />
+        <Point X="9.875" Y="7.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>BgBAEAAAIAAAAgIEAAAAAAAAAABAAGAAAAAAAAAAAAA=</HashCode>
+      <FileName>ToCode\TreeObjectsProperty.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TerminalGuiDesigner.UI.Windows.ArrayEditor" Collapsed="true">
+    <Position X="11.5" Y="9.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAACQgAAEEgAggAAQDACBQBABAAIBAEAAAgAQ=</HashCode>
+      <FileName>UI\Windows\ArrayEditor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TerminalGuiDesigner.TypeExtensions">
+    <Position X="15" Y="7.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAABAAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TypeExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TerminalGuiDesigner.UI.ValueFactory">
+    <Position X="13" Y="9.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAEAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAI=</HashCode>
+      <FileName>UI\ValueFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Interface Name="TerminalGuiDesigner.Operations.IOperation">
     <Position X="10.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAABAAAAAAgABABCAAAAAAAACAAAAAACAA=</HashCode>
+      <HashCode>AAAAAAAAAQAABAAAAAAgABABCAAAAAAAACAAAAAACAA=</HashCode>
       <FileName>Operations\IOperation.cs</FileName>
     </TypeIdentifier>
   </Interface>

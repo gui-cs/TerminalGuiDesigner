@@ -54,11 +54,12 @@
 
             var sliderIn = RoundTrip<Dialog, TreeView<object>>((d, v) =>
             {
+                // Should not be able to pick Objects when T is object
                 var objectsProperty = d.GetDesignableProperty("Objects");
-                Assert.That(objectsProperty, Is.InstanceOf<TreeObjectsProperty<object>>());
                 Assert.That(v.TreeBuilder, Is.Null);
 
                 Assert.That(v.IsBorderlessContainerView, Is.True);
+
 
             }, out var viewAfter);
 

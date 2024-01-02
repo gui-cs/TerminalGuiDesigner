@@ -125,4 +125,10 @@ public class TreeObjectsProperty<T> : Property, ITreeObjectsProperty where T : c
     {
         return !value.Any();
     }
+
+    /// <inheritdoc/>
+    public bool IsSupported()
+    {
+        return treeBuilders.ContainsKey(typeof(T));
+    }
 }

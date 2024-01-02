@@ -806,7 +806,9 @@ public class Design
         
         if (isGenericType && viewType.GetGenericTypeDefinition() == typeof(TreeView<>))
         {
-            yield return this.CreateTreeObjectsProperty(viewType);
+            var prop = this.CreateTreeObjectsProperty(viewType);
+            if(((ITreeObjectsProperty)prop).IsSupported())
+                yield return prop;
         }
 
         if (this.View is TableView tv)
