@@ -207,10 +207,6 @@ public static class ViewFactory
                     (p) => p is DirectoryInfo d ? d.GetFileSystemInfos() : Enumerable.Empty<FileSystemInfo>());
                 SetDefaultDimensions(newView, width ?? 16, height ?? 5);
                 break;
-            case TreeView<object> fstv:
-                fstv.TreeBuilder = new DelegateTreeBuilder<object>(o => Enumerable.Empty<object>());
-                SetDefaultDimensions(newView, width ?? 16, height ?? 5);
-                break;
             case ScrollView sv:
                 sv.ContentSize = new Size( 20, 10 );
                 SetDefaultDimensions(newView, width ?? 10, height ?? 5 );
