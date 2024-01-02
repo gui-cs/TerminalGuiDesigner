@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Terminal.Gui;
 
 namespace TerminalGuiDesigner
 {
@@ -35,6 +36,18 @@ namespace TerminalGuiDesigner
 
 
             return null;
+        }
+
+        /// <summary>
+        /// Returns true if <paramref name="type"/> is an implementation of a generic parent
+        /// type <paramref name="genericParentHypothesis"/>.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="genericParentHypothesis">Generic parent e.g. <see langword="typeof"/>(TreeView&lt;&gt;)</param>
+        /// <returns></returns>
+        public static bool IsGenericType(this Type type, Type genericParentHypothesis)
+        {
+            return type.IsGenericType && type.GetGenericTypeDefinition() == genericParentHypothesis;
         }
     }
 }

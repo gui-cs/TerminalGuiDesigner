@@ -22,7 +22,7 @@ public class DesignState
     {
         this.Design = design;
         this.OriginalScheme = this.Design.View.GetExplicitColorScheme();
-        this.Design.View.DrawContent += this.DrawContent;
+        this.Design.View.DrawContentComplete += this.DrawContentComplete;
         this.Design.View.Enter += this.Enter;
     }
 
@@ -49,7 +49,7 @@ public class DesignState
         }
     }
 
-    private void DrawContent(object? sender, DrawEventArgs r)
+    private void DrawContentComplete(object? sender, DrawEventArgs r)
     {
         if (this.Design.View.IsBorderlessContainerView() && Editor.ShowBorders)
         {

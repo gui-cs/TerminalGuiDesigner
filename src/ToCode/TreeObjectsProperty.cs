@@ -3,9 +3,13 @@ using Terminal.Gui;
 
 namespace TerminalGuiDesigner.ToCode;
 
-public class TreeObjectsProperty<T> : Property where T : class
+/// <summary>
+/// <see cref="Property"/> for storing, editing and code gen for TreeView&lt;T&gt;.Options.
+/// </summary>
+/// <typeparam name="T"></typeparam>
+public class TreeObjectsProperty<T> : Property, ITreeObjectsProperty where T : class
 {
-    public List<T> Value { get; private set; } = new List<T>();
+    public List<T> Value { get; private set; }
     readonly TreeView<T> treeView;
 
     Dictionary<Type,Func<CodeExpression>> treeBuilders = new Dictionary<Type, Func<CodeExpression>>()
@@ -21,6 +25,7 @@ public class TreeObjectsProperty<T> : Property where T : class
               ?? throw new MissingFieldException("Expected property was missing from TreeView"))
     {
         treeView = (TreeView<T>)design.View;
+        Value = new List<T>(treeView.Objects);
     }
 
     public override string GetHumanReadableName()
@@ -69,8 +74,6 @@ public class TreeObjectsProperty<T> : Property where T : class
 
         args.InitMethod.Statements.Add(call);
 
-
-
         // Now also create TreeBuilder if its a known Type we can handle
         if(treeBuilders.ContainsKey(typeof(T)))
         {
@@ -101,4 +104,8 @@ public class TreeObjectsProperty<T> : Property where T : class
         throw new NotSupportedException("This property requires ");
     }
 
+    public bool IsEmpty()
+    {
+        return !Value.Any();
+    }
 }
