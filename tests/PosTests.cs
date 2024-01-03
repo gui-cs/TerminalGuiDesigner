@@ -1,9 +1,3 @@
-using System.IO;
-using System.Linq;
-using TerminalGuiDesigner.FromCode;
-using TerminalGuiDesigner.Operations;
-using TerminalGuiDesigner.ToCode;
-
 namespace UnitTests;
 
 [TestFixture]
@@ -196,7 +190,7 @@ internal class PosTests : Tests
             };
         }
     }
-    
+
     private static IEnumerable<TestCaseData> IsCenter_Cases
     {
         get
@@ -336,14 +330,14 @@ internal class PosTests : Tests
     [TestCaseSource( nameof( GetCode_Cases ) )]
     public void GetCode( Pos testPos, string expectedCodeString, Design d, View v )
     {
-        Assert.That( testPos.ToCode( new( ) { d } ), Is.EqualTo( expectedCodeString ) );
+        Assert.That( testPos.ToCode( [d] ), Is.EqualTo( expectedCodeString ) );
     }
 
     [Test]
     [TestCaseSource( nameof( GetPosType_OutputsCorrectOffset_Cases ) )]
     public bool GetPosType_OutputsCorrectOffset( Pos testValue, int expectedOffset, Design? d )
     {
-        List<Design> knownDesigns = new( );
+        List<Design> knownDesigns = [];
         if ( d is not null )
         {
             knownDesigns.Add( d );
@@ -358,7 +352,7 @@ internal class PosTests : Tests
     [TestCaseSource( nameof( GetPosType_OutputsCorrectType_Cases ) )]
     public bool GetPosType_OutputsCorrectType( Pos testValue, PosType expectedPosType, Design? d )
     {
-        List<Design> knownDesigns = new( );
+        List<Design> knownDesigns = [];
         if ( d is not null )
         {
             knownDesigns.Add( d );
@@ -373,7 +367,7 @@ internal class PosTests : Tests
     [TestCaseSource( nameof( GetPosType_OutputsCorrectValue_Cases ) )]
     public bool GetPosType_OutputsCorrectValue( Pos testValue, float expectedValue, Design? d )
     {
-        List<Design> knownDesigns = new( );
+        List<Design> knownDesigns = [];
         if ( d is not null )
         {
             knownDesigns.Add( d );
@@ -411,6 +405,7 @@ internal class PosTests : Tests
         {
             Assert.Ignore( "BUG: Null returns true for this, when it shouldn't" );
         }
+
         return testValue.IsAnchorEnd( );
     }
 
@@ -433,6 +428,7 @@ internal class PosTests : Tests
         {
             Assert.Warn( "BUG: Null returns true for this, when it shouldn't" );
         }
+
         return testValue.IsCenter( );
     }
 
@@ -472,7 +468,7 @@ internal class PosTests : Tests
     [NonParallelizable]
     public bool IsRelative_WithOutParams( Pos testValue, Design? expectedOutDesign, Side expectedOutSide )
     {
-        List<Design> knownDesigns = new( );
+        List<Design> knownDesigns = [];
         if ( expectedOutDesign is not null )
         {
             knownDesigns.Add( expectedOutDesign );
@@ -499,7 +495,7 @@ internal class PosTests : Tests
         Assert.Multiple( ( ) =>
         {
             Assert.That( p.IsRelative );
-            Assert.That( p.IsRelative( new List<Design> { d }, out Design outDesign, out Side outSide ) );
+            Assert.That( p.IsRelative( new List<Design> { d }, out Design? outDesign, out Side outSide ) );
             Assert.That( outDesign, Is.SameAs( d ) );
             Assert.That( outSide, Is.EqualTo( side ) );
         } );
@@ -524,121 +520,43 @@ internal class PosTests : Tests
     }
 
     [Test]
-    [Ignore( "Code generation is tested in other tests here" )]
-    public void TestRoundTrip_PosAnchorEnd( )
+    public void TestRoundTrip_PosRelative( [Values] Side side, [Values( -2, 1, 5 )] int offset, [Values( "X", "Y" )] string property )
     {
-        var viewToCode = new ViewToCode( );
+        ViewToCode viewToCode = new( );
 
-        var file = new FileInfo( "TestRoundTrip_PosAnchorEnd.cs" );
-        var designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Window ) );
+        FileInfo file = new( $"{nameof( TestRoundTrip_PosRelative )}.cs" );
+        Design designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Window ) );
 
         designOut.View.Width = 100;
         designOut.View.Height = 100;
 
-        var lbl = ViewFactory.Create<Label>( );
-        lbl.X = Pos.AnchorEnd( 1 );
-        lbl.Y = Pos.AnchorEnd( 4 ); // length of "Heya"
-
-        new AddViewOperation( lbl, designOut, "label1" ).Do( );
-
-        viewToCode.GenerateDesignerCs( designOut, typeof( Window ) );
-
-        var codeToView = new CodeToView( designOut.SourceCode );
-        var designBackIn = codeToView.CreateInstance( );
-
-        var lblIn = designBackIn.View.GetActualSubviews( ).OfType<Label>( ).Single( );
-
-        lblIn.X.GetPosType( designBackIn.GetAllDesigns( ).ToList( ), out var backInType, out var backInValue, out _, out _, out var backInOffset );
-        Assert.That( backInOffset, Is.Zero );
-        Assert.That( backInType, Is.EqualTo( PosType.AnchorEnd ) );
-        Assert.That( backInValue, Is.EqualTo( 1 ) );
-
-        lblIn.Y.GetPosType( designBackIn.GetAllDesigns( ).ToList( ), out backInType, out backInValue, out _, out _, out backInOffset );
-        Assert.That( backInOffset, Is.Zero );
-        Assert.That( backInType, Is.EqualTo( PosType.AnchorEnd ) );
-        Assert.That( backInValue, Is.EqualTo( 14 ) );
-    }
-
-    [Test]
-    [Ignore( "Code generation is tested in other tests here" )]
-    public void TestRoundTrip_PosAnchorEnd_WithOffset( )
-    {
-        var viewToCode = new ViewToCode( );
-
-        var file = new FileInfo( "TestRoundTrip_PosAnchorEnd.cs" );
-        var designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Window ) );
-
-        designOut.View.Width = 100;
-        designOut.View.Height = 100;
-
-        var lbl = ViewFactory.Create<Label>( );
-        lbl.X = Pos.AnchorEnd( 1 ) + 5;
-        lbl.Y = Pos.AnchorEnd( 4 ) - 3; // length of "Heya"
-
-        new AddViewOperation( lbl, designOut, "label1" ).Do( );
-
-        viewToCode.GenerateDesignerCs( designOut, typeof( Window ) );
-
-        var codeToView = new CodeToView( designOut.SourceCode );
-        var designBackIn = codeToView.CreateInstance( );
-
-        var lblIn = designBackIn.View.GetActualSubviews( ).OfType<Label>( ).Single( );
-
-        lblIn.X.GetPosType( designBackIn.GetAllDesigns( ).ToList( ), out var backInType, out var backInValue, out _, out _, out var backInOffset );
-        Assert.That( backInOffset, Is.EqualTo( 5 ) );
-        Assert.That( backInType, Is.EqualTo( PosType.AnchorEnd ) );
-        Assert.That( backInValue, Is.EqualTo( 1 ) );
-
-        lblIn.Y.GetPosType( designBackIn.GetAllDesigns( ).ToList( ), out backInType, out backInValue, out _, out _, out backInOffset );
-        Assert.That( backInOffset, Is.EqualTo( -3 ) );
-        Assert.That( backInType, Is.EqualTo( PosType.AnchorEnd ) );
-        Assert.That( backInValue, Is.EqualTo( 4 ) );
-    }
-
-    [Test]
-    [TestCase( Side.Left, -2, "X" )]
-    [TestCase( Side.Right, 1, "X" )]
-    [TestCase( Side.Top, -2, "Y" )]
-    [TestCase( Side.Bottom, 5, "Y" )]
-    [Ignore( "Code generation is tested in other tests here" )]
-    public void TestRoundTrip_PosRelative( Side side, int offset, string property )
-    {
-        var viewToCode = new ViewToCode( );
-
-        var file = new FileInfo( "TestRoundTrip_PosRelative.cs" );
-        var designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Window ) );
-
-        designOut.View.Width = 100;
-        designOut.View.Height = 100;
-
-        var lbl = ViewFactory.Create<Label>( );
+        using Label lbl = ViewFactory.Create<Label>( );
         lbl.X = 50;
         lbl.Y = 50;
 
-        var btn = ViewFactory.Create( typeof( Button ) );
+        using Button btn = ViewFactory.Create<Button>( );
 
-        new AddViewOperation( lbl, designOut, "label1" ).Do( );
-        new AddViewOperation( btn, designOut, "btn" ).Do( );
+        Assert.That( ( ) => new AddViewOperation( lbl, designOut, "label1" ).Do( ), Throws.Nothing );
+        Assert.That( ( ) => new AddViewOperation( btn, designOut, "btn" ).Do( ), Throws.Nothing );
 
-        if ( property == "X" )
+        switch ( property )
         {
-            btn.X = PosExtensions.CreatePosRelative( (Design)lbl.Data, side, offset );
-        }
-        else if ( property == "Y" )
-        {
-            btn.Y = PosExtensions.CreatePosRelative( (Design)lbl.Data, side, offset );
-        }
-        else
-        {
-            throw new ArgumentException( $"Unknown property for test '{property}'" );
+            case "X":
+                btn.X = ( (Design)lbl.Data ).CreatePosRelative( side, offset );
+                break;
+            case "Y":
+                btn.Y = ( (Design)lbl.Data ).CreatePosRelative( side, offset );
+                break;
+            default:
+                throw new ArgumentException( $"Unknown property for test '{property}'" );
         }
 
         viewToCode.GenerateDesignerCs( designOut, typeof( Window ) );
 
-        var codeToView = new CodeToView( designOut.SourceCode );
-        var designBackIn = codeToView.CreateInstance( );
+        CodeToView codeToView = new( designOut.SourceCode );
+        Design designBackIn = codeToView.CreateInstance( );
 
-        var btnIn = designBackIn.View.GetActualSubviews( ).OfType<Button>( ).Single( );
+        using Button btnIn = designBackIn.View.GetActualSubviews( ).OfType<Button>( ).Single( );
 
         PosType backInType;
         Design? backInRelativeTo;
