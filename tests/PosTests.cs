@@ -518,79 +518,7 @@ internal class PosTests : Tests
         Assert.That( type, Is.EqualTo( PosType.Absolute ) );
         Assert.That( val, Is.Zero );
     }
-
-    [Test]
-    [Ignore( "Code generation is tested in other tests here" )]
-    public void TestRoundTrip_PosAnchorEnd( )
-    {
-        var viewToCode = new ViewToCode( );
-
-        var file = new FileInfo( "TestRoundTrip_PosAnchorEnd.cs" );
-        var designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Window ) );
-
-        designOut.View.Width = 100;
-        designOut.View.Height = 100;
-
-        var lbl = ViewFactory.Create<Label>( );
-        lbl.X = Pos.AnchorEnd( 1 );
-        lbl.Y = Pos.AnchorEnd( 4 ); // length of "Heya"
-
-        new AddViewOperation( lbl, designOut, "label1" ).Do( );
-
-        viewToCode.GenerateDesignerCs( designOut, typeof( Window ) );
-
-        var codeToView = new CodeToView( designOut.SourceCode );
-        var designBackIn = codeToView.CreateInstance( );
-
-        var lblIn = designBackIn.View.GetActualSubviews( ).OfType<Label>( ).Single( );
-
-        lblIn.X.GetPosType( designBackIn.GetAllDesigns( ).ToList( ), out var backInType, out var backInValue, out _, out _, out var backInOffset );
-        Assert.That( backInOffset, Is.Zero );
-        Assert.That( backInType, Is.EqualTo( PosType.AnchorEnd ) );
-        Assert.That( backInValue, Is.EqualTo( 1 ) );
-
-        lblIn.Y.GetPosType( designBackIn.GetAllDesigns( ).ToList( ), out backInType, out backInValue, out _, out _, out backInOffset );
-        Assert.That( backInOffset, Is.Zero );
-        Assert.That( backInType, Is.EqualTo( PosType.AnchorEnd ) );
-        Assert.That( backInValue, Is.EqualTo( 14 ) );
-    }
-
-    [Test]
-    [Ignore( "Code generation is tested in other tests here" )]
-    public void TestRoundTrip_PosAnchorEnd_WithOffset( )
-    {
-        var viewToCode = new ViewToCode( );
-
-        var file = new FileInfo( "TestRoundTrip_PosAnchorEnd.cs" );
-        var designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Window ) );
-
-        designOut.View.Width = 100;
-        designOut.View.Height = 100;
-
-        var lbl = ViewFactory.Create<Label>( );
-        lbl.X = Pos.AnchorEnd( 1 ) + 5;
-        lbl.Y = Pos.AnchorEnd( 4 ) - 3; // length of "Heya"
-
-        new AddViewOperation( lbl, designOut, "label1" ).Do( );
-
-        viewToCode.GenerateDesignerCs( designOut, typeof( Window ) );
-
-        var codeToView = new CodeToView( designOut.SourceCode );
-        var designBackIn = codeToView.CreateInstance( );
-
-        var lblIn = designBackIn.View.GetActualSubviews( ).OfType<Label>( ).Single( );
-
-        lblIn.X.GetPosType( designBackIn.GetAllDesigns( ).ToList( ), out var backInType, out var backInValue, out _, out _, out var backInOffset );
-        Assert.That( backInOffset, Is.EqualTo( 5 ) );
-        Assert.That( backInType, Is.EqualTo( PosType.AnchorEnd ) );
-        Assert.That( backInValue, Is.EqualTo( 1 ) );
-
-        lblIn.Y.GetPosType( designBackIn.GetAllDesigns( ).ToList( ), out backInType, out backInValue, out _, out _, out backInOffset );
-        Assert.That( backInOffset, Is.EqualTo( -3 ) );
-        Assert.That( backInType, Is.EqualTo( PosType.AnchorEnd ) );
-        Assert.That( backInValue, Is.EqualTo( 4 ) );
-    }
-
+    
     [Test]
     [TestCase( Side.Left, -2, "X" )]
     [TestCase( Side.Right, 1, "X" )]
@@ -611,18 +539,18 @@ internal class PosTests : Tests
         lbl.X = 50;
         lbl.Y = 50;
 
-        var btn = ViewFactory.Create( typeof( Button ) );
+        var btn = ViewFactory.Create<Button>( );
 
         new AddViewOperation( lbl, designOut, "label1" ).Do( );
         new AddViewOperation( btn, designOut, "btn" ).Do( );
 
         if ( property == "X" )
         {
-            btn.X = PosExtensions.CreatePosRelative( (Design)lbl.Data, side, offset );
+            btn.X = ((Design)lbl.Data).CreatePosRelative( side, offset );
         }
         else if ( property == "Y" )
         {
-            btn.Y = PosExtensions.CreatePosRelative( (Design)lbl.Data, side, offset );
+            btn.Y = ((Design)lbl.Data).CreatePosRelative( side, offset );
         }
         else
         {
