@@ -2,24 +2,27 @@ using static Terminal.Gui.SpinnerStyle;
 
 namespace UnitTests;
 
+[TestFixture]
+[Category( "Core" )]
 internal class SpinnerViewTests : Tests
 {
     [Test]
-    public void TestNewSpinnerAutoSpins()
+    public void NewSpinnerAutoSpins()
     {
         ClassicAssert.Contains(typeof(SpinnerView), ViewFactory.SupportedViewTypes.ToArray());
 
         ClassicAssert.IsEmpty(Application.MainLoop.Timeouts);
 
         var s = (SpinnerView)ViewFactory.Create(typeof(SpinnerView));
-            
+
         ClassicAssert.IsNotEmpty(Application.MainLoop.Timeouts);
         s.Dispose();
 
         ClassicAssert.IsEmpty(Application.MainLoop.Timeouts);
     }
     [Test]
-    public void TestNewSpinnerAutoSpins_AfterRoundTrip()
+    [Category("Code Generation")]
+    public void NewSpinnerAutoSpins_AfterRoundTrip()
     {
         ClassicAssert.Contains(typeof(SpinnerView), ViewFactory.SupportedViewTypes.ToArray());
 
@@ -30,12 +33,13 @@ internal class SpinnerViewTests : Tests
 
         },out _);
 
-        // Autospin original and the one that is read back in
+        // Auto-spin original and the one that is read back in
         ClassicAssert.AreEqual(2, Application.MainLoop.Timeouts.Count);
     }
 
     [Test]
-    public void TestNewSpinnerAutoSpins_ChangeStyle()
+    [Category("Code Generation")]
+    public void NewSpinnerAutoSpins_ChangeStyle()
     {
         var backIn = RoundTrip<View, SpinnerView>((d, v) =>
         {
@@ -46,7 +50,7 @@ internal class SpinnerViewTests : Tests
             ClassicAssert.IsInstanceOf<Triangle>(v.Style);
         }, out _);
 
-        // Autospin original and the one that is read back in
+        // Auto-spin original and the one that is read back in
         ClassicAssert.IsInstanceOf<Triangle>(backIn.Style);
     }
 }
