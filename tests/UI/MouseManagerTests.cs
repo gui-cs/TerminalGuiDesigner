@@ -389,68 +389,67 @@ internal class MouseManagerTests : Tests
           Hi
         */
 
-        var lbl1 = new Label(2, 1, "Hi");
-        var lbl2 = new Label(4, 2, "Hi");
-        var lbl3 = new Label(2, 3, "Hi");
+        Label lbl1 = new( 2, 1, "Hi" );
+        Label lbl2 = new( 4, 2, "Hi" );
+        Label lbl3 = new( 2, 3, "Hi" );
 
-        var lbl1Design = new Design(d.SourceCode, "lbl1", lbl1);
-        var lbl2Design = new Design(d.SourceCode, "lbl2", lbl2);
-        var lbl3Design = new Design(d.SourceCode, "lbl3", lbl3);
+        Design lbl1Design = new( d.SourceCode, "lbl1", lbl1 );
+        Design lbl2Design = new( d.SourceCode, "lbl2", lbl2 );
+        Design lbl3Design = new( d.SourceCode, "lbl3", lbl3 );
 
         lbl1.Data = lbl1Design;
         lbl2.Data = lbl2Design;
         lbl3.Data = lbl3Design;
 
-        var labels = new[] { lbl1Design, lbl2Design, lbl3Design };
+        Design[] labels = new[] { lbl1Design, lbl2Design, lbl3Design };
 
-        d.View.Add(lbl1);
-        d.View.Add(lbl2);
-        d.View.Add(lbl3);
+        d.View.Add( lbl1 );
+        d.View.Add( lbl2 );
+        d.View.Add( lbl3 );
 
-        var selection = SelectionManager.Instance;
-        selection.Clear();
-        var mgr = new MouseManager();
+        SelectionManager selection = SelectionManager.Instance;
+        selection.Clear( );
+        MouseManager mgr = new( );
 
         // user presses down
-        var e = new MouseEvent
+        MouseEvent e = new( )
         {
             X = xStart,
             Y = yStart,
             Flags = MouseFlags.Button1Pressed,
         };
 
-        mgr.HandleMouse(e, d);
+        mgr.HandleMouse( e, d );
 
         // user pulled selection box to destination
-        e = new MouseEvent
+        e = new( )
         {
             X = xEnd,
             Y = yEnd,
             Flags = MouseFlags.Button1Pressed,
         };
-        mgr.HandleMouse(e, d);
+        mgr.HandleMouse( e, d );
 
         // user releases mouse (in place)
-        e = new MouseEvent
+        e = new( )
         {
             X = xEnd,
             Y = yEnd,
         };
-        mgr.HandleMouse(e, d);
+        mgr.HandleMouse( e, d );
 
         // do not expect dragging selection box to change anything
         // or be undoable
-        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
+        Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
 
         // for each selectable thing
-        for (int i = 0; i < labels.Length; i++)
+        for ( int i = 0; i < labels.Length; i++ )
         {
             // its selection status should match the expectation
             // passed in the test case
-            ClassicAssert.AreEqual(
-                expectSelected.Contains(i),
-                selection.Selected.ToList().Contains(labels[i]),
-                $"Expectation wrong for label index {i} (indexes are 0 based)");
+            Assert.That(
+                selection.Selected.ToList( ).Contains( labels[ i ] ), Is.EqualTo( expectSelected.Contains( i ) ),
+                $"Expectation wrong for label index {i} (indexes are 0 based)" );
         }
     }
 }
