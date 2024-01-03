@@ -1,7 +1,11 @@
 using System;
+using System.CodeDom;
+using System.CodeDom.Compiler;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Microsoft.CSharp;
 using Terminal.Gui;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.FromCode;
