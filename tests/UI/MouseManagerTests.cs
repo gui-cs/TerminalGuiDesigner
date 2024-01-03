@@ -1,5 +1,10 @@
+using System.Runtime.CompilerServices;
+
 namespace UnitTests.UI;
 
+[TestFixture]
+[TestOf( typeof( MouseManager ) )]
+[Category( "UI" )]
 internal class MouseManagerTests : Tests
 {
     [Test]
