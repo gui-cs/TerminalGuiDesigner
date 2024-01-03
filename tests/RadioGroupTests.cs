@@ -8,10 +8,10 @@ namespace UnitTests;
 internal class RadioGroupTests : Tests
 {
     [Test]
-    public void TestRoundTrip_PreserveRadioGroups()
+    public void RoundTrip_PreserveRadioGroups()
     {
 
-        var rgIn = RoundTrip<Window, RadioGroup>((_, _) => { }, out _);
+        var rgIn = RoundTrip<Window, RadioGroup>( static (_, _) => { }, out _);
 
         ClassicAssert.AreEqual(2, rgIn.RadioLabels.Length);
 
@@ -20,13 +20,12 @@ internal class RadioGroupTests : Tests
     }
 
     [Test]
-    public void TestRoundTrip_PreserveRadioGroups_Custom()
+    public void RoundTrip_PreserveRadioGroups_Custom()
     {
 
-        var rgIn = RoundTrip<Window, RadioGroup>(
-            (_, r) =>
+        var rgIn = RoundTrip<Window, RadioGroup>( static (_, r) =>
             {
-                r.RadioLabels = new string[] { "Fish", "Cat", "Balloon" };
+                r.RadioLabels = [ "Fish", "Cat", "Balloon" ];
         }, out _);
 
         ClassicAssert.AreEqual(3, rgIn.RadioLabels.Length);
@@ -37,12 +36,11 @@ internal class RadioGroupTests : Tests
     }
 
     [Test]
-    public void TestRoundTrip_PreserveRadioGroups_Empty()
+    public void RoundTrip_PreserveRadioGroups_Empty()
     {
-        var rgIn = RoundTrip<Window, RadioGroup>(
-            (_, r) =>
+        var rgIn = RoundTrip<Window, RadioGroup>( static (_, r) =>
             {
-                r.RadioLabels = new string[] { };
+                r.RadioLabels = [ ];
             }, out _);
 
         ClassicAssert.IsEmpty(rgIn.RadioLabels);
