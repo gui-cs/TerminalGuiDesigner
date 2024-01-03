@@ -14,7 +14,7 @@ internal class PropertyTests : Tests
     public void PropertyOfType_Pos( )
     {
         var d = new Design(new SourceCodeFile(nameof(PropertyOfType_Pos) + ".cs"), "FFF", new Label());
-        var xProp = d.GetDesignableProperties().Single(p => p.PropertyInfo.Name.Equals(nameof(View.X)));
+        var xProp = d.GetDesignableProperties().Single( static p => p.PropertyInfo.Name.Equals(nameof(View.X)));
 
         xProp.SetValue(Pos.Center());
 
@@ -28,7 +28,7 @@ internal class PropertyTests : Tests
     public void TestPropertyOfType_Size()
     {
         var d = new Design(new SourceCodeFile(nameof(PropertyOfType_Size) + ".cs"), "FFF", new ScrollView());
-        var xProp = d.GetDesignableProperties().Single(p => p.PropertyInfo.Name.Equals(nameof(View.X)));
+        var xProp = d.GetDesignableProperties().Single( static p => p.PropertyInfo.Name.Equals(nameof(View.X)));
 
         xProp.SetValue(Pos.Center());
 
@@ -42,7 +42,7 @@ internal class PropertyTests : Tests
     public void PropertyOfType_Attribute( )
     {
         var d = new Design(new SourceCodeFile(nameof(PropertyOfType_Attribute) + ".cs"), "FFF", new GraphView());
-        var colorProp = d.GetDesignableProperties().Single(p => p.PropertyInfo.Name.Equals(nameof(GraphView.GraphColor)));
+        var colorProp = d.GetDesignableProperties().Single( static p => p.PropertyInfo.Name.Equals(nameof(GraphView.GraphColor)));
 
         colorProp.SetValue(null);
 
@@ -59,7 +59,7 @@ internal class PropertyTests : Tests
     public void PropertyOfType_PointF( )
     {
         var d = new Design(new SourceCodeFile(nameof(PropertyOfType_PointF) + ".cs"), "FFF", new GraphView());
-        var pointProp = d.GetDesignableProperties().Single(p => p.PropertyInfo.Name.Equals(nameof(GraphView.ScrollOffset)));
+        var pointProp = d.GetDesignableProperties().Single( static p => p.PropertyInfo.Name.Equals(nameof(GraphView.ScrollOffset)));
 
         pointProp.SetValue(new PointF(4.5f, 4.1f));
 
@@ -77,7 +77,7 @@ internal class PropertyTests : Tests
         var file = new FileInfo("TestPropertyOfType_Rune.cs");
         var lv = new LineView();
         var d = new Design(new SourceCodeFile(file), "lv", lv);
-        var prop = d.GetDesignableProperties().Single(p => p.PropertyInfo.Name.Equals("LineRune"));
+        var prop = d.GetDesignableProperties().Single( static p => p.PropertyInfo.Name.Equals("LineRune"));
 
         prop.SetValue('F');
 
