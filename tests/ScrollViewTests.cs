@@ -5,66 +5,66 @@ namespace UnitTests;
 internal class ScrollViewTests : Tests
 {
     [Test]
-    public void TestRoundTrip_PreserveContentSize()
+    public void TestRoundTrip_PreserveContentSize( [Values( 1, 5, 25, 100 )] int width, [Values( 1, 5, 25, 100 )] int height )
     {
-        var scrollViewIn = RoundTrip<View, ScrollView>(
-            (d, s) =>
-                s.ContentSize = new Size(10, 5),
-            out var scrollViewOut);
+        using ScrollView scrollViewIn = RoundTrip<View, ScrollView>(
+            ( _, s ) => { s.ContentSize = new( width, height ); }, out ScrollView? scrollViewOut );
 
-        Assert.That( scrollViewIn, Is.Not.SameAs( scrollViewOut ) );
-        Assert.That( scrollViewIn.ContentSize.Width, Is.EqualTo( 10 ) );
-        Assert.That( scrollViewIn.ContentSize.Height, Is.EqualTo( 5 ) );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( scrollViewIn, Is.Not.SameAs( scrollViewOut ) );
+            Assert.That( scrollViewIn.ContentSize.Width, Is.EqualTo( width ) );
+            Assert.That( scrollViewIn.ContentSize.Height, Is.EqualTo( height ) );
+        } );
     }
 
     [Test]
-    public void TestRoundTrip_PreserveContentViews()
+    public void TestRoundTrip_PreserveContentViews( [Values( "blarggg" )] string text, [Values( "myLbl" )] string fieldName )
     {
-        var scrollViewIn = RoundTrip<View, ScrollView>(
-            (d, s) =>
-                {
-                    var op = new AddViewOperation(new Label("blarggg"), d, "myLbl");
-                    op.Do();
-                }, out _);
+        using Label lbl = new ( text );
+        using ScrollView scrollViewIn = RoundTrip<View, ScrollView>(
+            ( d, _ ) =>
+            {
+                AddViewOperation op = new ( lbl, d, fieldName );
+                op.Do( );
+            }, out _ );
 
-        var child = scrollViewIn.GetActualSubviews().Single();
+        using View child = scrollViewIn.GetActualSubviews( ).Single( );
         Assert.That( child, Is.InstanceOf<Label>( ) );
         Assert.That( child.Data, Is.InstanceOf<Design>( ) );
 
-        var lblIn = (Design)child.Data;
-        Assert.That( lblIn.FieldName, Is.EqualTo( "myLbl" ) );
-        Assert.That( lblIn.View.Text, Is.EqualTo( "blarggg" ) );
+        Design? lblIn = (Design)child.Data;
+        Assert.That( lblIn.FieldName, Is.EqualTo( fieldName ) );
+        Assert.That( lblIn.View.Text, Is.EqualTo( text ) );
     }
 
     [Test]
-    public void TestRoundTrip_ScrollViewInsideTabView_PreserveContentViews()
+    public void TestRoundTrip_ScrollViewInsideTabView_PreserveContentViews( )
     {
-        var scrollOut = ViewFactory.Create(typeof(ScrollView));
-        var buttonOut = ViewFactory.Create(typeof(Button));
+        using ScrollView scrollOut = ViewFactory.Create<ScrollView>( );
+        using Button buttonOut = ViewFactory.Create<Button>( );
 
-        var tabIn = RoundTrip<View, TabView>(
-            (d, tab) =>
-                {
-                    // Add a ScrollView to the first Tab
-                    new AddViewOperation(scrollOut, d, "myTabView")
-                    .Do();
+        using TabView tabIn = RoundTrip<View, TabView>(
+            ( d, _ ) =>
+            {
+                // Add a ScrollView to the first Tab
+                new AddViewOperation( scrollOut, d, "myTabView" ).Do( );
 
-                    // Add a Button to the ScrollView
-                    new AddViewOperation(buttonOut, (Design)scrollOut.Data, "myButton")
-                    .Do();
-                }, out _);
+                // Add a Button to the ScrollView
+                new AddViewOperation( buttonOut, (Design)scrollOut.Data, "myButton" ).Do( );
+            }, out _ );
 
         // The ScrollView should contain the Button
-        ClassicAssert.Contains(buttonOut, scrollOut.GetActualSubviews().ToArray());
+        Assert.That( scrollOut.GetActualSubviews( ).ToArray( ), Does.Contain( buttonOut ) );
 
         // The TabView read back in should contain the ScrollView
-        var scrollIn = tabIn.Tabs.First()
-                .View.GetActualSubviews()
-                .OfType<ScrollView>()
-                .Single();
+        using ScrollView scrollIn = tabIn.Tabs.First( )
+                                         .View.GetActualSubviews( )
+                                         .OfType<ScrollView>( )
+                                         .Single( );
 
-        var butttonIn = scrollIn.GetActualSubviews().Single();
-        Assert.That( butttonIn, Is.InstanceOf<Button>( ) );
-        Assert.That( butttonIn, Is.Not.SameAs( buttonOut ) );
+        using View buttonIn = scrollIn.GetActualSubviews( ).Single( );
+        Assert.That( buttonIn, Is.InstanceOf<Button>( ) );
+        Assert.That( buttonIn, Is.Not.SameAs( buttonOut ) );
     }
 }
