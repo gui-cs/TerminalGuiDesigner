@@ -530,11 +530,11 @@ internal class PosTests : Tests
         designOut.View.Width = 100;
         designOut.View.Height = 100;
 
-        var lbl = ViewFactory.Create<Label>( );
+        using Label lbl = ViewFactory.Create<Label>( );
         lbl.X = 50;
         lbl.Y = 50;
 
-        var btn = ViewFactory.Create<Button>( );
+        using Button btn = ViewFactory.Create<Button>( );
 
         new AddViewOperation( lbl, designOut, "label1" ).Do( );
         new AddViewOperation( btn, designOut, "btn" ).Do( );
@@ -557,7 +557,7 @@ internal class PosTests : Tests
         var codeToView = new CodeToView( designOut.SourceCode );
         var designBackIn = codeToView.CreateInstance( );
 
-        var btnIn = designBackIn.View.GetActualSubviews( ).OfType<Button>( ).Single( );
+        using Button btnIn = designBackIn.View.GetActualSubviews( ).OfType<Button>( ).Single( );
 
         PosType backInType;
         Design? backInRelativeTo;
