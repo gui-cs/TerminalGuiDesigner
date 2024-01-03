@@ -1,4 +1,5 @@
 using System.CodeDom;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using TerminalGuiAttribute = Terminal.Gui.Attribute;
 using TerminalGuiConfigurationManager = Terminal.Gui.ConfigurationManager;
@@ -56,8 +57,9 @@ internal class PropertyTests : Tests
 
         colorProp.SetValue( null );
 
-        CodeSnippetExpression rhs = (CodeSnippetExpression)colorProp.GetRhs( );
-        Assert.That( rhs.Value, Is.EqualTo( "null" ) );
+        CodeSnippetExpression? rhs = colorProp.GetRhs( ) as CodeSnippetExpression;
+        Assert.That( rhs, Is.Not.Null.And.InstanceOf<CodeSnippetExpression>( ) );
+        Assert.That( rhs!.Value, Is.Not.Null.And.EqualTo( "null" ) );
 
         colorProp.SetValue( new TerminalGuiAttribute( Color.BrightMagenta, Color.Blue ) );
 
@@ -67,16 +69,20 @@ internal class PropertyTests : Tests
 
     [Test]
     public void PropertyOfType_PointF( )
+    public void PropertyOfType_PointF( [Values( 4.5f, 10.1f )] float x, [Values( 4.5f, 10.1f )] float y )
     {
-        using GraphView graphView = new ( );
+        using GraphView graphView = new( );
         Design d = new( new( $"{nameof( PropertyOfType_PointF )}.cs" ), "FFF", graphView );
         Property pointProp = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof( GraphView.ScrollOffset ) ) );
 
-        pointProp.SetValue( new PointF( 4.5f, 4.1f ) );
-
-        CodeObjectCreateExpression rhs = (CodeObjectCreateExpression)pointProp.GetRhs( );
+        PointF pointF = new( x, y );
+        pointProp.SetValue( pointF );
 
         // The code generated should be a new PointF
+        CodeObjectCreateExpression? rhs = pointProp.GetRhs( ) as CodeObjectCreateExpression;
+
+        Assert.That( rhs, Is.Not.Null.And.InstanceOf<CodeObjectCreateExpression>( ) );
+        Assert.That( rhs!.Parameters, Is.Not.Null.And.InstanceOf<CodeExpressionCollection>( ) );
         Assert.That( rhs.Parameters, Has.Count.EqualTo( 2 ) );
     }
 
