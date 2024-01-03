@@ -1,39 +1,59 @@
-﻿using StringExtensions = TerminalGuiDesigner.StringExtensions;
+﻿using System.Diagnostics.CodeAnalysis;
+using StringExtensions = TerminalGuiDesigner.StringExtensions;
 
 namespace UnitTests;
 
 [TestFixture]
 [TestOf( typeof( StringExtensions ) )]
 [Category( "Core" )]
+[SuppressMessage( "Performance", "CA1861:Avoid constant arrays as arguments", Justification = "We don't really care for unit tests..." )]
 internal class StringExtensionTests
 {
-    [TestCase("bob", "bob", new[] {"fish"})]
-    [TestCase("fish", "fish2", new[] { "fish" })]
-    [TestCase("fish2", "fish3", new[] { "fish1","fish2" })]
-    [TestCase(null, "blank", new[] { "fish1", "fish2" })]
-    [TestCase("  ", "blank", new[] { "fish1", "fish2" })]
-    [TestCase("bob", "bob3", new[] { "bob", "bob2" })]
-    [TestCase("Fish1", "Fish1", new[] { "fish1"})] // default behavior is case sensitive
-    public void MakeUnique_DefaultComparer(string? stringIn, string expectedOut, string[] whenCollection)
+    private static IEnumerable<TestCaseData> MakeUnique_DefaultComparer_Cases =>
+    [
+        new( "bob", "bob", new[] { "fish" } ),
+        new( "fish", "fish2", new[] { "fish" } ),
+        new( "fish2", "fish3", new[] { "fish1", "fish2" } ),
+        new( null, "blank", new[] { "fish1", "fish2" } ),
+        new( "  ", "blank", new[] { "fish1", "fish2" } ),
+        new( "bob", "bob3", new[] { "bob", "bob2" } ),
+        new( "Fish1", "Fish1", new[] { "fish1" } )
+    ];
+
+    private static IEnumerable<TestCaseData> MakeUnique_IgnoreCase_Cases =>
+    [
+        new( "bob", "bob", new[] { "fish" } ),
+        new( "Fish", "Fish2", new[] { "fish" } ),
+        new( "fIsh2", "fIsh3", new[] { "fish1", "fish2" } ),
+        new( "fish2", "fish3", new[] { "fiSH1", "fiSH2" } )
+    ];
+
+    private static IEnumerable<TestCaseData> PadBoth_Cases =>
+    [
+        new( "a", 4, " a  " ),
+        new( "a", 5, "  a  " ),
+        new( "b l", 5, " b l " ),
+        new( "sooooLooong", 2, "sooooLooong" )
+    ];
+
+    [Test]
+    [TestCaseSource( nameof( MakeUnique_DefaultComparer_Cases ) )]
+    public void MakeUnique_DefaultComparer( string? stringIn, string expectedOut, string[] whenCollection )
     {
-        Assert.That( stringIn.MakeUnique(whenCollection), Is.EqualTo( expectedOut ) );
+        Assert.That( stringIn.MakeUnique( whenCollection ), Is.EqualTo( expectedOut ) );
     }
 
-    [TestCase("bob", "bob", new[] { "fish" })]
-    [TestCase("Fish", "Fish2", new[] { "fish" })]
-    [TestCase("fIsh2", "fIsh3", new[] { "fish1", "fish2" })]
-    [TestCase("fish2", "fish3", new[] { "fiSH1", "fiSH2" })]
-    public void MakeUnique_IgnoreCaps(string stringIn, string expectedOut, string[] whenCollection)
+    [Test]
+    [TestCaseSource( nameof( MakeUnique_IgnoreCase_Cases ) )]
+    public void MakeUnique_IgnoreCase( string stringIn, string expectedOut, string[] whenCollection )
     {
-        Assert.That( stringIn.MakeUnique(whenCollection,System.StringComparer.InvariantCultureIgnoreCase), Is.EqualTo( expectedOut ) );
+        Assert.That( stringIn.MakeUnique( whenCollection, StringComparer.InvariantCultureIgnoreCase ), Is.EqualTo( expectedOut ) );
     }
 
-    [TestCase("a",4," a  ")]
-    [TestCase("a", 5, "  a  ")]
-    [TestCase("b l", 5, " b l ")]
-    [TestCase("sooooLooong", 2, "sooooLooong")]
-    public void PadBoth(string input, int length, string expectedOutput)
+    [Test]
+    [TestCaseSource( nameof( PadBoth_Cases ) )]
+    public void PadBoth( string input, int length, string expectedOutput )
     {
-        Assert.That( input.PadBoth(length), Is.EqualTo( expectedOutput ) );
+        Assert.That( input.PadBoth( length ), Is.EqualTo( expectedOutput ) );
     }
 }
