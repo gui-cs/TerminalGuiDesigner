@@ -1,47 +1,46 @@
-using Terminal.Gui;
-
 namespace UnitTests;
 
-class RadioGroupTests : Tests
+[TestFixture]
+[TestOf( typeof( OperationManager ) )]
+[TestOf( typeof( CodeToView ) )]
+[TestOf( typeof( ViewToCode ) )]
+[Category( "Code Generation" )]
+internal class RadioGroupTests : Tests
 {
     [Test]
-    public void TestRoundTrip_PreserveRadioGroups()
+    public void RoundTrip_PreserveRadioGroups( )
     {
+        var rgIn = RoundTrip<Window, RadioGroup>( static ( _, _ ) => { }, out _ );
 
-        var rgIn = RoundTrip<Window, RadioGroup>((_, _) => { }, out _);
+        Assert.That( rgIn.RadioLabels, Has.Length.EqualTo( 2 ) );
 
-        ClassicAssert.AreEqual(2, rgIn.RadioLabels.Length);
-
-        ClassicAssert.AreEqual("Option 1", rgIn.RadioLabels[0]);
-        ClassicAssert.AreEqual("Option 2", rgIn.RadioLabels[1]);
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( rgIn.RadioLabels[ 0 ], Is.EqualTo( "Option 1" ) );
+            Assert.That( rgIn.RadioLabels[ 1 ], Is.EqualTo( "Option 2" ) );
+        } );
     }
 
     [Test]
-    public void TestRoundTrip_PreserveRadioGroups_Custom()
+    public void RoundTrip_PreserveRadioGroups_Custom( )
     {
+        var rgIn = RoundTrip<Window, RadioGroup>( static ( _, r ) => { r.RadioLabels = ["Fish", "Cat", "Balloon"]; }, out _ );
 
-        var rgIn = RoundTrip<Window, RadioGroup>(
-            (_, r) =>
-            {
-                r.RadioLabels = new string[] { "Fish", "Cat", "Balloon" };
-        }, out _);
+        Assert.That( rgIn.RadioLabels, Has.Length.EqualTo( 3 ) );
 
-        ClassicAssert.AreEqual(3, rgIn.RadioLabels.Length);
-
-        ClassicAssert.AreEqual("Fish", rgIn.RadioLabels[0]);
-        ClassicAssert.AreEqual("Cat", rgIn.RadioLabels[1]);
-        ClassicAssert.AreEqual("Balloon", rgIn.RadioLabels[2]);
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( rgIn.RadioLabels[ 0 ], Is.EqualTo( "Fish" ) );
+            Assert.That( rgIn.RadioLabels[ 1 ], Is.EqualTo( "Cat" ) );
+            Assert.That( rgIn.RadioLabels[ 2 ], Is.EqualTo( "Balloon" ) );
+        } );
     }
 
     [Test]
-    public void TestRoundTrip_PreserveRadioGroups_Empty()
+    public void RoundTrip_PreserveRadioGroups_Empty( )
     {
-        var rgIn = RoundTrip<Window, RadioGroup>(
-            (_, r) =>
-            {
-                r.RadioLabels = new string[] { };
-            }, out _);
+        var rgIn = RoundTrip<Window, RadioGroup>( static ( _, r ) => { r.RadioLabels = []; }, out _ );
 
-        ClassicAssert.IsEmpty(rgIn.RadioLabels);
+        Assert.That( rgIn.RadioLabels, Is.Empty );
     }
 }
