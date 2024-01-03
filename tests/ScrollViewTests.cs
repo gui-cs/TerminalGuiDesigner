@@ -1,6 +1,8 @@
 namespace UnitTests;
 
-class ScrollViewTests : Tests
+[TestFixture]
+[Category( "Code Generation" )]
+internal class ScrollViewTests : Tests
 {
     [Test]
     public void TestRoundTrip_PreserveContentSize()
