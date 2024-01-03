@@ -12,9 +12,9 @@ internal class ScrollViewTests : Tests
                 s.ContentSize = new Size(10, 5),
             out var scrollViewOut);
 
-        ClassicAssert.AreNotSame(scrollViewOut, scrollViewIn);
-        ClassicAssert.AreEqual(10, scrollViewIn.ContentSize.Width);
-        ClassicAssert.AreEqual(5, scrollViewIn.ContentSize.Height);
+        Assert.That( scrollViewIn, Is.Not.SameAs( scrollViewOut ) );
+        Assert.That( scrollViewIn.ContentSize.Width, Is.EqualTo( 10 ) );
+        Assert.That( scrollViewIn.ContentSize.Height, Is.EqualTo( 5 ) );
     }
 
     [Test]
@@ -28,12 +28,12 @@ internal class ScrollViewTests : Tests
                 }, out _);
 
         var child = scrollViewIn.GetActualSubviews().Single();
-        ClassicAssert.IsInstanceOf<Label>(child);
-        ClassicAssert.IsInstanceOf<Design>(child.Data);
+        Assert.That( child, Is.InstanceOf<Label>( ) );
+        Assert.That( child.Data, Is.InstanceOf<Design>( ) );
 
         var lblIn = (Design)child.Data;
-        ClassicAssert.AreEqual("myLbl", lblIn.FieldName);
-        ClassicAssert.AreEqual("blarggg", lblIn.View.Text);
+        Assert.That( lblIn.FieldName, Is.EqualTo( "myLbl" ) );
+        Assert.That( lblIn.View.Text, Is.EqualTo( "blarggg" ) );
     }
 
     [Test]
@@ -64,7 +64,7 @@ internal class ScrollViewTests : Tests
                 .Single();
 
         var butttonIn = scrollIn.GetActualSubviews().Single();
-        ClassicAssert.IsInstanceOf<Button>(butttonIn);
-        ClassicAssert.AreNotSame(buttonOut, butttonIn);
+        Assert.That( butttonIn, Is.InstanceOf<Button>( ) );
+        Assert.That( butttonIn, Is.Not.SameAs( buttonOut ) );
     }
 }
