@@ -1,8 +1,3 @@
-using System.Linq;
-using Terminal.Gui;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.Operations;
-
 namespace UnitTests;
 
 class ScrollViewTests : Tests
