@@ -1,5 +1,4 @@
 using System.CodeDom;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using TerminalGuiAttribute = Terminal.Gui.Attribute;
 using TerminalGuiConfigurationManager = Terminal.Gui.ConfigurationManager;
@@ -68,7 +67,6 @@ internal class PropertyTests : Tests
     }
 
     [Test]
-    public void PropertyOfType_PointF( )
     public void PropertyOfType_PointF( [Values( 4.5f, 10.1f )] float x, [Values( 4.5f, 10.1f )] float y )
     {
         using GraphView graphView = new( );
@@ -102,20 +100,20 @@ internal class PropertyTests : Tests
     }
 
     [Test]
-    public void PropertyOfType_Rune( )
+    public void PropertyOfType_Rune( [Values( 'a', 'A', 'f', 'F' )] char runeCharacter )
     {
-        FileInfo file = new( $"{nameof( PropertyOfType_Rune )}.cs" );
+        FileInfo file = new( $"{nameof( PropertyOfType_Rune )}_{runeCharacter}.cs" );
         using LineView lv = new( );
         Design d = new( new( file ), "lv", lv );
         Property prop = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( "LineRune" ) );
 
-        prop.SetValue( 'F' );
+        prop.SetValue( runeCharacter );
 
-        Assert.That( lv.LineRune, Is.EqualTo( new Rune( 'F' ) ) );
+        Assert.That( lv.LineRune, Is.EqualTo( new Rune( runeCharacter ) ) );
 
         string code = Helpers.ExpressionToCode( prop.GetRhs( ) );
 
-        Assert.That( code, Is.EqualTo( "new System.Text.Rune('F')" ) );
+        Assert.That( code, Is.EqualTo( $"new System.Text.Rune('{runeCharacter}')" ) );
     }
 
     [Test]
