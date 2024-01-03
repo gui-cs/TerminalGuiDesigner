@@ -18,23 +18,23 @@ internal class PropertyTests : Tests
         v.View.Add( lv );
         lv.IsInitialized = true;
 
-        ClassicAssert.AreEqual( Orientation.Horizontal, lv.Orientation );
-        ClassicAssert.AreEqual( new Rune( '─' ), lv.LineRune );
+        Assert.That( lv.Orientation, Is.EqualTo( Orientation.Horizontal ) );
+        Assert.That( lv.LineRune, Is.EqualTo( new Rune( '─' ) ) );
         Property? prop = d.GetDesignableProperty( nameof( LineView.Orientation ) );
 
-        ClassicAssert.IsNotNull( prop );
+        Assert.That( prop, Is.Not.Null );
         prop?.SetValue( Orientation.Vertical );
-        ClassicAssert.AreEqual( ConfigurationManager.Glyphs.VLine, lv.LineRune );
+        Assert.That( lv.LineRune, Is.EqualTo( ConfigurationManager.Glyphs.VLine ) );
 
         // now try with a dim fill
         lv.Height = Dim.Fill( );
         lv.Width = 1;
 
         prop?.SetValue( Orientation.Horizontal );
-        ClassicAssert.AreEqual( Orientation.Horizontal, lv.Orientation );
-        ClassicAssert.AreEqual( ConfigurationManager.Glyphs.HLine, lv.LineRune );
-        ClassicAssert.AreEqual( Dim.Fill( ), lv.Width );
-        ClassicAssert.AreEqual( Dim.Sized( 1 ), lv.Height );
+        Assert.That( lv.Orientation, Is.EqualTo( Orientation.Horizontal ) );
+        Assert.That( lv.LineRune, Is.EqualTo( ConfigurationManager.Glyphs.HLine ) );
+        Assert.That( lv.Width, Is.EqualTo( Dim.Fill( ) ) );
+        Assert.That( lv.Height, Is.EqualTo( Dim.Sized( 1 ) ) );
     }
 
     public static string ExpressionToCode( CodeExpression expression )
@@ -60,12 +60,12 @@ internal class PropertyTests : Tests
         colorProp.SetValue( null );
 
         CodeSnippetExpression rhs = (CodeSnippetExpression)colorProp.GetRhs( );
-        ClassicAssert.AreEqual( rhs.Value, "null" );
+        Assert.That( "null", Is.EqualTo( rhs.Value ) );
 
         colorProp.SetValue( new Attribute( Color.BrightMagenta, Color.Blue ) );
 
         rhs = (CodeSnippetExpression)colorProp.GetRhs( );
-        ClassicAssert.AreEqual( rhs.Value, "new Terminal.Gui.Attribute(Color.BrightMagenta,Color.Blue)" );
+        Assert.That( rhs.Value, Is.EqualTo( "new Terminal.Gui.Attribute(Color.BrightMagenta,Color.Blue)" ) );
     }
 
     [Test]
@@ -79,7 +79,7 @@ internal class PropertyTests : Tests
         CodeObjectCreateExpression rhs = (CodeObjectCreateExpression)pointProp.GetRhs( );
 
         // The code generated should be a new PointF
-        ClassicAssert.AreEqual( rhs.Parameters.Count, 2 );
+        Assert.That( 2, Is.EqualTo( rhs.Parameters.Count ) );
     }
 
     [Test]
@@ -93,7 +93,7 @@ internal class PropertyTests : Tests
         CodeSnippetExpression rhs = (CodeSnippetExpression)xProp.GetRhs( );
 
         // The code generated for a Property of Type Pos should be the function call
-        ClassicAssert.AreEqual( rhs.Value, "Pos.Center()" );
+        Assert.That( rhs.Value, Is.EqualTo( "Pos.Center()" ) );
     }
 
     [Test]
@@ -108,11 +108,11 @@ internal class PropertyTests : Tests
 
         prop.SetValue( 'F' );
 
-        ClassicAssert.AreEqual( new Rune( 'F' ), lv.LineRune );
+        Assert.That( lv.LineRune, Is.EqualTo( new Rune( 'F' ) ) );
 
         string code = ExpressionToCode( prop.GetRhs( ) );
 
-        ClassicAssert.AreEqual( "new System.Text.Rune('F')", code );
+        Assert.That( code, Is.EqualTo( "new System.Text.Rune('F')" ) );
     }
 
     [Test]
@@ -126,6 +126,6 @@ internal class PropertyTests : Tests
         CodeSnippetExpression rhs = (CodeSnippetExpression)xProp.GetRhs( );
 
         // The code generated for a Property of Type Pos should be the function call
-        ClassicAssert.AreEqual( rhs.Value, "Pos.Center()" );
+        Assert.That( rhs.Value, Is.EqualTo( "Pos.Center()" ) );
     }
 }
