@@ -26,11 +26,14 @@ internal class MouseManagerTests : Tests
         MouseManager mgr = new( );
 
         // we haven't done anything yet
-        Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
-        Assert.That( view.Bounds.X, Is.Zero );
-        Assert.That( view.Bounds.Y, Is.Zero );
-        Assert.That( view.Bounds.Width, Is.EqualTo( 8 ) );
-        Assert.That( view.Bounds.Height, Is.EqualTo( 1 ) );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+            Assert.That( view.Bounds.X, Is.Zero );
+            Assert.That( view.Bounds.Y, Is.Zero );
+            Assert.That( view.Bounds.Width, Is.EqualTo( 8 ) );
+            Assert.That( view.Bounds.Height, Is.EqualTo( 1 ) );
+        } );
 
         // user presses down in the lower right of control
         MouseEvent e = new( )
@@ -42,10 +45,13 @@ internal class MouseManagerTests : Tests
 
         mgr.HandleMouse( e, d );
 
-        Assert.That( view.Bounds.Y, Is.Zero );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( view.Bounds.Y, Is.Zero );
 
-        // we still haven't committed to anything
-        Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+            // we still haven't committed to anything
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+        } );
 
         // user pulled view size +1 width and +1 height
         e = new( )
@@ -56,13 +62,16 @@ internal class MouseManagerTests : Tests
         };
         mgr.HandleMouse( e, d );
 
-        Assert.That( view.Bounds.X, Is.Zero );
-        Assert.That( view.Bounds.Y, Is.Zero );
-        Assert.That( view.Bounds.Width, Is.EqualTo( 10 ), "Expected resize to increase Width when dragging" );
-        Assert.That( view.Bounds.Height, Is.EqualTo( 1 ), "Expected resize of button to ignore Y component" );
-
         // we still haven't committed to anything
-        Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( view.Bounds.X, Is.Zero );
+            Assert.That( view.Bounds.Y, Is.Zero );
+            Assert.That( view.Bounds.Width, Is.EqualTo( 10 ), "Expected resize to increase Width when dragging" );
+            Assert.That( view.Bounds.Height, Is.EqualTo( 1 ), "Expected resize of button to ignore Y component" );
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+        } );
+
 
         // user releases mouse (in place)
         e = new( )
@@ -72,13 +81,16 @@ internal class MouseManagerTests : Tests
         };
         mgr.HandleMouse( e, d );
 
-        Assert.That( view.Bounds.X, Is.Zero );
-        Assert.That( view.Bounds.Y, Is.Zero );
-        Assert.That( view.Bounds.Width, Is.EqualTo( 10 ), "Expected resize to increase Width when dragging" );
-        Assert.That( view.Bounds.Height, Is.EqualTo( 1 ) );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( view.Bounds.X, Is.Zero );
+            Assert.That( view.Bounds.Y, Is.Zero );
+            Assert.That( view.Bounds.Width, Is.EqualTo( 10 ), "Expected resize to increase Width when dragging" );
+            Assert.That( view.Bounds.Height, Is.EqualTo( 1 ) );
 
-        // we have now committed the drag so could undo
-        Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
+            // we have now committed the drag so could undo
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
+        } );
     }
 
     [Test]
@@ -298,7 +310,7 @@ internal class MouseManagerTests : Tests
     }
 
     [Test]
-    public void TestDragResizeView_CannotResize_1By1View( [Values( 0, 3 )] int locationOfViewX, [Values( 0, 3 )] int locationOfViewY )
+    public void DragResizeView_CannotResize_1By1View( [Values( 0, 3 )] int locationOfViewX, [Values( 0, 3 )] int locationOfViewY )
     {
         Design d = Get10By10View( );
 
@@ -359,7 +371,7 @@ internal class MouseManagerTests : Tests
 
     [TestCase( 1, 1, 4, 6, new[] { 0, 2 } )]      // drag from 1,1 to 4,6 and expect labels 0 and 2 to be selected
     [TestCase( 1, 1, 10, 10, new[] { 0, 1, 2 } )] // drag over all
-    public void TestDragSelectionBox( int xStart, int yStart, int xEnd, int yEnd, int[] expectSelected )
+    public void DragSelectionBox( int xStart, int yStart, int xEnd, int yEnd, int[] expectSelected )
     {
         Design d = Get10By10View( );
 
