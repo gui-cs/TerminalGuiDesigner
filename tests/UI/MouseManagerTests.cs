@@ -113,11 +113,14 @@ internal class MouseManagerTests : Tests
         MouseManager mgr = new( );
 
         // we haven't done anything yet
-        Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
-        Assert.That( view.Frame.X, Is.EqualTo( locationOfViewX ) );
-        Assert.That( view.Frame.Y, Is.EqualTo( locationOfViewY ) );
-        Assert.That( view.Bounds.Width, Is.EqualTo( 1 ) );
-        Assert.That( view.Bounds.Height, Is.EqualTo( 1 ) );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+            Assert.That( view.Frame.X, Is.EqualTo( locationOfViewX ) );
+            Assert.That( view.Frame.Y, Is.EqualTo( locationOfViewY ) );
+            Assert.That( view.Bounds.Width, Is.EqualTo( 1 ) );
+            Assert.That( view.Bounds.Height, Is.EqualTo( 1 ) );
+        } );
 
         // user presses down in the lower right of control
         MouseEvent e = new( )
@@ -128,16 +131,22 @@ internal class MouseManagerTests : Tests
         };
 
         View? hit = view.HitTest( e, out bool isBorder, out bool isLowerRight );
-        Assert.That( hit, Is.SameAs( view ) );
-        Assert.That( isBorder );
-        Assert.That( isLowerRight, Is.False, "Upper left should never be considered lower right even if view is 1x1" );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( hit, Is.SameAs( view ) );
+            Assert.That( isBorder );
+            Assert.That( isLowerRight, Is.False, "Upper left should never be considered lower right even if view is 1x1" );
+        } );
 
         mgr.HandleMouse( e, d );
 
-        Assert.That( view.Frame.Y, Is.EqualTo( locationOfViewY ) );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( view.Frame.Y, Is.EqualTo( locationOfViewY ) );
 
-        // we still haven't committed to anything
-        Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+            // we still haven't committed to anything
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+        } );
 
         // user pulled view size down and left
         e = new( )
@@ -148,8 +157,11 @@ internal class MouseManagerTests : Tests
         };
         mgr.HandleMouse( e, d );
 
-        Assert.That( view.Bounds.Width, Is.EqualTo( 1 ) );
-        Assert.That( view.Bounds.Height, Is.EqualTo( 1 ) );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( view.Bounds.Width, Is.EqualTo( 1 ) );
+            Assert.That( view.Bounds.Height, Is.EqualTo( 1 ) );
+        } );
     }
 
     [Test]
@@ -190,10 +202,13 @@ internal class MouseManagerTests : Tests
 
         mgr.HandleMouse( e, d );
 
-        Assert.That( view.Bounds.Y, Is.Zero );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( view.Bounds.Y, Is.Zero );
 
-        // we still haven't committed to anything
-        Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+            // we still haven't committed to anything
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+        } );
 
         // user pulled view size down and left
         e = new( )
@@ -204,12 +219,15 @@ internal class MouseManagerTests : Tests
         };
         mgr.HandleMouse( e, d );
 
-        Assert.That( view.Bounds.X, Is.Zero );
-        Assert.That( view.Bounds.Y, Is.Zero );
-        Assert.That( view.Bounds.Width, Is.EqualTo( 10 ), "Expected Width to remain constant because it is Dim.Fill()" );
-        Assert.That( view.Bounds.Height, Is.EqualTo( 4 ), "Expected resize to update Y component" );
-        Assert.That( view.Width, Is.EqualTo( Dim.Fill( ) ) );
-        Assert.That( view.Height, Is.EqualTo( Dim.Sized( 4 ) ) );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( view.Bounds.X, Is.Zero );
+            Assert.That( view.Bounds.Y, Is.Zero );
+            Assert.That( view.Bounds.Width, Is.EqualTo( 10 ), "Expected Width to remain constant because it is Dim.Fill()" );
+            Assert.That( view.Bounds.Height, Is.EqualTo( 4 ), "Expected resize to update Y component" );
+            Assert.That( view.Width, Is.EqualTo( Dim.Fill( ) ) );
+            Assert.That( view.Height, Is.EqualTo( Dim.Sized( 4 ) ) );
+        } );
 
         // we still haven't committed to anything
         Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
@@ -345,10 +363,13 @@ internal class MouseManagerTests : Tests
         MouseManager mgr = new( );
 
         // we haven't done anything yet
-        Assume.That( OperationManager.Instance.UndoStackSize, Is.Zero );
-        Assume.That( OperationManager.Instance.RedoStackSize, Is.Zero );
-        Assert.That( view.X, Is.EqualTo( (Pos)initialViewXPos ) );
-        Assert.That( view.Y, Is.EqualTo( (Pos)initialViewYPos ) );
+        Assert.Multiple( ( ) =>
+        {
+            Assume.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+            Assume.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+            Assert.That( view.X, Is.EqualTo( (Pos)initialViewXPos ) );
+            Assert.That( view.Y, Is.EqualTo( (Pos)initialViewYPos ) );
+        } );
 
         // user presses down over the control
         MouseEvent firstClick = new( )
@@ -361,10 +382,13 @@ internal class MouseManagerTests : Tests
         mgr.HandleMouse( firstClick, d );
 
         // we still haven't committed to anything
-        Assert.That( view.X, Is.EqualTo( (Pos)initialViewXPos ) );
-        Assert.That( view.Y, Is.EqualTo( (Pos)initialViewYPos ) );
-        Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
-        Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( view.X, Is.EqualTo( (Pos)initialViewXPos ) );
+            Assert.That( view.Y, Is.EqualTo( (Pos)initialViewYPos ) );
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+            Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+        } );
 
         // user moved view but still has mouse down
         MouseEvent dragWithMouseButton1Down = new( )
@@ -375,14 +399,16 @@ internal class MouseManagerTests : Tests
         };
         mgr.HandleMouse( dragWithMouseButton1Down, d );
 
-        Assert.That( view.X, Is.EqualTo( (Pos)( initialViewXPos + deltaX ) ) );
-        Assert.That( view.Y, Is.EqualTo( (Pos)( initialViewYPos + deltaY ) ) );
-
         // we still haven't committed to anything
-        Assert.That( view.Bounds.X, Is.Zero );
-        Assert.That( view.Bounds.Y, Is.Zero );
-        Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
-        Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( view.X, Is.EqualTo( (Pos)( initialViewXPos + deltaX ) ) );
+            Assert.That( view.Y, Is.EqualTo( (Pos)( initialViewYPos + deltaY ) ) );
+            Assert.That( view.Bounds.X, Is.Zero );
+            Assert.That( view.Bounds.Y, Is.Zero );
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+            Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+        } );
 
         // user releases mouse
         MouseEvent releaseMouseButton1AtNewCoordinates = new( )
@@ -460,8 +486,8 @@ internal class MouseManagerTests : Tests
 
     private static IEnumerable<TestCaseData> DragSelectionBox_Cases( )
     {
-        yield return new( 1, 1, 4, 6, new int[] { 0, 2 } );
-        yield return new( 1, 1, 10, 10, new int[] { 0, 1, 2 } );
+        yield return new( 1, 1, 4, 6, new[] { 0, 2 } );
+        yield return new( 1, 1, 10, 10, new[] { 0, 1, 2 } );
     }
 
     private static IEnumerable<View> GetDummyViewsForDrag( )
