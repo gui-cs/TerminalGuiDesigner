@@ -1,57 +1,52 @@
-using System;
-using System.Linq;
-using Terminal.Gui;
-using TerminalGuiDesigner;
 using static Terminal.Gui.SpinnerStyle;
 
-namespace UnitTests
+namespace UnitTests;
+
+internal class SpinnerViewTests : Tests
 {
-    internal class SpinnerViewTests : Tests
+    [Test]
+    public void TestNewSpinnerAutoSpins()
     {
-        [Test]
-        public void TestNewSpinnerAutoSpins()
-        {
-            ClassicAssert.Contains(typeof(SpinnerView), ViewFactory.SupportedViewTypes.ToArray());
+        ClassicAssert.Contains(typeof(SpinnerView), ViewFactory.SupportedViewTypes.ToArray());
 
-            ClassicAssert.IsEmpty(Application.MainLoop.Timeouts);
+        ClassicAssert.IsEmpty(Application.MainLoop.Timeouts);
 
-            var s = (SpinnerView)ViewFactory.Create(typeof(SpinnerView));
+        var s = (SpinnerView)ViewFactory.Create(typeof(SpinnerView));
             
-            ClassicAssert.IsNotEmpty(Application.MainLoop.Timeouts);
-            s.Dispose();
+        ClassicAssert.IsNotEmpty(Application.MainLoop.Timeouts);
+        s.Dispose();
 
-            ClassicAssert.IsEmpty(Application.MainLoop.Timeouts);
-        }
-        [Test]
-        public void TestNewSpinnerAutoSpins_AfterRoundTrip()
+        ClassicAssert.IsEmpty(Application.MainLoop.Timeouts);
+    }
+    [Test]
+    public void TestNewSpinnerAutoSpins_AfterRoundTrip()
+    {
+        ClassicAssert.Contains(typeof(SpinnerView), ViewFactory.SupportedViewTypes.ToArray());
+
+        ClassicAssert.IsEmpty(Application.MainLoop.Timeouts);
+
+        RoundTrip<View, SpinnerView>((d,v) =>
         {
-            ClassicAssert.Contains(typeof(SpinnerView), ViewFactory.SupportedViewTypes.ToArray());
 
-            ClassicAssert.IsEmpty(Application.MainLoop.Timeouts);
+        },out _);
 
-            RoundTrip<View, SpinnerView>((d,v) =>
-            {
+        // Autospin original and the one that is read back in
+        ClassicAssert.AreEqual(2, Application.MainLoop.Timeouts.Count);
+    }
 
-            },out _);
-
-            // Autospin original and the one that is read back in
-            ClassicAssert.AreEqual(2, Application.MainLoop.Timeouts.Count);
-        }
-
-        [Test]
-        public void TestNewSpinnerAutoSpins_ChangeStyle()
+    [Test]
+    public void TestNewSpinnerAutoSpins_ChangeStyle()
+    {
+        var backIn = RoundTrip<View, SpinnerView>((d, v) =>
         {
-            var backIn = RoundTrip<View, SpinnerView>((d, v) =>
-            {
-                var prop = d.GetDesignableProperty(nameof(SpinnerView.Style))
-                    ?? throw new Exception("Property was unexpectedly not designable");
+            var prop = d.GetDesignableProperty(nameof(SpinnerView.Style))
+                       ?? throw new Exception("Property was unexpectedly not designable");
 
-                prop.SetValue(new Triangle());
-                ClassicAssert.IsInstanceOf<Triangle>(v.Style);
-            }, out _);
+            prop.SetValue(new Triangle());
+            ClassicAssert.IsInstanceOf<Triangle>(v.Style);
+        }, out _);
 
-            // Autospin original and the one that is read back in
-            ClassicAssert.IsInstanceOf<Triangle>(backIn.Style);
-        }
+        // Autospin original and the one that is read back in
+        ClassicAssert.IsInstanceOf<Triangle>(backIn.Style);
     }
 }
