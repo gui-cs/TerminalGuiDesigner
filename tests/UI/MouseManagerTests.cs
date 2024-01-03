@@ -214,91 +214,107 @@ internal class MouseManagerTests : Tests
         Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
     }
 
-    [TestCase(typeof(View))]
-    public void TestDragResizeView_CannotResize_DimFill(Type t)
+    private static IEnumerable<TestCaseData> DragResizeView_CannotResize_DimFill_Types( )
     {
-        var d = Get10By10View();
+        yield return new( (View)RuntimeHelpers.GetUninitializedObject( typeof( View ) ) ) { TestName = "DragResizeView_CannotResize_DimFill<View>" };
+    }
 
-        var view = ViewFactory.Create(t);
-        view.Width = Dim.Fill();
+    [Test]
+    [TestCaseSource( nameof( DragResizeView_CannotResize_DimFill_Types ) )]
+    public void DragResizeView_CannotResize_DimFill<T>( T dummy )
+        where T : View, new( )
+    {
+        Design d = Get10By10View( );
+        Assume.That( dummy, Is.TypeOf<T>( ) );
+
+        T view = ViewFactory.Create<T>( );
+        view.Width = Dim.Fill( );
         view.Height = 1;
 
-        var design = new Design(d.SourceCode, "myView", view);
+        Design design = new( d.SourceCode, "myView", view );
         view.Data = design;
-        d.View.Add(view);
+        d.View.Add( view );
 
-        var mgr = new MouseManager();
+        MouseManager mgr = new( );
 
         // we haven't done anything yet
-        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
-        ClassicAssert.AreEqual(0, view.Bounds.X);
-        ClassicAssert.AreEqual(0, view.Bounds.Y);
-        ClassicAssert.AreEqual(10, view.Bounds.Width);
-        ClassicAssert.AreEqual(1, view.Bounds.Height);
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+            Assert.That( view.Bounds.X, Is.Zero );
+            Assert.That( view.Bounds.Y, Is.Zero );
+            Assert.That( view.Bounds.Width, Is.EqualTo( 10 ) );
+            Assert.That( view.Bounds.Height, Is.EqualTo( 1 ) );
+        } );
 
         // user presses down in the lower right of control
-        var e = new MouseEvent
+        MouseEvent e = new( )
         {
             X = 9,
             Y = 0,
             Flags = MouseFlags.Button1Pressed,
         };
 
-        mgr.HandleMouse(e, d);
+        mgr.HandleMouse( e, d );
 
-        ClassicAssert.AreEqual(0, view.Bounds.Y);
+        Assert.That( view.Bounds.Y, Is.Zero );
 
         // we still haven't committed to anything
-        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
+        Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
 
         // user pulled view size down and left
-        e = new MouseEvent
+        e = new( )
         {
             X = 6,
             Y = 3,
             Flags = MouseFlags.Button1Pressed,
         };
-        mgr.HandleMouse(e, d);
+        mgr.HandleMouse( e, d );
 
-        ClassicAssert.AreEqual(0, view.Bounds.X);
-        ClassicAssert.AreEqual(0, view.Bounds.Y);
-        ClassicAssert.AreEqual(10, view.Bounds.Width, "Expected Width to remain constant because it is Dim.Fill()");
-        ClassicAssert.AreEqual(4, view.Bounds.Height, "Expected resize to update Y component");
-        ClassicAssert.AreEqual(Dim.Fill(), view.Width);
-        ClassicAssert.AreEqual(Dim.Sized(4), view.Height);
+        Assert.That( view.Bounds.X, Is.Zero );
+        Assert.That( view.Bounds.Y, Is.Zero );
+        Assert.That( view.Bounds.Width, Is.EqualTo( 10 ), "Expected Width to remain constant because it is Dim.Fill()" );
+        Assert.That( view.Bounds.Height, Is.EqualTo( 4 ), "Expected resize to update Y component" );
+        Assert.That( view.Width, Is.EqualTo( Dim.Fill( ) ) );
+        Assert.That( view.Height, Is.EqualTo( Dim.Sized( 4 ) ) );
 
         // we still haven't committed to anything
-        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
+        Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
 
         // user releases mouse (in place)
-        e = new MouseEvent
+        e = new( )
         {
             X = 6,
             Y = 3,
         };
-        mgr.HandleMouse(e, d);
+        mgr.HandleMouse( e, d );
 
-        ClassicAssert.AreEqual(0, view.Bounds.X);
-        ClassicAssert.AreEqual(0, view.Bounds.Y);
-        ClassicAssert.AreEqual(10, view.Bounds.Width, "Expected Width to remain constant because it is Dim.Fill()");
-        ClassicAssert.AreEqual(4, view.Bounds.Height, "Expected resize to update Y component");
-        ClassicAssert.AreEqual(Dim.Fill(), view.Width);
-        ClassicAssert.AreEqual(Dim.Sized(4), view.Height);
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( view.Bounds.X, Is.Zero );
+            Assert.That( view.Bounds.Y, Is.Zero );
+            Assert.That( view.Bounds.Width, Is.EqualTo( 10 ), "Expected Width to remain constant because it is Dim.Fill()" );
+            Assert.That( view.Bounds.Height, Is.EqualTo( 4 ), "Expected resize to update Y component" );
+            Assert.That( view.Width, Is.EqualTo( Dim.Fill( ) ) );
+            Assert.That( view.Height, Is.EqualTo( Dim.Sized( 4 ) ) );
+        } );
 
         // we have now committed the drag so could undo
-        ClassicAssert.AreEqual(1, OperationManager.Instance.UndoStackSize);
+        Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
 
-        OperationManager.Instance.Undo();
+        OperationManager.Instance.Undo( );
 
         // Should reset us to the initial state
-        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
-        ClassicAssert.AreEqual(0, view.Bounds.X);
-        ClassicAssert.AreEqual(0, view.Bounds.Y);
-        ClassicAssert.AreEqual(10, view.Bounds.Width);
-        ClassicAssert.AreEqual(1, view.Bounds.Height);
-        ClassicAssert.AreEqual(Dim.Fill(), view.Width);
-        ClassicAssert.AreEqual(Dim.Sized(1), view.Height);
-
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+            Assert.That( view.Bounds.X, Is.Zero );
+            Assert.That( view.Bounds.Y, Is.Zero );
+            Assert.That( view.Bounds.Width, Is.EqualTo( 10 ) );
+            Assert.That( view.Bounds.Height, Is.EqualTo( 1 ) );
+            Assert.That( view.Width, Is.EqualTo( Dim.Fill( ) ) );
+            Assert.That( view.Height, Is.EqualTo( Dim.Sized( 1 ) ) );
+        } );
     }
 
     [TestCase(0, 0)]
