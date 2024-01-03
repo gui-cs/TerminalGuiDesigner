@@ -11,9 +11,9 @@ namespace UnitTests;
 internal class PropertyTests : Tests
 {
     [Test]
-    public void TestPropertyOfType_Pos()
+    public void PropertyOfType_Pos( )
     {
-        var d = new Design(new SourceCodeFile(nameof(this.TestPropertyOfType_Pos) + ".cs"), "FFF", new Label());
+        var d = new Design(new SourceCodeFile(nameof(PropertyOfType_Pos) + ".cs"), "FFF", new Label());
         var xProp = d.GetDesignableProperties().Single(p => p.PropertyInfo.Name.Equals(nameof(View.X)));
 
         xProp.SetValue(Pos.Center());
@@ -27,7 +27,7 @@ internal class PropertyTests : Tests
     [Test]
     public void TestPropertyOfType_Size()
     {
-        var d = new Design(new SourceCodeFile(nameof(this.TestPropertyOfType_Size) + ".cs"), "FFF", new ScrollView());
+        var d = new Design(new SourceCodeFile(nameof(PropertyOfType_Size) + ".cs"), "FFF", new ScrollView());
         var xProp = d.GetDesignableProperties().Single(p => p.PropertyInfo.Name.Equals(nameof(View.X)));
 
         xProp.SetValue(Pos.Center());
@@ -39,9 +39,9 @@ internal class PropertyTests : Tests
     }
 
     [Test]
-    public void TestPropertyOfType_Attribute()
+    public void PropertyOfType_Attribute( )
     {
-        var d = new Design(new SourceCodeFile(nameof(this.TestPropertyOfType_Attribute) + ".cs"), "FFF", new GraphView());
+        var d = new Design(new SourceCodeFile(nameof(PropertyOfType_Attribute) + ".cs"), "FFF", new GraphView());
         var colorProp = d.GetDesignableProperties().Single(p => p.PropertyInfo.Name.Equals(nameof(GraphView.GraphColor)));
 
         colorProp.SetValue(null);
@@ -56,9 +56,9 @@ internal class PropertyTests : Tests
     }
 
     [Test]
-    public void TestPropertyOfType_PointF()
+    public void PropertyOfType_PointF( )
     {
-        var d = new Design(new SourceCodeFile(nameof(this.TestPropertyOfType_PointF) + ".cs"), "FFF", new GraphView());
+        var d = new Design(new SourceCodeFile(nameof(PropertyOfType_PointF) + ".cs"), "FFF", new GraphView());
         var pointProp = d.GetDesignableProperties().Single(p => p.PropertyInfo.Name.Equals(nameof(GraphView.ScrollOffset)));
 
         pointProp.SetValue(new PointF(4.5f, 4.1f));
@@ -70,7 +70,7 @@ internal class PropertyTests : Tests
     }
 
     [Test]
-    public void TestPropertyOfType_Rune()
+    public void PropertyOfType_Rune( )
     {
         var viewToCode = new ViewToCode();
 
@@ -89,7 +89,7 @@ internal class PropertyTests : Tests
     }
 
     [Test]
-    public void TestChanging_LineViewOrientation()
+    public void Changing_LineViewOrientation( )
     {
         var v = Get10By10View();
         var lv = (LineView)ViewFactory.Create(typeof(LineView));
@@ -117,7 +117,7 @@ internal class PropertyTests : Tests
         ClassicAssert.AreEqual(Dim.Sized(1), lv.Height);
     }
 
-    public static string ExpressionToCode(CodeExpression expression)
+    public static string ExpressionToCode( CodeExpression expression )
     {
         CSharpCodeProvider provider = new ();
 
