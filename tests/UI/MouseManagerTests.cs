@@ -284,15 +284,16 @@ internal class MouseManagerTests : Tests
         using Label lbl2 = new( 4, 2, "Hi" );
         using Label lbl3 = new( 2, 3, "Hi" );
 
-        Design lbl1Design = new( d.SourceCode, "lbl1", lbl1 );
-        Design lbl2Design = new( d.SourceCode, "lbl2", lbl2 );
-        Design lbl3Design = new( d.SourceCode, "lbl3", lbl3 );
+        Design[] labels =
+        [
+            new( d.SourceCode, "lbl1", lbl1 ),
+            new( d.SourceCode, "lbl2", lbl2 ),
+            new( d.SourceCode, "lbl3", lbl3 )
+        ];
 
-        lbl1.Data = lbl1Design;
-        lbl2.Data = lbl2Design;
-        lbl3.Data = lbl3Design;
-
-        Design[] labels = { lbl1Design, lbl2Design, lbl3Design };
+        lbl1.Data = labels[ 0 ];
+        lbl2.Data = labels[ 1 ];
+        lbl3.Data = labels[ 2 ];
 
         d.View.Add( lbl1 );
         d.View.Add( lbl2 );
