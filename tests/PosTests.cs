@@ -336,14 +336,14 @@ internal class PosTests : Tests
     [TestCaseSource( nameof( GetCode_Cases ) )]
     public void GetCode( Pos testPos, string expectedCodeString, Design d, View v )
     {
-        Assert.That( testPos.ToCode( new( ) { d } ), Is.EqualTo( expectedCodeString ) );
+        Assert.That( testPos.ToCode( [d] ), Is.EqualTo( expectedCodeString ) );
     }
 
     [Test]
     [TestCaseSource( nameof( GetPosType_OutputsCorrectOffset_Cases ) )]
     public bool GetPosType_OutputsCorrectOffset( Pos testValue, int expectedOffset, Design? d )
     {
-        List<Design> knownDesigns = new( );
+        List<Design> knownDesigns = [];
         if ( d is not null )
         {
             knownDesigns.Add( d );
@@ -358,7 +358,7 @@ internal class PosTests : Tests
     [TestCaseSource( nameof( GetPosType_OutputsCorrectType_Cases ) )]
     public bool GetPosType_OutputsCorrectType( Pos testValue, PosType expectedPosType, Design? d )
     {
-        List<Design> knownDesigns = new( );
+        List<Design> knownDesigns = [];
         if ( d is not null )
         {
             knownDesigns.Add( d );
@@ -373,7 +373,7 @@ internal class PosTests : Tests
     [TestCaseSource( nameof( GetPosType_OutputsCorrectValue_Cases ) )]
     public bool GetPosType_OutputsCorrectValue( Pos testValue, float expectedValue, Design? d )
     {
-        List<Design> knownDesigns = new( );
+        List<Design> knownDesigns = [];
         if ( d is not null )
         {
             knownDesigns.Add( d );
@@ -472,7 +472,7 @@ internal class PosTests : Tests
     [NonParallelizable]
     public bool IsRelative_WithOutParams( Pos testValue, Design? expectedOutDesign, Side expectedOutSide )
     {
-        List<Design> knownDesigns = new( );
+        List<Design> knownDesigns = [];
         if ( expectedOutDesign is not null )
         {
             knownDesigns.Add( expectedOutDesign );
