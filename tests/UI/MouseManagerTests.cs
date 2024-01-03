@@ -130,81 +130,88 @@ internal class MouseManagerTests : Tests
                 break;
         }
     }
+
+    private static IEnumerable<View> DragResizeView_Types( )
+    {
+        yield return (Label)RuntimeHelpers.GetUninitializedObject( typeof( Label ) );
+        yield return (Button)RuntimeHelpers.GetUninitializedObject( typeof( Button ) );
+        yield return (TabView)RuntimeHelpers.GetUninitializedObject( typeof( TabView ) );
+        yield return (TableView)RuntimeHelpers.GetUninitializedObject( typeof( TableView ) );
+        yield return (View)RuntimeHelpers.GetUninitializedObject( typeof( View ) );
     }
 
-    [TestCase(typeof(Button))]
-    [TestCase(typeof(TabView))]
-    [TestCase(typeof(TableView))]
-    [TestCase(typeof(View))]
-    public void TestDragResizeView(Type t)
+    [Test]
+    public void DragResizeView<T>( [ValueSource( nameof( DragResizeView_Types ) )] T dummy )
+        where T : View, new( )
     {
-        var d = Get10By10View();
+        Design d = Get10By10View( );
+        Assume.That( dummy, Is.TypeOf<T>( ) );
 
-        var view = ViewFactory.Create(t);
+        T view = ViewFactory.Create<T>( );
         view.Width = 8;
         view.Height = 1;
 
-        var design = new Design(d.SourceCode, "myView", view);
+        Design design = new( d.SourceCode, "myView", view );
         view.Data = design;
-        d.View.Add(view);
+        d.View.Add( view );
 
-        ClassicAssert.AreEqual(8, view.Bounds.Width);
-        var mgr = new MouseManager();
+        Assert.That( view.Bounds.Width, Is.EqualTo( 8 ) );
+        MouseManager mgr = new( );
 
         // we haven't done anything yet
-        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
-        ClassicAssert.AreEqual(0, view.Bounds.X);
-        ClassicAssert.AreEqual(0, view.Bounds.Y);
-        ClassicAssert.AreEqual(8, view.Bounds.Width);
-        ClassicAssert.AreEqual(1, view.Bounds.Height);
+        Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+        Assert.That( view.Bounds.X, Is.Zero );
+        Assert.That( view.Bounds.Y, Is.Zero );
+        Assert.That( view.Bounds.Width, Is.EqualTo( 8 ) );
+        Assert.That( view.Bounds.Height, Is.EqualTo( 1 ) );
 
         // user presses down in the lower right of control
-        var e = new MouseEvent
+        MouseEvent e = new( )
         {
             X = 6,
             Y = 0,
             Flags = MouseFlags.Button1Pressed,
         };
 
-        mgr.HandleMouse(e, d);
+        mgr.HandleMouse( e, d );
 
-        ClassicAssert.AreEqual(0, view.Bounds.Y);
+        Assert.That( view.Bounds.Y, Is.Zero );
 
         // we still haven't committed to anything
-        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
+        Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
 
         // user pulled view size +1 width and +1 height
-        e = new MouseEvent
+        e = new( )
         {
             X = 9,
             Y = 0,
             Flags = MouseFlags.Button1Pressed,
         };
-        mgr.HandleMouse(e, d);
+        mgr.HandleMouse( e, d );
 
-        ClassicAssert.AreEqual(0, view.Bounds.X);
-        ClassicAssert.AreEqual(0, view.Bounds.Y);
-        ClassicAssert.AreEqual(10, view.Bounds.Width, "Expected resize to increase Width when dragging");
-        ClassicAssert.AreEqual(1, view.Bounds.Height, "Expected resize of button to ignore Y component");
+        Assert.That( view.Bounds.X, Is.Zero );
+        Assert.That( view.Bounds.Y, Is.Zero );
+        Assert.That( view.Bounds.Width, Is.EqualTo( 10 ), "Expected resize to increase Width when dragging" );
+        Assert.That( view.Bounds.Height, Is.EqualTo( 1 ), "Expected resize of button to ignore Y component" );
 
         // we still haven't committed to anything
-        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
+        Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
 
         // user releases mouse (in place)
-        e = new MouseEvent
+        e = new( )
         {
             X = 9,
             Y = 0,
         };
-        mgr.HandleMouse(e, d);
+        mgr.HandleMouse( e, d );
 
-        ClassicAssert.AreEqual(0, view.Bounds.X);
-        ClassicAssert.AreEqual(0, view.Bounds.Y);
-        ClassicAssert.AreEqual(10, view.Bounds.Width, "Expected resize to increase Width when dragging");
-        ClassicAssert.AreEqual(1, view.Bounds.Height);
+        Assert.That( view.Bounds.X, Is.Zero );
+        Assert.That( view.Bounds.Y, Is.Zero );
+        Assert.That( view.Bounds.Width, Is.EqualTo( 10 ), "Expected resize to increase Width when dragging" );
+        Assert.That( view.Bounds.Height, Is.EqualTo( 1 ) );
 
         // we have now committed the drag so could undo
-        ClassicAssert.AreEqual(1, OperationManager.Instance.UndoStackSize);
+        Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
     }
 
     [TestCase(typeof(View))]
