@@ -51,7 +51,7 @@ internal class PropertyTests : Tests
     public void PropertyOfType_Attribute( )
     {
         using GraphView graphView = new ( );
-        Design d = new( new( nameof( PropertyOfType_Attribute ) + ".cs" ), "FFF", graphView );
+        Design d = new( new( $"{nameof( PropertyOfType_Attribute )}.cs" ), "FFF", graphView );
         Property colorProp = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof( GraphView.GraphColor ) ) );
 
         colorProp.SetValue( null );
@@ -69,7 +69,7 @@ internal class PropertyTests : Tests
     public void PropertyOfType_PointF( )
     {
         using GraphView graphView = new ( );
-        Design d = new( new( nameof( PropertyOfType_PointF ) + ".cs" ), "FFF", graphView );
+        Design d = new( new( $"{nameof( PropertyOfType_PointF )}.cs" ), "FFF", graphView );
         Property pointProp = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof( GraphView.ScrollOffset ) ) );
 
         pointProp.SetValue( new PointF( 4.5f, 4.1f ) );
@@ -84,7 +84,7 @@ internal class PropertyTests : Tests
     public void PropertyOfType_Pos( )
     {
         using Label label = new ( );
-        Design d = new( new( nameof( PropertyOfType_Pos ) + ".cs" ), "FFF", label );
+        Design d = new( new( $"{nameof( PropertyOfType_Pos )}.cs" ), "FFF", label );
         Property xProp = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof( View.X ) ) );
 
         xProp.SetValue( Pos.Center( ) );
@@ -116,7 +116,7 @@ internal class PropertyTests : Tests
     public void PropertyOfType_Size( )
     {
         using ScrollView scrollView = new( );
-        Design d = new( new( nameof( PropertyOfType_Size ) + ".cs" ), "FFF", scrollView );
+        Design d = new( new( $"{nameof( PropertyOfType_Size )}.cs" ), "FFF", scrollView );
         Property xProp = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof( View.X ) ) );
 
         xProp.SetValue( Pos.Center( ) );
