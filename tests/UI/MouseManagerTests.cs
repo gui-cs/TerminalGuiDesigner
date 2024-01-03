@@ -317,72 +317,71 @@ internal class MouseManagerTests : Tests
         } );
     }
 
-    [TestCase(0, 0)]
-    [TestCase(3, 3)]
-    public void TestDragResizeView_CannotResize_1By1View(int locationOfViewX, int locationOfViewY)
+    [Test]
+    public void TestDragResizeView_CannotResize_1By1View( [Values( 0, 3 )] int locationOfViewX, [Values( 0, 3 )] int locationOfViewY )
     {
-        var d = Get10By10View();
+        Design d = Get10By10View( );
 
-        var view = ViewFactory.Create(typeof(View));
-        view.Width = Dim.Fill();
+        View view = ViewFactory.Create<View>( );
+        view.Width = Dim.Fill( );
         view.X = locationOfViewX;
         view.Y = locationOfViewY;
         view.Width = 1;
         view.Height = 1;
 
-        var design = new Design(d.SourceCode, "myView", view);
+        Design design = new( d.SourceCode, "myView", view );
         view.Data = design;
-        d.View.Add(view);
+        d.View.Add( view );
 
-        d.View.LayoutSubviews();
+        d.View.LayoutSubviews( );
 
-        var mgr = new MouseManager();
+        MouseManager mgr = new( );
 
         // we haven't done anything yet
-        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
-        ClassicAssert.AreEqual(locationOfViewX, view.Frame.X);
-        ClassicAssert.AreEqual(locationOfViewY, view.Frame.Y);
-        ClassicAssert.AreEqual(1, view.Bounds.Width);
-        ClassicAssert.AreEqual(1, view.Bounds.Height);
+        Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+        Assert.That( view.Frame.X, Is.EqualTo( locationOfViewX ) );
+        Assert.That( view.Frame.Y, Is.EqualTo( locationOfViewY ) );
+        Assert.That( view.Bounds.Width, Is.EqualTo( 1 ) );
+        Assert.That( view.Bounds.Height, Is.EqualTo( 1 ) );
 
         // user presses down in the lower right of control
-        var e = new MouseEvent
+        MouseEvent e = new( )
         {
             X = locationOfViewX,
             Y = locationOfViewY,
             Flags = MouseFlags.Button1Pressed,
         };
 
-        var hit = view.HitTest(e, out var isBorder, out var isLowerRight);
-        ClassicAssert.AreSame(view, hit);
-        ClassicAssert.IsTrue(isBorder);
-        ClassicAssert.IsFalse(isLowerRight, "Upper left should never be considered lower right even if view is 1x1");
+        View? hit = view.HitTest( e, out bool isBorder, out bool isLowerRight );
+        Assert.That( hit, Is.SameAs( view ) );
+        Assert.That( isBorder );
+        Assert.That( isLowerRight, Is.False, "Upper left should never be considered lower right even if view is 1x1" );
 
-        mgr.HandleMouse(e, d);
+        mgr.HandleMouse( e, d );
 
-        ClassicAssert.AreEqual(locationOfViewY, view.Frame.Y);
+        Assert.That( view.Frame.Y, Is.EqualTo( locationOfViewY ) );
 
         // we still haven't committed to anything
-        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
+        Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
 
         // user pulled view size down and left
-        e = new MouseEvent
+        e = new( )
         {
             X = 6,
             Y = 3,
             Flags = MouseFlags.Button1Pressed,
         };
-        mgr.HandleMouse(e, d);
+        mgr.HandleMouse( e, d );
 
-        ClassicAssert.AreEqual(1, view.Bounds.Width);
-        ClassicAssert.AreEqual(1, view.Bounds.Height);
+        Assert.That( view.Bounds.Width, Is.EqualTo( 1 ) );
+        Assert.That( view.Bounds.Height, Is.EqualTo( 1 ) );
     }
 
-    [TestCase(1, 1, 4, 6, new[] { 0, 2 })] // drag from 1,1 to 4,6 and expect labels 0 and 2 to be selected
-    [TestCase(1, 1, 10, 10, new[] { 0, 1, 2 })] // drag over all
-    public void TestDragSelectionBox(int xStart, int yStart, int xEnd, int yEnd, int[] expectSelected)
+    [TestCase( 1, 1, 4, 6, new[] { 0, 2 } )]      // drag from 1,1 to 4,6 and expect labels 0 and 2 to be selected
+    [TestCase( 1, 1, 10, 10, new[] { 0, 1, 2 } )] // drag over all
+    public void TestDragSelectionBox( int xStart, int yStart, int xEnd, int yEnd, int[] expectSelected )
     {
-        var d = Get10By10View();
+        Design d = Get10By10View( );
 
         /*
           Hi
