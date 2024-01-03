@@ -98,7 +98,7 @@ internal class PropertyTests : Tests
     [Test]
     public void PropertyOfType_Rune( )
     {
-        FileInfo file = new( "TestPropertyOfType_Rune.cs" );
+        FileInfo file = new( $"{nameof( PropertyOfType_Rune )}.cs" );
         using LineView lv = new( );
         Design d = new( new( file ), "lv", lv );
         Property prop = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( "LineRune" ) );
