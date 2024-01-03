@@ -250,8 +250,8 @@ internal class MouseManagerTests : Tests
         } );
     }
 
-    [TestCase( 1, 1, 4, 6, new[] { 0, 2 } )]      // drag from 1,1 to 4,6 and expect labels 0 and 2 to be selected
-    [TestCase( 1, 1, 10, 10, new[] { 0, 1, 2 } )] // drag over all
+    [Test]
+    [TestCaseSource( nameof( DragSelectionBox_Cases ) )]
     public void DragSelectionBox( int xStart, int yStart, int xEnd, int yEnd, int[] expectSelected )
     {
         Design d = Get10By10View( );
@@ -456,6 +456,12 @@ internal class MouseManagerTests : Tests
         yield return (TabView)RuntimeHelpers.GetUninitializedObject( typeof( TabView ) );
         yield return (TableView)RuntimeHelpers.GetUninitializedObject( typeof( TableView ) );
         yield return (View)RuntimeHelpers.GetUninitializedObject( typeof( View ) );
+    }
+
+    private static IEnumerable<TestCaseData> DragSelectionBox_Cases( )
+    {
+        yield return new( 1, 1, 4, 6, new int[] { 0, 2 } );
+        yield return new( 1, 1, 10, 10, new int[] { 0, 1, 2 } );
     }
 
     private static IEnumerable<View> GetDummyViewsForDrag( )
