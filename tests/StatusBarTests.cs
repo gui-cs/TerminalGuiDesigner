@@ -1,24 +1,22 @@
-﻿using Terminal.Gui;
-using TerminalGuiDesigner;
+﻿namespace UnitTests;
 
-namespace UnitTests
+[TestFixture]
+[Category( "Code Generation" )]
+internal class StatusBarTests : Tests
 {
-    internal class StatusBarTests : Tests
+    [Test]
+    public void ItemsArePreserved( )
     {
-        [Test]
-        public void TestItemsArePreserved()
+        Key shortcutBefore = KeyCode.Null;
+
+        using StatusBar statusBarIn = RoundTrip<Toplevel, StatusBar>( ( _, v ) =>
         {
-            Key shortcutBefore = KeyCode.Null;
+            Assert.That( v.Items, Has.Length.EqualTo( 1 ), $"Expected {nameof( ViewFactory )} to create a placeholder status item in new StatusBars it creates" );
+            shortcutBefore = v.Items[ 0 ].Shortcut;
 
-            var statusBarIn = RoundTrip<Toplevel, StatusBar>((d, v) =>
-            {
-                ClassicAssert.AreEqual(1, v.Items.Length, $"Expected {nameof(ViewFactory)} to create a placeholder status item in new StatusBars it creates");
-                shortcutBefore = v.Items[0].Shortcut;
+        }, out _ );
 
-            }, out _);
-
-            ClassicAssert.AreEqual(1, statusBarIn.Items.Length, "Expected reloading StatusBar to create the same number of StatusItems");
-            ClassicAssert.AreEqual(shortcutBefore, statusBarIn.Items[0].Shortcut);
-        }
+        Assert.That( statusBarIn.Items, Has.Length.EqualTo( 1 ), "Expected reloading StatusBar to create the same number of StatusItems" );
+        Assert.That( statusBarIn.Items[ 0 ].Shortcut, Is.EqualTo( shortcutBefore ) );
     }
 }
