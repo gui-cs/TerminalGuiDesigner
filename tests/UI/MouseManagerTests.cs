@@ -14,7 +14,7 @@ internal class MouseManagerTests : Tests
         Design d = Get10By10View( );
         Assume.That( dummy, Is.TypeOf<T>( ) );
 
-        T view = ViewFactory.Create<T>( );
+        using T view = ViewFactory.Create<T>( );
         view.Width = 8;
         view.Height = 1;
 
@@ -97,7 +97,7 @@ internal class MouseManagerTests : Tests
     {
         Design d = Get10By10View( );
 
-        View view = ViewFactory.Create<View>( );
+        using View view = ViewFactory.Create<View>( );
         view.Width = Dim.Fill( );
         view.X = locationOfViewX;
         view.Y = locationOfViewY;
@@ -172,7 +172,7 @@ internal class MouseManagerTests : Tests
         Design d = Get10By10View( );
         Assume.That( dummy, Is.TypeOf<T>( ) );
 
-        T view = ViewFactory.Create<T>( );
+        using T view = ViewFactory.Create<T>( );
         view.Width = Dim.Fill( );
         view.Height = 1;
 
@@ -280,9 +280,9 @@ internal class MouseManagerTests : Tests
           Hi
         */
 
-        Label lbl1 = new( 2, 1, "Hi" );
-        Label lbl2 = new( 4, 2, "Hi" );
-        Label lbl3 = new( 2, 3, "Hi" );
+        using Label lbl1 = new( 2, 1, "Hi" );
+        using Label lbl2 = new( 4, 2, "Hi" );
+        using Label lbl3 = new( 2, 3, "Hi" );
 
         Design lbl1Design = new( d.SourceCode, "lbl1", lbl1 );
         Design lbl2Design = new( d.SourceCode, "lbl2", lbl2 );
@@ -355,7 +355,7 @@ internal class MouseManagerTests : Tests
 
         Assume.That( dummy.GetType( ), Is.EqualTo( typeof( T ) ) );
         Design d = Get10By10View( );
-        T view = ViewFactory.Create<T>( null, null, "Hi there buddy" );
+        using T view = ViewFactory.Create<T>( null, null, "Hi there buddy" );
         Design viewDesign = new( d.SourceCode, $"my{typeof( T ).Name}", view );
         view.Data = viewDesign;
         d.View.Add( view );
