@@ -518,7 +518,7 @@ internal class PosTests : Tests
         Assert.That( type, Is.EqualTo( PosType.Absolute ) );
         Assert.That( val, Is.Zero );
     }
-    
+
     [Test]
     public void TestRoundTrip_PosRelative( [Values] Side side, [Values( -2, 1, 5 )] int offset, [Values( "X", "Y" )] string property )
     {
@@ -539,23 +539,22 @@ internal class PosTests : Tests
         Assert.That( ( ) => new AddViewOperation( lbl, designOut, "label1" ).Do( ), Throws.Nothing );
         Assert.That( ( ) => new AddViewOperation( btn, designOut, "btn" ).Do( ), Throws.Nothing );
 
-        if ( property == "X" )
+        switch ( property )
         {
-            btn.X = ( (Design)lbl.Data ).CreatePosRelative( side, offset );
-        }
-        else if ( property == "Y" )
-        {
-            btn.Y = ( (Design)lbl.Data ).CreatePosRelative( side, offset );
-        }
-        else
-        {
-            throw new ArgumentException( $"Unknown property for test '{property}'" );
+            case "X":
+                btn.X = ( (Design)lbl.Data ).CreatePosRelative( side, offset );
+                break;
+            case "Y":
+                btn.Y = ( (Design)lbl.Data ).CreatePosRelative( side, offset );
+                break;
+            default:
+                throw new ArgumentException( $"Unknown property for test '{property}'" );
         }
 
         viewToCode.GenerateDesignerCs( designOut, typeof( Window ) );
 
-        var codeToView = new CodeToView( designOut.SourceCode );
-        var designBackIn = codeToView.CreateInstance( );
+        CodeToView codeToView = new( designOut.SourceCode );
+        Design designBackIn = codeToView.CreateInstance( );
 
         using Button btnIn = designBackIn.View.GetActualSubviews( ).OfType<Button>( ).Single( );
 
