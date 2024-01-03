@@ -520,14 +520,9 @@ internal class PosTests : Tests
     }
     
     [Test]
-    [TestCase( Side.Left, -2, "X" )]
-    [TestCase( Side.Right, 1, "X" )]
-    [TestCase( Side.Top, -2, "Y" )]
-    [TestCase( Side.Bottom, 5, "Y" )]
-    [Ignore( "Code generation is tested in other tests here" )]
-    public void TestRoundTrip_PosRelative( Side side, int offset, string property )
+    public void TestRoundTrip_PosRelative( [Values] Side side, [Values( -2, 1, 5 )] int offset, [Values( "X", "Y" )] string property )
     {
-        var viewToCode = new ViewToCode( );
+        ViewToCode viewToCode = new( );
 
         var file = new FileInfo( "TestRoundTrip_PosRelative.cs" );
         var designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Window ) );
