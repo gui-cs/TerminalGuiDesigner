@@ -7,63 +7,129 @@ namespace UnitTests.UI;
 [Category( "UI" )]
 internal class MouseManagerTests : Tests
 {
-    [Test]
-    public void TestDragLabel()
+    private static IEnumerable<View> GetDummyViewsForDrag( )
     {
-        var d = Get10By10View();
+        yield return (Label)RuntimeHelpers.GetUninitializedObject( typeof( Label ) );
+    }
 
-        var lbl = new Label(0, 0, "Hi there buddy");
-        var lblDesign = new Design(d.SourceCode, "mylabel", lbl);
-        lbl.Data = lblDesign;
-        d.View.Add(lbl);
+    [Test]
+    public void DragView<T>( [ValueSource( nameof( GetDummyViewsForDrag ) )] T dummy, [Values( -5, -1, 0, 1, 5 )] int deltaX, [Values( -5, -1, 0, 1, 5 )] int deltaY )
+        where T : View, new( )
+    {
+        const int initialViewXPos = 0;
+        const int initialViewYPos = 0;
+        const int startDragX = 1;
+        const int startDragY = 0;
 
-        var mgr = new MouseManager();
+        Assume.That( dummy.GetType( ), Is.EqualTo( typeof( T ) ) );
+        Design d = Get10By10View( );
+        T view = ViewFactory.Create<T>( null, null, "Hi there buddy" );
+        Design viewDesign = new( d.SourceCode, $"my{typeof( T ).Name}", view );
+        view.Data = viewDesign;
+        d.View.Add( view );
+
+        MouseManager mgr = new( );
 
         // we haven't done anything yet
-        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
-        ClassicAssert.AreEqual(0, lbl.Bounds.Y);
+        Assume.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+        Assume.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+        Assert.That( view.X, Is.EqualTo( (Pos)initialViewXPos ) );
+        Assert.That( view.Y, Is.EqualTo( (Pos)initialViewYPos ) );
+
 
         // user presses down over the control
-        var e = new MouseEvent
+        MouseEvent firstClick = new( )
         {
-            X = 1,
-            Y = 0,
+            X = startDragX,
+            Y = startDragY,
             Flags = MouseFlags.Button1Pressed,
         };
 
-        mgr.HandleMouse(e, d);
-
-        ClassicAssert.AreEqual(0, lbl.Bounds.Y);
+        mgr.HandleMouse( firstClick, d );
 
         // we still haven't committed to anything
-        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
+        Assert.That( view.X, Is.EqualTo( (Pos)initialViewXPos ) );
+        Assert.That( view.Y, Is.EqualTo( (Pos)initialViewYPos ) );
+        Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+        Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
 
-        // user pulled view down but still has mouse down
-        e = new MouseEvent
+        // user moved view but still has mouse down
+        MouseEvent dragWithMouseButton1Down = new( )
         {
-            X = 1,
-            Y = 1,
+            X = startDragX + deltaX,
+            Y = startDragY + deltaY,
             Flags = MouseFlags.Button1Pressed,
         };
-        mgr.HandleMouse(e, d);
+        mgr.HandleMouse( dragWithMouseButton1Down, d );
 
-        ClassicAssert.AreEqual((Pos)1, lbl.Y);
+        Assert.That( view.X, Is.EqualTo( (Pos)( initialViewXPos + deltaX ) ) );
+        Assert.That( view.Y, Is.EqualTo( (Pos)( initialViewYPos + deltaY ) ) );
 
         // we still haven't committed to anything
-        ClassicAssert.AreEqual(0, OperationManager.Instance.UndoStackSize);
+        Assert.That( view.Bounds.X, Is.Zero );
+        Assert.That( view.Bounds.Y, Is.Zero );
+        Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+        Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
 
-        // user releases mouse (in place)
-        e = new MouseEvent
+        // user releases mouse
+        MouseEvent releaseMouseButton1AtNewCoordinates = new( )
         {
-            X = 1,
-            Y = 1,
+            X = startDragX + deltaX,
+            Y = startDragY + deltaY,
         };
-        mgr.HandleMouse(e, d);
+        mgr.HandleMouse( releaseMouseButton1AtNewCoordinates, d );
 
-        ClassicAssert.AreEqual((Pos)1, lbl.Y);
+        // We have now committed the drag.
+        // Check position
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+            Assert.That( view.X, Is.EqualTo( (Pos)( initialViewXPos + deltaX ) ) );
+            Assert.That( view.Y, Is.EqualTo( (Pos)( initialViewYPos + deltaY ) ) );
+        } );
 
-        // we have now committed the drag so could undo
-        ClassicAssert.AreEqual(1, OperationManager.Instance.UndoStackSize);
+        // Now check that undo state was properly tracked.
+        // TODO: This should condense down after the bugs are fixed.
+        // Verbose for now for easier debugging.
+        switch ( deltaX, deltaY )
+        {
+            case (-1, 0): // Left only by exactly 1
+                Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
+                break;
+            case (< -1, 0): // Left only by more than 1
+                Assert.Warn( "Bug in handling of drag events. Moving left by more than 1 moves the view but does not push to undo stack" );
+                Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+                break;
+            case (0, -1): // Up only by exactly 1
+                Assert.Warn( "Bug in handling of drag events. Moving up by exactly 1 moves the view but does not push to undo stack" );
+                Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+                break;
+            case (0, < -1): // Up only by more than 1
+                Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+                break;
+            case (< 0, < 0): // Up and left
+                Assert.Warn( "Bug in handling of drag events. Moving up and left to outside bounds moves the view but does not push to undo stack" );
+                // TODO: Fix this after bug is fixed.
+                Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+                break;
+            case (0, 0): // Not actually moved
+                Assert.Warn( "Bug in handling of drag events. 0-pixel move still gets pushed onto the undo stack." );
+                // TODO: Fix this after bug is fixed.
+                // Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+                // The undo stack should be empty, as this was not actually a move.
+                Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
+                break;
+            case (> 0, 0): // Right only
+                Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
+                break;
+            case (0, > 0): // Down only
+                Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
+                break;
+            case (> 0, > 0): // Down and right
+                Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
+                break;
+        }
+    }
     }
 
     [TestCase(typeof(Button))]
