@@ -363,13 +363,10 @@ internal class MouseManagerTests : Tests
         MouseManager mgr = new( );
 
         // we haven't done anything yet
-        Assert.Multiple( ( ) =>
-        {
-            Assume.That( OperationManager.Instance.UndoStackSize, Is.Zero );
-            Assume.That( OperationManager.Instance.RedoStackSize, Is.Zero );
-            Assert.That( view.X, Is.EqualTo( (Pos)initialViewXPos ) );
-            Assert.That( view.Y, Is.EqualTo( (Pos)initialViewYPos ) );
-        } );
+        Assume.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+        Assume.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+        Assume.That( view.X, Is.EqualTo( (Pos)initialViewXPos ) );
+        Assume.That( view.Y, Is.EqualTo( (Pos)initialViewYPos ) );
 
         // user presses down over the control
         MouseEvent firstClick = new( )
