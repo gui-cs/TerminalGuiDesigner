@@ -536,16 +536,16 @@ internal class PosTests : Tests
 
         using Button btn = ViewFactory.Create<Button>( );
 
-        new AddViewOperation( lbl, designOut, "label1" ).Do( );
-        new AddViewOperation( btn, designOut, "btn" ).Do( );
+        Assert.That( ( ) => new AddViewOperation( lbl, designOut, "label1" ).Do( ), Throws.Nothing );
+        Assert.That( ( ) => new AddViewOperation( btn, designOut, "btn" ).Do( ), Throws.Nothing );
 
         if ( property == "X" )
         {
-            btn.X = ((Design)lbl.Data).CreatePosRelative( side, offset );
+            btn.X = ( (Design)lbl.Data ).CreatePosRelative( side, offset );
         }
         else if ( property == "Y" )
         {
-            btn.Y = ((Design)lbl.Data).CreatePosRelative( side, offset );
+            btn.Y = ( (Design)lbl.Data ).CreatePosRelative( side, offset );
         }
         else
         {
