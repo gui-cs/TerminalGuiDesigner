@@ -1,6 +1,6 @@
 using System.CodeDom;
 using System.Text;
-using Attribute = Terminal.Gui.Attribute;
+using TerminalGuiAttribute = Terminal.Gui.Attribute;
 
 namespace UnitTests;
 
@@ -57,7 +57,7 @@ internal class PropertyTests : Tests
         CodeSnippetExpression rhs = (CodeSnippetExpression)colorProp.GetRhs( );
         Assert.That( rhs.Value, Is.EqualTo( "null" ) );
 
-        colorProp.SetValue( new Attribute( Color.BrightMagenta, Color.Blue ) );
+        colorProp.SetValue( new TerminalGuiAttribute( Color.BrightMagenta, Color.Blue ) );
 
         rhs = (CodeSnippetExpression)colorProp.GetRhs( );
         Assert.That( rhs.Value, Is.EqualTo( "new Terminal.Gui.Attribute(Color.BrightMagenta,Color.Blue)" ) );
@@ -103,7 +103,7 @@ internal class PropertyTests : Tests
 
         Assert.That( lv.LineRune, Is.EqualTo( new Rune( 'F' ) ) );
 
-        string code = TestHelpers.ExpressionToCode( prop.GetRhs( ) );
+        string code = Helpers.ExpressionToCode( prop.GetRhs( ) );
 
         Assert.That( code, Is.EqualTo( "new System.Text.Rune('F')" ) );
     }

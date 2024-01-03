@@ -78,7 +78,7 @@ internal class ListViewTests : Tests
 
         Assert.That( lv.Source, Has.Count.EqualTo( 2 ) );
 
-        var code = TestHelpers.ExpressionToCode( prop.GetRhs( ) );
+        var code = Helpers.ExpressionToCode( prop.GetRhs( ) );
 
         Assert.That(
             code, Is.EqualTo( "new Terminal.Gui.ListWrapper(new string[] {\n            \"hi there\",\n            \"my friend\"})".Replace( "\n", Environment.NewLine ) ) );
