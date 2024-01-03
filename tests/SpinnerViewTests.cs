@@ -1,57 +1,57 @@
-using System;
-using System.Linq;
-using Terminal.Gui;
-using TerminalGuiDesigner;
 using static Terminal.Gui.SpinnerStyle;
 
-namespace UnitTests
+namespace UnitTests;
+
+[TestFixture]
+[Category( "Core" )]
+internal class SpinnerViewTests : Tests
 {
-    internal class SpinnerViewTests : Tests
+    [Test]
+    public void NewSpinnerAutoSpins()
     {
-        [Test]
-        public void TestNewSpinnerAutoSpins()
+        Assume.That( ViewFactory.SupportedViewTypes, Does.Contain( typeof( SpinnerView ) ) );
+
+        Assume.That( Application.MainLoop.Timeouts, Is.Empty );
+
+        using ( SpinnerView s = ViewFactory.Create<SpinnerView>( ) )
         {
-            ClassicAssert.Contains(typeof(SpinnerView), ViewFactory.SupportedViewTypes.ToArray());
-
-            ClassicAssert.IsEmpty(Application.MainLoop.Timeouts);
-
-            var s = (SpinnerView)ViewFactory.Create(typeof(SpinnerView));
-            
-            ClassicAssert.IsNotEmpty(Application.MainLoop.Timeouts);
-            s.Dispose();
-
-            ClassicAssert.IsEmpty(Application.MainLoop.Timeouts);
-        }
-        [Test]
-        public void TestNewSpinnerAutoSpins_AfterRoundTrip()
-        {
-            ClassicAssert.Contains(typeof(SpinnerView), ViewFactory.SupportedViewTypes.ToArray());
-
-            ClassicAssert.IsEmpty(Application.MainLoop.Timeouts);
-
-            RoundTrip<View, SpinnerView>((d,v) =>
-            {
-
-            },out _);
-
-            // Autospin original and the one that is read back in
-            ClassicAssert.AreEqual(2, Application.MainLoop.Timeouts.Count);
+            Assert.That( Application.MainLoop.Timeouts, Is.Not.Empty );
         }
 
-        [Test]
-        public void TestNewSpinnerAutoSpins_ChangeStyle()
+        Assert.That( Application.MainLoop.Timeouts, Is.Empty );
+    }
+
+    [Test]
+    [Category("Code Generation")]
+    public void NewSpinnerAutoSpins_AfterRoundTrip()
+    {
+        Assume.That( ViewFactory.SupportedViewTypes.ToArray(), Does.Contain( typeof(SpinnerView) ) );
+
+        Assume.That( Application.MainLoop.Timeouts, Is.Empty );
+
+        using SpinnerView s = RoundTrip<View, SpinnerView>( static (_,_) =>
         {
-            var backIn = RoundTrip<View, SpinnerView>((d, v) =>
-            {
-                var prop = d.GetDesignableProperty(nameof(SpinnerView.Style))
-                    ?? throw new Exception("Property was unexpectedly not designable");
 
-                prop.SetValue(new Triangle());
-                ClassicAssert.IsInstanceOf<Triangle>(v.Style);
-            }, out _);
+        },out _);
 
-            // Autospin original and the one that is read back in
-            ClassicAssert.IsInstanceOf<Triangle>(backIn.Style);
-        }
+        // Auto-spin original and the one that is read back in
+        Assert.That( Application.MainLoop.Timeouts, Has.Count.EqualTo( 2 ) );
+    }
+
+    [Test]
+    [Category("Code Generation")]
+    public void NewSpinnerAutoSpins_ChangeStyle()
+    {
+        using SpinnerView backIn = RoundTrip<View, SpinnerView>( static(d, v) =>
+        {
+            var prop = d.GetDesignableProperty(nameof(SpinnerView.Style))
+                       ?? throw new ("Property was unexpectedly not designable");
+
+            prop.SetValue(new Triangle());
+            Assert.That(v.Style, Is.InstanceOf<Triangle>( ) );
+        }, out _);
+
+        // Auto-spin original and the one that is read back in
+        Assert.That( backIn.Style, Is.InstanceOf<Triangle>( ) );
     }
 }
