@@ -524,8 +524,8 @@ internal class PosTests : Tests
     {
         ViewToCode viewToCode = new( );
 
-        var file = new FileInfo( "TestRoundTrip_PosRelative.cs" );
-        var designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Window ) );
+        FileInfo file = new( $"{nameof( TestRoundTrip_PosRelative )}.cs" );
+        Design designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Window ) );
 
         designOut.View.Width = 100;
         designOut.View.Height = 100;
