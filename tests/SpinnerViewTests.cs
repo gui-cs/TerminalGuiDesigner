@@ -13,9 +13,10 @@ internal class SpinnerViewTests : Tests
 
         Assume.That( Application.MainLoop.Timeouts, Is.Empty );
 
-        using SpinnerView s = (SpinnerView)ViewFactory.Create(typeof(SpinnerView));
-
-        Assert.That( Application.MainLoop.Timeouts, Is.Not.Empty );
+        using ( SpinnerView s = ViewFactory.Create<SpinnerView>( ) )
+        {
+            Assert.That( Application.MainLoop.Timeouts, Is.Not.Empty );
+        }
 
         Assert.That( Application.MainLoop.Timeouts, Is.Empty );
     }
