@@ -1,9 +1,3 @@
-using System.IO;
-using System.Linq;
-using TerminalGuiDesigner.FromCode;
-using TerminalGuiDesigner.Operations;
-using TerminalGuiDesigner.ToCode;
-
 namespace UnitTests;
 
 [TestFixture]
@@ -196,7 +190,7 @@ internal class PosTests : Tests
             };
         }
     }
-    
+
     private static IEnumerable<TestCaseData> IsCenter_Cases
     {
         get
@@ -411,6 +405,7 @@ internal class PosTests : Tests
         {
             Assert.Ignore( "BUG: Null returns true for this, when it shouldn't" );
         }
+
         return testValue.IsAnchorEnd( );
     }
 
@@ -433,6 +428,7 @@ internal class PosTests : Tests
         {
             Assert.Warn( "BUG: Null returns true for this, when it shouldn't" );
         }
+
         return testValue.IsCenter( );
     }
 
