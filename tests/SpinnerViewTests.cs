@@ -20,6 +20,7 @@ internal class SpinnerViewTests : Tests
 
         Assert.That( Application.MainLoop.Timeouts, Is.Empty );
     }
+
     [Test]
     [Category("Code Generation")]
     public void NewSpinnerAutoSpins_AfterRoundTrip()
@@ -28,7 +29,7 @@ internal class SpinnerViewTests : Tests
 
         Assume.That( Application.MainLoop.Timeouts, Is.Empty );
 
-        RoundTrip<View, SpinnerView>((d,v) =>
+        using SpinnerView s = RoundTrip<View, SpinnerView>( static (_,_) =>
         {
 
         },out _);
@@ -41,10 +42,10 @@ internal class SpinnerViewTests : Tests
     [Category("Code Generation")]
     public void NewSpinnerAutoSpins_ChangeStyle()
     {
-        var backIn = RoundTrip<View, SpinnerView>((d, v) =>
+        using SpinnerView backIn = RoundTrip<View, SpinnerView>( static(d, v) =>
         {
             var prop = d.GetDesignableProperty(nameof(SpinnerView.Style))
-                       ?? throw new Exception("Property was unexpectedly not designable");
+                       ?? throw new ("Property was unexpectedly not designable");
 
             prop.SetValue(new Triangle());
             Assert.That(v.Style, Is.InstanceOf<Triangle>( ) );
