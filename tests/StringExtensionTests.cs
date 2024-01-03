@@ -1,7 +1,10 @@
-﻿using TerminalGuiDesigner;
+﻿using StringExtensions = TerminalGuiDesigner.StringExtensions;
 
 namespace UnitTests;
 
+[TestFixture]
+[TestOf( typeof( StringExtensions ) )]
+[Category( "Core" )]
 internal class StringExtensionTests
 {
     [TestCase("bob", "bob", new[] {"fish"})]
