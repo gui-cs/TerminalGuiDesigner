@@ -36,16 +36,14 @@ public partial class PosEditor : Dialog {
 
     /// <summary>
     /// Prompt user to create a new <see cref="Pos"/> value to populate
-    /// <paramref name="property"/> on <paramref name="design"/> with.
+    /// on <paramref name="design"/> with.
     /// </summary>
     /// <param name="design">What to set the value on.</param>
-    /// <param name="property">The property to set (must be of type <see cref="Pos"/>).</param>
-    public PosEditor(Design design, Property property) {
+    /// <param name="oldValue">The current value for the property.</param>
+    public PosEditor(Design design, Pos oldValue) {
         InitializeComponent();
         
         this.design = design;
-        this.property = property;
-
 
         Title = "Pos Designer";
         Border.BorderStyle = LineStyle.Double;

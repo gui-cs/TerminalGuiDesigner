@@ -1,9 +1,11 @@
 ﻿using System.CodeDom;
+using System.Collections;
 using System.Reflection;
 using System.Text;
 using Terminal.Gui;
 using Terminal.Gui.TextValidateProviders;
 using TerminalGuiDesigner;
+using YamlDotNet.Core.Tokens;
 using Attribute = Terminal.Gui.Attribute;
 
 namespace TerminalGuiDesigner.ToCode;
@@ -177,7 +179,7 @@ public class Property : ToCodeBase
             else
             {
                 throw new Exception($"Unexpected unicode character size.  Rune was {rune}");
-            }            
+            }
         }
 
         if (val is Attribute attribute)
@@ -263,7 +265,46 @@ public class Property : ToCodeBase
                 values.Select(v => v.ToCodePrimitiveExpression()).ToArray());
         }
 
+        if (val is IList valList)
+        {
+            var elementType = type.GetElementTypeEx()
+                ?? throw new Exception($"Type {type} was an IList but {nameof(Type.GetElementType)} returned null");
+
+            return new CodeObjectCreateExpression(
+                new CodeTypeReference(val.GetType()),
+                    new CodeArrayCreateExpression(
+                        elementType,
+                        valList.Cast<object>().Select(this.ValueFactory).ToArray())
+                );
+        }
+
         return val.ToCodePrimitiveExpression();
+    }
+
+    private CodeExpression ValueFactory(object val)
+    {
+
+        var type = val.GetType();
+
+        // TODO: Could move lots of logic in GetRHS into here
+        if (type.GetGenericTypeDefinition() == typeof(SliderOption<>))
+        {
+            // TODO: this feels very brittle!
+            var a1 = type.GetProperty(nameof(SliderOption<object>.Legend)).GetValue(val);
+            var a2 = (Rune)type.GetProperty(nameof(SliderOption<object>.LegendAbbr)).GetValue(val);
+            var a3 = type.GetProperty(nameof(SliderOption<object>.Data)).GetValue(val);
+            
+
+            return new CodeObjectCreateExpression(
+                new CodeTypeReference(val.GetType()),
+                new CodePrimitiveExpression(a1),
+                new CodeObjectCreateExpression(typeof(Rune),new CodePrimitiveExpression(a2.ToString()[0])),
+                new CodePrimitiveExpression(a3));
+        }
+        else
+        {
+            throw new NotSupportedException($"Cannot generate code for value '{val}'");
+        }
     }
 
     /// <summary>

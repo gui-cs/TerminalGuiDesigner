@@ -40,7 +40,12 @@ internal class ViewFactoryTests
     /// </summary>
     private static IEnumerable<TestCaseData> Create_And_CreateT_Type_Provider
     {
-        get { return ViewFactory_SupportedViewTypes.Select( static t => new TestCaseData( RuntimeHelpers.GetUninitializedObject( t ) ) ); }
+        get { return ViewFactory_SupportedViewTypes
+                .Select(Tests.PickFirstTTypeForGenerics)
+                .Select(
+            static t => new TestCaseData( 
+                RuntimeHelpers.GetUninitializedObject( t ) 
+                ) ); }
     }
 
     private static MenuBarItem[] ViewFactory_DefaultMenuBarItems => ViewFactory.DefaultMenuBarItems;
@@ -271,7 +276,6 @@ internal class ViewFactoryTests
             typeof( OpenDialog ),
             typeof( ScrollBarView ),
             typeof( TreeView<> ),
-            typeof( Slider<> ),
             typeof( Frame ),
             typeof( Wizard ),
             typeof( WizardStep )

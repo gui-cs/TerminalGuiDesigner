@@ -1,7 +1,7 @@
 ﻿{
   "AddView": "F2",
   "Copy": "Ctrl+C",
-  "Delete": "Delete",
+  "Delete": "DeleteChar",
   "EditProperties": "F4",
   "EditRootProperties": "F5",
   "MoveDown": "Shift+CursorDown",

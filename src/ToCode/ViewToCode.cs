@@ -125,6 +125,8 @@ public class ViewToCode
         var ns = new CodeNamespace(rosylyn.Namespace);
         ns.Imports.Add(new CodeNamespaceImport("System"));
         ns.Imports.Add(new CodeNamespaceImport("Terminal.Gui"));
+        ns.Imports.Add(new CodeNamespaceImport("System.Collections"));
+        ns.Imports.Add(new CodeNamespaceImport("System.Collections.Generic"));
 
         this.AddCustomHeaderForDesignerCsFile(ns);
 

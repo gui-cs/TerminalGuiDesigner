@@ -36,7 +36,6 @@ public static class ViewFactory
         typeof( OpenDialog ),
         typeof( ScrollBarView ),
         typeof( TreeView<> ),
-        typeof( Slider<> ),
 
         // Theses are special types of view and shouldn't be added manually by user
         typeof( Frame ),
@@ -81,7 +80,9 @@ public static class ViewFactory
                     } )
                     .Where( filteredType => filteredType.IsSubclassOf( typeof(View) ) )
                     .Where( viewDescendantType => !KnownUnsupportedTypes.Any( viewDescendantType.IsAssignableTo )
-                                                  || viewDescendantType == typeof( Window ) );
+                                                  || viewDescendantType == typeof( Window ))
+                    // Slider is an alias of Slider<object> so don't offer that
+                    .Where(vt=>vt != typeof(Slider));
 
     private static bool IsSupportedType( this Type t )
     {
@@ -257,6 +258,14 @@ public static class ViewFactory
     [Obsolete( "Migrate to using generic Create<T> method" )]
     public static View Create( Type requestedType )
     {
+        if (requestedType.IsGenericType)
+        {
+            var method = typeof(ViewFactory).GetMethods().Single(m=>m.Name=="Create" && m.IsGenericMethodDefinition);
+            method = method.MakeGenericMethod(requestedType) ?? throw new Exception("Could not find Create<T> method on ViewFactory");
+
+            return (View)(method.Invoke(null, new object?[] { null, null, null }) ?? throw new Exception("ViewFactory.Create resulted in null"));
+        }
+
         return requestedType switch
         {
             null => throw new ArgumentNullException( nameof( requestedType ) ),
@@ -293,5 +302,20 @@ public static class ViewFactory
         where T : View, new( )
     {
         return Create<T>( );
+    }
+
+    /// <summary>
+    /// Returns all Types which can be used with generic view of the given <paramref name="viewType"/>.
+    /// </summary>
+    /// <param name="viewType">A generic view type e.g. <see langword="typeof"/>(Slider&lt;&gt;)</param>
+    /// <returns></returns>
+    public static IEnumerable<Type> GetSupportedTTypesForGenericViewOfType(Type viewType)
+    {
+        if(viewType == typeof(Slider<>))
+        {
+            return new[] { typeof(int), typeof(string), typeof(float), typeof(double), typeof(bool) };
+        }
+
+        throw new NotSupportedException($"Generic View {viewType} is not yet supported");
     }
 }
