@@ -495,7 +495,7 @@ internal class PosTests : Tests
         Assert.Multiple( ( ) =>
         {
             Assert.That( p.IsRelative );
-            Assert.That( p.IsRelative( new List<Design> { d }, out Design outDesign, out Side outSide ) );
+            Assert.That( p.IsRelative( new List<Design> { d }, out Design? outDesign, out Side outSide ) );
             Assert.That( outDesign, Is.SameAs( d ) );
             Assert.That( outSide, Is.EqualTo( side ) );
         } );
