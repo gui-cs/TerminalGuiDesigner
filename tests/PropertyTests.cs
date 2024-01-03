@@ -47,10 +47,10 @@ internal class PropertyTests : Tests
         } );
     }
 
-    [Test]
-    public void PropertyOfType_Attribute( )
+    [Test( ExpectedResult = "new Terminal.Gui.Attribute(Color.BrightMagenta,Color.Blue)" )]
+    public string PropertyOfType_Attribute( )
     {
-        using GraphView graphView = new ( );
+        using GraphView graphView = new( );
         Design d = new( new( $"{nameof( PropertyOfType_Attribute )}.cs" ), "FFF", graphView );
         Property colorProp = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof( GraphView.GraphColor ) ) );
 
@@ -63,7 +63,7 @@ internal class PropertyTests : Tests
         colorProp.SetValue( new TerminalGuiAttribute( Color.BrightMagenta, Color.Blue ) );
 
         rhs = (CodeSnippetExpression)colorProp.GetRhs( );
-        Assert.That( rhs.Value, Is.EqualTo( "new Terminal.Gui.Attribute(Color.BrightMagenta,Color.Blue)" ) );
+        return rhs.Value;
     }
 
     [Test]
@@ -84,19 +84,17 @@ internal class PropertyTests : Tests
         Assert.That( rhs.Parameters, Has.Count.EqualTo( 2 ) );
     }
 
-    [Test]
-    public void PropertyOfType_Pos( )
+    [Test( ExpectedResult = "Pos.Center()" )]
+    [Category( "Code Generation" )]
+    public string PropertyOfType_Pos( )
     {
-        using Label label = new ( );
+        using Label label = new( );
         Design d = new( new( $"{nameof( PropertyOfType_Pos )}.cs" ), "FFF", label );
         Property xProp = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof( View.X ) ) );
 
         xProp.SetValue( Pos.Center( ) );
 
-        CodeSnippetExpression rhs = (CodeSnippetExpression)xProp.GetRhs( );
-
-        // The code generated for a Property of Type Pos should be the function call
-        Assert.That( rhs.Value, Is.EqualTo( "Pos.Center()" ) );
+        return ( (CodeSnippetExpression)xProp.GetRhs( ) ).Value;
     }
 
     [Test]
@@ -116,8 +114,9 @@ internal class PropertyTests : Tests
         Assert.That( code, Is.EqualTo( $"new System.Text.Rune('{runeCharacter}')" ) );
     }
 
-    [Test]
-    public void PropertyOfType_Size( )
+    [Test( ExpectedResult = "Pos.Center()" )]
+    [Category( "Code Generation" )]
+    public string PropertyOfType_Size( )
     {
         using ScrollView scrollView = new( );
         Design d = new( new( $"{nameof( PropertyOfType_Size )}.cs" ), "FFF", scrollView );
@@ -125,9 +124,6 @@ internal class PropertyTests : Tests
 
         xProp.SetValue( Pos.Center( ) );
 
-        CodeSnippetExpression rhs = (CodeSnippetExpression)xProp.GetRhs( );
-
-        // The code generated for a Property of Type Pos should be the function call
-        Assert.That( rhs.Value, Is.EqualTo( "Pos.Center()" ) );
+        return ( (CodeSnippetExpression)xProp.GetRhs( ) ).Value;
     }
 }
