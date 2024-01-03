@@ -9,24 +9,23 @@ internal class SpinnerViewTests : Tests
     [Test]
     public void NewSpinnerAutoSpins()
     {
-        ClassicAssert.Contains(typeof(SpinnerView), ViewFactory.SupportedViewTypes.ToArray());
+        Assume.That( ViewFactory.SupportedViewTypes, Does.Contain( typeof( SpinnerView ) ) );
 
-        ClassicAssert.IsEmpty(Application.MainLoop.Timeouts);
+        Assume.That( Application.MainLoop.Timeouts, Is.Empty );
 
-        var s = (SpinnerView)ViewFactory.Create(typeof(SpinnerView));
+        using SpinnerView s = (SpinnerView)ViewFactory.Create(typeof(SpinnerView));
 
-        ClassicAssert.IsNotEmpty(Application.MainLoop.Timeouts);
-        s.Dispose();
+        Assert.That( Application.MainLoop.Timeouts, Is.Not.Empty );
 
-        ClassicAssert.IsEmpty(Application.MainLoop.Timeouts);
+        Assert.That( Application.MainLoop.Timeouts, Is.Empty );
     }
     [Test]
     [Category("Code Generation")]
     public void NewSpinnerAutoSpins_AfterRoundTrip()
     {
-        ClassicAssert.Contains(typeof(SpinnerView), ViewFactory.SupportedViewTypes.ToArray());
+        Assert.That( ViewFactory.SupportedViewTypes.ToArray(), Does.Contain( typeof(SpinnerView) ) );
 
-        ClassicAssert.IsEmpty(Application.MainLoop.Timeouts);
+        Assert.That( Application.MainLoop.Timeouts, Is.Empty );
 
         RoundTrip<View, SpinnerView>((d,v) =>
         {
@@ -34,7 +33,7 @@ internal class SpinnerViewTests : Tests
         },out _);
 
         // Auto-spin original and the one that is read back in
-        ClassicAssert.AreEqual(2, Application.MainLoop.Timeouts.Count);
+        Assert.That( Application.MainLoop.Timeouts.Count, Is.EqualTo( 2 ) );
     }
 
     [Test]
@@ -47,10 +46,10 @@ internal class SpinnerViewTests : Tests
                        ?? throw new Exception("Property was unexpectedly not designable");
 
             prop.SetValue(new Triangle());
-            ClassicAssert.IsInstanceOf<Triangle>(v.Style);
+            Assert.That(v.Style, Is.InstanceOf<Triangle>( ) );
         }, out _);
 
         // Auto-spin original and the one that is read back in
-        ClassicAssert.IsInstanceOf<Triangle>(backIn.Style);
+        Assert.That( backIn.Style, Is.InstanceOf<Triangle>( ) );
     }
 }
