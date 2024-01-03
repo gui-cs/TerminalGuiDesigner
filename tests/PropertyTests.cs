@@ -1,25 +1,30 @@
 using System.CodeDom;
-using System.CodeDom.Compiler;
 using System.Text;
-using Microsoft.CSharp;
 using Attribute = Terminal.Gui.Attribute;
 
 namespace UnitTests;
 
+[TestFixture]
+[TestOf( typeof( Property ) )]
+[Category( "Core" )]
 internal class PropertyTests : Tests
 {
     [Test]
     public void Changing_LineViewOrientation( )
     {
         Design v = Get10By10View( );
-        LineView lv = (LineView)ViewFactory.Create( typeof( LineView ) );
+        LineView lv = ViewFactory.Create<LineView>( );
         Design d = new( v.SourceCode, "lv", lv );
 
         v.View.Add( lv );
         lv.IsInitialized = true;
 
-        Assert.That( lv.Orientation, Is.EqualTo( Orientation.Horizontal ) );
-        Assert.That( lv.LineRune, Is.EqualTo( new Rune( '─' ) ) );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( lv.Orientation, Is.EqualTo( Orientation.Horizontal ) );
+            Assert.That( lv.LineRune, Is.EqualTo( new Rune( '─' ) ) );
+        } );
+
         Property? prop = d.GetDesignableProperty( nameof( LineView.Orientation ) );
 
         Assert.That( prop, Is.Not.Null );
@@ -31,24 +36,14 @@ internal class PropertyTests : Tests
         lv.Width = 1;
 
         prop?.SetValue( Orientation.Horizontal );
-        Assert.That( lv.Orientation, Is.EqualTo( Orientation.Horizontal ) );
-        Assert.That( lv.LineRune, Is.EqualTo( ConfigurationManager.Glyphs.HLine ) );
-        Assert.That( lv.Width, Is.EqualTo( Dim.Fill( ) ) );
-        Assert.That( lv.Height, Is.EqualTo( Dim.Sized( 1 ) ) );
-    }
 
-    public static string ExpressionToCode( CodeExpression expression )
-    {
-        CSharpCodeProvider provider = new( );
-
-        using ( StringWriter sw = new( ) )
+        Assert.Multiple( ( ) =>
         {
-            IndentedTextWriter tw = new( sw, "    " );
-            provider.GenerateCodeFromExpression( expression, tw, new( ) );
-            tw.Close( );
-
-            return sw.GetStringBuilder( ).ToString( );
-        }
+            Assert.That( lv.Orientation, Is.EqualTo( Orientation.Horizontal ) );
+            Assert.That( lv.LineRune, Is.EqualTo( ConfigurationManager.Glyphs.HLine ) );
+            Assert.That( lv.Width, Is.EqualTo( Dim.Fill( ) ) );
+            Assert.That( lv.Height, Is.EqualTo( Dim.Sized( 1 ) ) );
+        } );
     }
 
     [Test]
@@ -60,7 +55,7 @@ internal class PropertyTests : Tests
         colorProp.SetValue( null );
 
         CodeSnippetExpression rhs = (CodeSnippetExpression)colorProp.GetRhs( );
-        Assert.That( "null", Is.EqualTo( rhs.Value ) );
+        Assert.That( rhs.Value, Is.EqualTo( "null" ) );
 
         colorProp.SetValue( new Attribute( Color.BrightMagenta, Color.Blue ) );
 
@@ -79,7 +74,7 @@ internal class PropertyTests : Tests
         CodeObjectCreateExpression rhs = (CodeObjectCreateExpression)pointProp.GetRhs( );
 
         // The code generated should be a new PointF
-        Assert.That( 2, Is.EqualTo( rhs.Parameters.Count ) );
+        Assert.That( rhs.Parameters, Has.Count.EqualTo( 2 ) );
     }
 
     [Test]
@@ -99,8 +94,6 @@ internal class PropertyTests : Tests
     [Test]
     public void PropertyOfType_Rune( )
     {
-        ViewToCode viewToCode = new( );
-
         FileInfo file = new( "TestPropertyOfType_Rune.cs" );
         LineView lv = new( );
         Design d = new( new( file ), "lv", lv );
@@ -110,7 +103,7 @@ internal class PropertyTests : Tests
 
         Assert.That( lv.LineRune, Is.EqualTo( new Rune( 'F' ) ) );
 
-        string code = ExpressionToCode( prop.GetRhs( ) );
+        string code = TestHelpers.ExpressionToCode( prop.GetRhs( ) );
 
         Assert.That( code, Is.EqualTo( "new System.Text.Rune('F')" ) );
     }
