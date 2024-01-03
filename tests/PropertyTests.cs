@@ -14,7 +14,7 @@ internal class PropertyTests : Tests
     public void Changing_LineViewOrientation( )
     {
         Design v = Get10By10View( );
-        LineView lv = ViewFactory.Create<LineView>( );
+        using LineView lv = ViewFactory.Create<LineView>( );
         Design d = new( v.SourceCode, "lv", lv );
 
         v.View.Add( lv );
@@ -50,7 +50,8 @@ internal class PropertyTests : Tests
     [Test]
     public void PropertyOfType_Attribute( )
     {
-        Design d = new( new( nameof( PropertyOfType_Attribute ) + ".cs" ), "FFF", new GraphView( ) );
+        using GraphView graphView = new ( );
+        Design d = new( new( nameof( PropertyOfType_Attribute ) + ".cs" ), "FFF", graphView );
         Property colorProp = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof( GraphView.GraphColor ) ) );
 
         colorProp.SetValue( null );
@@ -67,7 +68,8 @@ internal class PropertyTests : Tests
     [Test]
     public void PropertyOfType_PointF( )
     {
-        Design d = new( new( nameof( PropertyOfType_PointF ) + ".cs" ), "FFF", new GraphView( ) );
+        using GraphView graphView = new ( );
+        Design d = new( new( nameof( PropertyOfType_PointF ) + ".cs" ), "FFF", graphView );
         Property pointProp = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof( GraphView.ScrollOffset ) ) );
 
         pointProp.SetValue( new PointF( 4.5f, 4.1f ) );
@@ -81,7 +83,8 @@ internal class PropertyTests : Tests
     [Test]
     public void PropertyOfType_Pos( )
     {
-        Design d = new( new( nameof( PropertyOfType_Pos ) + ".cs" ), "FFF", new Label( ) );
+        using Label label = new ( );
+        Design d = new( new( nameof( PropertyOfType_Pos ) + ".cs" ), "FFF", label );
         Property xProp = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof( View.X ) ) );
 
         xProp.SetValue( Pos.Center( ) );
@@ -96,7 +99,7 @@ internal class PropertyTests : Tests
     public void PropertyOfType_Rune( )
     {
         FileInfo file = new( "TestPropertyOfType_Rune.cs" );
-        LineView lv = new( );
+        using LineView lv = new( );
         Design d = new( new( file ), "lv", lv );
         Property prop = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( "LineRune" ) );
 
@@ -112,7 +115,8 @@ internal class PropertyTests : Tests
     [Test]
     public void PropertyOfType_Size( )
     {
-        Design d = new( new( nameof( PropertyOfType_Size ) + ".cs" ), "FFF", new ScrollView( ) );
+        using ScrollView scrollView = new( );
+        Design d = new( new( nameof( PropertyOfType_Size ) + ".cs" ), "FFF", scrollView );
         Property xProp = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof( View.X ) ) );
 
         xProp.SetValue( Pos.Center( ) );
