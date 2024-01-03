@@ -1,6 +1,7 @@
 using System.CodeDom;
 using System.Text;
 using TerminalGuiAttribute = Terminal.Gui.Attribute;
+using TerminalGuiConfigurationManager = Terminal.Gui.ConfigurationManager;
 
 namespace UnitTests;
 
@@ -29,7 +30,7 @@ internal class PropertyTests : Tests
 
         Assert.That( prop, Is.Not.Null );
         prop?.SetValue( Orientation.Vertical );
-        Assert.That( lv.LineRune, Is.EqualTo( ConfigurationManager.Glyphs.VLine ) );
+        Assert.That( lv.LineRune, Is.EqualTo( TerminalGuiConfigurationManager.Glyphs.VLine ) );
 
         // now try with a dim fill
         lv.Height = Dim.Fill( );
@@ -40,7 +41,7 @@ internal class PropertyTests : Tests
         Assert.Multiple( ( ) =>
         {
             Assert.That( lv.Orientation, Is.EqualTo( Orientation.Horizontal ) );
-            Assert.That( lv.LineRune, Is.EqualTo( ConfigurationManager.Glyphs.HLine ) );
+            Assert.That( lv.LineRune, Is.EqualTo( TerminalGuiConfigurationManager.Glyphs.HLine ) );
             Assert.That( lv.Width, Is.EqualTo( Dim.Fill( ) ) );
             Assert.That( lv.Height, Is.EqualTo( Dim.Sized( 1 ) ) );
         } );
