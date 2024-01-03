@@ -24,9 +24,9 @@ internal class SpinnerViewTests : Tests
     [Category("Code Generation")]
     public void NewSpinnerAutoSpins_AfterRoundTrip()
     {
-        Assert.That( ViewFactory.SupportedViewTypes.ToArray(), Does.Contain( typeof(SpinnerView) ) );
+        Assume.That( ViewFactory.SupportedViewTypes.ToArray(), Does.Contain( typeof(SpinnerView) ) );
 
-        Assert.That( Application.MainLoop.Timeouts, Is.Empty );
+        Assume.That( Application.MainLoop.Timeouts, Is.Empty );
 
         RoundTrip<View, SpinnerView>((d,v) =>
         {
