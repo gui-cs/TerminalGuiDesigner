@@ -1,8 +1,11 @@
-using Terminal.Gui;
-
 namespace UnitTests;
 
-class RadioGroupTests : Tests
+[TestFixture]
+[TestOf( typeof( OperationManager ) )]
+[TestOf( typeof( CodeToView ) )]
+[TestOf( typeof( ViewToCode ) )]
+[Category( "Code Generation" )]
+internal class RadioGroupTests : Tests
 {
     [Test]
     public void TestRoundTrip_PreserveRadioGroups()
