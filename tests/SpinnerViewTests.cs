@@ -34,7 +34,7 @@ internal class SpinnerViewTests : Tests
         },out _);
 
         // Auto-spin original and the one that is read back in
-        Assert.That( Application.MainLoop.Timeouts.Count, Is.EqualTo( 2 ) );
+        Assert.That( Application.MainLoop.Timeouts, Has.Count.EqualTo( 2 ) );
     }
 
     [Test]
