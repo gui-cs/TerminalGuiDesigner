@@ -7,17 +7,34 @@ namespace UnitTests;
 internal class TabViewTests : Tests
 {
     [Test]
-    public void TestRoundTrip_PreserveTabs()
+    public void RoundTrip_PreserveTabs( )
     {
-        TabView tabIn = RoundTrip<Dialog, TabView>(
-            (d, t) =>
-            ClassicAssert.IsNotEmpty(t.Tabs, "Expected default TabView created by ViewFactory to have some placeholder Tabs"),
-            out TabView tabOut);
+        using TabView tabIn =
+            RoundTrip<Dialog, TabView>(
+                static ( _, t ) =>
+                {
+                    Assume.That( t.Tabs, Is.Not.Empty, "Expected default TabView created by ViewFactory to have some placeholder Tabs" );
+                    Assume.That( t.Tabs, Has.Exactly( 2 ).InstanceOf<Tab>( ) );
+                    Assume.That( t.Tabs, Has.ItemAt( 0 ).Property( "Text" ).EqualTo( "Tab1" ) );
+                    Assume.That( t.Tabs, Has.ItemAt( 1 ).Property( "Text" ).EqualTo( "Tab2" ) );
+                },
+                out TabView tabOut );
 
-        ClassicAssert.AreEqual(2, tabIn.Tabs.Count());
+        Assert.That( tabIn.Tabs, Has.Exactly( 2 ).InstanceOf<Tab>( ) );
 
-        ClassicAssert.AreEqual("Tab1", tabIn.Tabs.ElementAt(0).Text);
-        ClassicAssert.AreEqual("Tab2", tabIn.Tabs.ElementAt(1).Text);
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( tabIn.Tabs, Has.ItemAt( 0 ).Property( "Text" ).EqualTo( "Tab1" ) );
+            Assert.That( tabIn.Tabs, Has.ItemAt( 1 ).Property( "Text" ).EqualTo( "Tab2" ) );
+            Assert.That( tabOut.Tabs, Has.ItemAt( 0 ).Property( "Text" ).EqualTo( "Tab1" ) );
+            Assert.That( tabOut.Tabs, Has.ItemAt( 1 ).Property( "Text" ).EqualTo( "Tab2" ) );
+
+            // Also prove they aren't the same objects
+            Assert.That( tabIn, Is.Not.SameAs( tabOut ) );
+            Assert.That( tabIn.Tabs, Has.ItemAt( 0 ).Not.SameAs( tabOut.Tabs.ElementAt( 0 ) ) );
+            Assert.That( tabIn.Tabs, Has.ItemAt( 1 ).Not.SameAs( tabOut.Tabs.ElementAt( 1 ) ) );
+        } );
+        tabOut.Dispose( );
     }
 
     /// <summary>
