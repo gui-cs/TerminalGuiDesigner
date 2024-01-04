@@ -48,9 +48,16 @@ internal class TabViewTests : Tests
         var file = new FileInfo("TestGetTabView.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
-        var tvOut = ViewFactory.Create(typeof(TabView));
+        var tvOut = ViewFactory.Create<TabView>( );
 
-        OperationManager.Instance.Do(new AddViewOperation(tvOut, designOut, "myTabview"));
+        AddViewOperation? addViewOperation = new (tvOut, designOut, "myTabview");
+        Assume.That( addViewOperation, Is.Not.Null.And.InstanceOf<AddViewOperation>( ) );
+        Assume.That( addViewOperation.IsImpossible, Is.False );
+        Assume.That( addViewOperation.SupportsUndo );
+
+        bool addViewOperationSucceeded = false;
+        Assume.That( ( ) => addViewOperationSucceeded = OperationManager.Instance.Do( addViewOperation ), Throws.Nothing );
+        Assume.That( addViewOperationSucceeded );
 
         return (Design)tvOut.Data;
     }
