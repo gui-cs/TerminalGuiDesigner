@@ -264,34 +264,46 @@ internal class TabViewTests : Tests
     }
 
     [Test]
-    public void TestRoundTrip_DuplicateTabNames()
+    public void RoundTrip_DuplicateTabTitles( [Values( "TextTabTitle", "12345", "TextAndNumber5" )] string tabText )
     {
-        var viewToCode = new ViewToCode();
+        // TODO: I'm not sure this test is really necessary.
+        // Why would the title text be any different from any other property?
+        ViewToCode viewToCode = new( );
 
-        var file = new FileInfo("TestRoundTrip_DuplicateTabNames.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
+        FileInfo file = new( $"{nameof( RoundTrip_DuplicateTabTitles )}.cs" );
+        Design designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Dialog ) );
 
-        var tvOut = ViewFactory.Create<TabView>( );
+        using TabView tvOut = ViewFactory.Create<TabView>( );
 
-        OperationManager.Instance.Do(new AddViewOperation(tvOut, designOut, "myTabview"));
+        AddViewOperation addOperation = new( tvOut, designOut, "myTabview" );
+        Assume.That( addOperation.IsImpossible, Is.False );
+        bool addOperationSucceeded = false;
+        Assume.That( ( ) => addOperationSucceeded = OperationManager.Instance.Do( addOperation ), Throws.Nothing );
+        Assume.That( addOperationSucceeded );
 
-        // Give both tabs the same name
-        tvOut.Tabs.ElementAt(0).Text = "MyTab";
-        tvOut.Tabs.ElementAt(1).Text = "MyTab";
+        // Give both tabs the same title text
+        tvOut.Tabs.ElementAt( 0 ).Text = tabText;
+        tvOut.Tabs.ElementAt( 1 ).Text = tabText;
 
-        viewToCode.GenerateDesignerCs(designOut, typeof(Dialog));
+        viewToCode.GenerateDesignerCs( designOut, typeof( Dialog ) );
 
-        var tabOut = designOut.View.GetActualSubviews().OfType<TabView>().Single();
+        Assume.That( designOut.View.GetActualSubviews( ).OfType<TabView>( ).Single( ), Is.SameAs( tvOut ) );
 
-        var codeToView = new CodeToView(designOut.SourceCode);
-        var designBackIn = codeToView.CreateInstance();
+        CodeToView codeToView = new( designOut.SourceCode );
+        Design? designBackIn = null;
+        Assert.That( ( ) => designBackIn = codeToView.CreateInstance( ), Throws.Nothing );
+        Assert.That( designBackIn, Is.Not.Null.And.InstanceOf<Design>( ) );
 
-        var tabIn = designBackIn.View.GetActualSubviews().OfType<TabView>().Single();
+        using TabView tvIn = designBackIn!.View.GetActualSubviews( ).OfType<TabView>( ).Single( );
 
-        ClassicAssert.AreEqual(2, tabIn.Tabs.Count());
+        Assert.That( tvIn.Tabs, Has.Exactly( 2 ).InstanceOf<Tab>( ) );
 
-        ClassicAssert.AreEqual("MyTab", tabIn.Tabs.ElementAt(0).Text);
-        ClassicAssert.AreEqual("MyTab", tabIn.Tabs.ElementAt(1).Text);
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( tvIn, Is.Not.SameAs( tvOut ) );
+            Assert.That( tvIn.Tabs.ElementAt( 0 ).Text, Is.EqualTo( tabText ) );
+            Assert.That( tvIn.Tabs.ElementAt( 1 ).Text, Is.EqualTo( tabText ) );
+        } );
     }
 
     [Test]
