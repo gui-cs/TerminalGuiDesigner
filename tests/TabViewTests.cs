@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using TerminalGuiDesigner.Operations.TabOperations;
 
 namespace UnitTests;
@@ -6,64 +7,48 @@ namespace UnitTests;
 [Category( "Code Generation" )]
 internal class TabViewTests : Tests
 {
+    private static IEnumerable<View> TabView_Tab_SubViewTypes =>
+    [
+        (Label)RuntimeHelpers.GetUninitializedObject( typeof( Label ) ),
+        (Button)RuntimeHelpers.GetUninitializedObject( typeof( Button ) ),
+        (StatusBar)RuntimeHelpers.GetUninitializedObject( typeof( StatusBar ) )
+    ];
+
     [Test]
-    public void RoundTrip_PreserveTabs( )
+    public void AddingSubControlToTab<T>( [ValueSource( nameof( TabView_Tab_SubViewTypes ) )] T dummyObject )
+        where T : View, new( )
     {
-        using TabView tabIn =
-            RoundTrip<Dialog, TabView>(
-                static ( _, t ) =>
-                {
-                    Assume.That( t.Tabs, Is.Not.Empty, "Expected default TabView created by ViewFactory to have some placeholder Tabs" );
-                    Assume.That( t.Tabs, Has.Exactly( 2 ).InstanceOf<Tab>( ) );
-                    Assume.That( t.Tabs, Has.ItemAt( 0 ).Property( "Text" ).EqualTo( "Tab1" ) );
-                    Assume.That( t.Tabs, Has.ItemAt( 1 ).Property( "Text" ).EqualTo( "Tab2" ) );
-                },
-                out TabView tabOut );
+        ViewToCode viewToCode = new( );
 
-        Assert.That( tabIn.Tabs, Has.Exactly( 2 ).InstanceOf<Tab>( ) );
+        FileInfo file = new( $"{nameof( AddingSubControlToTab )}.cs" );
+        Design designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Dialog ) );
 
-        Assert.Multiple( ( ) =>
-        {
-            Assert.That( tabIn.Tabs, Has.ItemAt( 0 ).Property( "Text" ).EqualTo( "Tab1" ) );
-            Assert.That( tabIn.Tabs, Has.ItemAt( 1 ).Property( "Text" ).EqualTo( "Tab2" ) );
-            Assert.That( tabOut.Tabs, Has.ItemAt( 0 ).Property( "Text" ).EqualTo( "Tab1" ) );
-            Assert.That( tabOut.Tabs, Has.ItemAt( 1 ).Property( "Text" ).EqualTo( "Tab2" ) );
+        using TabView tvOut = ViewFactory.Create<TabView>( );
 
-            // Also prove they aren't the same objects
-            Assert.That( tabIn, Is.Not.SameAs( tabOut ) );
-            Assert.That( tabIn.Tabs, Has.ItemAt( 0 ).Not.SameAs( tabOut.Tabs.ElementAt( 0 ) ) );
-            Assert.That( tabIn.Tabs, Has.ItemAt( 1 ).Not.SameAs( tabOut.Tabs.ElementAt( 1 ) ) );
-        } );
-        tabOut.Dispose( );
-    }
+        AddViewOperation addOperation = new( tvOut, designOut, "myTabview" );
+        Assume.That( addOperation.IsImpossible, Is.False );
+        bool addOperationSucceeded = false;
+        Assume.That( ( ) => addOperationSucceeded = OperationManager.Instance.Do( addOperation ), Throws.Nothing );
+        Assume.That( addOperationSucceeded );
 
-    /// <summary>
-    /// Creates a Dialog with a <see cref="TabView"/> in it.  Returns the <see cref="Design"/>
-    /// </summary>
-    /// <returns></returns>
-    private static Design GetTabView()
-    {
-        var viewToCode = new ViewToCode();
+        using T subview = ViewFactory.Create<T>( );
 
-        var file = new FileInfo("TestGetTabView.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
+        AddViewOperation addSubviewOperation = new( subview, (Design)tvOut.Data, $"my{typeof( T ).Name}" );
+        Assert.That( addSubviewOperation.IsImpossible, Is.False );
+        bool addSubviewOperationSucceeded = false;
+        Assert.That( ( ) => addSubviewOperationSucceeded = OperationManager.Instance.Do( addSubviewOperation ), Throws.Nothing );
+        Assert.That( addSubviewOperationSucceeded );
+        Assert.That( tvOut.SelectedTab.View.Subviews.ToArray( ), Does.Contain( subview ), "Expected currently selected tab to have the new view but it did not" );
 
-        var tvOut = ViewFactory.Create<TabView>( );
+        viewToCode.GenerateDesignerCs( designOut, typeof( Dialog ) );
 
-        AddViewOperation? addViewOperation = new (tvOut, designOut, "myTabview");
-        Assume.That( addViewOperation, Is.Not.Null.And.InstanceOf<AddViewOperation>( ) );
-        Assume.That( addViewOperation.IsImpossible, Is.False );
-        Assume.That( addViewOperation.SupportsUndo );
+        CodeToView codeToView = new( designOut.SourceCode );
+        Design designBackIn = codeToView.CreateInstance( );
 
-        bool addViewOperationSucceeded = false;
-        Assume.That( ( ) => addViewOperationSucceeded = OperationManager.Instance.Do( addViewOperation ), Throws.Nothing );
-        Assume.That( addViewOperationSucceeded );
+        using TabView tabIn = designBackIn.View.GetActualSubviews( ).OfType<TabView>( ).Single( );
+        using T tabInSubview = tabIn.SelectedTab.View.Subviews.OfType<T>( ).Single( );
 
-        // The above operation interferes with expected results in tests,
-        // so let's clear it out.
-        OperationManager.Instance.ClearUndoRedo( );
-
-        return (Design)tvOut.Data;
+        Assert.That( tabInSubview.Text, Is.EqualTo( subview.Text ) );
     }
 
     [Test]
@@ -159,6 +144,31 @@ internal class TabViewTests : Tests
             Assert.That( tv.Tabs, Has.ItemAt( 0 ).Property( "Text" ).EqualTo( "Tab2" ) );
             Assert.That( tv.Tabs, Has.ItemAt( 1 ).Property( "Text" ).EqualTo( "Tab1" ) );
         } );
+    }
+
+    [Test]
+    public void GetAllDesigns_TabView<T>( [ValueSource( nameof( TabView_Tab_SubViewTypes ) )] T dummyObject )
+        where T : View, new( )
+    {
+        using TabView tv = new( );
+
+        SourceCodeFile source = new( new FileInfo( $"{nameof( GetAllDesigns_TabView )}.cs" ) );
+
+        using T subview1 = ViewFactory.Create<T>( null, null, "fff" );
+        Design subview1Design = new( source, "subview1", subview1 );
+        subview1Design.View.Data = subview1Design;
+
+        using T subview2 = ViewFactory.Create<T>( null, null, "ddd" );
+        Design subview2Design = new( source, "subview2", subview2 );
+        subview2Design.View.Data = subview2Design;
+
+        tv.AddTab( new( "Yay", subview1Design.View ), true );
+        tv.AddTab( new( "Yay", subview2Design.View ), false );
+
+        Design tvDesign = new( source, "tv", tv );
+
+        Design[] designs = tvDesign.GetAllDesigns( ).ToArray( );
+        Assert.That( designs, Is.EquivalentTo( (Design[]) [tvDesign, subview1Design, subview2Design] ) );
     }
 
     [Test]
@@ -306,73 +316,35 @@ internal class TabViewTests : Tests
         } );
     }
 
-    private static IEnumerable<View> TabView_Tab_SubViewTypes =>
-    [
-        (Label)RuntimeHelpers.GetUninitializedObject( typeof(Label) ),
-        (Button)RuntimeHelpers.GetUninitializedObject( typeof(Button) ),
-        (StatusBar)RuntimeHelpers.GetUninitializedObject( typeof(StatusBar) ),
-    ];
-
     [Test]
-    public void AddingSubControlToTab<T>( [ValueSource( nameof( TabView_Tab_SubViewTypes ) )] T dummyObject )
-        where T : View, new( )
+    public void RoundTrip_PreserveTabs( )
     {
-        ViewToCode viewToCode = new( );
+        using TabView tabIn =
+            RoundTrip<Dialog, TabView>(
+                static ( _, t ) =>
+                {
+                    Assume.That( t.Tabs, Is.Not.Empty, "Expected default TabView created by ViewFactory to have some placeholder Tabs" );
+                    Assume.That( t.Tabs, Has.Exactly( 2 ).InstanceOf<Tab>( ) );
+                    Assume.That( t.Tabs, Has.ItemAt( 0 ).Property( "Text" ).EqualTo( "Tab1" ) );
+                    Assume.That( t.Tabs, Has.ItemAt( 1 ).Property( "Text" ).EqualTo( "Tab2" ) );
+                },
+                out TabView tabOut );
 
-        FileInfo file = new( $"{nameof( AddingSubControlToTab )}.cs" );
-        Design designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Dialog ) );
+        Assert.That( tabIn.Tabs, Has.Exactly( 2 ).InstanceOf<Tab>( ) );
 
-        using TabView tvOut = ViewFactory.Create<TabView>( );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( tabIn.Tabs, Has.ItemAt( 0 ).Property( "Text" ).EqualTo( "Tab1" ) );
+            Assert.That( tabIn.Tabs, Has.ItemAt( 1 ).Property( "Text" ).EqualTo( "Tab2" ) );
+            Assert.That( tabOut.Tabs, Has.ItemAt( 0 ).Property( "Text" ).EqualTo( "Tab1" ) );
+            Assert.That( tabOut.Tabs, Has.ItemAt( 1 ).Property( "Text" ).EqualTo( "Tab2" ) );
 
-        AddViewOperation addOperation = new( tvOut, designOut, "myTabview" );
-        Assume.That( addOperation.IsImpossible, Is.False );
-        bool addOperationSucceeded = false;
-        Assume.That( ( ) => addOperationSucceeded = OperationManager.Instance.Do( addOperation ), Throws.Nothing );
-        Assume.That( addOperationSucceeded );
-
-        using T subview = ViewFactory.Create<T>( );
-
-        AddViewOperation addSubviewOperation = new( subview, (Design)tvOut.Data, $"my{typeof( T ).Name}" );
-        Assert.That( addSubviewOperation.IsImpossible, Is.False );
-        bool addSubviewOperationSucceeded = false;
-        Assert.That( ( ) => addSubviewOperationSucceeded = OperationManager.Instance.Do( addSubviewOperation ), Throws.Nothing );
-        Assert.That( addSubviewOperationSucceeded );
-        Assert.That( tvOut.SelectedTab.View.Subviews.ToArray( ), Does.Contain( subview ), "Expected currently selected tab to have the new view but it did not" );
-
-        viewToCode.GenerateDesignerCs( designOut, typeof( Dialog ) );
-
-        CodeToView codeToView = new( designOut.SourceCode );
-        Design designBackIn = codeToView.CreateInstance( );
-
-        using TabView tabIn = designBackIn.View.GetActualSubviews( ).OfType<TabView>( ).Single( );
-        using T tabInSubview = tabIn.SelectedTab.View.Subviews.OfType<T>( ).Single( );
-
-        Assert.That( tabInSubview.Text, Is.EqualTo( subview.Text ) );
-    }
-
-    [Test]
-    public void GetAllDesigns_TabView<T>( [ValueSource( nameof( TabView_Tab_SubViewTypes ) )] T dummyObject )
-        where T : View, new( )
-    {
-        using TabView tv = new( );
-
-        SourceCodeFile source = new( new FileInfo( $"{nameof( GetAllDesigns_TabView )}.cs" ) );
-
-        using T subview1 = ViewFactory.Create<T>( null, null, "fff" );
-        Design subview1Design = new( source, "subview1", subview1 );
-        subview1Design.View.Data = subview1Design;
-
-        using T subview2 = ViewFactory.Create<T>( null, null, "ddd" );
-        Design subview2Design = new( source, "subview2", subview2 );
-        subview2Design.View.Data = subview2Design;
-
-        tv.AddTab( new( "Yay", subview1Design.View ), true );
-        tv.AddTab( new( "Yay", subview2Design.View ), false );
-
-        Design tvDesign = new( source, "tv", tv );
-
-        Design[] designs = tvDesign.GetAllDesigns( ).ToArray( );
-        Assert.That( designs, Is.EquivalentTo( (Design[]) [tvDesign, subview1Design, subview2Design] ) );
+            // Also prove they aren't the same objects
+            Assert.That( tabIn, Is.Not.SameAs( tabOut ) );
+            Assert.That( tabIn.Tabs, Has.ItemAt( 0 ).Not.SameAs( tabOut.Tabs.ElementAt( 0 ) ) );
+            Assert.That( tabIn.Tabs, Has.ItemAt( 1 ).Not.SameAs( tabOut.Tabs.ElementAt( 1 ) ) );
+        } );
+        tabOut.Dispose( );
     }
 
     [Test]
@@ -409,5 +381,34 @@ internal class TabViewTests : Tests
         inst.Style.TabsOnBottom = true;
 
         Assert.That( inst.IsBorderlessContainerView( ) );
+    }
+
+    /// <summary>
+    ///   Creates a Dialog with a <see cref="TabView" /> in it.  Returns the <see cref="Design" />
+    /// </summary>
+    /// <returns></returns>
+    private static Design GetTabView( )
+    {
+        var viewToCode = new ViewToCode( );
+
+        var file = new FileInfo( "TestGetTabView.cs" );
+        var designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Dialog ) );
+
+        using TabView tvOut = ViewFactory.Create<TabView>( );
+
+        AddViewOperation addViewOperation = new( tvOut, designOut, "myTabview" );
+        Assume.That( addViewOperation, Is.Not.Null.And.InstanceOf<AddViewOperation>( ) );
+        Assume.That( addViewOperation.IsImpossible, Is.False );
+        Assume.That( addViewOperation.SupportsUndo );
+
+        bool addViewOperationSucceeded = false;
+        Assume.That( ( ) => addViewOperationSucceeded = OperationManager.Instance.Do( addViewOperation ), Throws.Nothing );
+        Assume.That( addViewOperationSucceeded );
+
+        // The above operation interferes with expected results in tests,
+        // so let's clear it out.
+        OperationManager.Instance.ClearUndoRedo( );
+
+        return (Design)tvOut.Data;
     }
 }
