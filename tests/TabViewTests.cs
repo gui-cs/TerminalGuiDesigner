@@ -306,32 +306,48 @@ internal class TabViewTests : Tests
         } );
     }
 
+    private static IEnumerable<View> AddingSubControlToTab_SubControlTypes =>
+    [
+        (Label)RuntimeHelpers.GetUninitializedObject( typeof(Label) ),
+        (Button)RuntimeHelpers.GetUninitializedObject( typeof(Button) ),
+        (StatusBar)RuntimeHelpers.GetUninitializedObject( typeof(StatusBar) ),
+    ];
+
     [Test]
-    public void TestAddingSubControlToTab()
+    public void AddingSubControlToTab<T>( [ValueSource( nameof( AddingSubControlToTab_SubControlTypes ) )] T dummyObject )
+        where T : View, new( )
     {
-        var viewToCode = new ViewToCode();
+        ViewToCode viewToCode = new( );
 
-        var file = new FileInfo("TestAddingSubcontrolToTab.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
+        FileInfo file = new( $"{nameof( AddingSubControlToTab )}.cs" );
+        Design designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Dialog ) );
 
-        var tvOut = ViewFactory.Create<TabView>( );
+        using TabView tvOut = ViewFactory.Create<TabView>( );
 
-        OperationManager.Instance.Do(new AddViewOperation(tvOut, designOut, "myTabview"));
+        AddViewOperation addOperation = new( tvOut, designOut, "myTabview" );
+        Assume.That( addOperation.IsImpossible, Is.False );
+        bool addOperationSucceeded = false;
+        Assume.That( ( ) => addOperationSucceeded = OperationManager.Instance.Do( addOperation ), Throws.Nothing );
+        Assume.That( addOperationSucceeded );
 
-        var label = ViewFactory.Create<Label>( );
+        using T subview = ViewFactory.Create<T>( );
 
-        OperationManager.Instance.Do(new AddViewOperation(label, (Design)tvOut.Data, "myLabel"));
-        ClassicAssert.Contains(label, tvOut.SelectedTab.View.Subviews.ToArray(), "Expected currently selected tab to have the new label but it did not");
+        AddViewOperation addSubviewOperation = new( subview, (Design)tvOut.Data, $"my{typeof( T ).Name}" );
+        Assert.That( addSubviewOperation.IsImpossible, Is.False );
+        bool addSubviewOperationSucceeded = false;
+        Assert.That( ( ) => addSubviewOperationSucceeded = OperationManager.Instance.Do( addSubviewOperation ), Throws.Nothing );
+        Assert.That( addSubviewOperationSucceeded );
+        Assert.That( tvOut.SelectedTab.View.Subviews.ToArray( ), Does.Contain( subview ), "Expected currently selected tab to have the new view but it did not" );
 
-        viewToCode.GenerateDesignerCs(designOut, typeof(Dialog));
+        viewToCode.GenerateDesignerCs( designOut, typeof( Dialog ) );
 
-        var codeToView = new CodeToView(designOut.SourceCode);
-        var designBackIn = codeToView.CreateInstance();
+        CodeToView codeToView = new( designOut.SourceCode );
+        Design designBackIn = codeToView.CreateInstance( );
 
-        var tabIn = designBackIn.View.GetActualSubviews().OfType<TabView>().Single();
-        var tabInLabel = tabIn.SelectedTab.View.Subviews.Single();
+        using TabView tabIn = designBackIn.View.GetActualSubviews( ).OfType<TabView>( ).Single( );
+        using T tabInSubview = tabIn.SelectedTab.View.Subviews.OfType<T>( ).Single( );
 
-        ClassicAssert.AreEqual(label.Text, tabInLabel.Text);
+        Assert.That( tabInSubview.Text, Is.EqualTo( subview.Text ) );
     }
 
     [Test]
