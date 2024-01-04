@@ -1,50 +1,63 @@
 using System.Data;
-using System.Linq;
-using Terminal.Gui;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.Operations;
 
 namespace UnitTests;
 
+[TestFixture]
+[Category( "Code Generation" )]
+[Parallelizable( ParallelScope.Children )]
 internal class TableViewTests : Tests
 {
     [Test]
-    public void TestRoundTrip_PreserveColumns()
+    [Category( "Terminal.Gui Extensions" )]
+    [TestOf( typeof( TableViewExtensions ) )]
+    public void RoundTrip_PreservesColumns( )
     {
-        TableView tableIn = RoundTrip<Window, TableView>(
+        using TableView tableIn =
+            RoundTrip<Window, TableView>( static ( _, v ) =>
+                                          {
+                                              Assume.That(
+                                                  v.GetDataTable( ).Columns,
+                                                  Is.Not.Empty,
+                                                  "Default ViewFactory should create some columns for new TableViews" );
+                                          },
+                                          out TableView tableOut );
 
-            (d, v) => ClassicAssert.IsNotEmpty(v.GetDataTable().Columns, "Default ViewFactory should create some columns for new TableViews"),
-            out TableView tableOut);
+        Assert.That( tableIn.Table, Is.Not.Null );
 
-        ClassicAssert.IsNotNull(tableIn.Table);
-
-        ClassicAssert.AreEqual(tableOut.Table.Columns, tableIn.Table.Columns);
-        ClassicAssert.AreEqual(tableOut.Table.Rows, tableIn.Table.Rows);
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( tableIn.Table.Columns, Is.EqualTo( tableOut.Table.Columns ) );
+            Assert.That( tableIn.Table.Rows, Is.EqualTo( tableOut.Table.Rows ) );
+        } );
+        tableOut.Dispose( );
     }
 
     [Test]
-    public void TestRoundTrip_TwoTablesWithDuplicatedColumns()
+    [Category( "Terminal.Gui Extensions" )]
+    [TestOf( typeof( TableViewExtensions ) )]
+    public void RoundTrip_TwoTablesWithDuplicatedColumns( )
     {
         // Create a TableView
-        TableView tableIn = RoundTrip<Window, TableView>(
-            (d, v) =>
-            {
-                // create a second TableView also on the root
-                TableView tvOut2 = ViewFactory.Create<TableView>( );
-                OperationManager.Instance.Do(new AddViewOperation(tvOut2, d.GetRootDesign(), "myTable2"));
-            },
-            out TableView tableOut);
+        using TableView tableIn = RoundTrip<Window, TableView>( static ( d, _ ) =>
+                                                                {
+                                                                    // create a second TableView also on the root
+                                                                    TableView tvOut2 = ViewFactory.Create<TableView>( );
+                                                                    OperationManager.Instance.Do( new AddViewOperation( tvOut2, d.GetRootDesign( ), "myTable2" ) );
+                                                                },
+                                                                out TableView tableOut );
 
         // Views should collide on column name but still compile
-        var designBackIn = ((Design)tableIn.Data).GetRootDesign();
-        var tables = designBackIn.View.GetActualSubviews().OfType<TableView>().ToArray();
+        var designBackIn = ( (Design)tableIn.Data ).GetRootDesign( );
+        var tables = designBackIn.View.GetActualSubviews( ).OfType<TableView>( ).ToArray( );
 
-        ClassicAssert.AreEqual(2, tables.Length);
+        Assert.That( tables, Has.Exactly( 2 ).InstanceOf<TableView>( ) );
 
-        ClassicAssert.That(
-            tables[0].GetDataTable().Columns.Cast<DataColumn>().Select(c => c.ColumnName),
+        Assert.That(
+            tables[ 0 ].GetDataTable( ).Columns.Cast<DataColumn>( ).Select( static c => c.ColumnName ),
             Is.EquivalentTo(
-                tables[1].GetDataTable().Columns.Cast<DataColumn>().Select(c => c.ColumnName)),
-            "Expected both TableViews to have columns with the same names");
+                tables[ 1 ].GetDataTable( ).Columns.Cast<DataColumn>( ).Select( static c => c.ColumnName ) ),
+            "Expected both TableViews to have columns with the same names" );
+
+        tableOut.Dispose( );
     }
 }
