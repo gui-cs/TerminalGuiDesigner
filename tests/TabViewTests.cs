@@ -306,7 +306,7 @@ internal class TabViewTests : Tests
         } );
     }
 
-    private static IEnumerable<View> AddingSubControlToTab_SubControlTypes =>
+    private static IEnumerable<View> TabView_Tab_SubViewTypes =>
     [
         (Label)RuntimeHelpers.GetUninitializedObject( typeof(Label) ),
         (Button)RuntimeHelpers.GetUninitializedObject( typeof(Button) ),
@@ -314,7 +314,7 @@ internal class TabViewTests : Tests
     ];
 
     [Test]
-    public void AddingSubControlToTab<T>( [ValueSource( nameof( AddingSubControlToTab_SubControlTypes ) )] T dummyObject )
+    public void AddingSubControlToTab<T>( [ValueSource( nameof( TabView_Tab_SubViewTypes ) )] T dummyObject )
         where T : View, new( )
     {
         ViewToCode viewToCode = new( );
@@ -351,28 +351,28 @@ internal class TabViewTests : Tests
     }
 
     [Test]
-    public void TestGetAllDesigns_TabView()
+    public void GetAllDesigns_TabView<T>( [ValueSource( nameof( TabView_Tab_SubViewTypes ) )] T dummyObject )
+        where T : View, new( )
     {
-        var tv = new TabView();
+        using TabView tv = new( );
 
-        var source = new SourceCodeFile(new FileInfo("yarg.cs"));
+        SourceCodeFile source = new( new FileInfo( $"{nameof( GetAllDesigns_TabView )}.cs" ) );
 
-        var lbl1 = new Design(source, "lbl1", new Label("fff"));
-        lbl1.View.Data = lbl1;
+        using T subview1 = ViewFactory.Create<T>( null, null, "fff" );
+        Design subview1Design = new( source, "subview1", subview1 );
+        subview1Design.View.Data = subview1Design;
 
-        var lbl2 = new Design(source, "lbl2", new Label("ddd"));
-        lbl2.View.Data = lbl2;
+        using T subview2 = ViewFactory.Create<T>( null, null, "ddd" );
+        Design subview2Design = new( source, "subview2", subview2 );
+        subview2Design.View.Data = subview2Design;
 
-        tv.AddTab(new Tab("Yay", lbl1.View), true);
-        tv.AddTab(new Tab("Yay", lbl2.View), false);
+        tv.AddTab( new( "Yay", subview1Design.View ), true );
+        tv.AddTab( new( "Yay", subview2Design.View ), false );
 
-        var tvDesign = new Design(source, "tv", tv);
+        Design tvDesign = new( source, "tv", tv );
 
-        ClassicAssert.Contains(tvDesign, tvDesign.GetAllDesigns().ToArray());
-        ClassicAssert.Contains(lbl1, tvDesign.GetAllDesigns().ToArray());
-        ClassicAssert.Contains(lbl2, tvDesign.GetAllDesigns().ToArray());
-
-        ClassicAssert.AreEqual(3, tvDesign.GetAllDesigns().Count(), $"Expected only 3 Designs but they were {string.Join(",", tvDesign.GetAllDesigns())}");
+        Design[] designs = tvDesign.GetAllDesigns( ).ToArray( );
+        Assert.That( designs, Is.EquivalentTo( (Design[]) [tvDesign, subview1Design, subview2Design] ) );
     }
 
     [Test]
