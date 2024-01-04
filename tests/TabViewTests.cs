@@ -59,6 +59,10 @@ internal class TabViewTests : Tests
         Assume.That( ( ) => addViewOperationSucceeded = OperationManager.Instance.Do( addViewOperation ), Throws.Nothing );
         Assume.That( addViewOperationSucceeded );
 
+        // The above operation interferes with expected results in tests,
+        // so let's clear it out.
+        OperationManager.Instance.ClearUndoRedo( );
+
         return (Design)tvOut.Data;
     }
 
