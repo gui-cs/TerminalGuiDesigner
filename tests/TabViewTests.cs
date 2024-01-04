@@ -69,42 +69,96 @@ internal class TabViewTests : Tests
     [Test]
     [Category( "UI" )]
     [TestOf( typeof( MoveTabOperation ) )]
-    public void TestChangeTabViewOrder_MoveTabLeft()
+    public void ChangeTabViewOrder_MoveTabLeft( )
     {
-        var d = GetTabView();
-        var tv = (TabView)d.View;
+        Design d = GetTabView( );
+        using TabView tv = (TabView)d.View;
 
-        ClassicAssert.AreEqual("Tab1", tv.Tabs.ElementAt(0).Text);
-        ClassicAssert.AreEqual("Tab2", tv.Tabs.ElementAt(1).Text);
+        Assume.That( tv.Tabs, Has.Exactly( 2 ).InstanceOf<Tab>( ) );
+        Assume.That( tv.Tabs, Has.ItemAt( 0 ).Property( "Text" ).EqualTo( "Tab1" ) );
+        Assume.That( tv.Tabs, Has.ItemAt( 1 ).Property( "Text" ).EqualTo( "Tab2" ) );
+        Assume.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+        Assume.That( OperationManager.Instance.UndoStackSize, Is.Zero );
 
         // Select Tab1
-        tv.SelectedTab = tv.Tabs.First();
+        tv.SelectedTab = tv.Tabs.First( );
 
         // try to move tab 1 left
-        var cmd = new MoveTabOperation(d, tv.SelectedTab, -1);
-        ClassicAssert.IsFalse(cmd.Do(), "Expected not to be able to move tab left because selected is the first");
+        MoveTabOperation cmd = new( d, tv.SelectedTab, -1 );
+        Assert.That( cmd.IsImpossible );
+        Assert.That( cmd.SupportsUndo );
+        bool cmdSucceeded = false;
+        Assert.That( ( ) => cmdSucceeded = OperationManager.Instance.Do( cmd ), Throws.Nothing );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( cmdSucceeded, Is.False, "Expected not to be able to move tab left because selected is the first" );
+            Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+        } );
 
         // Select Tab2
-        tv.SelectedTab = tv.Tabs.Last();
+        tv.SelectedTab = tv.Tabs.Last( );
 
-        ClassicAssert.AreEqual(tv.SelectedTab.Text, "Tab2", "Tab2 should be selected before operation is applied");
+        Assert.That( tv.SelectedTab.Text, Is.EqualTo( "Tab2" ), "Tab2 should be selected before operation is applied" );
 
         // try to move tab 2 left
-        cmd = new MoveTabOperation(d, tv.SelectedTab, -1);
-        ClassicAssert.IsFalse(cmd.IsImpossible);
-        ClassicAssert.IsTrue(cmd.Do());
-
-        ClassicAssert.AreEqual(tv.SelectedTab.Text, "Tab2", "Tab2 should still be selected after operation is applied");
+        MoveTabOperation cmd2 = new( d, tv.SelectedTab, -1 );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( cmd2.IsImpossible, Is.False );
+            Assert.That( cmd2.SupportsUndo );
+        } );
+        bool cmd2Succeeded = false;
+        Assert.That( ( ) => cmd2Succeeded = OperationManager.Instance.Do( cmd2 ), Throws.Nothing );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( cmd2Succeeded );
+            Assert.That( tv.SelectedTab.Text, Is.EqualTo( "Tab2" ), "Tab2 should still be selected after operation is applied" );
+            Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
+        } );
 
         // tabs should now be in reverse order
-        ClassicAssert.AreEqual("Tab2", tv.Tabs.ElementAt(0).Text);
-        ClassicAssert.AreEqual("Tab1", tv.Tabs.ElementAt(1).Text);
+        Assert.That( tv.Tabs, Has.Exactly( 2 ).InstanceOf<Tab>( ) );
 
-        cmd.Undo();
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( tv.Tabs, Has.ItemAt( 0 ).Property( "Text" ).EqualTo( "Tab2" ) );
+            Assert.That( tv.Tabs, Has.ItemAt( 1 ).Property( "Text" ).EqualTo( "Tab1" ) );
+        } );
+
+        Assert.That( OperationManager.Instance.Undo, Throws.Nothing );
+        Assert.Multiple( static ( ) =>
+        {
+            Assert.That( OperationManager.Instance.RedoStackSize, Is.EqualTo( 1 ) );
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+        } );
 
         // undoing command should revert to original tab order
-        ClassicAssert.AreEqual("Tab1", tv.Tabs.ElementAt(0).Text);
-        ClassicAssert.AreEqual("Tab2", tv.Tabs.ElementAt(1).Text);
+        Assert.That( tv.Tabs, Has.Exactly( 2 ).InstanceOf<Tab>( ) );
+
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( tv.Tabs, Has.ItemAt( 0 ).Property( "Text" ).EqualTo( "Tab1" ) );
+            Assert.That( tv.Tabs, Has.ItemAt( 1 ).Property( "Text" ).EqualTo( "Tab2" ) );
+        } );
+
+        // Now let's redo it
+        Assert.That( OperationManager.Instance.Redo, Throws.Nothing );
+        Assert.Multiple( static ( ) =>
+        {
+            Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
+        } );
+
+        // Redoing command should put the tabs back in reversed order
+        Assert.That( tv.Tabs, Has.Exactly( 2 ).InstanceOf<Tab>( ) );
+
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( tv.Tabs, Has.ItemAt( 0 ).Property( "Text" ).EqualTo( "Tab2" ) );
+            Assert.That( tv.Tabs, Has.ItemAt( 1 ).Property( "Text" ).EqualTo( "Tab1" ) );
+        } );
     }
 
     [Test]
