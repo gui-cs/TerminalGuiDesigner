@@ -164,43 +164,103 @@ internal class TabViewTests : Tests
     [Test]
     [Category( "UI" )]
     [TestOf( typeof( RemoveTabOperation ) )]
-    public void TestRemoveTabOperation()
+    public void RemoveTabOperation( )
     {
-        var d = GetTabView();
-        var tv = (TabView)d.View;
+        Design d = GetTabView( );
+        using TabView tv = (TabView)d.View;
 
-        ClassicAssert.AreEqual(2, tv.Tabs.Count);
-        ClassicAssert.AreEqual("Tab1", tv.Tabs.ElementAt(0).Text);
-        ClassicAssert.AreEqual("Tab2", tv.Tabs.ElementAt(1).Text);
+        Assume.That( tv.Tabs, Has.Exactly( 2 ).InstanceOf<Tab>( ) );
+        Assume.That( tv.Tabs, Has.ItemAt( 0 ).Property( "Text" ).EqualTo( "Tab1" ) );
+        Assume.That( tv.Tabs, Has.ItemAt( 1 ).Property( "Text" ).EqualTo( "Tab2" ) );
+        Assume.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+        Assume.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+
+        Tab tab1 = tv.Tabs.ElementAt( 0 );
+        Tab tab2 = tv.Tabs.ElementAt( 1 );
+        Assume.That( tab1, Is.Not.SameAs( tab2 ) );
 
         // Select Tab1
-        tv.SelectedTab = tv.Tabs.First();
+        tv.SelectedTab = tv.Tabs.First( );
 
         // try to remove the first tab
-        ClassicAssert.IsTrue(OperationManager.Instance.Do(new RemoveTabOperation(d, tv.SelectedTab)));
+        RemoveTabOperation removeTab1 = new( d, tv.SelectedTab );
+        Assert.That( removeTab1.IsImpossible, Is.False );
+        Assert.That( removeTab1.SupportsUndo );
+        bool removeTab1Succeeded = false;
+        Assert.That( ( ) => removeTab1Succeeded = OperationManager.Instance.Do( removeTab1 ), Throws.Nothing );
+        Assert.That( removeTab1Succeeded );
 
-        ClassicAssert.AreEqual(1, tv.Tabs.Count);
-        ClassicAssert.AreEqual("Tab2", tv.Tabs.ElementAt(0).Text);
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( tv.Tabs, Has.Exactly( 1 ).InstanceOf<Tab>( ) );
+            Assert.That( tv.Tabs, Does.Not.Contain( tab1 ) );
+            Assert.That( tv.Tabs, Does.Contain( tab2 ) );
+            Assert.That( tv.SelectedTab, Is.SameAs( tab2 ) );
+        } );
+
+        Assert.Multiple( static ( ) =>
+        {
+            Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
+        } );
 
         // remove the last tab (tab2)
-        ClassicAssert.IsTrue(OperationManager.Instance.Do(new RemoveTabOperation(d, tv.SelectedTab)));
-        ClassicAssert.IsEmpty(tv.Tabs);
+        RemoveTabOperation removeTab2 = new( d, tv.SelectedTab );
+        bool removeTab2Succeeded = false;
+        Assert.That( ( ) => removeTab2Succeeded = OperationManager.Instance.Do( removeTab2 ), Throws.Nothing );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( removeTab2Succeeded );
+            Assert.That( tv.Tabs, Is.Empty );
+            Assert.That( tv.SelectedTab, Is.Null );
+            Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 2 ) );
+        } );
 
-        OperationManager.Instance.Undo();
+        Assert.That( OperationManager.Instance.Undo, Throws.Nothing );
 
-        ClassicAssert.AreEqual(1, tv.Tabs.Count);
-        ClassicAssert.AreEqual("Tab2", tv.Tabs.ElementAt(0).Text);
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( tv.Tabs, Has.Exactly( 1 ).InstanceOf<Tab>( ) );
+            Assert.That( tv.Tabs, Does.Not.Contain( tab1 ) );
+            Assert.That( tv.Tabs, Does.Contain( tab2 ) );
+            Assert.That( tv.SelectedTab, Is.SameAs( tab2 ) );
+            Assert.That( OperationManager.Instance.RedoStackSize, Is.EqualTo( 1 ) );
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
+        } );
 
-        OperationManager.Instance.Redo();
-        ClassicAssert.IsEmpty(tv.Tabs);
+        Assert.That( OperationManager.Instance.Redo, Throws.Nothing );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( tv.Tabs, Is.Empty );
+            Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 2 ) );
+        } );
 
         // undo removing both
-        OperationManager.Instance.Undo();
-        OperationManager.Instance.Undo();
+        Assert.That( OperationManager.Instance.Undo, Throws.Nothing );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( tv.Tabs, Has.Exactly( 1 ).InstanceOf<Tab>( ) );
+            Assert.That( tv.Tabs, Does.Not.Contain( tab1 ) );
+            Assert.That( tv.Tabs, Does.Contain( tab2 ) );
+            Assert.That( tv.SelectedTab, Is.SameAs( tab2 ) );
+            Assert.That( OperationManager.Instance.RedoStackSize, Is.EqualTo( 1 ) );
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
+        } );
 
-        ClassicAssert.AreEqual(2, tv.Tabs.Count);
-        ClassicAssert.AreEqual("Tab1", tv.Tabs.ElementAt(0).Text);
-        ClassicAssert.AreEqual("Tab2", tv.Tabs.ElementAt(1).Text);
+        Assert.That( OperationManager.Instance.Undo, Throws.Nothing );
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( tv.Tabs, Has.Exactly( 2 ).InstanceOf<Tab>( ) );
+            Assert.That( tv.Tabs, Has.ItemAt( 0 ).SameAs( tab1 ) );
+            Assert.That( tv.Tabs, Has.ItemAt( 1 ).SameAs( tab2 ) );
+            // TODO: Shouldn't tab1 be selected now, after undoing its remove operation?
+            Assert.Warn( "Possible unintended behavior in tab selection after undo" );
+            // Assert.That( tv.SelectedTab, Is.SameAs( tab1 ) );
+            Assert.That( OperationManager.Instance.RedoStackSize, Is.EqualTo( 2 ) );
+            Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
+        } );
     }
 
     [Test]
