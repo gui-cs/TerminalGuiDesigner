@@ -378,30 +378,36 @@ internal class TabViewTests : Tests
     [Test]
     [Category( "Terminal.Gui Extensions" )]
     [TestOf( typeof( TabViewExtensions ) )]
-    public void TabView_IsBorderless_DependsOnShowBorder()
+    public void TabView_IsBorderless_DependsOnShowBorder( )
     {
-        var inst = new TabView();
+        using TabView inst = new( );
 
-        ClassicAssert.IsTrue(inst.Style.ShowBorder);
-        ClassicAssert.False(inst.IsBorderlessContainerView());
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( inst.Style.ShowBorder );
+            Assert.That( inst.IsBorderlessContainerView( ), Is.False );
+        } );
 
         inst.Style.ShowBorder = false;
 
-        ClassicAssert.True(inst.IsBorderlessContainerView());
+        Assert.That( inst.IsBorderlessContainerView( ) );
     }
 
     [Test]
     [Category( "Terminal.Gui Extensions" )]
     [TestOf( typeof( TabViewExtensions ) )]
-    public void TabView_IsBorderless_DependsOnTabsOnBottom()
+    public void TabView_IsBorderless_DependsOnTabsOnBottom( )
     {
-        var inst = new TabView();
+        using TabView inst = new( );
 
-        ClassicAssert.IsFalse(inst.Style.TabsOnBottom);
-        ClassicAssert.False(inst.IsBorderlessContainerView());
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( inst.Style.TabsOnBottom, Is.False );
+            Assert.That( inst.IsBorderlessContainerView( ), Is.False );
+        } );
 
         inst.Style.TabsOnBottom = true;
 
-        ClassicAssert.True(inst.IsBorderlessContainerView());
+        Assert.That( inst.IsBorderlessContainerView( ) );
     }
 }
