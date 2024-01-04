@@ -1,14 +1,12 @@
-using System.IO;
-using System.Linq;
-using Terminal.Gui;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.FromCode;
-using TerminalGuiDesigner.Operations;
-using TerminalGuiDesigner.ToCode;
+using Terminal.Gui.TextValidateProviders;
 
 namespace UnitTests;
 
-class TextValidateFieldTests : Tests
+[TestFixture]
+[Category( "Code Generation" )]
+[TestOf( typeof( ViewToCode ) )]
+[TestOf( typeof( CodeToView ) )]
+internal class TextValidateFieldTests : Tests
 {
     [Test]
     public void TestRoundTrip_PreserveProvider()
