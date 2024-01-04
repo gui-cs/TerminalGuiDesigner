@@ -1,15 +1,10 @@
-using System.IO;
-using System.Linq;
-using Terminal.Gui;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.FromCode;
-using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.Operations.TabOperations;
-using TerminalGuiDesigner.ToCode;
 
 namespace UnitTests;
 
-class TabViewTests : Tests
+[TestFixture]
+[Category( "Code Generation" )]
+internal class TabViewTests : Tests
 {
     [Test]
     public void TestRoundTrip_PreserveTabs()
@@ -29,7 +24,7 @@ class TabViewTests : Tests
     /// Creates a Dialog with a <see cref="TabView"/> in it.  Returns the <see cref="Design"/>
     /// </summary>
     /// <returns></returns>
-    private Design GetTabView()
+    private static Design GetTabView()
     {
         var viewToCode = new ViewToCode();
 
@@ -44,9 +39,11 @@ class TabViewTests : Tests
     }
 
     [Test]
+    [Category( "UI" )]
+    [TestOf( typeof( MoveTabOperation ) )]
     public void TestChangeTabViewOrder_MoveTabLeft()
     {
-        var d = this.GetTabView();
+        var d = GetTabView();
         var tv = (TabView)d.View;
 
         ClassicAssert.AreEqual("Tab1", tv.Tabs.ElementAt(0).Text);
@@ -83,9 +80,11 @@ class TabViewTests : Tests
     }
 
     [Test]
+    [Category( "UI" )]
+    [TestOf( typeof( RemoveTabOperation ) )]
     public void TestRemoveTabOperation()
     {
-        var d = this.GetTabView();
+        var d = GetTabView();
         var tv = (TabView)d.View;
 
         ClassicAssert.AreEqual(2, tv.Tabs.Count);
@@ -154,7 +153,7 @@ class TabViewTests : Tests
     }
 
     [Test]
-    public void TestAddingSubcontrolToTab()
+    public void TestAddingSubControlToTab()
     {
         var viewToCode = new ViewToCode();
 
@@ -207,6 +206,8 @@ class TabViewTests : Tests
     }
 
     [Test]
+    [Category( "Terminal.Gui Extensions" )]
+    [TestOf( typeof( TabViewExtensions ) )]
     public void TabView_IsBorderless_DependsOnShowBorder()
     {
         var inst = new TabView();
@@ -220,6 +221,8 @@ class TabViewTests : Tests
     }
 
     [Test]
+    [Category( "Terminal.Gui Extensions" )]
+    [TestOf( typeof( TabViewExtensions ) )]
     public void TabView_IsBorderless_DependsOnTabsOnBottom()
     {
         var inst = new TabView();
