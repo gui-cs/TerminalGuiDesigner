@@ -232,6 +232,11 @@ public static class ViewExtensions
             return true;
         }
 
+        if(v.GetType().IsGenericType(typeof(TreeView<>)))
+        {
+            return TreeViewExtensions.IsEmpty(v);
+        }
+
         return false;
     }
 

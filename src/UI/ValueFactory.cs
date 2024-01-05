@@ -161,7 +161,7 @@ namespace TerminalGuiDesigner.UI
             }
             else
             if (
-                // TODO: I just changed this from IsArray to IList assignable, need to worry about conversions a bit more
+                type.IsGenericType(typeof(IEnumerable<>)) ||
                 type.IsAssignableTo(typeof(IList))
                 )
             {
@@ -278,6 +278,35 @@ namespace TerminalGuiDesigner.UI
                 }
             }
             else
+            if (type == typeof(FileSystemInfo))
+            {
+                var fd = new FileDialog();
+                fd.AllowsMultipleSelection = false;
+
+
+                int answer = ChoicesDialog.Query(propertyName, $"Directory or File?", "Directory", "File", "Cancel");
+
+                if (answer < 0 || answer >= 2)
+                {
+                    return false;
+                }
+                bool pickDir = answer == 0;
+
+                fd.OpenMode = pickDir ? OpenMode.Directory : OpenMode.File;
+
+                Application.Run(fd);
+                if (fd.Canceled || string.IsNullOrWhiteSpace(fd.Path))
+                {
+                    return false;
+                }
+                else
+                {
+                    newValue = pickDir ? 
+                        new DirectoryInfo(fd.Path) : new FileInfo(fd.Path);
+                    return true;
+                }
+            }
+            else
             if (Modals.GetString(propertyName, "New String Value", oldValue?.ToString(), out var result, allowMultiLine))
             {
                 newValue = result;
@@ -387,6 +416,6 @@ namespace TerminalGuiDesigner.UI
                 newValue = null;
                 return false;
             }
-        }
+        }        
     }
 }

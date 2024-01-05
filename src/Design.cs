@@ -1,5 +1,6 @@
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Xml.Linq;
 using NLog;
 using Terminal.Gui;
@@ -48,7 +49,6 @@ public class Design
         typeof(TableView),
         typeof(TabView),
         typeof(TreeView),
-        typeof(TreeView<>),
         typeof(Dialog),
     };
 
@@ -794,7 +794,7 @@ public class Design
             yield return this.CreateProperty(nameof(FrameView.Title));
         }
 
-        if (this.View is TreeView tree)
+        if (this.View is ITreeView tree)
         {
             yield return this.CreateSubProperty(nameof(TreeStyle.CollapseableSymbol), nameof(TreeView<ITreeNode>.Style), tree.Style);
             yield return this.CreateSubProperty(nameof(TreeStyle.ColorExpandSymbol), nameof(TreeView<ITreeNode>.Style), tree.Style);
@@ -802,6 +802,13 @@ public class Design
             yield return this.CreateSubProperty(nameof(TreeStyle.InvertExpandSymbolColors), nameof(TreeView<ITreeNode>.Style), tree.Style);
             yield return this.CreateSubProperty(nameof(TreeStyle.LeaveLastRow), nameof(TreeView<ITreeNode>.Style), tree.Style);
             yield return this.CreateSubProperty(nameof(TreeStyle.ShowBranchLines), nameof(TreeView<ITreeNode>.Style), tree.Style);
+        }
+        
+        if (isGenericType && viewType.GetGenericTypeDefinition() == typeof(TreeView<>))
+        {
+            var prop = this.CreateTreeObjectsProperty(viewType);
+            if(((ITreeObjectsProperty)prop).IsSupported())
+                yield return prop;
         }
 
         if (this.View is TableView tv)
@@ -831,6 +838,23 @@ public class Design
             yield return this.CreateProperty(nameof(RadioGroup.RadioLabels));
             yield return this.CreateProperty(nameof(RadioGroup.DisplayMode));
         }
+    }
+
+    private Property CreateTreeObjectsProperty(Type viewType)
+    {
+        if(viewType.GetGenericTypeDefinition() != typeof(TreeView<>))
+        {
+            throw new ArgumentException("Method should only be called for TreeView<T>");
+        }
+
+        var tType = viewType.GetGenericArguments()[0];
+        var propertyType = typeof(TreeObjectsProperty<>).MakeGenericType(tType);
+
+        var instance =
+            Activator.CreateInstance(propertyType, new object?[] { this })
+            ?? throw new Exception($"Failed to construct {propertyType}");
+
+        return (Property)instance;
     }
 
     private bool ShowTextProperty()

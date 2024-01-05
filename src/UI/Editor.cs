@@ -240,7 +240,7 @@ public class Editor : Toplevel
     }
 
     /// <summary>
-    /// Event handler for <see cref="Application.KeyPressed"/>.
+    /// Event handler for <see cref="Application.KeyDown"/>.
     /// </summary>
     /// <param name="key">The key pressed.</param>
     /// <returns>True if key is handled.</returns>
