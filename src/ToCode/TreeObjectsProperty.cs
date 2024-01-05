@@ -105,8 +105,18 @@ public class TreeObjectsProperty<T> : Property, ITreeObjectsProperty where T : c
     private static CodeExpression TreeBuilderForFileSystemInfo()
     {
         return new CodeSnippetExpression("""
-                                            new Terminal.Gui.DelegateTreeBuilder<System.IO.FileSystemInfo>(
-                                                (p) => p is System.IO.DirectoryInfo d ? d.GetFileSystemInfos() : System.Linq.Enumerable.Empty<System.IO.FileSystemInfo>())
+                                                                        
+                                            new Terminal.Gui.DelegateTreeBuilder<System.IO.FileSystemInfo>((p) =>
+                                            {
+                                                try
+                                                {
+                                                    return p is System.IO.DirectoryInfo d ? d.GetFileSystemInfos() : System.Linq.Enumerable.Empty<System.IO.FileSystemInfo>();
+                                                }
+                                                catch (Exception)
+                                                {
+                                                    return System.Linq.Enumerable.Empty<System.IO.FileSystemInfo>();
+                                                }
+                                            });
                                             """);
                     }
 

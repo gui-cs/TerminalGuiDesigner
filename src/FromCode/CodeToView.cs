@@ -159,6 +159,8 @@ public class CodeToView
             MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "mscorlib.dll"),
             MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "System.Runtime.dll"),
             MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "System.Collections.dll"),
+            MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "System.Data.Common.dll")
+            ,
         };
 
         var options = new CSharpCompilationOptions(
