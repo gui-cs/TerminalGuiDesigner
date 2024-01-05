@@ -283,6 +283,17 @@ namespace TerminalGuiDesigner.UI
                 var fd = new FileDialog();
                 fd.AllowsMultipleSelection = false;
 
+
+                int answer = ChoicesDialog.Query(propertyName, $"Directory or File?", "Directory", "File", "Cancel");
+
+                if (answer < 0 || answer >= 2)
+                {
+                    return false;
+                }
+                bool pickDir = answer == 0;
+
+                fd.OpenMode = pickDir ? OpenMode.Directory : OpenMode.File;
+
                 Application.Run(fd);
                 if (fd.Canceled || string.IsNullOrWhiteSpace(fd.Path))
                 {
@@ -290,7 +301,7 @@ namespace TerminalGuiDesigner.UI
                 }
                 else
                 {
-                    newValue = IsPathDirectory(fd.Path) ?
+                    newValue = pickDir ? 
                         new DirectoryInfo(fd.Path) : new FileInfo(fd.Path);
                     return true;
                 }
@@ -405,34 +416,6 @@ namespace TerminalGuiDesigner.UI
                 newValue = null;
                 return false;
             }
-        }
-
-        /// <summary>
-        /// Returns true if path is to a directory.
-        /// Thanks: https://stackoverflow.com/a/19596821/4824531
-        /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        static bool IsPathDirectory(string path)
-        {
-            if (path == null) throw new ArgumentNullException("path");
-            path = path.Trim();
-
-            if (Directory.Exists(path))
-                return true;
-
-            if (File.Exists(path))
-                return false;
-
-            // neither file nor directory exists. guess intention
-
-            // if has trailing slash then it's a directory
-            if (new[] { Path.DirectorySeparatorChar,Path.AltDirectorySeparatorChar}.Any(x => path.EndsWith(x)))
-                return true; // ends with slash
-
-            // if has extension then its a file; directory otherwise
-            return string.IsNullOrWhiteSpace(Path.GetExtension(path));
-        }
+        }        
     }
 }
