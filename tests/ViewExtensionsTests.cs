@@ -106,7 +106,7 @@ internal class ViewExtensionsTests : Tests
         {
             // Only true when within 2 units of the lower left, and still in bounds.
             // The 2 constant should probably be exposed internally for testing.
-            case (>= TestViewRightEdge - 2 and <= TestViewRightEdge, >= TestViewBottomEdge - 2 and <= TestViewBottomEdge):
+            case (> TestViewRightEdge - 2 and <= TestViewRightEdge, > TestViewBottomEdge - 2 and <= TestViewBottomEdge):
                 Assert.That( isLowerRight );
                 break;
             // Otherwise, it's not

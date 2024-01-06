@@ -280,7 +280,7 @@ public static class ViewExtensions
                 int xDistanceFromBottomRight = screenFrame.Width - xClickCoordinateInView - 1;
                 int yDistanceFromBottomRight = screenFrame.Height - yClickCoordinateInView - 1;
 
-                isLowerRight = xDistanceFromBottomRight <= resizeBoxArea && yDistanceFromBottomRight <= resizeBoxArea;
+                isLowerRight = xDistanceFromBottomRight < resizeBoxArea && yDistanceFromBottomRight < resizeBoxArea;
             }
             else
             {
