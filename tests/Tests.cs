@@ -154,7 +154,7 @@ internal class Tests
     {
         if (type.IsGenericTypeDefinition)
         {
-            var tType = ViewFactory.GetSupportedTTypesForGenericViewOfType(type).First();
+            var tType = TTypes.GetSupportedTTypesForGenericViewOfType(type).First();
             return type.MakeGenericType(tType);
         }
 

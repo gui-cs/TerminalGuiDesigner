@@ -82,7 +82,7 @@ public class AddViewOperation : Operation
             {
                 if (selected.IsGenericType)
                 {
-                    var allowedTTypes = ViewFactory.GetSupportedTTypesForGenericViewOfType(selected).ToArray();
+                    var allowedTTypes = TTypes.GetSupportedTTypesForGenericViewOfType(selected).ToArray();
 
                     if(Modals.Get("Enter a Type for <T>", "Choose", true, allowedTTypes, this.TypeNameDelegate, false, null, out var selectedTType) && selectedTType != null)
                     {

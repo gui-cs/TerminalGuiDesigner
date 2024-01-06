@@ -10,6 +10,7 @@ using Microsoft.CodeAnalysis.Emit;
 using NLog;
 using Terminal.Gui;
 using TerminalGuiDesigner.ToCode;
+using static Terminal.Gui.SpinnerStyle;
 
 namespace TerminalGuiDesigner.FromCode;
 
@@ -151,12 +152,15 @@ public class CodeToView
         var references = new List<MetadataReference>()
         {
             MetadataReference.CreateFromFile(typeof(View).Assembly.Location),
-            MetadataReference.CreateFromFile(typeof(System.Data.DataTable).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.IO.FileSystemInfo).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(System.Linq.Enumerable).Assembly.Location),
             MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
             MetadataReference.CreateFromFile(typeof(MarshalByValueComponent).Assembly.Location),
             MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "mscorlib.dll"),
             MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "System.Runtime.dll"),
             MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "System.Collections.dll"),
+            MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "System.Data.Common.dll")
+            ,
         };
 
         var options = new CSharpCompilationOptions(
