@@ -1,60 +1,119 @@
-using System;
-using Terminal.Gui;
-using TerminalGuiDesigner;
-
 namespace UnitTests;
 
 [TestFixture]
 [TestOf( typeof( ViewExtensions ) )]
-[Category( "Core" )]
-[Category( "UI" )]
+[Category( "Terminal.Gui Extensions" )]
 internal class ViewExtensionsTests : Tests
 {
-    // upper left corner tests
-    [TestCase(1, 1, false, false, false)]
-    [TestCase(2, 3, true, true, false)]
-    [TestCase(2, 4, true, true, false)]
-    [TestCase(3, 3, true, true, false)]
-    [TestCase(3, 4, true, false, false)]
+    // These values represent a view with corners at 2,3 and 6,5
+    private const int TestViewLeftEdge = 2;
+    private const int TestViewTopEdge = 3;
+    private const int TestViewWidth = 5;
+    private const int TestViewHeight = 3;
+    private const int TestViewRightEdge = TestViewLeftEdge + TestViewWidth - 1;
+    private const int TestViewBottomEdge = TestViewTopEdge + TestViewHeight - 1;
+    private const int OneLeftOfTestViewLeftEdge = TestViewLeftEdge - 1;
+    private const int OneRightOfTestViewRightEdge = TestViewRightEdge + 1;
+    private const int OneAboveTestViewTopEdge = TestViewTopEdge - 1;
+    private const int OneBelowTestViewBottomEdge = TestViewBottomEdge + 1;
 
-    // lower left corner tests
-    [TestCase(1, 6, false, false, false)]
-    [TestCase(2, 5, true, true, false)]
-    [TestCase(2, 3, true, true, false)]
-    [TestCase(3, 5, true, true, false)]
-    [TestCase(3, 4, true, false, false)]
-    public void TestHitTest(int x, int y, bool hit, bool border, bool lowerRight)
+    [Test]
+    public void HitTest_HitsWhenExpected( [Range( OneLeftOfTestViewLeftEdge, OneRightOfTestViewRightEdge, 1 )] int clickX, [Range( OneAboveTestViewTopEdge, OneBelowTestViewBottomEdge, 1 )] int clickY )
     {
-        var v = Get10By10View().View;
+        using View v = Get10By10View( ).View;
 
-        v.X = 2;
-        v.Y = 3;
-        v.Width = 5;
-        v.Height = 3;
+        v.X = TestViewLeftEdge;
+        v.Y = TestViewTopEdge;
+        v.Width = TestViewWidth;
+        v.Height = TestViewHeight;
 
-        Application.Top.Add(v);
-        bool isLowerRight;
-        bool isBorder;
+        Application.Top.Add( v );
 
-        var result = v.HitTest(
-            new MouseEvent
+        var result = v.HitTest( new( )
         {
-            X = x,
-            Y = y,
-        }, out isBorder, out isLowerRight);
+            X = clickX,
+            Y = clickY,
+        }, out _, out _ );
 
-        // click didn't land in anything
-        if (hit)
+        Assert.That( ( clickX, clickY ) switch
         {
-            ClassicAssert.AreSame(v, result);
+            // Beyond any edge, result should be null
+            (< TestViewLeftEdge, _) => result is null,
+            (_, < TestViewTopEdge) => result is null,
+            (> TestViewRightEdge, _) => result is null,
+            (_, > TestViewBottomEdge) => result is null,
+            // Everything else is a hit and result should be a reference to the view
+            _ => ReferenceEquals( v, result )
+        } );
+    }
+
+    [Test]
+    public void HitTest_IsBorderWhenExpected( [Range( OneLeftOfTestViewLeftEdge, OneRightOfTestViewRightEdge, 1 )] int clickX, [Range( OneAboveTestViewTopEdge, OneBelowTestViewBottomEdge, 1 )] int clickY )
+    {
+        using View v = Get10By10View().View;
+
+        v.X = TestViewLeftEdge;
+        v.Y = TestViewTopEdge;
+        v.Width = TestViewWidth;
+        v.Height = TestViewHeight;
+
+        Application.Top.Add( v );
+
+        _ = v.HitTest(
+            new ()
+            {
+                X = clickX,
+                Y = clickY,
+            }, out bool isBorder, out _ );
+
+        switch ( clickX, clickY )
+        {
+            // If exactly on the left or right edge, and within the vertical bounds, it's a border
+            case (TestViewLeftEdge, >= TestViewTopEdge and <= TestViewBottomEdge):
+            case (TestViewRightEdge, >= TestViewTopEdge and <= TestViewBottomEdge):
+            // If exactly on the top or bottom edge, and within the horizontal bounds, it's a border
+            case (>= TestViewLeftEdge and <= TestViewRightEdge, TestViewTopEdge):
+            case (>= TestViewLeftEdge and <= TestViewRightEdge, TestViewBottomEdge):
+                Assert.That( isBorder );
+                break;
+            // Otherwise, it's not
+            default:
+                Assert.That( isBorder, Is.False );
+                break;
         }
-        else
-        {
-            ClassicAssert.IsNull(result);
-        }
+    }
 
-        ClassicAssert.AreEqual(lowerRight, isLowerRight);
-        ClassicAssert.AreEqual(border, isBorder);
+    [Test]
+    public void HitTest_IsLowerRightWhenExpected( [Range( OneLeftOfTestViewLeftEdge, OneRightOfTestViewRightEdge, 1 )] int clickX, [Range( OneAboveTestViewTopEdge, OneBelowTestViewBottomEdge, 1 )] int clickY )
+    {
+        using View v = Get10By10View( ).View;
+
+        v.X = TestViewLeftEdge;
+        v.Y = TestViewTopEdge;
+        v.Width = TestViewWidth;
+        v.Height = TestViewHeight;
+
+        Application.Top.Add( v );
+
+        _ = v.HitTest(
+            new( )
+            {
+                X = clickX,
+                Y = clickY,
+            }, out _, out bool isLowerRight );
+
+        switch ( clickX, clickY )
+        {
+            // Only true when within 2 units of the lower left, and still in bounds.
+            // The 2 constant should probably be exposed internally for testing.
+            case (>= TestViewRightEdge - 2 and <= TestViewRightEdge, >= TestViewBottomEdge - 2 and <= TestViewBottomEdge):
+                Assert.That( isLowerRight );
+                break;
+            // Otherwise, it's not
+            default:
+                Assert.That( isLowerRight, Is.False );
+                break;
+        }
     }
 
     [TestCase(typeof(Label), false)]
