@@ -29,7 +29,7 @@
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
 		<PackageReference Include="NUnit" Version="4.0.1" />
 		<PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
-		<PackageReference Include="ReportGenerator" Version="5.1.24" />
+		<PackageReference Include="ReportGenerator" Version="5.2.0" />
 		<PackageReference Include="coverlet.collector" Version="6.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -48,6 +48,7 @@
     <Using Include="TerminalGuiDesigner.FromCode" />
     <Using Include="TerminalGuiDesigner.Operations" />
     <Using Include="TerminalGuiDesigner.ToCode" />
+    <Using Include="TerminalGuiDesigner.UI" />
     <Using Include="UnitTests.TestSupportTypes" />
 		<Using Include="NUnit.Framework" />
 		<Using Include="NUnit.Framework.Legacy" />

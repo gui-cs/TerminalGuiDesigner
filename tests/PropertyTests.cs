@@ -1,136 +1,129 @@
 using System.CodeDom;
-using System.CodeDom.Compiler;
-using System.IO;
-using System.Linq;
 using System.Text;
-using Microsoft.CSharp;
-using Terminal.Gui;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.ToCode;
-using Attribute = Terminal.Gui.Attribute;
+using TerminalGuiAttribute = Terminal.Gui.Attribute;
+using TerminalGuiConfigurationManager = Terminal.Gui.ConfigurationManager;
 
 namespace UnitTests;
 
+[TestFixture]
+[TestOf( typeof( Property ) )]
+[Category( "Core" )]
 internal class PropertyTests : Tests
 {
     [Test]
-    public void TestPropertyOfType_Pos()
+    public void Changing_LineViewOrientation( )
     {
-        var d = new Design(new SourceCodeFile(nameof(this.TestPropertyOfType_Pos) + ".cs"), "FFF", new Label());
-        var xProp = d.GetDesignableProperties().Single(p => p.PropertyInfo.Name.Equals(nameof(View.X)));
+        Design v = Get10By10View( );
+        using LineView lv = ViewFactory.Create<LineView>( );
+        Design d = new( v.SourceCode, "lv", lv );
 
-        xProp.SetValue(Pos.Center());
-
-        var rhs = (CodeSnippetExpression)xProp.GetRhs();
-
-        // The code generated for a Property of Type Pos should be the function call
-        ClassicAssert.AreEqual(rhs.Value, "Pos.Center()");
-    }
-
-    [Test]
-    public void TestPropertyOfType_Size()
-    {
-        var d = new Design(new SourceCodeFile(nameof(this.TestPropertyOfType_Size) + ".cs"), "FFF", new ScrollView());
-        var xProp = d.GetDesignableProperties().Single(p => p.PropertyInfo.Name.Equals(nameof(View.X)));
-
-        xProp.SetValue(Pos.Center());
-
-        var rhs = (CodeSnippetExpression)xProp.GetRhs();
-
-        // The code generated for a Property of Type Pos should be the function call
-        ClassicAssert.AreEqual(rhs.Value, "Pos.Center()");
-    }
-
-    [Test]
-    public void TestPropertyOfType_Attribute()
-    {
-        var d = new Design(new SourceCodeFile(nameof(this.TestPropertyOfType_Attribute) + ".cs"), "FFF", new GraphView());
-        var colorProp = d.GetDesignableProperties().Single(p => p.PropertyInfo.Name.Equals(nameof(GraphView.GraphColor)));
-
-        colorProp.SetValue(null);
-
-        var rhs = (CodeSnippetExpression)colorProp.GetRhs();
-        ClassicAssert.AreEqual(rhs.Value, "null");
-
-        colorProp.SetValue(new Attribute(Color.BrightMagenta, Color.Blue));
-
-        rhs = (CodeSnippetExpression)colorProp.GetRhs();
-        ClassicAssert.AreEqual(rhs.Value, "new Terminal.Gui.Attribute(Color.BrightMagenta,Color.Blue)");
-    }
-
-    [Test]
-    public void TestPropertyOfType_PointF()
-    {
-        var d = new Design(new SourceCodeFile(nameof(this.TestPropertyOfType_PointF) + ".cs"), "FFF", new GraphView());
-        var pointProp = d.GetDesignableProperties().Single(p => p.PropertyInfo.Name.Equals(nameof(GraphView.ScrollOffset)));
-
-        pointProp.SetValue(new PointF(4.5f, 4.1f));
-
-        var rhs = (CodeObjectCreateExpression)pointProp.GetRhs();
-
-        // The code generated should be a new PointF
-        ClassicAssert.AreEqual(rhs.Parameters.Count, 2);
-    }
-
-    [Test]
-    public void TestPropertyOfType_Rune()
-    {
-        var viewToCode = new ViewToCode();
-
-        var file = new FileInfo("TestPropertyOfType_Rune.cs");
-        var lv = new LineView();
-        var d = new Design(new SourceCodeFile(file), "lv", lv);
-        var prop = d.GetDesignableProperties().Single(p => p.PropertyInfo.Name.Equals("LineRune"));
-
-        prop.SetValue('F');
-
-        ClassicAssert.AreEqual(new Rune('F'), lv.LineRune);
-
-        var code = ExpressionToCode(prop.GetRhs());
-
-        ClassicAssert.AreEqual("new System.Text.Rune('F')", code);
-    }
-
-    [Test]
-    public void TestChanging_LineViewOrientation()
-    {
-        var v = Get10By10View();
-        var lv = (LineView)ViewFactory.Create(typeof(LineView));
-        var d = new Design(v.SourceCode, "lv", lv);
-
-        v.View.Add(lv);
+        v.View.Add( lv );
         lv.IsInitialized = true;
 
-        ClassicAssert.AreEqual(Orientation.Horizontal, lv.Orientation);
-        ClassicAssert.AreEqual(new Rune('─'), lv.LineRune);
-        var prop = d.GetDesignableProperty(nameof(LineView.Orientation));
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( lv.Orientation, Is.EqualTo( Orientation.Horizontal ) );
+            Assert.That( lv.LineRune, Is.EqualTo( new Rune( '─' ) ) );
+        } );
 
-        ClassicAssert.IsNotNull(prop);
-        prop?.SetValue(Orientation.Vertical);
-        ClassicAssert.AreEqual(ConfigurationManager.Glyphs.VLine, lv.LineRune);
+        Property? prop = d.GetDesignableProperty( nameof( LineView.Orientation ) );
+
+        Assert.That( prop, Is.Not.Null );
+        prop?.SetValue( Orientation.Vertical );
+        Assert.That( lv.LineRune, Is.EqualTo( TerminalGuiConfigurationManager.Glyphs.VLine ) );
 
         // now try with a dim fill
-        lv.Height = Dim.Fill();
+        lv.Height = Dim.Fill( );
         lv.Width = 1;
 
-        prop?.SetValue(Orientation.Horizontal);
-        ClassicAssert.AreEqual(Orientation.Horizontal, lv.Orientation);
-        ClassicAssert.AreEqual(ConfigurationManager.Glyphs.HLine, lv.LineRune);
-        ClassicAssert.AreEqual(Dim.Fill(), lv.Width);
-        ClassicAssert.AreEqual(Dim.Sized(1), lv.Height);
+        prop?.SetValue( Orientation.Horizontal );
+
+        Assert.Multiple( ( ) =>
+        {
+            Assert.That( lv.Orientation, Is.EqualTo( Orientation.Horizontal ) );
+            Assert.That( lv.LineRune, Is.EqualTo( TerminalGuiConfigurationManager.Glyphs.HLine ) );
+            Assert.That( lv.Width, Is.EqualTo( Dim.Fill( ) ) );
+            Assert.That( lv.Height, Is.EqualTo( Dim.Sized( 1 ) ) );
+        } );
     }
 
-    public static string ExpressionToCode(CodeExpression expression)
+    [Test( ExpectedResult = "new Terminal.Gui.Attribute(Color.BrightMagenta,Color.Blue)" )]
+    public string PropertyOfType_Attribute( )
     {
-        CSharpCodeProvider provider = new ();
+        using GraphView graphView = new( );
+        Design d = new( new( $"{nameof( PropertyOfType_Attribute )}.cs" ), "FFF", graphView );
+        Property colorProp = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof( GraphView.GraphColor ) ) );
 
-        using (var sw = new StringWriter())
-        {
-            IndentedTextWriter tw = new IndentedTextWriter(sw, "    ");
-            provider.GenerateCodeFromExpression(expression, tw, new CodeGeneratorOptions());
-            tw.Close();
+        colorProp.SetValue( null );
 
-            return sw.GetStringBuilder().ToString();
-        }
+        CodeSnippetExpression? rhs = colorProp.GetRhs( ) as CodeSnippetExpression;
+        Assert.That( rhs, Is.Not.Null.And.InstanceOf<CodeSnippetExpression>( ) );
+        Assert.That( rhs!.Value, Is.Not.Null.And.EqualTo( "null" ) );
+
+        colorProp.SetValue( new TerminalGuiAttribute( Color.BrightMagenta, Color.Blue ) );
+
+        rhs = (CodeSnippetExpression)colorProp.GetRhs( );
+        return rhs.Value;
+    }
+
+    [Test]
+    public void PropertyOfType_PointF( [Values( 4.5f, 10.1f )] float x, [Values( 4.5f, 10.1f )] float y )
+    {
+        using GraphView graphView = new( );
+        Design d = new( new( $"{nameof( PropertyOfType_PointF )}.cs" ), "FFF", graphView );
+        Property pointProp = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof( GraphView.ScrollOffset ) ) );
+
+        PointF pointF = new( x, y );
+        pointProp.SetValue( pointF );
+
+        // The code generated should be a new PointF
+        CodeObjectCreateExpression? rhs = pointProp.GetRhs( ) as CodeObjectCreateExpression;
+
+        Assert.That( rhs, Is.Not.Null.And.InstanceOf<CodeObjectCreateExpression>( ) );
+        Assert.That( rhs!.Parameters, Is.Not.Null.And.InstanceOf<CodeExpressionCollection>( ) );
+        Assert.That( rhs.Parameters, Has.Count.EqualTo( 2 ) );
+    }
+
+    [Test( ExpectedResult = "Pos.Center()" )]
+    [Category( "Code Generation" )]
+    public string PropertyOfType_Pos( )
+    {
+        using Label label = new( );
+        Design d = new( new( $"{nameof( PropertyOfType_Pos )}.cs" ), "FFF", label );
+        Property xProp = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof( View.X ) ) );
+
+        xProp.SetValue( Pos.Center( ) );
+
+        return ( (CodeSnippetExpression)xProp.GetRhs( ) ).Value;
+    }
+
+    [Test]
+    public void PropertyOfType_Rune( [Values( 'a', 'A', 'f', 'F' )] char runeCharacter )
+    {
+        FileInfo file = new( $"{nameof( PropertyOfType_Rune )}_{runeCharacter}.cs" );
+        using LineView lv = new( );
+        Design d = new( new( file ), "lv", lv );
+        Property prop = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( "LineRune" ) );
+
+        prop.SetValue( runeCharacter );
+
+        Assert.That( lv.LineRune, Is.EqualTo( new Rune( runeCharacter ) ) );
+
+        string code = Helpers.ExpressionToCode( prop.GetRhs( ) );
+
+        Assert.That( code, Is.EqualTo( $"new System.Text.Rune('{runeCharacter}')" ) );
+    }
+
+    [Test( ExpectedResult = "Pos.Center()" )]
+    [Category( "Code Generation" )]
+    public string PropertyOfType_Size( )
+    {
+        using ScrollView scrollView = new( );
+        Design d = new( new( $"{nameof( PropertyOfType_Size )}.cs" ), "FFF", scrollView );
+        Property xProp = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof( View.X ) ) );
+
+        xProp.SetValue( Pos.Center( ) );
+
+        return ( (CodeSnippetExpression)xProp.GetRhs( ) ).Value;
     }
 }

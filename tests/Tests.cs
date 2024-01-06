@@ -1,13 +1,6 @@
-using System;
-using System.IO;
-using System.Linq;
+
+
 using System.Runtime.CompilerServices;
-using Terminal.Gui;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.FromCode;
-using TerminalGuiDesigner.Operations;
-using TerminalGuiDesigner.ToCode;
-using TerminalGuiDesigner.UI;
 
 namespace UnitTests;
 
@@ -72,7 +65,7 @@ internal class Tests
 
         return rootDesign;
     }
-    
+
     /// <summary>
     /// Creates a new instance of <typeparamref name="T2"/> using <see cref="ViewFactory"/>.  Then calls the
     /// provided <paramref name="adjust"/> action before writing out and reading back the code.  Returns
@@ -115,7 +108,7 @@ internal class Tests
         return designBackIn.View
                            .GetActualSubviews( )
                            .OfType<T2>( )
-                           .Single( v => v.Data is Design { FieldName: fieldName } );
+                           .Single( static v => v.Data is Design { FieldName: fieldName } );
     }
     /// <summary>
     /// Performs a mouse drag from the first coordinates to the second (in screen space)

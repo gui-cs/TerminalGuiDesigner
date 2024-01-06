@@ -64,10 +64,12 @@ public class RemoveMenuItemOperation : MenuItemOperation
             return;
         }
 
-        var children = this.Parent.Children.ToList<MenuItem>();
-
-        children.Insert(this.removedAtIdx, this.OperateOn);
-        this.Parent.Children = children.ToArray();
+        this.Parent.Children =
+        [
+            .. Parent.Children[ .. removedAtIdx ],
+            this.OperateOn,
+            .. Parent.Children[ removedAtIdx .. ]
+        ];
         this.Bar?.SetNeedsDisplay();
 
         // if any MenuBarItem were converted to vanilla MenuItem
@@ -123,12 +125,12 @@ public class RemoveMenuItemOperation : MenuItemOperation
             return false;
         }
 
-        var children = this.Parent.Children.ToList<MenuItem>();
-
-        this.removedAtIdx = Math.Max(0, children.IndexOf(this.OperateOn));
-
-        children.Remove(this.OperateOn);
-        this.Parent.Children = children.ToArray();
+        this.removedAtIdx = Math.Max( 0, Array.IndexOf( Parent.Children, OperateOn ) );
+        this.Parent.Children =
+        [
+            .. Parent.Children[ ..removedAtIdx ],
+            .. Parent.Children[ ( removedAtIdx + 1 ).. ]
+        ];
         this.Bar?.SetNeedsDisplay();
 
         if (this.Bar != null)
@@ -137,27 +139,24 @@ public class RemoveMenuItemOperation : MenuItemOperation
         }
 
         // if a top level menu now has no children
-        if (this.Bar != null)
+        var empty = this.Bar?.Menus.Where(bi => bi.Children.Length == 0).ToArray();
+        if (empty?.Any() == true)
         {
-            var empty = this.Bar.Menus.Where(bi => bi.Children.Length == 0).ToArray();
-            if (empty.Any())
-            {
-                // remember where they were
-                this.prunedEmptyTopLevelMenus = empty.ToDictionary(e => Array.IndexOf(this.Bar.Menus, e), v => v);
+            // remember where they were
+            this.prunedEmptyTopLevelMenus = empty.ToDictionary(e => Array.IndexOf(this.Bar.Menus, e), v => v);
 
-                // and remove them
-                this.Bar.Menus = this.Bar.Menus.Except(this.prunedEmptyTopLevelMenus.Values).ToArray();
-            }
+            // and remove them
+            this.Bar.Menus = this.Bar.Menus.Except(this.prunedEmptyTopLevelMenus.Values).ToArray();
+        }
 
-            // if we just removed the last menu header
-            // leaving a completely blank menu bar
-            if (this.Bar.Menus.Length == 0 && this.Bar.SuperView != null)
-            {
-                // remove the bar completely
-                this.Bar.CloseMenu();
-                this.barRemovedFrom = this.Bar.SuperView;
-                this.barRemovedFrom.Remove(this.Bar);
-            }
+        // if we just removed the last menu header
+        // leaving a completely blank menu bar
+        if (this.Bar?.Menus.Length == 0 && this.Bar.SuperView != null)
+        {
+            // remove the bar completely
+            this.Bar.CloseMenu();
+            this.barRemovedFrom = this.Bar.SuperView;
+            this.barRemovedFrom.Remove(this.Bar);
         }
 
         return true;

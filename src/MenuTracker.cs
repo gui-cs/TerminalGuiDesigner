@@ -48,6 +48,22 @@ public class MenuTracker
     }
 
     /// <summary>
+    /// Unregisters listeners for <paramref name="mb"/>.
+    /// </summary>
+    /// <param name="mb"><see cref="MenuBar"/> to stop tracking.</param>
+    public void UnregisterMenuBar( MenuBar? mb )
+    {
+        if ( !bars.TryTake( out mb ) )
+        {
+            return;
+        }
+
+        mb.MenuAllClosed -= MenuAllClosed;
+        mb.MenuOpened -= MenuOpened;
+        mb.MenuClosing -= MenuClosing;
+    }
+
+    /// <summary>
     /// <para>
     /// Searches child items of all MenuBars tracked by this class
     /// to try and find the parent of the item passed.
@@ -63,7 +79,7 @@ public class MenuTracker
     /// <returns>The immediate parent of <paramref name="item"/>.</returns>
     /// <remarks>Result may be a top level menu (e.g. File, View)
     /// or a sub-menu parent (e.g. View=>Windows).</remarks>
-    public MenuBarItem? GetParent( MenuItem item, out MenuBar? hostBar )
+    private MenuBarItem? GetParent( MenuItem item, out MenuBar? hostBar )
     {
         foreach (var bar in this.bars)
         {
@@ -83,7 +99,23 @@ public class MenuTracker
         return null;
     }
 
-    public bool TryGetParent(MenuItem item, [NotNullWhen(true)]out MenuBar? hostBar, [NotNullWhen(true)] out MenuBarItem? parentItem)
+    /// <summary>
+    ///   Searches child items of all MenuBars tracked by this class to try and find the parent of the item passed.
+    /// </summary>
+    /// <param name="item">The item whose parent you want to find.</param>
+    /// <param name="hostBar">
+    ///   When this method returns true, the <see cref="MenuBar" /> that owns <paramref name="item" />.<br /> Otherwise, <see langword="null" /> if
+    ///   not found or parent not registered (see <see cref="Register(MenuBar)" />).
+    /// </param>
+    /// <param name="parentItem">
+    ///   When this method returns <see langword="true" />, the immediate parent of <paramref name="item" />.<br /> Otherwise,
+    ///   <see langword="null" />
+    /// </param>
+    /// <remarks>
+    ///   Search is recursive and dips into sub-menus.<br /> For sub-menus it is the immediate parent that is returned.
+    /// </remarks>
+    /// <returns>A <see langword="bool" /> indicating if the search was successful or not.</returns>
+    public bool TryGetParent( MenuItem item, [NotNullWhen( true )] out MenuBar? hostBar, [NotNullWhen( true )] out MenuBarItem? parentItem )
     {
         var parentCandidate = GetParent( item, out hostBar );
         if ( parentCandidate is null )
@@ -106,22 +138,21 @@ public class MenuTracker
     /// the substitution object (<see cref="MenuItem"/>).  See
     /// <see cref="ConvertMenuBarItemToRegularItemIfEmpty(MenuBarItem, out MenuItem?)"/>
     /// for more information.</returns>
-    public Dictionary<MenuBarItem, MenuItem> ConvertEmptyMenus()
+    public Dictionary<MenuBarItem, MenuItem> ConvertEmptyMenus( )
     {
-        var toReturn = new Dictionary<MenuBarItem, MenuItem>();
-
+        Dictionary<MenuBarItem, MenuItem> dictionary = [];
         foreach (var b in this.bars)
         {
             foreach (var bi in b.Menus)
             {
-                foreach (var converted in this.ConvertEmptyMenus(b, bi))
+                foreach ( ( MenuBarItem? convertedMenuBarItem, MenuItem? convertedMenuItem ) in this.ConvertEmptyMenus( dictionary, b, bi ) )
                 {
-                    toReturn.Add(converted.Key, converted.Value);
+                    dictionary.TryAdd( convertedMenuBarItem, convertedMenuItem );
                 }
             }
         }
 
-        return toReturn;
+        return dictionary;
     }
 
     /// <summary>
@@ -137,12 +168,12 @@ public class MenuTracker
     /// <param name="added">The result of the conversion (same text, same index etc but
     /// <see cref="MenuItem"/> instead of <see cref="MenuBarItem"/>).</param>
     /// <returns><see langword="true"/> if conversion was possible (menu was empty and belonged to tracked menu).</returns>
-    internal static bool ConvertMenuBarItemToRegularItemIfEmpty(MenuBarItem bar, out MenuItem? added)
+    internal static bool ConvertMenuBarItemToRegularItemIfEmpty( MenuBarItem bar, [NotNullWhen( true )] out MenuItem? added )
     {
         added = null;
 
         // bar still has more children so don't convert
-        if (bar.Children.Any())
+        if ( bar.Children.Length != 0 )
         {
             return false;
         }
@@ -152,8 +183,7 @@ public class MenuTracker
             return false;
         }
 
-        var children = parent.Children.ToList<MenuItem>();
-        var idx = children.IndexOf(bar);
+        int idx = Array.IndexOf( parent.Children, bar );
 
         if (idx < 0)
         {
@@ -161,39 +191,32 @@ public class MenuTracker
         }
 
         // bar has no children so convert to MenuItem
-        added = new MenuItem { Title = bar.Title };
-        added.Data = bar.Data;
-        added.Shortcut = bar.Shortcut;
-
-        children.RemoveAt(idx);
-        children.Insert(idx, added);
-
-        parent.Children = children.ToArray();
+        parent.Children[ idx ] = added = new( )
+        {
+            Title = bar.Title,
+            Data = bar.Data,
+            Shortcut = bar.Shortcut
+        };
 
         return true;
     }
 
     /// <inheritdoc cref="ConvertEmptyMenus()"/>
-    private Dictionary<MenuBarItem, MenuItem> ConvertEmptyMenus(MenuBar bar, MenuBarItem mbi)
+    private Dictionary<MenuBarItem, MenuItem> ConvertEmptyMenus(Dictionary<MenuBarItem,MenuItem> dictionary, MenuBar bar, MenuBarItem mbi)
     {
-        var toReturn = new Dictionary<MenuBarItem, MenuItem>();
-
         foreach (var c in mbi.Children.OfType<MenuBarItem>())
         {
-            this.ConvertEmptyMenus(bar, c);
-            if ( ConvertMenuBarItemToRegularItemIfEmpty( c, out var added))
+            this.ConvertEmptyMenus(dictionary,bar, c);
+            if ( ConvertMenuBarItemToRegularItemIfEmpty( c, out MenuItem? added))
             {
-                if (added != null)
-                {
-                    toReturn.Add(c, added);
-                }
+                dictionary.TryAdd( c, added );
 
                 bar.CloseMenu();
                 bar.OpenMenu();
             }
         }
 
-        return toReturn;
+        return dictionary;
     }
 
     private void MenuClosing(object? sender, MenuClosingEventArgs obj)
@@ -204,7 +227,7 @@ public class MenuTracker
     private void MenuOpened(object? sender, MenuOpenedEventArgs obj)
     {
         this.CurrentlyOpenMenuItem = obj.MenuItem;
-        this.ConvertEmptyMenus();
+        this.ConvertEmptyMenus( );
     }
 
     private void MenuAllClosed(object? sender, EventArgs e)
