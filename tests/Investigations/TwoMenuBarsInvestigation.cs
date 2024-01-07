@@ -182,5 +182,55 @@ namespace YourNamespace {
             Assert.That(menuBars[1].Width, Is.EqualTo(Dim.Fill(0)));
         }
 
+        [Test]
+        public void RemoveAndThenAddMenuBar_Repro()
+        {
+            MenuBar menuBar;
+            MenuBar menuBar2;
+
+            var w = new Window();
+            menuBar2 = new Terminal.Gui.MenuBar();
+            menuBar = new Terminal.Gui.MenuBar();
+            w.Width = Dim.Fill(0);
+            w.Height = Dim.Fill(0);
+            w.X = 0;
+            w.Y = 0;
+
+            w.Visible = true;
+            w.Modal = false;
+            w.Title = "";
+            menuBar.Width = Dim.Fill(0);
+            menuBar.Height = 1;
+            menuBar.X = 0;
+            menuBar.Y = 0;
+            menuBar.Visible = true;
+            w.Add(menuBar);
+
+            menuBar2.Width = Dim.Fill(0);
+            menuBar2.Height = 1;
+            menuBar2.X = 0;
+            menuBar2.Y = 4;
+            menuBar2.Visible = true;
+            w.Add(menuBar2);
+
+
+            var menuBars = w.Subviews.OfType<MenuBar>().ToArray();
+            Assert.That(menuBars, Has.Length.EqualTo(2));
+
+            Assert.That(menuBars[0].Width, Is.EqualTo(Dim.Fill(0)));
+            Assert.That(menuBars[1].Width, Is.EqualTo(Dim.Fill(0)));
+
+            w.Remove(menuBar);
+            w.Remove(menuBar2);
+
+            w.Add(menuBar);
+            w.Add(menuBar2);
+
+
+            Assert.That(menuBars[0].Width, Is.EqualTo(Dim.Fill(0)));
+
+            // Fails here, (Expected Fill but was Absolute)
+            Assert.That(menuBars[1].Width, Is.EqualTo(Dim.Fill(0)));
+        }
     }
 }
