@@ -12,6 +12,7 @@ namespace UnitTests.Investigations
     {
         protected abstract string Cs { get; }
         protected abstract string DesignerCs { get; }
+        public SourceCodeFile SourceCode { get; private set; }
 
         protected abstract void MakeAssertions(Design rootDesign);
 
@@ -33,7 +34,7 @@ namespace UnitTests.Investigations
 
             File.WriteAllText(csFile.FullName, DesignerCs);
 
-            var decompiler = new CodeToView(new SourceCodeFile(designerFile));
+            var decompiler = new CodeToView(SourceCode = new SourceCodeFile(designerFile));
             var d = decompiler.CreateInstance();
             MakeAssertions(d);
         }

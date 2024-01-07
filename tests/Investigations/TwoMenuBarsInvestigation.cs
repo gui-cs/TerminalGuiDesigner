@@ -171,6 +171,15 @@ namespace YourNamespace {
 
             Assert.That(menuBars[0].Width, Is.EqualTo(Dim.Fill(0)));
             Assert.That(menuBars[1].Width, Is.EqualTo(Dim.Fill(0)));
+
+            var d = new Design(SourceCode, Design.RootDesignName, w);
+
+            // Bug is here
+            d.CreateSubControlDesigns();
+
+            // This fails
+            Assert.That(menuBars[0].Width, Is.EqualTo(Dim.Fill(0)));
+            Assert.That(menuBars[1].Width, Is.EqualTo(Dim.Fill(0)));
         }
 
     }
