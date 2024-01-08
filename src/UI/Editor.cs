@@ -122,7 +122,7 @@ public class Editor : Toplevel
 
         Application.KeyDown += (_, k) =>
         {
-            if (this.editing)
+            if (this.editing || this.viewBeingEdited == null)
             {
                 return;
             }
