@@ -10,20 +10,18 @@ internal class ViewExtensionsTests : Tests
     private const int TestViewTopEdge = 3;
     private const int TestViewWidth = 5;
     private const int TestViewHeight = 3;
-    private const int TestViewRightEdge = TestViewLeftEdge + TestViewWidth - 1;
-    private const int TestViewBottomEdge = TestViewTopEdge + TestViewHeight - 1;
-    private const int OneLeftOfTestViewLeftEdge = TestViewLeftEdge - 1;
-    private const int OneRightOfTestViewRightEdge = TestViewRightEdge + 1;
-    private const int OneAboveTestViewTopEdge = TestViewTopEdge - 1;
-    private const int OneBelowTestViewBottomEdge = TestViewBottomEdge + 1;
+    private const int TestViewRightEdge = 6;
+    private const int TestViewBottomEdge = 5;
 
     [Test]
-    public void HitTest_HitsWhenExpected( [Range( OneLeftOfTestViewLeftEdge, OneRightOfTestViewRightEdge, 1 )] int clickX, [Range( OneAboveTestViewTopEdge, OneBelowTestViewBottomEdge, 1 )] int clickY )
+    public void HitTest_HitsWhenExpected([Range(2,3,1)] int testViewLeftEdge, [Range(2,3,1)]int testViewTopEdge,[Range(4,5,1)]int TestViewWidth,[Range(2,4,1)]int TestViewHeight, [Range( 1, 8, 1 )] int clickX, [Range( 1, 7, 1 )] int clickY )
     {
+        int testViewRightEdge = TestViewLeftEdge + TestViewWidth - 1;
+        int testViewBottomEdge = TestViewTopEdge + TestViewHeight - 1;
         using View v = Get10By10View( ).View;
 
-        v.X = TestViewLeftEdge;
-        v.Y = TestViewTopEdge;
+        v.X = testViewLeftEdge;
+        v.Y = testViewTopEdge;
         v.Width = TestViewWidth;
         v.Height = TestViewHeight;
 
@@ -38,17 +36,16 @@ internal class ViewExtensionsTests : Tests
         Assert.That( ( clickX, clickY ) switch
         {
             // Beyond any edge, result should be null
-            (< TestViewLeftEdge, _) => result is null,
-            (_, < TestViewTopEdge) => result is null,
-            (> TestViewRightEdge, _) => result is null,
-            (_, > TestViewBottomEdge) => result is null,
-            // Everything else is a hit and result should be a reference to the view
+            (_, _) when clickX < testViewLeftEdge => result is null,
+            (_, _) when clickX > testViewRightEdge => result is null,
+            (_, _) when clickY < testViewTopEdge => result is null,
+            (_, _) when clickY > testViewBottomEdge => result is null,
             _ => ReferenceEquals( v, result )
         } );
     }
 
     [Test]
-    public void HitTest_IsBorderWhenExpected( [Range( OneLeftOfTestViewLeftEdge, OneRightOfTestViewRightEdge, 1 )] int clickX, [Range( OneAboveTestViewTopEdge, OneBelowTestViewBottomEdge, 1 )] int clickY )
+    public void HitTest_IsBorderWhenExpected( [Range( 1, 7, 1 )] int clickX, [Range( 2, 6, 1 )] int clickY )
     {
         using View v = Get10By10View().View;
 
@@ -84,7 +81,7 @@ internal class ViewExtensionsTests : Tests
     }
 
     [Test]
-    public void HitTest_IsLowerRightWhenExpected( [Range( OneLeftOfTestViewLeftEdge, OneRightOfTestViewRightEdge, 1 )] int clickX, [Range( OneAboveTestViewTopEdge, OneBelowTestViewBottomEdge, 1 )] int clickY )
+    public void HitTest_IsLowerRightWhenExpected( [Range( 1, 7, 1 )] int clickX, [Range( 2, 6, 1 )] int clickY )
     {
         using View v = Get10By10View( ).View;
 
