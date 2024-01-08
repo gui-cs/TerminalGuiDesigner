@@ -258,7 +258,7 @@ public static class ViewExtensions
             v.Visible = false;
         }
 
-        var point = w.ScreenToBounds(m.X, m.Y);
+        var viewRelativeClickCoordinates = w.ScreenToBounds(m.X, m.Y);
 
         var hit = ApplicationExtensions.FindDeepestView(w, m.X, m.Y);
 
@@ -273,10 +273,10 @@ public static class ViewExtensions
         {
             var screenFrame = hit.FrameToScreen();
 
-            if (point != new Point(screenFrame.X, screenFrame.Y))
+            if (viewRelativeClickCoordinates != new Point(screenFrame.X, screenFrame.Y))
             {
-                ref int xClickCoordinateInView = ref point.X;
-                ref int yClickCoordinateInView = ref point.Y;
+                ref int xClickCoordinateInView = ref viewRelativeClickCoordinates.X;
+                ref int yClickCoordinateInView = ref viewRelativeClickCoordinates.Y;
                 int xDistanceFromBottomRight = screenFrame.Width - xClickCoordinateInView - 1;
                 int yDistanceFromBottomRight = screenFrame.Height - yClickCoordinateInView - 1;
 
