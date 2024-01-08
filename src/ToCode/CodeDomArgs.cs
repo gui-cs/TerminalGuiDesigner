@@ -113,6 +113,11 @@ public class CodeDomArgs
         return name;
     }
 
+    internal static bool IsValidIdentifier(string name)
+    {
+        return cSharpCodeProvider.IsValidIdentifier(name);
+    }
+
     /// <summary>
     /// Returns a unique field name based on the passed value.
     /// Removes non word characters and applies a numerical

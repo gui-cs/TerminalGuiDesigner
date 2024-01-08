@@ -79,7 +79,7 @@ public class ViewToCode
 
         var sourceFile = new SourceCodeFile(csFilePath);
 
-        var className = Path.GetFileNameWithoutExtension(sourceFile.CsFile.Name);
+        var className = sourceFile.ClassName;
 
         var csharpCode = GetGenerateNewViewCode(className, namespaceName);
         File.WriteAllText(sourceFile.CsFile.FullName, csharpCode);

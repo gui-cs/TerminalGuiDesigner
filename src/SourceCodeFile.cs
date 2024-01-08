@@ -58,6 +58,11 @@ public class SourceCodeFile
     public FileInfo DesignerFile { get; }
 
     /// <summary>
+    /// Returns the class name for the file e.g. for /SomeDir/MyClass.cs it will return MyClass
+    /// </summary>
+    public string ClassName => Path.GetFileNameWithoutExtension(CsFile.Name);
+
+    /// <summary>
     /// Returns the .Designer.cs file for the given class file.
     /// Returns a reference even if that file does not exist.
     /// </summary>

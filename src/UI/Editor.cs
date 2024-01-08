@@ -571,6 +571,22 @@ public class Editor : Toplevel
                         break;
                 }
             }
+
+
+            if (e == this.keyMap.New)
+            {
+                this.New();
+            }
+
+            if (e == this.keyMap.ShowHelp)
+            {
+                this.ShowHelp();
+            }
+
+            if (e == this.keyMap.Open)
+            {
+                this.Open();
+            }
         };
 
         this.Add(this.rootCommandsListView);
@@ -956,6 +972,13 @@ public class Editor : Toplevel
                 // Check if we are about to overwrite some files
                 // and if so warn the user
                 var files = new SourceCodeFile(file);
+
+                if(!CodeDomArgs.IsValidIdentifier(files.ClassName))
+                {
+                    ChoicesDialog.Query("Invalid Name",$"Invalid class name '{files.ClassName}'","Ok");
+                    return;
+                }
+
                 var sb = new StringBuilder();
 
                 if (files.CsFile.Exists)
