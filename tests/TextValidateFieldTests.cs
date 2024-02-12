@@ -1,36 +1,42 @@
-using System.IO;
-using System.Linq;
-using Terminal.Gui;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.FromCode;
-using TerminalGuiDesigner.Operations;
-using TerminalGuiDesigner.ToCode;
+using Terminal.Gui.TextValidateProviders;
 
 namespace UnitTests;
 
-class TextValidateFieldTests : Tests
+[TestFixture]
+[Category( "Code Generation" )]
+[TestOf( typeof( ViewToCode ) )]
+[TestOf( typeof( CodeToView ) )]
+internal class TextValidateFieldTests : Tests
 {
     [Test]
-    public void TestRoundTrip_PreserveProvider()
+    public void RoundTrip_PreservesProvider( )
     {
-        var viewToCode = new ViewToCode();
+        ViewToCode viewToCode = new( );
 
-        var file = new FileInfo("TestRoundTrip_PreserveProvider.cs");
-        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window));
+        FileInfo file = new( $"{nameof( RoundTrip_PreservesProvider )}.cs" );
+        Design designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Window ) );
 
-        var tvfOut = ViewFactory.Create<TextValidateField>();
+        using TextValidateField tvfOut = ViewFactory.Create<TextValidateField>( );
 
-        ClassicAssert.IsNotNull(tvfOut.Provider);
+        // Expected default from the ViewFactory:
+        Assume.That( tvfOut.Provider, Is.Not.Null.And.InstanceOf<TextRegexProvider>( ) );
+        Assume.That( ( (TextRegexProvider)tvfOut.Provider ).Pattern, Is.EqualTo( ".*" ) );
 
-        OperationManager.Instance.Do(new AddViewOperation(tvfOut, designOut, "myfield"));
+        AddViewOperation addTvfOp = new( tvfOut, designOut, "myfield" );
+        Assume.That( addTvfOp.IsImpossible, Is.False );
+        bool addTvfOpSucceeded = false;
+        Assume.That( ( ) => addTvfOpSucceeded = OperationManager.Instance.Do( addTvfOp ), Throws.Nothing );
+        Assume.That( addTvfOpSucceeded );
 
-        viewToCode.GenerateDesignerCs(designOut, typeof(Window));
+        Assert.That( ( ) => viewToCode.GenerateDesignerCs( designOut, typeof( Window ) ), Throws.Nothing );
 
-        var codeToView = new CodeToView(designOut.SourceCode);
-        var designBackIn = codeToView.CreateInstance();
+        CodeToView codeToView = new( designOut.SourceCode );
+        Design designBackIn = codeToView.CreateInstance( );
 
-        var tvfIn = designBackIn.View.GetActualSubviews().OfType<TextValidateField>().Single();
-
-        ClassicAssert.IsNotNull(tvfIn.Provider);
+        using TextValidateField tvfIn = designBackIn.View.GetActualSubviews( ).OfType<TextValidateField>( ).Single( );
+        Assert.That( tvfIn, Is.Not.Null.And.InstanceOf<TextValidateField>( ) );
+        Assert.That( tvfIn, Is.Not.SameAs( tvfOut ) );
+        Assert.That( tvfIn.Provider, Is.Not.Null.And.InstanceOf<TextRegexProvider>( ) );
+        Assert.That( ( (TextRegexProvider)tvfIn.Provider ).Pattern, Is.EqualTo( ".*" ) );
     }
 }

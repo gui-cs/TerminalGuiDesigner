@@ -258,7 +258,7 @@ public static class ViewExtensions
             v.Visible = false;
         }
 
-        var point = w.ScreenToBounds(m.X, m.Y);
+        var viewRelativeClickCoordinates = w.ScreenToBounds(m.X, m.Y);
 
         var hit = ApplicationExtensions.FindDeepestView(w, m.X, m.Y);
 
@@ -267,16 +267,20 @@ public static class ViewExtensions
             hit = hit.SuperView;
         }
 
-        int resizeBoxArea = 2;
+        const int resizeBoxArea = 2;
 
         if (hit != null)
         {
             var screenFrame = hit.FrameToScreen();
 
-            if (point != new Point(screenFrame.X, screenFrame.Y))
+            if (viewRelativeClickCoordinates != new Point(screenFrame.X, screenFrame.Y))
             {
-                isLowerRight = Math.Abs(screenFrame.X + screenFrame.Width - point.X) <= resizeBoxArea
-                && Math.Abs(screenFrame.Y + screenFrame.Height - point.Y) <= resizeBoxArea;
+                ref int xClickCoordinateInView = ref viewRelativeClickCoordinates.X;
+                ref int yClickCoordinateInView = ref viewRelativeClickCoordinates.Y;
+                int xDistanceFromBottomRight = screenFrame.Width - xClickCoordinateInView - 1;
+                int yDistanceFromBottomRight = screenFrame.Height - yClickCoordinateInView - 1;
+
+                isLowerRight = xDistanceFromBottomRight < resizeBoxArea && yDistanceFromBottomRight < resizeBoxArea;
             }
             else
             {
