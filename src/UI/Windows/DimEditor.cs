@@ -19,7 +19,6 @@ using TerminalGuiDesigner.ToCode;
 public partial class DimEditor : Dialog
 {
     private Design design;
-    private Property property { get; }
 
     /// <summary>
     /// The final <see cref="Dim"/> value user has configured based on
@@ -41,7 +40,6 @@ public partial class DimEditor : Dialog
         InitializeComponent();
         
         this.design = design;
-        this.property = property;
 
 
         Title = "Dim Designer";

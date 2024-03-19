@@ -21,7 +21,6 @@ using TerminalGuiDesigner.UI.Windows;
 public partial class PosEditor : Dialog {
 
     private Design design;
-    private Property property;
 
     /// <summary>
     /// Users configured <see cref="Pos"/> (assembled from radio button
@@ -63,7 +62,7 @@ public partial class PosEditor : Dialog {
         ddSide.SetSource(Enum.GetValues(typeof(Side)).Cast<Enum>().ToList());
         ddSide.KeyBindings.Add(Key.CursorDown, Command.Expand);
 
-        var val = (Pos)property.GetValue();
+        var val = oldValue;
         if(val.GetPosType(siblings,out var type,out var value,out var relativeTo,out var side, out var offset))
         {
             switch(type)
