@@ -675,7 +675,7 @@ public class Design
             yield return this.CreateProperty(nameof(Slider.InnerSpacing));
             yield return this.CreateProperty(nameof(Slider.LegendsOrientation));
             yield return this.CreateProperty(nameof(Slider.ShowLegends));
-            yield return this.CreateProperty(nameof(Slider.ShowSpacing));
+            yield return this.CreateProperty(nameof(Slider.ShowEndSpacing));
             yield return this.CreateProperty(nameof(Slider.Type));
         }
 
@@ -836,7 +836,6 @@ public class Design
         if (this.View is RadioGroup)
         {
             yield return this.CreateProperty(nameof(RadioGroup.RadioLabels));
-            yield return this.CreateProperty(nameof(RadioGroup.DisplayMode));
         }
     }
 

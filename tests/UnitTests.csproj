@@ -51,6 +51,12 @@
     <Using Include="TerminalGuiDesigner.Operations" />
     <Using Include="TerminalGuiDesigner.ToCode" />
     <Using Include="TerminalGuiDesigner.UI" />
+	<Using Include="System.Drawing.Rectangle" Alias="Rectangle" />
+	<Using Include="System.Drawing.RectangleF" Alias="RectangleF" />
+	<Using Include="System.Drawing.Point" Alias="Point" />
+	<Using Include="System.Drawing.PointF" Alias="PointF" />
+	<Using Include="System.Drawing.Size" Alias="Size" />
+	<Using Include="System.Drawing.SizeF" Alias="SizeF" />
     <Using Include="UnitTests.TestSupportTypes" />
 		<Using Include="NUnit.Framework" />
 		<Using Include="NUnit.Framework.Legacy" />

@@ -162,8 +162,17 @@ internal class TabViewTests : Tests
         Design subview2Design = new( source, "subview2", subview2 );
         subview2Design.View.Data = subview2Design;
 
-        tv.AddTab( new( "Yay", subview1Design.View ), true );
-        tv.AddTab( new( "Yay", subview2Design.View ), false );
+        tv.AddTab( new Tab
+        {
+            Title = "Yay",
+            View = subview1Design.View
+        },true);
+
+        tv.AddTab( new Tab
+        {
+            Title = "Yay",
+            View = subview2Design.View
+        }, false );
 
         Design tvDesign = new( source, "tv", tv );
 

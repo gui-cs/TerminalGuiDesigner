@@ -58,7 +58,7 @@ public partial class ChoicesDialog
 
             var i2 = i;
 
-            buttons[i].Clicked += (s,e) => {
+            buttons[i].MouseClick += (s,e) => {
                 Result = i2;
                 Application.RequestStop();
             };
@@ -80,7 +80,7 @@ public partial class ChoicesDialog
 
         // align buttons bottom of dialog 
         buttonPanel.Width = buttonWidth = buttons.Sum(b=>buttonPanel.Subviews.Contains(b) ? b.Frame.Width : 0) + 1;
-        
+
         int maxWidthLine = TextFormatter.MaxWidthLine(message);
         if (maxWidthLine > Application.Driver.Cols)
         {
@@ -99,7 +99,7 @@ public partial class ChoicesDialog
     }
 
     /// <inheritdoc/>
-    public override void OnDrawContent(Rect bounds)
+    public override void OnDrawContent(Rectangle bounds)
     {
         base.OnDrawContent(bounds);
 

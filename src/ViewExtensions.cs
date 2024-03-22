@@ -309,16 +309,16 @@ public static class ViewExtensions
     /// with the <paramref name="screenRect"/> rectangle.
     /// </summary>
     /// <param name="v"><see cref="View"/> whose bounds will be intersected with <paramref name="screenRect"/>.</param>
-    /// <param name="screenRect"><see cref="Rect"/> to intersect with <paramref name="v"/>.</param>
+    /// <param name="screenRect"><see cref="Rectangle"/> to intersect with <paramref name="v"/>.</param>
     /// <returns>True if the client area intersects.</returns>
-    public static bool IntersectsScreenRect(this View v, Rect screenRect)
+    public static bool IntersectsScreenRect(this View v, Rectangle screenRect)
     {
         // TODO: maybe this should use Frame instead? Currently this will not let you drag box
         // selection over the border of a container to select it (e.g. FrameView).
         v.BoundsToScreen(0, 0, out var x0, out var y0);
         v.BoundsToScreen(v.Bounds.Width, v.Bounds.Height, out var x1, out var y1);
 
-        return Rect.FromLTRB(x0, y0, x1, y1).IntersectsWith(screenRect);
+        return Rectangle.FromLTRB(x0, y0, x1, y1).IntersectsWith(screenRect);
     }
 
     /// <summary>
@@ -366,7 +366,7 @@ public static class ViewExtensions
     /// </summary>
     /// <param name="view">The view you want to translate coordinates for.</param>
     /// <returns>Screen coordinates of <paramref name="view"/>'s <see cref="View.Frame"/>.</returns>
-    public static Rect FrameToScreen(this View view)
+    public static Rectangle FrameToScreen(this View view)
     {
         if(view.SuperView == null)
         {
@@ -379,10 +379,10 @@ public static class ViewExtensions
     /// <summary>
     /// Converts a region in view-relative coordinates to screen-relative coordinates.
     /// </summary>
-    private static Rect ViewToScreen (this View v, Rect region)
+    private static Rectangle ViewToScreen (this View v, Rectangle region)
     {
         v.BoundsToScreen (region.X, region.Y, out var x, out var y, clamped: false);
-        return new Rect (x, y, region.Width, region.Height);
+        return new Rectangle (x, y, region.Width, region.Height);
     }
 
     private static bool HasNoBorderProperty(this View v)
