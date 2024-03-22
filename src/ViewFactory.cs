@@ -36,8 +36,6 @@ public static class ViewFactory
         typeof( OpenDialog ),
         typeof( ScrollBarView ),
 
-        // Theses are special types of view and shouldn't be added manually by user
-        typeof( Frame ),
         // BUG These seem to cause stack overflows in CreateSubControlDesigns (see TestAddView_RoundTrip)
         typeof( Wizard ),
         typeof( WizardStep )

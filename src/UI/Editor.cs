@@ -192,7 +192,7 @@ public class Editor : Toplevel
     /// Tailors redrawing to add overlays (e.g. showing what is selected etc.).
     /// </summary>
     /// <param name="bounds">The view bounds.</param>
-    public override void OnDrawContent(Rect bounds)
+    public override void OnDrawContent(Rectangle bounds)
     {
         base.OnDrawContent(bounds);
 

@@ -28,7 +28,7 @@ public class MouseManager
     /// <summary>
     /// Gets the current 'drag a box' selection area that is ongoing (if any).
     /// </summary>
-    public Rect? SelectionBox => RectExtensions.FromBetweenPoints(this.selectionStart, this.selectionEnd);
+    public Rectangle? SelectionBox => RectExtensions.FromBetweenPoints(this.selectionStart, this.selectionEnd);
 
     /// <summary>
     /// Responds to <see cref="Application.RootMouseEvent"/>(by changing a 'drag a box' selection area

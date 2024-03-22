@@ -54,7 +54,7 @@ public class EditDialog : Window
             IsDefault = true,
         };
 
-        btnSet.Clicked += (s, e) =>
+        btnSet.MouseClick += (s, e) =>
         {
             this.SetProperty(false);
         };
@@ -64,7 +64,7 @@ public class EditDialog : Window
             X = Pos.Right(btnSet),
             Y = Pos.Bottom(this.list),
         };
-        btnClose.Clicked += (s, e) => Application.RequestStop();
+        btnClose.MouseClick += (s, e) => Application.RequestStop();
 
         this.Add(this.list);
         this.Add(btnSet);

@@ -21,7 +21,7 @@ internal class DragOperationTests : Tests
     {
         var d = Get10By10View();
 
-        var lbl = new Label(0, 0, "Hi there buddy");
+        var lbl = new Label { Text = "Hi there buddy" };
         var lblDesign = new Design(d.SourceCode, "mylabel", lbl);
         lbl.Data = lblDesign;
         d.View.Add(lbl);

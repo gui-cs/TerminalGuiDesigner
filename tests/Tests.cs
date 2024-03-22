@@ -41,7 +41,11 @@ internal class Tests
         // start with blank slate
         OperationManager.Instance.ClearUndoRedo();
 
-        var v = new View(new Rect(0, 0, 10, 10));
+        var v = new View()
+        {
+            Width = 10,
+            Height = 10,
+        };
         var d = new Design(new SourceCodeFile(new FileInfo("TenByTen.cs")), Design.RootDesignName, v);
         v.Data = d;
 

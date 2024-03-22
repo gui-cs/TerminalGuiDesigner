@@ -43,8 +43,8 @@ public partial class PointEditor {
         tbX.Text = x.ToString();
         tbY.Text = y.ToString();
 
-        btnOk.Clicked += Ok;
-        btnCancel.Clicked += Cancel;
+        btnOk.MouseClick += Ok;
+        btnCancel.MouseClick += Cancel;
     }
 
     private void Cancel(object sender, EventArgs e)

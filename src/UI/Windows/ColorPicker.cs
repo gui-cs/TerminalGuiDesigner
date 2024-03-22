@@ -47,8 +47,8 @@ public partial class ColorPicker
         radiogroup1.SelectedItemChanged += (s,e) => UpdatePreview();
         radiogroup2.SelectedItemChanged += (s,e) => UpdatePreview();
 
-        btnOk.Clicked += (s, e) => Ok();
-        btnCancel.Clicked += (s, e) => Cancel();
+        btnOk.MouseClick += (s, e) => Ok();
+        btnCancel.MouseClick += (s, e) => Cancel();
     }
 
     private void Ok()

@@ -91,7 +91,7 @@ public class BigListBox<T>
         {
             Y = Pos.Bottom(this.listView),
         };
-        btnOk.Clicked += (s, e) =>
+        btnOk.MouseClick += (s, e) =>
         {
             this.Accept();
         };
@@ -100,7 +100,7 @@ public class BigListBox<T>
         {
             Y = Pos.Bottom(this.listView),
         };
-        btnCancel.Clicked += (s, e) => Application.RequestStop();
+        btnCancel.MouseClick += (s, e) => Application.RequestStop();
 
         if (addSearch)
         {

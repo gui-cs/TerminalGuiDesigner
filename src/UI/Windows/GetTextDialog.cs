@@ -65,7 +65,7 @@ internal class GetTextDialog
             Y = Pos.Bottom(this.textField),
             IsDefault = !this.args.MultiLine,
         };
-        btnOk.Clicked += (s, e) =>
+        btnOk.MouseClick += (s, e) =>
         {
             this.Accept();
         };
@@ -76,7 +76,7 @@ internal class GetTextDialog
             Y = Pos.Bottom(this.textField),
             IsDefault = false,
         };
-        btnCancel.Clicked += (s, e) =>
+        btnCancel.MouseClick += (s, e) =>
         {
             this.okClicked = false;
             Application.RequestStop();
@@ -87,7 +87,7 @@ internal class GetTextDialog
             X = Pos.Right(btnCancel),
             Y = Pos.Bottom(this.textField),
         };
-        btnClear.Clicked += (s, e) =>
+        btnClear.MouseClick += (s, e) =>
         {
             this.textField.Text = string.Empty;
         };

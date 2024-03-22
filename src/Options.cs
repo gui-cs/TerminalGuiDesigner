@@ -49,11 +49,6 @@ public class Options
     [Option('n', HelpText = "The C# namespace to be used for the View code generated")]
     public string Namespace { get; set; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether <see cref="Application.UseSystemConsole"/> should be enabled.
-    /// </summary>
-    [Option(HelpText = "Enables UseSystemConsole, an alternative console display driver")]
-    public bool Usc { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether experimental new features should be accessible.
