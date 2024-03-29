@@ -381,8 +381,15 @@ public static class ViewExtensions
     /// </summary>
     private static Rectangle ViewToScreen (this View v, Rectangle region)
     {
-        v.BoundsToScreen (region.X, region.Y, out var x, out var y, clamped: false);
+        v.BoundsToScreen (region.X, region.Y, out var x, out var y);
         return new Rectangle (x, y, region.Width, region.Height);
+    }
+
+    private static void BoundsToScreen(this View v, int x, int y, out int originalSuperX , out int originalSuperY)
+    {
+        var answer = v.BoundsToScreen(new Rectangle(0, 0, 1, 1));
+        originalSuperX = answer.X;
+        originalSuperY = answer.Y;
     }
 
     private static bool HasNoBorderProperty(this View v)

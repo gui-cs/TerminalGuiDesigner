@@ -16,43 +16,49 @@ public class DefaultColorSchemes
     /// </summary>
     public DefaultColorSchemes()
     {
-        this.RedOnBlack = new NamedColorScheme("redOnBlack");
-        this.RedOnBlack.Scheme.Normal = new Terminal.Gui.Attribute(Terminal.Gui.Color.Red, Terminal.Gui.Color.Black);
-        this.RedOnBlack.Scheme.HotNormal = new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightRed, Terminal.Gui.Color.Black);
-        this.RedOnBlack.Scheme.Focus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Red, Terminal.Gui.Color.Yellow);
-        this.RedOnBlack.Scheme.HotFocus = new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightRed, Terminal.Gui.Color.Yellow);
-        this.RedOnBlack.Scheme.Disabled = new Terminal.Gui.Attribute(Terminal.Gui.Color.Gray, Terminal.Gui.Color.Black);
+        this.RedOnBlack = new NamedColorScheme("redOnBlack",
+            new ColorScheme(
+        normal: new Terminal.Gui.Attribute(Terminal.Gui.Color.Red, Terminal.Gui.Color.Black),
+        hotNormal: new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightRed, Terminal.Gui.Color.Black),
+        focus: new Terminal.Gui.Attribute(Terminal.Gui.Color.Red, Terminal.Gui.Color.Yellow),
+        hotFocus: new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightRed, Terminal.Gui.Color.Yellow),
+        disabled: new Terminal.Gui.Attribute(Terminal.Gui.Color.Gray, Terminal.Gui.Color.Black)
+            ));
 
-        this.GreenOnBlack = new NamedColorScheme("greenOnBlack");
-        this.GreenOnBlack.Scheme.Normal = new Terminal.Gui.Attribute(Terminal.Gui.Color.Green, Terminal.Gui.Color.Black);
-        this.GreenOnBlack.Scheme.HotNormal = new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightGreen, Terminal.Gui.Color.Black);
-        this.GreenOnBlack.Scheme.Focus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Green, Terminal.Gui.Color.Magenta);
-        this.GreenOnBlack.Scheme.HotFocus = new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightGreen, Terminal.Gui.Color.Magenta);
-        this.GreenOnBlack.Scheme.Disabled = new Terminal.Gui.Attribute(Terminal.Gui.Color.Gray, Terminal.Gui.Color.Black);
+        this.GreenOnBlack = new NamedColorScheme("greenOnBlack",
+            new ColorScheme(
+        normal : new Terminal.Gui.Attribute(Terminal.Gui.Color.Green, Terminal.Gui.Color.Black),
+        hotNormal: new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightGreen, Terminal.Gui.Color.Black),
+        focus: new Terminal.Gui.Attribute(Terminal.Gui.Color.Green, Terminal.Gui.Color.Magenta),
+        hotFocus: new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightGreen, Terminal.Gui.Color.Magenta),
+        disabled : new Terminal.Gui.Attribute(Terminal.Gui.Color.Gray, Terminal.Gui.Color.Black)));
 
-        this.BlueOnBlack = new NamedColorScheme("blueOnBlack");
-        this.BlueOnBlack.Scheme.Normal = new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightBlue, Terminal.Gui.Color.Black);
-        this.BlueOnBlack.Scheme.HotNormal = new Terminal.Gui.Attribute(Terminal.Gui.Color.Cyan, Terminal.Gui.Color.Black);
-        this.BlueOnBlack.Scheme.Focus = new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightBlue, Terminal.Gui.Color.BrightYellow);
-        this.BlueOnBlack.Scheme.HotFocus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Cyan, Terminal.Gui.Color.BrightYellow);
-        this.BlueOnBlack.Scheme.Disabled = new Terminal.Gui.Attribute(Terminal.Gui.Color.Gray, Terminal.Gui.Color.Black);
+        this.BlueOnBlack = new NamedColorScheme("blueOnBlack",
+            new ColorScheme(
+        normal : new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightBlue, Terminal.Gui.Color.Black),
+        hotNormal: new Terminal.Gui.Attribute(Terminal.Gui.Color.Cyan, Terminal.Gui.Color.Black),
+        focus: new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightBlue, Terminal.Gui.Color.BrightYellow),
+        hotFocus: new Terminal.Gui.Attribute(Terminal.Gui.Color.Cyan, Terminal.Gui.Color.BrightYellow),
+        disabled: new Terminal.Gui.Attribute(Terminal.Gui.Color.Gray, Terminal.Gui.Color.Black)));
 
-        this.GrayOnBlack = new NamedColorScheme("greyOnBlack");
-        this.GrayOnBlack.Scheme.Normal = new Terminal.Gui.Attribute(Terminal.Gui.Color.DarkGray, Terminal.Gui.Color.Black);
-        this.GrayOnBlack.Scheme.HotNormal = new Terminal.Gui.Attribute(Terminal.Gui.Color.DarkGray, Terminal.Gui.Color.Black);
-        this.GrayOnBlack.Scheme.Focus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.DarkGray);
-        this.GrayOnBlack.Scheme.HotFocus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.DarkGray);
-        this.GrayOnBlack.Scheme.Disabled = new Terminal.Gui.Attribute(Terminal.Gui.Color.DarkGray, Terminal.Gui.Color.Black);
+        this.GrayOnBlack = new NamedColorScheme("greyOnBlack",
+            new ColorScheme(
+        normal : new Terminal.Gui.Attribute(Terminal.Gui.Color.DarkGray, Terminal.Gui.Color.Black),
+        hotNormal: new Terminal.Gui.Attribute(Terminal.Gui.Color.DarkGray, Terminal.Gui.Color.Black),
+        focus: new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.DarkGray),
+        hotFocus: new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.DarkGray),
+        disabled: new Terminal.Gui.Attribute(Terminal.Gui.Color.DarkGray, Terminal.Gui.Color.Black)));
 
-        this.TerminalGuiDefault = new NamedColorScheme("tgDefault");
-        this.TerminalGuiDefault.Scheme.Normal = new Terminal.Gui.Attribute(Color.White, Color.Blue);
-        this.TerminalGuiDefault.Scheme.HotNormal = new Terminal.Gui.Attribute(Color.BrightCyan, Color.Blue);
-        this.TerminalGuiDefault.Scheme.Focus = new Terminal.Gui.Attribute(Color.Black, Color.Gray);
-        this.TerminalGuiDefault.Scheme.HotFocus = new Terminal.Gui.Attribute(Color.BrightBlue, Color.Gray);
+        this.TerminalGuiDefault = new NamedColorScheme("tgDefault",
+            new ColorScheme(
+        normal : new Terminal.Gui.Attribute(Color.White, Color.Blue),
+        hotNormal : new Terminal.Gui.Attribute(Color.BrightCyan, Color.Blue),
+        focus : new Terminal.Gui.Attribute(Color.Black, Color.Gray),
+        hotFocus : new Terminal.Gui.Attribute(Color.BrightBlue, Color.Gray),
 
         // HACK : Keeping this foreground as Brown because otherwise designer will think this is legit
         // the real default and assume user has not chosen it.  See: https://github.com/gui-cs/TerminalGuiDesigner/issues/133
-        this.TerminalGuiDefault.Scheme.Disabled = new Terminal.Gui.Attribute(Color.Yellow, Color.Blue);
+        disabled: new Terminal.Gui.Attribute(Color.Yellow, Color.Blue)));
     }
 
     /// <summary>

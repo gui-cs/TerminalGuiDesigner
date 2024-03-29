@@ -81,7 +81,7 @@ public partial class ChoicesDialog
         // align buttons bottom of dialog 
         buttonPanel.Width = buttonWidth = buttons.Sum(b=>buttonPanel.Subviews.Contains(b) ? b.Frame.Width : 0) + 1;
 
-        int maxWidthLine = TextFormatter.MaxWidthLine(message);
+        int maxWidthLine = TextFormatter.GetSumMaxCharWidth(message);
         if (maxWidthLine > Application.Driver.Cols)
         {
             maxWidthLine = Application.Driver.Cols;
@@ -90,8 +90,8 @@ public partial class ChoicesDialog
         maxWidthLine = Math.Max(maxWidthLine, defaultWidth);
            
 
-        int textWidth = Math.Min(TextFormatter.MaxWidth(message, maxWidthLine), Application.Driver.Cols);
-        int textHeight = TextFormatter.MaxLines(message, textWidth) + 2; // message.Count (ustring.Make ('\n')) + 1;
+        int textWidth = Math.Min(TextFormatter.GetSumMaxCharWidth(message, maxWidthLine), Application.Driver.Cols);
+        int textHeight = TextFormatter.GetSumMaxCharWidth(message, textWidth) + 2; // message.Count (ustring.Make ('\n')) + 1;
         int msgboxHeight = Math.Min(Math.Max(1, textHeight) + 4, Application.Driver.Rows); // textHeight + (top + top padding + buttons + bottom)
 
         Width = Math.Min(Math.Max(maxWidthLine, Math.Max(Title.GetColumns(), Math.Max(textWidth + 2, buttonWidth))), Application.Driver.Cols);
