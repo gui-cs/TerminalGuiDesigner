@@ -72,14 +72,15 @@ public class BigListBox<T>
             Modal = true,
         };
 
-        this.listView = new ListView(ErrorStringArray.ToList( ) )
+        this.listView = new ListView()
         {
             X = 0,
             Y = 0,
             Height = Dim.Fill(2),
             Width = Dim.Fill(2),
-            SelectedItem = 0,
+            SelectedItem = 0
         };
+        listView.SetSource(ErrorStringArray.ToList());
 
         this.listView.KeyDown += this.ListView_KeyPress;
 
@@ -87,8 +88,10 @@ public class BigListBox<T>
         this.listView.SetSource((this.collection = this.BuildList(this.GetInitialSource())).ToList());
         this.win.Add(this.listView);
 
-        var btnOk = new Button(okText, true)
+        var btnOk = new Button()
         {
+            Text = okText,
+            IsDefault = true,
             Y = Pos.Bottom(this.listView),
         };
         btnOk.MouseClick += (s, e) =>
@@ -96,24 +99,27 @@ public class BigListBox<T>
             this.Accept();
         };
 
-        var btnCancel = new Button("Cancel")
+        var btnCancel = new Button()
         {
+            Text = "Cancel",
             Y = Pos.Bottom(this.listView),
         };
         btnCancel.MouseClick += (s, e) => Application.RequestStop();
 
         if (addSearch)
         {
-            var searchLabel = new Label("Search:")
+            var searchLabel = new Label()
             {
+                Text = "Search:",
                 X = 0,
                 Y = Pos.Bottom(this.listView),
             };
 
             this.win.Add(searchLabel);
 
-            this.searchBox = new TextField(string.Empty)
+            this.searchBox = new TextField()
             {
+                Text = string.Empty,
                 X = Pos.Right(searchLabel),
                 Y = Pos.Bottom(this.listView),
                 Width = 30,

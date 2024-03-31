@@ -59,8 +59,9 @@ internal class GetTextDialog
 
         this.win.Add(this.textField);
 
-        var btnOk = new Button("Ok", true)
+        var btnOk = new Button()
         {
+            Text = "Ok",
             X = 0,
             Y = Pos.Bottom(this.textField),
             IsDefault = !this.args.MultiLine,
@@ -70,8 +71,9 @@ internal class GetTextDialog
             this.Accept();
         };
 
-        var btnCancel = new Button("Cancel")
+        var btnCancel = new Button()
         {
+            Text = "Cancel",
             X = Pos.Right(btnOk),
             Y = Pos.Bottom(this.textField),
             IsDefault = false,
@@ -82,8 +84,9 @@ internal class GetTextDialog
             Application.RequestStop();
         };
 
-        var btnClear = new Button("Clear")
+        var btnClear = new Button()
         {
+            Text = "Clear",
             X = Pos.Right(btnCancel),
             Y = Pos.Bottom(this.textField),
         };

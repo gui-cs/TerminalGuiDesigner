@@ -385,7 +385,7 @@ public static class ViewExtensions
         return new Rectangle (x, y, region.Width, region.Height);
     }
 
-    private static void BoundsToScreen(this View v, int x, int y, out int originalSuperX , out int originalSuperY)
+    public static void BoundsToScreen(this View v, int x, int y, out int originalSuperX , out int originalSuperY)
     {
         var answer = v.BoundsToScreen(new Rectangle(0, 0, 1, 1));
         originalSuperX = answer.X;

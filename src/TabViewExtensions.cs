@@ -75,7 +75,11 @@ public static class TabViewExtensions
     /// <returns>The tab added.</returns>
     public static Tab AddEmptyTab(this TabView tabView, string named)
     {
-        var tab = new Tab(named, new View { Width = Dim.Fill(), Height = Dim.Fill() });
+        var tab = new Tab()
+        {
+            DisplayText = named,
+            View = new View { Width = Dim.Fill(), Height = Dim.Fill() }
+        };
         tabView.AddTab(tab, false);
         return tab;
     }

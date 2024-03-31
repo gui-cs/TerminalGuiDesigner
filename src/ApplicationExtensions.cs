@@ -20,6 +20,6 @@ public static class ApplicationExtensions
     /// <exception cref="MissingMethodException">Thrown if Terminal.Gui private API changes.</exception>
     public static View? FindDeepestView(View start, int x, int y)
     {
-        return View.FindDeepestView(start, x, y, out _, out _);
+        return View.FindDeepestView(start, x, y);
     }
 }

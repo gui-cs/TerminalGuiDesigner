@@ -31,9 +31,17 @@ public class ExceptionViewer
 
         bool toggleStack = true;
 
-        var btnOk = new Button("Ok", true);
+        var btnOk = new Button()
+        {
+            Text = "Ok",
+            IsDefault = true
+        };
+
         btnOk.MouseClick += (s, e) => Application.RequestStop();
-        var btnStack = new Button("Stack");
+        var btnStack = new Button()
+        {
+            Text = "Stack"
+        };
         btnStack.MouseClick += (s, e) =>
         {
             // flip between stack / no stack
@@ -42,13 +50,14 @@ public class ExceptionViewer
             toggleStack = !toggleStack;
         };
 
-        var dlg = new Dialog(btnOk, btnStack)
+        var dlg = new Dialog()
         {
             Title = "Error",
             X = Pos.Percent(10),
             Y = Pos.Percent(10),
             Width = Dim.Percent(80),
             Height = Dim.Percent(80),
+            Buttons = new[] { btnOk, btnStack }
         };
         dlg.Add(textView);
 

@@ -543,7 +543,7 @@ public class Editor : Toplevel
             rootCommands[i] = rootCommands[i].PadBoth(maxWidth);
         }
 
-        this.rootCommandsListView = new ListView(rootCommands)
+        this.rootCommandsListView = new ListView()
         {
             X = Pos.Center(),
             Y = Pos.Center(),
@@ -551,7 +551,7 @@ public class Editor : Toplevel
             Height = 3,
             ColorScheme = new DefaultColorSchemes().GetDefaultScheme("greyOnBlack").Scheme,
         };
-
+        this.rootCommandsListView.SetSource(rootCommands);
         this.rootCommandsListView.KeyDown += (_, e) =>
         {
             if (e == Key.Enter)
@@ -870,9 +870,11 @@ public class Editor : Toplevel
 
     private void Open()
     {
-        var ofd = new OpenDialog(
-            "Open",
-            new List<IAllowedType>(new[] { new AllowedType("View", SourceCodeFile.ExpectedExtension ) }));
+        var ofd = new OpenDialog()
+        {
+            Title = "Open",
+            AllowedTypes = new List<IAllowedType>(new[] { new AllowedType("View", SourceCodeFile.ExpectedExtension) })
+        };  
 
         Application.Run(ofd, this.ErrorHandler);
 
@@ -947,10 +949,10 @@ public class Editor : Toplevel
             return;
         }
 
-        var ofd = new SaveDialog(
-            "New",
-            new List<IAllowedType>() { new AllowedType("C# File", ".cs") })
+        var ofd = new SaveDialog()
         {
+            Title = "New",
+            AllowedTypes = new List<IAllowedType>() { new AllowedType("C# File", ".cs") },
             Path = "MyView.cs",
         };
 

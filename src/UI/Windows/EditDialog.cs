@@ -38,17 +38,19 @@ public class EditDialog : Window
             this.collection.RemoveAll( p => p is NameProperty );
         }
 
-        this.list = new ListView(this.collection)
+        this.list = new ListView()
         {
             X = 0,
             Y = 0,
             Width = Dim.Fill(2),
             Height = Dim.Fill(2),
         };
+        this.list.SetSource(this.collection);
         this.list.KeyDown += this.List_KeyPress;
 
-        var btnSet = new Button("Set")
+        var btnSet = new Button()
         {
+            Text = "Set",
             X = 0,
             Y = Pos.Bottom(this.list),
             IsDefault = true,
@@ -59,8 +61,9 @@ public class EditDialog : Window
             this.SetProperty(false);
         };
 
-        var btnClose = new Button("Close")
+        var btnClose = new Button()
         {
+            Text = "Close",
             X = Pos.Right(btnSet),
             Y = Pos.Bottom(this.list),
         };
