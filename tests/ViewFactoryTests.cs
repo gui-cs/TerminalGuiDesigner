@@ -117,9 +117,6 @@ internal class ViewFactoryTests
                 // but doing it this way allows us to just test everything and only skip what we absolutely have to.
                 switch ( dummyInvalidObject, property )
                 {
-                    case (_, not null) when property.PropertyType == typeof( Frame ):
-                        Assert.That( nonGenericPropertyValue!.ToString( ), Is.EqualTo( genericPropertyValue!.ToString( ) ) );
-                        continue;
                     case (_, not null) when property.PropertyType.IsAssignableTo( typeof( Dim ) ):
                         Assert.That( (Dim)nonGenericPropertyValue!, Is.EqualTo( (Dim)genericPropertyValue! ) );
                         continue;
@@ -275,7 +272,6 @@ internal class ViewFactoryTests
             typeof( SaveDialog ),
             typeof( OpenDialog ),
             typeof( ScrollBarView ),
-            typeof( Frame ),
             typeof( Wizard ),
             typeof( WizardStep )
         };
