@@ -52,18 +52,21 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.label2 = new Terminal.Gui.Label();
             this.tfLegend = new Terminal.Gui.TextField();
             this.label = new Terminal.Gui.Label();
-            this.redOnBlack = new Terminal.Gui.ColorScheme();
-            this.redOnBlack.Normal = new Terminal.Gui.Attribute(Terminal.Gui.Color.Red, Terminal.Gui.Color.Black);
-            this.redOnBlack.HotNormal = new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightRed, Terminal.Gui.Color.Black);
-            this.redOnBlack.Focus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Red, Terminal.Gui.Color.Yellow);
-            this.redOnBlack.HotFocus = new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightRed, Terminal.Gui.Color.Yellow);
-            this.redOnBlack.Disabled = new Terminal.Gui.Attribute(Terminal.Gui.Color.Gray, Terminal.Gui.Color.Black);
-            this.tgDefault = new Terminal.Gui.ColorScheme();
-            this.tgDefault.Normal = new Terminal.Gui.Attribute(Terminal.Gui.Color.White, Terminal.Gui.Color.Blue);
-            this.tgDefault.HotNormal = new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightCyan, Terminal.Gui.Color.Blue);
-            this.tgDefault.Focus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.Gray);
-            this.tgDefault.HotFocus = new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightBlue, Terminal.Gui.Color.Gray);
-            this.tgDefault.Disabled = new Terminal.Gui.Attribute(Terminal.Gui.Color.Yellow, Terminal.Gui.Color.Blue);
+            this.redOnBlack = new Terminal.Gui.ColorScheme(
+                new Terminal.Gui.Attribute(Terminal.Gui.Color.Red, Terminal.Gui.Color.Black),
+                new Terminal.Gui.Attribute(Terminal.Gui.Color.Red, Terminal.Gui.Color.Yellow),
+                new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightRed, Terminal.Gui.Color.Black),
+                new Terminal.Gui.Attribute(Terminal.Gui.Color.Gray, Terminal.Gui.Color.Black),
+                new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightRed, Terminal.Gui.Color.Yellow)
+                );
+
+            this.tgDefault = new Terminal.Gui.ColorScheme(
+                new Terminal.Gui.Attribute(Terminal.Gui.Color.White, Terminal.Gui.Color.Blue),
+                new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.Gray),
+                 new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightCyan, Terminal.Gui.Color.Blue),
+                 new Terminal.Gui.Attribute(Terminal.Gui.Color.Yellow, Terminal.Gui.Color.Blue),
+                 new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightBlue, Terminal.Gui.Color.Gray)
+                );
             this.Width = 50;
             this.Height = 8;
             this.X = Pos.Center();

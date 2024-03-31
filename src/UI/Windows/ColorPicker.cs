@@ -66,7 +66,7 @@ public partial class ColorPicker
 
     private void UpdatePreview()
     {
-        lblPreview.ColorScheme.Normal = GetColor();
+        lblPreview.ColorScheme = new ColorScheme(GetColor());
         lblPreview.SetNeedsDisplay();
     }
 

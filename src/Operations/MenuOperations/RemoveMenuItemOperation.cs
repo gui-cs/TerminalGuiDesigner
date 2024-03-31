@@ -154,7 +154,7 @@ public class RemoveMenuItemOperation : MenuItemOperation
         if (this.Bar?.Menus.Length == 0 && this.Bar.SuperView != null)
         {
             // remove the bar completely
-            this.Bar.CloseMenu();
+            this.Bar.CloseMenu(false);
             this.barRemovedFrom = this.Bar.SuperView;
             this.barRemovedFrom.Remove(this.Bar);
         }

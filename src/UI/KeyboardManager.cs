@@ -164,7 +164,7 @@ public class KeyboardManager
                     // if we deleted the last menu item
                     if (remove.Bar?.Menus.Length == 0)
                     {
-                        remove.Bar.CloseMenu();
+                        remove.Bar.CloseMenu(false);
                         return true;
                     }
 

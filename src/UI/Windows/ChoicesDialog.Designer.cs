@@ -38,18 +38,21 @@ public partial class ChoicesDialog : Terminal.Gui.Window {
         this.btn1 = new Terminal.Gui.Button();
         this.buttonPanel = new Terminal.Gui.View();
         this.label1 = new Terminal.Gui.Label();
-        this.dialogBackground = new Terminal.Gui.ColorScheme();
-        this.dialogBackground.Normal = new Terminal.Gui.Attribute(Terminal.Gui.Color.White, Terminal.Gui.Color.DarkGray);
-        this.dialogBackground.HotNormal = new Terminal.Gui.Attribute(Terminal.Gui.Color.White, Terminal.Gui.Color.DarkGray);
-        this.dialogBackground.Focus = new Terminal.Gui.Attribute(Terminal.Gui.Color.White, Terminal.Gui.Color.DarkGray);
-        this.dialogBackground.HotFocus = new Terminal.Gui.Attribute(Terminal.Gui.Color.White, Terminal.Gui.Color.DarkGray);
-        this.dialogBackground.Disabled = new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.Black);
-        this.buttons = new Terminal.Gui.ColorScheme();
-        this.buttons.Normal = new Terminal.Gui.Attribute(Terminal.Gui.Color.DarkGray, Terminal.Gui.Color.White);
-        this.buttons.HotNormal = new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.White);
-        this.buttons.Focus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Red, Terminal.Gui.Color.Yellow);
-        this.buttons.HotFocus = new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.Yellow);
-        this.buttons.Disabled = new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.Black);
+        this.dialogBackground = new Terminal.Gui.ColorScheme(
+            new Terminal.Gui.Attribute(Terminal.Gui.Color.White, Terminal.Gui.Color.DarkGray),
+            new Terminal.Gui.Attribute(Terminal.Gui.Color.White, Terminal.Gui.Color.DarkGray),
+            new Terminal.Gui.Attribute(Terminal.Gui.Color.White, Terminal.Gui.Color.DarkGray),
+            new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.Black),
+            new Terminal.Gui.Attribute(Terminal.Gui.Color.White, Terminal.Gui.Color.DarkGray)
+            );
+        this.buttons = new Terminal.Gui.ColorScheme(
+            new Terminal.Gui.Attribute(Terminal.Gui.Color.DarkGray, Terminal.Gui.Color.White),
+            new Terminal.Gui.Attribute(Terminal.Gui.Color.Red, Terminal.Gui.Color.Yellow),
+            new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.White),
+            new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.Black),
+            new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.Yellow)
+            );
+
         this.Width = Dim.Percent(85f);
         this.Height = Dim.Percent(85f);
         this.X = Pos.Center();
