@@ -138,7 +138,10 @@ internal class CopyPasteTests : Tests
     {
         var d = Get10By10View();
 
-        var lbl = new Label("Name:");
+        var lbl = new Label
+        {
+            Text = "Name:"
+        };
         var tb = new TextField
         {
             Width = 10,
@@ -188,7 +191,7 @@ internal class CopyPasteTests : Tests
     {
         var d = Get10By10View();
 
-        var lbl = new Label("Name:");
+        var lbl = new Label { Text = "Name:" };
         var tb = new TextField
         {
             Width = 10,

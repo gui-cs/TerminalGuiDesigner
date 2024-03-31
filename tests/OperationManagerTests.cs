@@ -15,7 +15,7 @@ internal class OperationManagerTests
         var viewToCode = new ViewToCode( );
         var designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Window ) );
 
-        var op = new AddViewOperation( new Label( "Hello World" ), designOut, "myLabel" );
+        var op = new AddViewOperation( new Label() { Text = "Hello World" }, designOut, "myLabel" );
         op.Do( );
 
         Assume.That( designOut, Is.Not.Null.And.InstanceOf<Design>( ) );

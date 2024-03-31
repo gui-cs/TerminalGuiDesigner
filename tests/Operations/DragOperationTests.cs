@@ -54,7 +54,10 @@ internal class DragOperationTests : Tests
     {
         var d = Get10By10View();
 
-        var lbl = new Label(0, 0, "Hi there buddy");
+        var lbl = new Label
+        {
+            Text = "Hi there buddy"
+        };
         var lblDesign = new Design(d.SourceCode, "mylabel", lbl);
         lbl.Data = lblDesign;
         d.View.Add(lbl);
@@ -81,8 +84,12 @@ internal class DragOperationTests : Tests
     {
         var d = Get10By10View();
 
-        var lbl1 = new Label(0, 0, "Hi there buddy");
-        var lbl2 = new Label(1, 1, "Hi there buddy");
+        var lbl1 = new Label{ Text = "Hi there buddy" };
+        var lbl2 = new Label{
+            X = 1,
+            Y = 1,
+            Text = "Hi there buddy"
+        };
 
         var lblDesign1 = new Design(d.SourceCode, "mylabel1", lbl1);
         var lblDesign2 = new Design(d.SourceCode, "mylabel2", lbl2);
@@ -132,7 +139,12 @@ internal class DragOperationTests : Tests
         };
         d.View.Add(container1);
 
-        var lbl = new Label(1, 2, "Hi there buddy");
+        var lbl = new Label
+        {
+            X=1,
+            Y=2,
+            Text = "Hi there buddy"
+        };
         var lblDesign = new Design(d.SourceCode, "mylabel", lbl);
         lbl.Data = lblDesign;
         container1.Add(lbl);
@@ -186,7 +198,13 @@ internal class DragOperationTests : Tests
         d.View.Add(container1);
         d.View.Add(container2);
 
-        var lbl = new Label(1, 2, "Hi there buddy");
+        var lbl = new Label
+        {
+            X = 1,
+            Y = 2,
+            Text = "Hi there buddy"
+        };
+
         var lblDesign = new Design(d.SourceCode, "mylabel", lbl);
         lbl.Data = lblDesign;
         container1.Add(lbl);
@@ -244,7 +262,7 @@ internal class DragOperationTests : Tests
         ClassicAssert.AreEqual(12, screenX);
         ClassicAssert.AreEqual(12, screenY);
 
-        var lbl = new Label(1, 2, "Hi there buddy");
+        var lbl = new Label{ X = 1, Y = 2, Text = "Hi there buddy" };
         var lblDesign = new Design(rootDesign.SourceCode, "mylabel", lbl);
         lbl.Data = lblDesign;
         frameView.Add(lbl);
@@ -282,7 +300,7 @@ internal class DragOperationTests : Tests
             v.Y = 2;
 
             // add a Button
-            var op = new AddViewOperation(new Button("Hello"), d.GetRootDesign(), "mybtn");
+            var op = new AddViewOperation(new Button() { Text = "Hello" }, d.GetRootDesign(), "mybtn");
             op.Do();
 
             Application.Top.Add(d.GetRootDesign().View);

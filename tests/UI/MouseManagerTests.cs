@@ -280,9 +280,25 @@ internal class MouseManagerTests : Tests
           Hi
         */
 
-        using Label lbl1 = new( 2, 1, "Hi" );
-        using Label lbl2 = new( 4, 2, "Hi" );
-        using Label lbl3 = new( 2, 3, "Hi" );
+        using Label lbl1 = new()
+        {
+            X = 2,
+            Y = 1,
+            Text = "Hi"
+        };
+        using Label lbl2 = new()
+        {
+            X = 4,
+            Y = 2,
+            Text = "Hi"
+        };
+
+        using Label lbl3 = new()
+        {
+            X = 2,
+            Y = 3,
+            Text = "Hi"
+        };
 
         Design[] labels =
         [
