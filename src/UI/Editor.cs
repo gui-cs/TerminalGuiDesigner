@@ -149,7 +149,7 @@ public class Editor : Toplevel
             }
 
             // If disabling drag we suppress all but right click (button 3)
-            if (!m.MouseEvent.Flags.HasFlag(MouseFlags.Button3Clicked) && !this.enableDrag)
+            if (!m.Flags.HasFlag(MouseFlags.Button3Clicked) && !this.enableDrag)
             {
                 return;
             }
@@ -161,19 +161,19 @@ public class Editor : Toplevel
 
             try
             {
-                this.mouseManager.HandleMouse(m.MouseEvent, this.viewBeingEdited);
+                this.mouseManager.HandleMouse(m, this.viewBeingEdited);
 
                 // right click
-                if (m.MouseEvent.Flags.HasFlag(this.keyMap.RightClick))
+                if (m.Flags.HasFlag(this.keyMap.RightClick))
                 {
-                    var hit = this.viewBeingEdited.View.HitTest(m.MouseEvent, out _, out _);
+                    var hit = this.viewBeingEdited.View.HitTest(m, out _, out _);
 
                     if (hit != null)
                     {
                         var d = hit.GetNearestDesign() ?? this.viewBeingEdited;
                         if (d != null)
                         {
-                            this.CreateAndShowContextMenu(m.MouseEvent, d);
+                            this.CreateAndShowContextMenu(m, d);
                         }
                     }
                 }
