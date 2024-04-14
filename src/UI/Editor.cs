@@ -702,6 +702,12 @@ public class Editor : Toplevel
 
         this.menuOpen = true;
         SelectionManager.Instance.LockSelection = true;
+        
+        if(m != null)
+        {
+            m.Handled = true;
+        }
+
         menu.Show();
         menu.MenuBar.MenuAllClosed += (_, _) =>
         {
