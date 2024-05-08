@@ -251,8 +251,8 @@ public static class ViewFactory
 
         static void SetDefaultDimensions( T v, int width = 5, int height = 1 )
         {
-            v.Width = Math.Max( v.Bounds.Width, width );
-            v.Height = Math.Max( v.Bounds.Height, height );
+            v.Width = Math.Max( v.ContentSize.Width, width );
+            v.Height = Math.Max( v.ContentSize.Height, height );
         }
     }
 

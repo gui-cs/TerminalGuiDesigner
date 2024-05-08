@@ -65,7 +65,8 @@ internal class KeyboardManagerTests : Tests
 
         //TODO: What is this stuff doing and why?
         Application.Top.Add( v );
-        v.Bounds = new( 0, 0, 6, 1 );
+        v.Width = 6;
+        v.Height = 1;
         v.Draw( );
     }
 

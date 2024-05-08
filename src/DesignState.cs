@@ -53,7 +53,7 @@ public class DesignState
     {
         if (this.Design.View.IsBorderlessContainerView() && Editor.ShowBorders)
         {
-            this.DrawBorderlessViewFrame(r.Rectangle);
+            this.DrawBorderlessViewFrame(r.NewViewport);
         }
     }
 

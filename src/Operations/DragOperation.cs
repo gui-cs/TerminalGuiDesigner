@@ -229,11 +229,11 @@ public partial class DragOperation : Operation
         }
 
         // Calculate screen coordinates of 0,0 in each of the views (from and to)
-        mem.OriginalSuperView.BoundsToScreen(0, 0, out var originalSuperX, out var originalSuperY);
-        this.DropInto.BoundsToScreen(0, 0, out var newSuperX, out var newSuperY);
+        var originalSuper = mem.OriginalSuperView.ContentToScreen(new Point(0, 0));
+        var newSuper = this.DropInto.ContentToScreen(new Point(0, 0));
 
         // Offset the point by the difference in screen space between 0,0 on each view
-        p.Offset(newSuperX - originalSuperX, newSuperY - originalSuperY);
+        p.Offset(newSuper.X - originalSuper.X, newSuper.Y - originalSuper.Y);
         return p;
     }
 

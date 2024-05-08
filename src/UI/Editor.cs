@@ -209,7 +209,7 @@ public class Editor : Toplevel
                 if (toDisplay != null)
                 {
                     // write its name in the lower right
-                    int y = this.Bounds.Height - 1;
+                    int y = this.ContentSize.Height - 1;
                     int right = bounds.Width - 1;
                     var len = toDisplay.Length;
 
@@ -696,8 +696,8 @@ public class Editor : Toplevel
         else
         {
             var d = SelectionManager.Instance.Selected.FirstOrDefault() ?? this.viewBeingEdited;
-            d.View.BoundsToScreen(0, 0, out var x, out var y);
-            menu.Position = new Point(x, y);
+            var pt = d.View.ContentToScreen(new Point(0, 0));
+            menu.Position = new Point(pt.X, pt.Y);
         }
 
         this.menuOpen = true;

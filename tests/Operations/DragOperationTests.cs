@@ -241,11 +241,12 @@ internal class DragOperationTests : Tests
         rootDesign.View.X = 0;
         rootDesign.View.Y = 0;
 
-        rootDesign.View.BoundsToScreen(0, 0, out var screenX, out var screenY);
+        var screen = rootDesign.View.ContentToScreen(new Point(0, 0));
+
 
         // A window is positioned at 0,0 but its client area (to which controls are added) is 1,1 due to border
-        ClassicAssert.AreEqual(1, screenX);
-        ClassicAssert.AreEqual(1, screenY);
+        ClassicAssert.AreEqual(1, screen.X);
+        ClassicAssert.AreEqual(1, screen.Y);
 
         var frameView = ViewFactory.Create(typeof(FrameView));
         frameView.X = 10;
@@ -258,9 +259,9 @@ internal class DragOperationTests : Tests
 
         /*Window client area starts at (1,1) + (10,10 X/Y) + (1,1) for border of FrameView*/
 
-        frameView.BoundsToScreen(0, 0, out screenX, out screenY);
-        ClassicAssert.AreEqual(12, screenX);
-        ClassicAssert.AreEqual(12, screenY);
+        screen = frameView.ContentToScreen(new Point(0, 0));
+        ClassicAssert.AreEqual(12, screen.X);
+        ClassicAssert.AreEqual(12, screen.Y);
 
         var lbl = new Label{ X = 1, Y = 2, Text = "Hi there buddy" };
         var lblDesign = new Design(rootDesign.SourceCode, "mylabel", lbl);
@@ -271,9 +272,9 @@ internal class DragOperationTests : Tests
         Application.Top.LayoutSubviews();
 
         // check screen coordinates are as expected
-        lblDesign.View.BoundsToScreen(0, 0, out screenX, out screenY);
-        ClassicAssert.AreEqual(13, screenX, "Expected label X screen to be at its parents 0,0 (11,11) + 1");
-        ClassicAssert.AreEqual(14, screenY, "Expected label Y screen to be at its parents 0,0 (11,11) + 2");
+        screen = lblDesign.View.ContentToScreen(new System.Drawing.Point(0, 0));
+        ClassicAssert.AreEqual(13, screen.X, "Expected label X screen to be at its parents 0,0 (11,11) + 1");
+        ClassicAssert.AreEqual(14, screen.Y, "Expected label Y screen to be at its parents 0,0 (11,11) + 2");
 
         // press down at 0,0 of the label
         ClassicAssert.AreEqual(lbl, rootDesign.View.HitTest(new MouseEvent { X = 13, Y = 14 }, out _, out _)

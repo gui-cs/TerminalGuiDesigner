@@ -258,7 +258,7 @@ public static class ViewExtensions
             v.Visible = false;
         }
 
-        var point = w.ScreenToBounds(m.X, m.Y);
+        var point = w.ScreenToContent(m.ScreenPosition);
 
         var hit = ApplicationExtensions.FindDeepestView(w, m.X, m.Y);
 
@@ -315,10 +315,10 @@ public static class ViewExtensions
     {
         // TODO: maybe this should use Frame instead? Currently this will not let you drag box
         // selection over the border of a container to select it (e.g. FrameView).
-        v.BoundsToScreen(0, 0, out var x0, out var y0);
-        v.BoundsToScreen(v.Bounds.Width, v.Bounds.Height, out var x1, out var y1);
+        var p0 = v.ContentToScreen(new Point(0, 0));
+        var p1 = v.ContentToScreen(new Point(v.ContentSize.Width, v.ContentSize.Height));
 
-        return Rectangle.FromLTRB(x0, y0, x1, y1).IntersectsWith(screenRect);
+        return Rectangle.FromLTRB(p0.X, p0.Y, p1.X, p1.Y).IntersectsWith(screenRect);
     }
 
     /// <summary>
@@ -357,39 +357,6 @@ public static class ViewExtensions
             .OrderBy(v => v is MenuBar ? int.MaxValue : 0)
             .ThenBy(v => v.Frame.Y)
             .ThenBy(v => v.Frame.X);
-    }
-
-    /// <summary>
-    /// Returns <see cref="View.Frame"/> in screen coordinates.  For tests ensure you
-    /// have run <see cref="View.LayoutSubviews"/> and that <paramref name="view"/> has
-    /// a route to <see cref="Application.Top"/> (e.g. is showing or <see cref="Application.Begin(Toplevel)"/>).
-    /// </summary>
-    /// <param name="view">The view you want to translate coordinates for.</param>
-    /// <returns>Screen coordinates of <paramref name="view"/>'s <see cref="View.Frame"/>.</returns>
-    public static Rectangle FrameToScreen(this View view)
-    {
-        if(view.SuperView == null)
-        {
-            return view.Frame;
-        }
-
-        return view.SuperView.BoundsToScreen(view.Frame);
-    }
-
-    /// <summary>
-    /// Converts a region in view-relative coordinates to screen-relative coordinates.
-    /// </summary>
-    private static Rectangle ViewToScreen (this View v, Rectangle region)
-    {
-        v.BoundsToScreen (region.X, region.Y, out var x, out var y);
-        return new Rectangle (x, y, region.Width, region.Height);
-    }
-
-    public static void BoundsToScreen(this View v, int x, int y, out int originalSuperX , out int originalSuperY)
-    {
-        var answer = v.BoundsToScreen(new Rectangle(0, 0, 1, 1));
-        originalSuperX = answer.X;
-        originalSuperY = answer.Y;
     }
 
     private static bool HasNoBorderProperty(this View v)
