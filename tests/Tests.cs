@@ -23,6 +23,12 @@ internal class Tests
         _init = true;
 
         OperationManager.Instance.ClearUndoRedo();
+
+        Application.Begin(new Toplevel
+        {
+            Width = Dim.Fill(),
+            Height = Dim.Fill(),
+        });
     }
 
     [TearDown]

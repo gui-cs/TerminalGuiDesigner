@@ -139,6 +139,7 @@
 	<ItemGroup>
 		<PackageReference Include="Basic.Reference.Assemblies.Net70" Version="1.4.5" />
 		<PackageReference Include="CommandLineParser" Version="2.9.1" />
+		<PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.0" />

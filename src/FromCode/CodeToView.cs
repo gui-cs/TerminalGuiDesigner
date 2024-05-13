@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Basic.Reference.Assemblies;
+using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -156,6 +157,11 @@ public class CodeToView
             MetadataReference.CreateFromFile(typeof(System.Linq.Enumerable).Assembly.Location),
             MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
             MetadataReference.CreateFromFile(typeof(MarshalByValueComponent).Assembly.Location),
+
+            // New assemblies required by Terminal.Gui version 2
+            MetadataReference.CreateFromFile(typeof(Size).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(CanBeNullAttribute).Assembly.Location),
+            
             MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "mscorlib.dll"),
             MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "System.Runtime.dll"),
             MetadataReference.CreateFromFile(coreDir.FullName + Path.DirectorySeparatorChar + "System.Collections.dll"),
