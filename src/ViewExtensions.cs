@@ -260,7 +260,7 @@ public static class ViewExtensions
 
         var point = w.ScreenToContent(m.ScreenPosition);
 
-        var hit = ApplicationExtensions.FindDeepestView(w, m.X, m.Y);
+        var hit = View.FindDeepestView(w, m.Position);
 
         if (hit != null && hit.GetType().Name.Equals("TabRowView"))
         {
@@ -284,10 +284,10 @@ public static class ViewExtensions
             }
 
             isBorder =
-                m.X == screenFrame.X + screenFrame.Width - 1 ||
-                m.X == screenFrame.X ||
-                m.Y == screenFrame.Y + screenFrame.Height - 1 ||
-                m.Y == screenFrame.Y;
+                m.Position.X == screenFrame.X + screenFrame.Width - 1 ||
+                m.Position.X == screenFrame.X ||
+                m.Position.Y == screenFrame.Y + screenFrame.Height - 1 ||
+                m.Position.Y == screenFrame.Y;
         }
         else
         {
@@ -316,7 +316,7 @@ public static class ViewExtensions
         // TODO: maybe this should use Frame instead? Currently this will not let you drag box
         // selection over the border of a container to select it (e.g. FrameView).
         var p0 = v.ContentToScreen(new Point(0, 0));
-        var p1 = v.ContentToScreen(new Point(v.ContentSize.Width, v.ContentSize.Height));
+        var p1 = v.ContentToScreen(new Point(v.ContentSize.Value.Width, v.ContentSize.Value.Height));
 
         return Rectangle.FromLTRB(p0.X, p0.Y, p1.X, p1.Y).IntersectsWith(screenRect);
     }

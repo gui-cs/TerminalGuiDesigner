@@ -13,8 +13,8 @@ internal class ScrollViewTests : Tests
         Assert.Multiple( ( ) =>
         {
             Assert.That( scrollViewIn, Is.Not.SameAs( scrollViewOut ) );
-            Assert.That( scrollViewIn.ContentSize.Width, Is.EqualTo( width ) );
-            Assert.That( scrollViewIn.ContentSize.Height, Is.EqualTo( height ) );
+            Assert.That( scrollViewIn.ContentSize.Value.Width, Is.EqualTo( width ) );
+            Assert.That( scrollViewIn.ContentSize.Value.Height, Is.EqualTo( height ) );
         } );
     }
 

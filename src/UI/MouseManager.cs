@@ -72,7 +72,7 @@ public class MouseManager
             {
                 // start dragging a selection box
                 this.selectionContainer = drag;
-                this.selectionStart = new Point(m.X, m.Y);
+                this.selectionStart = m.Position;
             }
 
             // if nothing is going on yet
@@ -121,7 +121,7 @@ public class MouseManager
         if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && this.selectionStart != null)
         {
             // move selection box to new mouse position
-            this.selectionEnd = new Point(m.X, m.Y);
+            this.selectionEnd = m.Position;
             viewBeingEdited.View.SetNeedsDisplay();
 
             // BUG: Method is gone, will this functionality work still without it?
