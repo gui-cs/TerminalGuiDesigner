@@ -184,8 +184,7 @@ public static class PosExtensions
 
         if (p.IsRelative(out var posView))
         {
-            var fTarget = posView.GetType().GetField("Target") ?? throw new Exception("PosView was missing expected field 'Target'");
-            View view = (View?)fTarget.GetValue(posView) ?? throw new Exception("PosView had a null 'Target' view");
+            View view = posView.Target;
 
             relativeTo = knownDesigns.FirstOrDefault(d => d.View == view);
 
@@ -195,8 +194,7 @@ public static class PosExtensions
             {
                 return false;
             }
-
-            var fSide = posView.GetType().GetField("side", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("PosView was missing expected field 'side'");
+            var fSide = posView.GetType().GetField("_side", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("PosView was missing expected field 'side'");
             var iSide = (int?)fSide.GetValue(posView)
                 ?? throw new Exception("Expected PosView property 'side' to be of Type int");
 
@@ -207,21 +205,6 @@ public static class PosExtensions
         return false;
     }
 
-    /// <summary>
-    /// Returns true if <paramref name="p"/> is the summation or subtraction of two
-    /// other <see cref="Pos"/>.
-    /// </summary>
-    /// <param name="p"><see cref="Pos"/> to classify.</param>
-    /// <returns>True if <paramref name="p"/> is a PosCombine.</returns>
-    public static bool IsCombine( [NotNullWhen( true )] Pos? p )
-    {
-        if ( p == null )
-        {
-            return false;
-        }
-
-        return p.GetType( ).Name == "PosCombine";
-    }
 
     /// <inheritdoc cref="IsCombine(Pos)"/>
     /// <param name="p"><see cref="Pos"/> to classify.</param>
@@ -231,16 +214,11 @@ public static class PosExtensions
     /// <returns>True if <paramref name="p"/> is PosCombine.</returns>
     public static bool IsCombine(this Pos? p, out Pos left, out Pos right, out bool add)
     {
-        if (IsCombine(p))
+        if (p is Pos.PosCombine combine)
         {
-            var fLeft = p.GetType().GetField("_left", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field missing from PosCombine");
-            left = fLeft.GetValue(p) as Pos ?? throw new Exception("Expected field '_left' of PosCombine to be a Pos");
-
-            var fRight = p.GetType().GetField("_right", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field missing from PosCombine");
-            right = fRight.GetValue(p) as Pos ?? throw new Exception("Expected field '_right' of PosCombine to be a Pos");
-
-            var fAdd = p.GetType().GetField("_add", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field missing from PosCombine");
-            add = fAdd.GetValue(p) as bool? ?? throw new Exception("Expected field '_add' of PosCombine to be a bool");
+            left = combine._left;
+            right = combine._right;
+            add = combine._add;
 
             return true;
         }
@@ -380,7 +358,7 @@ public static class PosExtensions
         };
     }
 
-    private static bool IsRelative(this Pos? p, out Pos posView)
+    private static bool IsRelative(this Pos? p, [NotNullWhen(true)]out Pos.PosView? posView)
     {
         // Terminal.Gui will often use Pos.Combine with RHS of 0 instead of just PosView alone
         if (p != null && p.IsCombine(out var left, out var right, out _))
@@ -391,13 +369,13 @@ public static class PosExtensions
             }
         }
 
-        if (p != null && p.GetType().Name == "PosView")
+        if (p is Pos.PosView pv)
         {
-            posView = p;
+            posView = pv;
             return true;
         }
 
-        posView = 0;
+        posView = null;
         return false;
     }
 
