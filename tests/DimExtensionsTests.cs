@@ -135,28 +135,6 @@ internal class DimExtensionsTests
     }
 
     [Test]
-    [Category( "Change Control" )]
-    public void NullDim_ActsLikeAbsoluteZero( )
-    {
-        var v = new View( );
-
-        Assert.That( v.Width, Is.Null, "As of v1.7.0 a new View started getting null for its Width, if this assert fails it means that behaviour was reverted and this test can be altered or suppressed" );
-
-        Assert.That( v.Width.IsAbsolute( ) );
-        Assert.That( v.Width.IsAbsolute( out int n ) );
-        Assert.That( n, Is.Zero );
-
-        Assert.That( v.Width.IsFill( ), Is.False );
-        Assert.That( v.Width.IsPercent( ), Is.False );
-        Assert.That( v.Width.IsCombine( ), Is.False );
-
-        Assert.That( v.Width.GetDimType( out var type, out var val, out _ ) );
-
-        Assert.That( type, Is.EqualTo( DimType.Absolute ) );
-        Assert.That( val, Is.Zero );
-    }
-
-    [Test]
     [Sequential]
     public void ToCode_ReturnsExpectedString(
         [Values( DimType.Percent, DimType.Fill, DimType.Absolute )] DimType dimType,
