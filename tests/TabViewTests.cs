@@ -301,8 +301,8 @@ internal class TabViewTests : Tests
         Assume.That( addOperationSucceeded );
 
         // Give both tabs the same title text
-        tvOut.Tabs.ElementAt( 0 ).Text = tabText;
-        tvOut.Tabs.ElementAt( 1 ).Text = tabText;
+        tvOut.Tabs.ElementAt( 0 ).DisplayText = tabText;
+        tvOut.Tabs.ElementAt( 1 ).DisplayText = tabText;
 
         viewToCode.GenerateDesignerCs( designOut, typeof( Dialog ) );
 
@@ -320,8 +320,8 @@ internal class TabViewTests : Tests
         Assert.Multiple( ( ) =>
         {
             Assert.That( tvIn, Is.Not.SameAs( tvOut ) );
-            Assert.That( tvIn.Tabs.ElementAt( 0 ).Text, Is.EqualTo( tabText ) );
-            Assert.That( tvIn.Tabs.ElementAt( 1 ).Text, Is.EqualTo( tabText ) );
+            Assert.That( tvIn.Tabs.ElementAt( 0 ).DisplayText, Is.EqualTo( tabText ) );
+            Assert.That( tvIn.Tabs.ElementAt( 1 ).DisplayText, Is.EqualTo( tabText ) );
         } );
     }
 

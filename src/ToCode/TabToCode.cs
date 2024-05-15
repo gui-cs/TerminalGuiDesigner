@@ -44,7 +44,7 @@ public class TabToCode : ToCodeBase
             tabName,
             typeof(Tab));
 
-        this.AddPropertyAssignment(args, $"{tabName}.{nameof(Tab.DisplayText)}", this.tab.Text.ToCodePrimitiveExpression());
+        this.AddPropertyAssignment(args, $"{tabName}.{nameof(Tab.DisplayText)}", this.tab.DisplayText.ToCodePrimitiveExpression());
         this.AddPropertyAssignment(args, $"{tabName}.{nameof(Tab.View)}", new CodeSnippetExpression("new View()"));            
 
         // make the Tab.View Dim.Fill
