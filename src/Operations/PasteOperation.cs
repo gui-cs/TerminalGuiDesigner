@@ -232,7 +232,7 @@ public class PasteOperation : Operation
         // add a new Tab for each one in the source
         foreach (var copyTab in copy.Tabs)
         {
-            var tab = pasted.AddEmptyTab(copyTab.Text?.ToString() ?? Operation.Unnamed);
+            var tab = pasted.AddEmptyTab(copyTab.DisplayText?.ToString() ?? Operation.Unnamed);
 
             // copy the tab contents
             copy.SelectedTab = copyTab;
