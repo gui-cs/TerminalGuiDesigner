@@ -21,7 +21,7 @@ internal class ScrollViewTests : Tests
     [Test]
     public void TestRoundTrip_PreserveContentViews( [Values( "blarggg" )] string text, [Values( "myLbl" )] string fieldName )
     {
-        using Label lbl = new (){ Text = text };
+        using Label lbl = new() { Text = text, Width = 7, Height = 1 };
         using ScrollView scrollViewIn = RoundTrip<View, ScrollView>(
             ( d, _ ) =>
             {
