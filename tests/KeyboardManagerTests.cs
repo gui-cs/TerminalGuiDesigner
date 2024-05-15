@@ -110,8 +110,8 @@ internal class KeyboardManagerTests : Tests
         Assert.That( string.IsNullOrEmpty( v.Text ) );
 
         mgr!.HandleKey( v, Key.B.WithShift);
-        mgr.HandleKey( v, (Key)'a');
-        mgr.HandleKey( v, (Key)'d');
+        mgr.HandleKey( v, Key.A);
+        mgr.HandleKey( v, Key.D);
 
         Assert.That( v.Text, Is.EqualTo( "Bad" ) );
 

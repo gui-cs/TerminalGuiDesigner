@@ -292,13 +292,11 @@ public class KeyboardManager
             newString = str.Length == 1 ? string.Empty : str.Substring(0, str.Length - 1);
             return true;
         }
-        else
-        {
-            var ch = (char)keystroke;
-            newString += ch;
 
-            return true;
-        }
+        var ch = keystroke.ToString().ToCharArray()[0];
+        newString += ch;
+
+        return true;
     }
 
     private bool IsActionableKey(Key keystroke)
@@ -316,7 +314,7 @@ public class KeyboardManager
 
         var punctuation = "\"\\/':;%^&*~`!@#.,? ()-+{}<>=_][|";
 
-        var ch = (char)keystroke;
+        var ch = keystroke.ToString().ToCharArray()[0];
 
         return punctuation.Contains(ch) || char.IsLetterOrDigit(ch);
     }
