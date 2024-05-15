@@ -18,7 +18,7 @@ public class AddTabOperation : AddOperation<TabView, Tab>
          : base(
             (t) => t.Tabs.ToArray(),
             (v, a) => v.ReOrderTabs(a),
-            tab => tab.Text.ToString() ?? "unnamed tab",
+            tab => tab.DisplayText.ToString() ?? "unnamed tab",
             AddTab,
             design,
             name)
