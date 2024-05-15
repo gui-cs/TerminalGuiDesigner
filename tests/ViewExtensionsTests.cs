@@ -101,7 +101,7 @@ internal class ViewExtensionsTests : Tests
         ClassicAssert.IsTrue(isBorder);
 
         // 1,1
-        ClassicAssert.AreSame(f, w.HitTest(new MouseEvent {Position = new Point(13, 1) }, out isBorder, out _),
+        ClassicAssert.AreSame(f, w.HitTest(new MouseEvent {Position = new Point(1, 1) }, out isBorder, out _),
             "Expected 1,1 to be the Frame border (its client area should start at 1,1)");
         ClassicAssert.IsTrue(isBorder);
     }

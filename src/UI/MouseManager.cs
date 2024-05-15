@@ -81,7 +81,7 @@ public class MouseManager
             {
                 var parent = drag.SuperView;
 
-                var dest = parent.ScreenToContent(m.ScreenPosition);
+                var dest = parent.ScreenToContent(m.Position);
 
                 if (isLowerRight)
                 {
@@ -132,7 +132,7 @@ public class MouseManager
         // continue dragging a view
         if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && this.dragOperation?.BeingDragged.View?.SuperView != null)
         {
-            var dest = this.dragOperation?.BeingDragged.View.SuperView.ScreenToContent(m.ScreenPosition);
+            var dest = this.dragOperation?.BeingDragged.View.SuperView.ScreenToContent(m.Position);
 
             if (dest != null && this.dragOperation != null)
             {
@@ -148,7 +148,7 @@ public class MouseManager
             && this.resizeOperation != null
             && this.resizeOperation.BeingResized.View.SuperView != null)
         {
-            var dest = this.resizeOperation.BeingResized.View.SuperView.ScreenToContent(m.ScreenPosition);
+            var dest = this.resizeOperation.BeingResized.View.SuperView.ScreenToContent(m.Position);
 
             this.resizeOperation.ContinueResize(dest);
 
