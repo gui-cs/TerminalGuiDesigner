@@ -258,7 +258,7 @@ public static class ViewExtensions
             v.Visible = false;
         }
 
-        var point = w.ScreenToContent(m.ScreenPosition);
+        var point = w.ScreenToContent(m.Position);
 
         var hit = View.FindDeepestView(w, m.Position);
 
@@ -301,7 +301,7 @@ public static class ViewExtensions
             v.Visible = true;
         }
 
-        return hit;
+        return hit is Adornment a ? a.Parent : hit;
     }
 
     /// <summary>
@@ -361,12 +361,7 @@ public static class ViewExtensions
 
     private static bool HasNoBorderProperty(this View v)
     {
-        if (v.Border == null)
-        {
-            return true;
-        }
-
-        if (v.Border.BorderStyle == LineStyle.None)
+        if (v.Border == null || v.BorderStyle == LineStyle.None)
         {
             return true;
         }

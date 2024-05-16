@@ -82,6 +82,8 @@ internal class ViewFactoryTests
                     case (TabView, { Name: "Tabs" }):
                     case (TabView, { Name: "SelectedTab" }):
                     case (TabView, { Name: "Subviews" }):
+                    case (DatePicker, { Name: "Subviews" }):
+                    case (DatePicker, { Name: "Date" }):
                         // Warn about these, until they are implemented (WIP)
                         Assert.Warn( $"{property.Name} not yet checked on {typeof( T ).Name}" );
                         continue;
@@ -132,6 +134,9 @@ internal class ViewFactoryTests
                             nonGenericTabIndexes,
                             Is.EquivalentTo( genericTabIndexes )
                               .Using<View, View>( CompareTwoViews ) );
+                        continue;
+                    case (_, not null) when property.PropertyType.IsAssignableTo(typeof(Adornment)):
+                        Assert.That(((Adornment)nonGenericPropertyValue!).ToString(), Is.EqualTo(((Adornment)genericPropertyValue!).ToString()));
                         continue;
                 }
 

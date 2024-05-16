@@ -651,6 +651,8 @@ public class Design
 
         yield return this.CreateSuppressedProperty(nameof(this.View.Visible), true);
 
+        yield return this.CreateSuppressedProperty(nameof(this.View.Arrangement), ViewArrangement.Movable);
+
         yield return new ColorSchemeProperty(this);
 
         // its important that this comes before Text because
