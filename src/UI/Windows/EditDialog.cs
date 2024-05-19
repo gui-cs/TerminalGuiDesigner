@@ -69,22 +69,21 @@ public class EditDialog : Window
         };
         btnClose.MouseClick += (s, e) => Application.RequestStop();
 
+        this.list.KeyUp += (s, e) =>
+        {
+
+            if (e == Key.Enter && this.list.HasFocus)
+            {
+                this.SetProperty(false);
+                e.Handled = true;
+            }
+        };
+
         this.Add(this.list);
         this.Add(btnSet);
         this.Add(btnClose);
     }
 
-    /// <inheritdoc/>
-    public override bool OnKeyDown(Key Key)
-    {
-        if (Key == Key.Enter && this.list.HasFocus)
-        {
-            this.SetProperty(false);
-            return true;
-        }
-
-        return base.OnKeyDown(Key);
-    }
 
     internal static bool SetPropertyToNewValue(Design design, Property p, object? oldValue)
     {

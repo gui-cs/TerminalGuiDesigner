@@ -159,6 +159,17 @@ public class BigListBox<T>
         this.callback = Application.AddTimeout(TimeSpan.FromMilliseconds(100), this.Timer);
 
         this.listView.FocusFirst();
+
+        this.listView.KeyUp += ListView_KeyUp;
+    }
+
+    private void ListView_KeyUp(object? sender, Key e)
+    {
+        if(e == Key.Enter)
+        {
+            Accept();
+            e.Handled = true;
+        }
     }
 
     /// <summary>
