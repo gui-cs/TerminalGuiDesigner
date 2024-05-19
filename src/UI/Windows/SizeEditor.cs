@@ -39,7 +39,7 @@ public partial class SizeEditor
         tfWidth.Text = s.Width.ToString();
         tfHeight.Text = s.Height.ToString();
 
-        btnOk.MouseClick += (s, e) =>
+        btnOk.Accept += (s, e) =>
         {
             try
             {
@@ -55,7 +55,7 @@ public partial class SizeEditor
             RequestStop();
         };
 
-        btnCancel.MouseClick += (s, e) =>
+        btnCancel.Accept += (s, e) =>
         {
             Cancelled = true;
             RequestStop();

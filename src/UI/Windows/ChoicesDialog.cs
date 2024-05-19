@@ -59,7 +59,7 @@ public partial class ChoicesDialog
             
             var i2 = i;
 
-            buttons[i].MouseClick += (s,e) => {
+            buttons[i].Accept += (s,e) => {
                 Result = i2;
                 Application.RequestStop();
             };

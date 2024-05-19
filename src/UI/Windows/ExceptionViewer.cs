@@ -37,12 +37,12 @@ public class ExceptionViewer
             IsDefault = true
         };
 
-        btnOk.MouseClick += (s, e) => Application.RequestStop();
+        btnOk.Accept += (s, e) => Application.RequestStop();
         var btnStack = new Button()
         {
             Text = "Stack"
         };
-        btnStack.MouseClick += (s, e) =>
+        btnStack.Accept += (s, e) =>
         {
             // flip between stack / no stack
             textView.Text = GetExceptionText(errorText, exception, toggleStack);

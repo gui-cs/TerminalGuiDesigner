@@ -49,8 +49,8 @@ public partial class PosEditor : Dialog {
 
         rgPosType.KeyDown += RgPosType_KeyPress;
 
-        btnOk.MouseClick += BtnOk_Clicked;
-        btnCancel.MouseClick += BtnCancel_Clicked;
+        btnOk.Accept += BtnOk_Clicked;
+        btnCancel.Accept += BtnCancel_Clicked;
         Cancelled = true;
         Modal = true;
 

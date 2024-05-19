@@ -39,8 +39,8 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.genericTypeArgument = genericTypeArgument;
             this.sliderOptionType = typeof(SliderOption<>).MakeGenericType(this.genericTypeArgument);
 
-            btnOk.MouseClick += BtnOk_Clicked;
-            btnCancel.MouseClick += BtnCancel_Clicked;
+            btnOk.Accept += BtnOk_Clicked;
+            btnCancel.Accept += BtnCancel_Clicked;
 
             lblType.Text = $"({genericTypeArgument.Name})";
 

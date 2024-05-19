@@ -94,7 +94,7 @@ public class BigListBox<T>
             IsDefault = true,
             Y = Pos.Bottom(this.listView),
         };
-        btnOk.MouseClick += (s, e) =>
+        btnOk.Accept += (s, e) =>
         {
             this.Accept();
         };
@@ -104,7 +104,7 @@ public class BigListBox<T>
             Text = "Cancel",
             Y = Pos.Bottom(this.listView),
         };
-        btnCancel.MouseClick += (s, e) => Application.RequestStop();
+        btnCancel.Accept += (s, e) => Application.RequestStop();
 
         if (addSearch)
         {
@@ -159,18 +159,8 @@ public class BigListBox<T>
         this.callback = Application.AddTimeout(TimeSpan.FromMilliseconds(100), this.Timer);
 
         this.listView.FocusFirst();
-
-        this.listView.KeyUp += ListView_KeyUp;
     }
 
-    private void ListView_KeyUp(object? sender, Key e)
-    {
-        if(e == Key.Enter)
-        {
-            Accept();
-            e.Handled = true;
-        }
-    }
 
     /// <summary>
     /// Gets the value the user chose upon exiting.
