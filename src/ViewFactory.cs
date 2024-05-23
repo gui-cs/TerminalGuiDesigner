@@ -216,7 +216,7 @@ public static class ViewFactory
                 SetDefaultDimensions(newView, width ?? 16, height ?? 5);
                 break;
             case ScrollView sv:
-                sv.ContentSize = new Size( 20, 10 );
+                sv.SetContentSize(new Size( 20, 10 ));
                 SetDefaultDimensions(newView, width ?? 10, height ?? 5 );
                 break;
             case Label l:
@@ -252,8 +252,8 @@ public static class ViewFactory
 
         static void SetDefaultDimensions( T v, int width = 5, int height = 1 )
         {
-            v.Width = Math.Max( v.ContentSize.Value.Width, width );
-            v.Height = Math.Max( v.ContentSize.Value.Height, height );
+            v.Width = Math.Max( v.ContentSize.Width, width );
+            v.Height = Math.Max( v.ContentSize.Height, height );
         }
     }
 

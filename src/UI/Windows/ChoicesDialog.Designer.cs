@@ -53,8 +53,8 @@ public partial class ChoicesDialog : Terminal.Gui.Window {
             new Terminal.Gui.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.Yellow)
             );
 
-        this.Width = Dim.Percent(85f);
-        this.Height = Dim.Percent(85f);
+        this.Width = Dim.Percent(85);
+        this.Height = Dim.Percent(85);
         this.X = Pos.Center();
         this.Y = Pos.Center();
         this.ColorScheme = this.dialogBackground;

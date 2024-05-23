@@ -149,10 +149,10 @@ public partial class ChoicesDialog
             var rightDefault = Driver != null ? ConfigurationManager.Glyphs.RightDefaultIndicator : new Rune('>');
 
             // draw the 'end' button symbol one in
-            btn.AddRune(bounds.Value.Width - 3, 0, rightDefault);
+            btn.AddRune(bounds.Width - 3, 0, rightDefault);
         }
 
-        btn.AddRune(bounds.Value.Width - 2, 0, new System.Text.Rune(']'));
+        btn.AddRune(bounds.Width - 2, 0, new System.Text.Rune(']'));
         btn.AddRune(0, 0, new System.Text.Rune('['));
 
         var backgroundColor = backgroundScheme.Normal.Background;
@@ -161,7 +161,7 @@ public partial class ChoicesDialog
         Driver.SetAttribute(new Terminal.Gui.Attribute(Color.Black, backgroundColor));
 
         // end shadow (right)
-        btn.AddRune(bounds.Value.Width - 1, 0, new System.Text.Rune('▄'));
+        btn.AddRune(bounds.Width - 1, 0, new System.Text.Rune('▄'));
 
         // leave whitespace in lower left in parent/default background color
         Driver.SetAttribute(new Terminal.Gui.Attribute(Color.Black, backgroundColor));
@@ -171,7 +171,7 @@ public partial class ChoicesDialog
         Driver.SetAttribute(new Terminal.Gui.Attribute(backgroundColor, Color.Black));
 
         // underline shadow                
-        for (int x = 1; x < bounds.Value.Width; x++)
+        for (int x = 1; x < bounds.Width; x++)
         {
             btn.AddRune(x, 1, new System.Text.Rune('▄'));
         }

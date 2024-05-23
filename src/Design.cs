@@ -673,7 +673,7 @@ public class Design
             yield return this.CreateProperty(nameof(Slider.Orientation));
             yield return this.CreateProperty(nameof(Slider.RangeAllowSingle));
             yield return this.CreateProperty(nameof(Slider.AllowEmpty));
-            yield return this.CreateProperty(nameof(Slider.InnerSpacing));
+            yield return this.CreateProperty(nameof(Slider.MinimumInnerSpacing));
             yield return this.CreateProperty(nameof(Slider.LegendsOrientation));
             yield return this.CreateProperty(nameof(Slider.ShowLegends));
             yield return this.CreateProperty(nameof(Slider.ShowEndSpacing));

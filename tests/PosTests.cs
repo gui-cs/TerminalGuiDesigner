@@ -23,7 +23,7 @@ internal class PosTests : Tests
                 };
                 return new TestCaseData[]
                 {
-                    new( Pos.At( 50 ) + offset, $"{50 + offset}", d, v ),
+                    new( Pos.Absolute( 50 ) + offset, $"{50 + offset}", d, v ),
                     new( Pos.AnchorEnd( 5 ) + offset, $"Pos.AnchorEnd(5){offsetString}", d, v ),
                     new( Pos.Center( ) + offset, $"Pos.Center(){offsetString}", d, v ),
                     new( Pos.Percent( 50 ) + offset, $"Pos.Percent(50f){offsetString}", d, v ),
@@ -47,7 +47,7 @@ internal class PosTests : Tests
 
             return new TestCaseData[]
             {
-                new ExpectedTrueTestCaseData( Pos.At( 50 ), 0, null ),
+                new ExpectedTrueTestCaseData( Pos.Absolute( 50 ), 0, null ),
                 new ExpectedTrueTestCaseData( Pos.AnchorEnd( 5 ), 0, null ),
                 new ExpectedTrueTestCaseData( Pos.Center( ), 0, null ),
                 new ExpectedTrueTestCaseData( Pos.Percent( 5 ), 0, null ),
@@ -58,8 +58,8 @@ internal class PosTests : Tests
                 new ExpectedTrueTestCaseData( Pos.Y( v ), 0, d ),
                 new ExpectedTrueTestCaseData( Pos.X( v ), 0, d ),
                 // Now with an offset
-                new ExpectedTrueTestCaseData( Pos.At( 50 ) + 5, 0, null ),
-                new ExpectedTrueTestCaseData( Pos.At( 50 ) - 5, 0, null ),
+                new ExpectedTrueTestCaseData( Pos.Absolute( 50 ) + 5, 0, null ),
+                new ExpectedTrueTestCaseData( Pos.Absolute( 50 ) - 5, 0, null ),
                 new ExpectedTrueTestCaseData( Pos.AnchorEnd( 5 ) + 5, 5, null ),
                 new ExpectedTrueTestCaseData( Pos.AnchorEnd( 5 ) - 5, -5, null ),
                 new ExpectedTrueTestCaseData( Pos.Center( ) + 5, +5, null ),
@@ -91,7 +91,7 @@ internal class PosTests : Tests
 
             return new TestCaseData[]
             {
-                new ExpectedTrueTestCaseData( Pos.At( 50 ), PosType.Absolute, null ),
+                new ExpectedTrueTestCaseData( Pos.Absolute( 50 ), PosType.Absolute, null ),
                 new ExpectedTrueTestCaseData( Pos.AnchorEnd( 5 ), PosType.AnchorEnd, null ),
                 new ExpectedTrueTestCaseData( Pos.Center( ), PosType.Center, null ),
                 new ExpectedTrueTestCaseData( Pos.Percent( 5 ), PosType.Percent, null ),
@@ -114,7 +114,7 @@ internal class PosTests : Tests
 
             return new TestCaseData[]
             {
-                new ExpectedTrueTestCaseData( Pos.At( 50 ), 50, null ),
+                new ExpectedTrueTestCaseData( Pos.Absolute( 50 ), 50, null ),
                 new ExpectedTrueTestCaseData( Pos.AnchorEnd( 5 ), 5, null ),
                 new ExpectedTrueTestCaseData( Pos.Center( ), 0, null ),
                 new ExpectedTrueTestCaseData( Pos.Percent( 5 ), 5, null ),
@@ -137,7 +137,7 @@ internal class PosTests : Tests
 
             return new TestCaseData[]
             {
-                new ExpectedTrueTestCaseData( Pos.At( 50 ) ),
+                new ExpectedTrueTestCaseData( Pos.Absolute( 50 ) ),
                 new ExpectedTrueTestCaseData( null ),
                 new ExpectedFalseTestCaseData( Pos.AnchorEnd( 5 ) ),
                 new ExpectedFalseTestCaseData( Pos.Center( ) ),
@@ -158,7 +158,7 @@ internal class PosTests : Tests
         {
             return new TestCaseData[]
             {
-                new ExpectedTrueTestCaseData( Pos.At( 50 ), 50 ),
+                new ExpectedTrueTestCaseData( Pos.Absolute( 50 ), 50 ),
                 new ExpectedFalseTestCaseData( Pos.AnchorEnd( 5 ), 0 ),
                 new ExpectedFalseTestCaseData( Pos.Center( ), 0 ),
                 new ExpectedFalseTestCaseData( Pos.Percent( 5 ), 0 )
@@ -175,7 +175,7 @@ internal class PosTests : Tests
 
             return new TestCaseData[]
             {
-                new ExpectedFalseTestCaseData( Pos.At( 50 ) ),
+                new ExpectedFalseTestCaseData( Pos.Absolute( 50 ) ),
                 new ExpectedFalseTestCaseData( null ),
                 new ExpectedTrueTestCaseData( Pos.AnchorEnd( ) ),
                 new ExpectedTrueTestCaseData( Pos.AnchorEnd( 5 ) ),
@@ -200,7 +200,7 @@ internal class PosTests : Tests
 
             return new TestCaseData[]
             {
-                new ExpectedFalseTestCaseData( Pos.At( 50 ) ),
+                new ExpectedFalseTestCaseData( Pos.Absolute( 50 ) ),
                 new ExpectedFalseTestCaseData( null ),
                 new ExpectedFalseTestCaseData( Pos.AnchorEnd( ) ),
                 new ExpectedFalseTestCaseData( Pos.AnchorEnd( 5 ) ),
@@ -225,7 +225,7 @@ internal class PosTests : Tests
 
             return new TestCaseData[]
             {
-                new ExpectedFalseTestCaseData( Pos.At( 50 ), 0 ),
+                new ExpectedFalseTestCaseData( Pos.Absolute( 50 ), 0 ),
                 new ExpectedTrueTestCaseData( Pos.AnchorEnd( ), 0 ),
                 new ExpectedTrueTestCaseData( Pos.AnchorEnd( 5 ), 5 ),
                 new ExpectedFalseTestCaseData( Pos.Center( ), 0 ),
@@ -249,7 +249,7 @@ internal class PosTests : Tests
 
             return new TestCaseData[]
             {
-                new ExpectedFalseTestCaseData( Pos.At( 50 ) ),
+                new ExpectedFalseTestCaseData( Pos.Absolute( 50 ) ),
                 new ExpectedFalseTestCaseData( null ),
                 new ExpectedFalseTestCaseData( Pos.AnchorEnd( 5 ) ),
                 new ExpectedFalseTestCaseData( Pos.Center( ) ),
@@ -270,7 +270,7 @@ internal class PosTests : Tests
         {
             return new TestCaseData[]
             {
-                new ExpectedFalseTestCaseData( Pos.At( 50 ), 0 ),
+                new ExpectedFalseTestCaseData( Pos.Absolute( 50 ), 0 ),
                 new ExpectedFalseTestCaseData( Pos.AnchorEnd( 5 ), 0 ),
                 new ExpectedFalseTestCaseData( Pos.Center( ), 0 ),
                 new ExpectedTrueTestCaseData( Pos.Percent( 5 ), 5 )
@@ -287,7 +287,7 @@ internal class PosTests : Tests
 
             return new TestCaseData[]
             {
-                new ExpectedFalseTestCaseData( Pos.At( 50 ) ),
+                new ExpectedFalseTestCaseData( Pos.Absolute( 50 ) ),
                 new ExpectedFalseTestCaseData( null ),
                 new ExpectedFalseTestCaseData( Pos.AnchorEnd( 5 ) ),
                 new ExpectedFalseTestCaseData( Pos.Center( ) ),
@@ -311,7 +311,7 @@ internal class PosTests : Tests
 
             return new TestCaseData[]
             {
-                new ExpectedFalseTestCaseData( Pos.At( 50 ), null, Side.Left ),
+                new ExpectedFalseTestCaseData( Pos.Absolute( 50 ), null, Side.Left ),
                 new ExpectedFalseTestCaseData( Pos.AnchorEnd( 5 ), null, Side.Left ),
                 new ExpectedFalseTestCaseData( Pos.Center( ), null, Side.Left ),
                 new ExpectedFalseTestCaseData( Pos.Percent( 5 ), null, Side.Left ),

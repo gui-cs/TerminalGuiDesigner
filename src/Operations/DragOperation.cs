@@ -202,13 +202,13 @@ public partial class DragOperation : Operation
         if (mem.Design.View.X.IsAbsolute() &&
             mem.OriginalX.IsAbsolute(out var originX))
         {
-            mem.Design.GetDesignableProperty("X")?.SetValue(Pos.At(originX + (this.DestinationX - dx)));
+            mem.Design.GetDesignableProperty("X")?.SetValue(Pos.Absolute(originX + (this.DestinationX - dx)));
         }
 
         if (mem.Design.View.Y.IsAbsolute() &&
             mem.OriginalY.IsAbsolute(out var originY))
         {
-            mem.Design.GetDesignableProperty("Y")?.SetValue(Pos.At(originY + (this.DestinationY - dy)));
+            mem.Design.GetDesignableProperty("Y")?.SetValue(Pos.Absolute(originY + (this.DestinationY - dy)));
         }
 
         return true;

@@ -212,20 +212,20 @@ public static class PosExtensions
     /// <param name="right">The right hand operand of the summation/subtraction.</param>
     /// <param name="add"><see langword="true"/> if addition or <see langword="false"/> if subtraction.</param>
     /// <returns>True if <paramref name="p"/> is PosCombine.</returns>
-    public static bool IsCombine(this Pos? p, out Pos left, out Pos right, out bool add)
+    public static bool IsCombine(this Pos? p, out Pos left, out Pos right, out AddOrSubtract add)
     {
-        if (p is Pos.PosCombine combine)
+        if (p is PosCombine combine)
         {
-            left = combine._left;
-            right = combine._right;
-            add = combine._add;
+            left = combine.Left;
+            right = combine.Right;
+            add = combine.Add;
 
             return true;
         }
 
         left = 0;
         right = 0;
-        add = false;
+        add = AddOrSubtract.Add;
         return false;
     }
 
@@ -290,7 +290,7 @@ public static class PosExtensions
             // e.g. Pos.Percent(25) + 5 is supported but Pos.Percent(5) + Pos.Percent(10) is not
             if (right.IsAbsolute(out int rhsVal))
             {
-                offset = add ? rhsVal : -rhsVal;
+                offset = add == AddOrSubtract.Add ? rhsVal : -rhsVal;
                 GetPosType(left, knownDesigns, out type, out value, out relativeTo, out side, out _);
                 return true;
             }
@@ -358,7 +358,7 @@ public static class PosExtensions
         };
     }
 
-    private static bool IsRelative(this Pos? p, [NotNullWhen(true)]out Pos.PosView? posView)
+    private static bool IsRelative(this Pos? p, [NotNullWhen(true)]out PosView? posView)
     {
         // Terminal.Gui will often use Pos.Combine with RHS of 0 instead of just PosView alone
         if (p != null && p.IsCombine(out var left, out var right, out _))
@@ -369,7 +369,7 @@ public static class PosExtensions
             }
         }
 
-        if (p is Pos.PosView pv)
+        if (p is PosView pv)
         {
             posView = pv;
             return true;

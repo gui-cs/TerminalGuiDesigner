@@ -33,7 +33,7 @@ internal class OperationManagerTests
         Assume.That( OperationManager.Instance.UndoStackSize, Is.Zero );
         Assume.That( OperationManager.Instance.RedoStackSize, Is.Zero );
 
-        OperationManager.Instance.Do( new SetPropertyOperation( lblDesign, propertyBeingChanged, propertyBeingChanged.GetValue( ), Pos.At( 10 ) ) );
+        OperationManager.Instance.Do( new SetPropertyOperation( lblDesign, propertyBeingChanged, propertyBeingChanged.GetValue( ), Pos.Absolute( 10 ) ) );
         Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
         Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
 
@@ -41,7 +41,7 @@ internal class OperationManagerTests
         Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 2 ) );
         Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
 
-        OperationManager.Instance.Do( new SetPropertyOperation( lblDesign, propertyBeingChanged, propertyBeingChanged.GetValue( ), Pos.At( 10 ) ) );
+        OperationManager.Instance.Do( new SetPropertyOperation( lblDesign, propertyBeingChanged, propertyBeingChanged.GetValue( ), Pos.Absolute( 10 ) ) );
         Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 3 ) );
         Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
 

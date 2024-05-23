@@ -48,8 +48,8 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnAddElement = new Terminal.Gui.Button();
             this.lvElements = new Terminal.Gui.ListView();
             this.frameView = new Terminal.Gui.FrameView();
-            this.Width = Dim.Percent(85f);
-            this.Height = Dim.Percent(85f);
+            this.Width = Dim.Percent(85);
+            this.Height = Dim.Percent(85);
             this.X = Pos.Center();
             this.Y = Pos.Center();
             this.Visible = true;

@@ -55,17 +55,17 @@ internal class ObjectExtensionsTests
 
     private static IEnumerable<object?> Get_ToCodePrimitiveExpression_DoesNotThrowOnSupportedAbsoluteTypes_Cases( )
     {
-        yield return new Dim.DimAbsolute( 10 );
-        yield return new Pos.PosAbsolute( 10 );
+        yield return new DimAbsolute( 10 );
+        yield return new PosAbsolute( 10 );
         yield return null;
     }
 
     private static IEnumerable<object?> Get_ToCodePrimitiveExpression_ThrowsOnUnsupportedNonAbsoluteTypes_Cases( )
     {
-        yield return new Dim.DimFill( 10 );
-        yield return new Dim.DimFactor( 10 );
-        yield return new Pos.PosAnchorEnd( 10 );
-        yield return new Pos.PosFactor( 10 );
-        yield return new Pos.PosCenter( );
+        yield return new DimFill( 10 );
+        yield return new DimPercent( 10 );
+        yield return new PosAnchorEnd( 10 );
+        yield return new DimPercent( 10 );
+        yield return new PosCenter( );
     }
 }

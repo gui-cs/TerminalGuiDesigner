@@ -31,18 +31,18 @@ internal class DragOperationTests : Tests
 
         // drag down 3 lines
         drag.ContinueDrag(new Point(2, 3));
-        ClassicAssert.AreEqual(Pos.At(0), lbl.X);
-        ClassicAssert.AreEqual(Pos.At(3), lbl.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(0), lbl.X);
+        ClassicAssert.AreEqual(Pos.Absolute(3), lbl.Y);
 
         // finalise the operation
         drag.Do();
-        ClassicAssert.AreEqual(Pos.At(0), lbl.X);
-        ClassicAssert.AreEqual(Pos.At(3), lbl.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(0), lbl.X);
+        ClassicAssert.AreEqual(Pos.Absolute(3), lbl.Y);
 
         // now test undoing it
         drag.Undo();
-        ClassicAssert.AreEqual(Pos.At(0), lbl.X);
-        ClassicAssert.AreEqual(Pos.At(0), lbl.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(0), lbl.X);
+        ClassicAssert.AreEqual(Pos.Absolute(0), lbl.Y);
     }
 
     /// <summary>
@@ -68,13 +68,13 @@ internal class DragOperationTests : Tests
         MouseDrag(d, 2, 0, 2, 3);
 
         // finalize the operation
-        ClassicAssert.AreEqual(Pos.At(0), lbl.X);
-        ClassicAssert.AreEqual(Pos.At(3), lbl.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(0), lbl.X);
+        ClassicAssert.AreEqual(Pos.Absolute(3), lbl.Y);
 
         // now test undoing it
         OperationManager.Instance.Undo();
-        ClassicAssert.AreEqual(Pos.At(0), lbl.X);
-        ClassicAssert.AreEqual(Pos.At(0), lbl.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(0), lbl.X);
+        ClassicAssert.AreEqual(Pos.Absolute(0), lbl.Y);
     }
 
 
@@ -106,24 +106,24 @@ internal class DragOperationTests : Tests
 
         // drag down 3 lines
         drag.ContinueDrag(new Point(2, 3));
-        ClassicAssert.AreEqual(Pos.At(0), lbl1.X);
-        ClassicAssert.AreEqual(Pos.At(3), lbl1.Y);
-        ClassicAssert.AreEqual(Pos.At(1), lbl2.X);
-        ClassicAssert.AreEqual(Pos.At(4), lbl2.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(0), lbl1.X);
+        ClassicAssert.AreEqual(Pos.Absolute(3), lbl1.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(1), lbl2.X);
+        ClassicAssert.AreEqual(Pos.Absolute(4), lbl2.Y);
 
         // finalize the operation
         drag.Do();
-        ClassicAssert.AreEqual(Pos.At(0), lbl1.X);
-        ClassicAssert.AreEqual(Pos.At(3), lbl1.Y);
-        ClassicAssert.AreEqual(Pos.At(1), lbl2.X);
-        ClassicAssert.AreEqual(Pos.At(4), lbl2.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(0), lbl1.X);
+        ClassicAssert.AreEqual(Pos.Absolute(3), lbl1.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(1), lbl2.X);
+        ClassicAssert.AreEqual(Pos.Absolute(4), lbl2.Y);
 
         // now test undoing it
         drag.Undo();
-        ClassicAssert.AreEqual(Pos.At(0), lbl1.X);
-        ClassicAssert.AreEqual(Pos.At(0), lbl1.Y);
-        ClassicAssert.AreEqual(Pos.At(1), lbl2.X);
-        ClassicAssert.AreEqual(Pos.At(1), lbl2.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(0), lbl1.X);
+        ClassicAssert.AreEqual(Pos.Absolute(0), lbl1.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(1), lbl2.X);
+        ClassicAssert.AreEqual(Pos.Absolute(1), lbl2.Y);
     }
 
     [Test]
@@ -166,8 +166,8 @@ internal class DragOperationTests : Tests
         ClassicAssert.AreEqual(3, drag.DestinationY);
         drag.Do();
 
-        ClassicAssert.AreEqual(Pos.At(2), lbl.X);
-        ClassicAssert.AreEqual(Pos.At(3), lbl.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(2), lbl.X);
+        ClassicAssert.AreEqual(Pos.Absolute(3), lbl.Y);
     }
 
     [Test]
@@ -216,21 +216,21 @@ internal class DragOperationTests : Tests
         drag.ContinueDrag(new Point(6, 7));
         drag.DropInto = container2;
 
-        ClassicAssert.AreEqual(Pos.At(4), lbl.X);
-        ClassicAssert.AreEqual(Pos.At(7), lbl.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(4), lbl.X);
+        ClassicAssert.AreEqual(Pos.Absolute(7), lbl.Y);
         ClassicAssert.Contains(lbl, container1.Subviews.ToArray(), "Did not expect continue drag to move to a new container");
 
         // finalise the operation
         drag.Do();
         ClassicAssert.IsFalse(container1.Subviews.Contains(lbl));
         ClassicAssert.Contains(lbl, container2.Subviews.ToArray(), "Expected new container to be the one we dropped into");
-        ClassicAssert.AreEqual(Pos.At(-1), lbl.X);
-        ClassicAssert.AreEqual(Pos.At(2), lbl.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(-1), lbl.X);
+        ClassicAssert.AreEqual(Pos.Absolute(2), lbl.Y);
 
         // now test undoing it
         drag.Undo();
-        ClassicAssert.AreEqual(Pos.At(1), lbl.X);
-        ClassicAssert.AreEqual(Pos.At(2), lbl.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(1), lbl.X);
+        ClassicAssert.AreEqual(Pos.Absolute(2), lbl.Y);
         ClassicAssert.Contains(lbl, container1.Subviews.ToArray(), "Expected undo to return view to its original parent");
     }
 

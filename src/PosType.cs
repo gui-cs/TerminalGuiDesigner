@@ -10,7 +10,7 @@ public enum PosType
 {
     /// <summary>
     /// An absolute fixed value <see cref="Pos"/> e.g. 5.
-    /// May be the result of <see cref="Pos.At(int)"/> call
+    /// May be the result of <see cref="Pos.Absolute(int)"/> call
     /// or an implicit cast of int value e.g.
     /// <code>myView.X = 5;</code>
     /// </summary>

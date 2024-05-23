@@ -8,13 +8,13 @@ internal class ScrollViewTests : Tests
     public void TestRoundTrip_PreserveContentSize( [Values( 1, 5, 25, 100 )] int width, [Values( 1, 5, 25, 100 )] int height )
     {
         using ScrollView scrollViewIn = RoundTrip<View, ScrollView>(
-            ( _, s ) => { s.ContentSize = new( width, height ); }, out ScrollView? scrollViewOut );
+            ( _, s ) => { s.SetContentSize( new( width, height )); }, out ScrollView? scrollViewOut );
 
         Assert.Multiple( ( ) =>
         {
             Assert.That( scrollViewIn, Is.Not.SameAs( scrollViewOut ) );
-            Assert.That( scrollViewIn.ContentSize.Value.Width, Is.EqualTo( width ) );
-            Assert.That( scrollViewIn.ContentSize.Value.Height, Is.EqualTo( height ) );
+            Assert.That( scrollViewIn.ContentSize.Width, Is.EqualTo( width ) );
+            Assert.That( scrollViewIn.ContentSize.Height, Is.EqualTo( height ) );
         } );
     }
 

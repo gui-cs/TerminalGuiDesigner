@@ -43,7 +43,7 @@ internal class PropertyTests : Tests
             Assert.That( lv.Orientation, Is.EqualTo( Orientation.Horizontal ) );
             Assert.That( lv.LineRune, Is.EqualTo( TerminalGuiConfigurationManager.Glyphs.HLine ) );
             Assert.That( lv.Width, Is.EqualTo( Dim.Fill( ) ) );
-            Assert.That( lv.Height, Is.EqualTo( Dim.Sized( 1 ) ) );
+            Assert.That( lv.Height, Is.EqualTo( Dim.Absolute( 1 ) ) );
         } );
     }
 

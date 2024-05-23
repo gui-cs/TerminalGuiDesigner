@@ -296,7 +296,7 @@ public partial class PosEditor : Dialog {
     {
         if (GetValue(out int newPos))
         {
-            result = Pos.At(newPos);
+            result = Pos.Absolute(newPos);
             return true;
         }
 

@@ -138,17 +138,17 @@ public partial class DimEditor : Dialog
     {
         // pick what type of Pos they want
         var type = GetDimType();
-        var val = string.IsNullOrWhiteSpace(tbValue.Text.ToString()) ? 0 : float.Parse(tbValue.Text.ToString());
+        var val = string.IsNullOrWhiteSpace(tbValue.Text.ToString()) ? 0 : int.Parse(tbValue.Text.ToString());
         var offset = string.IsNullOrWhiteSpace(tbOffset.Text.ToString()) ? 0 : int.Parse(tbOffset.Text.ToString());
 
         switch (type)
         {
             case DimType.Absolute:
-                return Dim.Sized((int)val);
+                return Dim.Absolute(val);
             case DimType.Percent:
                 return offset == 0? Dim.Percent(val) : Dim.Percent(val) + offset;
             case DimType.Fill:
-                return Dim.Fill((int)val);
+                return Dim.Fill(val);
 
             default: throw new ArgumentOutOfRangeException(nameof(type));
 

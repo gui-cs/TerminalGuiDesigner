@@ -407,7 +407,7 @@ public class Property : ToCodeBase
         {
             if (value is int i)
             {
-                value = Dim.Sized(i);
+                value = Dim.Absolute(i);
             }
         }
         // Some Terminal.Gui string properties get angry at null but are ok with empty strings
