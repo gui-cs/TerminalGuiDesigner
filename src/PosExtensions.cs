@@ -21,12 +21,7 @@ public static class PosExtensions
     /// <returns>True if <paramref name="p"/> is absolute.</returns>
     public static bool IsAbsolute(this Pos? p)
     {
-        if (p == null)
-        {
-            return TreatNullPosAs0;
-        }
-
-        return p.GetType().Name == "PosAbsolute";
+        return p is PosAbsolute;
     }
 
     /// <inheritdoc cref="IsAbsolute(Pos)"/>
@@ -43,10 +38,9 @@ public static class PosExtensions
                 return TreatNullPosAs0;
             }
 
-            var nField = p.GetType().GetField("_n", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?? throw new Exception("Expected private field '_n' of PosAbsolute was missing");
-            n = (int?)nField.GetValue(p)
-                ?? throw new Exception("Expected private field '_n' of PosAbsolute to be int");
+            var pa = (PosAbsolute)p;
+
+            n = pa.Position;
             return true;
         }
 
@@ -66,7 +60,7 @@ public static class PosExtensions
             return false;
         }
 
-        return p.GetType().Name == "PosFactor";
+        return p is PosPercent;
     }
 
     /// <inheritdoc cref="IsPercent(Pos)"/>
@@ -79,11 +73,11 @@ public static class PosExtensions
     {
         if (p != null && p.IsPercent())
         {
-            var nField = p.GetType().GetField("_factor", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?? throw new Exception("Expected private field '_factor' was missing from PosFactor");
-            percent = ((float?)nField.GetValue(p)
-                ?? throw new Exception("Expected private field '_factor' of PosFactor to be float"))
-                * 100f;
+            var pp = (PosPercent)p;
+
+            // TODO: presumably no longer needs *100?
+            percent = pp.Percent;
+
             return true;
         }
 
@@ -103,7 +97,7 @@ public static class PosExtensions
             return false;
         }
 
-        return p.GetType().Name == "PosCenter";
+        return p is PosCenter;
     }
 
     /// <summary>
@@ -118,8 +112,7 @@ public static class PosExtensions
         {
             return TreatNullPosAs0;
         }
-
-        return p.GetType().Name == "PosAnchorEnd";
+        return p is PosAnchorEnd;
     }
 
     /// <inheritdoc cref="IsAnchorEnd(Pos)"/>
@@ -137,10 +130,9 @@ public static class PosExtensions
                 return TreatNullPosAs0;
             }
 
-            var nField = p.GetType().GetField("_offset", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?? throw new Exception("Expected private field '_offset' of PosAbsolute was missing.  Fields were:" + string.Join(",", p.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Select(f=>f.Name).ToArray()));
-            margin = (int?)nField.GetValue(p)
-                ?? throw new Exception("Expected private field '_offset' of PosAbsolute to be int");
+            var pae = (PosAnchorEnd)p;
+
+            margin = pae.Offset;
             return true;
         }
 
@@ -194,11 +186,9 @@ public static class PosExtensions
             {
                 return false;
             }
-            var fSide = posView.GetType().GetField("_side", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("PosView was missing expected field 'side'");
-            var iSide = (int?)fSide.GetValue(posView)
-                ?? throw new Exception("Expected PosView property 'side' to be of Type int");
-
-            side = (Side)iSide;
+            
+            
+            side = posView.Side;
             return true;
         }
 
