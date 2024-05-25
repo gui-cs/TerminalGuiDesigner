@@ -255,15 +255,15 @@ public static class DimExtensions
             case DimType.Percent:
                 if (offset > 0)
                 {
-                    return $"Dim.Percent({val:G5}f) + {offset}";
+                    return $"Dim.Percent({val:G5}) + {offset}";
                 }
 
                 if (offset < 0)
                 {
-                    return $"Dim.Percent({val:G5}f) - {Math.Abs(offset)}";
+                    return $"Dim.Percent({val:G5}) - {Math.Abs(offset)}";
                 }
 
-                return $"Dim.Percent({val:G5}f)";
+                return $"Dim.Percent({val:G5})";
 
             default: throw new ArgumentOutOfRangeException(nameof(type));
         }
