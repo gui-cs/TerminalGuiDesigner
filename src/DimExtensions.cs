@@ -28,7 +28,7 @@ public static class DimExtensions
             return false;
         }
 
-        return d.GetType().Name == "DimFactor";
+        return d is DimPercent;
     }
 
     /// <inheritdoc cref="IsPercent(Dim)"/>
@@ -40,9 +40,8 @@ public static class DimExtensions
     {
         if (d != null && d.IsPercent())
         {
-            var nField = d.GetType().GetField("_factor", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?? throw new Exception("Expected private field '_factor' of DimPercent was missing");
-            percent = ((float?)nField.GetValue(d) ?? throw new Exception("Expected private field 'factor' to be a float")) * 100f;
+            var dp = (DimPercent)d;
+            percent = dp.Percent;
             return true;
         }
 
@@ -62,7 +61,7 @@ public static class DimExtensions
             return false;
         }
 
-        return d.GetType().Name == "DimFill";
+        return d is DimFill;
     }
 
     /// <inheritdoc cref="IsFill(Dim)"/>
@@ -72,9 +71,8 @@ public static class DimExtensions
     {
         if (d != null && d.IsFill())
         {
-            var nField = d.GetType().GetField("_margin", BindingFlags.NonPublic | BindingFlags.Instance)
-                 ?? throw new Exception("Expected private field '_margin' of DimFill was missing");
-            margin = (int?)nField.GetValue(d) ?? throw new Exception("Expected private field 'margin' of DimFill had unexpected Type");
+            var df = (DimFill)d;
+            margin = df.Margin;
             return true;
         }
 
@@ -94,7 +92,7 @@ public static class DimExtensions
             return TreatNullDimAs0;
         }
 
-        return d.GetType().Name == "DimAbsolute";
+        return d is DimAbsolute;
     }
 
     /// <inheritdoc cref="IsAbsolute(Dim)"/>
@@ -110,10 +108,8 @@ public static class DimExtensions
                 return TreatNullDimAs0;
             }
 
-            var nField = d.GetType().GetField("_n", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?? throw new Exception("Expected private field was missing from DimAbsolute");
-            n = (int?)nField.GetValue(d)
-                ?? throw new Exception("Expected private field 'n' to be in int for DimAbsolute");
+            var da = (DimAbsolute)d;
+            n = da.Size;
             return true;
         }
 
@@ -133,8 +129,7 @@ public static class DimExtensions
         {
             return false;
         }
-
-        return d.GetType().Name == "DimCombine";
+        return d is DimCombine;
     }
 
     /// <summary>
@@ -151,14 +146,11 @@ public static class DimExtensions
     {
         if (d.IsCombine())
         {
-            var fLeft = d.GetType().GetField("_left", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field was missing from Dim.Combine");
-            left = fLeft.GetValue(d) as Dim ?? throw new Exception("Expected private field in DimCombine to be of Type Dim");
+            var dc = (DimCombine)d;
 
-            var fRight = d.GetType().GetField("_right", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field was missing from Dim.Combine");
-            right = fRight.GetValue(d) as Dim ?? throw new Exception("Expected private field in DimCombine to be of Type Dim");
-
-            var fAdd = d.GetType().GetField("_add", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field was missing from Dim.Combine");
-            add = fAdd.GetValue(d) as bool? ?? throw new Exception("Expected private field in DimCombine to be of Type bool");
+            left = dc.Left;
+            right = dc.Right;
+            add = dc.Add == AddOrSubtract.Add;
 
             return true;
         }
