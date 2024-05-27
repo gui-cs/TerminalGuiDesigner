@@ -95,6 +95,32 @@ public static class DimExtensions
         return d is DimAbsolute;
     }
 
+
+    /// <summary>
+    /// True if <paramref name="d"/> is a <see cref="DimAuto"/> width/height.
+    /// </summary>
+    /// <param name="d">The <see cref="Dim"/> to determine whether it is auto.</param>
+    /// <returns><see langword="true"/> if <paramref name="d"/> is a auto sizing.</returns>
+    public static bool IsAuto(this Dim d, out DimAutoStyle das, out Dim? min, out Dim? max)
+    {
+        if(d is  DimAuto da)
+        {
+            das = da.Style;
+            min = da.MinimumContentDim;
+            max = da.MaximumContentDim;
+
+            return true;
+        }
+
+        das = default(DimAutoStyle);
+        min = null;
+        max = null;
+        return false;
+    }
+
+
+
+
     /// <inheritdoc cref="IsAbsolute(Dim)"/>
     /// <param name="d">The <see cref="Dim"/> to determine whether it is absolute.</param>
     /// <param name="n">The value of the fixed number absolute <see cref="Dim"/> value or 0.</param>
@@ -199,6 +225,15 @@ public static class DimExtensions
             return true;
         }
 
+        // TODO: probably need to care about maxes and mins at some point
+        if (d.IsAuto(out _, out _, out _))
+        {
+            type = DimType.Auto;
+            value = 0;
+            offset = 0;
+            return true;
+        }
+        
         if (d.IsCombine(out var left, out var right, out var add))
         {
             // we only deal in combines if the right is an absolute
@@ -229,10 +264,7 @@ public static class DimExtensions
     {
         if (!d.GetDimType(out var type, out var val, out var offset))
         {
-            // TODO: This is currently unreachable (though a TG change could make it not so)
-            // Would it maybe be a better idea to throw an exception, so generated code isn't silently incorrect?
-            // could not determine the type
-            return null;
+            throw new Exception("Could not determine code for Dim type:" + d.GetType());
         }
 
         switch (type)
@@ -265,6 +297,10 @@ public static class DimExtensions
 
                 return $"Dim.Percent({val:G5})";
 
+            case DimType.Auto:
+
+                // TODO: one day support the min/max/style
+                return "Dim.Auto()";
             default: throw new ArgumentOutOfRangeException(nameof(type));
         }
     }

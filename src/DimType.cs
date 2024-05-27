@@ -21,4 +21,9 @@ public enum DimType
     /// Filling the remaining space with a margin e.g. <see cref="Dim.Fill(int)"/>.
     /// </summary>
     Fill,
+
+    /// <summary>
+    /// Automatically size based on Text property e.g. <see cref="Dim.Auto(DimAutoStyle, Dim?, Dim?)"/>
+    /// </summary>
+    Auto
 }
