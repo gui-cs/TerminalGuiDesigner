@@ -5,7 +5,6 @@ namespace UnitTests;
 [Category( "Core" )]
 [Category( "Terminal.Gui Extensions" )]
 [Parallelizable( ParallelScope.Children )]
-[DefaultFloatingPointTolerance( 0.00001f )]
 internal class DimExtensionsTests
 {
     [Test]
@@ -40,9 +39,9 @@ internal class DimExtensionsTests
         Assert.That(
             dimType switch
             {
-                DimType.Absolute => Dim.Absolute( 24 ).GetDimType( out _, out float outValue, out _ ) && Is.EqualTo( 24f ).ApplyTo( outValue ).IsSuccess,
-                DimType.Percent => Dim.Percent( 24 ).GetDimType( out _, out float outValue, out _ ) && Is.EqualTo( 24f ).ApplyTo( outValue ).IsSuccess,
-                DimType.Fill => Dim.Fill( 24 ).GetDimType( out _, out float outValue, out _ ) && Is.EqualTo( 24f ).ApplyTo( outValue ).IsSuccess,
+                DimType.Absolute => Dim.Absolute( 24 ).GetDimType( out _, out int outValue, out _ ) && Is.EqualTo( 24f ).ApplyTo( outValue ).IsSuccess,
+                DimType.Percent => Dim.Percent( 24 ).GetDimType( out _, out int outValue, out _ ) && Is.EqualTo( 24f ).ApplyTo( outValue ).IsSuccess,
+                DimType.Fill => Dim.Fill( 24 ).GetDimType( out _, out int outValue, out _ ) && Is.EqualTo( 24f ).ApplyTo( outValue ).IsSuccess,
                 _ => throw new ArgumentOutOfRangeException( nameof( dimType ), dimType, "Test needs case for newly-added enum member" )
             } );
     }
@@ -125,11 +124,11 @@ internal class DimExtensionsTests
             dimType switch
             {
                 // With an or, because either one being true is a fail
-                DimType.Absolute => !( Dim.Absolute( requestedSize ).IsPercent( out float percent ) || Is.EqualTo( requestedSize ).ApplyTo( percent ).IsSuccess ),
+                DimType.Absolute => !( Dim.Absolute( requestedSize ).IsPercent( out int percent ) || Is.EqualTo( requestedSize ).ApplyTo( percent ).IsSuccess ),
                 // With an and, because either one being false is a fail
-                DimType.Percent => Dim.Percent( requestedSize ).IsPercent( out float percent ) && Is.EqualTo( requestedSize ).ApplyTo( percent ).IsSuccess,
+                DimType.Percent => Dim.Percent( requestedSize ).IsPercent( out int percent ) && Is.EqualTo( requestedSize ).ApplyTo( percent ).IsSuccess,
                 // With an or, because either one being true is a fail
-                DimType.Fill => !( Dim.Fill( requestedSize ).IsPercent( out float percent ) || Is.EqualTo( requestedSize ).ApplyTo( percent ).IsSuccess ),
+                DimType.Fill => !( Dim.Fill( requestedSize ).IsPercent( out int percent ) || Is.EqualTo( requestedSize ).ApplyTo( percent ).IsSuccess ),
                 _ => throw new ArgumentOutOfRangeException( nameof( dimType ), dimType, "Test needs case for newly-added enum member" )
             } );
     }
@@ -138,7 +137,7 @@ internal class DimExtensionsTests
     [Sequential]
     public void ToCode_ReturnsExpectedString(
         [Values( DimType.Percent, DimType.Fill, DimType.Absolute )] DimType dimType,
-        [Values( "Dim.Percent(50f)", "Dim.Fill(5)", "5" )] string expectedCode )
+        [Values( "Dim.Percent(50)", "Dim.Fill(5)", "5" )] string expectedCode )
     {
         Assert.That(
             dimType switch
@@ -157,7 +156,7 @@ internal class DimExtensionsTests
     public void ToCode_ReturnsExpectedString_WithOffset(
         [Values( DimType.Percent, DimType.Percent, DimType.Fill, DimType.Fill, DimType.Absolute, DimType.Absolute )] DimType dimType,
         [Values( 2, -2, 2, -2, 2, -2 )] int offset,
-        [Values( "Dim.Percent(50f) + 2", "Dim.Percent(50f) - 2", "Dim.Fill(5) + 2", "Dim.Fill(5) - 2", "7","3" )] string expectedCode )
+        [Values( "Dim.Percent(50) + 2", "Dim.Percent(50) - 2", "Dim.Fill(5) + 2", "Dim.Fill(5) - 2", "7","3" )] string expectedCode )
     {
         Assert.That(
             dimType switch

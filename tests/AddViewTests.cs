@@ -64,9 +64,9 @@ internal class AddViewTests : Tests
     }
 
     /// <summary>
-    /// 60 is one of those numbers that can't be modeled exactly in float so ends
+    /// 60 is one of those numbers that can't be modeled exactly in int so ends
     /// up with many decimal places.  This needs to be rounded in the code generated
-    /// and has to have the suffix 'f' to ensure that the value is treated as a float
+    /// and has to have the suffix 'f' to ensure that the value is treated as a int
     /// and not a double (which won't compile)
     /// </summary>
     /// <param name="offset"></param>
@@ -83,15 +83,15 @@ internal class AddViewTests : Tests
         Assert.That( lblIn.Text, Is.EqualTo( lblOut.Text ) );
 
         lblIn.Width.GetDimType(out var outDimType, out var outDimValue, out var outDimOffset);
-        lblIn.X.GetPosType(new List<Design>(), out var outPosType, out var outPosValue, out var outPosOffset, out _, out _);
+        lblIn.X.GetPosType(new List<Design>(), out var outPosType, out var outPosValue,out _,out _, out var outPosOffset);
 
         Assert.Multiple( ( ) =>
         {
             Assert.That( outDimType, Is.EqualTo( DimType.Percent ) );
-            Assert.That( 60f - outDimValue, Is.Zero.Within( 0.0001 ) );
+            Assert.That(outDimValue, Is.EqualTo(60));
 
             Assert.That( outPosType, Is.EqualTo( PosType.Percent ) );
-            Assert.That( 60f - outPosValue, Is.Zero.Within( 0.0001 ) );
+            Assert.That(outPosValue, Is.EqualTo(60));
         } );
     }
 }

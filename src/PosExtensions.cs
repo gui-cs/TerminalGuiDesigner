@@ -49,10 +49,10 @@ public static class PosExtensions
     }
 
     /// <summary>
-    /// Returns true if <paramref name="p"/> is a percentage position (See <see cref="Pos.Percent(float)"/>).
+    /// Returns true if <paramref name="p"/> is a percentage position (See <see cref="Pos.Percent(int)"/>).
     /// </summary>
     /// <param name="p"><see cref="Pos"/> to classify.</param>
-    /// <returns>True if <paramref name="p"/> is <see cref="Pos.Percent(float)"/>.</returns>
+    /// <returns>True if <paramref name="p"/> is <see cref="Pos.Percent(int)"/>.</returns>
     public static bool IsPercent(this Pos? p)
     {
         if (p == null)
@@ -66,10 +66,10 @@ public static class PosExtensions
     /// <inheritdoc cref="IsPercent(Pos)"/>
     /// <param name="p"><see cref="Pos"/> to classify.</param>
     /// <param name="percent">The percentage number (typically out of 100) that could be passed
-    /// to <see cref="Pos.Percent(float)"/> to produce <paramref name="p"/> or 0 if <paramref name="p"/>
+    /// to <see cref="Pos.Percent(int)"/> to produce <paramref name="p"/> or 0 if <paramref name="p"/>
     /// is not a percent <see cref="Pos"/>.</param>
-    /// <returns>True if <paramref name="p"/> is <see cref="Pos.Percent(float)"/>.</returns>
-    public static bool IsPercent(this Pos? p, out float percent)
+    /// <returns>True if <paramref name="p"/> is <see cref="Pos.Percent(int)"/>.</returns>
+    public static bool IsPercent(this Pos? p, out int percent)
     {
         if (p != null && p.IsPercent())
         {
@@ -230,7 +230,7 @@ public static class PosExtensions
     /// <param name="side">Only populated for <see cref="PosType.Relative"/>, this is the direction of offset from <paramref name="relativeTo"/>.</param>
     /// <param name="offset">The offset from the listed position.  Is provided if the input has addition/subtraction e.g.<code>Pos.Center() + 2</code></param>
     /// <returns>True if it was possible to determine what <see cref="PosType"/> <paramref name="p"/> is.</returns>
-    public static bool GetPosType(this Pos? p, IList<Design> knownDesigns, out PosType type, out float value, out Design? relativeTo, out Side side, out int offset)
+    public static bool GetPosType(this Pos? p, IList<Design> knownDesigns, out PosType type, out int value, out Design? relativeTo, out Side side, out int offset)
     {
         type = default;
         relativeTo = null;
@@ -313,7 +313,7 @@ public static class PosExtensions
             PosType.Relative => $"Pos.{GetMethodNameFor( side )}({relativeTo.FieldName})",
             PosType.Percent when offset > 0 => $"Pos.Percent({val:G5}) + {offset}",
             PosType.Percent when offset < 0 => $"Pos.Percent({val:G5}) - {Math.Abs( offset )}",
-            PosType.Percent => $"Pos.Percent({val:G5}f)",
+            PosType.Percent => $"Pos.Percent({val:G5})",
             PosType.Center when offset > 0 => $"Pos.Center() + {offset}",
             PosType.Center when offset < 0 => $"Pos.Center() - {Math.Abs( offset )}",
             PosType.Center => $"Pos.Center()",

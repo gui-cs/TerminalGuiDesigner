@@ -13,7 +13,7 @@ public enum DimType
     Absolute,
 
     /// <summary>
-    /// Percent of the remaining width/height e.g. <see cref="Dim.Percent(float, bool)"/>.
+    /// Percent of the remaining width/height e.g. <see cref="Dim.Percent(int, bool)"/>.
     /// </summary>
     Percent,
 

@@ -22,7 +22,7 @@ public enum PosType
     AnchorEnd,
 
     /// <summary>
-    /// Indicates use of <see cref="Pos.Percent(float)"/>.
+    /// Indicates use of <see cref="Pos.Percent(int)"/>.
     /// </summary>
     Percent,
 

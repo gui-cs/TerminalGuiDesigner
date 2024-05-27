@@ -17,7 +17,7 @@ public static class DimExtensions
     private const bool TreatNullDimAs0 = true;
 
     /// <summary>
-    /// Returns true if the <paramref name="d"/> is a DimFactor (i.e. created by <see cref="Dim.Percent(float, bool)"/>).
+    /// Returns true if the <paramref name="d"/> is a DimFactor (i.e. created by <see cref="Dim.Percent(int, bool)"/>).
     /// </summary>
     /// <param name="d">Dimension to determine Type.</param>
     /// <returns>true if <paramref name="d"/> is DimFactor.</returns>
@@ -34,9 +34,9 @@ public static class DimExtensions
     /// <inheritdoc cref="IsPercent(Dim)"/>
     /// <param name="d">The <see cref="Dim"/> to determine whether it represents a percent.</param>
     /// <param name="percent">The 'percentage' value of <paramref name="d"/>.  This is the value that would/could be
-    /// passed to <see cref="Dim.Percent(float, bool)"/> to produce the <paramref name="d"/> or 0 if <paramref name="d"/> is
+    /// passed to <see cref="Dim.Percent(int, bool)"/> to produce the <paramref name="d"/> or 0 if <paramref name="d"/> is
     /// not DimFactor.</param>
-    public static bool IsPercent(this Dim d, out float percent)
+    public static bool IsPercent(this Dim d, out int percent)
     {
         if (d != null && d.IsPercent())
         {
@@ -167,13 +167,13 @@ public static class DimExtensions
     /// </summary>
     /// <param name="d">The <see cref="Dim"/> to determine type of.</param>
     /// <param name="type">The determined type.</param>
-    /// <param name="value">The numerical element of the type e.g. for <see cref="Dim.Percent(float, bool)"/>
+    /// <param name="value">The numerical element of the type e.g. for <see cref="Dim.Percent(int, bool)"/>
     /// the <paramref name="value"/> is the percentage but for <see cref="Dim.Fill(int)"/> the <paramref name="value"/>
     /// is the margin.</param>
     /// <param name="offset">The numerical offset if any, for example -5 in the following:
     /// <code>Dim.Fill(1)-5</code></param>
     /// <returns>True if it was possible to determine <paramref name="type"/>.</returns>
-    public static bool GetDimType(this Dim d, out DimType type, out float value, out int offset)
+    public static bool GetDimType(this Dim d, out DimType type, out int value, out int offset)
     {
         if (d.IsAbsolute(out var n))
         {

@@ -39,7 +39,7 @@ public class Modals
         return false;
     }
 
-    internal static bool GetFloat(string windowTitle, string entryLabel, float? initialValue, out float? result)
+    internal static bool Getint(string windowTitle, string entryLabel, int? initialValue, out int? result)
     {
         if (GetString(windowTitle, entryLabel, initialValue.ToString(), out var newValue))
         {
@@ -49,7 +49,7 @@ public class Modals
                 return true;
             }
 
-            if (float.TryParse(newValue, out var r))
+            if (int.TryParse(newValue, out var r))
             {
                 result = r;
                 return true;
