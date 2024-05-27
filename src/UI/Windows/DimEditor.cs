@@ -64,6 +64,9 @@ public partial class DimEditor : Dialog
                 case DimType.Fill:
                     rgDimType.SelectedItem = 2;
                     break;
+                case DimType.Auto:
+                    rgDimType.SelectedItem = 3;
+                    break;
             }
 
             tbValue.Text = value.ToString("G5");
@@ -100,20 +103,36 @@ public partial class DimEditor : Dialog
         {
             case DimType.Absolute:
                 lblValue.Text = "Value";
+                lblValue.Visible = true;
+                tbValue.Visible = true;
+
                 lblOffset.Visible = false;
                 tbOffset.Visible = false;
                 SetNeedsDisplay();
                 break;
             case DimType.Fill:
+                lblValue.Text = "Margin";
+                lblValue.Visible = true;
+                tbValue.Visible = true;
+
                 lblOffset.Visible = false;
                 tbOffset.Visible = false;
-                lblValue.Text = "Margin";
                 SetNeedsDisplay();
                 break;
             case DimType.Percent:
                 lblValue.Text = "Factor";
+                lblValue.Visible = true;
+                tbValue.Visible = true;
+
                 lblOffset.Visible = true;
                 tbOffset.Visible = true;
+                SetNeedsDisplay();
+                break;
+            case DimType.Auto:
+                lblValue.Visible = false;
+                tbValue.Visible = false;
+                lblOffset.Visible = false;
+                tbOffset.Visible = false;
                 SetNeedsDisplay();
                 break;
 
@@ -149,6 +168,8 @@ public partial class DimEditor : Dialog
                 return offset == 0? Dim.Percent(val) : Dim.Percent(val) + offset;
             case DimType.Fill:
                 return Dim.Fill(val);
+            case DimType.Auto:
+                return Dim.Auto();
 
             default: throw new ArgumentOutOfRangeException(nameof(type));
 
