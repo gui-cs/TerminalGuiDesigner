@@ -293,10 +293,23 @@ public class KeyboardManager
             return true;
         }
 
-        var ch = keystroke.ToString().ToCharArray()[0];
+        var ch = KeyToLetter(keystroke);
+
+
+
         newString += ch;
 
         return true;
+    }
+
+    private char KeyToLetter(Key keystroke)
+    {
+        if(keystroke == Key.Space)
+        {
+            return ' ';
+        }
+
+        return keystroke.ToString().ToCharArray()[0];
     }
 
     private bool IsActionableKey(Key keystroke)
@@ -305,7 +318,10 @@ public class KeyboardManager
         {
             return true;
         }
-
+        if(keystroke == Key.Delete ||  keystroke.KeyCode == KeyCode.ShiftMask)
+        {
+            return false;
+        }
         // Don't let Ctrl+Q add a Q!
         if (keystroke.IsCtrl)
         {
@@ -314,7 +330,7 @@ public class KeyboardManager
 
         var punctuation = "\"\\/':;%^&*~`!@#.,? ()-+{}<>=_][|";
 
-        var ch = keystroke.ToString().ToCharArray()[0];
+        var ch = KeyToLetter(keystroke);
 
         return punctuation.Contains(ch) || char.IsLetterOrDigit(ch);
     }
