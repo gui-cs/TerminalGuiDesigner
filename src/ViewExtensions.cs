@@ -316,7 +316,7 @@ public static class ViewExtensions
         // TODO: maybe this should use Frame instead? Currently this will not let you drag box
         // selection over the border of a container to select it (e.g. FrameView).
         var p0 = v.ContentToScreen(new Point(0, 0));
-        var p1 = v.ContentToScreen(new Point(v.ContentSize.Width, v.ContentSize.Height));
+        var p1 = v.ContentToScreen(new Point(v.GetContentSize().Width, v.GetContentSize().Height));
 
         return Rectangle.FromLTRB(p0.X, p0.Y, p1.X, p1.Y).IntersectsWith(screenRect);
     }

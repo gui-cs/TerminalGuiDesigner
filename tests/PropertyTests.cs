@@ -47,7 +47,7 @@ internal class PropertyTests : Tests
         } );
     }
 
-    [Test( ExpectedResult = "new Terminal.Gui.Attribute(Color.BrightMagenta,Color.Blue)" )]
+    [Test( ExpectedResult = "new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightMagenta,Terminal.Gui.Color.Blue)")]
     public string PropertyOfType_Attribute( )
     {
         using GraphView graphView = new( );

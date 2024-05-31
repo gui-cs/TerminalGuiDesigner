@@ -689,11 +689,6 @@ public class Design
                 viewType.GetProperty(nameof(SpinnerView.Style)) ?? throw new Exception($"Could not find expected Property SpinnerView.Style on View of Type '{this.View.GetType()}'"));
         }
 
-        if (this.View is ScrollView)
-        {
-            yield return this.CreateProperty(nameof(ScrollView.ContentSize));
-        }
-
         if (this.View is TextView)
         {
             yield return this.CreateProperty(nameof(TextView.AllowsTab));

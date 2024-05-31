@@ -29,8 +29,8 @@ public class MoveViewOperation : Operation
         this.IsImpossible = true;
         var super = this.BeingMoved.View.SuperView;
 
-        int maxWidth = (super?.ContentSize.Width ?? int.MaxValue) - 1;
-        int maxHeight = (super?.ContentSize.Height ?? int.MaxValue) - 1;
+        int maxWidth = (super?.GetContentSize().Width ?? int.MaxValue) - 1;
+        int maxHeight = (super?.GetContentSize().Height ?? int.MaxValue) - 1;
 
         if (this.BeingMoved.View.X.IsAbsolute(out var x))
         {

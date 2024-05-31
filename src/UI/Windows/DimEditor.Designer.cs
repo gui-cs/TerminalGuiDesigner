@@ -50,7 +50,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Visible = true;
             this.Arrangement = Terminal.Gui.ViewArrangement.Movable;
             this.Modal = true;
-            this.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.TextAlignment = Terminal.Gui.Alignment.Start;
             this.Title = "";
             this.rgDimType.Width = 11;
             this.rgDimType.Height = 4;
@@ -60,7 +60,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.rgDimType.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
             this.rgDimType.Data = "rgDimType";
         this.rgDimType.Text = "";
-            this.rgDimType.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.rgDimType.TextAlignment = Terminal.Gui.Alignment.Start;
             this.rgDimType.RadioLabels = new string[] {
                     "Absolute",
                     "Percent",
@@ -74,7 +74,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lineview1.Visible = true;
             this.lineview1.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
             this.lineview1.Data = "lineview1";
-            this.lineview1.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.lineview1.TextAlignment = Terminal.Gui.Alignment.Start;
             this.lineview1.LineRune = new System.Text.Rune('│');
             this.lineview1.Orientation = Terminal.Gui.Orientation.Vertical;
             this.Add(this.lineview1);
@@ -86,7 +86,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lblValue.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
             this.lblValue.Data = "lblValue";
             this.lblValue.Text = "Value:";
-            this.lblValue.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.lblValue.TextAlignment = Terminal.Gui.Alignment.Start;
             this.Add(this.lblValue);
             this.tbValue.Width = 15;
             this.tbValue.Height = 1;
@@ -97,7 +97,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.tbValue.Secret = false;
             this.tbValue.Data = "tbValue";
             this.tbValue.Text = "";
-            this.tbValue.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.tbValue.TextAlignment = Terminal.Gui.Alignment.Start;
             this.Add(this.tbValue);
             this.lblOffset.Width = 7;
             this.lblOffset.Height = 1;
@@ -107,7 +107,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lblOffset.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
             this.lblOffset.Data = "lblOffset";
             this.lblOffset.Text = "Offset:";
-            this.lblOffset.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.lblOffset.TextAlignment = Terminal.Gui.Alignment.Start;
             this.Add(this.lblOffset);
             this.tbOffset.Width = 15;
             this.tbOffset.Height = 1;
@@ -118,7 +118,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.tbOffset.Secret = false;
             this.tbOffset.Data = "tbOffset";
             this.tbOffset.Text = "";
-            this.tbOffset.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.tbOffset.TextAlignment = Terminal.Gui.Alignment.Start;
             this.Add(this.tbOffset);
             this.btnOk.Width = 8;
             this.btnOk.Height = Dim.Auto();
@@ -128,7 +128,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnOk.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
             this.btnOk.Data = "btnOk";
             this.btnOk.Text = "Ok";
-            this.btnOk.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+            this.btnOk.TextAlignment = Terminal.Gui.Alignment.Center;
             this.btnOk.IsDefault = true;
             this.Add(this.btnOk);
             this.btnCancel.Width = 10;
@@ -139,7 +139,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnCancel.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
             this.btnCancel.Data = "btnCancel";
             this.btnCancel.Text = "Cancel";
-            this.btnCancel.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+            this.btnCancel.TextAlignment = Terminal.Gui.Alignment.Center;
             this.btnCancel.IsDefault = false;
             this.Add(this.btnCancel);
         }

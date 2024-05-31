@@ -258,7 +258,7 @@ internal class ViewFactoryTests
     private bool CompareTwoViews( View nonGenericTabIndex, View genericTabIndex )
     {
         Assert.Warn( "View comparison only done by bounds check." );
-        return nonGenericTabIndex.ContentSize == genericTabIndex.ContentSize;
+        return nonGenericTabIndex.GetContentSize() == genericTabIndex.GetContentSize();
     }
 
     private static IEnumerable<Type> CreateT_ThrowsOnUnsupportedTypes_Cases( )

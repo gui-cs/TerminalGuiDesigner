@@ -73,7 +73,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Y = Pos.Center();
             this.Visible = true;
             this.Modal = true;
-            this.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.TextAlignment = Terminal.Gui.Alignment.Start;
             this.Title = "OptionEditor";
             this.label.Width = 4;
             this.label.Height = 1;
@@ -82,7 +82,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.label.Visible = true;
             this.label.Data = "label";
             this.label.Text = "Legend:";
-            this.label.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.label.TextAlignment = Terminal.Gui.Alignment.Start;
             this.Add(this.label);
             this.tfLegend.Width = Dim.Fill(0);
             this.tfLegend.Height = 1;
@@ -92,7 +92,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.tfLegend.Secret = false;
             this.tfLegend.Data = "tfLegend";
             this.tfLegend.Text = "";
-            this.tfLegend.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.tfLegend.TextAlignment = Terminal.Gui.Alignment.Start;
             this.Add(this.tfLegend);
             this.label2.Width = 4;
             this.label2.Height = 1;
@@ -101,7 +101,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.label2.Visible = true;
             this.label2.Data = "label2";
             this.label2.Text = "Abbreviation:";
-            this.label2.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.label2.TextAlignment = Terminal.Gui.Alignment.Start;
             this.Add(this.label2);
             this.tfLegendAbbr.Width = 1;
             this.tfLegendAbbr.Height = 1;
@@ -111,7 +111,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.tfLegendAbbr.Secret = false;
             this.tfLegendAbbr.Data = "tfLegendAbbr";
             this.tfLegendAbbr.Text = "";
-            this.tfLegendAbbr.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.tfLegendAbbr.TextAlignment = Terminal.Gui.Alignment.Start;
             this.Add(this.tfLegendAbbr);
             this.lblOneChar.Width = 10;
             this.lblOneChar.Height = 1;
@@ -120,7 +120,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lblOneChar.Visible = true;
             this.lblOneChar.Data = "lblOneChar";
             this.lblOneChar.Text = "(Single Char)  ";
-            this.lblOneChar.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+            this.lblOneChar.TextAlignment = Terminal.Gui.Alignment.Center;
             this.Add(this.lblOneChar);
             this.label3.Width = 4;
             this.label3.Height = 1;
@@ -129,7 +129,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.label3.Visible = true;
             this.label3.Data = "label3";
             this.label3.Text = "Data:";
-            this.label3.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.label3.TextAlignment = Terminal.Gui.Alignment.Start;
             this.Add(this.label3);
             this.tfData.Width = Dim.Fill(0);
             this.tfData.Height = 1;
@@ -139,7 +139,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.tfData.Secret = false;
             this.tfData.Data = "tfData";
             this.tfData.Text = "";
-            this.tfData.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.tfData.TextAlignment = Terminal.Gui.Alignment.Start;
             this.Add(this.tfData);
             this.lblType.Width = Dim.Fill(0);
             this.lblType.Height = 1;
@@ -148,7 +148,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lblType.Visible = true;
             this.lblType.Data = "lblType";
             this.lblType.Text = "( Type ) ";
-            this.lblType.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+            this.lblType.TextAlignment = Terminal.Gui.Alignment.Center;
             this.Add(this.lblType);
             this.btnOk.Width = 8;
             this.btnOk.Height = 1;
@@ -157,7 +157,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnOk.Visible = true;
             this.btnOk.Data = "btnOk";
             this.btnOk.Text = "Ok";
-            this.btnOk.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+            this.btnOk.TextAlignment = Terminal.Gui.Alignment.Center;
             this.btnOk.IsDefault = true;
             this.Add(this.btnOk);
             this.btnCancel.Width = 8;
@@ -167,7 +167,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnCancel.Visible = true;
             this.btnCancel.Data = "btnCancel";
             this.btnCancel.Text = "Cancel";
-            this.btnCancel.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+            this.btnCancel.TextAlignment = Terminal.Gui.Alignment.Center;
             this.btnCancel.IsDefault = false;
             this.Add(this.btnCancel);
         }

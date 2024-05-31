@@ -61,7 +61,7 @@ public partial class ChoicesDialog : Terminal.Gui.Window {
         this.Modal = true;
         this.Text = "";
         this.Border.BorderStyle = Terminal.Gui.LineStyle.Double;
-        this.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Title = "";
         this.label1.Width = Dim.Fill(0);
         this.label1.Height = Dim.Fill(0);
@@ -69,7 +69,7 @@ public partial class ChoicesDialog : Terminal.Gui.Window {
         this.label1.Y = 1;
         this.label1.Data = "label1";
         this.label1.Text = "lblMessage";
-        this.label1.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+        this.label1.TextAlignment = Terminal.Gui.Alignment.Center;
         this.Add(this.label1);
         this.buttonPanel.Width = 50;
         this.buttonPanel.Height = 2;
@@ -77,7 +77,7 @@ public partial class ChoicesDialog : Terminal.Gui.Window {
         this.buttonPanel.Y = Pos.AnchorEnd(2);
         this.buttonPanel.Data = "buttonPanel";
         this.buttonPanel.Text = "";
-        this.buttonPanel.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.buttonPanel.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.buttonPanel);
         this.btn1.Width = 10;
         this.btn1.Height = 2;
@@ -86,7 +86,7 @@ public partial class ChoicesDialog : Terminal.Gui.Window {
         this.btn1.ColorScheme = this.buttons;
         this.btn1.Data = "btn1";
         this.btn1.Text = "btn1";
-        this.btn1.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+        this.btn1.TextAlignment = Terminal.Gui.Alignment.Center;
         this.btn1.IsDefault = true;
         this.buttonPanel.Add(this.btn1);
         this.btn2.Width = 9;
@@ -96,7 +96,7 @@ public partial class ChoicesDialog : Terminal.Gui.Window {
         this.btn2.ColorScheme = this.buttons;
         this.btn2.Data = "btn2";
         this.btn2.Text = "btn2";
-        this.btn2.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+        this.btn2.TextAlignment = Terminal.Gui.Alignment.Center;
         this.btn2.IsDefault = false;
         this.buttonPanel.Add(this.btn2);
         this.btn3.Width = 8;
@@ -106,7 +106,7 @@ public partial class ChoicesDialog : Terminal.Gui.Window {
         this.btn3.ColorScheme = this.buttons;
         this.btn3.Data = "btn3";
         this.btn3.Text = "btn3";
-        this.btn3.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+        this.btn3.TextAlignment = Terminal.Gui.Alignment.Center;
         this.btn3.IsDefault = false;
         this.buttonPanel.Add(this.btn3);
         this.btn4.Width = 8;
@@ -116,7 +116,7 @@ public partial class ChoicesDialog : Terminal.Gui.Window {
         this.btn4.ColorScheme = this.buttons;
         this.btn4.Data = "btn4";
         this.btn4.Text = "btn4";
-        this.btn4.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+        this.btn4.TextAlignment = Terminal.Gui.Alignment.Center;
         this.btn4.IsDefault = false;
         this.buttonPanel.Add(this.btn4);
     }

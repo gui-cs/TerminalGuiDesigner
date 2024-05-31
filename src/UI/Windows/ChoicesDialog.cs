@@ -136,7 +136,7 @@ public partial class ChoicesDialog
 
     internal static void PaintShadow(Button btn, ColorScheme backgroundScheme)
     {
-        var bounds = btn.ContentSize;
+        var bounds = btn.GetContentSize();
 
         Attribute buttonColor = btn.HasFocus ? 
             new Terminal.Gui.Attribute(btn.ColorScheme.Focus.Foreground, btn.ColorScheme.Focus.Background):

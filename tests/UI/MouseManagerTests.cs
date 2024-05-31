@@ -22,15 +22,15 @@ internal class MouseManagerTests : Tests
         view.Data = design;
         d.View.Add( view );
 
-        Assert.That( view.ContentSize.Width, Is.EqualTo( 8 ) );
+        Assert.That( view.GetContentSize().Width, Is.EqualTo( 8 ) );
         MouseManager mgr = new( );
 
         // we haven't done anything yet
         Assert.Multiple( ( ) =>
         {
             Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
-            Assert.That( view.ContentSize.Width, Is.EqualTo( 8 ) );
-            Assert.That( view.ContentSize.Height, Is.EqualTo( 1 ) );
+            Assert.That( view.GetContentSize().Width, Is.EqualTo( 8 ) );
+            Assert.That( view.GetContentSize().Height, Is.EqualTo( 1 ) );
         } );
 
         // user presses down in the lower right of control
@@ -59,8 +59,8 @@ internal class MouseManagerTests : Tests
         // we still haven't committed to anything
         Assert.Multiple( ( ) =>
         {
-            Assert.That( view.ContentSize.Width, Is.EqualTo( 10 ), "Expected resize to increase Width when dragging" );
-            Assert.That( view.ContentSize.Height, Is.EqualTo( 1 ), "Expected resize of button to ignore Y component" );
+            Assert.That( view.GetContentSize().Width, Is.EqualTo( 10 ), "Expected resize to increase Width when dragging" );
+            Assert.That( view.GetContentSize().Height, Is.EqualTo( 1 ), "Expected resize of button to ignore Y component" );
             Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
         } );
 
@@ -73,8 +73,8 @@ internal class MouseManagerTests : Tests
 
         Assert.Multiple( ( ) =>
         {
-            Assert.That( view.ContentSize.Width, Is.EqualTo( 10 ), "Expected resize to increase Width when dragging" );
-            Assert.That( view.ContentSize.Height, Is.EqualTo( 1 ) );
+            Assert.That( view.GetContentSize().Width, Is.EqualTo( 10 ), "Expected resize to increase Width when dragging" );
+            Assert.That( view.GetContentSize().Height, Is.EqualTo( 1 ) );
 
             // we have now committed the drag so could undo
             Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
@@ -107,8 +107,8 @@ internal class MouseManagerTests : Tests
             Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
             Assert.That( view.Frame.X, Is.EqualTo( locationOfViewX ) );
             Assert.That( view.Frame.Y, Is.EqualTo( locationOfViewY ) );
-            Assert.That( view.ContentSize.Width, Is.EqualTo( 1 ) );
-            Assert.That( view.ContentSize.Height, Is.EqualTo( 1 ) );
+            Assert.That( view.GetContentSize().Width, Is.EqualTo( 1 ) );
+            Assert.That( view.GetContentSize().Height, Is.EqualTo( 1 ) );
         } );
 
         // user presses down in the lower right of control
@@ -146,8 +146,8 @@ internal class MouseManagerTests : Tests
 
         Assert.Multiple( ( ) =>
         {
-            Assert.That( view.ContentSize.Width, Is.EqualTo( 1 ) );
-            Assert.That( view.ContentSize.Height, Is.EqualTo( 1 ) );
+            Assert.That( view.GetContentSize().Width, Is.EqualTo( 1 ) );
+            Assert.That( view.GetContentSize().Height, Is.EqualTo( 1 ) );
         } );
     }
 
@@ -173,8 +173,8 @@ internal class MouseManagerTests : Tests
         Assert.Multiple( ( ) =>
         {
             Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
-            Assert.That( view.ContentSize.Width, Is.EqualTo( 10 ) );
-            Assert.That( view.ContentSize.Height, Is.EqualTo( 1 ) );
+            Assert.That( view.GetContentSize().Width, Is.EqualTo( 10 ) );
+            Assert.That( view.GetContentSize().Height, Is.EqualTo( 1 ) );
         } );
 
         // user presses down in the lower right of control
@@ -202,8 +202,8 @@ internal class MouseManagerTests : Tests
 
         Assert.Multiple( ( ) =>
         {
-            Assert.That( view.ContentSize.Width, Is.EqualTo( 10 ), "Expected Width to remain constant because it is Dim.Fill()" );
-            Assert.That( view.ContentSize.Height, Is.EqualTo( 4 ), "Expected resize to update Y component" );
+            Assert.That( view.GetContentSize().Width, Is.EqualTo( 10 ), "Expected Width to remain constant because it is Dim.Fill()" );
+            Assert.That( view.GetContentSize().Height, Is.EqualTo( 4 ), "Expected resize to update Y component" );
             Assert.That( view.Width, Is.EqualTo( Dim.Fill( ) ) );
             Assert.That( view.Height, Is.EqualTo( Dim.Absolute( 4 ) ) );
         } );
@@ -220,8 +220,8 @@ internal class MouseManagerTests : Tests
 
         Assert.Multiple( ( ) =>
         {
-            Assert.That( view.ContentSize.Width, Is.EqualTo( 10 ), "Expected Width to remain constant because it is Dim.Fill()" );
-            Assert.That( view.ContentSize.Height, Is.EqualTo( 4 ), "Expected resize to update Y component" );
+            Assert.That( view.GetContentSize().Width, Is.EqualTo( 10 ), "Expected Width to remain constant because it is Dim.Fill()" );
+            Assert.That( view.GetContentSize().Height, Is.EqualTo( 4 ), "Expected resize to update Y component" );
             Assert.That( view.Width, Is.EqualTo( Dim.Fill( ) ) );
             Assert.That( view.Height, Is.EqualTo( Dim.Absolute( 4 ) ) );
         } );
@@ -235,8 +235,8 @@ internal class MouseManagerTests : Tests
         Assert.Multiple( ( ) =>
         {
             Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
-            Assert.That( view.ContentSize.Width, Is.EqualTo( 10 ) );
-            Assert.That( view.ContentSize.Height, Is.EqualTo( 1 ) );
+            Assert.That( view.GetContentSize().Width, Is.EqualTo( 10 ) );
+            Assert.That( view.GetContentSize().Height, Is.EqualTo( 1 ) );
             Assert.That( view.Width, Is.EqualTo( Dim.Fill( ) ) );
             Assert.That( view.Height, Is.EqualTo( Dim.Absolute( 1 ) ) );
         } );

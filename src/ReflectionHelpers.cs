@@ -64,8 +64,8 @@ public static class ReflectionHelpers
         var instance = Activator.CreateInstance( t ) as View ?? throw new InvalidOperationException( $"CreateInstance returned null for Type '{t.Name}'" );
         instance.SetActualText( "Heya" );
 
-        instance.Width = Math.Max( instance.ContentSize.Width, 4 );
-        instance.Height = Math.Max( instance.ContentSize.Height, 1 );
+        instance.Width = Math.Max( instance.GetContentSize().Width, 4 );
+        instance.Height = Math.Max( instance.GetContentSize().Height, 1 );
 
         return instance;
     }

@@ -209,7 +209,7 @@ public class Editor : Toplevel
                 if (toDisplay != null)
                 {
                     // write its name in the lower right
-                    int y = this.ContentSize.Height - 1;
+                    int y = this.GetContentSize().Height - 1;
                     int right = bounds.Width - 1;
                     var len = toDisplay.Length;
 
