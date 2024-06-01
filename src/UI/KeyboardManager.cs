@@ -309,18 +309,19 @@ public class KeyboardManager
             return ' ';
         }
 
-        var ch = (char)keystroke;
+        var ch = (char)Key.ToRune(keystroke.KeyCode).Value;
 
         if(ch >= 'A' && ch <= 'Z' && !keystroke.IsShift)
         {
             return char.ToLower(ch);
-        }
+        }       
 
         return ch;
     }
 
     private bool IsActionableKey(Key keystroke)
     {
+        
         if (keystroke == Key.Backspace)
         {
             return true;
@@ -333,6 +334,10 @@ public class KeyboardManager
         if (keystroke.IsCtrl)
         {
             return false;
+        }
+
+        if (keystroke >= Key.A && keystroke <= Key.Z) {
+            return true;
         }
 
         var punctuation = "\"\\/':;%^&*~`!@#.,? ()-+{}<>=_][|";
