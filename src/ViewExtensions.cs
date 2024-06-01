@@ -262,10 +262,7 @@ public static class ViewExtensions
 
         var hit = View.FindDeepestView(w, m.Position);
 
-        if (hit != null && hit.GetType().Name.Equals("TabRowView"))
-        {
-            hit = hit.SuperView;
-        }
+        hit = UnpackHitView(hit);
 
         int resizeBoxArea = 2;
 
@@ -302,6 +299,44 @@ public static class ViewExtensions
         }
 
         return hit is Adornment a ? a.Parent : hit;
+    }
+
+    /// <summary>
+    /// <para>
+    /// Sometimes <see cref="View.FindDeepestView"/> returns what the library considers
+    /// the clicked View rather than what the user would expect.  For example clicking in
+    /// the <see cref="Border"/> area of a <see cref="View"/>.
+    /// </para>
+    /// <para>This works out what the real view is.</para>
+    /// </summary>
+    /// <param name="hit"></param>
+    /// <returns></returns>
+    public static View? UnpackHitView(this View? hit)
+    {
+        if (hit != null && hit.GetType().Name.Equals("TabRowView"))
+        {
+            hit = hit.SuperView;
+        }
+
+        // Translate clicks in the border as the real View being clicked
+        if (hit is Border b)
+        {
+            hit = b.Parent;
+
+        }
+
+        // TabView nesting of 'fake' views goes:
+        // TabView
+        //   - TabViewRow
+        //   - View (pane)
+        //     - Border (note you need Parent not SuperView to find Border parent)
+
+        if (hit?.SuperView is TabView tv)
+        {
+            hit = tv;
+        }
+
+        return hit;
     }
 
     /// <summary>
