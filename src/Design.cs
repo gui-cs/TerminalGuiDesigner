@@ -861,6 +861,12 @@ public class Design
             return false;
         }
 
+        // Do not let Text be set on Slider or Slider<> implementations as weird stuff happens
+        if(this.View.GetType().Name.StartsWith("Slider") || View is RadioGroup)
+        {
+            return false;
+        }
+
         return !this.excludeTextPropertyFor.Contains(this.View.GetType());
     }
 
