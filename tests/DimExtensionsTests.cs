@@ -1,3 +1,5 @@
+using TerminalGuiDesigner;
+
 namespace UnitTests;
 
 [TestFixture]

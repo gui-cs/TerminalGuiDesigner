@@ -309,7 +309,14 @@ public class KeyboardManager
             return ' ';
         }
 
-        return keystroke.ToString().ToCharArray()[0];
+        var ch = (char)keystroke;
+
+        if(ch >= 'A' && ch <= 'Z' && !keystroke.IsShift)
+        {
+            return char.ToLower(ch);
+        }
+
+        return ch;
     }
 
     private bool IsActionableKey(Key keystroke)
@@ -332,6 +339,9 @@ public class KeyboardManager
 
         var ch = KeyToLetter(keystroke);
 
+        
+
         return punctuation.Contains(ch) || char.IsLetterOrDigit(ch);
     }
+
 }
