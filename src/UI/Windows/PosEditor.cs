@@ -54,12 +54,12 @@ public partial class PosEditor : Dialog {
         Cancelled = true;
         Modal = true;
 
-        var siblings = design.GetSiblings().ToList();
+        var siblings = design.GetSiblings().ToListObs();
 
         ddRelativeTo.SetSource(siblings);
         ddRelativeTo.KeyBindings.Add(Key.CursorDown, Command.Expand);
 
-        ddSide.SetSource(Enum.GetValues(typeof(Side)).Cast<Enum>().ToList());
+        ddSide.SetSource(Enum.GetValues(typeof(Side)).Cast<Enum>().ToListObs());
         ddSide.KeyBindings.Add(Key.CursorDown, Command.Expand);
 
         var val = oldValue;
