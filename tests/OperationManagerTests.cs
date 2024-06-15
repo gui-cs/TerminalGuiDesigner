@@ -65,6 +65,6 @@ internal class OperationManagerTests
         Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 4 ) );
         Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
 
-        Assert.That( lblDesign.View.X.ToString( ), Is.EqualTo( $"Factor({0.5})" ) );
+        Assert.That( lblDesign.View.X.ToString( ), Is.EqualTo( $"Percent({50})" ) );
     }
 }
