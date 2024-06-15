@@ -20,7 +20,7 @@ internal class ColorSchemeTests : Tests
 
         var state = Application.Begin( window );
 
-        Assume.That( d.View.ColorScheme, Is.Not.Null.And.SameAs( Colors.Base ) );
+        Assume.That( d.View.ColorScheme, Is.Not.Null.And.SameAs( Colors.ColorSchemes["Base"] ) );
         Assume.That( d.HasKnownColorScheme( ), Is.False );
 
         var scheme = new ColorScheme( );
@@ -56,7 +56,7 @@ internal class ColorSchemeTests : Tests
 
         var state = Application.Begin(window);
 
-        Assert.That( d.View.ColorScheme, Is.Not.Null.And.SameAs( Colors.Base ) );
+        Assert.That( d.View.ColorScheme, Is.Not.Null.And.SameAs( Colors.ColorSchemes["Base"] ) );
         Assert.That( d.HasKnownColorScheme(), Is.False );
 
         var scheme = new ColorScheme();
@@ -115,7 +115,7 @@ internal class ColorSchemeTests : Tests
         // ColorScheme defined and just inherit from parent
         var v = Get10By10View();
 
-        var btn = new Button("Hey");
+        var btn = new Button{ Text = "Hey" };
         var op = new AddViewOperation(btn, v, "myBtn");
         op.Do();
         Design btnDesign = (Design)btn.Data;

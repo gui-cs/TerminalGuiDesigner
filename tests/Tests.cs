@@ -23,6 +23,12 @@ internal class Tests
         _init = true;
 
         OperationManager.Instance.ClearUndoRedo();
+
+        Application.Begin(new Toplevel
+        {
+            Width = Dim.Fill(),
+            Height = Dim.Fill(),
+        });
     }
 
     [TearDown]
@@ -41,7 +47,11 @@ internal class Tests
         // start with blank slate
         OperationManager.Instance.ClearUndoRedo();
 
-        var v = new View(new Rect(0, 0, 10, 10));
+        var v = new View()
+        {
+            Width = 10,
+            Height = 10,
+        };
         var d = new Design(new SourceCodeFile(new FileInfo("TenByTen.cs")), Design.RootDesignName, v);
         v.Data = d;
 
@@ -125,8 +135,7 @@ internal class Tests
         mm.HandleMouse(
             new MouseEvent
             {
-                X = x1,
-                Y = y1,
+                Position = new Point(x1, y1),
                 Flags = MouseFlags.Button1Pressed,
             }, root);
 
@@ -134,8 +143,7 @@ internal class Tests
         mm.HandleMouse(
             new MouseEvent
             {
-                X = x2,
-                Y = y2,
+                Position = new Point(x2, y2),
                 Flags = MouseFlags.Button1Pressed,
             }, root);
 
@@ -144,8 +152,7 @@ internal class Tests
         mm.HandleMouse(
             new MouseEvent
             {
-                X = x2,
-                Y = y2,
+                Position = new Point(x2,y2),
                 Flags = MouseFlags.Button1Released,
             }, root);
     }

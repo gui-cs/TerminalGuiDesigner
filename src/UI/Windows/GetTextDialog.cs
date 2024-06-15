@@ -59,35 +59,38 @@ internal class GetTextDialog
 
         this.win.Add(this.textField);
 
-        var btnOk = new Button("Ok", true)
+        var btnOk = new Button()
         {
+            Text = "Ok",
             X = 0,
             Y = Pos.Bottom(this.textField),
             IsDefault = !this.args.MultiLine,
         };
-        btnOk.Clicked += (s, e) =>
+        btnOk.Accept += (s, e) =>
         {
             this.Accept();
         };
 
-        var btnCancel = new Button("Cancel")
+        var btnCancel = new Button()
         {
+            Text = "Cancel",
             X = Pos.Right(btnOk),
             Y = Pos.Bottom(this.textField),
             IsDefault = false,
         };
-        btnCancel.Clicked += (s, e) =>
+        btnCancel.Accept += (s, e) =>
         {
             this.okClicked = false;
             Application.RequestStop();
         };
 
-        var btnClear = new Button("Clear")
+        var btnClear = new Button()
         {
+            Text = "Clear",
             X = Pos.Right(btnCancel),
             Y = Pos.Bottom(this.textField),
         };
-        btnClear.Clicked += (s, e) =>
+        btnClear.Accept += (s, e) =>
         {
             this.textField.Text = string.Empty;
         };

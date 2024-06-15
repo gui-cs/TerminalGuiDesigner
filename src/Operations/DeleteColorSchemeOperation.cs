@@ -76,15 +76,16 @@ public class DeleteColorSchemeOperation : Operation
         {
             switch (d.View)
             {
-                case Dialog: return Colors.Dialog;
-                case Window: return Colors.Base;
+                case Dialog: return Colors.ColorSchemes["Dialog"];
+                case Window: return Colors.ColorSchemes["Base"];
                 default: return null;
             }
         }
 
         if (d.View is MenuBar)
         {
-            return Colors.Menu;
+            
+            return Colors.ColorSchemes["Menu"];
         }
 
         return null;

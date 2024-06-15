@@ -110,7 +110,7 @@ internal class CodeDomArgsTests
         "false",
         "finally",
         "fixed",
-        "float",
+        "int",
         "for",
         "foreach",
         "goto",

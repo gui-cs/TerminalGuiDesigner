@@ -104,7 +104,7 @@ public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         this.Modal = true;
         this.Text = "";
         this.Border.BorderStyle = Terminal.Gui.LineStyle.Single;
-        this.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Title = "Color Scheme Editor";
         this.label2.Width = 10;
         this.label2.Height = 1;
@@ -112,7 +112,7 @@ public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         this.label2.Y = 0;
         this.label2.Data = "label2";
         this.label2.Text = "Normal   :";
-        this.label2.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.label2.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.label2);
         this.lblForegroundNormal.Width = 1;
         this.lblForegroundNormal.Height = 1;
@@ -120,7 +120,7 @@ public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         this.lblForegroundNormal.Y = 0;
         this.lblForegroundNormal.Data = "lblForegroundNormal";
         this.lblForegroundNormal.Text = " ";
-        this.lblForegroundNormal.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lblForegroundNormal.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.lblForegroundNormal);
         this.label1.Width = 1;
         this.label1.Height = 1;
@@ -128,7 +128,7 @@ public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         this.label1.Y = 0;
         this.label1.Data = "label1";
         this.label1.Text = "\\";
-        this.label1.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.label1.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.label1);
         this.lblBackgroundNormal.Width = 1;
         this.lblBackgroundNormal.Height = 1;
@@ -136,14 +136,14 @@ public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         this.lblBackgroundNormal.Y = 0;
         this.lblBackgroundNormal.Data = "lblBackgroundNormal";
         this.lblBackgroundNormal.Text = " ";
-        this.lblBackgroundNormal.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lblBackgroundNormal.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.lblBackgroundNormal);
         this.btnEditNormal.Width = 13;
         this.btnEditNormal.X = 15;
         this.btnEditNormal.Y = 0;
         this.btnEditNormal.Data = "btnEditNormal";
         this.btnEditNormal.Text = "Choose...";
-        this.btnEditNormal.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+        this.btnEditNormal.TextAlignment = Terminal.Gui.Alignment.Center;
         this.btnEditNormal.IsDefault = false;
         this.Add(this.btnEditNormal);
         this.label22.Width = 10;
@@ -152,7 +152,7 @@ public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         this.label22.Y = 1;
         this.label22.Data = "label22";
         this.label22.Text = "HotNormal:";
-        this.label22.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.label22.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.label22);
         this.lblForegroundHotNormal.Width = 1;
         this.lblForegroundHotNormal.Height = 1;
@@ -160,7 +160,7 @@ public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         this.lblForegroundHotNormal.Y = 1;
         this.lblForegroundHotNormal.Data = "lblForegroundHotNormal";
         this.lblForegroundHotNormal.Text = " ";
-        this.lblForegroundHotNormal.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lblForegroundHotNormal.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.lblForegroundHotNormal);
         this.lblHotNormalSlash.Width = 1;
         this.lblHotNormalSlash.Height = 1;
@@ -168,7 +168,7 @@ public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         this.lblHotNormalSlash.Y = 1;
         this.lblHotNormalSlash.Data = "lblHotNormalSlash";
         this.lblHotNormalSlash.Text = "\\";
-        this.lblHotNormalSlash.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lblHotNormalSlash.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.lblHotNormalSlash);
         this.lblBackgroundHotNormal.Width = 1;
         this.lblBackgroundHotNormal.Height = 1;
@@ -176,14 +176,14 @@ public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         this.lblBackgroundHotNormal.Y = 1;
         this.lblBackgroundHotNormal.Data = "lblBackgroundHotNormal";
         this.lblBackgroundHotNormal.Text = " ";
-        this.lblBackgroundHotNormal.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lblBackgroundHotNormal.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.lblBackgroundHotNormal);
         this.btnEditHotNormal.Width = 13;
         this.btnEditHotNormal.X = 15;
         this.btnEditHotNormal.Y = 1;
         this.btnEditHotNormal.Data = "btnEditHotNormal";
         this.btnEditHotNormal.Text = "Choose...";
-        this.btnEditHotNormal.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+        this.btnEditHotNormal.TextAlignment = Terminal.Gui.Alignment.Center;
         this.btnEditHotNormal.IsDefault = false;
         this.Add(this.btnEditHotNormal);
         this.lblFocus.Width = 10;
@@ -192,7 +192,7 @@ public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         this.lblFocus.Y = 2;
         this.lblFocus.Data = "lblFocus";
         this.lblFocus.Text = "Focus    :";
-        this.lblFocus.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lblFocus.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.lblFocus);
         this.lblForegroundFocus.Width = 1;
         this.lblForegroundFocus.Height = 1;
@@ -200,7 +200,7 @@ public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         this.lblForegroundFocus.Y = 2;
         this.lblForegroundFocus.Data = "lblForegroundFocus";
         this.lblForegroundFocus.Text = " ";
-        this.lblForegroundFocus.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lblForegroundFocus.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.lblForegroundFocus);
         this.lblHotNormalSlash2.Width = 1;
         this.lblHotNormalSlash2.Height = 1;
@@ -208,7 +208,7 @@ public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         this.lblHotNormalSlash2.Y = 2;
         this.lblHotNormalSlash2.Data = "lblHotNormalSlash2";
         this.lblHotNormalSlash2.Text = "\\";
-        this.lblHotNormalSlash2.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lblHotNormalSlash2.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.lblHotNormalSlash2);
         this.lblBackgroundFocus.Width = 1;
         this.lblBackgroundFocus.Height = 1;
@@ -216,14 +216,14 @@ public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         this.lblBackgroundFocus.Y = 2;
         this.lblBackgroundFocus.Data = "lblBackgroundFocus";
         this.lblBackgroundFocus.Text = " ";
-        this.lblBackgroundFocus.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lblBackgroundFocus.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.lblBackgroundFocus);
         this.btnEditFocus.Width = 13;
         this.btnEditFocus.X = 15;
         this.btnEditFocus.Y = 2;
         this.btnEditFocus.Data = "btnEditFocus";
         this.btnEditFocus.Text = "Choose...";
-        this.btnEditFocus.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+        this.btnEditFocus.TextAlignment = Terminal.Gui.Alignment.Center;
         this.btnEditFocus.IsDefault = false;
         this.Add(this.btnEditFocus);
         this.label223.Width = 10;
@@ -232,7 +232,7 @@ public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         this.label223.Y = 3;
         this.label223.Data = "label223";
         this.label223.Text = "HotFocus :";
-        this.label223.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.label223.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.label223);
         this.lblForegroundHotFocus.Width = 1;
         this.lblForegroundHotFocus.Height = 1;
@@ -240,7 +240,7 @@ public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         this.lblForegroundHotFocus.Y = 3;
         this.lblForegroundHotFocus.Data = "lblForegroundHotFocus";
         this.lblForegroundHotFocus.Text = " ";
-        this.lblForegroundHotFocus.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lblForegroundHotFocus.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.lblForegroundHotFocus);
         this.lblHotNormalSlash3.Width = 1;
         this.lblHotNormalSlash3.Height = 1;
@@ -248,7 +248,7 @@ public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         this.lblHotNormalSlash3.Y = 3;
         this.lblHotNormalSlash3.Data = "lblHotNormalSlash3";
         this.lblHotNormalSlash3.Text = "\\";
-        this.lblHotNormalSlash3.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lblHotNormalSlash3.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.lblHotNormalSlash3);
         this.lblBackgroundHotFocus.Width = 1;
         this.lblBackgroundHotFocus.Height = 1;
@@ -256,14 +256,14 @@ public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         this.lblBackgroundHotFocus.Y = 3;
         this.lblBackgroundHotFocus.Data = "lblBackgroundHotFocus";
         this.lblBackgroundHotFocus.Text = " ";
-        this.lblBackgroundHotFocus.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lblBackgroundHotFocus.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.lblBackgroundHotFocus);
         this.btnEditHotFocus.Width = 13;
         this.btnEditHotFocus.X = 15;
         this.btnEditHotFocus.Y = 3;
         this.btnEditHotFocus.Data = "btnEditHotFocus";
         this.btnEditHotFocus.Text = "Choose...";
-        this.btnEditHotFocus.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+        this.btnEditHotFocus.TextAlignment = Terminal.Gui.Alignment.Center;
         this.btnEditHotFocus.IsDefault = false;
         this.Add(this.btnEditHotFocus);
         this.label2232.Width = 10;
@@ -272,7 +272,7 @@ public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         this.label2232.Y = 4;
         this.label2232.Data = "label2232";
         this.label2232.Text = "Disabled :";
-        this.label2232.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.label2232.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.label2232);
         this.lblForegroundDisabled.Width = 1;
         this.lblForegroundDisabled.Height = 1;
@@ -280,7 +280,7 @@ public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         this.lblForegroundDisabled.Y = 4;
         this.lblForegroundDisabled.Data = "lblForegroundDisabled";
         this.lblForegroundDisabled.Text = " ";
-        this.lblForegroundDisabled.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lblForegroundDisabled.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.lblForegroundDisabled);
         this.lblHotNormalSlash32.Width = 1;
         this.lblHotNormalSlash32.Height = 1;
@@ -288,7 +288,7 @@ public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         this.lblHotNormalSlash32.Y = 4;
         this.lblHotNormalSlash32.Data = "lblHotNormalSlash32";
         this.lblHotNormalSlash32.Text = "\\";
-        this.lblHotNormalSlash32.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lblHotNormalSlash32.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.lblHotNormalSlash32);
         this.lblBackgroundDisabled.Width = 1;
         this.lblBackgroundDisabled.Height = 1;
@@ -296,14 +296,14 @@ public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         this.lblBackgroundDisabled.Y = 4;
         this.lblBackgroundDisabled.Data = "lblBackgroundDisabled";
         this.lblBackgroundDisabled.Text = " ";
-        this.lblBackgroundDisabled.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lblBackgroundDisabled.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.lblBackgroundDisabled);
         this.btnEditDisabled.Width = 13;
         this.btnEditDisabled.X = 15;
         this.btnEditDisabled.Y = 4;
         this.btnEditDisabled.Data = "btnEditDisabled";
         this.btnEditDisabled.Text = "Choose...";
-        this.btnEditDisabled.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+        this.btnEditDisabled.TextAlignment = Terminal.Gui.Alignment.Center;
         this.btnEditDisabled.IsDefault = false;
         this.Add(this.btnEditDisabled);
         this.btnOk.Width = 6;
@@ -311,7 +311,7 @@ public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         this.btnOk.Y = 6;
         this.btnOk.Data = "btnOk";
         this.btnOk.Text = "Ok";
-        this.btnOk.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+        this.btnOk.TextAlignment = Terminal.Gui.Alignment.Center;
         this.btnOk.IsDefault = false;
         this.Add(this.btnOk);
         this.btnCancel.Width = 10;
@@ -319,7 +319,7 @@ public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         this.btnCancel.Y = 6;
         this.btnCancel.Data = "btnCancel";
         this.btnCancel.Text = "Cancel";
-        this.btnCancel.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+        this.btnCancel.TextAlignment = Terminal.Gui.Alignment.Center;
         this.btnCancel.IsDefault = false;
         this.Add(this.btnCancel);
     }

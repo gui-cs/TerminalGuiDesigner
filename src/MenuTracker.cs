@@ -211,7 +211,7 @@ public class MenuTracker
             {
                 dictionary.TryAdd( c, added );
 
-                bar.CloseMenu();
+                bar.CloseMenu(false);
                 bar.OpenMenu();
             }
         }

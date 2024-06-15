@@ -32,7 +32,7 @@ public partial class PointEditor : Terminal.Gui.Dialog {
         this.Height = 8;
         this.X = Pos.Center();
         this.Y = Pos.Center();
-        this.TextAlignment = TextAlignment.Left;
+        this.TextAlignment = Alignment.Start;
         this.Title = "Point Designer";
         this.lblX = new Terminal.Gui.Label();
         this.lblX.Data = "lblX";
@@ -41,7 +41,7 @@ public partial class PointEditor : Terminal.Gui.Dialog {
         this.lblX.Height = 1;
         this.lblX.X = 2;
         this.lblX.Y = 1;
-        this.lblX.TextAlignment = TextAlignment.Left;
+        this.lblX.TextAlignment = Alignment.Start;
         this.Add(this.lblX);
         this.tbX = new Terminal.Gui.TextField();
         this.tbX.Data = "tbX";
@@ -50,7 +50,7 @@ public partial class PointEditor : Terminal.Gui.Dialog {
         this.tbX.Height = 1;
         this.tbX.X = 5;
         this.tbX.Y = 1;
-        this.tbX.TextAlignment = TextAlignment.Left;
+        this.tbX.TextAlignment = Alignment.Start;
         this.Add(this.tbX);
         this.lblY = new Terminal.Gui.Label();
         this.lblY.Data = "lblY";
@@ -59,7 +59,7 @@ public partial class PointEditor : Terminal.Gui.Dialog {
         this.lblY.Height = 1;
         this.lblY.X = 2;
         this.lblY.Y = 3;
-        this.lblY.TextAlignment = TextAlignment.Left;
+        this.lblY.TextAlignment = Alignment.Start;
         this.Add(this.lblY);
         this.tbY = new Terminal.Gui.TextField();
         this.tbY.Data = "tbY";
@@ -68,7 +68,7 @@ public partial class PointEditor : Terminal.Gui.Dialog {
         this.tbY.Height = 1;
         this.tbY.X = 5;
         this.tbY.Y = 3;
-        this.tbY.TextAlignment = TextAlignment.Left;
+        this.tbY.TextAlignment = Alignment.Start;
         this.Add(this.tbY);
         this.btnOk = new Terminal.Gui.Button();
         this.btnOk.Data = "btnOk";
@@ -77,7 +77,7 @@ public partial class PointEditor : Terminal.Gui.Dialog {
         this.btnOk.Height = 1;
         this.btnOk.X = 1;
         this.btnOk.Y = 5;
-        this.btnOk.TextAlignment = TextAlignment.Centered;
+        this.btnOk.TextAlignment = Alignment.Center;
         this.btnOk.IsDefault = true;
         this.Add(this.btnOk);
         this.btnCancel = new Terminal.Gui.Button();
@@ -87,7 +87,7 @@ public partial class PointEditor : Terminal.Gui.Dialog {
         this.btnCancel.Height = 1;
         this.btnCancel.X = 10;
         this.btnCancel.Y = 5;
-        this.btnCancel.TextAlignment = TextAlignment.Centered;
+        this.btnCancel.TextAlignment = Alignment.Center;
         this.btnCancel.IsDefault = false;
         this.Add(this.btnCancel);
     }

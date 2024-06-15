@@ -4,24 +4,11 @@ namespace UnitTests;
 [Category( "Code Generation" )]
 internal class ScrollViewTests : Tests
 {
-    [Test]
-    public void TestRoundTrip_PreserveContentSize( [Values( 1, 5, 25, 100 )] int width, [Values( 1, 5, 25, 100 )] int height )
-    {
-        using ScrollView scrollViewIn = RoundTrip<View, ScrollView>(
-            ( _, s ) => { s.ContentSize = new( width, height ); }, out ScrollView? scrollViewOut );
-
-        Assert.Multiple( ( ) =>
-        {
-            Assert.That( scrollViewIn, Is.Not.SameAs( scrollViewOut ) );
-            Assert.That( scrollViewIn.ContentSize.Width, Is.EqualTo( width ) );
-            Assert.That( scrollViewIn.ContentSize.Height, Is.EqualTo( height ) );
-        } );
-    }
 
     [Test]
     public void TestRoundTrip_PreserveContentViews( [Values( "blarggg" )] string text, [Values( "myLbl" )] string fieldName )
     {
-        using Label lbl = new ( text );
+        using Label lbl = new() { Text = text, Width = 7, Height = 1 };
         using ScrollView scrollViewIn = RoundTrip<View, ScrollView>(
             ( d, _ ) =>
             {

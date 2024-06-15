@@ -258,14 +258,11 @@ public static class ViewExtensions
             v.Visible = false;
         }
 
-        var point = w.ScreenToBounds(m.X, m.Y);
+        var point = w.ScreenToContent(m.Position);
 
-        var hit = ApplicationExtensions.FindDeepestView(w, m.X, m.Y);
+        var hit = View.FindDeepestView(w, m.Position);
 
-        if (hit != null && hit.GetType().Name.Equals("TabRowView"))
-        {
-            hit = hit.SuperView;
-        }
+        hit = UnpackHitView(hit);
 
         int resizeBoxArea = 2;
 
@@ -284,10 +281,10 @@ public static class ViewExtensions
             }
 
             isBorder =
-                m.X == screenFrame.X + screenFrame.Width - 1 ||
-                m.X == screenFrame.X ||
-                m.Y == screenFrame.Y + screenFrame.Height - 1 ||
-                m.Y == screenFrame.Y;
+                m.Position.X == screenFrame.X + screenFrame.Width - 1 ||
+                m.Position.X == screenFrame.X ||
+                m.Position.Y == screenFrame.Y + screenFrame.Height - 1 ||
+                m.Position.Y == screenFrame.Y;
         }
         else
         {
@@ -301,6 +298,44 @@ public static class ViewExtensions
             v.Visible = true;
         }
 
+        return hit is Adornment a ? a.Parent : hit;
+    }
+
+    /// <summary>
+    /// <para>
+    /// Sometimes <see cref="View.FindDeepestView"/> returns what the library considers
+    /// the clicked View rather than what the user would expect.  For example clicking in
+    /// the <see cref="Border"/> area of a <see cref="View"/>.
+    /// </para>
+    /// <para>This works out what the real view is.</para>
+    /// </summary>
+    /// <param name="hit"></param>
+    /// <returns></returns>
+    public static View? UnpackHitView(this View? hit)
+    {
+        if (hit != null && hit.GetType().Name.Equals("TabRowView"))
+        {
+            hit = hit.SuperView;
+        }
+
+        // Translate clicks in the border as the real View being clicked
+        if (hit is Border b)
+        {
+            hit = b.Parent;
+
+        }
+
+        // TabView nesting of 'fake' views goes:
+        // TabView
+        //   - TabViewRow
+        //   - View (pane)
+        //     - Border (note you need Parent not SuperView to find Border parent)
+
+        if (hit?.SuperView is TabView tv)
+        {
+            hit = tv;
+        }
+
         return hit;
     }
 
@@ -309,16 +344,16 @@ public static class ViewExtensions
     /// with the <paramref name="screenRect"/> rectangle.
     /// </summary>
     /// <param name="v"><see cref="View"/> whose bounds will be intersected with <paramref name="screenRect"/>.</param>
-    /// <param name="screenRect"><see cref="Rect"/> to intersect with <paramref name="v"/>.</param>
+    /// <param name="screenRect"><see cref="Rectangle"/> to intersect with <paramref name="v"/>.</param>
     /// <returns>True if the client area intersects.</returns>
-    public static bool IntersectsScreenRect(this View v, Rect screenRect)
+    public static bool IntersectsScreenRect(this View v, Rectangle screenRect)
     {
         // TODO: maybe this should use Frame instead? Currently this will not let you drag box
         // selection over the border of a container to select it (e.g. FrameView).
-        v.BoundsToScreen(0, 0, out var x0, out var y0);
-        v.BoundsToScreen(v.Bounds.Width, v.Bounds.Height, out var x1, out var y1);
+        var p0 = v.ContentToScreen(new Point(0, 0));
+        var p1 = v.ContentToScreen(new Point(v.GetContentSize().Width, v.GetContentSize().Height));
 
-        return Rect.FromLTRB(x0, y0, x1, y1).IntersectsWith(screenRect);
+        return Rectangle.FromLTRB(p0.X, p0.Y, p1.X, p1.Y).IntersectsWith(screenRect);
     }
 
     /// <summary>
@@ -359,40 +394,9 @@ public static class ViewExtensions
             .ThenBy(v => v.Frame.X);
     }
 
-    /// <summary>
-    /// Returns <see cref="View.Frame"/> in screen coordinates.  For tests ensure you
-    /// have run <see cref="View.LayoutSubviews"/> and that <paramref name="view"/> has
-    /// a route to <see cref="Application.Top"/> (e.g. is showing or <see cref="Application.Begin(Toplevel)"/>).
-    /// </summary>
-    /// <param name="view">The view you want to translate coordinates for.</param>
-    /// <returns>Screen coordinates of <paramref name="view"/>'s <see cref="View.Frame"/>.</returns>
-    public static Rect FrameToScreen(this View view)
-    {
-        if(view.SuperView == null)
-        {
-            return view.Frame;
-        }
-
-        return view.SuperView.BoundsToScreen(view.Frame);
-    }
-
-    /// <summary>
-    /// Converts a region in view-relative coordinates to screen-relative coordinates.
-    /// </summary>
-    private static Rect ViewToScreen (this View v, Rect region)
-    {
-        v.BoundsToScreen (region.X, region.Y, out var x, out var y, clamped: false);
-        return new Rect (x, y, region.Width, region.Height);
-    }
-
     private static bool HasNoBorderProperty(this View v)
     {
-        if (v.Border == null)
-        {
-            return true;
-        }
-
-        if (v.Border.BorderStyle == LineStyle.None)
+        if (v.Border == null || v.BorderStyle == LineStyle.None)
         {
             return true;
         }

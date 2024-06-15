@@ -17,11 +17,33 @@ using Attribute = Terminal.Gui.Attribute;
 /// </summary>
 public partial class ColorSchemeEditor {
     
+    class MutableColorScheme
+    {
+        public Attribute Disabled { get; set; }
+        public Attribute Focus { get; set; }
+        public Attribute HotFocus { get; set; }
+        public Attribute HotNormal { get; set; }
+        public Attribute Normal { get; set; }
+
+        internal ColorScheme ToColorScheme()
+        {
+            return new ColorScheme
+            {
+                Normal = Normal,
+                HotNormal = HotNormal,
+                Focus = Focus,
+                HotFocus = HotFocus,
+                Disabled = Disabled,
+            };
+        }
+    }
     /// <summary>
     /// All colors to use in all <see cref="View"/> states (focused, normal etc).
     /// </summary>
-    public ColorScheme Result {get;}
-    
+    public ColorScheme Result => _result.ToColorScheme();
+
+    MutableColorScheme _result;
+
     /// <summary>
     /// True if dialog was closed without clicking Ok (e.g. Cancel or Ctrl+Q).
     /// </summary>
@@ -34,54 +56,55 @@ public partial class ColorSchemeEditor {
     public ColorSchemeEditor(ColorScheme scheme) {
         InitializeComponent();
 
-        Result = Clone(scheme);
+        _result = Clone(scheme);
 
         SetColorPatches();
 
-        btnEditNormal.Clicked += (s, e)=>{
-            Result.Normal = PickNewColorsFor(Result.Normal);
+        btnEditNormal.Accept += (s, e)=>{
+            _result.Normal = PickNewColorsFor(Result.Normal);
             SetColorPatches();
             };
 
 
-        btnEditHotNormal.Clicked += (s, e)=>{
-            Result.HotNormal = PickNewColorsFor(Result.HotNormal);
+        btnEditHotNormal.Accept += (s, e)=>{
+            _result.HotNormal = PickNewColorsFor(Result.HotNormal);
             SetColorPatches();
             };
 
 
-        btnEditFocus.Clicked += (s, e)=>{
-            Result.Focus = PickNewColorsFor(Result.Focus);
+        btnEditFocus.Accept += (s, e)=>{
+            _result.Focus = PickNewColorsFor(Result.Focus);
             SetColorPatches();
             };
 
 
-        btnEditHotFocus.Clicked += (s, e)=>{
-            Result.HotFocus = PickNewColorsFor(Result.HotFocus);
+        btnEditHotFocus.Accept += (s, e)=>{
+            _result.HotFocus = PickNewColorsFor(Result.HotFocus);
             SetColorPatches();
             };
 
 
-        btnEditDisabled.Clicked += (s, e)=>{
-            Result.Disabled = PickNewColorsFor(Result.Disabled);
+        btnEditDisabled.Accept += (s, e)=>{
+            _result.Disabled = PickNewColorsFor(Result.Disabled);
             SetColorPatches();
             };
 
-        btnCancel.Clicked += (s, e)=>{
+        btnCancel.Accept += (s, e)=>{
             Cancelled = true;
             Application.RequestStop();
         };
 
-        btnOk.Clicked += (s, e)=>{
+        btnOk.Accept += (s, e)=>{
             Cancelled = false;
             Application.RequestStop();
         };
         
     }
 
-    private ColorScheme Clone(ColorScheme scheme)
+    private MutableColorScheme Clone(ColorScheme scheme)
     {
-        return new ColorScheme{
+        return new MutableColorScheme
+        {
             Normal = new Attribute(scheme.Normal.Foreground,scheme.Normal.Background),
             HotNormal = new Attribute(scheme.HotNormal.Foreground,scheme.HotNormal.Background),
             Focus = new Attribute(scheme.Focus.Foreground,scheme.Focus.Background),

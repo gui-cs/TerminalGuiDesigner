@@ -42,9 +42,10 @@ public class TabToCode : ToCodeBase
         this.AddConstructorCall(
             args,
             tabName,
-            typeof(Tab),
-            this.tab.Text.ToCodePrimitiveExpression(),
-            new CodeSnippetExpression("new View()"));
+            typeof(Tab));
+
+        this.AddPropertyAssignment(args, $"{tabName}.{nameof(Tab.DisplayText)}", this.tab.DisplayText.ToCodePrimitiveExpression());
+        this.AddPropertyAssignment(args, $"{tabName}.{nameof(Tab.View)}", new CodeSnippetExpression("new View()"));            
 
         // make the Tab.View Dim.Fill
         this.AddPropertyAssignment(args, $"{tabName}.View.Width", new CodeSnippetExpression("Dim.Fill()"));
@@ -60,7 +61,7 @@ public class TabToCode : ToCodeBase
 
     private string GetTabFieldName(CodeDomArgs args)
     {
-        var tabname = this.tab.Text?.ToString();
+        var tabname = this.tab.DisplayText?.ToString();
         if (string.IsNullOrWhiteSpace(tabname))
         {
             throw new Exception("Could not generate Tab variable name because its Text was blank or null");

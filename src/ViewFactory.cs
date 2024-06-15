@@ -36,8 +36,6 @@ public static class ViewFactory
         typeof( OpenDialog ),
         typeof( ScrollBarView ),
 
-        // Theses are special types of view and shouldn't be added manually by user
-        typeof( Frame ),
         // BUG These seem to cause stack overflows in CreateSubControlDesigns (see TestAddView_RoundTrip)
         typeof( Wizard ),
         typeof( WizardStep )
@@ -70,18 +68,19 @@ public static class ViewFactory
     /// <value>An <see cref="IEnumerable{T}" /> of <see cref="Type" />s supported by <see cref="ViewFactory" />.</value>
     public static IEnumerable<Type> SupportedViewTypes { get; } =
         typeof(View).Assembly.DefinedTypes
-                    .Where( unfilteredType => unfilteredType is
+                    .Where(unfilteredType => unfilteredType is
                     {
                         IsInterface: false,
                         IsAbstract: false,
                         IsPublic: true,
                         IsValueType: false
-                    } )
-                    .Where( filteredType => filteredType.IsSubclassOf( typeof(View) ) )
-                    .Where( viewDescendantType => !KnownUnsupportedTypes.Any( viewDescendantType.IsAssignableTo )
-                                                  || viewDescendantType == typeof( Window ))
+                    })
+                    .Where(filteredType => filteredType.IsSubclassOf(typeof(View)) && filteredType != typeof(Adornment)
+                                           && !filteredType.IsSubclassOf(typeof(Adornment)))
+                    .Where(viewDescendantType => !KnownUnsupportedTypes.Any(viewDescendantType.IsAssignableTo)
+                                                  || viewDescendantType == typeof(Window))
                     // Slider is an alias of Slider<object> so don't offer that
-                    .Where(vt=>vt != typeof(Slider));
+                    .Where(vt => vt != typeof(Slider));
 
     private static bool IsSupportedType( this Type t )
     {
@@ -217,7 +216,7 @@ public static class ViewFactory
                 SetDefaultDimensions(newView, width ?? 16, height ?? 5);
                 break;
             case ScrollView sv:
-                sv.ContentSize = new Size( 20, 10 );
+                sv.SetContentSize(new Size( 20, 10 ));
                 SetDefaultDimensions(newView, width ?? 10, height ?? 5 );
                 break;
             case Label l:
@@ -253,8 +252,8 @@ public static class ViewFactory
 
         static void SetDefaultDimensions( T v, int width = 5, int height = 1 )
         {
-            v.Width = Math.Max( v.Bounds.Width, width );
-            v.Height = Math.Max( v.Bounds.Height, height );
+            v.Width = Math.Max( v.GetContentSize().Width, width );
+            v.Height = Math.Max( v.GetContentSize().Height, height );
         }
     }
 
@@ -308,6 +307,9 @@ public static class ViewFactory
             { } t when t.IsAssignableTo( typeof( SpinnerView ) ) => Create<SpinnerView>( ),
             { } t when t.IsAssignableTo( typeof( FrameView ) ) => Create<FrameView>( ),
             { } t when t.IsAssignableTo( typeof( HexView ) ) => Create<HexView>( ),
+            { } t when t.IsAssignableTo( typeof( Tab ) ) => Create<Tab>( ),
+            { } t when t.IsAssignableTo( typeof( LegendAnnotation ) ) => Create<LegendAnnotation>( ),
+            { } t when t.IsAssignableTo( typeof( DatePicker ) ) => Create<DatePicker>( ),
             _ => ReflectionHelpers.GetDefaultViewInstance( requestedType )
         };
     }

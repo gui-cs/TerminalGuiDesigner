@@ -45,8 +45,8 @@ public partial class DimEditor : Dialog
         Title = "Dim Designer";
         Border.BorderStyle = LineStyle.Double;
 
-        btnOk.Clicked += BtnOk_Clicked;
-        btnCancel.Clicked += BtnCancel_Clicked;
+        btnOk.Accept += BtnOk_Clicked;
+        btnCancel.Accept += BtnCancel_Clicked;
         Cancelled = true;
         Modal = true;
         rgDimType.KeyDown += RgDimType_KeyPress;
@@ -63,6 +63,9 @@ public partial class DimEditor : Dialog
                     break;
                 case DimType.Fill:
                     rgDimType.SelectedItem = 2;
+                    break;
+                case DimType.Auto:
+                    rgDimType.SelectedItem = 3;
                     break;
             }
 
@@ -100,20 +103,36 @@ public partial class DimEditor : Dialog
         {
             case DimType.Absolute:
                 lblValue.Text = "Value";
+                lblValue.Visible = true;
+                tbValue.Visible = true;
+
                 lblOffset.Visible = false;
                 tbOffset.Visible = false;
                 SetNeedsDisplay();
                 break;
             case DimType.Fill:
+                lblValue.Text = "Margin";
+                lblValue.Visible = true;
+                tbValue.Visible = true;
+
                 lblOffset.Visible = false;
                 tbOffset.Visible = false;
-                lblValue.Text = "Margin";
                 SetNeedsDisplay();
                 break;
             case DimType.Percent:
                 lblValue.Text = "Factor";
+                lblValue.Visible = true;
+                tbValue.Visible = true;
+
                 lblOffset.Visible = true;
                 tbOffset.Visible = true;
+                SetNeedsDisplay();
+                break;
+            case DimType.Auto:
+                lblValue.Visible = false;
+                tbValue.Visible = false;
+                lblOffset.Visible = false;
+                tbOffset.Visible = false;
                 SetNeedsDisplay();
                 break;
 
@@ -138,17 +157,19 @@ public partial class DimEditor : Dialog
     {
         // pick what type of Pos they want
         var type = GetDimType();
-        var val = string.IsNullOrWhiteSpace(tbValue.Text.ToString()) ? 0 : float.Parse(tbValue.Text.ToString());
+        var val = string.IsNullOrWhiteSpace(tbValue.Text.ToString()) ? 0 : int.Parse(tbValue.Text.ToString());
         var offset = string.IsNullOrWhiteSpace(tbOffset.Text.ToString()) ? 0 : int.Parse(tbOffset.Text.ToString());
 
         switch (type)
         {
             case DimType.Absolute:
-                return Dim.Sized((int)val);
+                return Dim.Absolute(val);
             case DimType.Percent:
                 return offset == 0? Dim.Percent(val) : Dim.Percent(val) + offset;
             case DimType.Fill:
-                return Dim.Fill((int)val);
+                return Dim.Fill(val);
+            case DimType.Auto:
+                return Dim.Auto();
 
             default: throw new ArgumentOutOfRangeException(nameof(type));
 

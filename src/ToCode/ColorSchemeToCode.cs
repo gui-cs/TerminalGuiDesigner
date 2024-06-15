@@ -33,13 +33,20 @@ public class ColorSchemeToCode : ToCodeBase
     {
         this.AddFieldToClass(args, typeof(ColorScheme), this.scheme.Name);
 
-        this.AddConstructorCall(args, $"this.{this.scheme.Name}", typeof(ColorScheme));
+        this.AddConstructorCall(args, $"this.{this.scheme.Name}", typeof(ColorScheme),
+            GetColorCode(this.scheme.Scheme.Normal),
+            GetColorCode(this.scheme.Scheme.Focus),
+            GetColorCode(this.scheme.Scheme.HotNormal),
+            GetColorCode(this.scheme.Scheme.Disabled),
+            GetColorCode(this.scheme.Scheme.HotFocus));
+    }
 
-        this.AddColorSchemeField(args, this.scheme.Scheme.Normal, nameof(ColorScheme.Normal));
-        this.AddColorSchemeField(args, this.scheme.Scheme.HotNormal, nameof(ColorScheme.HotNormal));
-        this.AddColorSchemeField(args, this.scheme.Scheme.Focus, nameof(ColorScheme.Focus));
-        this.AddColorSchemeField(args, this.scheme.Scheme.HotFocus, nameof(ColorScheme.HotFocus));
-        this.AddColorSchemeField(args, this.scheme.Scheme.Disabled, nameof(ColorScheme.Disabled));
+    private CodeObjectCreateExpression GetColorCode(Attribute attr)
+    {
+        return new CodeObjectCreateExpression(
+            typeof(Attribute),
+            new CodePrimitiveExpression(attr.Foreground.Argb),
+            new CodePrimitiveExpression(attr.Background.Argb));
     }
 
     private void AddColorSchemeField(CodeDomArgs args, Attribute color, string colorSchemeSubfield)

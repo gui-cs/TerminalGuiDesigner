@@ -47,8 +47,8 @@ public partial class ColorPicker
         radiogroup1.SelectedItemChanged += (s,e) => UpdatePreview();
         radiogroup2.SelectedItemChanged += (s,e) => UpdatePreview();
 
-        btnOk.Clicked += (s, e) => Ok();
-        btnCancel.Clicked += (s, e) => Cancel();
+        btnOk.Accept += (s, e) => Ok();
+        btnCancel.Accept += (s, e) => Cancel();
     }
 
     private void Ok()
@@ -66,7 +66,7 @@ public partial class ColorPicker
 
     private void UpdatePreview()
     {
-        lblPreview.ColorScheme.Normal = GetColor();
+        lblPreview.ColorScheme = new ColorScheme(GetColor());
         lblPreview.SetNeedsDisplay();
     }
 

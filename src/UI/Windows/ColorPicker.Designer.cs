@@ -47,7 +47,7 @@ public partial class ColorPicker : Terminal.Gui.Dialog {
         this.Modal = true;
         this.Text = "";
         this.Border.BorderStyle = Terminal.Gui.LineStyle.Single;
-        this.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Title = "Color Picker";
         this.lblForeground.Width = 11;
         this.lblForeground.Height = 1;
@@ -55,7 +55,7 @@ public partial class ColorPicker : Terminal.Gui.Dialog {
         this.lblForeground.Y = 0;
         this.lblForeground.Data = "lblForeground";
         this.lblForeground.Text = "Foreground:";
-        this.lblForeground.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lblForeground.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.lblForeground);
         this.lblBackground.Width = 11;
         this.lblBackground.Height = 1;
@@ -63,7 +63,7 @@ public partial class ColorPicker : Terminal.Gui.Dialog {
         this.lblBackground.Y = 0;
         this.lblBackground.Data = "lblBackground";
         this.lblBackground.Text = "Background:";
-        this.lblBackground.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lblBackground.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.lblBackground);
         this.lblResult.Width = 7;
         this.lblResult.Height = 1;
@@ -71,7 +71,7 @@ public partial class ColorPicker : Terminal.Gui.Dialog {
         this.lblResult.Y = 0;
         this.lblResult.Data = "lblResult";
         this.lblResult.Text = "Result:";
-        this.lblResult.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lblResult.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.lblResult);
         this.radiogroup1.Width = 17;
         this.radiogroup1.Height = 16;
@@ -79,7 +79,7 @@ public partial class ColorPicker : Terminal.Gui.Dialog {
         this.radiogroup1.Y = 1;
         this.radiogroup1.Data = "radiogroup1";
         this.radiogroup1.Text = "";
-        this.radiogroup1.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.radiogroup1.TextAlignment = Terminal.Gui.Alignment.Start;
         this.radiogroup1.RadioLabels = new string[] {
                 "Black",
                 "Blue",
@@ -104,7 +104,7 @@ public partial class ColorPicker : Terminal.Gui.Dialog {
         this.radiogroup2.Y = 1;
         this.radiogroup2.Data = "radiogroup2";
         this.radiogroup2.Text = "";
-        this.radiogroup2.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.radiogroup2.TextAlignment = Terminal.Gui.Alignment.Start;
         this.radiogroup2.RadioLabels = new string[] {
                 "Black",
                 "Blue",
@@ -129,14 +129,14 @@ public partial class ColorPicker : Terminal.Gui.Dialog {
         this.lblPreview.Y = 1;
         this.lblPreview.Data = "lblPreview";
         this.lblPreview.Text = "\"Sample Text\"";
-        this.lblPreview.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lblPreview.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.lblPreview);
         this.btnOk.Width = 8;
         this.btnOk.X = 10;
         this.btnOk.Y = 17;
         this.btnOk.Data = "btnOk";
         this.btnOk.Text = "Ok";
-        this.btnOk.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+        this.btnOk.TextAlignment = Terminal.Gui.Alignment.Center;
         this.btnOk.IsDefault = true;
         this.Add(this.btnOk);
         this.btnCancel.Width = 10;
@@ -144,7 +144,7 @@ public partial class ColorPicker : Terminal.Gui.Dialog {
         this.btnCancel.Y = 17;
         this.btnCancel.Data = "btnCancel";
         this.btnCancel.Text = "Cancel";
-        this.btnCancel.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+        this.btnCancel.TextAlignment = Terminal.Gui.Alignment.Center;
         this.btnCancel.IsDefault = false;
         this.Add(this.btnCancel);
     }

@@ -22,7 +22,7 @@ public partial class LoadingDialog : Terminal.Gui.Dialog {
         this.Height = 5;
         this.X = Pos.Center();
         this.Y = Pos.Center();
-        this.TextAlignment = TextAlignment.Left;
+        this.TextAlignment = Alignment.Start;
         this.Title = "Loading...";
         this.Title = "Loading...";
         this.lblLoading = new Terminal.Gui.Label();
@@ -32,7 +32,7 @@ public partial class LoadingDialog : Terminal.Gui.Dialog {
         this.lblLoading.Height = 1;
         this.lblLoading.X = 1;
         this.lblLoading.Y = 1;
-        this.lblLoading.TextAlignment = TextAlignment.Left;
+        this.lblLoading.TextAlignment = Alignment.Start;
         this.Add(this.lblLoading);
     }
 }

@@ -149,7 +149,7 @@ public class Editor : Toplevel
             }
 
             // If disabling drag we suppress all but right click (button 3)
-            if (!m.MouseEvent.Flags.HasFlag(MouseFlags.Button3Clicked) && !this.enableDrag)
+            if (!m.Flags.HasFlag(MouseFlags.Button3Clicked) && !this.enableDrag)
             {
                 return;
             }
@@ -161,19 +161,19 @@ public class Editor : Toplevel
 
             try
             {
-                this.mouseManager.HandleMouse(m.MouseEvent, this.viewBeingEdited);
+                this.mouseManager.HandleMouse(m, this.viewBeingEdited);
 
                 // right click
-                if (m.MouseEvent.Flags.HasFlag(this.keyMap.RightClick))
+                if (m.Flags.HasFlag(this.keyMap.RightClick))
                 {
-                    var hit = this.viewBeingEdited.View.HitTest(m.MouseEvent, out _, out _);
+                    var hit = this.viewBeingEdited.View.HitTest(m, out _, out _);
 
                     if (hit != null)
                     {
                         var d = hit.GetNearestDesign() ?? this.viewBeingEdited;
                         if (d != null)
                         {
-                            this.CreateAndShowContextMenu(m.MouseEvent, d);
+                            this.CreateAndShowContextMenu(m, d);
                         }
                     }
                 }
@@ -192,7 +192,7 @@ public class Editor : Toplevel
     /// Tailors redrawing to add overlays (e.g. showing what is selected etc.).
     /// </summary>
     /// <param name="bounds">The view bounds.</param>
-    public override void OnDrawContent(Rect bounds)
+    public override void OnDrawContent(Rectangle bounds)
     {
         base.OnDrawContent(bounds);
 
@@ -209,7 +209,7 @@ public class Editor : Toplevel
                 if (toDisplay != null)
                 {
                     // write its name in the lower right
-                    int y = this.Bounds.Height - 1;
+                    int y = this.GetContentSize().Height - 1;
                     int right = bounds.Width - 1;
                     var len = toDisplay.Length;
 
@@ -543,7 +543,7 @@ public class Editor : Toplevel
             rootCommands[i] = rootCommands[i].PadBoth(maxWidth);
         }
 
-        this.rootCommandsListView = new ListView(rootCommands)
+        this.rootCommandsListView = new ListView()
         {
             X = Pos.Center(),
             Y = Pos.Center(),
@@ -551,7 +551,7 @@ public class Editor : Toplevel
             Height = 3,
             ColorScheme = new DefaultColorSchemes().GetDefaultScheme("greyOnBlack").Scheme,
         };
-
+        this.rootCommandsListView.SetSource(rootCommands);
         this.rootCommandsListView.KeyDown += (_, e) =>
         {
             if (e == Key.Enter)
@@ -691,17 +691,23 @@ public class Editor : Toplevel
 
         if (m != null)
         {
-            menu.Position = new Point(m.X, m.Y);
+            menu.Position = m.Position;
         }
         else
         {
             var d = SelectionManager.Instance.Selected.FirstOrDefault() ?? this.viewBeingEdited;
-            d.View.BoundsToScreen(0, 0, out var x, out var y);
-            menu.Position = new Point(x, y);
+            var pt = d.View.ContentToScreen(new Point(0, 0));
+            menu.Position = new Point(pt.X, pt.Y);
         }
 
         this.menuOpen = true;
         SelectionManager.Instance.LockSelection = true;
+        
+        if(m != null)
+        {
+            m.Handled = true;
+        }
+
         menu.Show();
         menu.MenuBar.MenuAllClosed += (_, _) =>
         {
@@ -870,9 +876,11 @@ public class Editor : Toplevel
 
     private void Open()
     {
-        var ofd = new OpenDialog(
-            "Open",
-            new List<IAllowedType>(new[] { new AllowedType("View", SourceCodeFile.ExpectedExtension ) }));
+        var ofd = new OpenDialog()
+        {
+            Title = "Open",
+            AllowedTypes = new List<IAllowedType>(new[] { new AllowedType("View", SourceCodeFile.ExpectedExtension) })
+        };  
 
         Application.Run(ofd, this.ErrorHandler);
 
@@ -947,10 +955,10 @@ public class Editor : Toplevel
             return;
         }
 
-        var ofd = new SaveDialog(
-            "New",
-            new List<IAllowedType>() { new AllowedType("C# File", ".cs") })
+        var ofd = new SaveDialog()
         {
+            Title = "New",
+            AllowedTypes = new List<IAllowedType>() { new AllowedType("C# File", ".cs") },
             Path = "MyView.cs",
         };
 

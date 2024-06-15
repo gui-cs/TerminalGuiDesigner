@@ -82,6 +82,8 @@ internal class ViewFactoryTests
                     case (TabView, { Name: "Tabs" }):
                     case (TabView, { Name: "SelectedTab" }):
                     case (TabView, { Name: "Subviews" }):
+                    case (DatePicker, { Name: "Subviews" }):
+                    case (DatePicker, { Name: "Date" }):
                         // Warn about these, until they are implemented (WIP)
                         Assert.Warn( $"{property.Name} not yet checked on {typeof( T ).Name}" );
                         continue;
@@ -117,10 +119,15 @@ internal class ViewFactoryTests
                 // but doing it this way allows us to just test everything and only skip what we absolutely have to.
                 switch ( dummyInvalidObject, property )
                 {
-                    case (_, not null) when property.PropertyType == typeof( Frame ):
-                        Assert.That( nonGenericPropertyValue!.ToString( ), Is.EqualTo( genericPropertyValue!.ToString( ) ) );
-                        continue;
                     case (_, not null) when property.PropertyType.IsAssignableTo( typeof( Dim ) ):
+
+                        if(nonGenericPropertyValue is DimAuto)
+                        {
+                            // TODO: https://github.com/gui-cs/Terminal.Gui/issues/3521
+                            Assert.Warn("Disabled this test case because of https://github.com/gui-cs/Terminal.Gui/issues/3521");
+                            continue;
+                        }
+
                         Assert.That( (Dim)nonGenericPropertyValue!, Is.EqualTo( (Dim)genericPropertyValue! ) );
                         continue;
                     case (_, not null) when property.PropertyType.IsAssignableTo( typeof( TextFormatter ) ):
@@ -135,6 +142,9 @@ internal class ViewFactoryTests
                             nonGenericTabIndexes,
                             Is.EquivalentTo( genericTabIndexes )
                               .Using<View, View>( CompareTwoViews ) );
+                        continue;
+                    case (_, not null) when property.PropertyType.IsAssignableTo(typeof(Adornment)):
+                        Assert.That(((Adornment)nonGenericPropertyValue!).ToString(), Is.EqualTo(((Adornment)genericPropertyValue!).ToString()));
                         continue;
                 }
 
@@ -256,7 +266,7 @@ internal class ViewFactoryTests
     private bool CompareTwoViews( View nonGenericTabIndex, View genericTabIndex )
     {
         Assert.Warn( "View comparison only done by bounds check." );
-        return nonGenericTabIndex.Bounds == genericTabIndex.Bounds;
+        return nonGenericTabIndex.GetContentSize() == genericTabIndex.GetContentSize();
     }
 
     private static IEnumerable<Type> CreateT_ThrowsOnUnsupportedTypes_Cases( )
@@ -275,7 +285,6 @@ internal class ViewFactoryTests
             typeof( SaveDialog ),
             typeof( OpenDialog ),
             typeof( ScrollBarView ),
-            typeof( Frame ),
             typeof( Wizard ),
             typeof( WizardStep )
         };

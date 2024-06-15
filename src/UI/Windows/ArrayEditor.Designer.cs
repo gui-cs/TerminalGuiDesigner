@@ -48,13 +48,13 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnAddElement = new Terminal.Gui.Button();
             this.lvElements = new Terminal.Gui.ListView();
             this.frameView = new Terminal.Gui.FrameView();
-            this.Width = Dim.Percent(85f);
-            this.Height = Dim.Percent(85f);
+            this.Width = Dim.Percent(85);
+            this.Height = Dim.Percent(85);
             this.X = Pos.Center();
             this.Y = Pos.Center();
             this.Visible = true;
             this.Modal = true;
-            this.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.TextAlignment = Terminal.Gui.Alignment.Start;
             this.Title = "Array Editor";
             this.frameView.Width = Dim.Fill(0);
             this.frameView.Height = Dim.Fill(3);
@@ -62,7 +62,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.frameView.Y = 0;
             this.frameView.Visible = true;
             this.frameView.Data = "frameView";
-            this.frameView.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.frameView.TextAlignment = Terminal.Gui.Alignment.Start;
             this.frameView.Title = "Elements";
             this.Add(this.frameView);
             this.lvElements.Width = Dim.Fill(0);
@@ -71,7 +71,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lvElements.Y = 0;
             this.lvElements.Visible = true;
             this.lvElements.Data = "lvElements";
-            this.lvElements.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.lvElements.TextAlignment = Terminal.Gui.Alignment.Start;
             this.lvElements.Source = new Terminal.Gui.ListWrapper(new string[] {
                         "Item1",
                         "Item2",
@@ -86,7 +86,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnAddElement.Visible = true;
             this.btnAddElement.Data = "btnAddElement";
             this.btnAddElement.Text = "Add";
-            this.btnAddElement.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+            this.btnAddElement.TextAlignment = Terminal.Gui.Alignment.Center;
             this.btnAddElement.IsDefault = false;
             this.Add(this.btnAddElement);
             this.btnDelete.Width = 8;
@@ -96,7 +96,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnDelete.Visible = true;
             this.btnDelete.Data = "btnDelete";
             this.btnDelete.Text = "Delete";
-            this.btnDelete.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+            this.btnDelete.TextAlignment = Terminal.Gui.Alignment.Center;
             this.btnDelete.IsDefault = false;
             this.Add(this.btnDelete);
             this.btnMoveUp.Width = 8;
@@ -106,7 +106,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnMoveUp.Visible = true;
             this.btnMoveUp.Data = "btnMoveUp";
             this.btnMoveUp.Text = "Move Up";
-            this.btnMoveUp.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+            this.btnMoveUp.TextAlignment = Terminal.Gui.Alignment.Center;
             this.btnMoveUp.IsDefault = false;
             this.Add(this.btnMoveUp);
             this.btnMoveDown.Width = 8;
@@ -116,7 +116,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnMoveDown.Visible = true;
             this.btnMoveDown.Data = "btnMoveDown";
             this.btnMoveDown.Text = "Move Down";
-            this.btnMoveDown.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+            this.btnMoveDown.TextAlignment = Terminal.Gui.Alignment.Center;
             this.btnMoveDown.IsDefault = false;
             this.Add(this.btnMoveDown);
             this.btnEdit.Width = 8;
@@ -126,7 +126,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnEdit.Visible = true;
             this.btnEdit.Data = "btnEdit";
             this.btnEdit.Text = "Edit";
-            this.btnEdit.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+            this.btnEdit.TextAlignment = Terminal.Gui.Alignment.Center;
             this.btnEdit.IsDefault = false;
             this.Add(this.btnEdit);
             this.lineView.Width = Dim.Fill(1);
@@ -135,7 +135,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lineView.Y = Pos.AnchorEnd(2);
             this.lineView.Visible = true;
             this.lineView.Data = "lineView";
-            this.lineView.TextAlignment = Terminal.Gui.TextAlignment.Left;
+            this.lineView.TextAlignment = Terminal.Gui.Alignment.Start;
             this.lineView.LineRune = new System.Text.Rune('─');
             this.lineView.Orientation = Terminal.Gui.Orientation.Horizontal;
             this.Add(this.lineView);
@@ -146,7 +146,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnOk.Visible = true;
             this.btnOk.Data = "btnOk";
             this.btnOk.Text = "Ok";
-            this.btnOk.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+            this.btnOk.TextAlignment = Terminal.Gui.Alignment.Center;
             this.btnOk.IsDefault = false;
             this.Add(this.btnOk);
             this.btnCancel.Width = 8;
@@ -156,7 +156,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnCancel.Visible = true;
             this.btnCancel.Data = "btnCancel";
             this.btnCancel.Text = "Cancel";
-            this.btnCancel.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+            this.btnCancel.TextAlignment = Terminal.Gui.Alignment.Center;
             this.btnCancel.IsDefault = false;
             this.Add(this.btnCancel);
         }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<ItemGroup>
 		<None Include=".\logo.png">
 			<Pack>True</Pack>
@@ -139,13 +139,14 @@
 	<ItemGroup>
 		<PackageReference Include="Basic.Reference.Assemblies.Net70" Version="1.4.5" />
 		<PackageReference Include="CommandLineParser" Version="2.9.1" />
+		<PackageReference Include="JetBrains.Annotations" Version="2023.3.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 		<PackageReference Include="NetEscapades.Configuration.Yaml" Version="3.1.0" />
-		<PackageReference Include="Terminal.Gui" Version="2.0.0-pre.250" />
+		<PackageReference Include="Terminal.Gui" Version="2.0.0-pre.1491" />
 		<PackageReference Include="nlog" Version="5.2.7" />
 		<PackageReference Include="Basic.Reference.Assemblies.Net80" Version="1.4.5" />
 		<PackageReference Include="System.CodeDom" Version="8.0.0" />
@@ -153,5 +154,11 @@
 	
 	<ItemGroup>
 		<InternalsVisibleTo Include="UnitTests" />
+		<Using Include="System.Drawing.Rectangle" Alias="Rectangle" />
+		<Using Include="System.Drawing.RectangleF" Alias="RectangleF" />
+		<Using Include="System.Drawing.Point" Alias="Point" />
+		<Using Include="System.Drawing.PointF" Alias="PointF" />
+		<Using Include="System.Drawing.Size" Alias="Size" />
+		<Using Include="System.Drawing.SizeF" Alias="SizeF" />
 	</ItemGroup>
 </Project>

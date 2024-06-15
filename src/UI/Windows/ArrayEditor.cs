@@ -49,13 +49,13 @@ namespace TerminalGuiDesigner.UI.Windows {
 
             lvElements.SetSource(Result);
             lvElements.KeyUp += LvElements_KeyUp;
-            btnOk.Clicked += BtnOk_Clicked;
-            btnCancel.Clicked += BtnCancel_Clicked;
-            btnAddElement.Clicked += BtnAddElement_Clicked;
-            btnDelete.Clicked += (s, e) => DeleteSelectedItem();
-            btnMoveDown.Clicked += BtnMoveDown_Clicked;
-            btnMoveUp.Clicked += BtnMoveUp_Clicked;
-            btnEdit.Clicked += BtnEdit_Clicked;
+            btnOk.Accept += BtnOk_Clicked;
+            btnCancel.Accept += BtnCancel_Clicked;
+            btnAddElement.Accept += BtnAddElement_Clicked;
+            btnDelete.Accept += (s, e) => DeleteSelectedItem();
+            btnMoveDown.Accept += BtnMoveDown_Clicked;
+            btnMoveUp.Accept += BtnMoveUp_Clicked;
+            btnEdit.Accept += BtnEdit_Clicked;
         }
 
 

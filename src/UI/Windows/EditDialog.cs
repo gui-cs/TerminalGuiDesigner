@@ -38,50 +38,52 @@ public class EditDialog : Window
             this.collection.RemoveAll( p => p is NameProperty );
         }
 
-        this.list = new ListView(this.collection)
+        this.list = new ListView()
         {
             X = 0,
             Y = 0,
             Width = Dim.Fill(2),
             Height = Dim.Fill(2),
         };
+        this.list.SetSource(this.collection);
         this.list.KeyDown += this.List_KeyPress;
 
-        var btnSet = new Button("Set")
+        var btnSet = new Button()
         {
+            Text = "Set",
             X = 0,
             Y = Pos.Bottom(this.list),
             IsDefault = true,
         };
 
-        btnSet.Clicked += (s, e) =>
+        btnSet.Accept += (s, e) =>
         {
             this.SetProperty(false);
         };
 
-        var btnClose = new Button("Close")
+        var btnClose = new Button()
         {
+            Text = "Close",
             X = Pos.Right(btnSet),
             Y = Pos.Bottom(this.list),
         };
-        btnClose.Clicked += (s, e) => Application.RequestStop();
+        btnClose.Accept += (s, e) => Application.RequestStop();
+
+        this.list.KeyUp += (s, e) =>
+        {
+
+            if (e == Key.Enter && this.list.HasFocus)
+            {
+                this.SetProperty(false);
+                e.Handled = true;
+            }
+        };
 
         this.Add(this.list);
         this.Add(btnSet);
         this.Add(btnClose);
     }
 
-    /// <inheritdoc/>
-    public override bool OnKeyDown(Key Key)
-    {
-        if (Key == Key.Enter && this.list.HasFocus)
-        {
-            this.SetProperty(false);
-            return true;
-        }
-
-        return base.OnKeyDown(Key);
-    }
 
     internal static bool SetPropertyToNewValue(Design design, Property p, object? oldValue)
     {

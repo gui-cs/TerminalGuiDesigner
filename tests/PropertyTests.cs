@@ -43,11 +43,11 @@ internal class PropertyTests : Tests
             Assert.That( lv.Orientation, Is.EqualTo( Orientation.Horizontal ) );
             Assert.That( lv.LineRune, Is.EqualTo( TerminalGuiConfigurationManager.Glyphs.HLine ) );
             Assert.That( lv.Width, Is.EqualTo( Dim.Fill( ) ) );
-            Assert.That( lv.Height, Is.EqualTo( Dim.Sized( 1 ) ) );
+            Assert.That( lv.Height, Is.EqualTo( Dim.Absolute( 1 ) ) );
         } );
     }
 
-    [Test( ExpectedResult = "new Terminal.Gui.Attribute(Color.BrightMagenta,Color.Blue)" )]
+    [Test( ExpectedResult = "new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightMagenta,Terminal.Gui.Color.Blue)")]
     public string PropertyOfType_Attribute( )
     {
         using GraphView graphView = new( );

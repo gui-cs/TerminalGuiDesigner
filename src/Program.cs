@@ -18,7 +18,6 @@ public partial class Program
         Parser.Default.ParseArguments<Options>(args)
                    .WithParsed<Options>(o =>
                    {
-                       Application.UseSystemConsole = o.Usc;
                        Editor.Experimental = o.Experimental;
 
                        Application.Init();

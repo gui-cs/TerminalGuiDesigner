@@ -43,8 +43,8 @@ public partial class PointEditor {
         tbX.Text = x.ToString();
         tbY.Text = y.ToString();
 
-        btnOk.Clicked += Ok;
-        btnCancel.Clicked += Cancel;
+        btnOk.Accept += Ok;
+        btnCancel.Accept += Cancel;
     }
 
     private void Cancel(object sender, EventArgs e)
@@ -55,9 +55,9 @@ public partial class PointEditor {
 
     private void Ok(object sender, EventArgs e)
     {
-        if(float.TryParse(tbX.Text.ToString(), out var x))
+        if(int.TryParse(tbX.Text.ToString(), out var x))
         {
-            if(float.TryParse(tbY.Text.ToString(), out var y))
+            if(int.TryParse(tbY.Text.ToString(), out var y))
             {
                 ResultX = x;
                 ResultY = y;

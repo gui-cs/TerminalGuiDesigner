@@ -164,7 +164,7 @@ public class KeyboardManager
                     // if we deleted the last menu item
                     if (remove.Bar?.Menus.Length == 0)
                     {
-                        remove.Bar.CloseMenu();
+                        remove.Bar.CloseMenu(false);
                         return true;
                     }
 
@@ -292,32 +292,61 @@ public class KeyboardManager
             newString = str.Length == 1 ? string.Empty : str.Substring(0, str.Length - 1);
             return true;
         }
-        else
-        {
-            var ch = (char)keystroke;
-            newString += ch;
 
-            return true;
+        var ch = KeyToLetter(keystroke);
+
+
+
+        newString += ch;
+
+        return true;
+    }
+
+    private char KeyToLetter(Key keystroke)
+    {
+        if(keystroke == Key.Space)
+        {
+            return ' ';
         }
+
+        var ch = (char)Key.ToRune(keystroke.KeyCode).Value;
+
+        if(ch >= 'A' && ch <= 'Z' && !keystroke.IsShift)
+        {
+            return char.ToLower(ch);
+        }       
+
+        return ch;
     }
 
     private bool IsActionableKey(Key keystroke)
     {
+        
         if (keystroke == Key.Backspace)
         {
             return true;
         }
-
+        if(keystroke == Key.Delete ||  keystroke.KeyCode == KeyCode.ShiftMask)
+        {
+            return false;
+        }
         // Don't let Ctrl+Q add a Q!
         if (keystroke.IsCtrl)
         {
             return false;
         }
 
+        if (keystroke >= Key.A && keystroke <= Key.Z) {
+            return true;
+        }
+
         var punctuation = "\"\\/':;%^&*~`!@#.,? ()-+{}<>=_][|";
 
-        var ch = (char)keystroke;
+        var ch = KeyToLetter(keystroke);
+
+        
 
         return punctuation.Contains(ch) || char.IsLetterOrDigit(ch);
     }
+
 }

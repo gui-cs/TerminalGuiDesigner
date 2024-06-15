@@ -21,12 +21,7 @@ public static class PosExtensions
     /// <returns>True if <paramref name="p"/> is absolute.</returns>
     public static bool IsAbsolute(this Pos? p)
     {
-        if (p == null)
-        {
-            return TreatNullPosAs0;
-        }
-
-        return p.GetType().Name == "PosAbsolute";
+        return p is PosAbsolute;
     }
 
     /// <inheritdoc cref="IsAbsolute(Pos)"/>
@@ -43,10 +38,9 @@ public static class PosExtensions
                 return TreatNullPosAs0;
             }
 
-            var nField = p.GetType().GetField("_n", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?? throw new Exception("Expected private field '_n' of PosAbsolute was missing");
-            n = (int?)nField.GetValue(p)
-                ?? throw new Exception("Expected private field '_n' of PosAbsolute to be int");
+            var pa = (PosAbsolute)p;
+
+            n = pa.Position;
             return true;
         }
 
@@ -55,10 +49,10 @@ public static class PosExtensions
     }
 
     /// <summary>
-    /// Returns true if <paramref name="p"/> is a percentage position (See <see cref="Pos.Percent(float)"/>).
+    /// Returns true if <paramref name="p"/> is a percentage position (See <see cref="Pos.Percent(int)"/>).
     /// </summary>
     /// <param name="p"><see cref="Pos"/> to classify.</param>
-    /// <returns>True if <paramref name="p"/> is <see cref="Pos.Percent(float)"/>.</returns>
+    /// <returns>True if <paramref name="p"/> is <see cref="Pos.Percent(int)"/>.</returns>
     public static bool IsPercent(this Pos? p)
     {
         if (p == null)
@@ -66,24 +60,24 @@ public static class PosExtensions
             return false;
         }
 
-        return p.GetType().Name == "PosFactor";
+        return p is PosPercent;
     }
 
     /// <inheritdoc cref="IsPercent(Pos)"/>
     /// <param name="p"><see cref="Pos"/> to classify.</param>
     /// <param name="percent">The percentage number (typically out of 100) that could be passed
-    /// to <see cref="Pos.Percent(float)"/> to produce <paramref name="p"/> or 0 if <paramref name="p"/>
+    /// to <see cref="Pos.Percent(int)"/> to produce <paramref name="p"/> or 0 if <paramref name="p"/>
     /// is not a percent <see cref="Pos"/>.</param>
-    /// <returns>True if <paramref name="p"/> is <see cref="Pos.Percent(float)"/>.</returns>
-    public static bool IsPercent(this Pos? p, out float percent)
+    /// <returns>True if <paramref name="p"/> is <see cref="Pos.Percent(int)"/>.</returns>
+    public static bool IsPercent(this Pos? p, out int percent)
     {
         if (p != null && p.IsPercent())
         {
-            var nField = p.GetType().GetField("_factor", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?? throw new Exception("Expected private field '_factor' was missing from PosFactor");
-            percent = ((float?)nField.GetValue(p)
-                ?? throw new Exception("Expected private field '_factor' of PosFactor to be float"))
-                * 100f;
+            var pp = (PosPercent)p;
+
+            // TODO: presumably no longer needs *100?
+            percent = pp.Percent;
+
             return true;
         }
 
@@ -103,7 +97,7 @@ public static class PosExtensions
             return false;
         }
 
-        return p.GetType().Name == "PosCenter";
+        return p is PosCenter;
     }
 
     /// <summary>
@@ -118,8 +112,7 @@ public static class PosExtensions
         {
             return TreatNullPosAs0;
         }
-
-        return p.GetType().Name == "PosAnchorEnd";
+        return p is PosAnchorEnd;
     }
 
     /// <inheritdoc cref="IsAnchorEnd(Pos)"/>
@@ -137,10 +130,9 @@ public static class PosExtensions
                 return TreatNullPosAs0;
             }
 
-            var nField = p.GetType().GetField("_offset", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?? throw new Exception("Expected private field '_offset' of PosAbsolute was missing.  Fields were:" + string.Join(",", p.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Select(f=>f.Name).ToArray()));
-            margin = (int?)nField.GetValue(p)
-                ?? throw new Exception("Expected private field '_offset' of PosAbsolute to be int");
+            var pae = (PosAnchorEnd)p;
+
+            margin = pae.Offset;
             return true;
         }
 
@@ -184,8 +176,7 @@ public static class PosExtensions
 
         if (p.IsRelative(out var posView))
         {
-            var fTarget = posView.GetType().GetField("Target") ?? throw new Exception("PosView was missing expected field 'Target'");
-            View view = (View?)fTarget.GetValue(posView) ?? throw new Exception("PosView had a null 'Target' view");
+            View view = posView.Target;
 
             relativeTo = knownDesigns.FirstOrDefault(d => d.View == view);
 
@@ -195,33 +186,15 @@ public static class PosExtensions
             {
                 return false;
             }
-
-            var fSide = posView.GetType().GetField("side", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("PosView was missing expected field 'side'");
-            var iSide = (int?)fSide.GetValue(posView)
-                ?? throw new Exception("Expected PosView property 'side' to be of Type int");
-
-            side = (Side)iSide;
+            
+            
+            side = posView.Side;
             return true;
         }
 
         return false;
     }
 
-    /// <summary>
-    /// Returns true if <paramref name="p"/> is the summation or subtraction of two
-    /// other <see cref="Pos"/>.
-    /// </summary>
-    /// <param name="p"><see cref="Pos"/> to classify.</param>
-    /// <returns>True if <paramref name="p"/> is a PosCombine.</returns>
-    public static bool IsCombine( [NotNullWhen( true )] Pos? p )
-    {
-        if ( p == null )
-        {
-            return false;
-        }
-
-        return p.GetType( ).Name == "PosCombine";
-    }
 
     /// <inheritdoc cref="IsCombine(Pos)"/>
     /// <param name="p"><see cref="Pos"/> to classify.</param>
@@ -229,25 +202,20 @@ public static class PosExtensions
     /// <param name="right">The right hand operand of the summation/subtraction.</param>
     /// <param name="add"><see langword="true"/> if addition or <see langword="false"/> if subtraction.</param>
     /// <returns>True if <paramref name="p"/> is PosCombine.</returns>
-    public static bool IsCombine(this Pos? p, out Pos left, out Pos right, out bool add)
+    public static bool IsCombine(this Pos? p, out Pos left, out Pos right, out AddOrSubtract add)
     {
-        if (IsCombine(p))
+        if (p is PosCombine combine)
         {
-            var fLeft = p.GetType().GetField("_left", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field missing from PosCombine");
-            left = fLeft.GetValue(p) as Pos ?? throw new Exception("Expected field '_left' of PosCombine to be a Pos");
-
-            var fRight = p.GetType().GetField("_right", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field missing from PosCombine");
-            right = fRight.GetValue(p) as Pos ?? throw new Exception("Expected field '_right' of PosCombine to be a Pos");
-
-            var fAdd = p.GetType().GetField("_add", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field missing from PosCombine");
-            add = fAdd.GetValue(p) as bool? ?? throw new Exception("Expected field '_add' of PosCombine to be a bool");
+            left = combine.Left;
+            right = combine.Right;
+            add = combine.Add;
 
             return true;
         }
 
         left = 0;
         right = 0;
-        add = false;
+        add = AddOrSubtract.Add;
         return false;
     }
 
@@ -262,7 +230,7 @@ public static class PosExtensions
     /// <param name="side">Only populated for <see cref="PosType.Relative"/>, this is the direction of offset from <paramref name="relativeTo"/>.</param>
     /// <param name="offset">The offset from the listed position.  Is provided if the input has addition/subtraction e.g.<code>Pos.Center() + 2</code></param>
     /// <returns>True if it was possible to determine what <see cref="PosType"/> <paramref name="p"/> is.</returns>
-    public static bool GetPosType(this Pos? p, IList<Design> knownDesigns, out PosType type, out float value, out Design? relativeTo, out Side side, out int offset)
+    public static bool GetPosType(this Pos? p, IList<Design> knownDesigns, out PosType type, out int value, out Design? relativeTo, out Side side, out int offset)
     {
         type = default;
         relativeTo = null;
@@ -312,7 +280,7 @@ public static class PosExtensions
             // e.g. Pos.Percent(25) + 5 is supported but Pos.Percent(5) + Pos.Percent(10) is not
             if (right.IsAbsolute(out int rhsVal))
             {
-                offset = add ? rhsVal : -rhsVal;
+                offset = add == AddOrSubtract.Add ? rhsVal : -rhsVal;
                 GetPosType(left, knownDesigns, out type, out value, out relativeTo, out side, out _);
                 return true;
             }
@@ -343,9 +311,9 @@ public static class PosExtensions
             PosType.Relative when offset > 0 => $"Pos.{GetMethodNameFor( side )}({relativeTo.FieldName}) + {offset}",
             PosType.Relative when offset < 0 => $"Pos.{GetMethodNameFor( side )}({relativeTo.FieldName}) - {Math.Abs( offset )}",
             PosType.Relative => $"Pos.{GetMethodNameFor( side )}({relativeTo.FieldName})",
-            PosType.Percent when offset > 0 => $"Pos.Percent({val:G5}f) + {offset}",
-            PosType.Percent when offset < 0 => $"Pos.Percent({val:G5}f) - {Math.Abs( offset )}",
-            PosType.Percent => $"Pos.Percent({val:G5}f)",
+            PosType.Percent when offset > 0 => $"Pos.Percent({val:G5}) + {offset}",
+            PosType.Percent when offset < 0 => $"Pos.Percent({val:G5}) - {Math.Abs( offset )}",
+            PosType.Percent => $"Pos.Percent({val:G5})",
             PosType.Center when offset > 0 => $"Pos.Center() + {offset}",
             PosType.Center when offset < 0 => $"Pos.Center() - {Math.Abs( offset )}",
             PosType.Center => $"Pos.Center()",
@@ -380,7 +348,7 @@ public static class PosExtensions
         };
     }
 
-    private static bool IsRelative(this Pos? p, out Pos posView)
+    private static bool IsRelative(this Pos? p, [NotNullWhen(true)]out PosView? posView)
     {
         // Terminal.Gui will often use Pos.Combine with RHS of 0 instead of just PosView alone
         if (p != null && p.IsCombine(out var left, out var right, out _))
@@ -391,13 +359,13 @@ public static class PosExtensions
             }
         }
 
-        if (p != null && p.GetType().Name == "PosView")
+        if (p is PosView pv)
         {
-            posView = p;
+            posView = pv;
             return true;
         }
 
-        posView = 0;
+        posView = null;
         return false;
     }
 

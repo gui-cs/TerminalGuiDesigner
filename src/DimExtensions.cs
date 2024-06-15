@@ -17,7 +17,7 @@ public static class DimExtensions
     private const bool TreatNullDimAs0 = true;
 
     /// <summary>
-    /// Returns true if the <paramref name="d"/> is a DimFactor (i.e. created by <see cref="Dim.Percent(float, bool)"/>).
+    /// Returns true if the <paramref name="d"/> is a DimFactor (i.e. created by <see cref="Dim.Percent(int, bool)"/>).
     /// </summary>
     /// <param name="d">Dimension to determine Type.</param>
     /// <returns>true if <paramref name="d"/> is DimFactor.</returns>
@@ -28,21 +28,20 @@ public static class DimExtensions
             return false;
         }
 
-        return d.GetType().Name == "DimFactor";
+        return d is DimPercent;
     }
 
     /// <inheritdoc cref="IsPercent(Dim)"/>
     /// <param name="d">The <see cref="Dim"/> to determine whether it represents a percent.</param>
     /// <param name="percent">The 'percentage' value of <paramref name="d"/>.  This is the value that would/could be
-    /// passed to <see cref="Dim.Percent(float, bool)"/> to produce the <paramref name="d"/> or 0 if <paramref name="d"/> is
+    /// passed to <see cref="Dim.Percent(int, bool)"/> to produce the <paramref name="d"/> or 0 if <paramref name="d"/> is
     /// not DimFactor.</param>
-    public static bool IsPercent(this Dim d, out float percent)
+    public static bool IsPercent(this Dim d, out int percent)
     {
         if (d != null && d.IsPercent())
         {
-            var nField = d.GetType().GetField("_factor", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?? throw new Exception("Expected private field '_factor' of DimPercent was missing");
-            percent = ((float?)nField.GetValue(d) ?? throw new Exception("Expected private field 'factor' to be a float")) * 100f;
+            var dp = (DimPercent)d;
+            percent = dp.Percent;
             return true;
         }
 
@@ -62,7 +61,7 @@ public static class DimExtensions
             return false;
         }
 
-        return d.GetType().Name == "DimFill";
+        return d is DimFill;
     }
 
     /// <inheritdoc cref="IsFill(Dim)"/>
@@ -72,9 +71,8 @@ public static class DimExtensions
     {
         if (d != null && d.IsFill())
         {
-            var nField = d.GetType().GetField("_margin", BindingFlags.NonPublic | BindingFlags.Instance)
-                 ?? throw new Exception("Expected private field '_margin' of DimFill was missing");
-            margin = (int?)nField.GetValue(d) ?? throw new Exception("Expected private field 'margin' of DimFill had unexpected Type");
+            var df = (DimFill)d;
+            margin = df.Margin;
             return true;
         }
 
@@ -94,8 +92,34 @@ public static class DimExtensions
             return TreatNullDimAs0;
         }
 
-        return d.GetType().Name == "DimAbsolute";
+        return d is DimAbsolute;
     }
+
+
+    /// <summary>
+    /// True if <paramref name="d"/> is a <see cref="DimAuto"/> width/height.
+    /// </summary>
+    /// <param name="d">The <see cref="Dim"/> to determine whether it is auto.</param>
+    /// <returns><see langword="true"/> if <paramref name="d"/> is a auto sizing.</returns>
+    public static bool IsAuto(this Dim d, out DimAutoStyle das, out Dim? min, out Dim? max)
+    {
+        if(d is  DimAuto da)
+        {
+            das = da.Style;
+            min = da.MinimumContentDim;
+            max = da.MaximumContentDim;
+
+            return true;
+        }
+
+        das = default(DimAutoStyle);
+        min = null;
+        max = null;
+        return false;
+    }
+
+
+
 
     /// <inheritdoc cref="IsAbsolute(Dim)"/>
     /// <param name="d">The <see cref="Dim"/> to determine whether it is absolute.</param>
@@ -110,10 +134,8 @@ public static class DimExtensions
                 return TreatNullDimAs0;
             }
 
-            var nField = d.GetType().GetField("_n", BindingFlags.NonPublic | BindingFlags.Instance)
-                ?? throw new Exception("Expected private field was missing from DimAbsolute");
-            n = (int?)nField.GetValue(d)
-                ?? throw new Exception("Expected private field 'n' to be in int for DimAbsolute");
+            var da = (DimAbsolute)d;
+            n = da.Size;
             return true;
         }
 
@@ -133,8 +155,7 @@ public static class DimExtensions
         {
             return false;
         }
-
-        return d.GetType().Name == "DimCombine";
+        return d is DimCombine;
     }
 
     /// <summary>
@@ -151,14 +172,11 @@ public static class DimExtensions
     {
         if (d.IsCombine())
         {
-            var fLeft = d.GetType().GetField("_left", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field was missing from Dim.Combine");
-            left = fLeft.GetValue(d) as Dim ?? throw new Exception("Expected private field in DimCombine to be of Type Dim");
+            var dc = (DimCombine)d;
 
-            var fRight = d.GetType().GetField("_right", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field was missing from Dim.Combine");
-            right = fRight.GetValue(d) as Dim ?? throw new Exception("Expected private field in DimCombine to be of Type Dim");
-
-            var fAdd = d.GetType().GetField("_add", BindingFlags.NonPublic | BindingFlags.Instance) ?? throw new Exception("Expected private field was missing from Dim.Combine");
-            add = fAdd.GetValue(d) as bool? ?? throw new Exception("Expected private field in DimCombine to be of Type bool");
+            left = dc.Left;
+            right = dc.Right;
+            add = dc.Add == AddOrSubtract.Add;
 
             return true;
         }
@@ -175,13 +193,13 @@ public static class DimExtensions
     /// </summary>
     /// <param name="d">The <see cref="Dim"/> to determine type of.</param>
     /// <param name="type">The determined type.</param>
-    /// <param name="value">The numerical element of the type e.g. for <see cref="Dim.Percent(float, bool)"/>
+    /// <param name="value">The numerical element of the type e.g. for <see cref="Dim.Percent(int, bool)"/>
     /// the <paramref name="value"/> is the percentage but for <see cref="Dim.Fill(int)"/> the <paramref name="value"/>
     /// is the margin.</param>
     /// <param name="offset">The numerical offset if any, for example -5 in the following:
     /// <code>Dim.Fill(1)-5</code></param>
     /// <returns>True if it was possible to determine <paramref name="type"/>.</returns>
-    public static bool GetDimType(this Dim d, out DimType type, out float value, out int offset)
+    public static bool GetDimType(this Dim d, out DimType type, out int value, out int offset)
     {
         if (d.IsAbsolute(out var n))
         {
@@ -207,6 +225,15 @@ public static class DimExtensions
             return true;
         }
 
+        // TODO: probably need to care about maxes and mins at some point
+        if (d.IsAuto(out _, out _, out _))
+        {
+            type = DimType.Auto;
+            value = 0;
+            offset = 0;
+            return true;
+        }
+        
         if (d.IsCombine(out var left, out var right, out var add))
         {
             // we only deal in combines if the right is an absolute
@@ -237,10 +264,7 @@ public static class DimExtensions
     {
         if (!d.GetDimType(out var type, out var val, out var offset))
         {
-            // TODO: This is currently unreachable (though a TG change could make it not so)
-            // Would it maybe be a better idea to throw an exception, so generated code isn't silently incorrect?
-            // could not determine the type
-            return null;
+            throw new Exception("Could not determine code for Dim type:" + d.GetType());
         }
 
         switch (type)
@@ -263,16 +287,20 @@ public static class DimExtensions
             case DimType.Percent:
                 if (offset > 0)
                 {
-                    return $"Dim.Percent({val:G5}f) + {offset}";
+                    return $"Dim.Percent({val:G5}) + {offset}";
                 }
 
                 if (offset < 0)
                 {
-                    return $"Dim.Percent({val:G5}f) - {Math.Abs(offset)}";
+                    return $"Dim.Percent({val:G5}) - {Math.Abs(offset)}";
                 }
 
-                return $"Dim.Percent({val:G5}f)";
+                return $"Dim.Percent({val:G5})";
 
+            case DimType.Auto:
+
+                // TODO: one day support the min/max/style
+                return "Dim.Auto()";
             default: throw new ArgumentOutOfRangeException(nameof(type));
         }
     }

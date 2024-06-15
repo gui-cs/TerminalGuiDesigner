@@ -651,6 +651,8 @@ public class Design
 
         yield return this.CreateSuppressedProperty(nameof(this.View.Visible), true);
 
+        yield return this.CreateSuppressedProperty(nameof(this.View.Arrangement), ViewArrangement.Movable);
+
         yield return new ColorSchemeProperty(this);
 
         // its important that this comes before Text because
@@ -671,11 +673,10 @@ public class Design
             yield return this.CreateProperty(nameof(Slider.Orientation));
             yield return this.CreateProperty(nameof(Slider.RangeAllowSingle));
             yield return this.CreateProperty(nameof(Slider.AllowEmpty));
-            yield return this.CreateProperty(nameof(Slider.AutoSize));
-            yield return this.CreateProperty(nameof(Slider.InnerSpacing));
+            yield return this.CreateProperty(nameof(Slider.MinimumInnerSpacing));
             yield return this.CreateProperty(nameof(Slider.LegendsOrientation));
             yield return this.CreateProperty(nameof(Slider.ShowLegends));
-            yield return this.CreateProperty(nameof(Slider.ShowSpacing));
+            yield return this.CreateProperty(nameof(Slider.ShowEndSpacing));
             yield return this.CreateProperty(nameof(Slider.Type));
         }
 
@@ -686,11 +687,6 @@ public class Design
             yield return new InstanceOfProperty(
                 this,
                 viewType.GetProperty(nameof(SpinnerView.Style)) ?? throw new Exception($"Could not find expected Property SpinnerView.Style on View of Type '{this.View.GetType()}'"));
-        }
-
-        if (this.View is ScrollView)
-        {
-            yield return this.CreateProperty(nameof(ScrollView.ContentSize));
         }
 
         if (this.View is TextView)
@@ -836,7 +832,6 @@ public class Design
         if (this.View is RadioGroup)
         {
             yield return this.CreateProperty(nameof(RadioGroup.RadioLabels));
-            yield return this.CreateProperty(nameof(RadioGroup.DisplayMode));
         }
     }
 
@@ -862,6 +857,12 @@ public class Design
         // never show Text for root because it's almost certainly a container
         // e.g. derived from Window or Dialog or View (directly)
         if (this.IsRoot)
+        {
+            return false;
+        }
+
+        // Do not let Text be set on Slider or Slider<> implementations as weird stuff happens
+        if(this.View.GetType().Name.StartsWith("Slider") || View is RadioGroup)
         {
             return false;
         }

@@ -54,11 +54,12 @@ public partial class ChoicesDialog
             buttons[i].Text = options[i] + " ";
 
             // TODO think it depends if it is default if we have to do this hack
-            buttons[i].Width = options[i].Length + 1;
+            buttons[i].Width = Dim.Auto();
 
+            
             var i2 = i;
 
-            buttons[i].Clicked += (s,e) => {
+            buttons[i].Accept += (s,e) => {
                 Result = i2;
                 Application.RequestStop();
             };
@@ -80,8 +81,8 @@ public partial class ChoicesDialog
 
         // align buttons bottom of dialog 
         buttonPanel.Width = buttonWidth = buttons.Sum(b=>buttonPanel.Subviews.Contains(b) ? b.Frame.Width : 0) + 1;
-        
-        int maxWidthLine = TextFormatter.MaxWidthLine(message);
+
+        int maxWidthLine = TextFormatter.GetSumMaxCharWidth(message);
         if (maxWidthLine > Application.Driver.Cols)
         {
             maxWidthLine = Application.Driver.Cols;
@@ -90,8 +91,8 @@ public partial class ChoicesDialog
         maxWidthLine = Math.Max(maxWidthLine, defaultWidth);
            
 
-        int textWidth = Math.Min(TextFormatter.MaxWidth(message, maxWidthLine), Application.Driver.Cols);
-        int textHeight = TextFormatter.MaxLines(message, textWidth) + 2; // message.Count (ustring.Make ('\n')) + 1;
+        int textWidth = Math.Min(TextFormatter.GetSumMaxCharWidth(message, maxWidthLine), Application.Driver.Cols);
+        int textHeight =  message.Count (c=>c=='\n') + 4;
         int msgboxHeight = Math.Min(Math.Max(1, textHeight) + 4, Application.Driver.Rows); // textHeight + (top + top padding + buttons + bottom)
 
         Width = Math.Min(Math.Max(maxWidthLine, Math.Max(Title.GetColumns(), Math.Max(textWidth + 2, buttonWidth))), Application.Driver.Cols);
@@ -99,11 +100,12 @@ public partial class ChoicesDialog
     }
 
     /// <inheritdoc/>
-    public override void OnDrawContent(Rect bounds)
+    public override void OnDrawContentComplete(Rectangle bounds)
     {
-        base.OnDrawContent(bounds);
+        base.OnDrawContentComplete(bounds);
 
-        Move(1, 0);
+        var screenTopLeft = FrameToScreen();
+        Driver.Move(screenTopLeft.X+2, screenTopLeft.Y);
         
         var padding = ((bounds.Width - _title.EnumerateRunes().Sum(v=>v.GetColumns())) / 2) - 1;
 
@@ -134,7 +136,7 @@ public partial class ChoicesDialog
 
     internal static void PaintShadow(Button btn, ColorScheme backgroundScheme)
     {
-        var bounds = btn.Bounds;
+        var bounds = btn.GetContentSize();
 
         Attribute buttonColor = btn.HasFocus ? 
             new Terminal.Gui.Attribute(btn.ColorScheme.Focus.Foreground, btn.ColorScheme.Focus.Background):
@@ -151,6 +153,7 @@ public partial class ChoicesDialog
         }
 
         btn.AddRune(bounds.Width - 2, 0, new System.Text.Rune(']'));
+        btn.AddRune(0, 0, new System.Text.Rune('['));
 
         var backgroundColor = backgroundScheme.Normal.Background;
 

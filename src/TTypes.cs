@@ -42,7 +42,7 @@ namespace TerminalGuiDesigner
         {
             if (viewType == typeof(Slider<>))
             {
-                return new[] { typeof(int), typeof(string), typeof(float), typeof(double), typeof(bool) };
+                return new[] { typeof(int), typeof(string), typeof(int), typeof(double), typeof(bool) };
             }
 
             if (viewType == typeof(TreeView<>))

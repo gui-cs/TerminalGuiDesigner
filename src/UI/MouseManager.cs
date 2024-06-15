@@ -28,7 +28,7 @@ public class MouseManager
     /// <summary>
     /// Gets the current 'drag a box' selection area that is ongoing (if any).
     /// </summary>
-    public Rect? SelectionBox => RectExtensions.FromBetweenPoints(this.selectionStart, this.selectionEnd);
+    public Rectangle? SelectionBox => RectExtensions.FromBetweenPoints(this.selectionStart, this.selectionEnd);
 
     /// <summary>
     /// Responds to <see cref="Application.RootMouseEvent"/>(by changing a 'drag a box' selection area
@@ -72,7 +72,7 @@ public class MouseManager
             {
                 // start dragging a selection box
                 this.selectionContainer = drag;
-                this.selectionStart = new Point(m.X, m.Y);
+                this.selectionStart = m.Position;
             }
 
             // if nothing is going on yet
@@ -81,7 +81,7 @@ public class MouseManager
             {
                 var parent = drag.SuperView;
 
-                var dest = parent.ScreenToBounds(m.X, m.Y);
+                var dest = parent.ScreenToContent(m.Position);
 
                 if (isLowerRight)
                 {
@@ -121,7 +121,7 @@ public class MouseManager
         if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && this.selectionStart != null)
         {
             // move selection box to new mouse position
-            this.selectionEnd = new Point(m.X, m.Y);
+            this.selectionEnd = m.Position;
             viewBeingEdited.View.SetNeedsDisplay();
 
             // BUG: Method is gone, will this functionality work still without it?
@@ -132,7 +132,7 @@ public class MouseManager
         // continue dragging a view
         if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && this.dragOperation?.BeingDragged.View?.SuperView != null)
         {
-            var dest = this.dragOperation?.BeingDragged.View.SuperView.ScreenToBounds(m.X, m.Y);
+            var dest = this.dragOperation?.BeingDragged.View.SuperView.ScreenToContent(m.Position);
 
             if (dest != null && this.dragOperation != null)
             {
@@ -148,7 +148,7 @@ public class MouseManager
             && this.resizeOperation != null
             && this.resizeOperation.BeingResized.View.SuperView != null)
         {
-            var dest = this.resizeOperation.BeingResized.View.SuperView.ScreenToBounds(m.X, m.Y);
+            var dest = this.resizeOperation.BeingResized.View.SuperView.ScreenToContent(m.Position);
 
             this.resizeOperation.ContinueResize(dest);
 

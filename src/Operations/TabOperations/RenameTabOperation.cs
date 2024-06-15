@@ -20,8 +20,8 @@ public class RenameTabOperation : RenameOperation<TabView, Tab>
         : base(
             (t) => t.Tabs.ToArray(),
             (v, a) => v.ReOrderTabs(a),
-            tab => tab.Text.ToString() ?? "unnamed tab",
-            (tab, n) => tab.Text = n,
+            tab => tab.DisplayText.ToString() ?? "unnamed tab",
+            (tab, n) => tab.DisplayText = n,
             design,
             toRename,
             newName)

@@ -25,7 +25,7 @@ public partial class ColorSchemesUI : Terminal.Gui.Window {
         this.Y = 0;
         this.Modal = false;
         this.Text = "";
-        this.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Title = "Color Schemes (Ctrl+Q to exit)";
         this.tvColorSchemes = new Terminal.Gui.TableView();
         this.tvColorSchemes.Width = Dim.Fill(0);
@@ -34,7 +34,7 @@ public partial class ColorSchemesUI : Terminal.Gui.Window {
         this.tvColorSchemes.Y = 0;
         this.tvColorSchemes.Data = "tvColorSchemes";
         this.tvColorSchemes.Text = "";
-        this.tvColorSchemes.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.tvColorSchemes.TextAlignment = Terminal.Gui.Alignment.Start;
         this.tvColorSchemes.FullRowSelect = false;
         this.tvColorSchemes.Style.AlwaysShowHeaders = false;
         this.tvColorSchemes.Style.ExpandLastColumn = false;

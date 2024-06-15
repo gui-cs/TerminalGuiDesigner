@@ -59,7 +59,7 @@ public partial class PosEditor : Terminal.Gui.Dialog {
         this.Modal = true;
         this.Text = "";
         this.Border.BorderStyle = Terminal.Gui.LineStyle.Single;
-        this.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Title = "";
         this.rgPosType.Width = 12;
         this.rgPosType.Height = 5;
@@ -67,7 +67,7 @@ public partial class PosEditor : Terminal.Gui.Dialog {
         this.rgPosType.Y = 1;
         this.rgPosType.Data = "rgPosType";
         this.rgPosType.Text = "";
-        this.rgPosType.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.rgPosType.TextAlignment = Terminal.Gui.Alignment.Start;
         this.rgPosType.RadioLabels = new string[] {
                 "Absolute",
                 "Percent",
@@ -81,7 +81,7 @@ public partial class PosEditor : Terminal.Gui.Dialog {
         this.lineview1.Y = 1;
         this.lineview1.Data = "lineview1";
         this.lineview1.Text = "";
-        this.lineview1.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lineview1.TextAlignment = Terminal.Gui.Alignment.Start;
         this.lineview1.LineRune = new System.Text.Rune('│');
         this.lineview1.Orientation = Orientation.Vertical;
         this.Add(this.lineview1);
@@ -91,7 +91,7 @@ public partial class PosEditor : Terminal.Gui.Dialog {
         this.lblValue.Y = 1;
         this.lblValue.Data = "lblValue";
         this.lblValue.Text = "Value:";
-        this.lblValue.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lblValue.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.lblValue);
         this.tbValue.Width = 15;
         this.tbValue.Height = 1;
@@ -100,7 +100,7 @@ public partial class PosEditor : Terminal.Gui.Dialog {
         this.tbValue.Secret = false;
         this.tbValue.Data = "tbValue";
         this.tbValue.Text = "";
-        this.tbValue.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.tbValue.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.tbValue);
         this.lblRelativeTo.Width = 12;
         this.lblRelativeTo.Height = 1;
@@ -108,7 +108,7 @@ public partial class PosEditor : Terminal.Gui.Dialog {
         this.lblRelativeTo.Y = 3;
         this.lblRelativeTo.Data = "lblRelativeTo";
         this.lblRelativeTo.Text = "Relative To:";
-        this.lblRelativeTo.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lblRelativeTo.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.lblRelativeTo);
         this.ddRelativeTo.Width = 15;
         this.ddRelativeTo.Height = 5;
@@ -116,7 +116,7 @@ public partial class PosEditor : Terminal.Gui.Dialog {
         this.ddRelativeTo.Y = 3;
         this.ddRelativeTo.Data = "ddRelativeTo";
         this.ddRelativeTo.Text = "";
-        this.ddRelativeTo.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.ddRelativeTo.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.ddRelativeTo);
         this.lblSide.Width = 5;
         this.lblSide.Height = 1;
@@ -124,7 +124,7 @@ public partial class PosEditor : Terminal.Gui.Dialog {
         this.lblSide.Y = 5;
         this.lblSide.Data = "lblSide";
         this.lblSide.Text = "Side:";
-        this.lblSide.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lblSide.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.lblSide);
         this.ddSide.Width = 15;
         this.ddSide.Height = 5;
@@ -132,7 +132,7 @@ public partial class PosEditor : Terminal.Gui.Dialog {
         this.ddSide.Y = Pos.Top(lblSide);
         this.ddSide.Data = "ddSide";
         this.ddSide.Text = "";
-        this.ddSide.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.ddSide.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.ddSide);
         this.lblOffset.Width = 7;
         this.lblOffset.Height = 1;
@@ -140,7 +140,7 @@ public partial class PosEditor : Terminal.Gui.Dialog {
         this.lblOffset.Y = 7;
         this.lblOffset.Data = "lblOffset";
         this.lblOffset.Text = "Offset:";
-        this.lblOffset.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.lblOffset.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.lblOffset);
         this.tbOffset.Width = 15;
         this.tbOffset.Height = 1;
@@ -149,14 +149,14 @@ public partial class PosEditor : Terminal.Gui.Dialog {
         this.tbOffset.Secret = false;
         this.tbOffset.Data = "tbOffset";
         this.tbOffset.Text = "";
-        this.tbOffset.TextAlignment = Terminal.Gui.TextAlignment.Left;
+        this.tbOffset.TextAlignment = Terminal.Gui.Alignment.Start;
         this.Add(this.tbOffset);
         this.btnOk.Width = 8;
         this.btnOk.X = 11;
         this.btnOk.Y = 9;
         this.btnOk.Data = "btnOk";
         this.btnOk.Text = "Ok";
-        this.btnOk.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+        this.btnOk.TextAlignment = Terminal.Gui.Alignment.Center;
         this.btnOk.IsDefault = true;
         this.Add(this.btnOk);
         this.btnCancel.Width = 10;
@@ -164,7 +164,7 @@ public partial class PosEditor : Terminal.Gui.Dialog {
         this.btnCancel.Y = 9;
         this.btnCancel.Data = "btnCancel";
         this.btnCancel.Text = "Cancel";
-        this.btnCancel.TextAlignment = Terminal.Gui.TextAlignment.Centered;
+        this.btnCancel.TextAlignment = Terminal.Gui.Alignment.Center;
         this.btnCancel.IsDefault = false;
         this.Add(this.btnCancel);
     }

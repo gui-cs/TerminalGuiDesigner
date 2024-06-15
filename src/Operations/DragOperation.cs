@@ -202,13 +202,13 @@ public partial class DragOperation : Operation
         if (mem.Design.View.X.IsAbsolute() &&
             mem.OriginalX.IsAbsolute(out var originX))
         {
-            mem.Design.GetDesignableProperty("X")?.SetValue(Pos.At(originX + (this.DestinationX - dx)));
+            mem.Design.GetDesignableProperty("X")?.SetValue(Pos.Absolute(originX + (this.DestinationX - dx)));
         }
 
         if (mem.Design.View.Y.IsAbsolute() &&
             mem.OriginalY.IsAbsolute(out var originY))
         {
-            mem.Design.GetDesignableProperty("Y")?.SetValue(Pos.At(originY + (this.DestinationY - dy)));
+            mem.Design.GetDesignableProperty("Y")?.SetValue(Pos.Absolute(originY + (this.DestinationY - dy)));
         }
 
         return true;
@@ -229,11 +229,11 @@ public partial class DragOperation : Operation
         }
 
         // Calculate screen coordinates of 0,0 in each of the views (from and to)
-        mem.OriginalSuperView.BoundsToScreen(0, 0, out var originalSuperX, out var originalSuperY, false);
-        this.DropInto.BoundsToScreen(0, 0, out var newSuperX, out var newSuperY, false);
+        var originalSuper = mem.OriginalSuperView.ContentToScreen(new Point(0, 0));
+        var newSuper = this.DropInto.ContentToScreen(new Point(0, 0));
 
         // Offset the point by the difference in screen space between 0,0 on each view
-        p.Offset(newSuperX - originalSuperX, newSuperY - originalSuperY);
+        p.Offset(newSuper.X - originalSuper.X, newSuper.Y - originalSuper.Y);
         return p;
     }
 

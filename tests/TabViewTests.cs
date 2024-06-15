@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using TerminalGuiDesigner.Operations.TabOperations;
 
 namespace UnitTests;
@@ -7,15 +6,15 @@ namespace UnitTests;
 [Category( "Code Generation" )]
 internal class TabViewTests : Tests
 {
-    private static IEnumerable<View> TabView_Tab_SubViewTypes =>
-    [
-        (Label)RuntimeHelpers.GetUninitializedObject( typeof( Label ) ),
-        (Button)RuntimeHelpers.GetUninitializedObject( typeof( Button ) ),
-        (StatusBar)RuntimeHelpers.GetUninitializedObject( typeof( StatusBar ) )
-    ];
+    public static IEnumerable<object[]> ViewTypes()
+    {
+        yield return new object[] { new Label() };
+        yield return new object[] { new Button() };
+        yield return new object[] { new StatusBar() };
+    }
 
-    [Test]
-    public void AddingSubControlToTab<T>( [ValueSource( nameof( TabView_Tab_SubViewTypes ) )] T dummyObject )
+    [TestCaseSource(nameof(ViewTypes))]
+    public void AddingSubControlToTab<T>(T _ )
         where T : View, new( )
     {
         ViewToCode viewToCode = new( );
@@ -60,8 +59,8 @@ internal class TabViewTests : Tests
         using TabView tv = (TabView)d.View;
 
         Assume.That( tv.Tabs, Has.Exactly( 2 ).InstanceOf<Tab>( ) );
-        Assume.That( tv.Tabs, Has.ItemAt( 0 ).Property( "Text" ).EqualTo( "Tab1" ) );
-        Assume.That( tv.Tabs, Has.ItemAt( 1 ).Property( "Text" ).EqualTo( "Tab2" ) );
+        Assume.That( tv.Tabs, Has.ItemAt( 0 ).Property("DisplayText").EqualTo( "Tab1" ) );
+        Assume.That( tv.Tabs, Has.ItemAt( 1 ).Property("DisplayText").EqualTo( "Tab2" ) );
         Assume.That( OperationManager.Instance.RedoStackSize, Is.Zero );
         Assume.That( OperationManager.Instance.UndoStackSize, Is.Zero );
 
@@ -84,7 +83,7 @@ internal class TabViewTests : Tests
         // Select Tab2
         tv.SelectedTab = tv.Tabs.Last( );
 
-        Assert.That( tv.SelectedTab.Text, Is.EqualTo( "Tab2" ), "Tab2 should be selected before operation is applied" );
+        Assert.That( tv.SelectedTab.DisplayText, Is.EqualTo( "Tab2" ), "Tab2 should be selected before operation is applied" );
 
         // try to move tab 2 left
         MoveTabOperation cmd2 = new( d, tv.SelectedTab, -1 );
@@ -98,7 +97,7 @@ internal class TabViewTests : Tests
         Assert.Multiple( ( ) =>
         {
             Assert.That( cmd2Succeeded );
-            Assert.That( tv.SelectedTab.Text, Is.EqualTo( "Tab2" ), "Tab2 should still be selected after operation is applied" );
+            Assert.That( tv.SelectedTab.DisplayText, Is.EqualTo( "Tab2" ), "Tab2 should still be selected after operation is applied" );
             Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
             Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
         } );
@@ -108,8 +107,8 @@ internal class TabViewTests : Tests
 
         Assert.Multiple( ( ) =>
         {
-            Assert.That( tv.Tabs, Has.ItemAt( 0 ).Property( "Text" ).EqualTo( "Tab2" ) );
-            Assert.That( tv.Tabs, Has.ItemAt( 1 ).Property( "Text" ).EqualTo( "Tab1" ) );
+            Assert.That( tv.Tabs, Has.ItemAt( 0 ).Property("DisplayText").EqualTo( "Tab2" ) );
+            Assert.That( tv.Tabs, Has.ItemAt( 1 ).Property("DisplayText").EqualTo( "Tab1" ) );
         } );
 
         Assert.That( OperationManager.Instance.Undo, Throws.Nothing );
@@ -124,8 +123,8 @@ internal class TabViewTests : Tests
 
         Assert.Multiple( ( ) =>
         {
-            Assert.That( tv.Tabs, Has.ItemAt( 0 ).Property( "Text" ).EqualTo( "Tab1" ) );
-            Assert.That( tv.Tabs, Has.ItemAt( 1 ).Property( "Text" ).EqualTo( "Tab2" ) );
+            Assert.That( tv.Tabs, Has.ItemAt( 0 ).Property("DisplayText").EqualTo( "Tab1" ) );
+            Assert.That( tv.Tabs, Has.ItemAt( 1 ).Property("DisplayText").EqualTo( "Tab2" ) );
         } );
 
         // Now let's redo it
@@ -141,13 +140,13 @@ internal class TabViewTests : Tests
 
         Assert.Multiple( ( ) =>
         {
-            Assert.That( tv.Tabs, Has.ItemAt( 0 ).Property( "Text" ).EqualTo( "Tab2" ) );
-            Assert.That( tv.Tabs, Has.ItemAt( 1 ).Property( "Text" ).EqualTo( "Tab1" ) );
+            Assert.That( tv.Tabs, Has.ItemAt( 0 ).Property("DisplayText").EqualTo( "Tab2" ) );
+            Assert.That( tv.Tabs, Has.ItemAt( 1 ).Property("DisplayText").EqualTo( "Tab1" ) );
         } );
     }
 
-    [Test]
-    public void GetAllDesigns_TabView<T>( [ValueSource( nameof( TabView_Tab_SubViewTypes ) )] T dummyObject )
+    [TestCaseSource(nameof(ViewTypes))]
+    public void GetAllDesigns_TabView<T>(T dummy )
         where T : View, new( )
     {
         using TabView tv = new( );
@@ -162,8 +161,17 @@ internal class TabViewTests : Tests
         Design subview2Design = new( source, "subview2", subview2 );
         subview2Design.View.Data = subview2Design;
 
-        tv.AddTab( new( "Yay", subview1Design.View ), true );
-        tv.AddTab( new( "Yay", subview2Design.View ), false );
+        tv.AddTab( new Tab
+        {
+            Title = "Yay",
+            View = subview1Design.View
+        },true);
+
+        tv.AddTab( new Tab
+        {
+            Title = "Yay",
+            View = subview2Design.View
+        }, false );
 
         Design tvDesign = new( source, "tv", tv );
 
@@ -180,8 +188,8 @@ internal class TabViewTests : Tests
         using TabView tv = (TabView)d.View;
 
         Assume.That( tv.Tabs, Has.Exactly( 2 ).InstanceOf<Tab>( ) );
-        Assume.That( tv.Tabs, Has.ItemAt( 0 ).Property( "Text" ).EqualTo( "Tab1" ) );
-        Assume.That( tv.Tabs, Has.ItemAt( 1 ).Property( "Text" ).EqualTo( "Tab2" ) );
+        Assume.That( tv.Tabs, Has.ItemAt( 0 ).Property("DisplayText").EqualTo( "Tab1" ) );
+        Assume.That( tv.Tabs, Has.ItemAt( 1 ).Property("DisplayText").EqualTo( "Tab2" ) );
         Assume.That( OperationManager.Instance.RedoStackSize, Is.Zero );
         Assume.That( OperationManager.Instance.UndoStackSize, Is.Zero );
 
@@ -292,8 +300,8 @@ internal class TabViewTests : Tests
         Assume.That( addOperationSucceeded );
 
         // Give both tabs the same title text
-        tvOut.Tabs.ElementAt( 0 ).Text = tabText;
-        tvOut.Tabs.ElementAt( 1 ).Text = tabText;
+        tvOut.Tabs.ElementAt( 0 ).DisplayText = tabText;
+        tvOut.Tabs.ElementAt( 1 ).DisplayText = tabText;
 
         viewToCode.GenerateDesignerCs( designOut, typeof( Dialog ) );
 
@@ -311,8 +319,8 @@ internal class TabViewTests : Tests
         Assert.Multiple( ( ) =>
         {
             Assert.That( tvIn, Is.Not.SameAs( tvOut ) );
-            Assert.That( tvIn.Tabs.ElementAt( 0 ).Text, Is.EqualTo( tabText ) );
-            Assert.That( tvIn.Tabs.ElementAt( 1 ).Text, Is.EqualTo( tabText ) );
+            Assert.That( tvIn.Tabs.ElementAt( 0 ).DisplayText, Is.EqualTo( tabText ) );
+            Assert.That( tvIn.Tabs.ElementAt( 1 ).DisplayText, Is.EqualTo( tabText ) );
         } );
     }
 
@@ -325,8 +333,8 @@ internal class TabViewTests : Tests
                 {
                     Assume.That( t.Tabs, Is.Not.Empty, "Expected default TabView created by ViewFactory to have some placeholder Tabs" );
                     Assume.That( t.Tabs, Has.Exactly( 2 ).InstanceOf<Tab>( ) );
-                    Assume.That( t.Tabs, Has.ItemAt( 0 ).Property( "Text" ).EqualTo( "Tab1" ) );
-                    Assume.That( t.Tabs, Has.ItemAt( 1 ).Property( "Text" ).EqualTo( "Tab2" ) );
+                    Assume.That( t.Tabs, Has.ItemAt( 0 ).Property("DisplayText").EqualTo( "Tab1" ) );
+                    Assume.That( t.Tabs, Has.ItemAt( 1 ).Property("DisplayText").EqualTo( "Tab2" ) );
                 },
                 out TabView tabOut );
 
@@ -334,10 +342,10 @@ internal class TabViewTests : Tests
 
         Assert.Multiple( ( ) =>
         {
-            Assert.That( tabIn.Tabs, Has.ItemAt( 0 ).Property( "Text" ).EqualTo( "Tab1" ) );
-            Assert.That( tabIn.Tabs, Has.ItemAt( 1 ).Property( "Text" ).EqualTo( "Tab2" ) );
-            Assert.That( tabOut.Tabs, Has.ItemAt( 0 ).Property( "Text" ).EqualTo( "Tab1" ) );
-            Assert.That( tabOut.Tabs, Has.ItemAt( 1 ).Property( "Text" ).EqualTo( "Tab2" ) );
+            Assert.That( tabIn.Tabs, Has.ItemAt( 0 ).Property("DisplayText").EqualTo( "Tab1" ) );
+            Assert.That( tabIn.Tabs, Has.ItemAt( 1 ).Property("DisplayText").EqualTo( "Tab2" ) );
+            Assert.That( tabOut.Tabs, Has.ItemAt( 0 ).Property("DisplayText").EqualTo( "Tab1" ) );
+            Assert.That( tabOut.Tabs, Has.ItemAt( 1 ).Property("DisplayText").EqualTo( "Tab2" ) );
 
             // Also prove they aren't the same objects
             Assert.That( tabIn, Is.Not.SameAs( tabOut ) );

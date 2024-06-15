@@ -21,7 +21,7 @@ internal class DragOperationTests : Tests
     {
         var d = Get10By10View();
 
-        var lbl = new Label(0, 0, "Hi there buddy");
+        var lbl = new Label { Text = "Hi there buddy" };
         var lblDesign = new Design(d.SourceCode, "mylabel", lbl);
         lbl.Data = lblDesign;
         d.View.Add(lbl);
@@ -31,18 +31,18 @@ internal class DragOperationTests : Tests
 
         // drag down 3 lines
         drag.ContinueDrag(new Point(2, 3));
-        ClassicAssert.AreEqual(Pos.At(0), lbl.X);
-        ClassicAssert.AreEqual(Pos.At(3), lbl.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(0), lbl.X);
+        ClassicAssert.AreEqual(Pos.Absolute(3), lbl.Y);
 
         // finalise the operation
         drag.Do();
-        ClassicAssert.AreEqual(Pos.At(0), lbl.X);
-        ClassicAssert.AreEqual(Pos.At(3), lbl.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(0), lbl.X);
+        ClassicAssert.AreEqual(Pos.Absolute(3), lbl.Y);
 
         // now test undoing it
         drag.Undo();
-        ClassicAssert.AreEqual(Pos.At(0), lbl.X);
-        ClassicAssert.AreEqual(Pos.At(0), lbl.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(0), lbl.X);
+        ClassicAssert.AreEqual(Pos.Absolute(0), lbl.Y);
     }
 
     /// <summary>
@@ -54,7 +54,10 @@ internal class DragOperationTests : Tests
     {
         var d = Get10By10View();
 
-        var lbl = new Label(0, 0, "Hi there buddy");
+        var lbl = new Label
+        {
+            Text = "Hi there buddy"
+        };
         var lblDesign = new Design(d.SourceCode, "mylabel", lbl);
         lbl.Data = lblDesign;
         d.View.Add(lbl);
@@ -65,13 +68,13 @@ internal class DragOperationTests : Tests
         MouseDrag(d, 2, 0, 2, 3);
 
         // finalize the operation
-        ClassicAssert.AreEqual(Pos.At(0), lbl.X);
-        ClassicAssert.AreEqual(Pos.At(3), lbl.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(0), lbl.X);
+        ClassicAssert.AreEqual(Pos.Absolute(3), lbl.Y);
 
         // now test undoing it
         OperationManager.Instance.Undo();
-        ClassicAssert.AreEqual(Pos.At(0), lbl.X);
-        ClassicAssert.AreEqual(Pos.At(0), lbl.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(0), lbl.X);
+        ClassicAssert.AreEqual(Pos.Absolute(0), lbl.Y);
     }
 
 
@@ -81,8 +84,12 @@ internal class DragOperationTests : Tests
     {
         var d = Get10By10View();
 
-        var lbl1 = new Label(0, 0, "Hi there buddy");
-        var lbl2 = new Label(1, 1, "Hi there buddy");
+        var lbl1 = new Label{ Text = "Hi there buddy" };
+        var lbl2 = new Label{
+            X = 1,
+            Y = 1,
+            Text = "Hi there buddy"
+        };
 
         var lblDesign1 = new Design(d.SourceCode, "mylabel1", lbl1);
         var lblDesign2 = new Design(d.SourceCode, "mylabel2", lbl2);
@@ -99,24 +106,24 @@ internal class DragOperationTests : Tests
 
         // drag down 3 lines
         drag.ContinueDrag(new Point(2, 3));
-        ClassicAssert.AreEqual(Pos.At(0), lbl1.X);
-        ClassicAssert.AreEqual(Pos.At(3), lbl1.Y);
-        ClassicAssert.AreEqual(Pos.At(1), lbl2.X);
-        ClassicAssert.AreEqual(Pos.At(4), lbl2.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(0), lbl1.X);
+        ClassicAssert.AreEqual(Pos.Absolute(3), lbl1.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(1), lbl2.X);
+        ClassicAssert.AreEqual(Pos.Absolute(4), lbl2.Y);
 
         // finalize the operation
         drag.Do();
-        ClassicAssert.AreEqual(Pos.At(0), lbl1.X);
-        ClassicAssert.AreEqual(Pos.At(3), lbl1.Y);
-        ClassicAssert.AreEqual(Pos.At(1), lbl2.X);
-        ClassicAssert.AreEqual(Pos.At(4), lbl2.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(0), lbl1.X);
+        ClassicAssert.AreEqual(Pos.Absolute(3), lbl1.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(1), lbl2.X);
+        ClassicAssert.AreEqual(Pos.Absolute(4), lbl2.Y);
 
         // now test undoing it
         drag.Undo();
-        ClassicAssert.AreEqual(Pos.At(0), lbl1.X);
-        ClassicAssert.AreEqual(Pos.At(0), lbl1.Y);
-        ClassicAssert.AreEqual(Pos.At(1), lbl2.X);
-        ClassicAssert.AreEqual(Pos.At(1), lbl2.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(0), lbl1.X);
+        ClassicAssert.AreEqual(Pos.Absolute(0), lbl1.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(1), lbl2.X);
+        ClassicAssert.AreEqual(Pos.Absolute(1), lbl2.Y);
     }
 
     [Test]
@@ -132,7 +139,12 @@ internal class DragOperationTests : Tests
         };
         d.View.Add(container1);
 
-        var lbl = new Label(1, 2, "Hi there buddy");
+        var lbl = new Label
+        {
+            X=1,
+            Y=2,
+            Text = "Hi there buddy"
+        };
         var lblDesign = new Design(d.SourceCode, "mylabel", lbl);
         lbl.Data = lblDesign;
         container1.Add(lbl);
@@ -154,8 +166,8 @@ internal class DragOperationTests : Tests
         ClassicAssert.AreEqual(3, drag.DestinationY);
         drag.Do();
 
-        ClassicAssert.AreEqual(Pos.At(2), lbl.X);
-        ClassicAssert.AreEqual(Pos.At(3), lbl.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(2), lbl.X);
+        ClassicAssert.AreEqual(Pos.Absolute(3), lbl.Y);
     }
 
     [Test]
@@ -186,7 +198,13 @@ internal class DragOperationTests : Tests
         d.View.Add(container1);
         d.View.Add(container2);
 
-        var lbl = new Label(1, 2, "Hi there buddy");
+        var lbl = new Label
+        {
+            X = 1,
+            Y = 2,
+            Text = "Hi there buddy"
+        };
+
         var lblDesign = new Design(d.SourceCode, "mylabel", lbl);
         lbl.Data = lblDesign;
         container1.Add(lbl);
@@ -198,21 +216,21 @@ internal class DragOperationTests : Tests
         drag.ContinueDrag(new Point(6, 7));
         drag.DropInto = container2;
 
-        ClassicAssert.AreEqual(Pos.At(4), lbl.X);
-        ClassicAssert.AreEqual(Pos.At(7), lbl.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(4), lbl.X);
+        ClassicAssert.AreEqual(Pos.Absolute(7), lbl.Y);
         ClassicAssert.Contains(lbl, container1.Subviews.ToArray(), "Did not expect continue drag to move to a new container");
 
         // finalise the operation
         drag.Do();
         ClassicAssert.IsFalse(container1.Subviews.Contains(lbl));
         ClassicAssert.Contains(lbl, container2.Subviews.ToArray(), "Expected new container to be the one we dropped into");
-        ClassicAssert.AreEqual(Pos.At(-1), lbl.X);
-        ClassicAssert.AreEqual(Pos.At(2), lbl.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(-1), lbl.X);
+        ClassicAssert.AreEqual(Pos.Absolute(2), lbl.Y);
 
         // now test undoing it
         drag.Undo();
-        ClassicAssert.AreEqual(Pos.At(1), lbl.X);
-        ClassicAssert.AreEqual(Pos.At(2), lbl.Y);
+        ClassicAssert.AreEqual(Pos.Absolute(1), lbl.X);
+        ClassicAssert.AreEqual(Pos.Absolute(2), lbl.Y);
         ClassicAssert.Contains(lbl, container1.Subviews.ToArray(), "Expected undo to return view to its original parent");
     }
 
@@ -223,11 +241,12 @@ internal class DragOperationTests : Tests
         rootDesign.View.X = 0;
         rootDesign.View.Y = 0;
 
-        rootDesign.View.BoundsToScreen(0, 0, out var screenX, out var screenY);
+        var screen = rootDesign.View.ContentToScreen(new Point(0, 0));
+
 
         // A window is positioned at 0,0 but its client area (to which controls are added) is 1,1 due to border
-        ClassicAssert.AreEqual(1, screenX);
-        ClassicAssert.AreEqual(1, screenY);
+        ClassicAssert.AreEqual(1, screen.X);
+        ClassicAssert.AreEqual(1, screen.Y);
 
         var frameView = ViewFactory.Create(typeof(FrameView));
         frameView.X = 10;
@@ -240,11 +259,11 @@ internal class DragOperationTests : Tests
 
         /*Window client area starts at (1,1) + (10,10 X/Y) + (1,1) for border of FrameView*/
 
-        frameView.BoundsToScreen(0, 0, out screenX, out screenY);
-        ClassicAssert.AreEqual(12, screenX);
-        ClassicAssert.AreEqual(12, screenY);
+        screen = frameView.ContentToScreen(new Point(0, 0));
+        ClassicAssert.AreEqual(12, screen.X);
+        ClassicAssert.AreEqual(12, screen.Y);
 
-        var lbl = new Label(1, 2, "Hi there buddy");
+        var lbl = new Label{ X = 1, Y = 2, Text = "Hi there buddy" };
         var lblDesign = new Design(rootDesign.SourceCode, "mylabel", lbl);
         lbl.Data = lblDesign;
         frameView.Add(lbl);
@@ -253,12 +272,12 @@ internal class DragOperationTests : Tests
         Application.Top.LayoutSubviews();
 
         // check screen coordinates are as expected
-        lblDesign.View.BoundsToScreen(0, 0, out screenX, out screenY);
-        ClassicAssert.AreEqual(13, screenX, "Expected label X screen to be at its parents 0,0 (11,11) + 1");
-        ClassicAssert.AreEqual(14, screenY, "Expected label Y screen to be at its parents 0,0 (11,11) + 2");
+        screen = lblDesign.View.ContentToScreen(new System.Drawing.Point(0, 0));
+        ClassicAssert.AreEqual(13, screen.X, "Expected label X screen to be at its parents 0,0 (11,11) + 1");
+        ClassicAssert.AreEqual(14, screen.Y, "Expected label Y screen to be at its parents 0,0 (11,11) + 2");
 
         // press down at 0,0 of the label
-        ClassicAssert.AreEqual(lbl, rootDesign.View.HitTest(new MouseEvent { X = 13, Y = 14 }, out _, out _)
+        ClassicAssert.AreEqual(lbl, rootDesign.View.HitTest(new MouseEvent { Position = new Point(13, 14) }, out _, out _)
             , "We just asked ViewToScreen for these same coordinates, how can they fail HitTest now?");
 
         // Drag up 4 so it is no longer in its parents container.
@@ -282,7 +301,7 @@ internal class DragOperationTests : Tests
             v.Y = 2;
 
             // add a Button
-            var op = new AddViewOperation(new Button("Hello"), d.GetRootDesign(), "mybtn");
+            var op = new AddViewOperation(new Button() { Text = "Hello" }, d.GetRootDesign(), "mybtn");
             op.Do();
 
             Application.Top.Add(d.GetRootDesign().View);

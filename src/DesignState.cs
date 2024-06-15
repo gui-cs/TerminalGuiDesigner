@@ -53,11 +53,11 @@ public class DesignState
     {
         if (this.Design.View.IsBorderlessContainerView() && Editor.ShowBorders)
         {
-            this.DrawBorderlessViewFrame(r.Rect);
+            this.DrawBorderlessViewFrame(r.NewViewport);
         }
     }
 
-    private void DrawBorderlessViewFrame(Rect r)
+    private void DrawBorderlessViewFrame(Rectangle r)
     {
         bool isSelected = SelectionManager.Instance.Selected.Contains(this.Design);
 

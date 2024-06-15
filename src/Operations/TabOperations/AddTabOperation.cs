@@ -18,7 +18,7 @@ public class AddTabOperation : AddOperation<TabView, Tab>
          : base(
             (t) => t.Tabs.ToArray(),
             (v, a) => v.ReOrderTabs(a),
-            tab => tab.Text.ToString() ?? "unnamed tab",
+            tab => tab.DisplayText.ToString() ?? "unnamed tab",
             AddTab,
             design,
             name)
@@ -27,7 +27,11 @@ public class AddTabOperation : AddOperation<TabView, Tab>
 
     private static Tab AddTab(TabView view, string name)
     {
-        var tab = new Tab(name, new View { Width = Dim.Fill(), Height = Dim.Fill() });
+        var tab = new Tab()
+        {
+            DisplayText = name,
+            View = new View { Width = Dim.Fill(), Height = Dim.Fill() }
+        };
         view.AddTab(tab, true);
         return tab;
     }

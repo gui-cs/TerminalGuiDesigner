@@ -248,10 +248,10 @@ namespace TerminalGuiDesigner.UI
                 }
             }
             else
-            if (type== typeof(float)
-                || type== typeof(float?))
+            if (type== typeof(int)
+                || type== typeof(int?))
             {
-                if (Modals.GetFloat(propertyName, "New Float Value", (float?)oldValue, out var resultInt))
+                if (Modals.Getint(propertyName, "New int Value", (int?)oldValue, out var resultInt))
                 {
                     newValue = resultInt;
                     return true;

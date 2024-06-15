@@ -28,8 +28,9 @@ public class MoveViewOperation : Operation
         // start out assuming X and Y are PosRelative so cannot be moved
         this.IsImpossible = true;
         var super = this.BeingMoved.View.SuperView;
-        int maxWidth = (super?.Bounds.Width ?? int.MaxValue) - 1;
-        int maxHeight = (super?.Bounds.Height ?? int.MaxValue) - 1;
+
+        int maxWidth = (super?.GetContentSize().Width ?? int.MaxValue) - 1;
+        int maxHeight = (super?.GetContentSize().Height ?? int.MaxValue) - 1;
 
         if (this.BeingMoved.View.X.IsAbsolute(out var x))
         {

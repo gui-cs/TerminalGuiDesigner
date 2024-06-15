@@ -15,7 +15,7 @@ internal class OperationManagerTests
         var viewToCode = new ViewToCode( );
         var designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Window ) );
 
-        var op = new AddViewOperation( new Label( "Hello World" ), designOut, "myLabel" );
+        var op = new AddViewOperation( new Label() { Text = "Hello World" }, designOut, "myLabel" );
         op.Do( );
 
         Assume.That( designOut, Is.Not.Null.And.InstanceOf<Design>( ) );
@@ -33,7 +33,7 @@ internal class OperationManagerTests
         Assume.That( OperationManager.Instance.UndoStackSize, Is.Zero );
         Assume.That( OperationManager.Instance.RedoStackSize, Is.Zero );
 
-        OperationManager.Instance.Do( new SetPropertyOperation( lblDesign, propertyBeingChanged, propertyBeingChanged.GetValue( ), Pos.At( 10 ) ) );
+        OperationManager.Instance.Do( new SetPropertyOperation( lblDesign, propertyBeingChanged, propertyBeingChanged.GetValue( ), Pos.Absolute( 10 ) ) );
         Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
         Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
 
@@ -41,7 +41,7 @@ internal class OperationManagerTests
         Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 2 ) );
         Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
 
-        OperationManager.Instance.Do( new SetPropertyOperation( lblDesign, propertyBeingChanged, propertyBeingChanged.GetValue( ), Pos.At( 10 ) ) );
+        OperationManager.Instance.Do( new SetPropertyOperation( lblDesign, propertyBeingChanged, propertyBeingChanged.GetValue( ), Pos.Absolute( 10 ) ) );
         Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 3 ) );
         Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
 
@@ -65,6 +65,6 @@ internal class OperationManagerTests
         Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 4 ) );
         Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
 
-        Assert.That( lblDesign.View.X.ToString( ), Is.EqualTo( $"Factor({0.5})" ) );
+        Assert.That( lblDesign.View.X.ToString( ), Is.EqualTo( $"Percent({50})" ) );
     }
 }
