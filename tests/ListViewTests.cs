@@ -81,6 +81,10 @@ internal class ListViewTests : Tests
         var code = Helpers.ExpressionToCode( prop.GetRhs( ) );
 
         Assert.That(
-            code, Is.EqualTo( "new Terminal.Gui.ListWrapper(new string[] {\n            \"hi there\",\n            \"my friend\"})".Replace( "\n", Environment.NewLine ) ) );
+            code.Trim().ReplaceLineEndings("\n"), Is.EqualTo( 
+                @"
+new Terminal.Gui.ListWrapper<string>(new System.Collections.ObjectModel.ObservableCollection<string>(new string[] {
+                ""hi there"",
+                ""my friend""}))".Trim().ReplaceLineEndings("\n")));
     }
 }

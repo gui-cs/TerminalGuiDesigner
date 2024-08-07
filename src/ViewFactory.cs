@@ -39,7 +39,11 @@ public static class ViewFactory
 
         // BUG These seem to cause stack overflows in CreateSubControlDesigns (see TestAddView_RoundTrip)
         typeof( Wizard ),
-        typeof( WizardStep )
+        typeof( WizardStep ),
+
+        // TODO: Requires tests and comprehensive testing, also its generic so that's more complicated
+        typeof(NumericUpDown),
+        typeof(NumericUpDown<>)
     ];
 
     /// <summary>

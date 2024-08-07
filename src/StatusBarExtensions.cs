@@ -75,11 +75,14 @@ public static class StatusBarExtensions
 
     public static void SetShortcuts(this StatusBar bar, Shortcut[] shortcuts)
     {
-        bar.Subviews.Clear();
+        foreach(var old in bar.GetShortcuts())
+        {
+            bar.Remove(old);
+        }
 
         foreach (var shortcut in shortcuts)
         {
-            bar.Subviews.Add(shortcut);
+            bar.Add(shortcut);
         }
     }
 }
