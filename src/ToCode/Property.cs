@@ -448,28 +448,14 @@ public class Property : ToCodeBase
                 // accept arrays as valid input values
                 // for setting an IListDataSource.  Just
                 // convert them to ListWrappers
-                value = ArrayToListWrapper(a);
+                value = a.ToListDataSource();
             }
         }
 
         return value;
     }
 
-    private IListDataSource ArrayToListWrapper(Array array)
-    {   
-        // Get the type of the array elements
-        var elementType = array.GetType().GetElementType()
-            ?? throw new Exception("Unable to get element type for array");
-
-        // Convert the array to a ObservableCollection<T>
-        // i.e. create a ObservableCollection<T> from the array
-        var listType = typeof(ObservableCollection<>).MakeGenericType(elementType);
-        var list = Activator.CreateInstance(listType, array);
-        
-        // Create an instance of ListWrapper<T>
-        var listWrapperType = typeof(ListWrapper<>).MakeGenericType(elementType);
-        return (IListDataSource) Activator.CreateInstance(listWrapperType, list);
-    }
+    
 
     /// <summary>
     /// Calls any methods that update the state of the View

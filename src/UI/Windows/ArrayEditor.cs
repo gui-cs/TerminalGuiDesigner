@@ -7,6 +7,9 @@
 //      You can make changes to this file and they will not be overwritten when saving.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
+
+using System.Collections.ObjectModel;
+
 namespace TerminalGuiDesigner.UI.Windows {
     using System.Collections;
     using Terminal.Gui;
@@ -38,7 +41,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             InitializeComponent();
             this.design = design;
             this.elementType = elementType;
-
+            
             Type listType = typeof(List<>).MakeGenericType(elementType);
             Result = (IList)Activator.CreateInstance(listType);
          
@@ -47,7 +50,7 @@ namespace TerminalGuiDesigner.UI.Windows {
                 Result.Add(e);
             }
 
-            lvElements.SetSource(Result);
+            lvElements.Source = Result.ToListDataSource();
             lvElements.KeyUp += LvElements_KeyUp;
             btnOk.Accept += BtnOk_Clicked;
             btnCancel.Accept += BtnCancel_Clicked;
@@ -71,7 +74,7 @@ namespace TerminalGuiDesigner.UI.Windows {
                 Result.RemoveAt(idx);
                 Result.Insert(newIndex, toMove);
 
-                lvElements.SetSource(Result);
+                lvElements.Source = Result.ToListDataSource();
                 lvElements.SelectedItem = newIndex;
                 lvElements.SetNeedsDisplay();
             }
@@ -89,7 +92,7 @@ namespace TerminalGuiDesigner.UI.Windows {
                 Result.RemoveAt(idx);
                 Result.Insert(newIndex, toMove);
 
-                lvElements.SetSource(Result);
+                lvElements.Source = Result.ToListDataSource();
                 lvElements.SelectedItem = newIndex;
                 lvElements.SetNeedsDisplay();
             }
@@ -112,7 +115,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             {
                 Result.RemoveAt(idx);
 
-                lvElements.SetSource(Result);
+                lvElements.Source = Result.ToListDataSource();
                 lvElements.SetNeedsDisplay();
                 lvElements.SelectedItem = 0;
             }
@@ -125,7 +128,7 @@ namespace TerminalGuiDesigner.UI.Windows {
                 Result.Add(newValue);                
             }
 
-            lvElements.SetSource(Result);
+            lvElements.Source = Result.ToListDataSource();
             lvElements.SelectedItem = Result.Count - 1;
             lvElements.SetNeedsDisplay();
         }
@@ -144,7 +147,7 @@ namespace TerminalGuiDesigner.UI.Windows {
                     Result.Insert(idx, newValue);
                 }
 
-                lvElements.SetSource(Result);
+                lvElements.Source = Result.ToListDataSource();
                 lvElements.SelectedItem = idx;
                 lvElements.SetNeedsDisplay();
             }
