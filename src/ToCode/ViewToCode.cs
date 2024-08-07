@@ -127,6 +127,7 @@ public class ViewToCode
         ns.Imports.Add(new CodeNamespaceImport("Terminal.Gui"));
         ns.Imports.Add(new CodeNamespaceImport("System.Collections"));
         ns.Imports.Add(new CodeNamespaceImport("System.Collections.Generic"));
+        ns.Imports.Add(new CodeNamespaceImport("System.Collections.ObjectModel"));
         ns.Imports.Add(new CodeNamespaceImport("System.Drawing"));
 
         this.AddCustomHeaderForDesignerCsFile(ns);
