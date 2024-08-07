@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Data;
 using Terminal.Gui;
 using Terminal.Gui.TextValidateProviders;
@@ -172,7 +173,7 @@ public static class ViewFactory
                 mb.Menus = DefaultMenuBarItems;
                 break;
             case StatusBar sb:
-                sb.Items = new[] { new StatusItem( Key.F1, "F1 - Edit Me", null ) };
+                sb.SetShortcuts(new[] { new Shortcut( Key.F1, "F1 - Edit Me", null ) });
                 break;
             case RadioGroup rg:
                 rg.RadioLabels = new string[] { "Option 1", "Option 2" };
@@ -183,7 +184,7 @@ public static class ViewFactory
                 SetDefaultDimensions( newView, width ?? 20, height ?? 5 );
                 break;
             case ListView lv:
-                lv.SetSource( new List<string> { "Item1", "Item2", "Item3" } );
+                lv.SetSource( new ObservableCollection<string> { "Item1", "Item2", "Item3" } );
                 SetDefaultDimensions( newView, width ?? 20, height ?? 3 );
                 break;
             case FrameView:

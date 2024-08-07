@@ -8,6 +8,9 @@
 //      the code is regenerated.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
+
+using System.Collections.ObjectModel;
+
 namespace TerminalGuiDesigner.UI.Windows {
     using System;
     using Terminal.Gui;
@@ -72,10 +75,10 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lvElements.Visible = true;
             this.lvElements.Data = "lvElements";
             this.lvElements.TextAlignment = Terminal.Gui.Alignment.Start;
-            this.lvElements.Source = new Terminal.Gui.ListWrapper(new string[] {
+            this.lvElements.Source = new Terminal.Gui.ListWrapper<string>(new ObservableCollection<string>(new string[] {
                         "Item1",
                         "Item2",
-                        "Item3"});
+                        "Item3"}));
             this.lvElements.AllowsMarking = false;
             this.lvElements.AllowsMultipleSelection = true;
             this.frameView.Add(this.lvElements);

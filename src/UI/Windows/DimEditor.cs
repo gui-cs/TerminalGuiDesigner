@@ -85,7 +85,7 @@ public partial class DimEditor : Dialog
         // if user types in some text change the focus to the text box to enable entering digits
         if ((obj == Key.Backspace || char.IsDigit(c)) && tbValue.Visible)
         {
-            tbValue?.FocusFirst();
+            tbValue?.FocusFirst(TabBehavior.TabStop);
         }
     }
 
