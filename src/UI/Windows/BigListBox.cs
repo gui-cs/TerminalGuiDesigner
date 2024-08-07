@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Collections.ObjectModel;
 using Terminal.Gui;
 
 namespace TerminalGuiDesigner.UI.Windows;
@@ -80,12 +81,17 @@ public class BigListBox<T>
             Width = Dim.Fill(2),
             SelectedItem = 0
         };
-        listView.SetSource(ErrorStringArray.ToList());
+        listView.SetSource(new ObservableCollection<string>(ErrorStringArray));
 
         this.listView.KeyDown += this.ListView_KeyPress;
 
         this.listView.MouseClick += this.ListView_MouseClick;
-        this.listView.SetSource((this.collection = this.BuildList(this.GetInitialSource())).ToList());
+        
+        this.collection = this.BuildList(this.GetInitialSource()).ToList();
+
+        this.listView.SetSource(
+            new ObservableCollection<T>(this.collection.Select(o=>o.Object).ToArray())
+            );
         this.win.Add(this.listView);
 
         var btnOk = new Button()
@@ -228,7 +234,10 @@ public class BigListBox<T>
             lock (this.taskCancellationLock)
             {
                 var oldSelected = this.listView.SelectedItem;
-                this.listView.SetSource(this.collection.ToList());
+                this.listView.SetSource(
+                    new ObservableCollection<T>(
+                        this.collection.Select(l=>l.Object)
+                        ));
 
                 if (oldSelected < this.collection.Count)
                 {

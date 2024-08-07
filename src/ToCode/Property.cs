@@ -1,5 +1,6 @@
 ﻿using System.CodeDom;
 using System.Collections;
+using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Text;
 using Terminal.Gui;
@@ -212,33 +213,6 @@ public class Property : ToCodeBase
                 regv.Pattern.ToCodePrimitiveExpression());
         }
 
-        if (val is ListWrapper w)
-        {
-            /* Create an Expression like:
-             * new ListWrapper(new string[]{"bob","frank"})
-             */
-
-            var a = new CodeArrayCreateExpression();
-            Type? listType = null;
-
-            foreach (var v in w.ToList())
-            {
-                if (v != null && listType == null)
-                {
-                    listType = v.GetType();
-                }
-
-                CodeExpression element = v == null ? new CodeDefaultValueExpression() : new CodePrimitiveExpression(v);
-
-                a.Initializers.Add(element);
-            }
-
-            a.CreateType = new CodeTypeReference(listType ?? typeof(string));
-            var ctor = new CodeObjectCreateExpression(typeof(ListWrapper), a);
-
-            return ctor;
-        }
-
         if (val is Pos p)
         {
             // TODO: Get EVERYONE! not just siblings
@@ -278,9 +252,56 @@ public class Property : ToCodeBase
                 );
         }
 
+        if (IsListWrapper(type))
+        {
+            return CreateListWrapperExpression((IListDataSource)val);
+        }
+
         return val.ToCodePrimitiveExpression();
     }
 
+    private bool IsListWrapper(Type t)
+    {
+        return t.IsGenericType && t.GetGenericTypeDefinition() == typeof(ListWrapper<>);
+    }
+
+    private CodeObjectCreateExpression CreateListWrapperExpression(IListDataSource val)
+    {
+        var list = val.ToList();
+
+        var listWrapperType = val.GetType();
+        
+        // Get the generic type argument (T)
+        var elementType = listWrapperType.GetGenericArguments()[0];
+
+        // Create an Expression like:
+        // new ListWrapper<string>(new ObservableCollection<string>(new string[]{"bob","frank"}))
+
+
+        var arrayCreateExpression = new CodeArrayCreateExpression(new CodeTypeReference(elementType));
+
+        if (list != null)
+        {
+            foreach (var v in list)
+            {
+                CodeExpression element = v == null
+                    ? new CodeDefaultValueExpression(new CodeTypeReference(elementType))
+                    : new CodePrimitiveExpression(v);
+                arrayCreateExpression.Initializers.Add(element);
+            }
+        }
+        
+        // Create an expression for new ObservableCollection<T>(new T[]{ ... })
+        var observableCollectionType = typeof(ObservableCollection<>).MakeGenericType(elementType);
+        var observableCollectionCtor = new CodeObjectCreateExpression(observableCollectionType, arrayCreateExpression);
+
+
+        // Create the final expression for new ListWrapper<T>(new ObservableCollection<T>(...))
+        var genericListWrapperType = typeof(ListWrapper<>).MakeGenericType(elementType);
+        var listWrapperCtor = new CodeObjectCreateExpression(genericListWrapperType, observableCollectionCtor);
+
+        return listWrapperCtor;
+    }
     private CodeExpression ValueFactory(object val)
     {
 
@@ -421,16 +442,33 @@ public class Property : ToCodeBase
 
         if (this.PropertyInfo.PropertyType == typeof(IListDataSource))
         {
-            if (value != null && value is Array a)
+            if (value is Array a)
             {
+                
                 // accept arrays as valid input values
                 // for setting an IListDataSource.  Just
                 // convert them to ListWrappers
-                value = new ListWrapper(a.ToList());
+                value = ArrayToListWrapper(a);
             }
         }
 
         return value;
+    }
+
+    private IListDataSource ArrayToListWrapper(Array array)
+    {   
+        // Get the type of the array elements
+        var elementType = array.GetType().GetElementType()
+            ?? throw new Exception("Unable to get element type for array");
+
+        // Convert the array to a ObservableCollection<T>
+        // i.e. create a ObservableCollection<T> from the array
+        var listType = typeof(ObservableCollection<>).MakeGenericType(elementType);
+        var list = Activator.CreateInstance(listType, array);
+        
+        // Create an instance of ListWrapper<T>
+        var listWrapperType = typeof(ListWrapper<>).MakeGenericType(elementType);
+        return (IListDataSource) Activator.CreateInstance(listWrapperType, list);
     }
 
     /// <summary>

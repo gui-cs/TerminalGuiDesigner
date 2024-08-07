@@ -4,9 +4,9 @@ using TerminalGuiDesigner.Operations.Generics;
 namespace TerminalGuiDesigner.Operations.StatusBarOperations
 {
     /// <summary>
-    /// Operation for adding a new <see cref="StatusItem"/> to a <see cref="StatusBar"/>.
+    /// Operation for adding a new <see cref="Shortcut"/> to a <see cref="StatusBar"/>.
     /// </summary>
-    public class AddStatusItemOperation : AddOperation<StatusBar, StatusItem>
+    public class AddStatusItemOperation : AddOperation<StatusBar, Shortcut>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AddStatusItemOperation"/> class.
@@ -15,10 +15,10 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
         /// <param name="name">Name for the new item created or null to prompt user.</param>
         public AddStatusItemOperation(Design design, string? name)
             : base(
-                  (d) => d.Items,
-                  (d, v) => d.Items = v,
+                  (d) => d.GetShortcuts(),
+                  (d, v) => d.SetShortcuts(v),
                   (v) => v.Title.ToString() ?? Operation.Unnamed,
-                  (d, name) => { return new StatusItem(KeyCode.Null, name, null); },
+                  (d, name) => { return new Shortcut(KeyCode.Null, name, null); },
                   design,
                   name)
         {
