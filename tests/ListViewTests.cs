@@ -32,7 +32,7 @@ internal class ListViewTests : Tests
         ListView initialListView = ViewFactory.Create<ListView>( );
         Assume.That( initialListView, Is.Not.Null.And.InstanceOf<ListView>( ) );
 
-        Assume.That( ( ) => initialListView.SetSource( listViewContents ), Throws.Nothing );
+        Assume.That( ( ) => initialListView.Source =  listViewContents.ToListDataSource(), Throws.Nothing );
         Assume.That( initialListView.Source, Has.Count.EqualTo( listViewContents.Count ) );
 
         IList initialListViewSource = initialListView.Source.ToList( );
