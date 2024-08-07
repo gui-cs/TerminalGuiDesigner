@@ -158,7 +158,7 @@ public class BigListBox<T>
 
         this.callback = Application.AddTimeout(TimeSpan.FromMilliseconds(100), this.Timer);
 
-        this.listView.FocusFirst();
+        this.listView.FocusFirst(TabBehavior.TabStop);
     }
 
 
@@ -215,7 +215,7 @@ public class BigListBox<T>
         // backspace or letter/numbers
         if (key == Key.Backspace || char.IsLetterOrDigit(c))
         {
-            this.searchBox?.FocusFirst();
+            this.searchBox?.FocusFirst(TabBehavior.TabStop);
             this.searchBox?.OnKeyDown(key);
             key.Handled = true;
         }

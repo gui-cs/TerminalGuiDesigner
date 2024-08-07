@@ -14,13 +14,14 @@ public static class StatusBarExtensions
     /// <param name="statusBar"><see cref="StatusBar"/> you want to find the clicked <see cref="MenuBarItem"/> (top level menu) for.</param>
     /// <param name="screenX">Screen coordinate of the click in X.</param>
     /// <returns>The <see cref="StatusItem"/> under the mouse at this position or null (only considers X).</returns>
-    public static StatusItem? ScreenToMenuBarItem(this StatusBar statusBar, int screenX)
+    public static Shortcut? ScreenToMenuBarItem(this StatusBar statusBar, int screenX)
     {
         // These might be changed in Terminal.Gui library
         const int initialWhitespace = 1;
         const int afterEachItemWhitespace = 3; /* currently a space then a '|' then another space*/
 
-        if (statusBar.Items.Length == 0)
+
+        if (statusBar.CountShortcuts() == 0)
         {
             return null;
         }
@@ -35,9 +36,9 @@ public static class StatusBarExtensions
 
         // Calculate the x display positions of each menu
         int distance = initialWhitespace;
-        Dictionary<int, StatusItem?> xLocations = new();
+        Dictionary<int, Shortcut?> xLocations = new();
 
-        foreach (var si in statusBar.Items)
+        foreach (var si in statusBar.Subviews.OfType<Shortcut>())
         {
             xLocations.Add(distance, si);
             distance += si.Title.GetColumns() + afterEachItemWhitespace;
@@ -55,5 +56,30 @@ public static class StatusBarExtensions
 
         // Return the last menu item that begins rendering before this X point
         return xLocations.Last(m => m.Key <= clientPoint.X).Value;
+    }
+
+    /// <summary>
+    /// Return a count of the number of <see cref="Shortcut"/> in the <see cref="StatusBar"/>.
+    /// </summary>
+    /// <param name="bar"></param>
+    /// <returns></returns>
+    public static int CountShortcuts(this StatusBar bar)
+    {
+        return bar.Subviews.OfType<Shortcut>().Count();
+    }
+
+    public static Shortcut[] GetShortcuts(this StatusBar bar)
+    {
+        return bar.Subviews.OfType<Shortcut>().ToArray();
+    }
+
+    public static void SetShortcuts(this StatusBar bar, Shortcut[] shortcuts)
+    {
+        bar.Subviews.Clear();
+
+        foreach (var shortcut in shortcuts)
+        {
+            bar.Subviews.Add(shortcut);
+        }
     }
 }

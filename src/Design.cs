@@ -750,7 +750,7 @@ public class Design
 
         if (this.View is CheckBox)
         {
-            yield return this.CreateProperty(nameof(CheckBox.Checked));
+            yield return this.CreateProperty(nameof(CheckBox.CheckedState));
         }
 
         if (this.View is ListView lv)
