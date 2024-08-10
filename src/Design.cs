@@ -229,12 +229,6 @@ public class Design
             tf.KeyDown += (s, e) => e.Handled = true;
         }
 
-        if (subView is Window w)
-        {
-            // prevent control from responding to events
-            w.Arrangement = ViewArrangement.Fixed;
-        }
-
         if (subView is TreeView tree)
         {
             tree.AddObject(new TreeNode("Example Branch 1")
@@ -656,6 +650,8 @@ public class Design
         yield return this.CreateProperty(nameof(this.View.Y));
 
         yield return this.CreateSuppressedProperty(nameof(this.View.Visible), true);
+
+        yield return this.CreateSuppressedProperty(nameof(this.View.Arrangement), ViewArrangement.Fixed);
 
         yield return new ColorSchemeProperty(this);
 

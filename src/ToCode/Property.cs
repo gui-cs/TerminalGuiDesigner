@@ -222,9 +222,8 @@ public class Property : ToCodeBase
 
         if (val is Enum e)
         {
-            return new CodeFieldReferenceExpression(
-                    new CodeTypeReferenceExpression(e.GetType()),
-                    e.ToString());
+            var toCode = new EnumToCode(e);
+            return toCode.ToCode();
         }
 
         var type = val.GetType();

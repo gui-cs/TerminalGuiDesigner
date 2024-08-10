@@ -27,5 +27,22 @@ namespace UnitTests
 
             }, out _);
         }
+
+        [Test]
+        public void Window_ArrangementIsUserServiceable()
+        {
+            RoundTrip<View, Window>(static (_, w) =>
+            {
+                // The Window in the editor should be fixed so that it plays nicely with designer
+                Assert.That(w.Arrangement, Is.EqualTo(ViewArrangement.Fixed));
+                var prop = w.GetNearestDesign()?.GetDesignableProperty(nameof(View.Arrangement))
+                           ?? throw new Exception("Failed to get Arrangement property");
+
+                // But when we write out to the file and read in compiled source we should have preserved the
+                // vanilla setting for Arrangement (typically Moveable for Window).
+                Assert.That(prop.GetValue(),Is.EqualTo(new Window().Arrangement));
+
+            }, out _);
+        }
     }
 }
