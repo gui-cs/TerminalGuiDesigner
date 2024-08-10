@@ -222,7 +222,7 @@ public class BigListBox<T>
         if (key == Key.Backspace || char.IsLetterOrDigit(c))
         {
             this.searchBox?.FocusFirst(TabBehavior.TabStop);
-            this.searchBox?.OnKeyDown(key);
+            this.searchBox?.OnProcessKeyDown(key);
             key.Handled = true;
         }
     }

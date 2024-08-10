@@ -69,7 +69,7 @@ public class EditDialog : Window
         };
         btnClose.Accept += (s, e) => Application.RequestStop();
 
-        this.list.KeyUp += (s, e) =>
+        this.list.KeyDown += (s, e) =>
         {
 
             if (e == Key.Enter && this.list.HasFocus)

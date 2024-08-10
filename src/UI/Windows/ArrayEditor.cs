@@ -51,7 +51,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             }
 
             lvElements.Source = Result.ToListDataSource();
-            lvElements.KeyUp += LvElements_KeyUp;
+            lvElements.KeyDown += LvElements_KeyDown;
             btnOk.Accept += BtnOk_Clicked;
             btnCancel.Accept += BtnCancel_Clicked;
             btnAddElement.Accept += BtnAddElement_Clicked;
@@ -98,7 +98,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             }
         }
 
-        private void LvElements_KeyUp(object sender, Key e)
+        private void LvElements_KeyDown(object sender, Key e)
         {
             if(e == Key.DeleteChar)
             {
