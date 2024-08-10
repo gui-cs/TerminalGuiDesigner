@@ -229,6 +229,12 @@ public class Design
             tf.KeyDown += (s, e) => e.Handled = true;
         }
 
+        if (subView is Window w)
+        {
+            // prevent control from responding to events
+            w.Arrangement = ViewArrangement.Fixed;
+        }
+
         if (subView is TreeView tree)
         {
             tree.AddObject(new TreeNode("Example Branch 1")
