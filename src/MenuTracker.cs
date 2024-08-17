@@ -195,7 +195,7 @@ public class MenuTracker
         {
             Title = bar.Title,
             Data = bar.Data,
-            Shortcut = bar.Shortcut
+            ShortcutKey = bar.ShortcutKey
         };
 
         return true;

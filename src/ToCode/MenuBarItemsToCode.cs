@@ -98,14 +98,14 @@ public class MenuBarItemsToCode : ToCodeBase
                 this.AddPropertyAssignment(args, $"this.{subFieldName}.{nameof(MenuItem.Title)}", sub.Title);
                 this.AddPropertyAssignment(args, $"this.{subFieldName}.{nameof(MenuItem.Data)}", subFieldName);
 
-                if (sub.Shortcut != KeyCode.Null)
+                if (sub.ShortcutKey != KeyCode.Null)
                 {
                     this.AddPropertyAssignment(
                     args,
-                    $"this.{subFieldName}.{nameof(MenuItem.Shortcut)}",
+                    $"this.{subFieldName}.{nameof(MenuItem.ShortcutKey)}",
                     new CodeCastExpression(
                         new CodeTypeReference(typeof(KeyCode)),
-                        new CodePrimitiveExpression((uint)sub.Shortcut)));
+                        new CodePrimitiveExpression((uint)sub.ShortcutKey)));
                 }
 
                 children.Add(subFieldName);

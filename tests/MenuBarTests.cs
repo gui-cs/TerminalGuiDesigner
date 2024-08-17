@@ -196,9 +196,9 @@ internal class MenuBarTests : Tests
         Assert.Multiple( ( ) =>
         {
             Assert.That( menu0Child1Leaf0.Title, Is.EqualTo( "Child1" ) );
-            Assert.That( menu0Child1Leaf0.Shortcut, Is.EqualTo( Key.J.WithCtrl.KeyCode ) );
+            Assert.That( menu0Child1Leaf0.ShortcutKey, Is.EqualTo( Key.J.WithCtrl ) );
             Assert.That( menu0Child1Leaf1.Title, Is.EqualTo( "Child2" ) );
-            Assert.That( menu0Child1Leaf1.Shortcut, Is.EqualTo( Key.F.WithCtrl.KeyCode ) );
+            Assert.That( menu0Child1Leaf1.ShortcutKey, Is.EqualTo( Key.F.WithCtrl ) );
         } );
 
         // Third item
@@ -264,7 +264,7 @@ internal class MenuBarTests : Tests
 
         MenuItem? mi = bar.Menus[ 0 ].Children[ 0 ];
         mi.Data = "yarg";
-        mi.Shortcut = Key.Y.WithCtrl.KeyCode;
+        mi.ShortcutKey = Key.Y.WithCtrl;
 
         AddMenuItemOperation addAnother = new( mi );
         Assert.That( addAnother.IsImpossible, Is.False );
@@ -340,7 +340,7 @@ internal class MenuBarTests : Tests
             // But the values need to be preserved
             Assert.That( firstChildAfterUndo.Title, Is.EqualTo( mi.Title ) );
             Assert.That( firstChildAfterUndo.Data, Is.EqualTo( mi.Data ) );
-            Assert.That( firstChildAfterUndo.Shortcut, Is.EqualTo( mi.Shortcut ) );
+            Assert.That( firstChildAfterUndo.ShortcutKey, Is.EqualTo( mi.ShortcutKey) );
         } );
     }
 
@@ -778,7 +778,7 @@ internal class MenuBarTests : Tests
                 return new( "Child1", null, static ( ) => { } )
                 {
                     Data = "Child1",
-                    Shortcut = Key.J.WithCtrl.KeyCode,
+                    ShortcutKey = Key.J.WithCtrl,
                 };
             }
 
@@ -787,7 +787,7 @@ internal class MenuBarTests : Tests
                 return new( "Child2", null, static ( ) => { } )
                 {
                     Data = "Child2",
-                    Shortcut = Key.F.WithCtrl.KeyCode,
+                    ShortcutKey = Key.F.WithCtrl,
                 };
             }
         }

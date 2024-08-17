@@ -109,7 +109,7 @@ public class KeyboardManager
 
         if (keystroke.ToString( ) == this.keyMap.SetShortcut)
         {
-            menuItem.Shortcut = Modals.GetShortcut().KeyCode;
+            menuItem.ShortcutKey = Modals.GetShortcut().KeyCode;
 
             focusedView.SetNeedsDisplay();
             return false;
