@@ -43,7 +43,15 @@ public static class ViewFactory
 
         // TODO: Requires tests and comprehensive testing, also its generic so that's more complicated
         typeof(NumericUpDown),
-        typeof(NumericUpDown<>)
+        typeof(NumericUpDown<>),
+
+        // Ignore menu bar v2 for now
+        typeof(MenuBarv2),
+
+        // This is unstable when added directly as a view see https://github.com/gui-cs/Terminal.Gui/issues/3664
+        typeof(Shortcut),
+        typeof(Bar)
+
     ];
 
     /// <summary>

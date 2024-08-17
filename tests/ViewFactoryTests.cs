@@ -74,6 +74,17 @@ internal class ViewFactoryTests
         {
             foreach ( PropertyInfo property in publicPropertiesOfType )
             {
+                // The purpose of this test is to confirm that generic and typeof(x) ViewFactory create methods create identical Views (in terms of properties).
+                // The following properties do not support equality well and are safe to assume get the same values regardless of which ViewFactory route creates them
+                if (property.PropertyType == typeof(KeyBindings))
+                {
+                    continue;
+                }
+                if (property.PropertyType == typeof(SliderStyle))
+                {
+                    continue;
+                }
+
                 switch ( dummyInvalidObject, property )
                 {
                     case (ComboBox, { Name: "Subviews" }):
@@ -128,6 +139,11 @@ internal class ViewFactoryTests
                             continue;
                         }
 
+                        if (nonGenericPropertyValue is KeyBindings)
+                        {
+                            continue;
+                        }
+
                         Assert.That( (Dim)nonGenericPropertyValue!, Is.EqualTo( (Dim)genericPropertyValue! ) );
                         continue;
                     case (_, not null) when property.PropertyType.IsAssignableTo( typeof( TextFormatter ) ):
@@ -145,6 +161,9 @@ internal class ViewFactoryTests
                         continue;
                     case (_, not null) when property.PropertyType.IsAssignableTo(typeof(Adornment)):
                         Assert.That(((Adornment)nonGenericPropertyValue!).ToString(), Is.EqualTo(((Adornment)genericPropertyValue!).ToString()));
+                        continue;
+                    case (_, not null) when property.PropertyType.IsAssignableTo(typeof(Shortcut)):
+                        Assert.That(((Shortcut)nonGenericPropertyValue!).Key, Is.EqualTo(((Shortcut)genericPropertyValue!).Key));
                         continue;
                 }
 
@@ -286,7 +305,14 @@ internal class ViewFactoryTests
             typeof( OpenDialog ),
             typeof( ScrollBarView ),
             typeof( Wizard ),
-            typeof( WizardStep )
+            typeof( WizardStep ),
+
+
+            typeof(NumericUpDown),
+            typeof(NumericUpDown<>),
+            typeof( MenuBarv2 ),
+            typeof( Bar ),
+            typeof( Shortcut )
         };
     }
 }
