@@ -50,7 +50,6 @@ public static class ViewFactory
 
         // This is unstable when added directly as a view see https://github.com/gui-cs/Terminal.Gui/issues/3664
         typeof(Shortcut),
-        typeof(Bar)
 
     ];
 
@@ -212,6 +211,10 @@ public static class ViewFactory
                 break;
             case TreeView:
                 SetDefaultDimensions( newView, width ?? 16, height ?? 5 );
+                break;
+            case Bar:
+                SetDefaultDimensions(newView,width?? 4, height?? 1);
+                newView.SetActualText(text ?? "Heya");
                 break;
             case TreeView<FileSystemInfo> fstv:
                 fstv.TreeBuilder = new DelegateTreeBuilder<FileSystemInfo>((p) =>
