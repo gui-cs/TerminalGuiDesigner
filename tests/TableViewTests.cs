@@ -4,6 +4,7 @@ namespace UnitTests;
 
 [TestFixture]
 [Category( "Code Generation" )]
+[NonParallelizable]
 internal class TableViewTests : Tests
 {
     [Test]
