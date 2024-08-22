@@ -623,7 +623,7 @@ public class Design
             return;
         }
 
-        if (e == Key.Tab || e == Key.Tab.WithShift)
+        if (e == Key.Tab || e == Key.Tab.WithShift || e == Key.Esc || e == Application.QuitKey)
         {
             e.Handled = false;
             return;
