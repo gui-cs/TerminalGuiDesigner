@@ -57,10 +57,7 @@ public partial class PosEditor : Dialog {
         var siblings = design.GetSiblings().ToListObs();
 
         ddRelativeTo.SetSource(siblings);
-        ddRelativeTo.KeyBindings.Add(Key.CursorDown, Command.Expand);
-
         ddSide.SetSource(Enum.GetValues(typeof(Side)).Cast<Enum>().ToListObs());
-        ddSide.KeyBindings.Add(Key.CursorDown, Command.Expand);
 
         var val = oldValue;
         if(val.GetPosType(siblings,out var type,out var value,out var relativeTo,out var side, out var offset))
