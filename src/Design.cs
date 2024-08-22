@@ -214,14 +214,14 @@ public class Design
         {
             // prevent control from responding to events
             txt.MouseClick += this.SuppressNativeClickEvents;
-            txt.KeyDown += (s, e) => e.Handled = true;
+            txt.KeyDown += this.SuppressNativeKeyboardEvents;
         }
 
         if (subView is TextField tf)
         {
             // prevent control from responding to events
             tf.MouseClick += this.SuppressNativeClickEvents;
-            tf.KeyDown += (s, e) => e.Handled = true;
+            tf.KeyDown += SuppressNativeKeyboardEvents;
         }
 
         if (subView is TreeView tree)
@@ -614,6 +614,22 @@ public class Design
     {
         // Suppress everything except single click (selection)
         obj.Handled = obj.MouseEvent.Flags != MouseFlags.Button1Clicked;
+    }
+
+    private void SuppressNativeKeyboardEvents(object? sender, Key e)
+    {
+        if (sender == null)
+        {
+            return;
+        }
+
+        if (e == Key.Tab || e == Key.Tab.WithShift)
+        {
+            e.Handled = false;
+            return;
+        }
+
+        e.Handled = true;
     }
 
     private void RegisterCheckboxDesignTimeChanges(CheckBox cb)
