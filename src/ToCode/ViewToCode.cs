@@ -86,14 +86,7 @@ public class ViewToCode
 
         var prototype = (View)(Activator.CreateInstance(viewType) ?? throw new Exception($"Could not create instance of Type '{viewType}' ('Activator.CreateInstance' returned null)"));
 
-        // Unlike Window and Dialog the default constructor on
-        // View will be a size 0 view.  Make it big so it can be
-        // edited
-        if (viewType == typeof(View))
-        {
-            prototype.Width = Dim.Fill();
-            prototype.Height = Dim.Fill();
-        }
+        FixDimensionsForNewRootView(prototype, viewType);
 
         // use the prototype to create a designer cs file
         var design = new Design(sourceFile, Design.RootDesignName, prototype);
@@ -107,6 +100,26 @@ public class ViewToCode
 
         var decompiler = new CodeToView(sourceFile);
         return decompiler.CreateInstance();
+    }
+
+    /// <summary>
+    /// Fixes any problematic default dimensions on specific types e.g. <see cref="Dialog"/> defaults to
+    /// <see cref="Dim.Auto"/>> which means 1x1 when opened empty in designer.
+    /// </summary>
+    /// <param name="prototype"></param>
+    /// <param name="viewType"></param>
+    private void FixDimensionsForNewRootView(View prototype, Type viewType)
+    {
+        if (viewType == typeof(View))
+        {
+            prototype.Width = Dim.Fill();
+            prototype.Height = Dim.Fill();
+        }
+        if (viewType == typeof(Dialog))
+        {
+            prototype.Width = Dim.Percent(90);
+            prototype.Height = Dim.Percent(80);
+        }
     }
 
     /// <summary>
