@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Terminal.Gui;
@@ -529,7 +530,7 @@ public class Editor : Toplevel
          * screen
          */
 
-        var rootCommands = new List<string>
+        var rootCommands = new ObservableCollection<string>
         {
             $"{this.keyMap.ShowHelp} - Show Help",
             $"{this.keyMap.New} - New Window/Class",

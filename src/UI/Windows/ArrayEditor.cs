@@ -7,6 +7,9 @@
 //      You can make changes to this file and they will not be overwritten when saving.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
+
+using System.Collections.ObjectModel;
+
 namespace TerminalGuiDesigner.UI.Windows {
     using System.Collections;
     using Terminal.Gui;
@@ -38,7 +41,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             InitializeComponent();
             this.design = design;
             this.elementType = elementType;
-
+            
             Type listType = typeof(List<>).MakeGenericType(elementType);
             Result = (IList)Activator.CreateInstance(listType);
          
@@ -47,8 +50,8 @@ namespace TerminalGuiDesigner.UI.Windows {
                 Result.Add(e);
             }
 
-            lvElements.SetSource(Result);
-            lvElements.KeyUp += LvElements_KeyUp;
+            lvElements.Source = Result.ToListDataSource();
+            lvElements.KeyDown += LvElements_KeyDown;
             btnOk.Accept += BtnOk_Clicked;
             btnCancel.Accept += BtnCancel_Clicked;
             btnAddElement.Accept += BtnAddElement_Clicked;
@@ -71,7 +74,7 @@ namespace TerminalGuiDesigner.UI.Windows {
                 Result.RemoveAt(idx);
                 Result.Insert(newIndex, toMove);
 
-                lvElements.SetSource(Result);
+                lvElements.Source = Result.ToListDataSource();
                 lvElements.SelectedItem = newIndex;
                 lvElements.SetNeedsDisplay();
             }
@@ -89,13 +92,13 @@ namespace TerminalGuiDesigner.UI.Windows {
                 Result.RemoveAt(idx);
                 Result.Insert(newIndex, toMove);
 
-                lvElements.SetSource(Result);
+                lvElements.Source = Result.ToListDataSource();
                 lvElements.SelectedItem = newIndex;
                 lvElements.SetNeedsDisplay();
             }
         }
 
-        private void LvElements_KeyUp(object sender, Key e)
+        private void LvElements_KeyDown(object sender, Key e)
         {
             if(e == Key.DeleteChar)
             {
@@ -112,7 +115,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             {
                 Result.RemoveAt(idx);
 
-                lvElements.SetSource(Result);
+                lvElements.Source = Result.ToListDataSource();
                 lvElements.SetNeedsDisplay();
                 lvElements.SelectedItem = 0;
             }
@@ -125,7 +128,7 @@ namespace TerminalGuiDesigner.UI.Windows {
                 Result.Add(newValue);                
             }
 
-            lvElements.SetSource(Result);
+            lvElements.Source = Result.ToListDataSource();
             lvElements.SelectedItem = Result.Count - 1;
             lvElements.SetNeedsDisplay();
         }
@@ -144,7 +147,7 @@ namespace TerminalGuiDesigner.UI.Windows {
                     Result.Insert(idx, newValue);
                 }
 
-                lvElements.SetSource(Result);
+                lvElements.Source = Result.ToListDataSource();
                 lvElements.SelectedItem = idx;
                 lvElements.SetNeedsDisplay();
             }

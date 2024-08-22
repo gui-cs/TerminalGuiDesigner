@@ -167,11 +167,6 @@ public class Design
     /// <returns>A new <see cref="Design"/> wrapper wrapping <paramref name="subView"/>.</returns>
     public Design CreateSubControlDesign(string name, View subView)
     {
-        // HACK: if you don't pull the label out first it complains that you cant set Focusable to true
-        // on the Label because its super is not focusable :(
-        var super = subView.SuperView;
-        super?.Remove(subView);
-
         // all views can be focused so that they can be edited
         // or deleted etc
         subView.CanFocus = true;
@@ -219,14 +214,14 @@ public class Design
         {
             // prevent control from responding to events
             txt.MouseClick += this.SuppressNativeClickEvents;
-            txt.KeyDown += (s, e) => e.Handled = true;
+            txt.KeyDown += this.SuppressNativeKeyboardEvents;
         }
 
         if (subView is TextField tf)
         {
             // prevent control from responding to events
             tf.MouseClick += this.SuppressNativeClickEvents;
-            tf.KeyDown += (s, e) => e.Handled = true;
+            tf.KeyDown += SuppressNativeKeyboardEvents;
         }
 
         if (subView is TreeView tree)
@@ -249,9 +244,7 @@ public class Design
                 tree.AddObject(new TreeNode($"Example Leaf {l}"));
             }
         }
-
-        super?.Add(subView);
-
+        
         var d = new Design(this.SourceCode, name, subView);
         return d;
     }
@@ -623,6 +616,22 @@ public class Design
         obj.Handled = obj.MouseEvent.Flags != MouseFlags.Button1Clicked;
     }
 
+    private void SuppressNativeKeyboardEvents(object? sender, Key e)
+    {
+        if (sender == null)
+        {
+            return;
+        }
+
+        if (e == Key.Tab || e == Key.Tab.WithShift || e == Key.Esc || e == Application.QuitKey)
+        {
+            e.Handled = false;
+            return;
+        }
+
+        e.Handled = true;
+    }
+
     private void RegisterCheckboxDesignTimeChanges(CheckBox cb)
     {
         // prevent space toggling the checkbox
@@ -651,7 +660,7 @@ public class Design
 
         yield return this.CreateSuppressedProperty(nameof(this.View.Visible), true);
 
-        yield return this.CreateSuppressedProperty(nameof(this.View.Arrangement), ViewArrangement.Movable);
+        yield return this.CreateSuppressedProperty(nameof(this.View.Arrangement), ViewArrangement.Fixed);
 
         yield return new ColorSchemeProperty(this);
 
@@ -691,7 +700,9 @@ public class Design
 
         if (this.View is TextView)
         {
-            yield return this.CreateProperty(nameof(TextView.AllowsTab));
+            // Do not allow tab at design time so that we don't get stuck in the View (adding more tabs each time!)
+            // But let user edit if they want
+            yield return this.CreateSuppressedProperty(nameof(TextView.AllowsTab), false);
             yield return this.CreateProperty(nameof(TextView.AllowsReturn));
             yield return this.CreateProperty(nameof(TextView.WordWrap));
         }
@@ -750,7 +761,7 @@ public class Design
 
         if (this.View is CheckBox)
         {
-            yield return this.CreateProperty(nameof(CheckBox.Checked));
+            yield return this.CreateProperty(nameof(CheckBox.CheckedState));
         }
 
         if (this.View is ListView lv)

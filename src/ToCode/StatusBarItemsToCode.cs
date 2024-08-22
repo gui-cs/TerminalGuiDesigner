@@ -37,35 +37,40 @@ public class StatusBarItemsToCode : ToCodeBase
         // TODO: Let user name these
         List<string> items = new();
 
-        foreach (var child in this.statusBar.Items)
+        var statusBarFieldExpression = new CodeFieldReferenceExpression(
+            new CodeThisReferenceExpression(), design.FieldName);
+
+        foreach (var child in this.statusBar.GetShortcuts())
         {
             var name = args.GetUniqueFieldName(child.Title.ToString(), false);
             items.Add(name);
 
-            this.AddFieldToClass(args, typeof(StatusItem), name);
+            this.AddFieldToClass(args, typeof(Shortcut), name);
 
             var param1 = new CodeCastExpression(
                         new CodeTypeReference(typeof(KeyCode)),
-                        new CodePrimitiveExpression((uint)child.Shortcut.KeyCode));
+                        new CodePrimitiveExpression((uint)child.Key.KeyCode));
             var param2 = child.Title.ToCodePrimitiveExpression();
             var param3 = new CodePrimitiveExpression(/*null*/);
 
             this.AddConstructorCall(
                 args,
                 $"this.{name}",
-                typeof(StatusItem),
+                typeof(Shortcut),
                 param1,
                 param2,
                 param3);
-        }
 
-        this.AddPropertyAssignment(
-            args,
-            $"this.{this.design.FieldName}.{nameof(this.statusBar.Items)}",
-            new CodeArrayCreateExpression(
-                typeof(StatusItem),
-                items.Select(c =>
-                    new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), c))
-                    .ToArray()));
+            var shortcutFieldExpression = new CodeFieldReferenceExpression(
+                new CodeThisReferenceExpression(), name);
+
+
+            // Create this.myBar.Add(sb1);
+            AddMethodCall(args, statusBarFieldExpression,
+                nameof(StatusBar.Add),new CodeExpression[]
+                {
+                    shortcutFieldExpression
+                });
+        }
     }
 }

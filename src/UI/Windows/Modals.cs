@@ -202,11 +202,25 @@ public class Modals
         var dlg = new LoadingDialog("Press Shortcut or Del");
         dlg.KeyDown += (s, e) =>
         {
-            key = e;
-            Application.RequestStop();
+            if (IsValidShortcut(e))
+            {
+                key = e;
+                key.Handled = true;
+                Application.RequestStop();
+            }
         };
         Application.Run(dlg);
 
         return key == Key.DeleteChar ? KeyCode.Null : key;
+    }
+
+    private static bool IsValidShortcut(Key key)
+    {
+        if (key.KeyCode == KeyCode.CtrlMask || key.KeyCode == KeyCode.ShiftMask || key.KeyCode == KeyCode.AltMask)
+        {
+            return false;
+        }
+
+        return true;
     }
 }

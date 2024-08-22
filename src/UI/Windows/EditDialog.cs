@@ -45,7 +45,7 @@ public class EditDialog : Window
             Width = Dim.Fill(2),
             Height = Dim.Fill(2),
         };
-        this.list.SetSource(this.collection);
+        this.list.Source = this.collection.ToListDataSource();
         this.list.KeyDown += this.List_KeyPress;
 
         var btnSet = new Button()
@@ -69,7 +69,7 @@ public class EditDialog : Window
         };
         btnClose.Accept += (s, e) => Application.RequestStop();
 
-        this.list.KeyUp += (s, e) =>
+        this.list.KeyDown += (s, e) =>
         {
 
             if (e == Key.Enter && this.list.HasFocus)
@@ -124,7 +124,7 @@ public class EditDialog : Window
                 }
 
                 var oldSelected = this.list.SelectedItem;
-                this.list.SetSource(this.collection);
+                this.list.Source = this.collection.ToListDataSource();
                 this.list.SelectedItem = oldSelected;
                 this.list.EnsureSelectedItemVisible();
             }

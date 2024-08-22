@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -160,6 +161,7 @@ public class CodeToView
             MetadataReference.CreateFromFile(typeof(System.Linq.Enumerable).Assembly.Location),
             MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
             MetadataReference.CreateFromFile(typeof(MarshalByValueComponent).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(ObservableCollection<string>).Assembly.Location),
 
             // New assemblies required by Terminal.Gui version 2
             MetadataReference.CreateFromFile(typeof(Size).Assembly.Location),

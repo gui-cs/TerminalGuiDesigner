@@ -1,3 +1,7 @@
+using System.Collections;
+using System.Collections.ObjectModel;
+using Terminal.Gui;
+
 namespace TerminalGuiDesigner;
 
 /// <summary>
@@ -26,4 +30,23 @@ public static class ArrayExtensions
 
         return toReturn;
     }
+    
+    public static IListDataSource ToListDataSource(this IEnumerable enumerable)
+    {
+        // Get the type of the elements
+        var elementType = enumerable.GetType().GetElementType() ?? enumerable.GetType().GetGenericArguments().FirstOrDefault();
+        if (elementType == null)
+        {
+            throw new Exception("Unable to get element type for collection");
+        }
+
+        // Convert the enumerable to an ObservableCollection<T>
+        var observableCollectionType = typeof(ObservableCollection<>).MakeGenericType(elementType);
+        var list = Activator.CreateInstance(observableCollectionType, enumerable);
+
+        // Create an instance of ListWrapper<T>
+        var listWrapperType = typeof(ListWrapper<>).MakeGenericType(elementType);
+        return (IListDataSource)Activator.CreateInstance(listWrapperType, list);
+    }
+
 }

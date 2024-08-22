@@ -12,12 +12,12 @@ internal class StatusBarTests : Tests
 
         using StatusBar statusBarIn = RoundTrip<Toplevel, StatusBar>( ( _, v ) =>
         {
-            Assert.That( v.Items, Has.Length.EqualTo( 1 ), $"Expected {nameof( ViewFactory )} to create a placeholder status item in new StatusBars it creates" );
-            shortcutBefore = v.Items[ 0 ].Shortcut;
+            Assert.That( v.GetShortcuts(), Has.Length.EqualTo( 1 ), $"Expected {nameof( ViewFactory )} to create a placeholder status item in new StatusBars it creates" );
+            shortcutBefore = v.GetShortcuts()[ 0 ].Key;
 
         }, out _ );
 
-        Assert.That( statusBarIn.Items, Has.Length.EqualTo( 1 ), "Expected reloading StatusBar to create the same number of StatusItems" );
-        Assert.That( statusBarIn.Items[ 0 ].Shortcut, Is.EqualTo( shortcutBefore ) );
+        Assert.That( statusBarIn.GetShortcuts(), Has.Length.EqualTo( 1 ), "Expected reloading StatusBar to create the same number of StatusItems" );
+        Assert.That( statusBarIn.GetShortcuts()[ 0 ].Key, Is.EqualTo( shortcutBefore ) );
     }
 }

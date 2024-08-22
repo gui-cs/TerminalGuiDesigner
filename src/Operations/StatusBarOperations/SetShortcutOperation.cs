@@ -8,7 +8,7 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
     /// Changes the <see cref="StatusItem.Shortcut"/> of a <see cref="StatusItem"/> on
     /// a <see cref="StatusBar"/>.
     /// </summary>
-    public class SetShortcutOperation : GenericArrayElementOperation<StatusBar, StatusItem>
+    public class SetShortcutOperation : GenericArrayElementOperation<StatusBar, Shortcut>
     {
         private Key originalShortcut;
         private Key? shortcut;
@@ -19,16 +19,16 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
         /// <param name="design">Wrapper for a <see cref="StatusBar"/>.</param>
         /// <param name="statusItem">The <see cref="StatusItem"/> whose shortcut you want to change.</param>
         /// <param name="shortcut">The new shortcut or null to prompt user at runtime.</param>
-        public SetShortcutOperation(Design design, StatusItem statusItem, Key? shortcut)
+        public SetShortcutOperation(Design design, Shortcut statusItem, Key? shortcut)
             : base(
-                  (v) => v.Items,
-                  (v, a) => v.Items = a,
+                  (v) => v.GetShortcuts(),
+                  (v, a) => v.SetShortcuts(a),
                   (e) => e.Title?.ToString() ?? Operation.Unnamed,
                   design,
                   statusItem)
         {
             this.shortcut = shortcut;
-            this.originalShortcut = statusItem.Shortcut;
+            this.originalShortcut = statusItem.Key;
         }
 
         /// <inheritdoc/>
@@ -39,13 +39,13 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
                 return;
             }
 
-            this.OperateOn.Shortcut = this.shortcut;
+            this.OperateOn.Key = this.shortcut;
         }
 
         /// <inheritdoc/>
         public override void Undo()
         {
-            this.OperateOn.Shortcut = this.originalShortcut;
+            this.OperateOn.Key = this.originalShortcut;
         }
 
         /// <inheritdoc/>
@@ -56,7 +56,7 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
                 this.shortcut = Modals.GetShortcut();
             }
 
-            this.OperateOn.Shortcut = this.shortcut;
+            this.OperateOn.Key = this.shortcut;
             return true;
         }
     }

@@ -110,7 +110,7 @@ public class MoveMenuItemRightOperation : MenuItemOperation
 
         var added = new MenuBarItem(children[idx].Title, new MenuItem[0], null);
         added.Data = children[idx].Data;
-        added.Shortcut = children[idx].Shortcut;
+        added.ShortcutKey = children[idx].ShortcutKey;
 
         children.RemoveAt(idx);
         children.Insert(idx, added);

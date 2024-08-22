@@ -54,13 +54,10 @@ public partial class PosEditor : Dialog {
         Cancelled = true;
         Modal = true;
 
-        var siblings = design.GetSiblings().ToList();
+        var siblings = design.GetSiblings().ToListObs();
 
         ddRelativeTo.SetSource(siblings);
-        ddRelativeTo.KeyBindings.Add(Key.CursorDown, Command.Expand);
-
-        ddSide.SetSource(Enum.GetValues(typeof(Side)).Cast<Enum>().ToList());
-        ddSide.KeyBindings.Add(Key.CursorDown, Command.Expand);
+        ddSide.SetSource(Enum.GetValues(typeof(Side)).Cast<Enum>().ToListObs());
 
         var val = oldValue;
         if(val.GetPosType(siblings,out var type,out var value,out var relativeTo,out var side, out var offset))
@@ -104,7 +101,7 @@ public partial class PosEditor : Dialog {
         // if user types in some text change the focus to the text box to enable entering digits
         if ((key == Key.Backspace || char.IsDigit(c)) && tbValue.Visible)
         {
-            tbValue?.FocusFirst();
+            tbValue?.FocusFirst(TabBehavior.TabStop);
         }            
     }
 

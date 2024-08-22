@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.Data;
 using Terminal.Gui;
 using Terminal.Gui.TextValidateProviders;
@@ -38,7 +39,18 @@ public static class ViewFactory
 
         // BUG These seem to cause stack overflows in CreateSubControlDesigns (see TestAddView_RoundTrip)
         typeof( Wizard ),
-        typeof( WizardStep )
+        typeof( WizardStep ),
+
+        // TODO: Requires tests and comprehensive testing, also its generic so that's more complicated
+        typeof(NumericUpDown),
+        typeof(NumericUpDown<>),
+
+        // Ignore menu bar v2 for now
+        typeof(MenuBarv2),
+
+        // This is unstable when added directly as a view see https://github.com/gui-cs/Terminal.Gui/issues/3664
+        typeof(Shortcut),
+
     ];
 
     /// <summary>
@@ -126,11 +138,15 @@ public static class ViewFactory
         {
             case Button:
             case CheckBox:
-            case ColorPicker:
             case ComboBox:
-            case TextView:
+            case Label:
                 newView.SetActualText( text ?? "Heya" );
                 SetDefaultDimensions( newView, width ?? 4, height ?? 1 );
+                newView.Width = Dim.Auto();
+                break;
+            case ColorPicker:
+            case TextView:
+                SetDefaultDimensions(newView, width ?? 10, height ?? 4);
                 break;
             case Line:
             case Slider:
@@ -172,7 +188,7 @@ public static class ViewFactory
                 mb.Menus = DefaultMenuBarItems;
                 break;
             case StatusBar sb:
-                sb.Items = new[] { new StatusItem( Key.F1, "F1 - Edit Me", null ) };
+                sb.SetShortcuts(new[] { new Shortcut( Key.F1, "F1 - Edit Me", null ) });
                 break;
             case RadioGroup rg:
                 rg.RadioLabels = new string[] { "Option 1", "Option 2" };
@@ -183,7 +199,7 @@ public static class ViewFactory
                 SetDefaultDimensions( newView, width ?? 20, height ?? 5 );
                 break;
             case ListView lv:
-                lv.SetSource( new List<string> { "Item1", "Item2", "Item3" } );
+                lv.SetSource( new ObservableCollection<string> { "Item1", "Item2", "Item3" } );
                 SetDefaultDimensions( newView, width ?? 20, height ?? 3 );
                 break;
             case FrameView:
@@ -199,6 +215,10 @@ public static class ViewFactory
                 break;
             case TreeView:
                 SetDefaultDimensions( newView, width ?? 16, height ?? 5 );
+                break;
+            case Bar:
+                SetDefaultDimensions(newView,width?? 4, height?? 1);
+                newView.SetActualText(text ?? "Heya");
                 break;
             case TreeView<FileSystemInfo> fstv:
                 fstv.TreeBuilder = new DelegateTreeBuilder<FileSystemInfo>((p) =>
@@ -218,10 +238,6 @@ public static class ViewFactory
             case ScrollView sv:
                 sv.SetContentSize(new Size( 20, 10 ));
                 SetDefaultDimensions(newView, width ?? 10, height ?? 5 );
-                break;
-            case Label l:
-                SetDefaultDimensions( newView, width ?? 4, height ?? 1 );
-                l.SetActualText( text ?? "Heya" );
                 break;
             case SpinnerView sv:
                 sv.AutoSpin = true;
@@ -252,8 +268,9 @@ public static class ViewFactory
 
         static void SetDefaultDimensions( T v, int width = 5, int height = 1 )
         {
-            v.Width = Math.Max( v.GetContentSize().Width, width );
-            v.Height = Math.Max( v.GetContentSize().Height, height );
+            v.Width = v.Width is DimFill ? width : Math.Max(v.GetContentSize().Width, width);
+
+            v.Height = v.Height is DimFill ? height : Math.Max( v.GetContentSize().Height, height );
         }
     }
 
@@ -287,6 +304,9 @@ public static class ViewFactory
             { } t when t == typeof( ComboBox ) => Create<ComboBox>( ),
             { } t when t == typeof( Line ) => Create<Line>( ),
             { } t when t == typeof( Slider ) => Create<Slider>( ),
+            { } t when t == typeof(Label) => Create<Label>(),
+            { } t when t == typeof(TextView) => Create<TextView>(),
+            { } t when t == typeof(ColorPicker) => Create<ColorPicker>(),
             { } t when t == typeof( TileView ) => Create<TileView>( ),
             { } t when t.IsAssignableTo( typeof( CheckBox ) ) => Create<CheckBox>( ),
             { } t when t.IsAssignableTo( typeof( TableView ) ) => Create<TableView>( ),
