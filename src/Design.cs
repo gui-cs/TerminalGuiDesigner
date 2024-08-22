@@ -700,7 +700,9 @@ public class Design
 
         if (this.View is TextView)
         {
-            yield return this.CreateProperty(nameof(TextView.AllowsTab));
+            // Do not allow tab at design time so that we don't get stuck in the View (adding more tabs each time!)
+            // But let user edit if they want
+            yield return this.CreateSuppressedProperty(nameof(TextView.AllowsTab), false);
             yield return this.CreateProperty(nameof(TextView.AllowsReturn));
             yield return this.CreateProperty(nameof(TextView.WordWrap));
         }

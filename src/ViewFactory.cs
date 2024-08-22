@@ -146,6 +146,8 @@ public static class ViewFactory
                 break;
             case ColorPicker:
             case TextView:
+                SetDefaultDimensions(newView, width ?? 10, height ?? 4);
+                break;
             case Line:
             case Slider:
             case TileView:
