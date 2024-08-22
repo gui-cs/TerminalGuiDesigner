@@ -138,12 +138,14 @@ public static class ViewFactory
         {
             case Button:
             case CheckBox:
-            case ColorPicker:
             case ComboBox:
-            case TextView:
+            case Label:
                 newView.SetActualText( text ?? "Heya" );
                 SetDefaultDimensions( newView, width ?? 4, height ?? 1 );
+                newView.Width = Dim.Auto();
                 break;
+            case ColorPicker:
+            case TextView:
             case Line:
             case Slider:
             case TileView:
@@ -235,10 +237,6 @@ public static class ViewFactory
                 sv.SetContentSize(new Size( 20, 10 ));
                 SetDefaultDimensions(newView, width ?? 10, height ?? 5 );
                 break;
-            case Label l:
-                SetDefaultDimensions( newView, width ?? 4, height ?? 1 );
-                l.SetActualText( text ?? "Heya" );
-                break;
             case SpinnerView sv:
                 sv.AutoSpin = true;
                 if ( width is not null )
@@ -304,6 +302,9 @@ public static class ViewFactory
             { } t when t == typeof( ComboBox ) => Create<ComboBox>( ),
             { } t when t == typeof( Line ) => Create<Line>( ),
             { } t when t == typeof( Slider ) => Create<Slider>( ),
+            { } t when t == typeof(Label) => Create<Label>(),
+            { } t when t == typeof(TextView) => Create<TextView>(),
+            { } t when t == typeof(ColorPicker) => Create<ColorPicker>(),
             { } t when t == typeof( TileView ) => Create<TileView>( ),
             { } t when t.IsAssignableTo( typeof( CheckBox ) ) => Create<CheckBox>( ),
             { } t when t.IsAssignableTo( typeof( TableView ) ) => Create<TableView>( ),
