@@ -167,11 +167,6 @@ public class Design
     /// <returns>A new <see cref="Design"/> wrapper wrapping <paramref name="subView"/>.</returns>
     public Design CreateSubControlDesign(string name, View subView)
     {
-        // HACK: if you don't pull the label out first it complains that you cant set Focusable to true
-        // on the Label because its super is not focusable :(
-        var super = subView.SuperView;
-        super?.Remove(subView);
-
         // all views can be focused so that they can be edited
         // or deleted etc
         subView.CanFocus = true;
@@ -249,9 +244,7 @@ public class Design
                 tree.AddObject(new TreeNode($"Example Leaf {l}"));
             }
         }
-
-        super?.Add(subView);
-
+        
         var d = new Design(this.SourceCode, name, subView);
         return d;
     }
