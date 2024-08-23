@@ -20,7 +20,7 @@
 		<PackageOutputPath>./nupkg</PackageOutputPath>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<PackageId>TerminalGuiDesigner</PackageId>
-		<Version>1.1.0-rc1</Version>
+		<Version>2.0.0-alpha.2189</Version>
 		<Authors>Thomas Nind</Authors>
 		<Nullable>enable</Nullable>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -33,6 +33,8 @@
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
+			2.0.0-alpha.2189
+			* Support for targetting v2 pre-release Terminal.Gui packages. Note that v2 is not backwards compatible with v1.
 			v1.1.0-rc1
 			* Prototype dual targeting dotnet 8 and 7
 			v1.0.25
