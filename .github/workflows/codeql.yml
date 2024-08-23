@@ -27,7 +27,7 @@ jobs:
 
     steps:
     - name: Set up .net 8 SDK
-      uses: actions/setup-dotnet@v3.2.0
+      uses: actions/setup-dotnet@v4.0.1
       with:
         dotnet-version: 8.0
       
