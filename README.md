@@ -16,8 +16,17 @@ Update to the latest version using
 ```
 dotnet tool update --global TerminalGuiDesigner
 ```
-
 This project is in alpha.  See the [feature list](./README.md#features) for progress.
+
+## V2 
+
+If you are targetting Terminal.Gui version 2 (currently pre-alpha) then you will want to install version 2 of the designer
+```
+dotnet tool install --global TerminalGuiDesigner --prerelease
+```
+Ensure that you match the Terminal.Gui library version you reference to the Designer version.
+
+## Demo
 
 ![long-demo](https://github.com/gui-cs/TerminalGuiDesigner/assets/31306100/5df9f545-8c61-4655-bc0c-1e75d1c149d9)
 
