@@ -26,7 +26,7 @@ public partial class ColorSchemesUI : Terminal.Gui.Window {
         this.Modal = false;
         this.Text = "";
         this.TextAlignment = Terminal.Gui.Alignment.Start;
-        this.Title = "Color Schemes (Ctrl+Q to exit)";
+        this.Title = "Color Schemes (Esc to exit)";
         this.tvColorSchemes = new Terminal.Gui.TableView();
         this.tvColorSchemes.Width = Dim.Fill(0);
         this.tvColorSchemes.Height = Dim.Fill(0);
