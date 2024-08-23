@@ -261,23 +261,23 @@ public class Editor : Toplevel
 
         // The main ASCII art text block
         string artText = """
-                    ___________                  .__              .__                           
-                    \__    ___/__________  _____ |__| ____ _____  |  |                          
-                      |    |_/ __ \_  __ \/     \|  |/    \\__  \ |  |                          
-                      |    |\  ___/|  | \/  Y Y  \  |   |  \/ __ \|  |__                        
-                      |____| \___  >__|  |__|_|  /__|___|  (____  /____/                        
-                               \/            \/        \/     \/                              
-        ________      .__  ________                .__                            
-       /  _____/ __ __|__| \______ \   ____   _____|__| ____   ____   ___________ 
-      /   \  ___|  |  \  |  |    |  \_/ __ \ /  ___/  |/ ___\ /    \_/ __ \_  __ \
-      \    \_\  \  |  /  |  |    `   \  ___/ \___ \|  / /_/  >   |  \  ___/|  | \/
-       \______  /____/|__| /_______  /\___  >____  >__\___  /|___|  /\___  >__|   
-              \/                   \/     \/     \/  /_____/      \/     \/       
-    """;
+                ___________                  .__              .__                           
+                \__    ___/__________  _____ |__| ____ _____  |  |                          
+                  |    |_/ __ \_  __ \/     \|  |/    \\__  \ |  |                          
+                  |    |\  ___/|  | \/  Y Y  \  |   |  \/ __ \|  |__                        
+                  |____| \___  >__|  |__|_|  /__|___|  (____  /____/                        
+                           \/            \/        \/     \/                              
+    ________      .__  ________                .__                            
+   /  _____/ __ __|__| \______ \   ____   _____|__| ____   ____   ___________ 
+  /   \  ___|  |  \  |  |    |  \_/ __ \ /  ___/  |/ ___\ /    \_/ __ \_  __ \
+  \    \_\  \  |  /  |  |    `   \  ___/ \___ \|  / /_/  >   |  \  ___/|  | \/
+   \______  /____/|__| /_______  /\___  >____  >__\___  /|___|  /\___  >__|   
+          \/                   \/     \/     \/  /_____/      \/     \/       
+""";
 
         // Standardize the text
         artText = artText.Replace("\r\n", "\n");
-        
+
         // The version information line
         string versionLine = $"(Alpha - {informationalVersion} )";
 
@@ -288,13 +288,20 @@ public class Editor : Toplevel
         int artHeight = artLines.Length;
         int artWidth = artLines.Max(line => line.Length);
 
-        int artStartX = inArea.X + (inArea.Width - artWidth) / 2;
-        int artStartY = inArea.Y + (inArea.Height - artHeight - 1) / 2; // -1 for the version line below
+        // Check if there's enough space for the ASCII art and the version line
+        if (inArea.Width < artWidth || inArea.Height < (artHeight + 2)) // +2 allows space for version line
+        {
+            // Not enough space, render the simpler title
 
-        // Create the gradient
-        var gradient = new Gradient(
-            new[]
-            {
+            // Simple title and version
+            string simpleTitle = "Terminal Gui Designer";
+            int simpleTitleX = inArea.X + (inArea.Width - simpleTitle.Length) / 2;
+            int versionLineX = inArea.X + (inArea.Width - versionLine.Length) / 2;
+
+            // Create the gradient
+            var gradient = new Gradient(
+                new[]
+                {
                 new Color("#FF0000"), // Red
                 new Color("#FF7F00"), // Orange
                 new Color("#FFFF00"), // Yellow
@@ -302,52 +309,87 @@ public class Editor : Toplevel
                 new Color("#00FFFF"), // Cyan
                 new Color("#0000FF"), // Blue
                 new Color("#8B00FF")  // Violet
-            },
-            new[] { 10 }
-        );
+                },
+                new[] { 10 }
+            );
+            var fill = new GradientFill(inArea, gradient, GradientDirection.Diagonal);
 
-        var fill = new GradientFill(inArea, gradient, GradientDirection.Diagonal);
-
-        // Render the ASCII art block
-        for (int i = 0; i < artLines.Length; i++)
-        {
-            string line = artLines[i];
-            for (int j = 0; j < line.Length; j++)
+            // Render the simple title
+            for (int i = 0; i < simpleTitle.Length; i++)
             {
-                int x = artStartX + j;
-                int y = artStartY + i;
+                int x = simpleTitleX + i;
+                int y = inArea.Y + inArea.Height / 2 - 1; // Center the title vertically
 
-                // Get the color at this point in the rectangle
                 var colorAtPoint = fill.GetColor(new Point(x, y));
-
-                // Set the attribute for this character (foreground color from gradient, background is black)
                 Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(ColorName.Black)));
+                this.AddRune(x, y, (Rune)simpleTitle[i]);
+            }
 
-                // Draw the character at the calculated position
-                this.AddRune(x, y, (Rune)line[j]);
+            // Render the version line below the simple title
+            for (int i = 0; i < versionLine.Length; i++)
+            {
+                int x = versionLineX + i;
+                int y = inArea.Y + inArea.Height / 2; // Line below the title
+
+                var colorAtPoint = fill.GetColor(new Point(x, y));
+                Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(ColorName.Black)));
+                this.AddRune(x, y, (Rune)versionLine[i]);
             }
         }
-
-        // Center the version line below the ASCII art
-        int versionLineX = inArea.X + (inArea.Width - versionLine.Length) / 2;
-        int versionLineY = artStartY + artHeight;
-
-        // Render the version line
-        for (int i = 0; i < versionLine.Length; i++)
+        else
         {
-            int x = versionLineX + i;
-            int y = versionLineY;
+            // Enough space, render the ASCII art block
 
-            // Get the color at this point in the rectangle
-            var colorAtPoint = fill.GetColor(new Point(x, y));
+            int artStartX = inArea.X + (inArea.Width - artWidth) / 2;
+            int artStartY = inArea.Y + (inArea.Height - artHeight - 1) / 2; // -1 for the version line below
 
-            // Set the attribute for this character (foreground color from gradient, background is black)
-            Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(ColorName.Black)));
+            // Create the gradient
+            var gradient = new Gradient(
+                new[]
+                {
+                new Color("#FF0000"), // Red
+                new Color("#FF7F00"), // Orange
+                new Color("#FFFF00"), // Yellow
+                new Color("#00FF00"), // Green
+                new Color("#00FFFF"), // Cyan
+                new Color("#0000FF"), // Blue
+                new Color("#8B00FF")  // Violet
+                },
+                new[] { 10 }
+            );
+            var fill = new GradientFill(inArea, gradient, GradientDirection.Diagonal);
 
-            // Draw the character at the calculated position
-            this.AddRune(x, y, (Rune)versionLine[i]);
+            // Render the ASCII art block
+            for (int i = 0; i < artLines.Length; i++)
+            {
+                string line = artLines[i];
+                for (int j = 0; j < line.Length; j++)
+                {
+                    int x = artStartX + j;
+                    int y = artStartY + i;
+
+                    var colorAtPoint = fill.GetColor(new Point(x, y));
+                    Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(ColorName.Black)));
+                    this.AddRune(x, y, (Rune)line[j]);
+                }
+            }
+
+            // Render the version line below the ASCII art
+            int versionLineX = inArea.X + (inArea.Width - versionLine.Length) / 2;
+            int versionLineY = artStartY + artHeight;
+
+            for (int i = 0; i < versionLine.Length; i++)
+            {
+                int x = versionLineX + i;
+                int y = versionLineY;
+
+                var colorAtPoint = fill.GetColor(new Point(x, y));
+                Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(ColorName.Black)));
+                this.AddRune(x, y, (Rune)versionLine[i]);
+            }
         }
     }
+
 
 
 
