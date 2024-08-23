@@ -27,7 +27,7 @@ If you are targetting Terminal.Gui version 2 (currently pre-alpha) then you will
 ```
 dotnet tool install --global TerminalGuiDesigner --prerelease
 ```
-Ensure that you match the Terminal.Gui library version you reference to the Designer version.
+Ensure that you match the Terminal.Gui library version you reference to the designer version.
 
 ## Demo
 
