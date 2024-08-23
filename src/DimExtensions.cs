@@ -41,7 +41,7 @@ public static class DimExtensions
         if (d != null && d.IsPercent())
         {
             var dp = (DimPercent)d;
-            percent = dp.Percent;
+            percent = dp.Percentage;
             return true;
         }
 

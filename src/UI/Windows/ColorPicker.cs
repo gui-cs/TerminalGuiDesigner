@@ -37,15 +37,18 @@ public partial class ColorPicker
 
         if (currentValue != null)
         {
-            radiogroup1.SelectedItem = (int)currentValue.Value.Foreground;
-            radiogroup2.SelectedItem = (int)currentValue.Value.Background;
+            // TODO: Enable again once true color nuget package available and designer supported
+            // see https://github.com/gui-cs/Terminal.Gui/pull/3604
+
+            // cpForeground.SelectedColor = currentValue.Value.Foreground;
+            // cpBackground.SelectedColor = currentValue.Value.Background;
         }
 
         lblPreview.ColorScheme = new ColorScheme();
         UpdatePreview();
 
-        radiogroup1.SelectedItemChanged += (s,e) => UpdatePreview();
-        radiogroup2.SelectedItemChanged += (s,e) => UpdatePreview();
+        cpForeground.ColorChanged += (s,e) => UpdatePreview();
+        cpBackground.ColorChanged += (s,e) => UpdatePreview();
 
         btnOk.Accept += (s, e) => Ok();
         btnCancel.Accept += (s, e) => Cancel();
@@ -69,9 +72,9 @@ public partial class ColorPicker
         lblPreview.ColorScheme = new ColorScheme(GetColor());
         lblPreview.SetNeedsDisplay();
     }
-
+    
     private Attribute GetColor()
     {
-        return new Attribute((Color)radiogroup1.SelectedItem, (Color)radiogroup2.SelectedItem);
+        return new Attribute(new Color(cpForeground.SelectedColor),new Color(cpBackground.SelectedColor));
     }
 }
