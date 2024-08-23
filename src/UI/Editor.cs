@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Reflection;
 using System.Text;
 using Microsoft.Extensions.Configuration;
 using Terminal.Gui;
@@ -6,6 +7,7 @@ using TerminalGuiDesigner.FromCode;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 using TerminalGuiDesigner.UI.Windows;
+using Attribute = Terminal.Gui.Attribute;
 
 namespace TerminalGuiDesigner.UI;
 
@@ -238,7 +240,116 @@ public class Editor : Toplevel
 
             return;
         }
+        else
+        {
+            var top = new Rectangle(0, 0, bounds.Width, rootCommandsListView.Frame.Top - 1);
+            RenderTitle(top);
+        }
     }
+
+    private void RenderTitle(Rectangle inArea)
+    {
+        var assembly = typeof(Label).Assembly;
+        var informationalVersion = assembly
+            .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
+            ?? "unknown";
+
+        if (informationalVersion.Contains("+"))
+        {
+            informationalVersion = informationalVersion.Substring(0, informationalVersion.IndexOf('+'));
+        }
+
+        // The main ASCII art text block
+        string artText = """
+                    ___________                  .__              .__                           
+                    \__    ___/__________  _____ |__| ____ _____  |  |                          
+                      |    |_/ __ \_  __ \/     \|  |/    \\__  \ |  |                          
+                      |    |\  ___/|  | \/  Y Y  \  |   |  \/ __ \|  |__                        
+                      |____| \___  >__|  |__|_|  /__|___|  (____  /____/                        
+                               \/            \/        \/     \/                              
+        ________      .__  ________                .__                            
+       /  _____/ __ __|__| \______ \   ____   _____|__| ____   ____   ___________ 
+      /   \  ___|  |  \  |  |    |  \_/ __ \ /  ___/  |/ ___\ /    \_/ __ \_  __ \
+      \    \_\  \  |  /  |  |    `   \  ___/ \___ \|  / /_/  >   |  \  ___/|  | \/
+       \______  /____/|__| /_______  /\___  >____  >__\___  /|___|  /\___  >__|   
+              \/                   \/     \/     \/  /_____/      \/     \/       
+    """;
+
+        // Standardize the text
+        artText = artText.Replace("\r\n", "\n");
+        
+        // The version information line
+        string versionLine = $"(Alpha - {informationalVersion} )";
+
+        // Split the ASCII art into lines
+        var artLines = artText.Split('\n');
+
+        // Calculate the starting point for centering the art text
+        int artHeight = artLines.Length;
+        int artWidth = artLines.Max(line => line.Length);
+
+        int artStartX = inArea.X + (inArea.Width - artWidth) / 2;
+        int artStartY = inArea.Y + (inArea.Height - artHeight - 1) / 2; // -1 for the version line below
+
+        // Create the gradient
+        var gradient = new Gradient(
+            new[]
+            {
+                new Color("#FF0000"), // Red
+                new Color("#FF7F00"), // Orange
+                new Color("#FFFF00"), // Yellow
+                new Color("#00FF00"), // Green
+                new Color("#00FFFF"), // Cyan
+                new Color("#0000FF"), // Blue
+                new Color("#8B00FF")  // Violet
+            },
+            new[] { 10 }
+        );
+
+        var fill = new GradientFill(inArea, gradient, GradientDirection.Diagonal);
+
+        // Render the ASCII art block
+        for (int i = 0; i < artLines.Length; i++)
+        {
+            string line = artLines[i];
+            for (int j = 0; j < line.Length; j++)
+            {
+                int x = artStartX + j;
+                int y = artStartY + i;
+
+                // Get the color at this point in the rectangle
+                var colorAtPoint = fill.GetColor(new Point(x, y));
+
+                // Set the attribute for this character (foreground color from gradient, background is black)
+                Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(ColorName.Black)));
+
+                // Draw the character at the calculated position
+                this.AddRune(x, y, (Rune)line[j]);
+            }
+        }
+
+        // Center the version line below the ASCII art
+        int versionLineX = inArea.X + (inArea.Width - versionLine.Length) / 2;
+        int versionLineY = artStartY + artHeight;
+
+        // Render the version line
+        for (int i = 0; i < versionLine.Length; i++)
+        {
+            int x = versionLineX + i;
+            int y = versionLineY;
+
+            // Get the color at this point in the rectangle
+            var colorAtPoint = fill.GetColor(new Point(x, y));
+
+            // Set the attribute for this character (foreground color from gradient, background is black)
+            Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(ColorName.Black)));
+
+            // Draw the character at the calculated position
+            this.AddRune(x, y, (Rune)versionLine[i]);
+        }
+    }
+
+
 
     /// <summary>
     /// Event handler for <see cref="Application.KeyDown"/>.
@@ -516,7 +627,7 @@ public class Editor : Toplevel
                 {this.keyMap.Delete} - Delete selected View
                 Shift+Cursor - Move focused View
                 Ctrl+Cursor - Move focused View quickly
-                Ctrl+Q - Quit
+                Esc - Quit
                 {this.keyMap.Undo} - Undo
                 {this.keyMap.Redo} - Redo
                 """;
@@ -547,12 +658,21 @@ public class Editor : Toplevel
         this.rootCommandsListView = new ListView()
         {
             X = Pos.Center(),
-            Y = Pos.Center(),
+            Y = Pos.Percent(75),
             Width = maxWidth,
             Height = 3,
-            ColorScheme = new DefaultColorSchemes().GetDefaultScheme("greyOnBlack").Scheme,
+            ColorScheme = new ColorScheme
+            (
+                new Attribute(new Color(Color.White),new Color(Color.Black)),
+                new Attribute(new Color(Color.Black),new Color(Color.White)),
+            new Attribute(new Color(Color.White), new Color(Color.Black)),
+            new Attribute(new Color(Color.White), new Color(Color.Black)),
+            new Attribute(new Color(Color.Black), new Color(Color.White))
+                ),
         };
         this.rootCommandsListView.SetSource(rootCommands);
+        this.rootCommandsListView.SelectedItem = 0;
+
         this.rootCommandsListView.KeyDown += (_, e) =>
         {
             if (e == Key.Enter)
