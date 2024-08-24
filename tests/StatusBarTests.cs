@@ -2,7 +2,7 @@
 
 [TestFixture]
 [Category( "Code Generation" )]
-[Parallelizable(ParallelScope.All)]
+[NonParallelizable]
 internal class StatusBarTests : Tests
 {
     [Test]

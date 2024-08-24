@@ -8,7 +8,7 @@ namespace UnitTests;
 [TestFixture]
 [TestOf( typeof( ObjectExtensions ) )]
 [Category( "Core" )]
-[Parallelizable( ParallelScope.All )]
+[NonParallelizable]
 [Order( 10 )]
 internal class ObjectExtensionsTests
 {

@@ -71,7 +71,7 @@ internal class KeyboardManagerTests : Tests
     }
 
     [Test]
-    [Parallelizable(ParallelScope.Self)]
+    [NonParallelizable]
     public void ButtonRename( )
     {
         Button v = ViewFactory.Create<Button>( );

@@ -6,7 +6,7 @@ namespace UnitTests;
 [TestFixture]
 [TestOf( typeof( StringExtensions ) )]
 [Category( "Core" )]
-[Parallelizable( ParallelScope.All )]
+[NonParallelizable]
 [SuppressMessage( "Performance", "CA1861:Avoid constant arrays as arguments", Justification = "We don't really care for unit tests..." )]
 internal class StringExtensionTests
 {

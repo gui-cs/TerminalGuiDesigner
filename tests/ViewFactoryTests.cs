@@ -10,7 +10,7 @@ namespace UnitTests;
 [TestOf( typeof( ViewFactory ) )]
 [Category( "Core" )]
 [Order( 1 )]
-[Parallelizable(ParallelScope.Children)]
+[NonParallelizable]
 internal class ViewFactoryTests
 {
     [ThreadStatic]
@@ -58,7 +58,7 @@ internal class ViewFactoryTests
 
     [Test]
     [TestCaseSource( nameof( Create_And_CreateT_Type_Provider ) )]
-    [Parallelizable(ParallelScope.Children)]
+    [NonParallelizable]
     [Category( "Change Control" )]
     [Description( "This test makes sure that both the generic and non-generic Create methods return non-null instances of the same type" )]
     [Obsolete("Can be removed once non-generic ViewFactory.Create method is no longer in use.")]
@@ -74,7 +74,7 @@ internal class ViewFactoryTests
     }
 
     [Test]
-    [Parallelizable(ParallelScope.Children)]
+    [NonParallelizable]
     [TestCaseSource( nameof( Create_And_CreateT_Type_Provider ) )]
     [SuppressMessage( "Style", "IDE0060:Remove unused parameter", Justification = "It is expected" )]
     public void CreateT_DoesNotThrowOnSupportedTypes<T>(T dummyObject  )
@@ -91,7 +91,7 @@ internal class ViewFactoryTests
     }
 
     [Test]
-    [Parallelizable(ParallelScope.Children)]
+    [NonParallelizable]
     [TestCaseSource( nameof( Create_And_CreateT_Type_Provider ) )]
     [SuppressMessage( "Style", "IDE0060:Remove unused parameter", Justification = "It is expected" )]
     public void CreateT_ReturnsValidViewOfExpectedType<T>( T dummyObject )
@@ -108,7 +108,7 @@ internal class ViewFactoryTests
     }
 
     [Test]
-    [Parallelizable(ParallelScope.Children)]
+    [NonParallelizable]
     public void CreateT_ThrowsOnUnsupportedTypes( [ValueSource( nameof( CreateT_ThrowsOnUnsupportedTypes_Cases ) )] Type unsupportedType )
     {
         MethodInfo viewFactoryCreateTGeneric = typeof( ViewFactory ).GetMethods( ).Single( static m => m is { IsGenericMethod: true, IsPublic: true, IsStatic: true, Name: "Create" } );
@@ -148,7 +148,7 @@ internal class ViewFactoryTests
     [Test]
     [Description( "Checks that all tested types exist in the collection in ViewFactory" )]
     [Category( "Change Control" )]
-    [Parallelizable(ParallelScope.Children)]
+    [NonParallelizable]
     public void KnownUnsupportedTypes_ContainsExpectedItems( [ValueSource( nameof( KnownUnsupportedTypes_ExpectedTypes ) )] Type expectedType )
     {
         Assert.That( ViewFactory.KnownUnsupportedTypes, Contains.Item( expectedType ) );
@@ -157,7 +157,7 @@ internal class ViewFactoryTests
     [Test]
     [Description( "Checks that no new types have been added that aren't tested" )]
     [Category( "Change Control" )]
-    [Parallelizable(ParallelScope.Children)]
+    [NonParallelizable]
     public void KnownUnsupportedTypes_DoesNotContainUnexpectedItems( [ValueSource( nameof( ViewFactory_KnownUnsupportedTypes ) )] Type typeDeclaredUnsupportedInViewFactory )
     {
         Assert.That( KnownUnsupportedTypes_ExpectedTypes, Contains.Item( typeDeclaredUnsupportedInViewFactory ) );
