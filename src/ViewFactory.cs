@@ -145,6 +145,12 @@ public static class ViewFactory
                 newView.Width = Dim.Auto();
                 break;
             case ColorPicker:
+                SetDefaultDimensions(newView, width ?? 20, height ?? 4);
+                break;
+
+            // leave with default dimensions
+            case ColorPicker16:
+                break;
             case TextView:
                 SetDefaultDimensions(newView, width ?? 10, height ?? 4);
                 break;
@@ -317,6 +323,8 @@ public static class ViewFactory
             { } t when t == typeof( TextValidateField ) => Create<TextValidateField>( ),
             { } t when t == typeof( ProgressBar ) => Create<ProgressBar>( ),
             { } t when t == typeof( View ) => Create<View>( ),
+            { } t when t == typeof(ColorPicker) => Create<ColorPicker>(),
+            { } t when t == typeof(ColorPicker16) => Create<ColorPicker16>(),
             { } t when t == typeof( Window ) => Create<Window>( ),
             { } t when t == typeof( TextField ) => Create<TextField>( ),
             { } t when t.IsAssignableTo( typeof( GraphView ) ) => Create<GraphView>( ),
