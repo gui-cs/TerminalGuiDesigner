@@ -75,6 +75,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.cpForeground.Style.ColorModel = Terminal.Gui.ColorModel.HSV;
             this.cpForeground.Style.ShowColorName = true;
             this.cpForeground.Style.ShowTextFields = true;
+            this.cpForeground.ApplyStyleChanges();
             this.Add(this.cpForeground);
             this.lblBackground.Width = 11;
             this.lblBackground.Height = 1;
@@ -98,6 +99,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.cpBackground.Style.ColorModel = Terminal.Gui.ColorModel.HSV;
             this.cpBackground.Style.ShowColorName = true;
             this.cpBackground.Style.ShowTextFields = true;
+            this.cpBackground.ApplyStyleChanges();
             this.Add(this.cpBackground);
             this.lblResult.Width = Dim.Auto();
             this.lblResult.Height = 1;
