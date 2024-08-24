@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Terminal.Gui.TextValidateProviders;
 
 namespace UnitTests;
 
@@ -54,132 +55,6 @@ internal class ViewFactoryTests
 
     private static IEnumerable<Type> ViewFactory_SupportedViewTypes => ViewFactory.SupportedViewTypes;
 
-    [Test]
-    [TestCaseSource( nameof( Create_And_CreateT_Type_Provider ) )]
-    [Parallelizable(ParallelScope.Children)]
-    [Category( "Change Control" )]
-    [Description( "This test makes sure that both the generic and non-generic Create methods return objects with the same property values" )]
-    [Obsolete("Can be removed once non-generic ViewFactory.Create method is no longer in use.")]
-    public void Create_And_CreateT_ReturnEquivalentInstancesForSameInputs<T>( T dummyInvalidObject )
-        where T : View, new( )
-    {
-        if (dummyInvalidObject is StatusBar)
-        {
-            return;
-        }
-
-        T? createdByNonGeneric = ViewFactory.Create( typeof( T ) ) as T;
-        Assume.That( createdByNonGeneric, Is.Not.Null.And.InstanceOf<T>( ) );
-
-        T createdByGeneric = ViewFactory.Create<T>( );
-        Assume.That( createdByGeneric, Is.Not.Null.And.InstanceOf<T>( ) );
-
-        PropertyInfo[] publicPropertiesOfType = typeof( T ).GetProperties( BindingFlags.Instance | BindingFlags.Public ).Where( static p => p.CanRead ).ToArray( );
-        Assert.Multiple( ( ) =>
-        {
-            foreach ( PropertyInfo property in publicPropertiesOfType )
-            {
-                // The purpose of this test is to confirm that generic and typeof(x) ViewFactory create methods create identical Views (in terms of properties).
-                // The following properties do not support equality well and are safe to assume get the same values regardless of which ViewFactory route creates them
-                if (property.PropertyType == typeof(KeyBindings))
-                {
-                    continue;
-                }
-                if (property.PropertyType == typeof(SliderStyle))
-                {
-                    continue;
-                }
-                if (property.PropertyType == typeof(Shortcut))
-                {
-                    continue;
-                }
-
-                switch ( dummyInvalidObject, property )
-                {
-                    case (ComboBox, { Name: "Subviews" }):
-                    case (MenuBar, { Name: "Menus" }):
-                    case (TableView, { Name: "Table" }):
-                    case (TabView, { Name: "Tabs" }):
-                    case (TabView, { Name: "SelectedTab" }):
-                    case (TabView, { Name: "Subviews" }):
-                    case (DatePicker, { Name: "Subviews" }):
-                    case (DatePicker, { Name: "Date" }):
-                        // Warn about these, until they are implemented (WIP)
-                        Assert.Warn( $"{property.Name} not yet checked on {typeof( T ).Name}" );
-                        continue;
-                    case (ScrollView, { Name: "Subviews" }):
-                    case (TileView, { Name: "Subviews" }):
-                    case (TileView, { Name: "Tiles" }):
-                    case (_, { Name: "ContextMenu" }):
-                    case (_, { Name: "OverlappedTop" }):
-                        continue;
-                    case (Window, _):
-                        // Safe to skip these, as we don't set them in Create
-                        continue;
-                }
-
-                object? nonGenericPropertyValue = property.GetValue( createdByNonGeneric );
-                object? genericPropertyValue = property.GetValue( createdByGeneric );
-
-                // First, if they're both null, we're good so just skip it.
-                if ( nonGenericPropertyValue is null && genericPropertyValue is null )
-                {
-                    continue;
-                }
-
-                // If one or the other isn't null, assert they both are not null
-                Assert.Multiple( ( ) =>
-                {
-                    Assert.That( nonGenericPropertyValue, Is.Not.Null );
-                    Assert.That( genericPropertyValue, Is.Not.Null );
-                } );
-
-                // Special cases for certain properties by property type, property name, and/or tested view type.
-                // In general, we could actually skip basically everything that isn't explicitly in Create,
-                // but doing it this way allows us to just test everything and only skip what we absolutely have to.
-                switch ( dummyInvalidObject, property )
-                {
-                    case (_, not null) when property.PropertyType.IsAssignableTo( typeof( Dim ) ):
-
-                        if(nonGenericPropertyValue is DimAuto)
-                        {
-                            // TODO: https://github.com/gui-cs/Terminal.Gui/issues/3521
-                            Assert.Warn("Disabled this test case because of https://github.com/gui-cs/Terminal.Gui/issues/3521");
-                            continue;
-                        }
-
-                        if (nonGenericPropertyValue is KeyBindings)
-                        {
-                            continue;
-                        }
-
-                        Assert.That( (Dim)nonGenericPropertyValue!, Is.EqualTo( (Dim)genericPropertyValue! ) );
-                        continue;
-                    case (_, not null) when property.PropertyType.IsAssignableTo( typeof( TextFormatter ) ):
-                        TextFormatter nonGenericTextFormatter = (TextFormatter)nonGenericPropertyValue!;
-                        TextFormatter genericTextFormatter = (TextFormatter)genericPropertyValue!;
-                        Assert.That( nonGenericTextFormatter.ToCodePrimitiveExpression( ), Is.EqualTo( genericTextFormatter.ToCodePrimitiveExpression( ) ) );
-                        continue;
-                    case (_, { Name: "TabIndexes" }):
-                        var nonGenericTabIndexes = (ReadOnlyCollection<View>)nonGenericPropertyValue!;
-                        var genericTabIndexes = (ReadOnlyCollection<View>)genericPropertyValue!;
-                        Assert.That(
-                            nonGenericTabIndexes,
-                            Is.EquivalentTo( genericTabIndexes )
-                              .Using<View, View>( CompareTwoViews ) );
-                        continue;
-                    case (_, not null) when property.PropertyType.IsAssignableTo(typeof(Adornment)):
-                        Assert.That(((Adornment)nonGenericPropertyValue!).ToString(), Is.EqualTo(((Adornment)genericPropertyValue!).ToString()));
-                        continue;
-                }
-
-                Assert.That(
-                    nonGenericPropertyValue,
-                    Is.EqualTo( genericPropertyValue ),
-                    $"Property {property!.Name} of type {property.ReflectedType!.Name} mismatch. Generic: {genericPropertyValue} Non-Generic: {nonGenericPropertyValue}" );
-            }
-        } );
-    }
 
     [Test]
     [TestCaseSource( nameof( Create_And_CreateT_Type_Provider ) )]

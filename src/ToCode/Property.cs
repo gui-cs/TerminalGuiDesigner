@@ -471,6 +471,10 @@ public class Property : ToCodeBase
         {
             t.Update();
         }
+        if (this.Design.View is ColorPicker cp)
+        {
+            cp.ApplyStyleChanges();
+        }
 
         this.Design.View.SetNeedsDisplay();
     }

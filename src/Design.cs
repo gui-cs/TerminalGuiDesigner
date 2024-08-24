@@ -449,7 +449,7 @@ public class Design
         {
             yield break;
         }
-
+        
         foreach (var v in this.View.SuperView.Subviews)
         {
             if (v == this.View)
@@ -762,6 +762,12 @@ public class Design
         if (this.View is CheckBox)
         {
             yield return this.CreateProperty(nameof(CheckBox.CheckedState));
+        }
+        if (this.View is ColorPicker cp)
+        {
+            yield return this.CreateSubProperty(nameof(ColorPickerStyle.ColorModel),nameof(ColorPicker.Style),cp.Style);
+            yield return this.CreateSubProperty(nameof(ColorPickerStyle.ShowColorName), nameof(ColorPicker.Style), cp.Style);
+            yield return this.CreateSubProperty(nameof(ColorPickerStyle.ShowTextFields), nameof(ColorPicker.Style), cp.Style);
         }
 
         if (this.View is ListView lv)
