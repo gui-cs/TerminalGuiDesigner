@@ -6,7 +6,7 @@ namespace UnitTests;
 [TestOf( typeof( KeyMap ) )]
 [Category( "Core" )]
 [Category( "UI" )]
-[Parallelizable( ParallelScope.All )]
+[NonParallelizable]
 internal class KeyMapTests
 {
     private const string ExpectedKeysYamlContent =

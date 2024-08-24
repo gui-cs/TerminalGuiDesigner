@@ -37,11 +37,8 @@ public partial class ColorPicker
 
         if (currentValue != null)
         {
-            // TODO: Enable again once true color nuget package available and designer supported
-            // see https://github.com/gui-cs/Terminal.Gui/pull/3604
-
-            // cpForeground.SelectedColor = currentValue.Value.Foreground;
-            // cpBackground.SelectedColor = currentValue.Value.Background;
+            cpForeground.SelectedColor = currentValue.Value.Foreground;
+            cpBackground.SelectedColor = currentValue.Value.Background;
         }
 
         lblPreview.ColorScheme = new ColorScheme();

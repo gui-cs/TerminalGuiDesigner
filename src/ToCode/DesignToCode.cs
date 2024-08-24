@@ -57,6 +57,13 @@ internal class DesignToCode : ToCodeBase
             designItems.ToCode(args);
         }
 
+        if (this.Design.View is ColorPicker)
+        {
+            var designItems = new ColorPickerToCode(this.Design);
+            designItems.ToCode(args);
+        }
+
+
         // call this.Add(someView)
         this.AddAddToViewStatement(args, this.Design, parentView);
     }

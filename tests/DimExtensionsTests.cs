@@ -6,7 +6,7 @@ namespace UnitTests;
 [TestOf( typeof( DimExtensions ) )]
 [Category( "Core" )]
 [Category( "Terminal.Gui Extensions" )]
-[Parallelizable( ParallelScope.Children )]
+[NonParallelizable]
 internal class DimExtensionsTests
 {
     [Test]
