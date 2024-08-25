@@ -40,11 +40,7 @@ public static class ViewFactory
         // BUG These seem to cause stack overflows in CreateSubControlDesigns (see TestAddView_RoundTrip)
         typeof( Wizard ),
         typeof( WizardStep ),
-
-        // TODO: Requires tests and comprehensive testing, also its generic so that's more complicated
-        typeof(NumericUpDown),
-        typeof(NumericUpDown<>),
-
+        
         // Ignore menu bar v2 for now
         typeof(MenuBarv2),
 
@@ -134,6 +130,8 @@ public static class ViewFactory
 
         T newView = new( );
 
+
+
         switch ( newView )
         {
             case Button:
@@ -150,6 +148,11 @@ public static class ViewFactory
 
             // leave with default dimensions
             case ColorPicker16:
+            case NumericUpDown<int>:
+            case NumericUpDown<long>:
+            case NumericUpDown<double>:
+            case NumericUpDown<float>:
+            case NumericUpDown<decimal>:
                 break;
             case TextView:
                 SetDefaultDimensions(newView, width ?? 10, height ?? 4);

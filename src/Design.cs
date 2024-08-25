@@ -50,6 +50,7 @@ public class Design
         typeof(TabView),
         typeof(TreeView),
         typeof(Dialog),
+        typeof(NumericUpDown)
     };
 
     /// <summary>
@@ -850,6 +851,11 @@ public class Design
         {
             yield return this.CreateProperty(nameof(RadioGroup.RadioLabels));
         }
+
+        if (viewType.IsGenericType(typeof(NumericUpDown<>)))
+        {
+            yield return this.CreateProperty(nameof(NumericUpDown.Value));
+        }
     }
 
     private Property CreateTreeObjectsProperty(Type viewType)
@@ -879,7 +885,7 @@ public class Design
         }
 
         // Do not let Text be set on Slider or Slider<> implementations as weird stuff happens
-        if(this.View.GetType().Name.StartsWith("Slider") || View is RadioGroup)
+        if(this.View.GetType().Name.StartsWith("Slider") || View is RadioGroup || View.GetType().IsGenericType(typeof(NumericUpDown<>)))
         {
             return false;
         }
