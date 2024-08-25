@@ -143,7 +143,8 @@ public static class ViewFactory
                 newView.Width = Dim.Auto();
                 break;
             case ColorPicker:
-                SetDefaultDimensions(newView, width ?? 20, height ?? 4);
+                newView.Width = width ?? 20;
+                newView.Height = Dim.Auto();
                 break;
 
             // leave with default dimensions

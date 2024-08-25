@@ -26,7 +26,7 @@ internal class ColorPickerTests : Tests
         {
             Assume.That(v.Style.ColorModel,Is.Not.EqualTo(ColorModel.RGB));
 
-            var prop = d.GetDesignableProperty(nameof(ColorPicker.Style) + "." + nameof(ColorPickerStyle.ColorModel))
+            var prop = d.GetDesignableProperty(nameof(ColorPickerStyle.ColorModel))
                        ?? throw new("Property was unexpectedly not designable");
 
             // We change to RGB
