@@ -19,45 +19,50 @@ namespace TerminalGuiDesigner.UI
             {
                 return RunEditor(new SliderOptionEditor(type.GetGenericArguments()[0], oldValue), out newValue);
             }
-            else if (type == typeof(ColorScheme))
+            if (type == typeof(ColorScheme))
             {
                 return GetNewColorSchemeValue(design, out newValue);
             }
-            else if (type == typeof(Attribute) || type == typeof(Attribute?))
+            if (type == typeof(Attribute) || type == typeof(Attribute?))
             {
                 return RunEditor(new ColorPicker((Attribute?)oldValue), out newValue);
             }
-            else if (type == typeof(Pos))
+            if (type == typeof(Pos))
             {
                 return RunEditor(new PosEditor(design, (Pos)oldValue ?? throw new Exception("Pos property was unexpectedly null")), out newValue);
             }
-            else if (type == typeof(Size))
+            if (type == typeof(Size))
             {
                 return RunEditor(new SizeEditor((Size)(oldValue ?? throw new Exception($"Property {propertyName} is of Type Size but its current value is null"))), out newValue);
             }
-            else if (type == typeof(PointF))
+            if (type == typeof(Point))
+            {
+                var oldPoint = (Point)(oldValue ?? throw new Exception($"Property {propertyName} is of Type Point but its current value is null"));
+                var result = RunEditor(new PointEditor(oldPoint.X, oldPoint.Y), out newValue);
+
+                if (newValue != null)
+                {
+                    newValue = new Point((int)((PointF)newValue).X, (int)((PointF)newValue).Y);
+                }
+                return result;
+                
+            }
+            if (type == typeof(PointF))
             {
                 var oldPointF = (PointF)(oldValue ?? throw new Exception($"Property {propertyName} is of Type PointF but its current value is null"));
                 return RunEditor(new PointEditor(oldPointF.X, oldPointF.Y), out newValue);
             }
-            else if (type == typeof(Dim))
+            if (type == typeof(Dim))
             {
                 return RunEditor(new DimEditor(design, (Dim)oldValue), out newValue);
             }
-            else if (type == typeof(bool))
+            if (type == typeof(bool))
             {
                 int answer = ChoicesDialog.Query(propertyName, $"New value for {type}", "Yes", "No");
                 newValue = answer == 0 ? true : false;
                 return answer != -1;
             }
-            if (type== typeof(bool))
-            {
-                int answer = ChoicesDialog.Query(propertyName, $"New value for {type}", "Yes", "No");
 
-                newValue = answer == 0 ? true : false;
-                return answer != -1;
-            }
-            else
             if (
                 type.IsGenericType(typeof(IEnumerable<>)) ||
                 type.IsAssignableTo(typeof(IList))
@@ -86,7 +91,7 @@ namespace TerminalGuiDesigner.UI
 
                     if (!designer.Cancelled)
                     {
-                        newValue = designer.Result;
+                        newValue = designer.ResultAsList;
                         return true;
                     }
                     else
@@ -96,7 +101,6 @@ namespace TerminalGuiDesigner.UI
                         return false;
                     }
                 }
-
             }
             else
             if (type== typeof(IListDataSource))
@@ -130,7 +134,8 @@ namespace TerminalGuiDesigner.UI
                 }
             }
             else
-            if (type== typeof(int)
+            if (
+                type== typeof(int)
                 || type== typeof(int?)
                 || type== typeof(uint)
                 || type== typeof(uint?))
@@ -142,16 +147,6 @@ namespace TerminalGuiDesigner.UI
                 {
                     // change back to uint/int/null
                     newValue = resultInt == null ? null : Convert.ChangeType(resultInt, type);
-                    return true;
-                }
-            }
-            else
-            if (type== typeof(int)
-                || type== typeof(int?))
-            {
-                if (Modals.Getint(propertyName, "New int Value", (int?)oldValue, out var resultInt))
-                {
-                    newValue = resultInt;
                     return true;
                 }
             }
