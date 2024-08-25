@@ -252,6 +252,8 @@ public static class ViewExtensions
     /// <returns>The <see cref="View"/> at the given screen location or null if none found.</returns>
     public static View? HitTest(this View w, MouseEvent m, out bool isBorder, out bool isLowerRight, params View[] ignoring)
     {
+        ignoring = ignoring.Union(w.GetAllNonDesignableSubviews()).ToArray();
+
         // hide the views while we perform the hit test
         foreach (View v in ignoring)
         {
@@ -300,6 +302,7 @@ public static class ViewExtensions
 
         return hit is Adornment a ? a.Parent : hit;
     }
+
 
     /// <summary>
     /// <para>
@@ -394,6 +397,32 @@ public static class ViewExtensions
             .ThenBy(v => v.Frame.X);
     }
 
+    /// <summary>
+    /// Returns all subviews that are not Designable.  Beware that designs can be nested
+    /// e.g. calling this on a root view with return subviews that belong to other designed
+    /// components that were added to the root designed window.
+    /// </summary>
+    /// <param name="view"></param>
+    /// <returns></returns>
+    public static IEnumerable<View> GetAllNonDesignableSubviews(this View view)
+    {
+        var alsoIgnore = new List<View>();
+        RecursivelyIgnoreAllNonDesignableSubviews(view, alsoIgnore);
+        return alsoIgnore;
+    }
+    private static void RecursivelyIgnoreAllNonDesignableSubviews(View view, List<View> alsoIgnore)
+    {
+        foreach (var sub in view.Subviews)
+        {
+            if (sub.Data is not Design)
+            {
+                alsoIgnore.Add(sub);
+            }
+
+            RecursivelyIgnoreAllNonDesignableSubviews(sub, alsoIgnore);
+        }
+    }
+
     private static bool HasNoBorderProperty(this View v)
     {
         if (v.Border == null || v.BorderStyle == LineStyle.None)
@@ -403,4 +432,6 @@ public static class ViewExtensions
 
         return false;
     }
+
+
 }
