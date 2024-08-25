@@ -855,6 +855,10 @@ public class Design
         if (viewType.IsGenericType(typeof(NumericUpDown<>)))
         {
             yield return this.CreateProperty(nameof(NumericUpDown.Value));
+            yield return this.CreateProperty(nameof(NumericUpDown.Increment));
+
+            // TODO: Probably needs some thought
+            // yield return this.CreateProperty(nameof(NumericUpDown.Format));
         }
     }
 
