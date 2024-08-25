@@ -251,6 +251,7 @@ public class Design
         foreach (var v in subView.GetAllNonDesignableSubviews())
         {
             v.MouseClick += (s,e)=>this.SuppressNativeClickEvents(s,e,true);
+            v.MouseEvent += (s, e) => this.SuppressNativeClickEvents(s, e, true);
         }
         
         var d = new Design(this.SourceCode, name, subView);
