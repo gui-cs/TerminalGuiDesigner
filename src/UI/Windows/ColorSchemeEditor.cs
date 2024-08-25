@@ -115,10 +115,10 @@ public partial class ColorSchemeEditor {
 
     private Terminal.Gui.Attribute PickNewColorsFor(Terminal.Gui.Attribute current)
     {
-        var pick = new ColorPicker(current);
+        var pick = new Windows.ColorPicker(current);
         Application.Run(pick);
 
-        return pick.Cancelled ? current : pick.Result ?? current;
+        return pick.Cancelled ? current : (Attribute?)pick.Result ?? current;
     }
 
     private void SetColorPatches()

@@ -17,141 +17,39 @@ namespace TerminalGuiDesigner.UI
 
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(SliderOption<>))
             {
-                var designer = new SliderOptionEditor(type.GetGenericArguments()[0], oldValue);
-                Application.Run(designer);
-
-                if (!designer.Cancelled)
-                {
-                    newValue = designer.Result;
-                    return true;
-                }
-                else
-                {
-                    // user canceled designing the Option
-                    return false;
-                }
+                return RunEditor(new SliderOptionEditor(type.GetGenericArguments()[0], oldValue), out newValue);
             }
-            else
-            if (type== typeof(ColorScheme))
+            else if (type == typeof(ColorScheme))
             {
                 return GetNewColorSchemeValue(design, out newValue);
             }
-            else
-            if (type == typeof(Attribute) ||
-                type == typeof(Attribute?))
+            else if (type == typeof(Attribute) || type == typeof(Attribute?))
             {
-                // if its an Attribute or nullableAttribute
-                var picker = new ColorPicker((Attribute?)oldValue);
-                Application.Run(picker);
-
-                if (!picker.Cancelled)
-                {
-                    newValue = picker.Result;
-                    return true;
-                }
-                else
-                {
-                    // user cancelled designing the Color
-                    newValue = null;
-                    return false;
-                }
+                return RunEditor(new ColorPicker((Attribute?)oldValue), out newValue);
             }
-            else
-            if (type== typeof(ITextValidateProvider))
+            else if (type == typeof(Pos))
             {
-                string? oldPattern = oldValue is TextRegexProvider r ? (string?)r.Pattern.ToPrimitive() : null;
-                if (Modals.GetString("New Validation Pattern", "Regex Pattern", oldPattern, out var newPattern))
-                {
-                    newValue = string.IsNullOrWhiteSpace(newPattern) ? null : new TextRegexProvider(newPattern);
-                    return true;
-                }
-
-                // user cancelled entering a pattern
-                newValue = null;
-                return false;
+                return RunEditor(new PosEditor(design, (Pos)oldValue ?? throw new Exception("Pos property was unexpectedly null")), out newValue);
             }
-            else
-            if (type== typeof(Pos))
+            else if (type == typeof(Size))
             {
-                // user is editing a Pos
-                var designer = new PosEditor(design, (Pos)oldValue?? throw new Exception("Pos property was unexpectedly null"));
-
-                Application.Run(designer);
-
-                if (!designer.Cancelled)
-                {
-                    newValue = designer.Result;
-                    return true;
-                }
-                else
-                {
-                    // user cancelled designing the Pos
-                    newValue = null;
-                    return false;
-                }
+                return RunEditor(new SizeEditor((Size)(oldValue ?? throw new Exception($"Property {propertyName} is of Type Size but its current value is null"))), out newValue);
             }
-            else
-            if (type== typeof(Size))
+            else if (type == typeof(PointF))
             {
-                // user is editing a Size
-                var oldSize = (Size)(oldValue ?? throw new Exception($"Property {propertyName} is of Type Size but it's current value is null"));
-                var designer = new SizeEditor(oldSize);
-
-                Application.Run(designer);
-
-                if (!designer.Cancelled)
-                {
-                    newValue = designer.Result;
-                    return true;
-                }
-                else
-                {
-                    // user cancelled designing the Pos
-                    newValue = null;
-                    return false;
-                }
+                var oldPointF = (PointF)(oldValue ?? throw new Exception($"Property {propertyName} is of Type PointF but its current value is null"));
+                return RunEditor(new PointEditor(oldPointF.X, oldPointF.Y), out newValue);
             }
-            else
-            if (type== typeof(PointF))
+            else if (type == typeof(Dim))
             {
-                // user is editing a PointF
-                var oldPointF = (PointF)(oldValue ?? throw new Exception($"Property {propertyName} is of Type PointF but it's current value is null"));
-                var designer = new PointEditor(oldPointF.X, oldPointF.Y);
-
-                Application.Run(designer);
-
-                if (!designer.Cancelled)
-                {
-                    newValue = new PointF(designer.ResultX, designer.ResultY);
-                    return true;
-                }
-                else
-                {
-                    // user cancelled designing the Pos
-                    newValue = null;
-                    return false;
-                }
+                return RunEditor(new DimEditor(design, (Dim)oldValue), out newValue);
             }
-            else
-            if (type== typeof(Dim))
+            else if (type == typeof(bool))
             {
-                // user is editing a Dim
-                var designer = new DimEditor(design, (Dim)oldValue);
-                Application.Run(designer);
-
-                if (!designer.Cancelled)
-                {
-                    newValue = designer.Result;
-                    return true;
-                }
-                else
-                {
-                    // user cancelled designing the Dim
-                    newValue = null;
-                    return false;
-                }
+                int answer = ChoicesDialog.Query(propertyName, $"New value for {type}", "Yes", "No");
+                newValue = answer == 0 ? true : false;
+                return answer != -1;
             }
-            else
             if (type== typeof(bool))
             {
                 int answer = ChoicesDialog.Query(propertyName, $"New value for {type}", "Yes", "No");
@@ -316,6 +214,20 @@ namespace TerminalGuiDesigner.UI
             newValue = null;
             return false;
         }
+
+        private static bool RunEditor<T>(T editor, out object? result) where T : Dialog, IValueGetterDialog
+        {
+            Application.Run(editor);
+            if (editor.Cancelled)
+            {
+                result = null;
+                return false;
+            }
+
+            result = editor.Result;
+            return true;
+        }
+
         internal static bool GetNewValue(Design design, Property property, object? oldValue, out object? newValue)
         {
             if (property is InstanceOfProperty inst)

@@ -7,13 +7,16 @@
 //      You can make changes to this file and they will not be overwritten when saving.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
+
+
 namespace TerminalGuiDesigner.UI.Windows {
     using System.Reflection;
     using System.Text;
     using Terminal.Gui;
     
     
-    public partial class SliderOptionEditor {
+    public partial class SliderOptionEditor : IValueGetterDialog
+    {
         private readonly Type genericTypeArgument;
         private readonly Type sliderOptionType;
 

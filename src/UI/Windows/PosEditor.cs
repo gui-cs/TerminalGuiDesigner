@@ -7,6 +7,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using JetBrains.Annotations;
+
 namespace TerminalGuiDesigner.UI.Windows;
 
 using Terminal.Gui;
@@ -18,7 +20,7 @@ using TerminalGuiDesigner.UI.Windows;
 /// <summary>
 /// Editor for the <see cref="Pos"/> type.
 /// </summary>
-public partial class PosEditor : Dialog {
+public partial class PosEditor : Dialog, IValueGetterDialog {
 
     private Design design;
 
@@ -26,7 +28,8 @@ public partial class PosEditor : Dialog {
     /// Users configured <see cref="Pos"/> (assembled from radio button
     /// selected and text values entered - offset etc).
     /// </summary>
-    public Pos Result { get; private set; }
+    [CanBeNull]
+    public object Result { get; private set; }
 
     /// <summary>
     /// True if user cancelled the dialog instead of hitting Ok.

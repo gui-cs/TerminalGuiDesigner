@@ -15,12 +15,12 @@ namespace TerminalGuiDesigner.UI.Windows;
 /// <summary>
 /// Prompts user to pick a two <see cref="Color"/> to make an <see cref="Attribute"/>.
 /// </summary>
-public partial class ColorPicker
+public partial class ColorPicker : IValueGetterDialog
 {
     /// <summary>
     /// The combination of foreground and background <see cref="Color"/> the user chose.
     /// </summary>
-    public Terminal.Gui.Attribute? Result { get; internal set; }
+    public object Result { get; internal set; }
 
     /// <summary>
     /// True if user closed dialog with cancel.
