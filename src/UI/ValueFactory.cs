@@ -11,6 +11,40 @@ namespace TerminalGuiDesigner.UI
 {
     static class ValueFactory
     {
+        public static readonly Type[] ConvertChangeTypeSupports = new Type[]
+        {
+            typeof(byte),
+            typeof(sbyte),
+            typeof(short),
+            typeof(ushort),
+            typeof(int),
+            typeof(uint),
+            typeof(long),
+            typeof(ulong),
+            typeof(float),
+            typeof(double),
+            typeof(decimal),
+            typeof(bool),
+            typeof(char),
+            typeof(string),
+            typeof(DateTime),
+
+            typeof(byte?),
+            typeof(sbyte?),
+            typeof(short?),
+            typeof(ushort?),
+            typeof(int?),
+            typeof(uint?),
+            typeof(long?),
+            typeof(ulong?),
+            typeof(float?),
+            typeof(double?),
+            typeof(decimal?),
+            typeof(bool?),
+            typeof(char?),
+            typeof(DateTime?)
+        };
+
         internal static bool GetNewValue(string propertyName, Design design, Type type, object? oldValue, out object? newValue, bool allowMultiLine)
         {
             newValue = null;
@@ -45,7 +79,7 @@ namespace TerminalGuiDesigner.UI
                     newValue = new Point((int)((PointF)newValue).X, (int)((PointF)newValue).Y);
                 }
                 return result;
-                
+
             }
             if (type == typeof(PointF))
             {
@@ -86,7 +120,7 @@ namespace TerminalGuiDesigner.UI
                 }
                 else
                 {
-                    var designer = new ArrayEditor(design,type.GetElementTypeEx(), (IList)oldValue);
+                    var designer = new ArrayEditor(design, type.GetElementTypeEx(), (IList)oldValue);
                     Application.Run(designer);
 
                     if (!designer.Cancelled)
@@ -103,7 +137,7 @@ namespace TerminalGuiDesigner.UI
                 }
             }
             else
-            if (type== typeof(IListDataSource))
+            if (type == typeof(IListDataSource))
             {
                 // TODO : Make this work with non strings e.g.
                 // if user types a bunch of numbers in or dates
@@ -134,29 +168,12 @@ namespace TerminalGuiDesigner.UI
                 }
             }
             else
-            if (
-                type== typeof(int)
-                || type== typeof(int?)
-                || type== typeof(uint)
-                || type== typeof(uint?))
+            if (ConvertChangeTypeSupports.Contains(type))
             {
-                // deals with null, int and uint
-                var v = oldValue == null ? null : (int?)Convert.ToInt32(oldValue);
-
-                if (Modals.GetInt(propertyName, "New Int Value", v, out var resultInt))
+                var oldValueConverted = oldValue == null ? null : Convert.ChangeType(oldValue, type);
+                if (Modals.GetString(propertyName, $"New {type.Name} Value", oldValueConverted?.ToString(), out var result, allowMultiLine))
                 {
-                    // change back to uint/int/null
-                    newValue = resultInt == null ? null : Convert.ChangeType(resultInt, type);
-                    return true;
-                }
-            }
-            else
-            if (type== typeof(char?)
-                || type== typeof(char))
-            {
-                if (Modals.GetChar(propertyName, "New Single Character", oldValue is null ? null : (char?)oldValue.ToPrimitive() ?? null, out var resultChar))
-                {
-                    newValue = resultChar;
+                    newValue = string.IsNullOrWhiteSpace(result) ? null : Convert.ChangeType(result, type);
                     return true;
                 }
             }
@@ -176,7 +193,6 @@ namespace TerminalGuiDesigner.UI
                 var fd = new FileDialog();
                 fd.AllowsMultipleSelection = false;
 
-
                 int answer = ChoicesDialog.Query(propertyName, $"Directory or File?", "Directory", "File", "Cancel");
 
                 if (answer < 0 || answer >= 2)
@@ -194,7 +210,7 @@ namespace TerminalGuiDesigner.UI
                 }
                 else
                 {
-                    newValue = pickDir ? 
+                    newValue = pickDir ?
                         new DirectoryInfo(fd.Path) : new FileInfo(fd.Path);
                     return true;
                 }
@@ -250,7 +266,7 @@ namespace TerminalGuiDesigner.UI
             }
             else
             {
-                return GetNewValue(property.PropertyInfo.Name, design, property.PropertyInfo.PropertyType,oldValue, out newValue, ValueFactory.AllowMultiLine(property));
+                return GetNewValue(property.PropertyInfo.Name, design, property.PropertyInfo.PropertyType, oldValue, out newValue, ValueFactory.AllowMultiLine(property));
             }
 
         }
@@ -323,6 +339,6 @@ namespace TerminalGuiDesigner.UI
                 newValue = null;
                 return false;
             }
-        }        
+        }
     }
 }
