@@ -225,6 +225,13 @@ public class Design
             tf.KeyDown += SuppressNativeKeyboardEvents;
         }
 
+        if (subView.GetType().IsGenericType(typeof(Slider<>)))
+        {
+            // TODO: Does not seem to work
+            subView.MouseEvent += (s, e) => SuppressNativeClickEvents(s, e,true);
+            subView.MouseClick += (s, e) => SuppressNativeClickEvents(s,e, true);
+        }
+
         if (subView is TreeView tree)
         {
             tree.AddObject(new TreeNode("Example Branch 1")
