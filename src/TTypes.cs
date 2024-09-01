@@ -45,6 +45,18 @@ namespace TerminalGuiDesigner
                 return new[] { typeof(int), typeof(string), typeof(int), typeof(double), typeof(bool) };
             }
 
+            if (viewType == typeof(NumericUpDown<>))
+            {
+                return new[]
+                {
+                    typeof(int),
+                    typeof(long),
+                    typeof(double),
+                    typeof(float),
+                    typeof(decimal)
+                };
+            }
+
             if (viewType == typeof(TreeView<>))
             {
                 return new[] { typeof(object), typeof(FileSystemInfo) };

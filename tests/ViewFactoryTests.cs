@@ -188,9 +188,6 @@ internal class ViewFactoryTests
             typeof( Wizard ),
             typeof( WizardStep ),
 
-
-            typeof(NumericUpDown),
-            typeof(NumericUpDown<>),
             typeof( MenuBarv2 ),
             typeof( Shortcut )
         };

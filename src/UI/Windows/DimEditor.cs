@@ -7,6 +7,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using JetBrains.Annotations;
+
 namespace TerminalGuiDesigner.UI.Windows;
 
 using Terminal.Gui;
@@ -16,7 +18,7 @@ using TerminalGuiDesigner.ToCode;
 /// <summary>
 /// Editor for the <see cref="Dim"/> class.
 /// </summary>
-public partial class DimEditor : Dialog
+public partial class DimEditor : Dialog, IValueGetterDialog
 {
     private Design design;
 
@@ -24,7 +26,8 @@ public partial class DimEditor : Dialog
     /// The final <see cref="Dim"/> value user has configured based on
     /// radio buttons and text box values.
     /// </summary>
-    public Dim Result { get; private set; }
+    [CanBeNull]
+    public object Result { get; private set; }
 
     /// <summary>
     /// True if dialog was canceled.

@@ -9,13 +9,14 @@
 // -----------------------------------------------------------------------------
 
 using System.Collections.ObjectModel;
+using JetBrains.Annotations;
 
 namespace TerminalGuiDesigner.UI.Windows {
     using System.Collections;
     using Terminal.Gui;
     using TerminalGuiDesigner.ToCode;
 
-    public partial class ArrayEditor {
+    public partial class ArrayEditor : IValueGetterDialog {
 
         /// <summary>
         /// True if the editing was aborted.
@@ -28,7 +29,10 @@ namespace TerminalGuiDesigner.UI.Windows {
         /// <summary>
         /// The new array 
         /// </summary>
-        public IList Result { get; private set; }
+        [CanBeNull]
+        public object Result => ResultAsList;
+        public IList ResultAsList { get; private set; }
+
 
         /// <summary>
         /// Creates a new instance of the editor configured to build lists of <paramref name="elementType"/>
@@ -43,14 +47,14 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.elementType = elementType;
             
             Type listType = typeof(List<>).MakeGenericType(elementType);
-            Result = (IList)Activator.CreateInstance(listType);
+            ResultAsList = (IList)Activator.CreateInstance(listType);
          
             foreach(var e in oldValue)
             {
-                Result.Add(e);
+                ResultAsList.Add(e);
             }
 
-            lvElements.Source = Result.ToListDataSource();
+            lvElements.Source = ResultAsList.ToListDataSource();
             lvElements.KeyDown += LvElements_KeyDown;
             btnOk.Accept += BtnOk_Clicked;
             btnCancel.Accept += BtnCancel_Clicked;
@@ -67,14 +71,14 @@ namespace TerminalGuiDesigner.UI.Windows {
             // Moving up means reducing the index by 1
             var idx = lvElements.SelectedItem;
 
-            if (idx >= 1 && idx < Result.Count)
+            if (idx >= 1 && idx < ResultAsList.Count)
             { 
-                var toMove = Result[idx];
+                var toMove = ResultAsList[idx];
                 var newIndex = idx - 1;
-                Result.RemoveAt(idx);
-                Result.Insert(newIndex, toMove);
+                ResultAsList.RemoveAt(idx);
+                ResultAsList.Insert(newIndex, toMove);
 
-                lvElements.Source = Result.ToListDataSource();
+                lvElements.Source = ResultAsList.ToListDataSource();
                 lvElements.SelectedItem = newIndex;
                 lvElements.SetNeedsDisplay();
             }
@@ -85,14 +89,14 @@ namespace TerminalGuiDesigner.UI.Windows {
             // Moving up means increasing the index by 1
             var idx = lvElements.SelectedItem;
 
-            if (idx >= 0 && idx < Result.Count-1)
+            if (idx >= 0 && idx < ResultAsList.Count-1)
             {
-                var toMove = Result[idx];
+                var toMove = ResultAsList[idx];
                 var newIndex = idx + 1;
-                Result.RemoveAt(idx);
-                Result.Insert(newIndex, toMove);
+                ResultAsList.RemoveAt(idx);
+                ResultAsList.Insert(newIndex, toMove);
 
-                lvElements.Source = Result.ToListDataSource();
+                lvElements.Source = ResultAsList.ToListDataSource();
                 lvElements.SelectedItem = newIndex;
                 lvElements.SetNeedsDisplay();
             }
@@ -111,11 +115,11 @@ namespace TerminalGuiDesigner.UI.Windows {
         {
             var idx = lvElements.SelectedItem;
 
-            if (idx >= 0 && idx < Result.Count)
+            if (idx >= 0 && idx < ResultAsList.Count)
             {
-                Result.RemoveAt(idx);
+                ResultAsList.RemoveAt(idx);
 
-                lvElements.Source = Result.ToListDataSource();
+                lvElements.Source = ResultAsList.ToListDataSource();
                 lvElements.SetNeedsDisplay();
                 lvElements.SelectedItem = 0;
             }
@@ -125,29 +129,29 @@ namespace TerminalGuiDesigner.UI.Windows {
         {
             if(ValueFactory.GetNewValue("Element Value", design, this.elementType,null, out var newValue,true))
             {
-                Result.Add(newValue);                
+                ResultAsList.Add(newValue);                
             }
 
-            lvElements.Source = Result.ToListDataSource();
-            lvElements.SelectedItem = Result.Count - 1;
+            lvElements.Source = ResultAsList.ToListDataSource();
+            lvElements.SelectedItem = ResultAsList.Count - 1;
             lvElements.SetNeedsDisplay();
         }
         private void BtnEdit_Clicked(object sender, EventArgs e)
         {
             var idx = lvElements.SelectedItem;
 
-            if (idx >= 0 && idx < Result.Count)
+            if (idx >= 0 && idx < ResultAsList.Count)
             {
-                var toEdit = Result[idx];
+                var toEdit = ResultAsList[idx];
 
                 if (ValueFactory.GetNewValue("Element Value", design, this.elementType, toEdit, out var newValue, true))
                 {
                     // Replace old with new
-                    Result.RemoveAt(idx);
-                    Result.Insert(idx, newValue);
+                    ResultAsList.RemoveAt(idx);
+                    ResultAsList.Insert(idx, newValue);
                 }
 
-                lvElements.Source = Result.ToListDataSource();
+                lvElements.Source = ResultAsList.ToListDataSource();
                 lvElements.SelectedItem = idx;
                 lvElements.SetNeedsDisplay();
             }

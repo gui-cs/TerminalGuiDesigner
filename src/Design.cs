@@ -50,6 +50,7 @@ public class Design
         typeof(TabView),
         typeof(TreeView),
         typeof(Dialog),
+        typeof(NumericUpDown)
     };
 
     /// <summary>
@@ -213,15 +214,22 @@ public class Design
         if (subView is TextView txt)
         {
             // prevent control from responding to events
-            txt.MouseClick += this.SuppressNativeClickEvents;
+            txt.MouseClick += (s, e) => this.SuppressNativeClickEvents(s, e);
             txt.KeyDown += this.SuppressNativeKeyboardEvents;
         }
 
         if (subView is TextField tf)
         {
             // prevent control from responding to events
-            tf.MouseClick += this.SuppressNativeClickEvents;
+            tf.MouseClick += (s,e)=>this.SuppressNativeClickEvents(s,e);
             tf.KeyDown += SuppressNativeKeyboardEvents;
+        }
+
+        if (subView.GetType().IsGenericType(typeof(Slider<>)))
+        {
+            // TODO: Does not seem to work
+            subView.MouseEvent += (s, e) => SuppressNativeClickEvents(s, e,true);
+            subView.MouseClick += (s, e) => SuppressNativeClickEvents(s,e, true);
         }
 
         if (subView is TreeView tree)
@@ -243,6 +251,14 @@ public class Design
             {
                 tree.AddObject(new TreeNode($"Example Leaf {l}"));
             }
+        }
+
+        // Disable click events for sub controls. This allows you to prevent clicking
+        // in non designed subcomponents e.g. the bar of a true color picker.
+        foreach (var v in subView.GetAllNonDesignableSubviews())
+        {
+            v.MouseClick += (s,e)=>this.SuppressNativeClickEvents(s,e,true);
+            v.MouseEvent += (s, e) => this.SuppressNativeClickEvents(s, e, true);
         }
         
         var d = new Design(this.SourceCode, name, subView);
@@ -610,10 +626,17 @@ public class Design
         }
     }
 
-    private void SuppressNativeClickEvents(object? sender, MouseEventEventArgs obj)
+    private void SuppressNativeClickEvents(object? sender, MouseEventEventArgs obj, bool alsoSuppressClick = false)
     {
-        // Suppress everything except single click (selection)
-        obj.Handled = obj.MouseEvent.Flags != MouseFlags.Button1Clicked;
+        if (alsoSuppressClick)
+        {
+            obj.Handled = true;
+        }
+        else
+        {
+            // Suppress everything except single click (selection)
+            obj.Handled = obj.MouseEvent.Flags != MouseFlags.Button1Clicked;
+        }
     }
 
     private void SuppressNativeKeyboardEvents(object? sender, Key e)
@@ -850,6 +873,15 @@ public class Design
         {
             yield return this.CreateProperty(nameof(RadioGroup.RadioLabels));
         }
+
+        if (viewType.IsGenericType(typeof(NumericUpDown<>)))
+        {
+            yield return this.CreateProperty(nameof(NumericUpDown.Value));
+            yield return this.CreateProperty(nameof(NumericUpDown.Increment));
+
+            // TODO: Probably needs some thought
+            // yield return this.CreateProperty(nameof(NumericUpDown.Format));
+        }
     }
 
     private Property CreateTreeObjectsProperty(Type viewType)
@@ -879,7 +911,7 @@ public class Design
         }
 
         // Do not let Text be set on Slider or Slider<> implementations as weird stuff happens
-        if(this.View.GetType().Name.StartsWith("Slider") || View is RadioGroup)
+        if(this.View.GetType().Name.StartsWith("Slider") || View is RadioGroup || View.GetType().IsGenericType(typeof(NumericUpDown<>)))
         {
             return false;
         }

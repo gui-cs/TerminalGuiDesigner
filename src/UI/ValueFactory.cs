@@ -11,155 +11,92 @@ namespace TerminalGuiDesigner.UI
 {
     static class ValueFactory
     {
+        public static readonly Type[] ConvertChangeTypeSupports = new Type[]
+        {
+            typeof(byte),
+            typeof(sbyte),
+            typeof(short),
+            typeof(ushort),
+            typeof(int),
+            typeof(uint),
+            typeof(long),
+            typeof(ulong),
+            typeof(float),
+            typeof(double),
+            typeof(decimal),
+            typeof(bool),
+            typeof(char),
+            typeof(string),
+            typeof(DateTime),
+
+            typeof(byte?),
+            typeof(sbyte?),
+            typeof(short?),
+            typeof(ushort?),
+            typeof(int?),
+            typeof(uint?),
+            typeof(long?),
+            typeof(ulong?),
+            typeof(float?),
+            typeof(double?),
+            typeof(decimal?),
+            typeof(bool?),
+            typeof(char?),
+            typeof(DateTime?)
+        };
+
         internal static bool GetNewValue(string propertyName, Design design, Type type, object? oldValue, out object? newValue, bool allowMultiLine)
         {
             newValue = null;
 
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(SliderOption<>))
             {
-                var designer = new SliderOptionEditor(type.GetGenericArguments()[0], oldValue);
-                Application.Run(designer);
-
-                if (!designer.Cancelled)
-                {
-                    newValue = designer.Result;
-                    return true;
-                }
-                else
-                {
-                    // user canceled designing the Option
-                    return false;
-                }
+                return RunEditor(new SliderOptionEditor(type.GetGenericArguments()[0], oldValue), out newValue);
             }
-            else
-            if (type== typeof(ColorScheme))
+            if (type == typeof(ColorScheme))
             {
                 return GetNewColorSchemeValue(design, out newValue);
             }
-            else
-            if (type == typeof(Attribute) ||
-                type == typeof(Attribute?))
+            if (type == typeof(Attribute) || type == typeof(Attribute?))
             {
-                // if its an Attribute or nullableAttribute
-                var picker = new ColorPicker((Attribute?)oldValue);
-                Application.Run(picker);
-
-                if (!picker.Cancelled)
-                {
-                    newValue = picker.Result;
-                    return true;
-                }
-                else
-                {
-                    // user cancelled designing the Color
-                    newValue = null;
-                    return false;
-                }
+                return RunEditor(new ColorPicker((Attribute?)oldValue), out newValue);
             }
-            else
-            if (type== typeof(ITextValidateProvider))
+            if (type == typeof(Pos))
             {
-                string? oldPattern = oldValue is TextRegexProvider r ? (string?)r.Pattern.ToPrimitive() : null;
-                if (Modals.GetString("New Validation Pattern", "Regex Pattern", oldPattern, out var newPattern))
-                {
-                    newValue = string.IsNullOrWhiteSpace(newPattern) ? null : new TextRegexProvider(newPattern);
-                    return true;
-                }
-
-                // user cancelled entering a pattern
-                newValue = null;
-                return false;
+                return RunEditor(new PosEditor(design, (Pos)oldValue ?? throw new Exception("Pos property was unexpectedly null")), out newValue);
             }
-            else
-            if (type== typeof(Pos))
+            if (type == typeof(Size))
             {
-                // user is editing a Pos
-                var designer = new PosEditor(design, (Pos)oldValue?? throw new Exception("Pos property was unexpectedly null"));
-
-                Application.Run(designer);
-
-                if (!designer.Cancelled)
-                {
-                    newValue = designer.Result;
-                    return true;
-                }
-                else
-                {
-                    // user cancelled designing the Pos
-                    newValue = null;
-                    return false;
-                }
+                return RunEditor(new SizeEditor((Size)(oldValue ?? throw new Exception($"Property {propertyName} is of Type Size but its current value is null"))), out newValue);
             }
-            else
-            if (type== typeof(Size))
+            if (type == typeof(Point))
             {
-                // user is editing a Size
-                var oldSize = (Size)(oldValue ?? throw new Exception($"Property {propertyName} is of Type Size but it's current value is null"));
-                var designer = new SizeEditor(oldSize);
+                var oldPoint = (Point)(oldValue ?? throw new Exception($"Property {propertyName} is of Type Point but its current value is null"));
+                var result = RunEditor(new PointEditor(oldPoint.X, oldPoint.Y), out newValue);
 
-                Application.Run(designer);
+                if (newValue != null)
+                {
+                    newValue = new Point((int)((PointF)newValue).X, (int)((PointF)newValue).Y);
+                }
+                return result;
 
-                if (!designer.Cancelled)
-                {
-                    newValue = designer.Result;
-                    return true;
-                }
-                else
-                {
-                    // user cancelled designing the Pos
-                    newValue = null;
-                    return false;
-                }
             }
-            else
-            if (type== typeof(PointF))
+            if (type == typeof(PointF))
             {
-                // user is editing a PointF
-                var oldPointF = (PointF)(oldValue ?? throw new Exception($"Property {propertyName} is of Type PointF but it's current value is null"));
-                var designer = new PointEditor(oldPointF.X, oldPointF.Y);
-
-                Application.Run(designer);
-
-                if (!designer.Cancelled)
-                {
-                    newValue = new PointF(designer.ResultX, designer.ResultY);
-                    return true;
-                }
-                else
-                {
-                    // user cancelled designing the Pos
-                    newValue = null;
-                    return false;
-                }
+                var oldPointF = (PointF)(oldValue ?? throw new Exception($"Property {propertyName} is of Type PointF but its current value is null"));
+                return RunEditor(new PointEditor(oldPointF.X, oldPointF.Y), out newValue);
             }
-            else
-            if (type== typeof(Dim))
+            if (type == typeof(Dim))
             {
-                // user is editing a Dim
-                var designer = new DimEditor(design, (Dim)oldValue);
-                Application.Run(designer);
-
-                if (!designer.Cancelled)
-                {
-                    newValue = designer.Result;
-                    return true;
-                }
-                else
-                {
-                    // user cancelled designing the Dim
-                    newValue = null;
-                    return false;
-                }
+                return RunEditor(new DimEditor(design, (Dim)oldValue), out newValue);
             }
-            else
-            if (type== typeof(bool))
+            if (type == typeof(bool))
             {
                 int answer = ChoicesDialog.Query(propertyName, $"New value for {type}", "Yes", "No");
-
                 newValue = answer == 0 ? true : false;
                 return answer != -1;
             }
-            else
+
             if (
                 type.IsGenericType(typeof(IEnumerable<>)) ||
                 type.IsAssignableTo(typeof(IList))
@@ -183,12 +120,12 @@ namespace TerminalGuiDesigner.UI
                 }
                 else
                 {
-                    var designer = new ArrayEditor(design,type.GetElementTypeEx(), (IList)oldValue);
+                    var designer = new ArrayEditor(design, type.GetElementTypeEx(), (IList)oldValue);
                     Application.Run(designer);
 
                     if (!designer.Cancelled)
                     {
-                        newValue = designer.Result;
+                        newValue = designer.ResultAsList;
                         return true;
                     }
                     else
@@ -198,10 +135,9 @@ namespace TerminalGuiDesigner.UI
                         return false;
                     }
                 }
-
             }
             else
-            if (type== typeof(IListDataSource))
+            if (type == typeof(IListDataSource))
             {
                 // TODO : Make this work with non strings e.g.
                 // if user types a bunch of numbers in or dates
@@ -232,38 +168,12 @@ namespace TerminalGuiDesigner.UI
                 }
             }
             else
-            if (type== typeof(int)
-                || type== typeof(int?)
-                || type== typeof(uint)
-                || type== typeof(uint?))
+            if (ConvertChangeTypeSupports.Contains(type))
             {
-                // deals with null, int and uint
-                var v = oldValue == null ? null : (int?)Convert.ToInt32(oldValue);
-
-                if (Modals.GetInt(propertyName, "New Int Value", v, out var resultInt))
+                var oldValueConverted = oldValue == null ? null : Convert.ChangeType(oldValue, type);
+                if (Modals.GetString(propertyName, $"New {type.Name} Value", oldValueConverted?.ToString(), out var result, allowMultiLine))
                 {
-                    // change back to uint/int/null
-                    newValue = resultInt == null ? null : Convert.ChangeType(resultInt, type);
-                    return true;
-                }
-            }
-            else
-            if (type== typeof(int)
-                || type== typeof(int?))
-            {
-                if (Modals.Getint(propertyName, "New int Value", (int?)oldValue, out var resultInt))
-                {
-                    newValue = resultInt;
-                    return true;
-                }
-            }
-            else
-            if (type== typeof(char?)
-                || type== typeof(char))
-            {
-                if (Modals.GetChar(propertyName, "New Single Character", oldValue is null ? null : (char?)oldValue.ToPrimitive() ?? null, out var resultChar))
-                {
-                    newValue = resultChar;
+                    newValue = string.IsNullOrWhiteSpace(result) ? null : Convert.ChangeType(result, type);
                     return true;
                 }
             }
@@ -283,7 +193,6 @@ namespace TerminalGuiDesigner.UI
                 var fd = new FileDialog();
                 fd.AllowsMultipleSelection = false;
 
-
                 int answer = ChoicesDialog.Query(propertyName, $"Directory or File?", "Directory", "File", "Cancel");
 
                 if (answer < 0 || answer >= 2)
@@ -301,7 +210,7 @@ namespace TerminalGuiDesigner.UI
                 }
                 else
                 {
-                    newValue = pickDir ? 
+                    newValue = pickDir ?
                         new DirectoryInfo(fd.Path) : new FileInfo(fd.Path);
                     return true;
                 }
@@ -316,6 +225,20 @@ namespace TerminalGuiDesigner.UI
             newValue = null;
             return false;
         }
+
+        private static bool RunEditor<T>(T editor, out object? result) where T : Dialog, IValueGetterDialog
+        {
+            Application.Run(editor);
+            if (editor.Cancelled)
+            {
+                result = null;
+                return false;
+            }
+
+            result = editor.Result;
+            return true;
+        }
+
         internal static bool GetNewValue(Design design, Property property, object? oldValue, out object? newValue)
         {
             if (property is InstanceOfProperty inst)
@@ -343,7 +266,7 @@ namespace TerminalGuiDesigner.UI
             }
             else
             {
-                return GetNewValue(property.PropertyInfo.Name, design, property.PropertyInfo.PropertyType,oldValue, out newValue, ValueFactory.AllowMultiLine(property));
+                return GetNewValue(property.PropertyInfo.Name, design, property.PropertyInfo.PropertyType, oldValue, out newValue, ValueFactory.AllowMultiLine(property));
             }
 
         }
@@ -416,6 +339,6 @@ namespace TerminalGuiDesigner.UI
                 newValue = null;
                 return false;
             }
-        }        
+        }
     }
 }

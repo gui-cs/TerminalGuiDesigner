@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 namespace UnitTests;
 
 [RequiresThread]
-internal class Tests
+public class Tests
 {
     [ThreadStatic]
     private static bool? _init;

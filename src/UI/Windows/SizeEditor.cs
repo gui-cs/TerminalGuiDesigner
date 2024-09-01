@@ -14,13 +14,13 @@ using Terminal.Gui;
 /// <summary>
 /// Popup editor for the <see cref="Size"/> class.
 /// </summary>
-public partial class SizeEditor
+public partial class SizeEditor : IValueGetterDialog
 {
 
     /// <summary>
     /// The users edited <see cref="Size"/> 
     /// </summary>
-    public Size Result { get; private set; }
+    public object? Result { get; private set; }
 
     /// <summary>
     /// True if user cancelled the dialog instead of hitting "Ok".

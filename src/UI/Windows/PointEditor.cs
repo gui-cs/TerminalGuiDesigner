@@ -7,6 +7,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using JetBrains.Annotations;
+using TerminalGuiDesigner.UI.Windows;
+
 namespace TerminalGuiDesigner; 
 using System;
 using Terminal.Gui;
@@ -14,7 +17,7 @@ using Terminal.Gui;
 /// <summary>
 /// Pop-up editor for creating a <see cref="Point"/>.
 /// </summary>
-public partial class PointEditor {
+public partial class PointEditor : IValueGetterDialog {
 
     /// <summary>
     /// Gets a value indicating whether user cancelled the dialog before
@@ -31,6 +34,8 @@ public partial class PointEditor {
     /// Gets user entered value for <see cref="Point.Y"/>
     /// </summary>
     public float ResultY {get;private set;}
+
+    [CanBeNull] public object Result => new PointF(ResultX, ResultY);
 
     /// <summary>
     /// Creates a new instance of the <see cref="PointEditor"/> class.

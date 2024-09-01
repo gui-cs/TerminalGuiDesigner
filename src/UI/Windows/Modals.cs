@@ -39,27 +39,6 @@ public class Modals
         return false;
     }
 
-    internal static bool Getint(string windowTitle, string entryLabel, int? initialValue, out int? result)
-    {
-        if (GetString(windowTitle, entryLabel, initialValue.ToString(), out var newValue))
-        {
-            if (string.IsNullOrWhiteSpace(newValue))
-            {
-                result = null;
-                return true;
-            }
-
-            if (int.TryParse(newValue, out var r))
-            {
-                result = r;
-                return true;
-            }
-        }
-
-        result = 0;
-        return false;
-    }
-
     internal static bool GetArray(string windowTitle, string entryLabel, Type arrayElement, Array? initialValue, out Array? result)
     {
         var dlg = new GetTextDialog(
