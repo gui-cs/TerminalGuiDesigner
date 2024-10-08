@@ -104,7 +104,7 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
         // if user types in some text change the focus to the text box to enable entering digits
         if ((key == Key.Backspace || char.IsDigit(c)) && tbValue.Visible)
         {
-            tbValue?.FocusFirst(TabBehavior.TabStop);
+            tbValue?.SetFocus();
         }            
     }
 
