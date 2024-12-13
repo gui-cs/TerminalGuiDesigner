@@ -10,7 +10,7 @@ internal class GetTextDialog
     private readonly DialogArgs args;
     private readonly string? initialValue;
     private readonly Window win;
-    private readonly TextView textField;
+    private readonly TextView textView;
     private bool okClicked = false;
     private static CheckState lastKnownEnableNewlines = CheckState.UnChecked;
     private bool? multiLineChecked;
@@ -44,7 +44,7 @@ internal class GetTextDialog
 
         this.win.Add(entryLabel);
 
-        this.textField = new TextView()
+        this.textView = new TextView()
         {
             X = 1,
             Y = Pos.Bottom(entryLabel),
@@ -53,13 +53,13 @@ internal class GetTextDialog
             Text = this.initialValue ?? string.Empty,
             AllowsTab = false,
         };
-        this.textField.KeyDown += this.TextField_KeyPress;
+        this.textView.KeyDown += this.TextViewKeyPress;
 
         // make it easier for user to replace this text with something else
         // by directly selecting it all so next keypress replaces text
-        this.textField.SelectAll();
+        this.textView.SelectAll();
 
-        this.win.Add(this.textField);
+        this.win.Add(this.textView);
 
         if (args.MultiLine)
         {
@@ -75,7 +75,7 @@ internal class GetTextDialog
         {
             Text = "Ok",
             X = 0,
-            Y = Pos.Bottom(this.textField),
+            Y = Pos.Bottom(this.textView),
             IsDefault = !this.args.MultiLine,
         };
         btnOk.Accept += (s, e) =>
@@ -87,7 +87,7 @@ internal class GetTextDialog
         {
             Text = "Cancel",
             X = Pos.Right(btnOk),
-            Y = Pos.Bottom(this.textField),
+            Y = Pos.Bottom(this.textView),
             IsDefault = false,
         };
         btnCancel.Accept += (s, e) =>
@@ -100,11 +100,11 @@ internal class GetTextDialog
         {
             Text = "Clear",
             X = Pos.Right(btnCancel),
-            Y = Pos.Bottom(this.textField),
+            Y = Pos.Bottom(this.textView),
         };
         btnClear.Accept += (s, e) =>
         {
-            this.textField.Text = string.Empty;
+            this.textView.Text = string.Empty;
         };
 
         this.win.Add(btnOk);
@@ -150,7 +150,7 @@ internal class GetTextDialog
     private void SetEnableNewlines(CheckState newValue)
     {
         lastKnownEnableNewlines = newValue;
-        multiLineChecked = textField.AllowsReturn = newValue == CheckState.Checked;
+        multiLineChecked = textView.AllowsReturn = newValue == CheckState.Checked;
     }
 
     public string? ResultText { get; set; }
@@ -165,11 +165,11 @@ internal class GetTextDialog
     private void Accept()
     {
         this.okClicked = true;
-        this.ResultText = this.textField.Text.ToString();
+        this.ResultText = this.textView.Text.ToString();
         Application.RequestStop();
     }
 
-    private void TextField_KeyPress(object? sender, Key key)
+    private void TextViewKeyPress(object? sender, Key key)
     {
         if (key == Key.Enter && !IsMultiLine())
         {
