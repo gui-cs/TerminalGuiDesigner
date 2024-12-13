@@ -12,6 +12,8 @@ internal class GetTextDialog
     private readonly Window win;
     private readonly TextView textField;
     private bool okClicked = false;
+    private static CheckState lastKnownEnableNewlines = CheckState.UnChecked;
+    private bool? multiLineChecked;
 
     public GetTextDialog(DialogArgs args, string? initialValue)
     {
@@ -59,6 +61,16 @@ internal class GetTextDialog
 
         this.win.Add(this.textField);
 
+        if (args.MultiLine)
+        {
+            SetupMultiLineForced();
+        }
+        else
+        if (args.ToggleableMultiLine)
+        {
+            SetupMultiLineOptional();
+        }
+
         var btnOk = new Button()
         {
             Text = "Ok",
@@ -100,6 +112,47 @@ internal class GetTextDialog
         this.win.Add(btnClear);
     }
 
+    private void SetupMultiLineForced()
+    {
+        var cbMultiLine = new CheckBox()
+        {
+            Text = "Enable Newlines",
+            X = Pos.AnchorEnd(),
+            CheckedState = CheckState.Checked,
+            Enabled = false
+        };
+        win.Add(cbMultiLine);
+    }
+
+    private void SetupMultiLineOptional()
+    {
+        // Initial state
+        SetEnableNewlines();
+
+        var cbMultiLine = new CheckBox()
+        {
+            Text = "Enable Newlines",
+            X = Pos.AnchorEnd(),
+            CheckedState = lastKnownEnableNewlines
+        };
+        cbMultiLine.CheckedStateChanging += (s, e) =>
+        {
+            SetEnableNewlines(e.NewValue);
+        };
+        win.Add(cbMultiLine);
+    }
+
+    private void SetEnableNewlines()
+    {
+       SetEnableNewlines(lastKnownEnableNewlines);
+    }
+
+    private void SetEnableNewlines(CheckState newValue)
+    {
+        lastKnownEnableNewlines = newValue;
+        multiLineChecked = textField.AllowsReturn = newValue == CheckState.Checked;
+    }
+
     public string? ResultText { get; set; }
 
     public bool ShowDialog()
@@ -118,10 +171,15 @@ internal class GetTextDialog
 
     private void TextField_KeyPress(object? sender, Key key)
     {
-        if (key == Key.Enter && !this.args.MultiLine)
+        if (key == Key.Enter && !IsMultiLine())
         {
             this.Accept();
             key.Handled = true;
         }
+    }
+
+    private bool IsMultiLine()
+    {
+        return this.args.MultiLine || (multiLineChecked ?? false);
     }
 }

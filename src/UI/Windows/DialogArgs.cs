@@ -32,6 +32,11 @@ public class DialogArgs
     /// </summary>
     public bool MultiLine { get; set; }
 
+    /// <summary>
+    /// True to make newlines toggleable (e.g. for Label).
+    /// </summary>
+    public bool ToggleableMultiLine { get; set; } = true;
+
     /// <inheritdoc/>
     public override string ToString()
     {
