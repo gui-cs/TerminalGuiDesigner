@@ -100,7 +100,7 @@ public class BigListBox<T>
             IsDefault = true,
             Y = Pos.Bottom(this.listView),
         };
-        btnOk.Accept += (s, e) =>
+        btnOk.Accepting += (s, e) =>
         {
             this.Accept();
         };
@@ -110,7 +110,7 @@ public class BigListBox<T>
             Text = "Cancel",
             Y = Pos.Bottom(this.listView),
         };
-        btnCancel.Accept += (s, e) => Application.RequestStop();
+        btnCancel.Accepting += (s, e) => Application.RequestStop();
 
         if (addSearch)
         {
@@ -204,9 +204,9 @@ public class BigListBox<T>
         this.Selected = this.collection[selected].Object;
     }
 
-    private void ListView_MouseClick(object? sender, MouseEventEventArgs obj)
+    private void ListView_MouseClick(object? sender, MouseEventArgs obj)
     {
-        if (obj.MouseEventArgs.Flags.HasFlag(MouseFlags.Button1DoubleClicked))
+        if (obj.Flags.HasFlag(MouseFlags.Button1DoubleClicked))
         {
             obj.Handled = true;
             this.Accept();
@@ -221,7 +221,7 @@ public class BigListBox<T>
         // backspace or letter/numbers
         if (key == Key.Backspace || char.IsLetterOrDigit(c))
         {
-            this.searchBox?.FocusFirst(TabBehavior.TabStop);
+            this.searchBox?.FocusDeepest(NavigationDirection.Forward, TabBehavior.TabStop);
             this.searchBox?.NewKeyDownEvent(key);
             key.Handled = true;
         }
