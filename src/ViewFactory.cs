@@ -137,9 +137,8 @@ public static class ViewFactory
             case CheckBox:
             case ComboBox:
             case Label:
-                newView.SetActualText( text ?? "Heya" );
-                SetDefaultDimensions( newView, width ?? 4, height ?? 1 );
-                newView.Width = Dim.Auto();
+                newView.SetActualText(text ?? "Heya");
+                SetDefaultDimensionsDimAuto(newView);
                 break;
             case ColorPicker:
                 newView.Width = width ?? 20;
@@ -277,7 +276,13 @@ public static class ViewFactory
 
             v.Height = v.Height is DimFill ? height : Math.Max( v.GetContentSize().Height, height );
         }
+        static void SetDefaultDimensionsDimAuto(T v)
+        {
+            v.Width = Dim.Auto();
+            v.Height = Dim.Auto();
+        }
     }
+
 
     /// <summary>
     ///   Creates a new instance of <see cref="View" /> of <see cref="Type" /> <paramref name="requestedType" /> with
