@@ -34,7 +34,7 @@ internal class MouseManagerTests : Tests
         } );
 
         // user presses down in the lower right of control
-        MouseEvent e = new( )
+        MouseEventArgs e = new( )
         {
             Position = new Point( 6, 0),
             Flags = MouseFlags.Button1Pressed
@@ -112,7 +112,7 @@ internal class MouseManagerTests : Tests
         } );
 
         // user presses down in the lower right of control
-        MouseEvent e = new( )
+        MouseEventArgs e = new( )
         {
             Position = new Point(locationOfViewX,locationOfViewY),
             Flags = MouseFlags.Button1Pressed
@@ -178,7 +178,7 @@ internal class MouseManagerTests : Tests
         } );
 
         // user presses down in the lower right of control
-        MouseEvent e = new( )
+        MouseEventArgs e = new( )
         {
             Position = new Point(9,0),
             Flags = MouseFlags.Button1Pressed
@@ -294,7 +294,7 @@ internal class MouseManagerTests : Tests
         MouseManager mgr = new( );
 
         // user presses down
-        MouseEvent e = new( )
+        MouseEventArgs e = new( )
         {
             Position = new Point(xStart,yStart),
             Flags = MouseFlags.Button1Pressed
@@ -357,7 +357,7 @@ internal class MouseManagerTests : Tests
         Assume.That( view.Y, Is.EqualTo( (Pos)initialViewYPos ) );
 
         // user presses down over the control
-        MouseEvent firstClick = new( )
+        MouseEventArgs firstClick = new( )
         {
             Position = new Point(startDragX,startDragY),
             Flags = MouseFlags.Button1Pressed
@@ -375,7 +375,7 @@ internal class MouseManagerTests : Tests
         } );
 
         // user moved view but still has mouse down
-        MouseEvent dragWithMouseButton1Down = new( )
+        MouseEventArgs dragWithMouseButton1Down = new( )
         {
             Position = new Point(
                 startDragX + deltaX,
@@ -394,7 +394,7 @@ internal class MouseManagerTests : Tests
         } );
 
         // user releases mouse
-        MouseEvent releaseMouseButton1AtNewCoordinates = new( )
+        MouseEventArgs releaseMouseButton1AtNewCoordinates = new( )
         {
             Position = new Point(
                 startDragX + deltaX,

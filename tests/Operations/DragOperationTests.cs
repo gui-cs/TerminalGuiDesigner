@@ -277,7 +277,7 @@ internal class DragOperationTests : Tests
         ClassicAssert.AreEqual(14, screen.Y, "Expected label Y screen to be at its parents 0,0 (11,11) + 2");
 
         // press down at 0,0 of the label
-        ClassicAssert.AreEqual(lbl, rootDesign.View.HitTest(new MouseEvent { Position = new Point(13, 14) }, out _, out _)
+        ClassicAssert.AreEqual(lbl, rootDesign.View.HitTest(new MouseEventArgs { Position = new Point(13, 14) }, out _, out _)
             , "We just asked ViewToScreen for these same coordinates, how can they fail HitTest now?");
 
         // Drag up 4 so it is no longer in its parents container.

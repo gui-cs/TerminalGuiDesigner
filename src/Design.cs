@@ -44,8 +44,6 @@ public class Design
         typeof(LineView),
         typeof(ListView),
         typeof(MenuBar),
-        typeof(ScrollBarView),
-        typeof(ScrollView),
         typeof(TableView),
         typeof(TabView),
         typeof(TreeView),
@@ -228,7 +226,7 @@ public class Design
         if (subView.GetType().IsGenericType(typeof(Slider<>)))
         {
             // TODO: Does not seem to work
-            subView.MouseEvent += (s, e) => SuppressNativeClickEvents(s, e,true);
+            subView.MouseEventArgs += (s, e) => SuppressNativeClickEvents(s, e,true);
             subView.MouseClick += (s, e) => SuppressNativeClickEvents(s,e, true);
         }
 
@@ -258,7 +256,7 @@ public class Design
         foreach (var v in subView.GetAllNonDesignableSubviews())
         {
             v.MouseClick += (s,e)=>this.SuppressNativeClickEvents(s,e,true);
-            v.MouseEvent += (s, e) => this.SuppressNativeClickEvents(s, e, true);
+            v.MouseEventArgs += (s, e) => this.SuppressNativeClickEvents(s, e, true);
         }
         
         var d = new Design(this.SourceCode, name, subView);
@@ -626,7 +624,7 @@ public class Design
         }
     }
 
-    private void SuppressNativeClickEvents(object? sender, MouseEventEventArgs obj, bool alsoSuppressClick = false)
+    private void SuppressNativeClickEvents(object? sender, MouseEventArgs obj, bool alsoSuppressClick = false)
     {
         if (alsoSuppressClick)
         {
@@ -635,7 +633,7 @@ public class Design
         else
         {
             // Suppress everything except single click (selection)
-            obj.Handled = obj.MouseEvent.Flags != MouseFlags.Button1Clicked;
+            obj.Handled = obj.Flags != MouseFlags.Button1Clicked;
         }
     }
 
@@ -662,7 +660,7 @@ public class Design
         cb.KeyBindings.Remove(Key.Space);
         cb.MouseClick += (s, e) =>
         {
-            if (e.MouseEvent.Flags.HasFlag(MouseFlags.Button1Clicked))
+            if (e.Flags.HasFlag(MouseFlags.Button1Clicked))
             {
                 e.Handled = true;
                 cb.SetFocus();

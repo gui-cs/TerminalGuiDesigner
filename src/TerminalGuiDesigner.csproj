@@ -150,7 +150,7 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="8.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 		<PackageReference Include="NetEscapades.Configuration.Yaml" Version="3.1.0" />
-		<PackageReference Include="Terminal.Gui" Version="2.0.0-v2-develop.2203" />
+		<PackageReference Include="Terminal.Gui" Version="2.0.0-v2-develop.1532" />
 		<PackageReference Include="nlog" Version="5.3.3" />
 		<PackageReference Include="Basic.Reference.Assemblies.Net80" Version="1.7.7" />
 		<PackageReference Include="System.CodeDom" Version="8.0.0" />

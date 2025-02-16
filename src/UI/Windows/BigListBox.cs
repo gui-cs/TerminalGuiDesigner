@@ -206,7 +206,7 @@ public class BigListBox<T>
 
     private void ListView_MouseClick(object? sender, MouseEventEventArgs obj)
     {
-        if (obj.MouseEvent.Flags.HasFlag(MouseFlags.Button1DoubleClicked))
+        if (obj.MouseEventArgs.Flags.HasFlag(MouseFlags.Button1DoubleClicked))
         {
             obj.Handled = true;
             this.Accept();

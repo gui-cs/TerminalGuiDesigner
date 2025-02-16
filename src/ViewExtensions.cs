@@ -250,7 +250,7 @@ public static class ViewExtensions
     /// <param name="isLowerRight">True if the click lands in the lower right of the returned <see cref="View"/>.</param>
     /// <param name="ignoring">One or more <see cref="View"/> to ignore (click through) when performing the hit test.</param>
     /// <returns>The <see cref="View"/> at the given screen location or null if none found.</returns>
-    public static View? HitTest(this View w, MouseEvent m, out bool isBorder, out bool isLowerRight, params View[] ignoring)
+    public static View? HitTest(this View w, MouseEventArgs m, out bool isBorder, out bool isLowerRight, params View[] ignoring)
     {
         ignoring = ignoring.Union(w.GetAllNonDesignableSubviews()).ToArray();
 

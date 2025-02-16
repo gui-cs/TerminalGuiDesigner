@@ -59,12 +59,12 @@ public partial class ChoicesDialog
             
             var i2 = i;
 
-            buttons[i].Accept += (s,e) => {
+            buttons[i].Accepting += (s,e) => {
                 Result = i2;
                 Application.RequestStop();
             };
 
-            buttons[i].DrawContentComplete += (s,r) =>
+            buttons[i].DrawComplete += (s,r) =>
                 ChoicesDialog.PaintShadow(buttons[i2], ColorScheme);
         }
 
@@ -98,16 +98,16 @@ public partial class ChoicesDialog
         Width = Math.Min(Math.Max(maxWidthLine, Math.Max(Title.GetColumns(), Math.Max(textWidth + 2, buttonWidth))), Application.Driver.Cols);
         Height = msgboxHeight;
     }
-
+    
     /// <inheritdoc/>
-    public override void OnDrawContentComplete(Rectangle bounds)
+    protected override void OnDrawComplete()
     {
-        base.OnDrawContentComplete(bounds);
+        base.OnDrawComplete();
 
         var screenTopLeft = FrameToScreen();
         Driver.Move(screenTopLeft.X+2, screenTopLeft.Y);
         
-        var padding = ((bounds.Width - _title.EnumerateRunes().Sum(v=>v.GetColumns())) / 2) - 1;
+        var padding = ((Viewport.Width - _title.EnumerateRunes().Sum(v=>v.GetColumns())) / 2) - 1;
 
         Driver.SetAttribute(
             new Attribute(ColorScheme.Normal.Foreground, ColorScheme.Normal.Background));

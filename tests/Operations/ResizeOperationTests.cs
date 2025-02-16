@@ -74,7 +74,7 @@ internal class ResizeOperationTests : Tests
             }
             else
             {
-                var hit = root.View.HitTest(new MouseEvent {Position = new Point(13, 11) },out _, out var isLowerRight);
+                var hit = root.View.HitTest(new MouseEventArgs {Position = new Point(13, 11) },out _, out var isLowerRight);
                 ClassicAssert.AreSame(tab, hit, "Expected above diagram which already passed asserts to work for HitTest too given the above screen coordinates");
                 ClassicAssert.IsTrue(isLowerRight);
 

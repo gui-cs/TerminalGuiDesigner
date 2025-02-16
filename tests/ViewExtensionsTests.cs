@@ -37,7 +37,7 @@ internal class ViewExtensionsTests : Tests
         bool isBorder;
 
         var result = v.HitTest(
-            new MouseEvent
+            new MouseEventArgs
         {
                 Position = new Point(x, y),
         }, out isBorder, out isLowerRight);
@@ -96,12 +96,12 @@ internal class ViewExtensionsTests : Tests
         Application.Begin(w);
         w.LayoutSubviews();
 
-        ClassicAssert.AreSame(w, w.HitTest(new MouseEvent {Position = new Point(13, 0) }, out var isBorder, out _),
+        ClassicAssert.AreSame(w, w.HitTest(new MouseEventArgs {Position = new Point(13, 0) }, out var isBorder, out _),
             "Expected 0,0 to be the window border (its client area should start at 1,1)");
         ClassicAssert.IsTrue(isBorder);
 
         // 1,1
-        ClassicAssert.AreSame(f, w.HitTest(new MouseEvent {Position = new Point(1, 1) }, out isBorder, out _),
+        ClassicAssert.AreSame(f, w.HitTest(new MouseEventArgs {Position = new Point(1, 1) }, out isBorder, out _),
             "Expected 1,1 to be the Frame border (its client area should start at 1,1)");
         ClassicAssert.IsTrue(isBorder);
     }

@@ -133,7 +133,7 @@ public class Tests
         var mm = new MouseManager();
 
         mm.HandleMouse(
-            new MouseEvent
+            new MouseEventArgs
             {
                 Position = new Point(x1, y1),
                 Flags = MouseFlags.Button1Pressed,
@@ -141,7 +141,7 @@ public class Tests
 
         // press down at 0,0 of the label
         mm.HandleMouse(
-            new MouseEvent
+            new MouseEventArgs
             {
                 Position = new Point(x2, y2),
                 Flags = MouseFlags.Button1Pressed,
@@ -150,7 +150,7 @@ public class Tests
 
         // release in parent
         mm.HandleMouse(
-            new MouseEvent
+            new MouseEventArgs
             {
                 Position = new Point(x2,y2),
                 Flags = MouseFlags.Button1Released,

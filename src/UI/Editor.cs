@@ -143,7 +143,7 @@ public class Editor : Toplevel
             }
         };
 
-        Application.MouseEvent += (s, m) =>
+        Application.MouseEventArgs += (s, m) =>
         {
             // if another window is showing don't respond to mouse
             if (!this.IsCurrentTop)
@@ -369,7 +369,7 @@ public class Editor : Toplevel
                     int y = artStartY + i;
 
                     var colorAtPoint = fill.GetColor(new Point(x, y));
-                    Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(ColorName.Black)));
+                    Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(Color.Black)));
                     this.AddRune(x, y, (Rune)line[j]);
                 }
             }
@@ -384,7 +384,7 @@ public class Editor : Toplevel
                 int y = versionLineY;
 
                 var colorAtPoint = fill.GetColor(new Point(x, y));
-                Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(ColorName.Black)));
+                Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(Color.Black)));
                 this.AddRune(x, y, (Rune)versionLine[i]);
             }
         }
@@ -782,7 +782,7 @@ public class Editor : Toplevel
         }
     }
 
-    private void CreateAndShowContextMenu(MouseEvent? m, Design? rightClicked)
+    private void CreateAndShowContextMenu(MouseEventArgs? m, Design? rightClicked)
     {
         if (this.viewBeingEdited == null)
         {

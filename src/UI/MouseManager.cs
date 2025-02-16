@@ -4,7 +4,7 @@ using TerminalGuiDesigner.Operations;
 namespace TerminalGuiDesigner.UI;
 
 /// <summary>
-/// Manages responding to <see cref="Application.RootMouseEvent"/> e.g. by
+/// Manages responding to root mouse e.g. by
 /// dragging <see cref="Design"/> around and/or resizing.
 /// </summary>
 public class MouseManager
@@ -34,9 +34,9 @@ public class MouseManager
     /// Responds to <see cref="Application.RootMouseEvent"/>(by changing a 'drag a box' selection area
     /// or starting a resize etc).
     /// </summary>
-    /// <param name="m">The <see cref="MouseEvent"/> reported by <see cref="Application.RootMouseEvent"/>.</param>
+    /// <param name="m">The <see cref="MouseEventArgs"/> reported by <see cref="Application.RootMouseEvent"/>.</param>
     /// <param name="viewBeingEdited">The root <see cref="Design"/> that is open in the <see cref="Editor"/>.</param>
-    public void HandleMouse(MouseEvent m, Design viewBeingEdited)
+    public void HandleMouse(MouseEventArgs m, Design viewBeingEdited)
     {
         // start dragging
         if (m.Flags.HasFlag(MouseFlags.Button1Pressed)
