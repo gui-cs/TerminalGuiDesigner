@@ -164,7 +164,7 @@ public class BigListBox<T>
 
         this.callback = Application.AddTimeout(TimeSpan.FromMilliseconds(100), this.Timer);
 
-        this.listView.FocusFirst(TabBehavior.TabStop);
+        this.listView.FocusDeepest(NavigationDirection.Forward,TabBehavior.TabStop);
     }
 
 

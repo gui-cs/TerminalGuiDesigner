@@ -60,41 +60,41 @@ public partial class ColorSchemeEditor {
 
         SetColorPatches();
 
-        btnEditNormal.Accept += (s, e)=>{
+        btnEditNormal.Accepting += (s, e)=>{
             _result.Normal = PickNewColorsFor(Result.Normal);
             SetColorPatches();
             };
 
 
-        btnEditHotNormal.Accept += (s, e)=>{
+        btnEditHotNormal.Accepting += (s, e)=>{
             _result.HotNormal = PickNewColorsFor(Result.HotNormal);
             SetColorPatches();
             };
 
 
-        btnEditFocus.Accept += (s, e)=>{
+        btnEditFocus.Accepting += (s, e)=>{
             _result.Focus = PickNewColorsFor(Result.Focus);
             SetColorPatches();
             };
 
 
-        btnEditHotFocus.Accept += (s, e)=>{
+        btnEditHotFocus.Accepting += (s, e)=>{
             _result.HotFocus = PickNewColorsFor(Result.HotFocus);
             SetColorPatches();
             };
 
 
-        btnEditDisabled.Accept += (s, e)=>{
+        btnEditDisabled.Accepting += (s, e)=>{
             _result.Disabled = PickNewColorsFor(Result.Disabled);
             SetColorPatches();
             };
 
-        btnCancel.Accept += (s, e)=>{
+        btnCancel.Accepting += (s, e)=>{
             Cancelled = true;
             Application.RequestStop();
         };
 
-        btnOk.Accept += (s, e)=>{
+        btnOk.Accepting += (s, e)=>{
             Cancelled = false;
             Application.RequestStop();
         };

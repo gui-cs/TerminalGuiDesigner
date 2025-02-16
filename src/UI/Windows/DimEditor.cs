@@ -48,8 +48,8 @@ public partial class DimEditor : Dialog, IValueGetterDialog
         Title = "Dim Designer";
         Border.BorderStyle = LineStyle.Double;
 
-        btnOk.Accept += BtnOk_Clicked;
-        btnCancel.Accept += BtnCancel_Clicked;
+        btnOk.Accepting += BtnOk_Clicked;
+        btnCancel.Accepting += BtnCancel_Clicked;
         Cancelled = true;
         Modal = true;
         rgDimType.KeyDown += RgDimType_KeyPress;

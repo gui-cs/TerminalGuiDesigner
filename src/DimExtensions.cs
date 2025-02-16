@@ -72,7 +72,7 @@ public static class DimExtensions
         if (d != null && d.IsFill())
         {
             var df = (DimFill)d;
-            margin = df.Margin;
+            margin = ((DimAbsolute)df.Margin).Size;
             return true;
         }
 

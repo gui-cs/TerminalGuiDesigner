@@ -35,7 +35,6 @@ public static class ViewFactory
         typeof( FileDialog ),
         typeof( SaveDialog ),
         typeof( OpenDialog ),
-        typeof( ScrollBarView ),
 
         // BUG These seem to cause stack overflows in CreateSubControlDesigns (see TestAddView_RoundTrip)
         typeof( Wizard ),
@@ -335,7 +334,6 @@ public static class ViewFactory
             { } t when t.IsAssignableTo( typeof( ListView ) ) => Create<ListView>( ),
             { } t when t == typeof( LineView ) => Create<LineView>( ),
             { } t when t == typeof( TreeView ) => Create<TreeView>( ),
-            { } t when t == typeof( ScrollView ) => Create<ScrollView>( ),
             { } t when t.IsAssignableTo( typeof( SpinnerView ) ) => Create<SpinnerView>( ),
             { } t when t.IsAssignableTo( typeof( FrameView ) ) => Create<FrameView>( ),
             { } t when t.IsAssignableTo( typeof( HexView ) ) => Create<HexView>( ),

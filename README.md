@@ -74,7 +74,7 @@ You can add new code to `MyDialog.cs` but avoid making any changes to `MyDialog.
 For example in `MyDialog.cs` after `InitializeComponent()` add the following:
 
 ```csharp
-button1.Accept += ()=>MessageBox.Query("Hello","Hello World","Ok");
+button1.Accepting += ()=>MessageBox.Query("Hello","Hello World","Ok");
 ```
 Now when run clicking the button will trigger a message box.
 

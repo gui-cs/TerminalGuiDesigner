@@ -52,8 +52,8 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
 
         rgPosType.KeyDown += RgPosType_KeyPress;
 
-        btnOk.Accept += BtnOk_Clicked;
-        btnCancel.Accept += BtnCancel_Clicked;
+        btnOk.Accepting += BtnOk_Clicked;
+        btnCancel.Accepting += BtnCancel_Clicked;
         Cancelled = true;
         Modal = true;
 
@@ -104,7 +104,7 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
         // if user types in some text change the focus to the text box to enable entering digits
         if ((key == Key.Backspace || char.IsDigit(c)) && tbValue.Visible)
         {
-            tbValue?.FocusFirst(TabBehavior.TabStop);
+            tbValue?.FocusDeepest(NavigationDirection.Forward,TabBehavior.TabStop);
         }            
     }
 

@@ -48,8 +48,8 @@ public partial class PointEditor : IValueGetterDialog {
         tbX.Text = x.ToString();
         tbY.Text = y.ToString();
 
-        btnOk.Accept += Ok;
-        btnCancel.Accept += Cancel;
+        btnOk.Accepting += Ok;
+        btnCancel.Accepting += Cancel;
     }
 
     private void Cancel(object sender, EventArgs e)

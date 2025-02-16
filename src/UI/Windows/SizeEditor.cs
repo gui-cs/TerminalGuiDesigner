@@ -39,7 +39,7 @@ public partial class SizeEditor : IValueGetterDialog
         tfWidth.Text = s.Width.ToString();
         tfHeight.Text = s.Height.ToString();
 
-        btnOk.Accept += (s, e) =>
+        btnOk.Accepting += (s, e) =>
         {
             try
             {
@@ -55,7 +55,7 @@ public partial class SizeEditor : IValueGetterDialog
             RequestStop();
         };
 
-        btnCancel.Accept += (s, e) =>
+        btnCancel.Accepting += (s, e) =>
         {
             Cancelled = true;
             RequestStop();
