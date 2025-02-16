@@ -57,14 +57,14 @@ public abstract class RenameOperation<T1, T2> : GenericArrayElementOperation<T1,
         }
 
         this.stringSetter(this.OperateOn, this.newName);
-        this.SetNeedsDisplay();
+        this.SetNeedsDraw();
     }
 
     /// <inheritdoc/>
     public override void Undo()
     {
         this.stringSetter(this.OperateOn, this.originalName);
-        this.SetNeedsDisplay();
+        this.SetNeedsDraw();
     }
 
     /// <inheritdoc/>
@@ -84,7 +84,7 @@ public abstract class RenameOperation<T1, T2> : GenericArrayElementOperation<T1,
         }
 
         this.stringSetter(this.OperateOn, this.newName);
-        this.SetNeedsDisplay();
+        this.SetNeedsDraw();
 
         return true;
     }

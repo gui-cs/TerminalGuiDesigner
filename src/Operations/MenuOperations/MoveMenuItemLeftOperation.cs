@@ -94,7 +94,7 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
 
             MenuTracker.Instance.ConvertEmptyMenus();
 
-            this.Bar?.SetNeedsDisplay();
+            this.Bar?.SetNeedsDraw();
 
             return true;
         }

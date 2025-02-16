@@ -79,7 +79,7 @@ public class AddMenuItemOperation : MenuItemOperation
         children.Insert(insertAt, menuItem);
         this.Parent.Children = children.ToArray();
 
-        this.Bar?.SetNeedsDisplay();
+        this.Bar?.SetNeedsDraw();
 
         return true;
     }

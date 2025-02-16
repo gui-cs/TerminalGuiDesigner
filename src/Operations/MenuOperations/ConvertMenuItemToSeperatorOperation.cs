@@ -39,7 +39,7 @@ public class ConvertMenuItemToSeperatorOperation : MenuItemOperation
 
         children[this.removedAtIdx] = this.OperateOn;
         this.Parent.Children = children.ToArray();
-        this.Bar?.SetNeedsDisplay();
+        this.Bar?.SetNeedsDraw();
     }
 
     /// <inheritdoc/>
@@ -56,7 +56,7 @@ public class ConvertMenuItemToSeperatorOperation : MenuItemOperation
         children[this.removedAtIdx] = null;
 
         this.Parent.Children = children.ToArray();
-        this.Bar?.SetNeedsDisplay();
+        this.Bar?.SetNeedsDraw();
 
         return true;
     }

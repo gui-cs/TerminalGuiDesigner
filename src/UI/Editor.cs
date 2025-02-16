@@ -143,7 +143,7 @@ public class Editor : Toplevel
             }
         };
 
-        Application.MouseEventArgs += (s, m) =>
+        Application.MouseEvent += (s, m) =>
         {
             // if another window is showing don't respond to mouse
             if (!this.IsCurrentTop)
@@ -194,10 +194,11 @@ public class Editor : Toplevel
     /// <summary>
     /// Tailors redrawing to add overlays (e.g. showing what is selected etc.).
     /// </summary>
-    /// <param name="bounds">The view bounds.</param>
-    public override void OnDrawContent(Rectangle bounds)
+    protected override bool OnDrawingContent()
     {
-        base.OnDrawContent(bounds);
+        var r = base.OnDrawingContent();
+        var bounds = Viewport;
+
 
         // if we are editing a view
         if (this.viewBeingEdited != null)
@@ -238,13 +239,15 @@ public class Editor : Toplevel
                 }
             }
 
-            return;
+            return r;
         }
         else
         {
             var top = new Rectangle(0, 0, bounds.Width, rootCommandsListView.Frame.Top - 1);
             RenderTitle(top);
         }
+
+        return r;
     }
 
     private void RenderTitle(Rectangle inArea)
@@ -321,7 +324,7 @@ public class Editor : Toplevel
                 int y = inArea.Y + inArea.Height / 2 - 1; // Center the title vertically
 
                 var colorAtPoint = fill.GetColor(new Point(x, y));
-                Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(ColorName.Black)));
+                Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(Color.Black)));
                 this.AddRune(x, y, (Rune)simpleTitle[i]);
             }
 
@@ -332,7 +335,7 @@ public class Editor : Toplevel
                 int y = inArea.Y + inArea.Height / 2; // Line below the title
 
                 var colorAtPoint = fill.GetColor(new Point(x, y));
-                Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(ColorName.Black)));
+                Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(Color.Black)));
                 this.AddRune(x, y, (Rune)versionLine[i]);
             }
         }
@@ -530,14 +533,14 @@ public class Editor : Toplevel
             if (keyString == this.keyMap.ToggleShowFocused)
             {
                 this.enableShowFocused = !this.enableShowFocused;
-                this.SetNeedsDisplay();
+                this.SetNeedsDraw();
                 return true;
             }
 
             if (keyString == this.keyMap.ToggleShowBorders)
             {
                 ShowBorders = !ShowBorders;
-                this.SetNeedsDisplay();
+                this.SetNeedsDraw();
                 return true;
             }
 
@@ -850,7 +853,7 @@ public class Editor : Toplevel
         }
 
         var menu = new ContextMenu();
-        menu.MenuItems = new MenuBarItem(all.ToArray());
+        menu.SetMenuItems(new MenuBarItem(all.ToArray()));
 
         if (m != null)
         {
@@ -871,7 +874,8 @@ public class Editor : Toplevel
             m.Handled = true;
         }
 
-        menu.Show();
+        // TODO: rly? you have to pass it its own menu items!?
+        menu.Show(menu.MenuItems);
         menu.MenuBar.MenuAllClosed += (_, _) =>
         {
             this.menuOpen = false;
@@ -1287,7 +1291,7 @@ public class Editor : Toplevel
             this.viewBeingEdited.View.GetType().BaseType ?? throw new Exception("View being edited had no base class"));
 
         this.flashMessage = $"Saved {this.viewBeingEdited.SourceCode.DesignerFile.Name}";
-        this.SetNeedsDisplay();
+        this.SetNeedsDraw();
 
         this.LastSavedOperation = OperationManager.Instance.GetLastAppliedOperation()?.UniqueIdentifier;
     }

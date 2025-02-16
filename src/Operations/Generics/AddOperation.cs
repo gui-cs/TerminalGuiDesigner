@@ -83,7 +83,7 @@ public abstract class AddOperation<T1, T2> : GenericArrayOperation<T1, T2>
 
         this.newItem = this.elementFactory(this.View, uniqueName);
         this.Add(this.newItem);
-        this.SetNeedsDisplay();
+        this.SetNeedsDraw();
         return true;
     }
 }

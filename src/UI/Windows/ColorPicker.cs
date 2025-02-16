@@ -67,7 +67,7 @@ public partial class ColorPicker : IValueGetterDialog
     private void UpdatePreview()
     {
         lblPreview.ColorScheme = new ColorScheme(GetColor());
-        lblPreview.SetNeedsDisplay();
+        lblPreview.SetNeedsDraw();
     }
     
     private Attribute GetColor()

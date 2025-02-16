@@ -134,7 +134,7 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
                 tbOffset.Y = 3;
                 tbOffset.Visible = true;
 
-                SetNeedsDisplay();
+                SetNeedsDraw();
                 break;
             case PosType.Center:
                 lblRelativeTo.Visible = false;
@@ -150,7 +150,7 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
                 tbOffset.Y = 1;
                 tbOffset.Visible = true;
 
-                SetNeedsDisplay();
+                SetNeedsDraw();
                 break;
             case PosType.Absolute:
             case PosType.AnchorEnd:
@@ -165,7 +165,7 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
 
                 lblOffset.Visible = false;
                 tbOffset.Visible = false;
-                SetNeedsDisplay();
+                SetNeedsDraw();
                 break;
             case PosType.Relative:
                 lblRelativeTo.Y = 1;
@@ -188,7 +188,7 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
                 lblOffset.Visible = true;
                 tbOffset.Y = 5;
                 tbOffset.Visible = true;
-                SetNeedsDisplay();
+                SetNeedsDraw();
                 break;
 
             default: throw new ArgumentOutOfRangeException();

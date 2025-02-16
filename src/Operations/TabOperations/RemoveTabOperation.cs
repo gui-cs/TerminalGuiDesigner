@@ -26,13 +26,13 @@ public class RemoveTabOperation : RemoveOperation<TabView, Tab>
     }
 
     /// <inheritdoc/>
-    protected override void SetNeedsDisplay()
+    protected override void SetNeedsDraw()
     {
         if (!this.View.Tabs.Contains(this.View.SelectedTab))
         {
             this.View.SelectedTab = this.View.Tabs.FirstOrDefault();
         }
 
-        base.SetNeedsDisplay();
+        base.SetNeedsDraw();
     }
 }

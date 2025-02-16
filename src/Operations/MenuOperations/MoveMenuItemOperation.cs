@@ -80,7 +80,7 @@ public class MoveMenuItemOperation : MenuItemOperation
         this.siblings.Insert(moveTo, this.OperateOn);
         this.Parent.Children = this.siblings.ToArray();
 
-        this.Bar?.SetNeedsDisplay();
+        this.Bar?.SetNeedsDraw();
 
         return true;
     }

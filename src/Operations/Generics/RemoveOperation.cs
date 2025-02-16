@@ -44,7 +44,7 @@ public abstract class RemoveOperation<T1, T2> : GenericArrayElementOperation<T1,
         var current = this.ArrayGetter(this.View).Cast<T2>().ToList();
         current.Insert(this.idx, this.OperateOn);
         this.ArraySetter(this.View, current.ToArray());
-        this.SetNeedsDisplay();
+        this.SetNeedsDraw();
     }
 
     /// <inheritdoc/>

@@ -96,7 +96,7 @@ public class MoveMenuItemRightOperation : MenuItemOperation
         // update the sub-menu
         addTo.Children = submenuChildren.ToArray();
 
-        this.Bar?.SetNeedsDisplay();
+        this.Bar?.SetNeedsDraw();
 
         return true;
     }

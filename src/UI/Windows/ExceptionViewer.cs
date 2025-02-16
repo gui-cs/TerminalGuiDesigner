@@ -46,7 +46,7 @@ public class ExceptionViewer
         {
             // flip between stack / no stack
             textView.Text = GetExceptionText(errorText, exception, toggleStack);
-            textView.SetNeedsDisplay();
+            textView.SetNeedsDraw();
             toggleStack = !toggleStack;
         };
 

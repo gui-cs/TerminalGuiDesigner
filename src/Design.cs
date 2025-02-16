@@ -226,7 +226,7 @@ public class Design
         if (subView.GetType().IsGenericType(typeof(Slider<>)))
         {
             // TODO: Does not seem to work
-            subView.MouseEventArgs += (s, e) => SuppressNativeClickEvents(s, e,true);
+            subView.MouseEvent += (s, e) => SuppressNativeClickEvents(s, e,true);
             subView.MouseClick += (s, e) => SuppressNativeClickEvents(s,e, true);
         }
 
@@ -256,7 +256,7 @@ public class Design
         foreach (var v in subView.GetAllNonDesignableSubviews())
         {
             v.MouseClick += (s,e)=>this.SuppressNativeClickEvents(s,e,true);
-            v.MouseEventArgs += (s, e) => this.SuppressNativeClickEvents(s, e, true);
+            v.MouseEvent += (s, e) => this.SuppressNativeClickEvents(s, e, true);
         }
         
         var d = new Design(this.SourceCode, name, subView);

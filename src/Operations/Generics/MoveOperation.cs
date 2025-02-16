@@ -94,7 +94,7 @@ public abstract class MoveOperation<T1, T2> : GenericArrayElementOperation<T1, T
         list.Insert(this.originalIdx, this.OperateOn);
 
         this.ArraySetter(this.View, list.Cast<T2>().ToArray());
-        this.SetNeedsDisplay();
+        this.SetNeedsDraw();
     }
 
     /// <inheritdoc/>
@@ -106,7 +106,7 @@ public abstract class MoveOperation<T1, T2> : GenericArrayElementOperation<T1, T
         list.Insert(this.newIndex, this.OperateOn);
 
         this.ArraySetter(this.View, list.Cast<T2>().ToArray());
-        this.SetNeedsDisplay();
+        this.SetNeedsDraw();
         return true;
     }
 }

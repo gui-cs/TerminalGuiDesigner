@@ -111,7 +111,7 @@ public class KeyboardManager
         {
             menuItem.ShortcutKey = Modals.GetShortcut().KeyCode;
 
-            focusedView.SetNeedsDisplay();
+            focusedView.SetNeedsDraw();
             return false;
         }
 
@@ -209,7 +209,7 @@ public class KeyboardManager
                 menuItem.Title = newValue;
             }
 
-            focusedView.SetNeedsDisplay();
+            focusedView.SetNeedsDraw();
 
             return true;
         }
@@ -270,7 +270,7 @@ public class KeyboardManager
         }
 
         design.View.SetActualText(newStr);
-        design.View.SetNeedsDisplay();
+        design.View.SetNeedsDraw();
         this.currentOperation.NewValue = newStr;
 
         return true;

@@ -111,7 +111,7 @@ public partial class DimEditor : Dialog, IValueGetterDialog
 
                 lblOffset.Visible = false;
                 tbOffset.Visible = false;
-                SetNeedsDisplay();
+                SetNeedsDraw();
                 break;
             case DimType.Fill:
                 lblValue.Text = "Margin";
@@ -120,7 +120,7 @@ public partial class DimEditor : Dialog, IValueGetterDialog
 
                 lblOffset.Visible = false;
                 tbOffset.Visible = false;
-                SetNeedsDisplay();
+                SetNeedsDraw();
                 break;
             case DimType.Percent:
                 lblValue.Text = "Factor";
@@ -129,14 +129,14 @@ public partial class DimEditor : Dialog, IValueGetterDialog
 
                 lblOffset.Visible = true;
                 tbOffset.Visible = true;
-                SetNeedsDisplay();
+                SetNeedsDraw();
                 break;
             case DimType.Auto:
                 lblValue.Visible = false;
                 tbValue.Visible = false;
                 lblOffset.Visible = false;
                 tbOffset.Visible = false;
-                SetNeedsDisplay();
+                SetNeedsDraw();
                 break;
 
             default: throw new ArgumentOutOfRangeException();

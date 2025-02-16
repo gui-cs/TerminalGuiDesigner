@@ -80,7 +80,7 @@ namespace TerminalGuiDesigner.UI.Windows {
 
                 lvElements.Source = ResultAsList.ToListDataSource();
                 lvElements.SelectedItem = newIndex;
-                lvElements.SetNeedsDisplay();
+                lvElements.SetNeedsDraw();
             }
         }
 
@@ -98,7 +98,7 @@ namespace TerminalGuiDesigner.UI.Windows {
 
                 lvElements.Source = ResultAsList.ToListDataSource();
                 lvElements.SelectedItem = newIndex;
-                lvElements.SetNeedsDisplay();
+                lvElements.SetNeedsDraw();
             }
         }
 
@@ -120,7 +120,7 @@ namespace TerminalGuiDesigner.UI.Windows {
                 ResultAsList.RemoveAt(idx);
 
                 lvElements.Source = ResultAsList.ToListDataSource();
-                lvElements.SetNeedsDisplay();
+                lvElements.SetNeedsDraw();
                 lvElements.SelectedItem = 0;
             }
         }
@@ -134,7 +134,7 @@ namespace TerminalGuiDesigner.UI.Windows {
 
             lvElements.Source = ResultAsList.ToListDataSource();
             lvElements.SelectedItem = ResultAsList.Count - 1;
-            lvElements.SetNeedsDisplay();
+            lvElements.SetNeedsDraw();
         }
         private void BtnEdit_Clicked(object sender, EventArgs e)
         {
@@ -153,7 +153,7 @@ namespace TerminalGuiDesigner.UI.Windows {
 
                 lvElements.Source = ResultAsList.ToListDataSource();
                 lvElements.SelectedItem = idx;
-                lvElements.SetNeedsDisplay();
+                lvElements.SetNeedsDraw();
             }
         }
 

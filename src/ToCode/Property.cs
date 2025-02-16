@@ -476,6 +476,6 @@ public class Property : ToCodeBase
             cp.ApplyStyleChanges();
         }
 
-        this.Design.View.SetNeedsDisplay();
+        this.Design.View.SetNeedsDraw();
     }
 }

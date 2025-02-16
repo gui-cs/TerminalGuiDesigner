@@ -55,7 +55,7 @@ public class AddViewOperation : Operation
 
         var v = this.GetViewToAddTo();
         v.Add(this.add);
-        v.SetNeedsDisplay();
+        v.SetNeedsDraw();
     }
 
     /// <inheritdoc/>
@@ -68,7 +68,7 @@ public class AddViewOperation : Operation
 
         var v = this.GetViewToAddTo();
         v.Remove(this.add);
-        v.SetNeedsDisplay();
+        v.SetNeedsDraw();
     }
 
     /// <inheritdoc/>
@@ -118,7 +118,7 @@ public class AddViewOperation : Operation
 
         SelectionManager.Instance.ForceSetSelection(design);
 
-        v.SetNeedsDisplay();
+        v.SetNeedsDraw();
         return true;
     }
 

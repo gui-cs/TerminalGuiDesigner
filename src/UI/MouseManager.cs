@@ -122,7 +122,7 @@ public class MouseManager
         {
             // move selection box to new mouse position
             this.selectionEnd = m.Position;
-            viewBeingEdited.View.SetNeedsDisplay();
+            viewBeingEdited.View.SetNeedsDraw();
 
             // BUG: Method is gone, will this functionality work still without it?
             // Application.DoEvents();
@@ -137,7 +137,7 @@ public class MouseManager
             if (dest != null && this.dragOperation != null)
             {
                 this.dragOperation.ContinueDrag(dest.Value);
-                viewBeingEdited.View.SetNeedsDisplay();
+                viewBeingEdited.View.SetNeedsDraw();
                 // BUG: Method is gone, will this functionality work still without it?
                 // Application.DoEvents();
             }
@@ -152,7 +152,7 @@ public class MouseManager
 
             this.resizeOperation.ContinueResize(dest);
 
-            viewBeingEdited.View.SetNeedsDisplay();
+            viewBeingEdited.View.SetNeedsDraw();
             // BUG: Method is gone, will this functionality work still without it?
             // Application.DoEvents();
         }
@@ -174,7 +174,7 @@ public class MouseManager
                 this.selectionStart = null;
                 this.selectionEnd = null;
                 this.selectionContainer = null;
-                viewBeingEdited.View.SetNeedsDisplay();
+                viewBeingEdited.View.SetNeedsDraw();
                 // BUG: Method is gone, will this functionality work still without it?
                 // Application.DoEvents();
             }
