@@ -244,10 +244,6 @@ public static class ViewFactory
 
                 SetDefaultDimensions(newView, width ?? 16, height ?? 5);
                 break;
-            case ScrollView sv:
-                sv.SetContentSize(new Size( 20, 10 ));
-                SetDefaultDimensions(newView, width ?? 10, height ?? 5 );
-                break;
             case SpinnerView sv:
                 sv.AutoSpin = true;
                 if ( width is not null )

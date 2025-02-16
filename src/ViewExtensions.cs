@@ -8,6 +8,10 @@ namespace TerminalGuiDesigner;
 /// </summary>
 public static class ViewExtensions
 {
+    public static View? FindDeepestView(Point screenPoint)
+    {
+        return View.GetViewsUnderMouse(screenPoint).LastOrDefault(v=> v!= null);
+    }
     /// <summary>
     /// Returns the sub-views of <paramref name="v"/> skipping out any
     /// public views used by the Terminal.Gui API e.g. the 'ContentView'
@@ -196,7 +200,6 @@ public static class ViewExtensions
 
         // TODO: are there any others?
         return
-            v is ScrollView ||
             v is TabView ||
             v is FrameView ||
             v is Window ||
@@ -255,8 +258,8 @@ public static class ViewExtensions
         }
 
         var point = w.ScreenToContent(m.Position);
-
-        var hit = View.FindDeepestView(w, m.Position);
+        
+        var hit = ViewExtensions.FindDeepestView(m.Position);
 
         hit = UnpackHitView(hit);
 
