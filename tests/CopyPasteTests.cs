@@ -393,13 +393,13 @@ internal class CopyPasteTests : Tests
     }
 
     [Test]
-    public void CopyPasteContainer_Empty_ScrollView_Into_Root()
+    public void CopyPasteContainer_Empty_View_Into_Root()
     {
-        RoundTrip<Window, ScrollView>(
+        RoundTrip<Window, View>(
             ( d, v ) =>
             {
                 Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
-                Assume.That( v, Is.Not.Null.And.InstanceOf<ScrollView>( ) );
+                Assume.That( v, Is.Not.Null.And.InstanceOf<View>( ) );
                 Assume.That( v.GetActualSubviews( ), Is.Empty );
 
                 // copy the ScrollView
@@ -430,20 +430,20 @@ internal class CopyPasteTests : Tests
 
                 var rootSubviews = rootDesign.View.GetActualSubviews( );
                 Assert.That( rootSubviews, Has.Count.EqualTo( 2 ) );
-                Assert.That( rootSubviews, Has.All.InstanceOf<ScrollView>( ) );
+                Assert.That( rootSubviews, Has.All.InstanceOf<View>( ) );
             }
             , out _
         );
     }
 
     [Test]
-    public void CopyPasteContainer_EmptyScrollView_Into_Itself( )
+    public void CopyPasteContainer_EmptyView_Into_Itself( )
     {
-        RoundTrip<Window, ScrollView>(
+        RoundTrip<Window, View>(
             ( d, v ) =>
             {
                 Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
-                Assume.That( v, Is.Not.Null.And.InstanceOf<ScrollView>( ) );
+                Assume.That( v, Is.Not.Null.And.InstanceOf<View>( ) );
                 Assume.That( v.GetActualSubviews( ), Is.Empty );
 
                 CopyOperation copyOperation = new( d );
@@ -473,7 +473,7 @@ internal class CopyPasteTests : Tests
 
                 var rootSubviews = rootDesign.View.GetActualSubviews( );
                 Assert.That( rootSubviews, Has.Count.EqualTo( 2 ) );
-                Assert.That( rootSubviews, Has.All.InstanceOf<ScrollView>( ) );
+                Assert.That( rootSubviews, Has.All.InstanceOf<View>( ) );
             }
             , out _
         );

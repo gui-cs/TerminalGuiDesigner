@@ -184,7 +184,6 @@ internal class ViewFactoryTests
             typeof( FileDialog ),
             typeof( SaveDialog ),
             typeof( OpenDialog ),
-            typeof( ScrollBarView ),
             typeof( Wizard ),
             typeof( WizardStep ),
 

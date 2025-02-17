@@ -118,8 +118,8 @@ internal class PropertyTests : Tests
     [Category( "Code Generation" )]
     public string PropertyOfType_Size( )
     {
-        using ScrollView scrollView = new( );
-        Design d = new( new( $"{nameof( PropertyOfType_Size )}.cs" ), "FFF", scrollView );
+        using View view = new( );
+        Design d = new( new( $"{nameof( PropertyOfType_Size )}.cs" ), "FFF", view );
         Property xProp = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof( View.X ) ) );
 
         xProp.SetValue( Pos.Center( ) );
