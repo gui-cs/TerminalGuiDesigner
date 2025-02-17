@@ -59,6 +59,7 @@ public class ResizeOperation : Operation
     {
         this.BeingResized.GetDesignableProperty("Width")?.SetValue(this.OriginalWidth);
         this.BeingResized.GetDesignableProperty("Height")?.SetValue(this.OriginalHeight);
+        this.BeingResized.View.Layout();
     }
 
     /// <inheritdoc/>
@@ -81,6 +82,8 @@ public class ResizeOperation : Operation
 
         this.DestinationY = dest.Y;
         this.SetHeight();
+
+        this.BeingResized.View.Layout();
     }
 
     /// <inheritdoc/>

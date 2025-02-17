@@ -199,7 +199,7 @@ internal class MouseManagerTests : Tests
             Flags = MouseFlags.Button1Pressed
         };
         mgr.HandleMouse( e, d );
-
+        
         Assert.Multiple( ( ) =>
         {
             Assert.That( view.GetContentSize().Width, Is.EqualTo( 10 ), "Expected Width to remain constant because it is Dim.Fill()" );

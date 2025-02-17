@@ -44,6 +44,8 @@ public class Tests
 
     protected static Design Get10By10View()
     {
+        Application.Top.RemoveAll();
+
         // start with blank slate
         OperationManager.Instance.ClearUndoRedo();
 
@@ -51,12 +53,16 @@ public class Tests
         {
             Width = 10,
             Height = 10,
+            CanFocus = true,
         };
         var d = new Design(new SourceCodeFile(new FileInfo("TenByTen.cs")), Design.RootDesignName, v);
         v.Data = d;
 
         v.BeginInit();
         v.EndInit();
+
+        Application.Top.Add(v);
+        Application.Top.LayoutSubviews();
 
         return d;
     }
