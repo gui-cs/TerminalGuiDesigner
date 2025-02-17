@@ -685,6 +685,8 @@ public class Design
 
         yield return new ColorSchemeProperty(this);
 
+        yield return this.CreateSuppressedProperty(nameof(View.CanFocus), true);
+
         // its important that this comes before Text because
         // changing the validator clears the text
         if (this.View is TextValidateField)

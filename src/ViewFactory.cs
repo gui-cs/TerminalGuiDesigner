@@ -265,8 +265,11 @@ public static class ViewFactory
                 SetDefaultDimensions(newView, 10, 5);
                 break;
             case null:
-                throw new InvalidOperationException( $"Unexpected null result from type {typeof( T ).Name} construtor." );
+                throw new InvalidOperationException( $"Unexpected null result from type {typeof( T ).Name} constructor." );
         }
+
+        // Almost universally all user controlled views are going to want this.
+        newView.CanFocus = true;
 
         return newView;
 
