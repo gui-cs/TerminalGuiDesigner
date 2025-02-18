@@ -193,62 +193,77 @@ public class Editor : Toplevel
 
     /// <summary>
     /// Tailors redrawing to add overlays (e.g. showing what is selected etc.).
+    /// Only runs when a view is open and <see cref="viewBeingEdited"/>.
+    /// </summary>
+    protected override void OnDrawComplete()
+    {
+        base.OnDrawComplete();
+
+        // if we are not editing a view
+        if (this.viewBeingEdited == null)
+        {
+            return;
+        }
+
+        var bounds = Viewport;
+
+        if (this.enableShowFocused)
+        {
+            Application.Driver.SetAttribute(this.viewBeingEdited.View.ColorScheme.Normal);
+
+            string? toDisplay = this.GetLowerRightTextIfAny();
+
+            // and have a designable view focused
+            if (toDisplay != null)
+            {
+                // write its name in the lower right
+                int y = this.GetContentSize().Height - 1;
+                int right = bounds.Width - 1;
+                var len = toDisplay.Length;
+
+                for (int i = 0; i < len; i++)
+                {
+                    this.AddRune(right - len + i, y, new Rune(toDisplay[i]));
+                }
+            }
+        }
+
+        if (this.mouseManager.SelectionBox != null)
+        {
+            var box = this.mouseManager.SelectionBox.Value;
+            for (int x = 0; x < box.Width; x++)
+            {
+                for (int y = 0; y < box.Height; y++)
+                {
+                    if (y == 0 || y == box.Height - 1 || x == 0 || x == box.Width - 1)
+                    {
+                        this.AddRune(box.X + x, box.Y + y, new Rune('.'));
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Draws title screen when no view is currently open
     /// </summary>
     protected override bool OnDrawingContent()
     {
         var r = base.OnDrawingContent();
+
+        if (viewBeingEdited != null)
+        {
+            return true;
+        }
+
         var bounds = Viewport;
 
         Application.Driver.SetAttribute(new Attribute(Color.Black));
         Application.Driver.FillRect(bounds,' ');
 
-        // if we are editing a view
-        if (this.viewBeingEdited != null)
-        {
-            if (this.enableShowFocused)
-            {
-                Application.Driver.SetAttribute(this.viewBeingEdited.View.ColorScheme.Normal);
-
-                string? toDisplay = this.GetLowerRightTextIfAny();
-
-                // and have a designable view focused
-                if (toDisplay != null)
-                {
-                    // write its name in the lower right
-                    int y = this.GetContentSize().Height - 1;
-                    int right = bounds.Width - 1;
-                    var len = toDisplay.Length;
-
-                    for (int i = 0; i < len; i++)
-                    {
-                        this.AddRune(right - len + i, y, new Rune(toDisplay[i]));
-                    }
-                }
-            }
-
-            if (this.mouseManager.SelectionBox != null)
-            {
-                var box = this.mouseManager.SelectionBox.Value;
-                for (int x = 0; x < box.Width; x++)
-                {
-                    for (int y = 0; y < box.Height; y++)
-                    {
-                        if (y == 0 || y == box.Height - 1 || x == 0 || x == box.Width - 1)
-                        {
-                            this.AddRune(box.X + x, box.Y + y, new Rune('.'));
-                        }
-                    }
-                }
-            }
-
-            return r;
-        }
-        else
-        {
-            var top = new Rectangle(0, 0, bounds.Width, rootCommandsListView.Frame.Top - 1);
-            RenderTitle(top);
-        }
-
+        var top = new Rectangle(0, 0, bounds.Width, rootCommandsListView.Frame.Top - 1);
+        RenderTitle(top);
+    
         return r;
     }
 
