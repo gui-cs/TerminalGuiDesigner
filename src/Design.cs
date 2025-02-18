@@ -682,10 +682,12 @@ public class Design
         yield return this.CreateSuppressedProperty(nameof(this.View.Visible), true);
 
         yield return this.CreateSuppressedProperty(nameof(this.View.Arrangement), ViewArrangement.Fixed);
+        
 
         yield return new ColorSchemeProperty(this);
 
         yield return this.CreateSuppressedProperty(nameof(View.CanFocus), true);
+        yield return this.CreateProperty(nameof(this.View.ShadowStyle));
 
         // its important that this comes before Text because
         // changing the validator clears the text

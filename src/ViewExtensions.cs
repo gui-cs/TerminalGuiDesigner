@@ -325,6 +325,11 @@ public static class ViewExtensions
 
         }
 
+        if (hit?.IsAdornment() ?? false)
+        {
+            hit = hit.GetAdornmentParent();
+        }
+
         // TabView nesting of 'fake' views goes:
         // TabView
         //   - TabViewRow
@@ -430,5 +435,61 @@ public static class ViewExtensions
         return false;
     }
 
+    /// <summary>
+    /// Returns <see langword="true"/> if <paramref name="v"/> is part of
+    /// a <see cref="Adornment"/> (either directly or embedded sub view of
+    /// one - e.g. <see cref="ShadowView"/>).
+    /// </summary>
+    /// <param name="v"></param>
+    /// <returns></returns>
+    public static bool IsAdornment(this View v)
+    {
+        return v is Adornment || v.AnySuperViewIs<Adornment>();
+    }
 
+    /// <summary>
+    /// Returns <see langword="true"/> if any <see cref="View.SuperView"/> of
+    /// <paramref name="v"/> is of type T.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="v"></param>
+    /// <returns></returns>
+    public static bool AnySuperViewIs<T>(this View v) where T : View
+    {
+        var parent = v.SuperView;
+
+        while (parent != null)
+        {
+            if (parent is T)
+            {
+                return true;
+            }
+            parent = parent.SuperView;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Returns the <see cref="Adornment.Parent"/> of <paramref name="v"/>
+    /// if it is an <see cref="Adornment"/>. Or if <param name="v"/> is not
+    /// directly an adornment but <see cref="AnySuperViewIs{T}"/> then the method
+    /// will traverse up <see cref="View.SuperView"/> hierarchy until parent is found.
+    /// </summary>
+    /// <param name="v"></param>
+    /// <returns></returns>
+    public static View? GetAdornmentParent(this View v)
+    {
+        while (v != null)
+        {
+            if (v is Adornment a)
+            {
+                return a.Parent;
+            }
+
+            v = v.SuperView;
+        }
+
+        return null;
+    }
 }
