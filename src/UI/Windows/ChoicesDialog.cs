@@ -52,10 +52,6 @@ public partial class ChoicesDialog
         {
             // add space for right hand side shadow
             buttons[i].Text = options[i] + " ";
-
-            // TODO think it depends if it is default if we have to do this hack
-            buttons[i].Width = Dim.Auto();
-
             
             var i2 = i;
 
@@ -63,10 +59,9 @@ public partial class ChoicesDialog
                 Result = i2;
                 Application.RequestStop();
             };
-
-            buttons[i].DrawComplete += (s,r) =>
-                ChoicesDialog.PaintShadow(buttons[i2], ColorScheme);
         }
+
+        buttonPanel.LayoutSubviews();
 
         // hide other buttons
         for(int i=options.Length;i<buttons.Length;i++)
@@ -133,50 +128,6 @@ public partial class ChoicesDialog
         Application.Run(dlg);
         return dlg.Result;
     }
-
-    internal static void PaintShadow(Button btn, ColorScheme backgroundScheme)
-    {
-        var bounds = btn.GetContentSize();
-
-        Attribute buttonColor = btn.HasFocus ? 
-            new Terminal.Gui.Attribute(btn.ColorScheme.Focus.Foreground, btn.ColorScheme.Focus.Background):
-            new Terminal.Gui.Attribute(btn.ColorScheme.Normal.Foreground, btn.ColorScheme.Normal.Background);
-
-        Driver.SetAttribute(buttonColor);
-
-        if (btn.IsDefault)
-        {
-            var rightDefault = Driver != null ? ConfigurationManager.Glyphs.RightDefaultIndicator : new Rune('>');
-
-            // draw the 'end' button symbol one in
-            btn.AddRune(bounds.Width - 3, 0, rightDefault);
-        }
-
-        btn.AddRune(bounds.Width - 2, 0, new System.Text.Rune(']'));
-        btn.AddRune(0, 0, new System.Text.Rune('['));
-
-        var backgroundColor = backgroundScheme.Normal.Background;
-
-        // shadow color
-        Driver.SetAttribute(new Terminal.Gui.Attribute(Color.Black, backgroundColor));
-
-        // end shadow (right)
-        btn.AddRune(bounds.Width - 1, 0, new System.Text.Rune('▄'));
-
-        // leave whitespace in lower left in parent/default background color
-        Driver.SetAttribute(new Terminal.Gui.Attribute(Color.Black, backgroundColor));
-        btn.AddRune(0, 1, new System.Text.Rune(' '));
-
-        // The color for rendering shadow is 'black' + parent/default background color
-        Driver.SetAttribute(new Terminal.Gui.Attribute(backgroundColor, Color.Black));
-
-        // underline shadow                
-        for (int x = 1; x < bounds.Width; x++)
-        {
-            btn.AddRune(x, 1, new System.Text.Rune('▄'));
-        }
-    }
-
     internal static bool Confirm(string title, string message, string okText = "Yes", string cancelText = "No")
     {
         var dlg = new ChoicesDialog(title, message, okText, cancelText);

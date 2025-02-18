@@ -416,10 +416,14 @@ public static class ViewExtensions
     {
         foreach (var sub in view.Subviews)
         {
-            if (sub.Data is not Design)
+            // If Data is string then it is likely a View that is going to
+            // end up having a Design but we haven't gotten to it yet (i.e. method is being called mid-load)
+            if (sub.Data is not Design and not string)
             {
                 alsoIgnore.Add(sub);
             }
+
+
 
             RecursivelyIgnoreAllNonDesignableSubviews(sub, alsoIgnore);
         }

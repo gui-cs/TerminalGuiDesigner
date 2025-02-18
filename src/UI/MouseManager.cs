@@ -31,7 +31,7 @@ public class MouseManager
     public Rectangle? SelectionBox => RectExtensions.FromBetweenPoints(this.selectionStart, this.selectionEnd);
 
     /// <summary>
-    /// Responds to <see cref="Application.RootMouseEvent"/>(by changing a 'drag a box' selection area
+    /// Responds to <see cref="Application.MouseEvent"/>(by changing a 'drag a box' selection area
     /// or starting a resize etc).
     /// </summary>
     /// <param name="m">The <see cref="MouseEventArgs"/> reported by <see cref="Application.RootMouseEvent"/>.</param>
@@ -123,9 +123,6 @@ public class MouseManager
             // move selection box to new mouse position
             this.selectionEnd = m.Position;
             viewBeingEdited.View.SetNeedsDraw();
-
-            // BUG: Method is gone, will this functionality work still without it?
-            // Application.DoEvents();
             return;
         }
 
