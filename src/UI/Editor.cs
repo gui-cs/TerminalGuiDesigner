@@ -199,6 +199,8 @@ public class Editor : Toplevel
         var r = base.OnDrawingContent();
         var bounds = Viewport;
 
+        Application.Driver.SetAttribute(new Attribute(Color.Black));
+        Application.Driver.FillRect(bounds,' ');
 
         // if we are editing a view
         if (this.viewBeingEdited != null)
