@@ -57,7 +57,12 @@ public partial class ChoicesDialog
 
             buttons[i].Accepting += (s,e) => {
                 Result = i2;
+
+                // TODO: Remove once fixed upstream
+                // Workaround for https://github.com/gui-cs/Terminal.Gui/issues/3913
+                e.Cancel = true;
                 Application.RequestStop();
+
             };
         }
 
