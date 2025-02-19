@@ -15,8 +15,16 @@ internal class AddViewOperationTests : Tests
                                                                    .OrderBy( t => t == typeof( MenuBar ) ? int.MaxValue : 0 )
                                                                    .Select(PickFirstTTypeForGenerics)
                                                                    .ToArray( );
-
-    
+    /// <summary>
+    /// Views which add a sibling 'popover' view to parent when added
+    /// </summary>
+    public static HashSet<Type> PopoverTypes = new HashSet<Type>
+    {
+        typeof(TextField),
+        typeof(TextView),
+        typeof(DateField),
+        typeof(TimeField),
+    };
 
     [Test( Description = "Tests AddViewOperation against all SupportedViewTypes" )]
     public void Do_AddsExpectedSubview( [ValueSource( nameof( SupportedViewTypes ) )] Type candidateType )
@@ -30,7 +38,9 @@ internal class AddViewOperationTests : Tests
 
         IList<View> subviews = d.View.Subviews;
 
-        Assert.That( subviews, Has.Count.EqualTo( 1 ) );
+        var hasInvisPopupViewToo = PopoverTypes.Contains(candidateType);
+
+        Assert.That( subviews, Has.Count.EqualTo( hasInvisPopupViewToo? 2:1) );
 
         var theOnlySubView = subviews[ 0 ];
         Assert.That( theOnlySubView, Is.SameAs( instance ) );
@@ -55,9 +65,11 @@ internal class AddViewOperationTests : Tests
 
             IList<View> subviews = d.View.Subviews;
 
-            Assert.That( subviews, Has.Count.EqualTo( operationNumber ) );
+            var hasInvisPopupViewToo = PopoverTypes.Contains(instance.GetType());
 
-            var lastSubview = subviews.Last( );
+            Assert.That( subviews, Has.Count.EqualTo( operationNumber * (hasInvisPopupViewToo?2:1)) );
+
+            var lastSubview = subviews[subviews.Count - (hasInvisPopupViewToo?2:1)];
 
             Assert.That( lastSubview, Is.SameAs( instance ) );
 

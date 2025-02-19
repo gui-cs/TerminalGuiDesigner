@@ -29,7 +29,7 @@ internal class MenuBarExtensionsTests : Tests
             v.Y = yOffset;
 
             // Expect a MenuBar to be rendered that is 
-            // ".test..next..more.." (with 1 unit of preceding whitespace and 2 after each)
+            // ".test..next..more.." (with 1 unit of preceding whitespace and 1 after each)
             // Note that this test is brittle and subject to changes in Terminal.Gui e.g. pushing menus closer together.
             v.Menus[ 0 ].Title = "test";
 
@@ -39,7 +39,8 @@ internal class MenuBarExtensionsTests : Tests
             Assume.That( v.Menus, Has.Exactly( 3 ).InstanceOf<MenuBarItem>( ) );
 
             // Clicks in the "test" region
-            Assert.That( v.ScreenToMenuBarItem( clickXCoordinate + xOffset ), Is.SameAs( v.Menus[ ( clickXCoordinate - 1 ) / expectedItemWidth ] ) );
+            Assert.That( v.ScreenToMenuBarItem( clickXCoordinate + xOffset ),
+                Is.SameAs( v.Menus[ ( clickXCoordinate - 1 ) / expectedItemWidth ] ) );
         }, out _ );
     }
 
