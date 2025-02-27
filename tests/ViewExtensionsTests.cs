@@ -1,6 +1,7 @@
 using System;
 using Terminal.Gui;
 using TerminalGuiDesigner;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UnitTests;
 
@@ -32,6 +33,9 @@ internal class ViewExtensionsTests : Tests
         v.Width = 5;
         v.Height = 3;
 
+        // Hit test does not find things that are not designable
+        v.Data = new Design(new SourceCodeFile("MyView.cs"), "myview", v);
+
         Application.Top.Add(v);
         bool isLowerRight;
         bool isBorder;
@@ -49,7 +53,7 @@ internal class ViewExtensionsTests : Tests
         }
         else
         {
-            ClassicAssert.IsNull(result);
+            ClassicAssert.AreSame(Application.Top,result);
         }
 
         ClassicAssert.AreEqual(lowerRight, isLowerRight);
@@ -91,6 +95,9 @@ internal class ViewExtensionsTests : Tests
             Width = 5,
             Height = 5,
         };
+
+        // Hit test does not find things that are not designable
+        f.Data = new Design(new SourceCodeFile("MyView.cs"), "myframe", f);
 
         w.Add(f);
         Application.Begin(w);
