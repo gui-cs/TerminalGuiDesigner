@@ -90,7 +90,7 @@ public class BigListBox<T>
         this.collection = this.BuildList(this.GetInitialSource()).ToList();
 
         this.listView.SetSource(
-            new ObservableCollection<T>(this.collection.Select(o=>o.Object).ToArray())
+            new ObservableCollection<ListViewObject<T>>(this.collection.ToArray())
             );
         this.win.Add(this.listView);
 

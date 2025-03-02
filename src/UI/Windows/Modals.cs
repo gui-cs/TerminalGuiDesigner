@@ -138,7 +138,7 @@ public class Modals
 
     internal static bool Get<T>(string prompt, string okText, T[] collection, T? currentSelection, out T? selected)
     {
-        return Get(prompt, okText, true, collection, o => o?.ToString() ?? "Null", false, currentSelection, out selected);
+        return Get(prompt, okText, true, collection, o => o is Type t ? t.Name : o?.ToString() ?? "Null", false, currentSelection, out selected);
     }
 
     internal static bool Get<T>( string prompt, string okText, in bool addSearch, T[] collection, Func<T?, string> displayMember, bool addNull, [NotNullWhen( true )]T? currentSelection, [NotNullWhen( true )] out T? selected )
