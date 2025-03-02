@@ -195,9 +195,9 @@ public class Editor : Toplevel
     /// Tailors redrawing to add overlays (e.g. showing what is selected etc.).
     /// Only runs when a view is open and <see cref="viewBeingEdited"/>.
     /// </summary>
-    protected override void OnDrawComplete()
+    protected override void OnDrawComplete(DrawContext? context)
     {
-        base.OnDrawComplete();
+        base.OnDrawComplete(context);
 
         // if we are not editing a view
         if (this.viewBeingEdited == null)

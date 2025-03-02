@@ -19,8 +19,8 @@ public partial class Program
                    .WithParsed<Options>(o =>
                    {
                        Editor.Experimental = o.Experimental;
-
-                       Application.Init();
+                       
+                       Application.Init(null,"v2");
                        var editor = new Editor();
                        editor.Run(o);
                    });
