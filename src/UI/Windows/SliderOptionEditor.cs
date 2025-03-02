@@ -68,14 +68,16 @@ namespace TerminalGuiDesigner.UI.Windows {
             }
         }
 
-        private void BtnCancel_Clicked(object sender, EventArgs e)
+        private void BtnCancel_Clicked(object sender, CommandEventArgs e)
         {
+            e.Cancel = true;
             this.Cancelled = true;
             Application.RequestStop();
         }
 
-        private void BtnOk_Clicked(object sender, EventArgs e)
+        private void BtnOk_Clicked(object sender, CommandEventArgs e)
         {
+            e.Cancel = true;
             try
             {
                 this.BuildResult();

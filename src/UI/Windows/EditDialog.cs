@@ -58,6 +58,7 @@ public class EditDialog : Window
 
         btnSet.Accepting += (s, e) =>
         {
+            e.Cancel = true;
             this.SetProperty(false);
         };
 
@@ -67,7 +68,11 @@ public class EditDialog : Window
             X = Pos.Right(btnSet),
             Y = Pos.Bottom(this.list),
         };
-        btnClose.Accepting += (s, e) => Application.RequestStop();
+        btnClose.Accepting += (s, e) =>
+        {
+            e.Cancel = true;
+            Application.RequestStop();
+        };
 
         this.list.KeyDown += (s, e) =>
         {

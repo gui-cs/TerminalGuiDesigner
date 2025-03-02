@@ -143,14 +143,16 @@ public partial class DimEditor : Dialog, IValueGetterDialog
         }
     }
 
-    private void BtnCancel_Clicked(object sender, EventArgs e)
+    private void BtnCancel_Clicked(object sender, CommandEventArgs e)
     {
+        e.Cancel = true;
         Cancelled = true;
         Application.RequestStop();
     }
 
-    private void BtnOk_Clicked(object sender, EventArgs e)
+    private void BtnOk_Clicked(object sender, CommandEventArgs e)
     {
+        e.Cancel = true;
         Cancelled = false;
         Result = BuildResult();
         Application.RequestStop();

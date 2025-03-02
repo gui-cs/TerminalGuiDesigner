@@ -68,6 +68,7 @@ internal class GetTextDialog
         };
         btnOk.Accepting += (s, e) =>
         {
+            e.Cancel = true;
             this.Accept();
         };
 
@@ -80,6 +81,7 @@ internal class GetTextDialog
         };
         btnCancel.Accepting += (s, e) =>
         {
+            e.Cancel = true;
             this.okClicked = false;
             Application.RequestStop();
         };
@@ -92,6 +94,7 @@ internal class GetTextDialog
         };
         btnClear.Accepting += (s, e) =>
         {
+            e.Cancel = true;
             this.textField.Text = string.Empty;
         };
 

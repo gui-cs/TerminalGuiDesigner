@@ -102,6 +102,7 @@ public class BigListBox<T>
         };
         btnOk.Accepting += (s, e) =>
         {
+            e.Cancel = true;
             this.Accept();
         };
 
@@ -110,7 +111,11 @@ public class BigListBox<T>
             Text = "Cancel",
             Y = Pos.Bottom(this.listView),
         };
-        btnCancel.Accepting += (s, e) => Application.RequestStop();
+        btnCancel.Accepting += (s, e) =>
+        {
+            e.Cancel = true;
+            Application.RequestStop();
+        };
 
         if (addSearch)
         {

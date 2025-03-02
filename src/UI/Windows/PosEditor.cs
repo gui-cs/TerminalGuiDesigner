@@ -195,14 +195,16 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
         }
     }
 
-    private void BtnCancel_Clicked(object sender, EventArgs e)
+    private void BtnCancel_Clicked(object sender, CommandEventArgs e)
     {
+        e.Cancel = true;
         Cancelled = true;
         Application.RequestStop();
     }
 
-    private void BtnOk_Clicked(object sender, EventArgs e)
+    private void BtnOk_Clicked(object sender, CommandEventArgs e)
     {
+        e.Cancel = true;
         if(GetPosType() == PosType.AnchorEnd && GetValue(out var value) && value <=0)
         {
             if (!ChoicesDialog.Confirm("Anchor Without Margin", "Using AnchorEnd without a margin will result in a point outside of parent bounds.\nAre you sure?"))

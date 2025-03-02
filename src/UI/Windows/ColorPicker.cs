@@ -47,8 +47,12 @@ public partial class ColorPicker : IValueGetterDialog
         cpForeground.ColorChanged += (s,e) => UpdatePreview();
         cpBackground.ColorChanged += (s,e) => UpdatePreview();
 
-        btnOk.Accepting += (s, e) => Ok();
-        btnCancel.Accepting += (s, e) => Cancel();
+        btnOk.Accepting += (s, e) =>
+        {
+            e.Cancel = true;
+            Ok();
+        };
+        btnCancel.Accepting += (s, e) => { e.Cancel = true; Cancel(); };
     }
 
     private void Ok()

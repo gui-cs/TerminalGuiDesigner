@@ -52,14 +52,16 @@ public partial class PointEditor : IValueGetterDialog {
         btnCancel.Accepting += Cancel;
     }
 
-    private void Cancel(object sender, EventArgs e)
+    private void Cancel(object sender, CommandEventArgs e)
     {
+        e.Cancel = true;
         Cancelled = true;
         Application.RequestStop();
     }
 
-    private void Ok(object sender, EventArgs e)
+    private void Ok(object sender, CommandEventArgs e)
     {
+        e.Cancel = true;
         if(int.TryParse(tbX.Text.ToString(), out var x))
         {
             if(int.TryParse(tbY.Text.ToString(), out var y))
