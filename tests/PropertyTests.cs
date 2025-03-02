@@ -30,7 +30,7 @@ internal class PropertyTests : Tests
 
         Assert.That( prop, Is.Not.Null );
         prop?.SetValue( Orientation.Vertical );
-        Assert.That( lv.LineRune, Is.EqualTo( TerminalGuiConfigurationManager.Glyphs.VLine ) );
+        Assert.That( lv.LineRune, Is.EqualTo( Glyphs.VLine ) );
 
         // now try with a dim fill
         lv.Height = Dim.Fill( );
@@ -41,7 +41,7 @@ internal class PropertyTests : Tests
         Assert.Multiple( ( ) =>
         {
             Assert.That( lv.Orientation, Is.EqualTo( Orientation.Horizontal ) );
-            Assert.That( lv.LineRune, Is.EqualTo( TerminalGuiConfigurationManager.Glyphs.HLine ) );
+            Assert.That( lv.LineRune, Is.EqualTo( Glyphs.HLine ) );
             Assert.That( lv.Width, Is.EqualTo( Dim.Fill( ) ) );
             Assert.That( lv.Height, Is.EqualTo( Dim.Absolute( 1 ) ) );
         } );

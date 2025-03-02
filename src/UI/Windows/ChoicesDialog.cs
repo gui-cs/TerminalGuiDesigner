@@ -112,7 +112,7 @@ public partial class ChoicesDialog
         Driver.SetAttribute(
             new Attribute(ColorScheme.Normal.Foreground, ColorScheme.Normal.Background));
         
-        Driver.AddStr(string.Join("",Enumerable.Repeat(ConfigurationManager.Glyphs.HLineHv, padding)));
+        Driver.AddStr(string.Join("",Enumerable.Repeat(Glyphs.HLineHv, padding)));
 
         Driver.SetAttribute(
             new Attribute(ColorScheme.Normal.Background, ColorScheme.Normal.Foreground));
@@ -122,9 +122,9 @@ public partial class ChoicesDialog
             new Attribute(ColorScheme.Normal.Foreground, ColorScheme.Normal.Background));
 
         StringBuilder sb = new StringBuilder();
-        sb.Append(ConfigurationManager.Glyphs.HLineHv);
+        sb.Append(Glyphs.HLineHv);
 
-        Driver.AddStr(string.Join("", Enumerable.Repeat(ConfigurationManager.Glyphs.HLineHv.ToString(), padding)));
+        Driver.AddStr(string.Join("", Enumerable.Repeat(Glyphs.HLineHv.ToString(), padding)));
     }
 
     internal static int Query(string title, string message, params string[] options)
