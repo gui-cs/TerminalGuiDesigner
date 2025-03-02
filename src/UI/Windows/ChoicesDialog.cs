@@ -94,34 +94,8 @@ public partial class ChoicesDialog
 
         Width = Math.Min(Math.Max(maxWidthLine, Math.Max(Title.GetColumns(), Math.Max(textWidth + 2, buttonWidth))), Application.Driver.Cols);
         Height = msgboxHeight;
-    }
-    
-    /// <inheritdoc/>
-    protected override void OnDrawComplete()
-    {
-        base.OnDrawComplete();
 
-        var screenTopLeft = FrameToScreen();
-        Driver.Move(screenTopLeft.X+2, screenTopLeft.Y);
-        
-        var padding = ((Viewport.Width - _title.EnumerateRunes().Sum(v=>v.GetColumns())) / 2) - 1;
-
-        Driver.SetAttribute(
-            new Attribute(ColorScheme.Normal.Foreground, ColorScheme.Normal.Background));
-        
-        Driver.AddStr(string.Join("",Enumerable.Repeat(Glyphs.HLineHv, padding)));
-
-        Driver.SetAttribute(
-            new Attribute(ColorScheme.Normal.Background, ColorScheme.Normal.Foreground));
-        Driver.AddStr(_title);
-
-        Driver.SetAttribute(
-            new Attribute(ColorScheme.Normal.Foreground, ColorScheme.Normal.Background));
-
-        StringBuilder sb = new StringBuilder();
-        sb.Append(Glyphs.HLineHv);
-
-        Driver.AddStr(string.Join("", Enumerable.Repeat(Glyphs.HLineHv.ToString(), padding)));
+        btn1.FocusDeepest(NavigationDirection.Forward, TabBehavior.TabGroup);
     }
 
     internal static int Query(string title, string message, params string[] options)

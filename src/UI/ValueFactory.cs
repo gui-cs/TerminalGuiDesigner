@@ -305,7 +305,7 @@ namespace TerminalGuiDesigner.UI
             // add the option to jump to custom colors
             offer.Add(custom);
 
-            if (Modals.Get("Color Scheme", "Ok", offer.ToArray(), design.View.ColorScheme, out var selected))
+            if (Modals.Get("Color Scheme", "Ok", offer.ToArray(), design.View.ColorScheme, out var selected,false))
             {
                 // if user clicked "Custom..."
                 if (selected is string s && string.Equals(s, custom))

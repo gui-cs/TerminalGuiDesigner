@@ -47,16 +47,22 @@ public class BigListBox<T>
     /// <param name="displayMember">What to display in the list box (defaults to <see cref="object.ToString"/>.</param>
     /// <param name="addNull">Creates a selection option "Null" that returns a null selection.</param>
     /// <param name="currentSelection">The optional existing value, if present it should be selected in the list.</param>
-    public BigListBox(
-        string prompt,
+    /// <param name="sort"></param>
+    public BigListBox(string prompt,
         string okText,
         in bool addSearch,
         IList<T> collection,
         Func<T?, string> displayMember,
         bool addNull,
-        T? currentSelection)
+        T? currentSelection, bool sort = true)
     {
         this.AspectGetter = displayMember ?? (arg => arg?.ToString() ?? string.Empty);
+
+        // Sort alphabetically according to display member
+        if (sort)
+        {
+            collection = collection.OrderBy(e => AspectGetter(e)).ToList();
+        }
 
         this.publicCollection = collection ?? throw new ArgumentNullException( nameof( collection ) );
         this.addNull = addNull;
