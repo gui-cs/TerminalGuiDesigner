@@ -65,15 +65,19 @@ namespace Showcase {
             this.Y = 0;
             this.Visible = true;
             this.Arrangement = (Terminal.Gui.ViewArrangement.Movable | Terminal.Gui.ViewArrangement.Overlapped);
+            this.CanFocus = true;
+            this.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.Modal = false;
             this.TextAlignment = Terminal.Gui.Alignment.Start;
-            this.Title = "";
+            this.Title = "Numeric Up Down Controls";
             this.lblInt.Width = Dim.Auto();
             this.lblInt.Height = 1;
             this.lblInt.X = 0;
             this.lblInt.Y = 0;
             this.lblInt.Visible = true;
             this.lblInt.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.lblInt.CanFocus = true;
+            this.lblInt.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.lblInt.Data = "lblInt";
             this.lblInt.Text = "Int:";
             this.lblInt.TextAlignment = Terminal.Gui.Alignment.Start;
@@ -84,6 +88,8 @@ namespace Showcase {
             this.numericUpDownInt.Y = 0;
             this.numericUpDownInt.Visible = true;
             this.numericUpDownInt.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.numericUpDownInt.CanFocus = true;
+            this.numericUpDownInt.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.numericUpDownInt.Data = "numericUpDownInt";
             this.numericUpDownInt.TextAlignment = Terminal.Gui.Alignment.Start;
             this.numericUpDownInt.Value = 1;
@@ -95,6 +101,8 @@ namespace Showcase {
             this.lblInt64.Y = 1;
             this.lblInt64.Visible = true;
             this.lblInt64.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.lblInt64.CanFocus = true;
+            this.lblInt64.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.lblInt64.Data = "lblInt64";
             this.lblInt64.Text = "Int64:";
             this.lblInt64.TextAlignment = Terminal.Gui.Alignment.Start;
@@ -105,6 +113,8 @@ namespace Showcase {
             this.numericUpDownInt64.Y = 1;
             this.numericUpDownInt64.Visible = true;
             this.numericUpDownInt64.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.numericUpDownInt64.CanFocus = true;
+            this.numericUpDownInt64.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.numericUpDownInt64.Data = "numericUpDownInt64";
             this.numericUpDownInt64.TextAlignment = Terminal.Gui.Alignment.Start;
             this.numericUpDownInt64.Value = 8943589458974;
@@ -116,6 +126,8 @@ namespace Showcase {
             this.label3.Y = 2;
             this.label3.Visible = true;
             this.label3.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.label3.CanFocus = true;
+            this.label3.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.label3.Data = "label3";
             this.label3.Text = "Double:";
             this.label3.TextAlignment = Terminal.Gui.Alignment.Start;
@@ -126,6 +138,8 @@ namespace Showcase {
             this.numericUpDown2.Y = 2;
             this.numericUpDown2.Visible = true;
             this.numericUpDown2.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.numericUpDown2.CanFocus = true;
+            this.numericUpDown2.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.numericUpDown2.Data = "numericUpDown2";
             this.numericUpDown2.TextAlignment = Terminal.Gui.Alignment.Start;
             this.numericUpDown2.Value = 32.3D;
@@ -137,6 +151,8 @@ namespace Showcase {
             this.label6.Y = 3;
             this.label6.Visible = true;
             this.label6.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.label6.CanFocus = true;
+            this.label6.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.label6.Data = "label6";
             this.label6.Text = "Single:";
             this.label6.TextAlignment = Terminal.Gui.Alignment.Start;
@@ -147,6 +163,8 @@ namespace Showcase {
             this.numericUpDownSingle.Y = 3;
             this.numericUpDownSingle.Visible = true;
             this.numericUpDownSingle.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.numericUpDownSingle.CanFocus = true;
+            this.numericUpDownSingle.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.numericUpDownSingle.Data = "numericUpDownSingle";
             this.numericUpDownSingle.TextAlignment = Terminal.Gui.Alignment.Start;
             this.numericUpDownSingle.Value = 1F;
@@ -158,6 +176,8 @@ namespace Showcase {
             this.label.Y = 4;
             this.label.Visible = true;
             this.label.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.label.CanFocus = true;
+            this.label.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.label.Data = "label";
             this.label.Text = "Decimal:";
             this.label.TextAlignment = Terminal.Gui.Alignment.Start;
@@ -168,6 +188,8 @@ namespace Showcase {
             this.numericUpDownDecimal.Y = 4;
             this.numericUpDownDecimal.Visible = true;
             this.numericUpDownDecimal.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.numericUpDownDecimal.CanFocus = true;
+            this.numericUpDownDecimal.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.numericUpDownDecimal.Data = "numericUpDownDecimal";
             this.numericUpDownDecimal.TextAlignment = Terminal.Gui.Alignment.Start;
             this.numericUpDownDecimal.Value = 0.00000000001m;
@@ -179,6 +201,8 @@ namespace Showcase {
             this.label4.Y = 7;
             this.label4.Visible = true;
             this.label4.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.label4.CanFocus = true;
+            this.label4.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.label4.Data = "label4";
             this.label4.Text = "Single:";
             this.label4.TextAlignment = Terminal.Gui.Alignment.Start;
@@ -189,6 +213,8 @@ namespace Showcase {
             this.numericUpDown3.Y = 7;
             this.numericUpDown3.Visible = true;
             this.numericUpDown3.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.numericUpDown3.CanFocus = true;
+            this.numericUpDown3.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.numericUpDown3.Data = "numericUpDown3";
             this.numericUpDown3.TextAlignment = Terminal.Gui.Alignment.Start;
             this.numericUpDown3.Value = float.PositiveInfinity;
@@ -200,6 +226,8 @@ namespace Showcase {
             this.label5.Y = 7;
             this.label5.Visible = true;
             this.label5.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.label5.CanFocus = true;
+            this.label5.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.label5.Data = "label5";
             this.label5.Text = "(Supports infinitiy!?)";
             this.label5.TextAlignment = Terminal.Gui.Alignment.Start;

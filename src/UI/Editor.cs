@@ -2,12 +2,15 @@ using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Serilog;
 using Terminal.Gui;
 using TerminalGuiDesigner.FromCode;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 using TerminalGuiDesigner.UI.Windows;
 using Attribute = Terminal.Gui.Attribute;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace TerminalGuiDesigner.UI;
 
@@ -43,6 +46,8 @@ public class Editor : Toplevel
     /// </summary>
     internal Guid? LastSavedOperation;
 
+    private static string _logDirectory = string.Empty;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="Editor"/> class.
     /// </summary>
@@ -50,6 +55,8 @@ public class Editor : Toplevel
     {
         // Bug: This will have strange inheritance behavior if Editor is inherited from.
         this.CanFocus = true;
+
+        Logging.Logger = CreateLogger();
 
         try
         {
@@ -69,6 +76,30 @@ public class Editor : Toplevel
         this.Closing += this.Editor_Closing;
 
         this.BuildRootMenu();
+    }
+
+    static ILogger CreateLogger()
+    {
+        _logDirectory = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "TerminalGuiDesigner", "logs");
+
+        // Configure Serilog to write logs to a file
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Verbose() // Verbose includes Trace and Debug
+            .WriteTo.File(Path.Combine(_logDirectory,"logfile.txt"), rollingInterval: RollingInterval.Day)
+            .CreateLogger();
+
+        // Create a logger factory compatible with Microsoft.Extensions.Logging
+        using var loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder
+                .AddSerilog(dispose: true) // Integrate Serilog with ILogger
+                .SetMinimumLevel(LogLevel.Trace); // Set minimum log level
+        });
+
+        // Get an ILogger instance
+        return loggerFactory.CreateLogger("Global Logger");
     }
 
     /// <summary>
@@ -300,6 +331,7 @@ public class Editor : Toplevel
 
         // The version information line
         string versionLine = $"(Alpha - {informationalVersion} )";
+        string logLine = "Logs - " + _logDirectory;
 
         // Split the ASCII art into lines
         var artLines = artText.Split('\n');
@@ -406,6 +438,20 @@ public class Editor : Toplevel
                 var colorAtPoint = fill.GetColor(new Point(x, y));
                 Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(Color.Black)));
                 this.AddRune(x, y, (Rune)versionLine[i]);
+            }
+            
+            // Render the log directory line below the version line
+            int logLineX = inArea.X + (inArea.Width - logLine.Length) / 2;
+            int logLineY = versionLineY+2;
+
+            for (int i = 0; i < logLine.Length; i++)
+            {
+                int x = logLineX + i;
+                int y = logLineY;
+
+                var colorAtPoint = fill.GetColor(new Point(x, y));
+                Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(Color.Black)));
+                this.AddRune(x, y, (Rune)logLine[i]);
             }
         }
     }
