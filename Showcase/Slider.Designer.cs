@@ -33,7 +33,10 @@ namespace Showcase {
         
         private Terminal.Gui.Line line;
         
+        private Terminal.Gui.Slider<double> slider4;
+        
         private void InitializeComponent() {
+            this.slider4 = new Terminal.Gui.Slider<double>();
             this.line = new Terminal.Gui.Line();
             this.slider3 = new Terminal.Gui.Slider<string>();
             this.lblStringSliderThin = new Terminal.Gui.Label();
@@ -168,6 +171,27 @@ namespace Showcase {
             this.line.Text = "";
             this.line.TextAlignment = Terminal.Gui.Alignment.Start;
             this.Add(this.line);
+            this.slider4.Width = 5;
+            this.slider4.Height = Dim.Auto();
+            this.slider4.X = 16;
+            this.slider4.Y = 9;
+            this.slider4.Visible = true;
+            this.slider4.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.slider4.CanFocus = true;
+            this.slider4.ShadowStyle = Terminal.Gui.ShadowStyle.Transparent;
+            this.slider4.Options = new System.Collections.Generic.List<Terminal.Gui.SliderOption<double>>(new Terminal.Gui.SliderOption<double>[] {
+                        new Terminal.Gui.SliderOption<double>("Zero", new System.Text.Rune('0'), 0D)});
+            this.slider4.Orientation = Terminal.Gui.Orientation.Horizontal;
+            this.slider4.RangeAllowSingle = false;
+            this.slider4.AllowEmpty = false;
+            this.slider4.MinimumInnerSpacing = 1;
+            this.slider4.LegendsOrientation = Terminal.Gui.Orientation.Horizontal;
+            this.slider4.ShowLegends = true;
+            this.slider4.ShowEndSpacing = false;
+            this.slider4.Type = Terminal.Gui.SliderType.Single;
+            this.slider4.Data = "slider4";
+            this.slider4.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.Add(this.slider4);
         }
     }
 }
