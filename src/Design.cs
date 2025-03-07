@@ -166,10 +166,6 @@ public class Design
     /// <returns>A new <see cref="Design"/> wrapper wrapping <paramref name="subView"/>.</returns>
     public Design CreateSubControlDesign(string name, View subView)
     {
-        // all views can be focused so that they can be edited
-        // or deleted etc
-        subView.CanFocus = true;
-
         if (subView is TableView tv && tv.Table != null && tv.GetDataTable().Rows.Count == 0)
         {
             var dt = tv.GetDataTable();
