@@ -1,6 +1,6 @@
 # Terminal Gui Designer
 
-![example workflow](https://github.com/tznind/TerminalGuiDesigner/actions/workflows/build.yml/badge.svg) [![NuGet Badge](https://buildstats.info/nuget/TerminalGuiDesigner)](https://www.nuget.org/packages/TerminalGuiDesigner/)
+![example workflow](https://github.com/tznind/TerminalGuiDesigner/actions/workflows/build.yml/badge.svg) [![NuGet](https://img.shields.io/nuget/v/TerminalGuiDesigner.svg)](https://www.nuget.org/packages/TerminalGuiDesigner/)
 ![Code Coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/tznind/2a31eee1c9151917aa8d17b59bc86633/raw/code-coverage.json)
 
 Cross platform designer for [Terminal.Gui](https://github.com/migueldeicaza/gui.cs) applications.  
