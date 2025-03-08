@@ -209,14 +209,12 @@ public class Design
         {
             // prevent control from responding to events
             txt.MouseClick += (s, e) => this.SuppressNativeClickEvents(s, e);
-            txt.KeyDown += this.SuppressNativeKeyboardEvents;
         }
 
         if (subView is TextField tf)
         {
             // prevent control from responding to events
             tf.MouseClick += (s,e)=>this.SuppressNativeClickEvents(s,e);
-            tf.KeyDown += SuppressNativeKeyboardEvents;
         }
 
         if (subView.GetType().IsGenericType(typeof(Slider<>)))
@@ -633,21 +631,6 @@ public class Design
         }
     }
 
-    private void SuppressNativeKeyboardEvents(object? sender, Key e)
-    {
-        if (sender == null)
-        {
-            return;
-        }
-
-        if (e == Key.Tab || e == Key.Tab.WithShift || e == Key.Esc || e == Application.QuitKey)
-        {
-            e.Handled = false;
-            return;
-        }
-
-        e.Handled = true;
-    }
 
     private void RegisterCheckboxDesignTimeChanges(CheckBox cb)
     {

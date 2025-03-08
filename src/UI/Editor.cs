@@ -250,11 +250,12 @@ public class Editor : Toplevel
                 // write its name in the lower right
                 int y = this.GetContentSize().Height - 1;
                 int right = bounds.Width - 1;
-                var len = toDisplay.Length;
+                var runes = toDisplay.EnumerateRunes().ToList();
+                var len = runes.Count();
 
                 for (int i = 0; i < len; i++)
                 {
-                    this.AddRune(right - len + i, y, new Rune(toDisplay[i]));
+                    this.AddRune(right - len + i, y, runes[i]);
                 }
             }
         }

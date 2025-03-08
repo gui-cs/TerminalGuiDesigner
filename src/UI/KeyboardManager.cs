@@ -182,6 +182,16 @@ public class KeyboardManager
             }
         }
 
+        // When menu is being edited let user paste in text e.g. command names
+        if (keystroke == keyMap.Paste)
+        {
+            if (Clipboard.TryGetClipboardData(out string text) && IsValidSimpleStringToPaste(text))
+            {
+                menuItem.Title += text;
+                return true;
+            }
+        }
+
         // Allow typing but also Enter to create a new sub-item
         if ( !this.IsActionableKey( keystroke ) )
         {
@@ -215,6 +225,26 @@ public class KeyboardManager
         }
 
         return false;
+    }
+
+    private bool IsValidSimpleStringToPaste(string result)
+    {
+        if (string.IsNullOrWhiteSpace(result))
+        {
+            return false;
+        }
+
+        if (result.Contains('\n') || result.Contains('\r'))
+        {
+            return false;
+        }
+
+        if (result.Length > 100)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     private void ChangeKeyTo(Key keystroke, Key newKey)
