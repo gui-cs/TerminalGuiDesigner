@@ -38,7 +38,7 @@ public class CompositeOperation : Operation
     public IReadOnlyCollection<Operation> Operations => new ReadOnlyCollection<Operation>(this.operations);
 
     /// <inheritdoc/>
-    public override void Redo()
+    protected override void RedoImpl()
     {
         foreach (var op in this.operations)
         {
@@ -47,7 +47,7 @@ public class CompositeOperation : Operation
     }
 
     /// <inheritdoc/>
-    public override void Undo()
+    protected override void UndoImpl()
     {
         foreach (var op in this.operations)
         {

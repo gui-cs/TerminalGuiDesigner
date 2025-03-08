@@ -46,7 +46,7 @@ public class AddViewOperation : Operation
     }
 
     /// <inheritdoc/>
-    public override void Redo()
+    protected override void RedoImpl()
     {
         if (this.add == null)
         {
@@ -59,7 +59,7 @@ public class AddViewOperation : Operation
     }
 
     /// <inheritdoc/>
-    public override void Undo()
+    protected override void UndoImpl()
     {
         if (this.add == null)
         {

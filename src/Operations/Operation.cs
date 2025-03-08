@@ -1,4 +1,7 @@
-﻿namespace TerminalGuiDesigner.Operations;
+﻿using NLog;
+using Terminal.Gui;
+
+namespace TerminalGuiDesigner.Operations;
 
 /// <summary>
 /// Abstract base class for <see cref="IOperation"/>.
@@ -45,6 +48,8 @@ public abstract class Operation : IOperation
             return false;
         }
 
+        Logging.Information($"Do Operation {UniqueIdentifier} ({GetType().Name})");
+
         if ( this.DoImpl( ) )
         {
             Interlocked.Increment( ref _timesDone );
@@ -55,10 +60,22 @@ public abstract class Operation : IOperation
     }
 
     /// <inheritdoc/>
-    public abstract void Undo();
+    public void Undo()
+    {
+        Logging.Information($"Undo Operation {UniqueIdentifier} ({GetType().Name})");
+        UndoImpl();
+    }
+
+    protected abstract void UndoImpl();
 
     /// <inheritdoc/>
-    public abstract void Redo();
+    public void Redo()
+    {
+        Logging.Information($"Redo Operation {UniqueIdentifier} ({GetType().Name})");
+        RedoImpl();
+    }
+
+    protected abstract void RedoImpl();
 
     /// <inheritdoc cref="IOperation.Do"/>
     protected abstract bool DoImpl();

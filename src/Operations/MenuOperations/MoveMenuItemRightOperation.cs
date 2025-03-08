@@ -31,7 +31,7 @@ public class MoveMenuItemRightOperation : MenuItemOperation
     public int? InsertionIndex { get; set; }
 
     /// <inheritdoc/>
-    public override void Redo()
+    protected override void RedoImpl()
     {
         if (this.OperateOn == null)
         {
@@ -42,7 +42,7 @@ public class MoveMenuItemRightOperation : MenuItemOperation
     }
 
     /// <inheritdoc/>
-    public override void Undo()
+    protected override void UndoImpl()
     {
         if (this.Parent == null || this.OperateOn == null)
         {

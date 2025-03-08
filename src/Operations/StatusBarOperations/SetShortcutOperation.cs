@@ -32,7 +32,7 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
         }
 
         /// <inheritdoc/>
-        public override void Redo()
+        protected override void RedoImpl()
         {
             if (this.shortcut == null)
             {
@@ -43,7 +43,7 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
         }
 
         /// <inheritdoc/>
-        public override void Undo()
+        protected override void UndoImpl()
         {
             this.OperateOn.Key = this.originalShortcut;
         }

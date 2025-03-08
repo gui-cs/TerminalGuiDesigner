@@ -45,13 +45,13 @@ public class MoveMenuItemOperation : MenuItemOperation
     }
 
     /// <inheritdoc/>
-    public override void Redo()
+    protected override void RedoImpl()
     {
         this.Do();
     }
 
     /// <inheritdoc/>
-    public override void Undo()
+    protected override void UndoImpl()
     {
         this.Move(this.up ? 1 : -1);
     }

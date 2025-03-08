@@ -37,6 +37,70 @@ namespace Showcase {
         
         private Terminal.Gui.MenuItem spellCheckerConfigurationForSelectedItemMenuItem;
         
+        private Terminal.Gui.MenuBarItem openMenu;
+        
+        private Terminal.Gui.MenuItem projectSolutionMenuItem;
+        
+        private Terminal.Gui.MenuItem folderMenuItem;
+        
+        private Terminal.Gui.MenuItem workspaceMenuItem;
+        
+        private Terminal.Gui.MenuItem cMakeMenuItem;
+        
+        private Terminal.Gui.MenuItem fileMenuItem2;
+        
+        private Terminal.Gui.MenuItem cloneRepositoryMenuItem;
+        
+        private Terminal.Gui.MenuItem startWindowMenuItem;
+        
+        private Terminal.Gui.MenuItem closeMenuItem;
+        
+        private Terminal.Gui.MenuItem closeSolutionMenuItem;
+        
+        private Terminal.Gui.MenuItem startLiveShareSessionMenuItem;
+        
+        private Terminal.Gui.MenuItem joinLiveShareSessionMenuItem;
+        
+        private Terminal.Gui.MenuItem saveMenucsMenuItem;
+        
+        private Terminal.Gui.MenuItem saveMenucsAsMenuItem;
+        
+        private Terminal.Gui.MenuItem saveAllMenuItem;
+        
+        private Terminal.Gui.MenuItem pageSetupMenuItem;
+        
+        private Terminal.Gui.MenuItem printMenuItem;
+        
+        private Terminal.Gui.MenuItem accountSettingsMenuItem;
+        
+        private Terminal.Gui.MenuBarItem recentFilesMenu;
+        
+        private Terminal.Gui.MenuItem file1csMenuItem;
+        
+        private Terminal.Gui.MenuItem file2csMenuItem;
+        
+        private Terminal.Gui.MenuBarItem recentProjectsAndSolutionsMenu;
+        
+        private Terminal.Gui.MenuItem terminalGuislnMenuItem;
+        
+        private Terminal.Gui.MenuItem terminalGuiDesignerslnMenuItem;
+        
+        private Terminal.Gui.MenuBarItem moveMenucsIntoMenu;
+        
+        private Terminal.Gui.MenuItem solutionItemsMenuItem;
+        
+        private Terminal.Gui.MenuItem unitTestsMenuItem;
+        
+        private Terminal.Gui.MenuItem showcaseMenuItem;
+        
+        private Terminal.Gui.MenuItem exitMenuItem;
+        
+        private Terminal.Gui.MenuBarItem editMenu;
+        
+        private Terminal.Gui.MenuBarItem goToMenu;
+        
+        private Terminal.Gui.MenuItem goToLineMenuItem;
+        
         private void InitializeComponent() {
             this.menuBar = new Terminal.Gui.MenuBar();
             this.textField = new Terminal.Gui.TextField();
@@ -101,10 +165,154 @@ namespace Showcase {
                     this.projectFromExistingCodeMenuItem,
                     null,
                     this.spellCheckerConfigurationForSelectedItemMenuItem};
+            this.openMenu = new Terminal.Gui.MenuBarItem();
+            this.openMenu.Title = "Open";
+            this.projectSolutionMenuItem = new Terminal.Gui.MenuItem();
+            this.projectSolutionMenuItem.Title = "Project/Solution...";
+            this.projectSolutionMenuItem.Data = "projectSolutionMenuItem";
+            this.projectSolutionMenuItem.ShortcutKey = ((Terminal.Gui.KeyCode)(1342177359u));
+            this.folderMenuItem = new Terminal.Gui.MenuItem();
+            this.folderMenuItem.Title = "Folder...";
+            this.folderMenuItem.Data = "folderMenuItem";
+            this.folderMenuItem.ShortcutKey = ((Terminal.Gui.KeyCode)(3489661007u));
+            this.workspaceMenuItem = new Terminal.Gui.MenuItem();
+            this.workspaceMenuItem.Title = "Workspace...";
+            this.workspaceMenuItem.Data = "workspaceMenuItem";
+            this.cMakeMenuItem = new Terminal.Gui.MenuItem();
+            this.cMakeMenuItem.Title = "CMake...";
+            this.cMakeMenuItem.Data = "cMakeMenuItem";
+            this.fileMenuItem2 = new Terminal.Gui.MenuItem();
+            this.fileMenuItem2.Title = "File...";
+            this.fileMenuItem2.Data = "fileMenuItem2";
+            this.fileMenuItem2.ShortcutKey = ((Terminal.Gui.KeyCode)(1073741903u));
+            this.openMenu.Children = new Terminal.Gui.MenuItem[] {
+                    this.projectSolutionMenuItem,
+                    this.folderMenuItem,
+                    this.workspaceMenuItem,
+                    this.cMakeMenuItem,
+                    null,
+                    this.fileMenuItem2};
+            this.cloneRepositoryMenuItem = new Terminal.Gui.MenuItem();
+            this.cloneRepositoryMenuItem.Title = "Clone Repository...";
+            this.cloneRepositoryMenuItem.Data = "cloneRepositoryMenuItem";
+            this.startWindowMenuItem = new Terminal.Gui.MenuItem();
+            this.startWindowMenuItem.Title = "Start Window";
+            this.startWindowMenuItem.Data = "startWindowMenuItem";
+            this.closeMenuItem = new Terminal.Gui.MenuItem();
+            this.closeMenuItem.Title = "Close";
+            this.closeMenuItem.Data = "closeMenuItem";
+            this.closeSolutionMenuItem = new Terminal.Gui.MenuItem();
+            this.closeSolutionMenuItem.Title = "Close Solution";
+            this.closeSolutionMenuItem.Data = "closeSolutionMenuItem";
+            this.startLiveShareSessionMenuItem = new Terminal.Gui.MenuItem();
+            this.startLiveShareSessionMenuItem.Title = "Start Live Share Session";
+            this.startLiveShareSessionMenuItem.Data = "startLiveShareSessionMenuItem";
+            this.joinLiveShareSessionMenuItem = new Terminal.Gui.MenuItem();
+            this.joinLiveShareSessionMenuItem.Title = "Join Live Share Session...";
+            this.joinLiveShareSessionMenuItem.Data = "joinLiveShareSessionMenuItem";
+            this.saveMenucsMenuItem = new Terminal.Gui.MenuItem();
+            this.saveMenucsMenuItem.Title = "Save Menu.cs";
+            this.saveMenucsMenuItem.Data = "saveMenucsMenuItem";
+            this.saveMenucsMenuItem.ShortcutKey = ((Terminal.Gui.KeyCode)(1073741907u));
+            this.saveMenucsAsMenuItem = new Terminal.Gui.MenuItem();
+            this.saveMenucsAsMenuItem.Title = "Save Menu.cs As...";
+            this.saveMenucsAsMenuItem.Data = "saveMenucsAsMenuItem";
+            this.saveAllMenuItem = new Terminal.Gui.MenuItem();
+            this.saveAllMenuItem.Title = "Save All";
+            this.saveAllMenuItem.Data = "saveAllMenuItem";
+            this.saveAllMenuItem.ShortcutKey = ((Terminal.Gui.KeyCode)(1342177363u));
+            this.pageSetupMenuItem = new Terminal.Gui.MenuItem();
+            this.pageSetupMenuItem.Title = "Page Setup...";
+            this.pageSetupMenuItem.Data = "pageSetupMenuItem";
+            this.printMenuItem = new Terminal.Gui.MenuItem();
+            this.printMenuItem.Title = "Print...";
+            this.printMenuItem.Data = "printMenuItem";
+            this.printMenuItem.ShortcutKey = ((Terminal.Gui.KeyCode)(1073741904u));
+            this.accountSettingsMenuItem = new Terminal.Gui.MenuItem();
+            this.accountSettingsMenuItem.Title = "Account Settings...";
+            this.accountSettingsMenuItem.Data = "accountSettingsMenuItem";
+            this.recentFilesMenu = new Terminal.Gui.MenuBarItem();
+            this.recentFilesMenu.Title = "Recent Files";
+            this.file1csMenuItem = new Terminal.Gui.MenuItem();
+            this.file1csMenuItem.Title = "File 1.cs";
+            this.file1csMenuItem.Data = "file1csMenuItem";
+            this.file2csMenuItem = new Terminal.Gui.MenuItem();
+            this.file2csMenuItem.Title = "File 2.cs";
+            this.file2csMenuItem.Data = "file2csMenuItem";
+            this.recentFilesMenu.Children = new Terminal.Gui.MenuItem[] {
+                    this.file1csMenuItem,
+                    this.file2csMenuItem};
+            this.recentProjectsAndSolutionsMenu = new Terminal.Gui.MenuBarItem();
+            this.recentProjectsAndSolutionsMenu.Title = "Recent Projects and Solutions";
+            this.terminalGuislnMenuItem = new Terminal.Gui.MenuItem();
+            this.terminalGuislnMenuItem.Title = "Terminal.Gui.sln";
+            this.terminalGuislnMenuItem.Data = "terminalGuislnMenuItem";
+            this.terminalGuiDesignerslnMenuItem = new Terminal.Gui.MenuItem();
+            this.terminalGuiDesignerslnMenuItem.Title = "TerminalGuiDesigner.sln";
+            this.terminalGuiDesignerslnMenuItem.Data = "terminalGuiDesignerslnMenuItem";
+            this.recentProjectsAndSolutionsMenu.Children = new Terminal.Gui.MenuItem[] {
+                    this.terminalGuislnMenuItem,
+                    this.terminalGuiDesignerslnMenuItem};
+            this.moveMenucsIntoMenu = new Terminal.Gui.MenuBarItem();
+            this.moveMenucsIntoMenu.Title = "Move Menu.cs into";
+            this.solutionItemsMenuItem = new Terminal.Gui.MenuItem();
+            this.solutionItemsMenuItem.Title = "1 Solution Items";
+            this.solutionItemsMenuItem.Data = "solutionItemsMenuItem";
+            this.unitTestsMenuItem = new Terminal.Gui.MenuItem();
+            this.unitTestsMenuItem.Title = "2 UnitTests";
+            this.unitTestsMenuItem.Data = "unitTestsMenuItem";
+            this.showcaseMenuItem = new Terminal.Gui.MenuItem();
+            this.showcaseMenuItem.Title = "3 Showcase";
+            this.showcaseMenuItem.Data = "showcaseMenuItem";
+            this.moveMenucsIntoMenu.Children = new Terminal.Gui.MenuItem[] {
+                    this.solutionItemsMenuItem,
+                    this.unitTestsMenuItem,
+                    this.showcaseMenuItem};
+            this.exitMenuItem = new Terminal.Gui.MenuItem();
+            this.exitMenuItem.Title = "Exit";
+            this.exitMenuItem.Data = "exitMenuItem";
             this.fileF9Menu.Children = new Terminal.Gui.MenuItem[] {
-                    this.newMenu};
+                    this.newMenu,
+                    this.openMenu,
+                    this.cloneRepositoryMenuItem,
+                    this.startWindowMenuItem,
+                    null,
+                    this.closeMenuItem,
+                    this.closeSolutionMenuItem,
+                    null,
+                    this.startLiveShareSessionMenuItem,
+                    this.joinLiveShareSessionMenuItem,
+                    null,
+                    this.saveMenucsMenuItem,
+                    this.saveMenucsAsMenuItem,
+                    this.saveAllMenuItem,
+                    null,
+                    this.pageSetupMenuItem,
+                    this.printMenuItem,
+                    null,
+                    this.accountSettingsMenuItem,
+                    null,
+                    this.recentFilesMenu,
+                    this.recentProjectsAndSolutionsMenu,
+                    null,
+                    this.moveMenucsIntoMenu,
+                    null,
+                    this.exitMenuItem};
+            this.editMenu = new Terminal.Gui.MenuBarItem();
+            this.editMenu.Title = "Edit";
+            this.goToMenu = new Terminal.Gui.MenuBarItem();
+            this.goToMenu.Title = "Go To";
+            this.goToLineMenuItem = new Terminal.Gui.MenuItem();
+            this.goToLineMenuItem.Title = "Go To Line...";
+            this.goToLineMenuItem.Data = "goToLineMenuItem";
+            this.goToLineMenuItem.ShortcutKey = ((Terminal.Gui.KeyCode)(1073741895u));
+            this.goToMenu.Children = new Terminal.Gui.MenuItem[] {
+                    this.goToLineMenuItem};
+            this.editMenu.Children = new Terminal.Gui.MenuItem[] {
+                    this.goToMenu};
             this.menuBar.Menus = new Terminal.Gui.MenuBarItem[] {
-                    this.fileF9Menu};
+                    this.fileF9Menu,
+                    this.editMenu};
             this.Add(this.menuBar);
         }
     }
