@@ -88,9 +88,7 @@ public class BigListBox<T>
             SelectedItem = 0
         };
         listView.SetSource(new ObservableCollection<string>(ErrorStringArray));
-
-        this.listView.KeyDown += this.ListView_KeyPress;
-
+        
         this.listView.MouseClick += this.ListView_MouseClick;
         
         this.collection = this.BuildList(this.GetInitialSource()).ToList();
@@ -223,21 +221,7 @@ public class BigListBox<T>
             this.Accept();
         }
     }
-
-    private void ListView_KeyPress(object? sender, Key key)
-    {
-        // if user types in some text change the focus to the text box to enable searching
-        var c = (char)key;
-
-        // backspace or letter/numbers
-        if (key == Key.Backspace || char.IsLetterOrDigit(c))
-        {
-            this.searchBox?.FocusDeepest(NavigationDirection.Forward, TabBehavior.TabStop);
-            this.searchBox?.NewKeyDownEvent(key);
-            key.Handled = true;
-        }
-    }
-
+    
     private bool Timer()
     {
         if (this.changes && DateTime.Now.Subtract(this.lastKeypress) > TimeSpan.FromMilliseconds(100))
