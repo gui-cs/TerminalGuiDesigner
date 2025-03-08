@@ -107,7 +107,7 @@ internal class GetTextDialog
         btnClear.Accepting += (s, e) =>
         {
             e.Cancel = true;
-            this.textField.Text = string.Empty;
+            this.textView.Text = string.Empty;
         };
 
         this.win.Add(btnOk);
