@@ -16,6 +16,7 @@ public class ExceptionViewer
     /// <param name="exception"><see cref="Exception"/> to show.</param>
     public static void ShowException(string errorText, Exception exception)
     {
+        Logging.Critical(errorText + exception);
         var msg = GetExceptionText(errorText, exception, false);
 
         var textView = new TextView()

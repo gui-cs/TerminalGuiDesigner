@@ -1,4 +1,5 @@
 using TerminalGuiDesigner.Operations.MenuOperations;
+using TerminalGuiDesigner.UI.Windows;
 
 namespace UnitTests;
 
@@ -723,6 +724,20 @@ internal class MenuBarTests : Tests
         MenuTracker.Instance.UnregisterMenuBar( mbOut );
     }
 
+    [TestCase(KeyCode.ShiftMask,false)]
+    [TestCase(KeyCode.AltMask, false)]
+    [TestCase(KeyCode.CtrlMask, false)]
+    [TestCase(KeyCode.ShiftMask | KeyCode.CtrlMask, false)]
+    [TestCase(KeyCode.ShiftMask | KeyCode.AltMask, false)]
+    [TestCase(KeyCode.CtrlMask | KeyCode.AltMask, false)]
+    [TestCase(KeyCode.ShiftMask | KeyCode.CtrlMask | KeyCode.AltMask, false)]
+    [TestCase(KeyCode.CtrlMask | KeyCode.C, true)]
+    [TestCase(KeyCode.ShiftMask | KeyCode.CtrlMask | KeyCode.AltMask | KeyCode.C, true)]
+
+    public void TestShortcutIsValid(KeyCode k,bool expected)
+    {
+        Assert.That(Modals.IsValidShortcut(k),Is.EqualTo(expected));
+    }
     private static MenuBar GetMenuBar( )
     {
         return GetMenuBar( out _ );
