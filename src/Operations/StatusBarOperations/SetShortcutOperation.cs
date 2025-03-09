@@ -5,7 +5,7 @@ using TerminalGuiDesigner.UI.Windows;
 namespace TerminalGuiDesigner.Operations.StatusBarOperations
 {
     /// <summary>
-    /// Changes the <see cref="StatusItem.Shortcut"/> of a <see cref="StatusItem"/> on
+    /// Changes the <see cref="Shortcut"/> of a <see cref="Shortcut"/> on
     /// a <see cref="StatusBar"/>.
     /// </summary>
     public class SetShortcutOperation : GenericArrayElementOperation<StatusBar, Shortcut>
@@ -17,7 +17,7 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
         /// Initializes a new instance of the <see cref="SetShortcutOperation"/> class.
         /// </summary>
         /// <param name="design">Wrapper for a <see cref="StatusBar"/>.</param>
-        /// <param name="statusItem">The <see cref="StatusItem"/> whose shortcut you want to change.</param>
+        /// <param name="statusItem">The <see cref="Shortcut"/> whose shortcut you want to change.</param>
         /// <param name="shortcut">The new shortcut or null to prompt user at runtime.</param>
         public SetShortcutOperation(Design design, Shortcut statusItem, Key? shortcut)
             : base(

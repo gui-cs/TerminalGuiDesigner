@@ -112,8 +112,8 @@ public class Editor : Toplevel
 
     /// <summary>
     /// Gets or Sets a value indicating whether <see cref="View"/> that do not have borders
-    /// (e.g. <see cref="ScrollView"/>) should have a dotted line rendered around them so
-    /// users don't lose track of where they are on a same-colored background.
+    ///  should have a dotted line rendered around them so users don't lose track of where
+    /// they are on a same-colored background.
     /// </summary>
     // BUG: Thread-safety
     public static bool ShowBorders { get; set; } = true;

@@ -476,7 +476,7 @@ public static class ViewExtensions
 
     /// <summary>
     /// Returns the <see cref="Adornment.Parent"/> of <paramref name="v"/>
-    /// if it is an <see cref="Adornment"/>. Or if <param name="v"/> is not
+    /// if it is an <see cref="Adornment"/>. Or if <paramref name="v"/> is not
     /// directly an adornment but <see cref="AnySuperViewIs{T}"/> then the method
     /// will traverse up <see cref="View.SuperView"/> hierarchy until parent is found.
     /// </summary>

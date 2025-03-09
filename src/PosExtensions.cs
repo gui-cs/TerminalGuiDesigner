@@ -196,7 +196,9 @@ public static class PosExtensions
     }
 
 
-    /// <inheritdoc cref="IsCombine(Pos)"/>
+    /// <summary>
+    ///Returns true if the <see cref="Pos"/> is a summation or subtraction of two other <see cref="Pos"/>
+    /// </summary>
     /// <param name="p"><see cref="Pos"/> to classify.</param>
     /// <param name="left">The left hand operand of the summation/subtraction.</param>
     /// <param name="right">The right hand operand of the summation/subtraction.</param>

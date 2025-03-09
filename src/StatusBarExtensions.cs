@@ -9,11 +9,11 @@ namespace TerminalGuiDesigner;
 public static class StatusBarExtensions
 {
     /// <summary>
-    /// Returns the <see cref="StatusItem"/> that appears at the <paramref name="screenX"/> of the click.
+    /// Returns the <see cref="Shortcut"/> that appears at the <paramref name="screenX"/> of the click.
     /// </summary>
     /// <param name="statusBar"><see cref="StatusBar"/> you want to find the clicked <see cref="MenuBarItem"/> (top level menu) for.</param>
     /// <param name="screenX">Screen coordinate of the click in X.</param>
-    /// <returns>The <see cref="StatusItem"/> under the mouse at this position or null (only considers X).</returns>
+    /// <returns>The <see cref="Shortcut"/> under the mouse at this position or null (only considers X).</returns>
     public static Shortcut? ScreenToMenuBarItem(this StatusBar statusBar, int screenX)
     {
         // These might be changed in Terminal.Gui library

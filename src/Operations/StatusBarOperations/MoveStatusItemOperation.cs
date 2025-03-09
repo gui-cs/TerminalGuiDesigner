@@ -4,7 +4,7 @@ using TerminalGuiDesigner.Operations.Generics;
 namespace TerminalGuiDesigner.Operations.StatusBarOperations
 {
     /// <summary>
-    /// Moves a <see cref="StatusItem"/> on a <see cref="StatusBar"/> left or right.
+    /// Moves a <see cref="Shortcut"/> on a <see cref="StatusBar"/> left or right.
     /// </summary>
     public class MoveStatusItemOperation : MoveOperation<StatusBar, Shortcut>
     {

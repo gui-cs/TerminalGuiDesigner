@@ -33,7 +33,7 @@ public class CompositeOperation : Operation
     }
 
     /// <summary>
-    /// Gets the collection of sub operations performed on <see cref="Operation.Do"/> / <see cref="Undo"/>.
+    /// Gets the collection of sub operations performed on <see cref="Operation.Do"/> / <see cref="Operation.Undo"/>.
     /// </summary>
     public IReadOnlyCollection<Operation> Operations => new ReadOnlyCollection<Operation>(this.operations);
 
