@@ -17,26 +17,7 @@ using Attribute = Terminal.Gui.Attribute;
 /// </summary>
 public partial class ColorSchemeEditor {
     
-    class MutableColorScheme
-    {
-        public Attribute Disabled { get; set; }
-        public Attribute Focus { get; set; }
-        public Attribute HotFocus { get; set; }
-        public Attribute HotNormal { get; set; }
-        public Attribute Normal { get; set; }
-
-        internal ColorScheme ToColorScheme()
-        {
-            return new ColorScheme
-            {
-                Normal = Normal,
-                HotNormal = HotNormal,
-                Focus = Focus,
-                HotFocus = HotFocus,
-                Disabled = Disabled,
-            };
-        }
-    }
+    
     /// <summary>
     /// All colors to use in all <see cref="View"/> states (focused, normal etc).
     /// </summary>
