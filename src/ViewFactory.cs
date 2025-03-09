@@ -46,6 +46,14 @@ public static class ViewFactory
         // This is unstable when added directly as a view see https://github.com/gui-cs/Terminal.Gui/issues/3664
         typeof(Shortcut),
 
+        typeof(Tab),
+        typeof(Bar),
+        typeof(CharMap),
+        typeof(LegendAnnotation),
+        typeof(Menuv2),
+        typeof(ScrollBar),
+        typeof(ScrollSlider),
+        typeof(TileView)
     ];
 
     /// <summary>
@@ -91,7 +99,7 @@ public static class ViewFactory
 
     private static bool IsSupportedType( this Type t )
     {
-        return t == typeof( Window ) || ( !KnownUnsupportedTypes.Any( t.IsSubclassOf ) & !KnownUnsupportedTypes.Contains( t ) );
+        return t == typeof( Window ) ||!KnownUnsupportedTypes.Contains( t );
     }
 
     /// <summary>

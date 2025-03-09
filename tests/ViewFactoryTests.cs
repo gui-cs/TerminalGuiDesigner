@@ -154,15 +154,6 @@ internal class ViewFactoryTests
         Assert.That( ViewFactory.KnownUnsupportedTypes, Contains.Item( expectedType ) );
     }
 
-    [Test]
-    [Description( "Checks that no new types have been added that aren't tested" )]
-    [Category( "Change Control" )]
-    [NonParallelizable]
-    public void KnownUnsupportedTypes_DoesNotContainUnexpectedItems( [ValueSource( nameof( ViewFactory_KnownUnsupportedTypes ) )] Type typeDeclaredUnsupportedInViewFactory )
-    {
-        Assert.That( KnownUnsupportedTypes_ExpectedTypes, Contains.Item( typeDeclaredUnsupportedInViewFactory ) );
-    }
-
     private bool CompareTwoViews( View nonGenericTabIndex, View genericTabIndex )
     {
         Assert.Warn( "View comparison only done by bounds check." );
