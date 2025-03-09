@@ -16,6 +16,9 @@ namespace TerminalGuiDesigner.UI.Windows {
     using Terminal.Gui;
     using TerminalGuiDesigner.ToCode;
 
+    /// <summary>
+    /// UI for configuring array elements
+    /// </summary>
     public partial class ArrayEditor : IValueGetterDialog {
 
         /// <summary>
@@ -29,8 +32,11 @@ namespace TerminalGuiDesigner.UI.Windows {
         /// <summary>
         /// The new array 
         /// </summary>
-        [CanBeNull]
         public object Result => ResultAsList;
+
+        /// <summary>
+        /// Returns the <see cref="Array"/> being designed as an <see cref="IList"/>
+        /// </summary>
         public IList ResultAsList { get; private set; }
 
 

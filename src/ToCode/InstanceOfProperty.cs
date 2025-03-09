@@ -33,6 +33,7 @@ public class InstanceOfProperty : Property
             ?? throw new Exception("Unable to determine property type");
     }
 
+    /// <inheritdoc/>
     public override CodeExpression GetRhs()
     {
         var instance = this.GetValue();

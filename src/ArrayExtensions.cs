@@ -52,7 +52,8 @@ public static class ArrayExtensions
 
         // Create an instance of ListWrapper<T>
         var listWrapperType = typeof(ListWrapper<>).MakeGenericType(elementType);
-        return (IListDataSource)Activator.CreateInstance(listWrapperType, list);
+        return (IListDataSource)(Activator.CreateInstance(listWrapperType, list)
+                                 ?? throw new Exception("CreateInstance inexplicably returned null"));
     }
 
 }

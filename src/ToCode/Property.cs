@@ -310,9 +310,9 @@ public class Property : ToCodeBase
         if (type.GetGenericTypeDefinition() == typeof(SliderOption<>))
         {
             // TODO: this feels very brittle!
-            var a1 = type.GetProperty(nameof(SliderOption<object>.Legend)).GetValue(val);
-            var a2 = (Rune)type.GetProperty(nameof(SliderOption<object>.LegendAbbr)).GetValue(val);
-            var a3 = type.GetProperty(nameof(SliderOption<object>.Data)).GetValue(val);
+            var a1 = type.GetPropertyOrThrow(nameof(SliderOption<object>.Legend)).GetValue(val);
+            var a2 = (Rune)type.GetPropertyOrThrow(nameof(SliderOption<object>.LegendAbbr)).GetValue(val)!;
+            var a3 = type.GetPropertyOrThrow(nameof(SliderOption<object>.Data)).GetValue(val);
             
 
             return new CodeObjectCreateExpression(
