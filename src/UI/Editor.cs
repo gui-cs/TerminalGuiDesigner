@@ -49,6 +49,11 @@ public class Editor : Toplevel
     private static string _logDirectory = string.Empty;
 
     /// <summary>
+    /// True to disable logging (must be set before constructing <see cref="Editor"/>).
+    /// </summary>
+    public static bool Quiet = false;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="Editor"/> class.
     /// </summary>
     public Editor()
@@ -56,7 +61,10 @@ public class Editor : Toplevel
         // Bug: This will have strange inheritance behavior if Editor is inherited from.
         this.CanFocus = true;
 
-        Logging.Logger = CreateLogger();
+        if (!Quiet)
+        {
+            Logging.Logger = CreateLogger();
+        }
 
         try
         {
@@ -440,7 +448,12 @@ public class Editor : Toplevel
                 Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(Color.Black)));
                 this.AddRune(x, y, (Rune)versionLine[i]);
             }
-            
+
+            if (Quiet)
+            {
+                return;
+            }
+
             // Render the log directory line below the version line
             int logLineX = inArea.X + (inArea.Width - logLine.Length) / 2;
             int logLineY = versionLineY+2;
@@ -710,6 +723,7 @@ public class Editor : Toplevel
             return savedOp != currentOp;
         }
     }
+
 
     private string GetHelpWithEmptyFormLoaded()
     {
