@@ -2,18 +2,31 @@
 
 namespace TerminalGuiDesigner.ToCode;
 
+/// <summary>
+/// Code generation methods for writing out enum values
+/// using CodeDom.
+/// </summary>
 public class EnumToCode : ToCodeBase
 {
     private readonly Enum value;
     private readonly Type enumType;
 
-
+    /// <summary>
+    /// Creates a new instance of the class, primed to generate code
+    /// for the supplied <paramref name="value"/>
+    /// </summary>
+    /// <param name="value"></param>
     public EnumToCode(Enum value)
     {
         this.value = value;
         this.enumType = value.GetType();
     }
 
+    /// <summary>
+    /// <para>Returns code expression similar to <c>MyEnum.SomeValue</c>.</para>
+    /// <para>Supports Flags enums e.g. generating things like <c>MyEnum.ValA | MyEnum.ValB</c></para>
+    /// </summary>
+    /// <returns></returns>
     public CodeExpression ToCode()
     {
         var isFlags = enumType.IsDefined(typeof(FlagsAttribute), false);

@@ -176,8 +176,7 @@ public sealed record KeyMap(
     public string ToggleDragging { get; init; } = ToggleDragging;
 
     /// <summary>
-    ///   Gets the string to toggle showing dotted borders around views that otherwise do not have visible borders (e.g.
-    ///   <see cref="ScrollView" />).
+    ///   Gets the string to toggle showing dotted borders around views that otherwise do not have visible borders.
     /// </summary>
     public string ToggleShowBorders { get; init; } = ToggleShowBorders;
 

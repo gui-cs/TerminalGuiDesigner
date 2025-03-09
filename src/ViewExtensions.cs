@@ -303,7 +303,7 @@ public static class ViewExtensions
 
     /// <summary>
     /// <para>
-    /// Sometimes <see cref="View.FindDeepestView"/> returns what the library considers
+    /// Sometimes <see cref="View.GetViewsUnderMouse"/> returns what the library considers
     /// the clicked View rather than what the user would expect.  For example clicking in
     /// the <see cref="Border"/> area of a <see cref="View"/>.
     /// </para>
@@ -313,6 +313,7 @@ public static class ViewExtensions
     /// <returns></returns>
     public static View? UnpackHitView(this View? hit)
     {
+        
         if (hit != null && hit.GetType().Name.Equals("TabRowView"))
         {
             hit = hit.SuperView;

@@ -34,7 +34,7 @@ public class MouseManager
     /// Responds to <see cref="Application.MouseEvent"/>(by changing a 'drag a box' selection area
     /// or starting a resize etc).
     /// </summary>
-    /// <param name="m">The <see cref="MouseEventArgs"/> reported by <see cref="Application.RootMouseEvent"/>.</param>
+    /// <param name="m">The <see cref="MouseEventArgs"/> reported by <see cref="Application.MouseEvent"/>.</param>
     /// <param name="viewBeingEdited">The root <see cref="Design"/> that is open in the <see cref="Editor"/>.</param>
     public void HandleMouse(MouseEventArgs m, Design viewBeingEdited)
     {

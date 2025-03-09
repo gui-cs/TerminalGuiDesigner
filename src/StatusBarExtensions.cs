@@ -68,11 +68,23 @@ public static class StatusBarExtensions
         return bar.Subviews.OfType<Shortcut>().Count();
     }
 
+    /// <summary>
+    /// Returns the items on the <see cref="StatusBar"/> (previously
+    /// called StatusBarItems now called just <see cref="Shortcut"/>)
+    /// </summary>
+    /// <param name="bar"></param>
+    /// <returns></returns>
     public static Shortcut[] GetShortcuts(this StatusBar bar)
     {
         return bar.Subviews.OfType<Shortcut>().ToArray();
     }
 
+    /// <summary>
+    /// Replaces all items on the <paramref name="bar"/> with the new
+    /// <paramref name="shortcuts"/>.
+    /// </summary>
+    /// <param name="bar"></param>
+    /// <param name="shortcuts"></param>
     public static void SetShortcuts(this StatusBar bar, Shortcut[] shortcuts)
     {
         foreach(var old in bar.GetShortcuts())

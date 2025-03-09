@@ -8,7 +8,10 @@ namespace TerminalGuiDesigner.Operations;
 /// </summary>
 public abstract class Operation : IOperation
 {
-    protected int _timesDone;
+    /// <summary>
+    /// The number of times the operation has been performed.
+    /// </summary>
+    private int _timesDone;
 
     /// <summary>
     /// The name to give to all objects which do not have a title/text etc.
@@ -23,7 +26,7 @@ public abstract class Operation : IOperation
     public bool SupportsUndo { get; protected set; } = true;
 
     /// <inheritdoc />
-    public ref int TimesDone => ref _timesDone;
+    public int TimesDone => _timesDone;
 
     /// <inheritdoc/>
     /// <remarks>Defaults to <see cref="Guid.NewGuid"/>.</remarks>
@@ -66,6 +69,7 @@ public abstract class Operation : IOperation
         UndoImpl();
     }
 
+    /// <inheritdoc cref="Undo"/>
     protected abstract void UndoImpl();
 
     /// <inheritdoc/>
@@ -75,6 +79,7 @@ public abstract class Operation : IOperation
         RedoImpl();
     }
 
+    /// <inheritdoc cref="Redo"/>
     protected abstract void RedoImpl();
 
     /// <inheritdoc cref="IOperation.Do"/>

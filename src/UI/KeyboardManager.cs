@@ -30,7 +30,7 @@ public class KeyboardManager
     /// to the rest of the regular Terminal.Gui API layer.
     /// </summary>
     /// <param name="focusedView">The <see cref="View"/> that currently holds focus in <see cref="Editor"/>.</param>
-    /// <param name="keystroke">The key that has been reported by <see cref="Application.RootKey"/>.</param>
+    /// <param name="keystroke">The key that has been reported by <see cref="Application.KeyDown"/>.</param>
     /// <returns><see langword="true"/> if <paramref name="keystroke"/> should be suppressed.</returns>
     public bool HandleKey(View focusedView, Key keystroke)
     {
