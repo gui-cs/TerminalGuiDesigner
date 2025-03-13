@@ -63,7 +63,7 @@ public partial class ChoicesDialog
             };
         }
 
-        buttonPanel.LayoutSubviews();
+        buttonPanel.LayoutSubViews();
 
         // hide other buttons
         for(int i=options.Length;i<buttons.Length;i++)
@@ -77,7 +77,7 @@ public partial class ChoicesDialog
         int buttonWidth;
 
         // align buttons bottom of dialog 
-        buttonPanel.Width = buttonWidth = buttons.Sum(b=>buttonPanel.Subviews.Contains(b) ? b.Frame.Width : 0) + 1;
+        buttonPanel.Width = buttonWidth = buttons.Sum(b=>buttonPanel.SubViews.Contains(b) ? b.Frame.Width : 0) + 1;
 
         int maxWidthLine = TextFormatter.GetSumMaxCharWidth(message);
         if (maxWidthLine > Application.Driver.Cols)

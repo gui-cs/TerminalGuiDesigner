@@ -62,7 +62,7 @@ internal class ResizeOperationTests : Tests
             ClassicAssert.AreEqual(11, screen.Y);
 
             Application.Begin((Dialog)root.View);
-            root.View.LayoutSubviews();
+            root.View.LayoutSubViews();
 
             if (!withMouse)
             {

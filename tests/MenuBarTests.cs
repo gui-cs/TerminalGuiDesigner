@@ -32,7 +32,7 @@ internal class MenuBarTests : Tests
         Assert.Multiple( ( ) =>
         {
             Assert.That( bar.Menus, Is.Empty );
-            Assert.That( root.View.Subviews, Has.None.InstanceOf<MenuBar>( ) );
+            Assert.That( root.View.SubViews, Has.None.InstanceOf<MenuBar>( ) );
         } );
 
         Assert.That( OperationManager.Instance.Undo, Throws.Nothing );
@@ -45,8 +45,8 @@ internal class MenuBarTests : Tests
 
         // Same conditions as at the start
         // The MenuBar should be back in the root view...
-        Assert.That( root.View.Subviews, Has.Exactly( 1 ).InstanceOf<MenuBar>( ) );
-        Assert.That( root.View.Subviews[ 0 ], Is.Not.Null.And.SameAs( bar ) );
+        Assert.That( root.View.SubViews, Has.Exactly( 1 ).InstanceOf<MenuBar>( ) );
+        Assert.That( root.View.SubViews.ElementAt(0), Is.Not.Null.And.SameAs( bar ) );
 
         // ...And the original MenuBar should be back as it was at the start.
         Assert.That( bar.Menus, Is.Not.Null );
@@ -148,10 +148,10 @@ internal class MenuBarTests : Tests
             Assert.That( bar, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
             Assert.That( root, Is.Not.Null.And.InstanceOf<Design>( ) );
         } );
-        Assert.That( root.View.Subviews, Has.Exactly( 1 ).InstanceOf<MenuBar>( ) );
+        Assert.That( root.View.SubViews, Has.Exactly( 1 ).InstanceOf<MenuBar>( ) );
         Assert.Multiple( ( ) =>
         {
-            Assert.That( root.View.Subviews[ 0 ], Is.Not.Null.And.SameAs( bar ) );
+            Assert.That( root.View.SubViews.ElementAt(0), Is.Not.Null.And.SameAs( bar ) );
             Assert.That( bar.Menus, Is.Not.Null );
         } );
         Assert.That( bar.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
@@ -432,7 +432,7 @@ internal class MenuBarTests : Tests
         // 1 visible root menu (e.g. File)
         MenuBar? mbIn = null;
         Assert.That( designBackIn!.View, Is.Not.Null.And.InstanceOf<View>( ) );
-        IList<View> actualSubviews = designBackIn.View.GetActualSubviews();
+        IList<View> actualSubviews = designBackIn.View.GetActualSubviews().ToList();
         Assert.That( actualSubviews, Has.Exactly( 1 ).InstanceOf<MenuBar>( ) );
         Assert.That( ( ) => mbIn = actualSubviews.OfType<MenuBar>(  ).Single( ), Throws.Nothing );
         Assert.That( mbIn, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
@@ -513,7 +513,7 @@ internal class MenuBarTests : Tests
         MenuBar? mbIn = null;
         Assume.That( designBackIn!.View, Is.Not.Null.And.InstanceOf<View>( ) );
 
-        IList<View> actualSubviews = designBackIn.View.GetActualSubviews( );
+        IList<View> actualSubviews = designBackIn.View.GetActualSubviews( ).ToList();
         Assert.That( actualSubviews, Has.Exactly( 1 ).InstanceOf<MenuBar>( ) );
         Assert.That( ( ) => mbIn = actualSubviews.OfType<MenuBar>( ).Single( ), Throws.Nothing );
         Assert.That( mbIn, Is.Not.Null.And.InstanceOf<MenuBar>( ) );

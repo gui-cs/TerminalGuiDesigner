@@ -23,14 +23,14 @@ public static class ViewExtensions
     /// <param name="v"><see cref="View"/> whose children you want to find.</param>
     /// <returns>All <see cref="View"/> that user perceives as within <paramref name="v"/> skipping over
     /// any Terminal.Gui artifacts (e.g. ContentView).</returns>
-    public static IList<View> GetActualSubviews(this View v)
+    public static IReadOnlyCollection<View> GetActualSubviews(this View v)
     {
         if (v is TabView t)
         {
             return t.Tabs.Select(tab => tab.View).Where(v => v != null).ToList();
         }
 
-        return v.Subviews;
+        return v.SubViews;
     }
 
     /// <summary>
@@ -401,8 +401,8 @@ public static class ViewExtensions
     }
 
     /// <summary>
-    /// Returns all subviews that are not Designable.  Beware that designs can be nested
-    /// e.g. calling this on a root view with return subviews that belong to other designed
+    /// Returns all SubViews that are not Designable.  Beware that designs can be nested
+    /// e.g. calling this on a root view with return SubViews that belong to other designed
     /// components that were added to the root designed window.
     /// </summary>
     /// <param name="view"></param>
@@ -415,7 +415,7 @@ public static class ViewExtensions
     }
     private static void RecursivelyIgnoreAllNonDesignableSubviews(View view, List<View> alsoIgnore)
     {
-        foreach (var sub in view.Subviews)
+        foreach (var sub in view.SubViews)
         {
             // If Data is string then it is likely a View that is going to
             // end up having a Design but we haven't gotten to it yet (i.e. method is being called mid-load)

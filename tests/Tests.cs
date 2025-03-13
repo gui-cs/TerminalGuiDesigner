@@ -62,7 +62,7 @@ public class Tests
         v.EndInit();
 
         Application.Top.Add(v);
-        Application.Top.LayoutSubviews();
+        Application.Top.LayoutSubViews();
 
         return d;
     }
@@ -129,7 +129,7 @@ public class Tests
     /// <summary>
     /// Performs a mouse drag from the first coordinates to the second (in screen space)
     /// </summary>
-    /// <param name="root">The root Design.  Make sure you have added it to <see cref="Application.Top"/> and run <see cref="View.LayoutSubviews"/></param>
+    /// <param name="root">The root Design.  Make sure you have added it to <see cref="Application.Top"/> and run <see cref="View.LayoutSubViews"/></param>
     /// <param name="x1">X coordinate to start drag at</param>
     /// <param name="y1">Y coordinate to start drag at</param>
     /// <param name="x2">X coordinate to end drag at</param>

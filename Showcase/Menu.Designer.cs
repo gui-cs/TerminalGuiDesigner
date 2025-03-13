@@ -19,8 +19,6 @@ namespace Showcase {
     
     public partial class Menu : Terminal.Gui.Window {
         
-        private Terminal.Gui.TextField textField;
-        
         private Terminal.Gui.MenuBar menuBar;
         
         private Terminal.Gui.MenuBarItem fileF9Menu;
@@ -103,7 +101,6 @@ namespace Showcase {
         
         private void InitializeComponent() {
             this.menuBar = new Terminal.Gui.MenuBar();
-            this.textField = new Terminal.Gui.TextField();
             this.Width = Dim.Fill(0);
             this.Height = Dim.Fill(0);
             this.X = 0;
@@ -115,19 +112,6 @@ namespace Showcase {
             this.Modal = false;
             this.TextAlignment = Terminal.Gui.Alignment.Start;
             this.Title = "";
-            this.textField.Width = 5;
-            this.textField.Height = 1;
-            this.textField.X = 0;
-            this.textField.Y = 6;
-            this.textField.Visible = true;
-            this.textField.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
-            this.textField.CanFocus = true;
-            this.textField.ShadowStyle = Terminal.Gui.ShadowStyle.None;
-            this.textField.Secret = false;
-            this.textField.Data = "textField";
-            this.textField.Text = "Heya";
-            this.textField.TextAlignment = Terminal.Gui.Alignment.Start;
-            this.Add(this.textField);
             this.menuBar.Width = Dim.Fill(0);
             this.menuBar.Height = 1;
             this.menuBar.X = 0;

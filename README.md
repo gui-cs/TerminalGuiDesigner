@@ -171,7 +171,7 @@ italics are experimental and require passing the `-e` flag when starting applica
   - [x] Container views (e.g. TabView)
   - [ ] To OS clipboard (e.g. open one Designer.cs View and copy to another)
   - [x] Retain PosRelative mappings in pasted views (e.g. `A` LeftOf `B`)
-- [x] Move views to subviews
+- [x] Move views to SubViews
   - [x] With mouse
   - [ ] With keyboard
 - [ ] Read and present xmldoc comments when editing properties

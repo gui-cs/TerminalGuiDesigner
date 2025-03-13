@@ -206,7 +206,7 @@ public class ViewToCode
     public void AddSubViewsToDesignerCs(View forView, CodeDomArgs args, CodeExpression? parentViewExpression = null)
     {
         // order the controls top left to lower right so that tab order is good
-        foreach (var sub in ViewExtensions.OrderViewsByScreenPosition(forView.Subviews))
+        foreach (var sub in ViewExtensions.OrderViewsByScreenPosition(forView.SubViews))
         {
             // If the sub child has a Design (and is not an public part of another control,
             // For example ContentView sub-view of Window

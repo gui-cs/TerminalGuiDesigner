@@ -36,13 +36,13 @@ internal class AddViewOperationTests : Tests
         var op = new AddViewOperation( instance, d, instanceFieldName );
         Assert.That( op.Do, Throws.Nothing );
 
-        IList<View> subviews = d.View.Subviews;
+        IList<View> SubViews = d.View.SubViews.ToList();
 
         var hasInvisPopupViewToo = PopoverTypes.Contains(candidateType);
 
-        Assert.That( subviews, Has.Count.EqualTo( hasInvisPopupViewToo? 2:1) );
+        Assert.That( SubViews, Has.Count.EqualTo( hasInvisPopupViewToo? 2:1) );
 
-        var theOnlySubView = subviews[ 0 ];
+        var theOnlySubView = SubViews[ 0 ];
         Assert.That( theOnlySubView, Is.SameAs( instance ) );
         Assert.That( ( (Design)theOnlySubView.Data ).FieldName, Is.EqualTo( instanceFieldName ) );
     }
@@ -63,13 +63,13 @@ internal class AddViewOperationTests : Tests
             var op = new AddViewOperation( instance, d, baseName );
             Assert.That( op.Do, Throws.Nothing );
 
-            IList<View> subviews = d.View.Subviews;
+            IList<View> SubViews = d.View.SubViews.ToList();
 
             var hasInvisPopupViewToo = PopoverTypes.Contains(instance.GetType());
 
-            Assert.That( subviews, Has.Count.EqualTo( operationNumber * (hasInvisPopupViewToo?2:1)) );
+            Assert.That( SubViews, Has.Count.EqualTo( operationNumber * (hasInvisPopupViewToo?2:1)) );
 
-            var lastSubview = subviews[subviews.Count - (hasInvisPopupViewToo?2:1)];
+            var lastSubview = SubViews[SubViews.Count - (hasInvisPopupViewToo?2:1)];
 
             Assert.That( lastSubview, Is.SameAs( instance ) );
 
@@ -89,7 +89,7 @@ internal class AddViewOperationTests : Tests
             op.Do( );
         }, out _ );
 
-        IList<View> roundTripViews = windowIn.GetActualSubviews( );
+        IList<View> roundTripViews = windowIn.GetActualSubviews( ).ToList();
 
         Assert.That( roundTripViews, Has.Count.EqualTo( 1 ) );
         Assert.That( roundTripViews[ 0 ], Is.InstanceOf( type ) );
@@ -102,7 +102,7 @@ internal class AddViewOperationTests : Tests
 
         int stackSize = 0;
 
-        Assume.That( d.View.Subviews, Is.Empty );
+        Assume.That( d.View.SubViews, Is.Empty );
         
         foreach (var type in SupportedViewTypes)
         {
@@ -111,17 +111,17 @@ internal class AddViewOperationTests : Tests
             var op = new AddViewOperation(instance, d, "blah");
             Assume.That( ( ) => OperationManager.Instance.Do( op ), Throws.Nothing );
 
-            Assume.That( d.View.Subviews, Has.Count.EqualTo( stackSize ) );
+            Assume.That( d.View.SubViews, Has.Count.EqualTo( stackSize ) );
         }
 
         for (int i = 1; i <= stackSize; i++)
         {
             Assert.That( OperationManager.Instance.Undo, Throws.Nothing );
-            Assert.That( d.View.Subviews,
+            Assert.That( d.View.SubViews,
                          Has.Count.EqualTo( stackSize - i ),
                          "Expected the count of views to decrease once each time we Undo" );
         }
 
-        Assert.That( d.View.Subviews, Is.Empty );
+        Assert.That( d.View.SubViews, Is.Empty );
     }
 }

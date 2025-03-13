@@ -35,7 +35,7 @@ internal class MenuBarExtensionsTests : Tests
             v.X = xOffset;
             v.Y = yOffset;
 
-            v.SuperView!.LayoutSubviews();
+            v.SuperView!.LayoutSubViews();
 
             // Expect a MenuBar to be rendered that is 
             // ".test..next..more.." (with 1 unit of preceding whitespace and 1 after each)
@@ -68,7 +68,7 @@ internal class MenuBarExtensionsTests : Tests
             v.X = xOffset;
             v.Y = yOffset;
 
-            v.SuperView!.LayoutSubviews();
+            v.SuperView!.LayoutSubViews();
 
             // Expect a MenuBar to be rendered that is 
             // ".test..next..more.." (with 1 unit of preceding whitespace and 2 after each)
@@ -99,7 +99,7 @@ internal class MenuBarExtensionsTests : Tests
             v.X = xOffset;
             v.Y = yOffset;
 
-            v.SuperView!.LayoutSubviews();
+            v.SuperView!.LayoutSubViews();
              
             // Expect a MenuBar to be rendered that is 
             // ".test.." (with 1 unit of preceding whitespace and 2 after)
@@ -126,7 +126,7 @@ internal class MenuBarExtensionsTests : Tests
             v.X = xOffset;
             v.Y = yOffset;
 
-            v.SuperView!.LayoutSubviews();
+            v.SuperView!.LayoutSubViews();
 
             // Expect a MenuBar to be rendered that is 
             // ".test.." (with 1 unit of preceding whitespace and 2 after)
@@ -153,7 +153,7 @@ internal class MenuBarExtensionsTests : Tests
             v.X = xOffset;
             v.Y = yOffset;
 
-            v.SuperView!.LayoutSubviews();
+            v.SuperView!.LayoutSubViews();
 
             // Expect a MenuBar to be rendered that is 
             // ".test.." (with 1 unit of preceding whitespace and 2 after)

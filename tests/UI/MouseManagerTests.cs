@@ -103,9 +103,9 @@ internal class MouseManagerTests : Tests
 
         Assert.That(btn.Margin, Is.Not.Null);
         Assert.That(btn.Margin!.IsAdornment(), Is.True);
-        var shadow = btn.Margin!.Subviews[0];
+        var shadow = btn.Margin!.SubViews.ElementAt(0);
         Assert.That(shadow,Is.InstanceOf<ShadowView>());
-        Assert.That(shadow.IsAdornment);
+        Assert.That(shadow.IsAdornment,Is.True);
         Assert.That(shadow.GetAdornmentParent(),Is.SameAs(btn));
 
 
@@ -187,7 +187,7 @@ internal class MouseManagerTests : Tests
         view.Data = design;
         d.View.Add( view );
 
-        d.View.LayoutSubviews( );
+        d.View.LayoutSubViews( );
 
         MouseManager mgr = new( );
 

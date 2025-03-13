@@ -38,7 +38,7 @@ public static class StatusBarExtensions
         int distance = initialWhitespace;
         Dictionary<int, Shortcut?> xLocations = new();
 
-        foreach (var si in statusBar.Subviews.OfType<Shortcut>())
+        foreach (var si in statusBar.SubViews.OfType<Shortcut>())
         {
             xLocations.Add(distance, si);
             distance += si.Title.GetColumns() + afterEachItemWhitespace;
@@ -65,7 +65,7 @@ public static class StatusBarExtensions
     /// <returns></returns>
     public static int CountShortcuts(this StatusBar bar)
     {
-        return bar.Subviews.OfType<Shortcut>().Count();
+        return bar.SubViews.OfType<Shortcut>().Count();
     }
 
     /// <summary>
@@ -76,7 +76,7 @@ public static class StatusBarExtensions
     /// <returns></returns>
     public static Shortcut[] GetShortcuts(this StatusBar bar)
     {
-        return bar.Subviews.OfType<Shortcut>().ToArray();
+        return bar.SubViews.OfType<Shortcut>().ToArray();
     }
 
     /// <summary>

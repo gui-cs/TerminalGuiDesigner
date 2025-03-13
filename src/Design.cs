@@ -458,7 +458,7 @@ public class Design
             yield break;
         }
         
-        foreach (var v in this.View.SuperView.Subviews)
+        foreach (var v in this.View.SuperView.SubViews)
         {
             if (v == this.View)
             {

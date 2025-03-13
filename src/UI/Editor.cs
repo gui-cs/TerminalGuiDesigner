@@ -1066,6 +1066,18 @@ public class Editor : Toplevel
 
     private void ShowHelp()
     {
+        if (menuOpen)
+        {
+            return;
+        }
+        var menuItem = MenuTracker.Instance.CurrentlyOpenMenuItem;
+
+        // if we are in a menu
+        if (menuItem != null)
+        {
+            return;
+        }
+        
         ChoicesDialog.Query("Help", this.GetHelp(), "Ok");
     }
 

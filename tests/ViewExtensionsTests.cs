@@ -101,7 +101,7 @@ internal class ViewExtensionsTests : Tests
 
         w.Add(f);
         Application.Begin(w);
-        w.LayoutSubviews();
+        w.LayoutSubViews();
 
         ClassicAssert.AreSame(w, w.HitTest(new MouseEventArgs {Position = new Point(13, 0) }, out var isBorder, out _),
             "Expected 0,0 to be the window border (its client area should start at 1,1)");
