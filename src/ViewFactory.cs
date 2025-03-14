@@ -251,6 +251,9 @@ public static class ViewFactory
 
                 SetDefaultDimensions(newView, width ?? 16, height ?? 5);
                 break;
+            case DatePicker:
+                // Use defaults
+                break;
             case SpinnerView sv:
                 sv.AutoSpin = true;
                 if ( width is not null )
