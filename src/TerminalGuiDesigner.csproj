@@ -13,7 +13,7 @@
     </None>
   </ItemGroup>
   <PropertyGroup>
-	<TargetFrameworks>net7.0;net8.0</TargetFrameworks>
+	<TargetFrameworks>net8.0</TargetFrameworks>
 	<DefineConstants>$(DefineConstants);Building_For_Dotnet_8</DefineConstants>
     <OutputType>Exe</OutputType>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -23,7 +23,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>TerminalGuiDesigner</PackageId>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <Authors>Thomas Nind</Authors>
     <Nullable>enable</Nullable>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -36,6 +36,9 @@
     <PackageIcon>logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>
+    v1.1.1
+     * Support file scoped namespaces
+     * Target only dotnet 8
 	v1.1.0
 	 * Dual targeting dotnet 8 and 7
 	v1.0.25
