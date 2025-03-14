@@ -246,7 +246,8 @@ namespace TerminalGuiDesigner.UI
                 if (Modals.Get<Type>(
                     property.PropertyInfo.Name,
                     "New Value",
-                    typeof(Label).Assembly.GetTypes().Where(inst.MustBeDerivedFrom.IsAssignableFrom).ToArray(),
+                    typeof(Label).Assembly.GetTypes()
+                        .Where(t=>inst.MustBeDerivedFrom.IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface).ToArray(),
                     inst.GetValue()?.GetType(),
                     out Type? typeChosen))
                 {
