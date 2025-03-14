@@ -37,7 +37,7 @@ public class CodeToView
         var syntaxTree = CSharpSyntaxTree.ParseText(File.ReadAllText(sourceFile.CsFile.FullName));
         var root = syntaxTree.GetRoot();
 
-        var namespaces = root.DescendantNodes().OfType<NamespaceDeclarationSyntax>().ToArray();
+        var namespaces = root.DescendantNodes().OfType<BaseNamespaceDeclarationSyntax>().ToArray();
 
         if (namespaces.Length != 1)
         {
