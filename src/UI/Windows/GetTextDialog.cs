@@ -55,9 +55,6 @@ internal class GetTextDialog
         };
         this.textView.KeyDown += this.TextViewKeyPress;
 
-        // make it easier for user to replace this text with something else
-        // by directly selecting it all so next keypress replaces text
-        this.textView.SelectAll();
 
         this.win.Add(this.textView);
 
@@ -70,6 +67,12 @@ internal class GetTextDialog
         {
             SetupMultiLineOptional();
         }
+
+        this.textView.CursorPosition = new(0, 0);
+
+        // make it easier for user to replace this text with something else
+        // by directly selecting it all so next keypress replaces text
+        this.textView.SelectAll();
 
         var btnOk = new Button()
         {
