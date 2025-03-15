@@ -144,6 +144,9 @@ public static class ViewFactory
 
         switch ( newView )
         {
+            case TimeField:
+                SetDefaultDimensions(newView, width ?? 9, height ?? 1);
+                break;
             case Button:
             case CheckBox:
             case ComboBox:
@@ -323,6 +326,7 @@ public static class ViewFactory
         return requestedType switch
         {
             null => throw new ArgumentNullException( nameof( requestedType ) ),
+            { } t when t == typeof(TimeField) => Create<TimeField>(),
             { } t when t == typeof( DateField ) => Create<DateField>( ),
             { } t when t == typeof( Button ) => Create<Button>( ),
             { } t when t == typeof( ComboBox ) => Create<ComboBox>( ),
