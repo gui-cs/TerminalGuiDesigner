@@ -497,4 +497,26 @@ public static class ViewExtensions
 
         return null;
     }
+
+    public static void SetupNiceColorSchemes(this Dialog v)
+    {
+
+        ColorScheme dialogBackground;
+        ColorScheme buttons;     
+        dialogBackground = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4294967295u, 4285953654u));
+        buttons = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4278190080u, 4294967040u));
+
+        v.ColorScheme = dialogBackground;
+
+        void ApplyScheme(View view)
+        {
+            if (view is Button or TableView)
+                view.ColorScheme = buttons;
+
+            foreach (var subView in view.SubViews)
+                ApplyScheme(subView);
+        }
+
+        ApplyScheme(v);
+    }
 }

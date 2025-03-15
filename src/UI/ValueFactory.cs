@@ -191,6 +191,7 @@ namespace TerminalGuiDesigner.UI
             if (type == typeof(FileSystemInfo))
             {
                 var fd = new FileDialog();
+                fd.SetupNiceColorSchemes();
                 fd.AllowsMultipleSelection = false;
 
                 int answer = ChoicesDialog.Query(propertyName, $"Directory or File?", "Directory", "File", "Cancel");

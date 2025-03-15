@@ -1137,7 +1137,8 @@ public class Editor : Toplevel
         {
             Title = "Open",
             AllowedTypes = new List<IAllowedType>(new[] { new AllowedType("View", SourceCodeFile.ExpectedExtension) })
-        };  
+        };
+        ofd.SetupNiceColorSchemes();
 
         Application.Run(ofd, this.ErrorHandler);
 
@@ -1218,6 +1219,7 @@ public class Editor : Toplevel
             AllowedTypes = new List<IAllowedType>() { new AllowedType("C# File", ".cs") },
             Path = "MyView.cs",
         };
+        ofd.SetupNiceColorSchemes();
 
         Application.Run(ofd);
 
