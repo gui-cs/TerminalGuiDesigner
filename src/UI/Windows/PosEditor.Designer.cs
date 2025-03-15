@@ -29,11 +29,11 @@ namespace TerminalGuiDesigner.UI.Windows {
         
         private Terminal.Gui.Label lblRelativeTo;
         
-        private Terminal.Gui.ComboBox ddRelativeTo;
+        private Terminal.Gui.TextField tbRelativeTo;
         
         private Terminal.Gui.Label lblSide;
         
-        private Terminal.Gui.ComboBox ddSide;
+        private Terminal.Gui.RadioGroup rgSide;
         
         private Terminal.Gui.Label lblOffset;
         
@@ -48,16 +48,16 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnOk = new Terminal.Gui.Button();
             this.tbOffset = new Terminal.Gui.TextField();
             this.lblOffset = new Terminal.Gui.Label();
-            this.ddSide = new Terminal.Gui.ComboBox();
+            this.rgSide = new Terminal.Gui.RadioGroup();
             this.lblSide = new Terminal.Gui.Label();
-            this.ddRelativeTo = new Terminal.Gui.ComboBox();
+            this.tbRelativeTo = new Terminal.Gui.TextField();
             this.lblRelativeTo = new Terminal.Gui.Label();
             this.tbValue = new Terminal.Gui.TextField();
             this.lblValue = new Terminal.Gui.Label();
             this.lineview1 = new Terminal.Gui.LineView();
             this.rgPosType = new Terminal.Gui.RadioGroup();
             this.Width = 47;
-            this.Height = 14;
+            this.Height = 16;
             this.X = Pos.Center();
             this.Y = Pos.Center();
             this.Visible = true;
@@ -134,18 +134,19 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lblRelativeTo.Text = "Relative To:";
             this.lblRelativeTo.TextAlignment = Terminal.Gui.Alignment.Start;
             this.Add(this.lblRelativeTo);
-            this.ddRelativeTo.Width = 15;
-            this.ddRelativeTo.Height = 5;
-            this.ddRelativeTo.X = Pos.Right(lblRelativeTo) + 1;
-            this.ddRelativeTo.Y = 3;
-            this.ddRelativeTo.Visible = true;
-            this.ddRelativeTo.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
-            this.ddRelativeTo.CanFocus = true;
-            this.ddRelativeTo.ShadowStyle = Terminal.Gui.ShadowStyle.None;
-            this.ddRelativeTo.Data = "ddRelativeTo";
-            this.ddRelativeTo.Text = "";
-            this.ddRelativeTo.TextAlignment = Terminal.Gui.Alignment.Start;
-            this.Add(this.ddRelativeTo);
+            this.tbRelativeTo.Width = 15;
+            this.tbRelativeTo.Height = 1;
+            this.tbRelativeTo.X = Pos.Right(lblOffset) + 1;
+            this.tbRelativeTo.Y = 3;
+            this.tbRelativeTo.Visible = true;
+            this.tbRelativeTo.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.tbRelativeTo.CanFocus = true;
+            this.tbRelativeTo.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.tbRelativeTo.Secret = false;
+            this.tbRelativeTo.Data = "tbRelativeTo";
+            this.tbRelativeTo.Text = "";
+            this.tbRelativeTo.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.Add(this.tbRelativeTo);
             this.lblSide.Width = 5;
             this.lblSide.Height = 1;
             this.lblSide.X = 23;
@@ -158,22 +159,26 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lblSide.Text = "Side:";
             this.lblSide.TextAlignment = Terminal.Gui.Alignment.Start;
             this.Add(this.lblSide);
-            this.ddSide.Width = 15;
-            this.ddSide.Height = 5;
-            this.ddSide.X = Pos.Right(lblSide) + 1;
-            this.ddSide.Y = Pos.Top(lblSide);
-            this.ddSide.Visible = true;
-            this.ddSide.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
-            this.ddSide.CanFocus = true;
-            this.ddSide.ShadowStyle = Terminal.Gui.ShadowStyle.None;
-            this.ddSide.Data = "ddSide";
-            this.ddSide.Text = "";
-            this.ddSide.TextAlignment = Terminal.Gui.Alignment.Start;
-            this.Add(this.ddSide);
+            this.rgSide.Width = 10;
+            this.rgSide.Height = 4;
+            this.rgSide.X = 30;
+            this.rgSide.Y = 5;
+            this.rgSide.Visible = true;
+            this.rgSide.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.rgSide.CanFocus = true;
+            this.rgSide.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.rgSide.Data = "rgSide";
+            this.rgSide.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.rgSide.RadioLabels = new string[] {
+                    "Left",
+                    "Top",
+                    "Right",
+                    "Bottom"};
+            this.Add(this.rgSide);
             this.lblOffset.Width = 7;
             this.lblOffset.Height = 1;
             this.lblOffset.X = 21;
-            this.lblOffset.Y = 7;
+            this.lblOffset.Y = 9;
             this.lblOffset.Visible = true;
             this.lblOffset.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
             this.lblOffset.CanFocus = false;
@@ -185,7 +190,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.tbOffset.Width = 15;
             this.tbOffset.Height = 1;
             this.tbOffset.X = Pos.Right(lblOffset) + 1;
-            this.tbOffset.Y = 7;
+            this.tbOffset.Y = 9;
             this.tbOffset.Visible = true;
             this.tbOffset.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
             this.tbOffset.CanFocus = true;
@@ -197,8 +202,8 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Add(this.tbOffset);
             this.btnOk.Width = 8;
             this.btnOk.Height = Dim.Auto();
-            this.btnOk.X = 11;
-            this.btnOk.Y = 9;
+            this.btnOk.X = 14;
+            this.btnOk.Y = 11;
             this.btnOk.Visible = true;
             this.btnOk.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
             this.btnOk.CanFocus = true;
@@ -210,8 +215,8 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Add(this.btnOk);
             this.btnCancel.Width = 10;
             this.btnCancel.Height = Dim.Auto();
-            this.btnCancel.X = 21;
-            this.btnCancel.Y = 9;
+            this.btnCancel.X = 23;
+            this.btnCancel.Y = 11;
             this.btnCancel.Visible = true;
             this.btnCancel.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
             this.btnCancel.CanFocus = true;

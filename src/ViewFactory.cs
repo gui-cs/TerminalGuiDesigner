@@ -53,7 +53,10 @@ public static class ViewFactory
         typeof(Menuv2),
         typeof(ScrollBar),
         typeof(ScrollSlider),
-        typeof(TileView)
+        typeof(TileView),
+
+        // Terminal.Gui combo boxes do not really work properly
+        typeof(ComboBox)
     ];
 
     /// <summary>
