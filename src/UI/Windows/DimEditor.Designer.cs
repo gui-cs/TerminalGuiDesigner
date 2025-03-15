@@ -19,6 +19,10 @@ namespace TerminalGuiDesigner.UI.Windows {
     
     public partial class DimEditor : Terminal.Gui.Dialog {
         
+        private Terminal.Gui.ColorScheme dialogBackground;
+        
+        private Terminal.Gui.ColorScheme buttons;
+        
         private Terminal.Gui.RadioGroup rgDimType;
         
         private Terminal.Gui.LineView lineview1;
@@ -44,12 +48,15 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lblValue = new Terminal.Gui.Label();
             this.lineview1 = new Terminal.Gui.LineView();
             this.rgDimType = new Terminal.Gui.RadioGroup();
+            this.dialogBackground = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4294967295u, 4285953654u));
+            this.buttons = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4278190080u, 4294967040u));
             this.Width = 40;
             this.Height = 11;
             this.X = Pos.Center();
             this.Y = Pos.Center();
             this.Visible = true;
             this.Arrangement = Terminal.Gui.ViewArrangement.Movable;
+            this.ColorScheme = this.dialogBackground;
             this.CanFocus = true;
             this.ShadowStyle = Terminal.Gui.ShadowStyle.Transparent;
             this.Modal = true;
@@ -61,6 +68,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.rgDimType.Y = 1;
             this.rgDimType.Visible = true;
             this.rgDimType.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.rgDimType.ColorScheme = this.buttons;
             this.rgDimType.CanFocus = true;
             this.rgDimType.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.rgDimType.Data = "rgDimType";
@@ -134,12 +142,13 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.tbOffset.Text = "";
             this.tbOffset.TextAlignment = Terminal.Gui.Alignment.Start;
             this.Add(this.tbOffset);
-            this.btnOk.Width = 8;
+            this.btnOk.Width = Dim.Auto();
             this.btnOk.Height = Dim.Auto();
             this.btnOk.X = 5;
             this.btnOk.Y = 6;
             this.btnOk.Visible = true;
             this.btnOk.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.btnOk.ColorScheme = this.buttons;
             this.btnOk.CanFocus = true;
             this.btnOk.ShadowStyle = Terminal.Gui.ShadowStyle.Opaque;
             this.btnOk.Data = "btnOk";
@@ -147,12 +156,13 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnOk.TextAlignment = Terminal.Gui.Alignment.Center;
             this.btnOk.IsDefault = true;
             this.Add(this.btnOk);
-            this.btnCancel.Width = 10;
+            this.btnCancel.Width = Dim.Auto();
             this.btnCancel.Height = Dim.Auto();
             this.btnCancel.X = 16;
             this.btnCancel.Y = 6;
             this.btnCancel.Visible = true;
             this.btnCancel.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.btnCancel.ColorScheme = this.buttons;
             this.btnCancel.CanFocus = true;
             this.btnCancel.ShadowStyle = Terminal.Gui.ShadowStyle.Opaque;
             this.btnCancel.Data = "btnCancel";

@@ -19,6 +19,10 @@ namespace TerminalGuiDesigner {
     
     public partial class PointEditor : Terminal.Gui.Dialog {
         
+        private Terminal.Gui.ColorScheme dialogBackground;
+        
+        private Terminal.Gui.ColorScheme buttons;
+        
         private Terminal.Gui.Label lblX;
         
         private Terminal.Gui.TextField tbX;
@@ -38,12 +42,15 @@ namespace TerminalGuiDesigner {
             this.lblY = new Terminal.Gui.Label();
             this.tbX = new Terminal.Gui.TextField();
             this.lblX = new Terminal.Gui.Label();
-            this.Width = 23;
+            this.dialogBackground = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4294967295u, 4285953654u));
+            this.buttons = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4278190080u, 4294967040u));
+            this.Width = 25;
             this.Height = 10;
             this.X = Pos.Center();
             this.Y = Pos.Center();
             this.Visible = true;
             this.Arrangement = (Terminal.Gui.ViewArrangement.Movable | Terminal.Gui.ViewArrangement.Overlapped);
+            this.ColorScheme = this.dialogBackground;
             this.CanFocus = true;
             this.ShadowStyle = Terminal.Gui.ShadowStyle.Transparent;
             this.Modal = true;
@@ -112,12 +119,13 @@ namespace TerminalGuiDesigner {
             this.btnOk.TextAlignment = Terminal.Gui.Alignment.Center;
             this.btnOk.IsDefault = true;
             this.Add(this.btnOk);
-            this.btnCancel.Width = 10;
+            this.btnCancel.Width = Dim.Auto();
             this.btnCancel.Height = Dim.Auto();
             this.btnCancel.X = 10;
             this.btnCancel.Y = 5;
             this.btnCancel.Visible = true;
             this.btnCancel.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.btnCancel.ColorScheme = this.dialogBackground;
             this.btnCancel.CanFocus = true;
             this.btnCancel.ShadowStyle = Terminal.Gui.ShadowStyle.Opaque;
             this.btnCancel.Data = "btnCancel";

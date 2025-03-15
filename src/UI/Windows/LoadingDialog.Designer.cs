@@ -20,7 +20,11 @@ namespace TerminalGuiDesigner {
     public partial class LoadingDialog : Terminal.Gui.Dialog {
         
         private Terminal.Gui.Label lblLoading;
-        
+
+        private Terminal.Gui.ColorScheme dialogBackground;
+
+        private Terminal.Gui.ColorScheme buttons;
+
         private void InitializeComponent() {
             this.lblLoading = new Terminal.Gui.Label();
             this.Width = 40;
@@ -28,6 +32,9 @@ namespace TerminalGuiDesigner {
             this.X = Pos.Center();
             this.Y = Pos.Center();
             this.Visible = true;
+            this.dialogBackground = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4294967295u, 4285953654u));
+            this.buttons = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4278190080u, 4294967040u));
+            this.ColorScheme = this.dialogBackground;
             this.Arrangement = (Terminal.Gui.ViewArrangement.Movable | Terminal.Gui.ViewArrangement.Overlapped);
             this.CanFocus = true;
             this.ShadowStyle = Terminal.Gui.ShadowStyle.Transparent;

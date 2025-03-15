@@ -56,6 +56,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Y = Pos.Center();
             this.Visible = true;
             this.Arrangement = Terminal.Gui.ViewArrangement.Movable;
+            this.ColorScheme = this.dialogBackground;
             this.CanFocus = true;
             this.ShadowStyle = Terminal.Gui.ShadowStyle.Transparent;
             this.Modal = true;
@@ -147,6 +148,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnOk.Y = 14;
             this.btnOk.Visible = true;
             this.btnOk.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.btnOk.ColorScheme = this.buttons;
             this.btnOk.CanFocus = true;
             this.btnOk.ShadowStyle = Terminal.Gui.ShadowStyle.Opaque;
             this.btnOk.Data = "btnOk";
@@ -160,6 +162,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnCancel.Y = 14;
             this.btnCancel.Visible = true;
             this.btnCancel.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.btnCancel.ColorScheme = this.buttons;
             this.btnCancel.CanFocus = true;
             this.btnCancel.ShadowStyle = Terminal.Gui.ShadowStyle.Opaque;
             this.btnCancel.Data = "btnCancel";

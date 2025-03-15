@@ -19,6 +19,10 @@ namespace TerminalGuiDesigner.UI.Windows {
     
     public partial class ColorSchemeEditor : Terminal.Gui.Dialog {
         
+        private Terminal.Gui.ColorScheme dialogBackground;
+        
+        private Terminal.Gui.ColorScheme buttons;
+        
         private Terminal.Gui.Label label2;
         
         private Terminal.Gui.Label lblForegroundNormal;
@@ -101,12 +105,15 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.label1 = new Terminal.Gui.Label();
             this.lblForegroundNormal = new Terminal.Gui.Label();
             this.label2 = new Terminal.Gui.Label();
+            this.dialogBackground = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4294967295u, 4285953654u));
+            this.buttons = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4278190080u, 4294967040u));
             this.Width = 31;
             this.Height = 11;
             this.X = Pos.Center();
             this.Y = Pos.Center();
             this.Visible = true;
             this.Arrangement = (Terminal.Gui.ViewArrangement.Movable | Terminal.Gui.ViewArrangement.Overlapped);
+            this.ColorScheme = this.dialogBackground;
             this.CanFocus = true;
             this.ShadowStyle = Terminal.Gui.ShadowStyle.Transparent;
             this.Modal = true;
@@ -166,6 +173,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnEditNormal.Y = 0;
             this.btnEditNormal.Visible = true;
             this.btnEditNormal.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.btnEditNormal.ColorScheme = this.buttons;
             this.btnEditNormal.CanFocus = true;
             this.btnEditNormal.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.btnEditNormal.Data = "btnEditNormal";
@@ -227,6 +235,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnEditHotNormal.Y = 1;
             this.btnEditHotNormal.Visible = true;
             this.btnEditHotNormal.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.btnEditHotNormal.ColorScheme = this.buttons;
             this.btnEditHotNormal.CanFocus = true;
             this.btnEditHotNormal.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.btnEditHotNormal.Data = "btnEditHotNormal";
@@ -288,6 +297,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnEditFocus.Y = 2;
             this.btnEditFocus.Visible = true;
             this.btnEditFocus.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.btnEditFocus.ColorScheme = this.buttons;
             this.btnEditFocus.CanFocus = true;
             this.btnEditFocus.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.btnEditFocus.Data = "btnEditFocus";
@@ -349,6 +359,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnEditHotFocus.Y = 3;
             this.btnEditHotFocus.Visible = true;
             this.btnEditHotFocus.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.btnEditHotFocus.ColorScheme = this.buttons;
             this.btnEditHotFocus.CanFocus = true;
             this.btnEditHotFocus.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.btnEditHotFocus.Data = "btnEditHotFocus";
@@ -410,6 +421,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnEditDisabled.Y = 4;
             this.btnEditDisabled.Visible = true;
             this.btnEditDisabled.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.btnEditDisabled.ColorScheme = this.buttons;
             this.btnEditDisabled.CanFocus = true;
             this.btnEditDisabled.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.btnEditDisabled.Data = "btnEditDisabled";
@@ -417,12 +429,13 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnEditDisabled.TextAlignment = Terminal.Gui.Alignment.Center;
             this.btnEditDisabled.IsDefault = false;
             this.Add(this.btnEditDisabled);
-            this.btnOk.Width = 6;
+            this.btnOk.Width = Dim.Auto();
             this.btnOk.Height = Dim.Auto();
             this.btnOk.X = 3;
             this.btnOk.Y = 6;
             this.btnOk.Visible = true;
             this.btnOk.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.btnOk.ColorScheme = this.buttons;
             this.btnOk.CanFocus = true;
             this.btnOk.ShadowStyle = Terminal.Gui.ShadowStyle.Opaque;
             this.btnOk.Data = "btnOk";
@@ -430,12 +443,13 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnOk.TextAlignment = Terminal.Gui.Alignment.Center;
             this.btnOk.IsDefault = false;
             this.Add(this.btnOk);
-            this.btnCancel.Width = 10;
+            this.btnCancel.Width = Dim.Auto();
             this.btnCancel.Height = Dim.Auto();
             this.btnCancel.X = 13;
             this.btnCancel.Y = 6;
             this.btnCancel.Visible = true;
             this.btnCancel.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.btnCancel.ColorScheme = this.buttons;
             this.btnCancel.CanFocus = true;
             this.btnCancel.ShadowStyle = Terminal.Gui.ShadowStyle.Opaque;
             this.btnCancel.Data = "btnCancel";

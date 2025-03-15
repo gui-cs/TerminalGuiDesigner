@@ -17,6 +17,7 @@ using Terminal.Gui;
 public partial class SizeEditor : IValueGetterDialog
 {
 
+
     /// <summary>
     /// The users edited <see cref="Size"/> 
     /// </summary>
