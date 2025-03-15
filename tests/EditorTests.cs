@@ -70,11 +70,11 @@ internal class EditorTests : Tests
             return true;
         }
 
-        public override void Redo()
+        protected override void RedoImpl()
         {
         }
 
-        public override void Undo()
+        protected override void UndoImpl()
         {
         }
     }

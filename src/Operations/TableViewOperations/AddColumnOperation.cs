@@ -28,9 +28,9 @@ public class AddColumnOperation : AddOperation<TableView, DataColumn>
     }
 
     /// <inheritdoc/>
-    protected override void SetNeedsDisplay()
+    protected override void SetNeedsDraw()
     {
         this.View.Update();
-        base.SetNeedsDisplay();
+        base.SetNeedsDraw();
     }
 }

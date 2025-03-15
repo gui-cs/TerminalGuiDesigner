@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using Terminal.Gui;
 using YamlDotNet.Core.Tokens;
 using Key = Terminal.Gui.Key;
@@ -136,14 +137,14 @@ public class Modals
         return false;
     }
 
-    internal static bool Get<T>(string prompt, string okText, T[] collection, T? currentSelection, out T? selected)
+    internal static bool Get<T>(string prompt, string okText, T[] collection, T? currentSelection, out T? selected, bool sort = true)
     {
-        return Get(prompt, okText, true, collection, o => o?.ToString() ?? "Null", false, currentSelection, out selected);
+        return Get(prompt, okText, true, collection, o => o is Type t ? t.Name : o?.ToString() ?? "Null", false, currentSelection, out selected,sort);
     }
 
-    internal static bool Get<T>( string prompt, string okText, in bool addSearch, T[] collection, Func<T?, string> displayMember, bool addNull, [NotNullWhen( true )]T? currentSelection, [NotNullWhen( true )] out T? selected )
+    internal static bool Get<T>( string prompt, string okText, in bool addSearch, T[] collection, Func<T?, string> displayMember, bool addNull, [NotNullWhen( true )]T? currentSelection, [NotNullWhen( true )] out T? selected, bool sort=true )
     {
-        var pick = new BigListBox<T>( prompt, okText, in addSearch, collection, displayMember, addNull, currentSelection );
+        var pick = new BigListBox<T>( prompt, okText, in addSearch, collection, displayMember, addNull, currentSelection,sort );
         bool toReturn = pick.ShowDialog( );
         selected = pick.Selected;
         return toReturn;
@@ -193,9 +194,11 @@ public class Modals
         return key == Key.DeleteChar ? KeyCode.Null : key;
     }
 
-    private static bool IsValidShortcut(Key key)
+    public static bool IsValidShortcut(Key key)
     {
-        if (key.KeyCode == KeyCode.CtrlMask || key.KeyCode == KeyCode.ShiftMask || key.KeyCode == KeyCode.AltMask)
+        const KeyCode modifierMask = KeyCode.CtrlMask | KeyCode.ShiftMask | KeyCode.AltMask;
+
+        if ((key.KeyCode & modifierMask) != 0 && (key.KeyCode & ~modifierMask) == 0)
         {
             return false;
         }

@@ -9,11 +9,11 @@ namespace TerminalGuiDesigner;
 public static class StatusBarExtensions
 {
     /// <summary>
-    /// Returns the <see cref="StatusItem"/> that appears at the <paramref name="screenX"/> of the click.
+    /// Returns the <see cref="Shortcut"/> that appears at the <paramref name="screenX"/> of the click.
     /// </summary>
     /// <param name="statusBar"><see cref="StatusBar"/> you want to find the clicked <see cref="MenuBarItem"/> (top level menu) for.</param>
     /// <param name="screenX">Screen coordinate of the click in X.</param>
-    /// <returns>The <see cref="StatusItem"/> under the mouse at this position or null (only considers X).</returns>
+    /// <returns>The <see cref="Shortcut"/> under the mouse at this position or null (only considers X).</returns>
     public static Shortcut? ScreenToMenuBarItem(this StatusBar statusBar, int screenX)
     {
         // These might be changed in Terminal.Gui library
@@ -38,7 +38,7 @@ public static class StatusBarExtensions
         int distance = initialWhitespace;
         Dictionary<int, Shortcut?> xLocations = new();
 
-        foreach (var si in statusBar.Subviews.OfType<Shortcut>())
+        foreach (var si in statusBar.SubViews.OfType<Shortcut>())
         {
             xLocations.Add(distance, si);
             distance += si.Title.GetColumns() + afterEachItemWhitespace;
@@ -65,14 +65,26 @@ public static class StatusBarExtensions
     /// <returns></returns>
     public static int CountShortcuts(this StatusBar bar)
     {
-        return bar.Subviews.OfType<Shortcut>().Count();
+        return bar.SubViews.OfType<Shortcut>().Count();
     }
 
+    /// <summary>
+    /// Returns the items on the <see cref="StatusBar"/> (previously
+    /// called StatusBarItems now called just <see cref="Shortcut"/>)
+    /// </summary>
+    /// <param name="bar"></param>
+    /// <returns></returns>
     public static Shortcut[] GetShortcuts(this StatusBar bar)
     {
-        return bar.Subviews.OfType<Shortcut>().ToArray();
+        return bar.SubViews.OfType<Shortcut>().ToArray();
     }
 
+    /// <summary>
+    /// Replaces all items on the <paramref name="bar"/> with the new
+    /// <paramref name="shortcuts"/>.
+    /// </summary>
+    /// <param name="bar"></param>
+    /// <param name="shortcuts"></param>
     public static void SetShortcuts(this StatusBar bar, Shortcut[] shortcuts)
     {
         foreach(var old in bar.GetShortcuts())

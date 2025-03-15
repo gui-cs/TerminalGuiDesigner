@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Reflection;
+using Terminal.Gui;
 
 namespace TerminalGuiDesigner
 {
@@ -46,6 +48,19 @@ namespace TerminalGuiDesigner
         public static bool IsGenericType(this Type type, Type genericParentHypothesis)
         {
             return type.IsGenericType && type.GetGenericTypeDefinition() == genericParentHypothesis;
+        }
+
+        /// <summary>
+        /// Returns the <see cref="Type.GetProperty(string)"/> of the given <paramref name="name"/>
+        /// or throws an <see cref="Exception"/>.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static PropertyInfo GetPropertyOrThrow(this Type type, string name)
+        {
+            return type.GetProperty(name) ?? throw new Exception($"Could not find expected property {name} on type {type}");
         }
     }
 }

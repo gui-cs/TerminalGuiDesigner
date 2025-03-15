@@ -22,8 +22,8 @@ public class DesignState
     {
         this.Design = design;
         this.OriginalScheme = this.Design.View.GetExplicitColorScheme();
-        this.Design.View.DrawContentComplete += this.DrawContentComplete;
-        this.Design.View.Enter += this.Enter;
+        this.Design.View.DrawComplete += this.DrawContentComplete;
+        this.Design.View.HasFocusChanged += this.Enter;
     }
 
     /// <summary>
@@ -39,8 +39,13 @@ public class DesignState
     /// </summary>
     public Design Design { get; }
 
-    private void Enter(object? sender, FocusEventArgs obj)
+    private void Enter(object? sender, HasFocusEventArgs obj)
     {
+        // it's not enter
+        if (!obj.NewValue)
+        {
+            return;
+        }
         // when tabbing or clicking into this View when nothing complicated is going on (e.g. Ctrl+Click multi select)
         if (SelectionManager.Instance.Selected.Count <= 1)
         {

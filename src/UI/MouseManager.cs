@@ -4,7 +4,7 @@ using TerminalGuiDesigner.Operations;
 namespace TerminalGuiDesigner.UI;
 
 /// <summary>
-/// Manages responding to <see cref="Application.RootMouseEvent"/> e.g. by
+/// Manages responding to root mouse e.g. by
 /// dragging <see cref="Design"/> around and/or resizing.
 /// </summary>
 public class MouseManager
@@ -31,12 +31,12 @@ public class MouseManager
     public Rectangle? SelectionBox => RectExtensions.FromBetweenPoints(this.selectionStart, this.selectionEnd);
 
     /// <summary>
-    /// Responds to <see cref="Application.RootMouseEvent"/>(by changing a 'drag a box' selection area
+    /// Responds to <see cref="Application.MouseEvent"/>(by changing a 'drag a box' selection area
     /// or starting a resize etc).
     /// </summary>
-    /// <param name="m">The <see cref="MouseEvent"/> reported by <see cref="Application.RootMouseEvent"/>.</param>
+    /// <param name="m">The <see cref="MouseEventArgs"/> reported by <see cref="Application.MouseEvent"/>.</param>
     /// <param name="viewBeingEdited">The root <see cref="Design"/> that is open in the <see cref="Editor"/>.</param>
-    public void HandleMouse(MouseEvent m, Design viewBeingEdited)
+    public void HandleMouse(MouseEventArgs m, Design viewBeingEdited)
     {
         // start dragging
         if (m.Flags.HasFlag(MouseFlags.Button1Pressed)
@@ -122,10 +122,7 @@ public class MouseManager
         {
             // move selection box to new mouse position
             this.selectionEnd = m.Position;
-            viewBeingEdited.View.SetNeedsDisplay();
-
-            // BUG: Method is gone, will this functionality work still without it?
-            // Application.DoEvents();
+            viewBeingEdited.View.SetNeedsDraw();
             return;
         }
 
@@ -137,7 +134,7 @@ public class MouseManager
             if (dest != null && this.dragOperation != null)
             {
                 this.dragOperation.ContinueDrag(dest.Value);
-                viewBeingEdited.View.SetNeedsDisplay();
+                viewBeingEdited.View.SetNeedsDraw();
                 // BUG: Method is gone, will this functionality work still without it?
                 // Application.DoEvents();
             }
@@ -152,7 +149,7 @@ public class MouseManager
 
             this.resizeOperation.ContinueResize(dest);
 
-            viewBeingEdited.View.SetNeedsDisplay();
+            viewBeingEdited.View.SetNeedsDraw();
             // BUG: Method is gone, will this functionality work still without it?
             // Application.DoEvents();
         }
@@ -174,7 +171,7 @@ public class MouseManager
                 this.selectionStart = null;
                 this.selectionEnd = null;
                 this.selectionContainer = null;
-                viewBeingEdited.View.SetNeedsDisplay();
+                viewBeingEdited.View.SetNeedsDraw();
                 // BUG: Method is gone, will this functionality work still without it?
                 // Application.DoEvents();
             }

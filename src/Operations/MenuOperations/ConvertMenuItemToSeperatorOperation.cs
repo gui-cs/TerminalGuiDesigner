@@ -22,13 +22,13 @@ public class ConvertMenuItemToSeperatorOperation : MenuItemOperation
     }
 
     /// <inheritdoc/>
-    public override void Redo()
+    protected override void RedoImpl()
     {
         this.Do();
     }
 
     /// <inheritdoc/>
-    public override void Undo()
+    protected override void UndoImpl()
     {
         if (this.Parent == null || this.OperateOn == null)
         {
@@ -39,7 +39,7 @@ public class ConvertMenuItemToSeperatorOperation : MenuItemOperation
 
         children[this.removedAtIdx] = this.OperateOn;
         this.Parent.Children = children.ToArray();
-        this.Bar?.SetNeedsDisplay();
+        this.Bar?.SetNeedsDraw();
     }
 
     /// <inheritdoc/>
@@ -56,7 +56,7 @@ public class ConvertMenuItemToSeperatorOperation : MenuItemOperation
         children[this.removedAtIdx] = null;
 
         this.Parent.Children = children.ToArray();
-        this.Bar?.SetNeedsDisplay();
+        this.Bar?.SetNeedsDraw();
 
         return true;
     }

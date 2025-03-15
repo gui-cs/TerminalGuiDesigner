@@ -41,13 +41,13 @@ public abstract class AddOperation<T1, T2> : GenericArrayOperation<T1, T2>
     }
 
     /// <inheritdoc/>
-    public override void Undo()
+    protected override void UndoImpl()
     {
         this.Remove(this.newItem);
     }
 
     /// <inheritdoc/>
-    public override void Redo()
+    protected override void RedoImpl()
     {
         this.Add(this.newItem);
     }
@@ -83,7 +83,7 @@ public abstract class AddOperation<T1, T2> : GenericArrayOperation<T1, T2>
 
         this.newItem = this.elementFactory(this.View, uniqueName);
         this.Add(this.newItem);
-        this.SetNeedsDisplay();
+        this.SetNeedsDraw();
         return true;
     }
 }

@@ -33,7 +33,7 @@ public interface IOperation
     /// <summary>
     ///   Gets the number of times this <see cref="IOperation"/> has been executed successfully
     /// </summary>
-    ref int TimesDone { get; }
+    int TimesDone { get; }
 
     /// <summary>
     /// Performs the operation.

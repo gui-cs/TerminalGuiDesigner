@@ -37,7 +37,7 @@ internal class TabViewTests : Tests
         bool addSubviewOperationSucceeded = false;
         Assert.That( ( ) => addSubviewOperationSucceeded = OperationManager.Instance.Do( addSubviewOperation ), Throws.Nothing );
         Assert.That( addSubviewOperationSucceeded );
-        Assert.That( tvOut.SelectedTab.View.Subviews.ToArray( ), Does.Contain( subview ), "Expected currently selected tab to have the new view but it did not" );
+        Assert.That( tvOut.SelectedTab.View.SubViews.ToArray( ), Does.Contain( subview ), "Expected currently selected tab to have the new view but it did not" );
 
         viewToCode.GenerateDesignerCs( designOut, typeof( Dialog ) );
 
@@ -45,7 +45,7 @@ internal class TabViewTests : Tests
         Design designBackIn = codeToView.CreateInstance( );
 
         using TabView tabIn = designBackIn.View.GetActualSubviews( ).OfType<TabView>( ).Single( );
-        using T tabInSubview = tabIn.SelectedTab.View.Subviews.OfType<T>( ).Single( );
+        using T tabInSubview = tabIn.SelectedTab.View.SubViews.OfType<T>( ).Single( );
 
         Assert.That( tabInSubview.Text, Is.EqualTo( subview.Text ) );
     }

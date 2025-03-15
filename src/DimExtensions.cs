@@ -17,7 +17,7 @@ public static class DimExtensions
     private const bool TreatNullDimAs0 = true;
 
     /// <summary>
-    /// Returns true if the <paramref name="d"/> is a DimFactor (i.e. created by <see cref="Dim.Percent(int, bool)"/>).
+    /// Returns true if the <paramref name="d"/> is a DimFactor (i.e. created by <see cref="Dim.Percent"/>).
     /// </summary>
     /// <param name="d">Dimension to determine Type.</param>
     /// <returns>true if <paramref name="d"/> is DimFactor.</returns>
@@ -34,7 +34,7 @@ public static class DimExtensions
     /// <inheritdoc cref="IsPercent(Dim)"/>
     /// <param name="d">The <see cref="Dim"/> to determine whether it represents a percent.</param>
     /// <param name="percent">The 'percentage' value of <paramref name="d"/>.  This is the value that would/could be
-    /// passed to <see cref="Dim.Percent(int, bool)"/> to produce the <paramref name="d"/> or 0 if <paramref name="d"/> is
+    /// passed to <see cref="Dim.Percent"/> to produce the <paramref name="d"/> or 0 if <paramref name="d"/> is
     /// not DimFactor.</param>
     public static bool IsPercent(this Dim d, out int percent)
     {
@@ -50,10 +50,10 @@ public static class DimExtensions
     }
 
     /// <summary>
-    /// Determines whether an input <see cref="Dim"/> is a <see cref="Dim.Fill(int)"/>.
+    /// Determines whether an input <see cref="Dim"/> is a <see cref="Dim.Fill()"/>.
     /// </summary>
     /// <param name="d">Input <see cref="Dim"/> to classify.</param>
-    /// <returns><see langword="true"/> if <paramref name="d"/> is the result of a <see cref="Dim.Fill(int)"/> call.</returns>
+    /// <returns><see langword="true"/> if <paramref name="d"/> is the result of a <see cref="Dim.Fill()"/> call.</returns>
     public static bool IsFill(this Dim d)
     {
         if (d == null)
@@ -66,13 +66,13 @@ public static class DimExtensions
 
     /// <inheritdoc cref="IsFill(Dim)"/>
     /// <param name="d">Input <see cref="Dim"/> to classify.</param>
-    /// <param name="margin">The margin of the <see cref="Dim.Fill(int)"/> used to create <paramref name="d"/> or 0.</param>
+    /// <param name="margin">The margin of the <see cref="Dim.Fill()"/> used to create <paramref name="d"/> or 0.</param>
     public static bool IsFill(this Dim d, out int margin)
     {
         if (d != null && d.IsFill())
         {
             var df = (DimFill)d;
-            margin = df.Margin;
+            margin = ((DimAbsolute)df.Margin).Size;
             return true;
         }
 
@@ -100,6 +100,9 @@ public static class DimExtensions
     /// True if <paramref name="d"/> is a <see cref="DimAuto"/> width/height.
     /// </summary>
     /// <param name="d">The <see cref="Dim"/> to determine whether it is auto.</param>
+    /// <param name="das">If <paramref name="d"/> is <see cref="DimAuto"/> then this is <see cref="DimAuto.Style"/>.</param>
+    /// <param name="min">If <paramref name="d"/> is <see cref="DimAuto"/> then this is <see cref="DimAuto.MinimumContentDim"/></param>
+    /// <param name="max">If <paramref name="d"/> is <see cref="DimAuto"/> then this is <see cref="DimAuto.MaximumContentDim"/></param>
     /// <returns><see langword="true"/> if <paramref name="d"/> is a auto sizing.</returns>
     public static bool IsAuto(this Dim d, out DimAutoStyle das, out Dim? min, out Dim? max)
     {
@@ -193,8 +196,8 @@ public static class DimExtensions
     /// </summary>
     /// <param name="d">The <see cref="Dim"/> to determine type of.</param>
     /// <param name="type">The determined type.</param>
-    /// <param name="value">The numerical element of the type e.g. for <see cref="Dim.Percent(int, bool)"/>
-    /// the <paramref name="value"/> is the percentage but for <see cref="Dim.Fill(int)"/> the <paramref name="value"/>
+    /// <param name="value">The numerical element of the type e.g. for <see cref="Dim.Percent"/>
+    /// the <paramref name="value"/> is the percentage but for <see cref="Dim.Fill()"/> the <paramref name="value"/>
     /// is the margin.</param>
     /// <param name="offset">The numerical offset if any, for example -5 in the following:
     /// <code>Dim.Fill(1)-5</code></param>

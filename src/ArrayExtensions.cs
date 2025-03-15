@@ -31,6 +31,12 @@ public static class ArrayExtensions
         return toReturn;
     }
     
+    /// <summary>
+    /// Converts an enumerable to a <see cref="IListDataSource"/>
+    /// </summary>
+    /// <param name="enumerable"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
     public static IListDataSource ToListDataSource(this IEnumerable enumerable)
     {
         // Get the type of the elements
@@ -46,7 +52,8 @@ public static class ArrayExtensions
 
         // Create an instance of ListWrapper<T>
         var listWrapperType = typeof(ListWrapper<>).MakeGenericType(elementType);
-        return (IListDataSource)Activator.CreateInstance(listWrapperType, list);
+        return (IListDataSource)(Activator.CreateInstance(listWrapperType, list)
+                                 ?? throw new Exception("CreateInstance inexplicably returned null"));
     }
 
 }

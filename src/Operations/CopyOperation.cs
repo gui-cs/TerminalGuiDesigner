@@ -57,7 +57,7 @@ public class CopyOperation : Operation
     /// Throws <see cref="NotSupportedException"/> as you cannot undo a copy.
     /// </summary>
     /// <exception cref="NotSupportedException">Thrown if method run.</exception>
-    public override void Undo()
+    protected override void UndoImpl()
     {
         throw new NotSupportedException();
     }
@@ -66,7 +66,7 @@ public class CopyOperation : Operation
     /// Throws <see cref="NotSupportedException"/> as you cannot redo a copy.
     /// </summary>
     /// <exception cref="NotSupportedException">Thrown if method run.</exception>
-    public override void Redo()
+    protected override void RedoImpl()
     {
         throw new NotSupportedException();
     }

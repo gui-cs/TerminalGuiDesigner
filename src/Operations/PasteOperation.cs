@@ -63,7 +63,7 @@ public class PasteOperation : Operation
     }
 
     /// <inheritdoc/>
-    public override void Undo()
+    protected override void UndoImpl()
     {
         foreach (var a in this.addOperations)
         {
@@ -74,7 +74,7 @@ public class PasteOperation : Operation
     }
 
     /// <inheritdoc/>
-    public override void Redo()
+    protected override void RedoImpl()
     {
         foreach (var a in this.addOperations)
         {

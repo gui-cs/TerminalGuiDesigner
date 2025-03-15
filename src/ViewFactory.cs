@@ -35,7 +35,6 @@ public static class ViewFactory
         typeof( FileDialog ),
         typeof( SaveDialog ),
         typeof( OpenDialog ),
-        typeof( ScrollBarView ),
 
         // BUG These seem to cause stack overflows in CreateSubControlDesigns (see TestAddView_RoundTrip)
         typeof( Wizard ),
@@ -47,6 +46,17 @@ public static class ViewFactory
         // This is unstable when added directly as a view see https://github.com/gui-cs/Terminal.Gui/issues/3664
         typeof(Shortcut),
 
+        typeof(Tab),
+        typeof(Bar),
+        typeof(CharMap),
+        typeof(LegendAnnotation),
+        typeof(Menuv2),
+        typeof(ScrollBar),
+        typeof(ScrollSlider),
+        typeof(TileView),
+
+        // Terminal.Gui combo boxes do not really work properly
+        typeof(ComboBox)
     ];
 
     /// <summary>
@@ -92,7 +102,7 @@ public static class ViewFactory
 
     private static bool IsSupportedType( this Type t )
     {
-        return t == typeof( Window ) || ( !KnownUnsupportedTypes.Any( t.IsSubclassOf ) & !KnownUnsupportedTypes.Contains( t ) );
+        return t == typeof( Window ) ||!KnownUnsupportedTypes.Contains( t );
     }
 
     /// <summary>
@@ -138,9 +148,8 @@ public static class ViewFactory
             case CheckBox:
             case ComboBox:
             case Label:
-                newView.SetActualText( text ?? "Heya" );
-                SetDefaultDimensions( newView, width ?? 4, height ?? 1 );
-                newView.Width = Dim.Auto();
+                newView.SetActualText(text ?? "Heya");
+                SetDefaultDimensionsDimAuto(newView);
                 break;
             case ColorPicker:
                 newView.Width = width ?? 20;
@@ -245,9 +254,8 @@ public static class ViewFactory
 
                 SetDefaultDimensions(newView, width ?? 16, height ?? 5);
                 break;
-            case ScrollView sv:
-                sv.SetContentSize(new Size( 20, 10 ));
-                SetDefaultDimensions(newView, width ?? 10, height ?? 5 );
+            case DatePicker:
+                // Use defaults
                 break;
             case SpinnerView sv:
                 sv.AutoSpin = true;
@@ -271,9 +279,9 @@ public static class ViewFactory
                 SetDefaultDimensions(newView, 10, 5);
                 break;
             case null:
-                throw new InvalidOperationException( $"Unexpected null result from type {typeof( T ).Name} construtor." );
+                throw new InvalidOperationException( $"Unexpected null result from type {typeof( T ).Name} constructor." );
         }
-
+         
         return newView;
 
         static void SetDefaultDimensions( T v, int width = 5, int height = 1 )
@@ -282,7 +290,13 @@ public static class ViewFactory
 
             v.Height = v.Height is DimFill ? height : Math.Max( v.GetContentSize().Height, height );
         }
+        static void SetDefaultDimensionsDimAuto(T v)
+        {
+            v.Width = Dim.Auto();
+            v.Height = Dim.Auto();
+        }
     }
+
 
     /// <summary>
     ///   Creates a new instance of <see cref="View" /> of <see cref="Type" /> <paramref name="requestedType" /> with
@@ -335,7 +349,6 @@ public static class ViewFactory
             { } t when t.IsAssignableTo( typeof( ListView ) ) => Create<ListView>( ),
             { } t when t == typeof( LineView ) => Create<LineView>( ),
             { } t when t == typeof( TreeView ) => Create<TreeView>( ),
-            { } t when t == typeof( ScrollView ) => Create<ScrollView>( ),
             { } t when t.IsAssignableTo( typeof( SpinnerView ) ) => Create<SpinnerView>( ),
             { } t when t.IsAssignableTo( typeof( FrameView ) ) => Create<FrameView>( ),
             { } t when t.IsAssignableTo( typeof( HexView ) ) => Create<HexView>( ),

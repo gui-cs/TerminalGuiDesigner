@@ -116,7 +116,7 @@ public class SetPropertyOperation : Operation
     }
 
     /// <inheritdoc/>
-    public override void Undo()
+    protected override void UndoImpl()
     {
         foreach (var m in this.mementos)
         {
@@ -125,7 +125,7 @@ public class SetPropertyOperation : Operation
     }
 
     /// <inheritdoc/>
-    public override void Redo()
+    protected override void RedoImpl()
     {
         foreach (var m in this.mementos)
         {

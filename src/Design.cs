@@ -44,8 +44,6 @@ public class Design
         typeof(LineView),
         typeof(ListView),
         typeof(MenuBar),
-        typeof(ScrollBarView),
-        typeof(ScrollView),
         typeof(TableView),
         typeof(TabView),
         typeof(TreeView),
@@ -168,10 +166,6 @@ public class Design
     /// <returns>A new <see cref="Design"/> wrapper wrapping <paramref name="subView"/>.</returns>
     public Design CreateSubControlDesign(string name, View subView)
     {
-        // all views can be focused so that they can be edited
-        // or deleted etc
-        subView.CanFocus = true;
-
         if (subView is TableView tv && tv.Table != null && tv.GetDataTable().Rows.Count == 0)
         {
             var dt = tv.GetDataTable();
@@ -215,14 +209,12 @@ public class Design
         {
             // prevent control from responding to events
             txt.MouseClick += (s, e) => this.SuppressNativeClickEvents(s, e);
-            txt.KeyDown += this.SuppressNativeKeyboardEvents;
         }
 
         if (subView is TextField tf)
         {
             // prevent control from responding to events
             tf.MouseClick += (s,e)=>this.SuppressNativeClickEvents(s,e);
-            tf.KeyDown += SuppressNativeKeyboardEvents;
         }
 
         if (subView.GetType().IsGenericType(typeof(Slider<>)))
@@ -466,7 +458,7 @@ public class Design
             yield break;
         }
         
-        foreach (var v in this.View.SuperView.Subviews)
+        foreach (var v in this.View.SuperView.SubViews)
         {
             if (v == this.View)
             {
@@ -626,7 +618,7 @@ public class Design
         }
     }
 
-    private void SuppressNativeClickEvents(object? sender, MouseEventEventArgs obj, bool alsoSuppressClick = false)
+    private void SuppressNativeClickEvents(object? sender, MouseEventArgs obj, bool alsoSuppressClick = false)
     {
         if (alsoSuppressClick)
         {
@@ -635,25 +627,10 @@ public class Design
         else
         {
             // Suppress everything except single click (selection)
-            obj.Handled = obj.MouseEvent.Flags != MouseFlags.Button1Clicked;
+            obj.Handled = obj.Flags != MouseFlags.Button1Clicked;
         }
     }
 
-    private void SuppressNativeKeyboardEvents(object? sender, Key e)
-    {
-        if (sender == null)
-        {
-            return;
-        }
-
-        if (e == Key.Tab || e == Key.Tab.WithShift || e == Key.Esc || e == Application.QuitKey)
-        {
-            e.Handled = false;
-            return;
-        }
-
-        e.Handled = true;
-    }
 
     private void RegisterCheckboxDesignTimeChanges(CheckBox cb)
     {
@@ -662,7 +639,7 @@ public class Design
         cb.KeyBindings.Remove(Key.Space);
         cb.MouseClick += (s, e) =>
         {
-            if (e.MouseEvent.Flags.HasFlag(MouseFlags.Button1Clicked))
+            if (e.Flags.HasFlag(MouseFlags.Button1Clicked))
             {
                 e.Handled = true;
                 cb.SetFocus();
@@ -684,8 +661,12 @@ public class Design
         yield return this.CreateSuppressedProperty(nameof(this.View.Visible), true);
 
         yield return this.CreateSuppressedProperty(nameof(this.View.Arrangement), ViewArrangement.Fixed);
+        
 
         yield return new ColorSchemeProperty(this);
+
+        yield return this.CreateSuppressedProperty(nameof(View.CanFocus), true);
+        yield return this.CreateProperty(nameof(this.View.ShadowStyle));
 
         // its important that this comes before Text because
         // changing the validator clears the text

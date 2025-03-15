@@ -55,14 +55,15 @@ public class ResizeOperation : Operation
     public int DestinationY { get; private set; }
 
     /// <inheritdoc/>
-    public override void Undo()
+    protected override void UndoImpl()
     {
         this.BeingResized.GetDesignableProperty("Width")?.SetValue(this.OriginalWidth);
         this.BeingResized.GetDesignableProperty("Height")?.SetValue(this.OriginalHeight);
+        this.BeingResized.View.Layout();
     }
 
     /// <inheritdoc/>
-    public override void Redo()
+    protected override void RedoImpl()
     {
         this.Do();
     }
@@ -81,6 +82,8 @@ public class ResizeOperation : Operation
 
         this.DestinationY = dest.Y;
         this.SetHeight();
+
+        this.BeingResized.View.Layout();
     }
 
     /// <inheritdoc/>

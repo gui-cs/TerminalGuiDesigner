@@ -393,13 +393,13 @@ internal class CopyPasteTests : Tests
     }
 
     [Test]
-    public void CopyPasteContainer_Empty_ScrollView_Into_Root()
+    public void CopyPasteContainer_Empty_View_Into_Root()
     {
-        RoundTrip<Window, ScrollView>(
+        RoundTrip<Window, View>(
             ( d, v ) =>
             {
                 Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
-                Assume.That( v, Is.Not.Null.And.InstanceOf<ScrollView>( ) );
+                Assume.That( v, Is.Not.Null.And.InstanceOf<View>( ) );
                 Assume.That( v.GetActualSubviews( ), Is.Empty );
 
                 // copy the ScrollView
@@ -430,20 +430,20 @@ internal class CopyPasteTests : Tests
 
                 var rootSubviews = rootDesign.View.GetActualSubviews( );
                 Assert.That( rootSubviews, Has.Count.EqualTo( 2 ) );
-                Assert.That( rootSubviews, Has.All.InstanceOf<ScrollView>( ) );
+                Assert.That( rootSubviews, Has.All.InstanceOf<View>( ) );
             }
             , out _
         );
     }
 
     [Test]
-    public void CopyPasteContainer_EmptyScrollView_Into_Itself( )
+    public void CopyPasteContainer_EmptyView_Into_Itself( )
     {
-        RoundTrip<Window, ScrollView>(
+        RoundTrip<Window, View>(
             ( d, v ) =>
             {
                 Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
-                Assume.That( v, Is.Not.Null.And.InstanceOf<ScrollView>( ) );
+                Assume.That( v, Is.Not.Null.And.InstanceOf<View>( ) );
                 Assume.That( v.GetActualSubviews( ), Is.Empty );
 
                 CopyOperation copyOperation = new( d );
@@ -473,7 +473,7 @@ internal class CopyPasteTests : Tests
 
                 var rootSubviews = rootDesign.View.GetActualSubviews( );
                 Assert.That( rootSubviews, Has.Count.EqualTo( 2 ) );
-                Assert.That( rootSubviews, Has.All.InstanceOf<ScrollView>( ) );
+                Assert.That( rootSubviews, Has.All.InstanceOf<View>( ) );
             }
             , out _
         );
@@ -507,7 +507,7 @@ internal class CopyPasteTests : Tests
                 Assume.That( lbl2AddSucceeded );
                 Assume.That( lbl1Add.TimesDone, Is.EqualTo( 1 ) );
                 Assume.That( lbl2Add.TimesDone, Is.EqualTo( 1 ) );
-                IList<View> tab0Subviews = v.SelectedTab.View.GetActualSubviews( );
+                IList<View> tab0Subviews = v.SelectedTab.View.GetActualSubviews( ).ToList();
                 Assume.That( tab0Subviews, Has.Count.EqualTo( 2 ) );
                 Assume.That( tab0Subviews, Has.One.SameAs( lbl1 ) );
                 Assume.That( tab0Subviews, Has.One.SameAs( lbl2 ) );
@@ -527,7 +527,7 @@ internal class CopyPasteTests : Tests
                 Assume.That( lbl4AddSucceeded );
                 Assume.That( lbl3Add.TimesDone, Is.EqualTo( 1 ) );
                 Assume.That( lbl4Add.TimesDone, Is.EqualTo( 1 ) );
-                IList<View> tab1Subviews = v.SelectedTab.View.GetActualSubviews( );
+                IList<View> tab1Subviews = v.SelectedTab.View.GetActualSubviews( ).ToList();
                 Assume.That( tab1Subviews, Has.Count.EqualTo( 2 ) );
                 Assume.That( tab1Subviews, Has.One.SameAs( lbl3 ) );
                 Assume.That( tab1Subviews, Has.One.SameAs( lbl4 ) );
@@ -555,7 +555,7 @@ internal class CopyPasteTests : Tests
                 Assume.That( lbl6AddSucceeded );
                 Assume.That( lbl5Add.TimesDone, Is.EqualTo( 1 ) );
                 Assume.That( lbl6Add.TimesDone, Is.EqualTo( 1 ) );
-                IList<View> tab2Subviews = v.SelectedTab.View.GetActualSubviews( );
+                IList<View> tab2Subviews = v.SelectedTab.View.GetActualSubviews( ).ToList();
                 Assume.That( tab2Subviews, Has.Count.EqualTo( 2 ) );
                 Assume.That( tab2Subviews, Has.One.SameAs( lbl5 ) );
                 Assume.That( tab2Subviews, Has.One.SameAs( lbl6 ) );
@@ -589,8 +589,8 @@ internal class CopyPasteTests : Tests
                 Assert.That( rootSubviews, Has.Count.EqualTo( 2 ) );
                 Assert.That( rootSubviews, Has.All.InstanceOf<TabView>( ) );
 
-                var orig = (TabView)rootSubviews[ 0 ];
-                var pasted = (TabView)rootSubviews[ 1 ];
+                var orig = (TabView)rootSubviews.ElementAt(0);
+                var pasted = (TabView)rootSubviews.ElementAt(1);
 
                 // Ensure none of the original tabs is in the pasted group, to ensure no references were copied
                 Assert.That( orig.Tabs, Has.None.AnyOf( pasted.Tabs ) );

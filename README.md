@@ -74,7 +74,7 @@ You can add new code to `MyDialog.cs` but avoid making any changes to `MyDialog.
 For example in `MyDialog.cs` after `InitializeComponent()` add the following:
 
 ```csharp
-button1.Accept += ()=>MessageBox.Query("Hello","Hello World","Ok");
+button1.Accepting += ()=>MessageBox.Query("Hello","Hello World","Ok");
 ```
 Now when run clicking the button will trigger a message box.
 
@@ -171,7 +171,7 @@ italics are experimental and require passing the `-e` flag when starting applica
   - [x] Container views (e.g. TabView)
   - [ ] To OS clipboard (e.g. open one Designer.cs View and copy to another)
   - [x] Retain PosRelative mappings in pasted views (e.g. `A` LeftOf `B`)
-- [x] Move views to subviews
+- [x] Move views to SubViews
   - [x] With mouse
   - [ ] With keyboard
 - [ ] Read and present xmldoc comments when editing properties

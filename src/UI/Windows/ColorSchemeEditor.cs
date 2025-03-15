@@ -17,26 +17,7 @@ using Attribute = Terminal.Gui.Attribute;
 /// </summary>
 public partial class ColorSchemeEditor {
     
-    class MutableColorScheme
-    {
-        public Attribute Disabled { get; set; }
-        public Attribute Focus { get; set; }
-        public Attribute HotFocus { get; set; }
-        public Attribute HotNormal { get; set; }
-        public Attribute Normal { get; set; }
-
-        internal ColorScheme ToColorScheme()
-        {
-            return new ColorScheme
-            {
-                Normal = Normal,
-                HotNormal = HotNormal,
-                Focus = Focus,
-                HotFocus = HotFocus,
-                Disabled = Disabled,
-            };
-        }
-    }
+    
     /// <summary>
     /// All colors to use in all <see cref="View"/> states (focused, normal etc).
     /// </summary>
@@ -60,41 +41,53 @@ public partial class ColorSchemeEditor {
 
         SetColorPatches();
 
-        btnEditNormal.Accept += (s, e)=>{
+        btnEditNormal.Accepting += (s, e)=>
+        {
+            e.Cancel = true;
             _result.Normal = PickNewColorsFor(Result.Normal);
             SetColorPatches();
             };
 
 
-        btnEditHotNormal.Accept += (s, e)=>{
+        btnEditHotNormal.Accepting += (s, e)=>
+        {
+            e.Cancel = true;
             _result.HotNormal = PickNewColorsFor(Result.HotNormal);
             SetColorPatches();
             };
 
 
-        btnEditFocus.Accept += (s, e)=>{
+        btnEditFocus.Accepting += (s, e)=>{
+            e.Cancel = true;
             _result.Focus = PickNewColorsFor(Result.Focus);
             SetColorPatches();
             };
 
 
-        btnEditHotFocus.Accept += (s, e)=>{
+        btnEditHotFocus.Accepting += (s, e)=>
+        {
+            e.Cancel = true;
             _result.HotFocus = PickNewColorsFor(Result.HotFocus);
             SetColorPatches();
             };
 
 
-        btnEditDisabled.Accept += (s, e)=>{
+        btnEditDisabled.Accepting += (s, e)=>{
+            e.Cancel = true;
             _result.Disabled = PickNewColorsFor(Result.Disabled);
             SetColorPatches();
             };
 
-        btnCancel.Accept += (s, e)=>{
+        btnCancel.Accepting += (s, e)=>
+        {
+            e.Cancel = true;
             Cancelled = true;
             Application.RequestStop();
         };
 
-        btnOk.Accept += (s, e)=>{
+        btnOk.Accepting += (s, e)=>
+        {
+            e.Cancel = true;
             Cancelled = false;
             Application.RequestStop();
         };

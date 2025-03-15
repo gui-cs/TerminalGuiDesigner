@@ -140,7 +140,7 @@ public partial class DragOperation : Operation
     /// <summary>
     /// Moves all dragged views back to original positions.
     /// </summary>
-    public override void Undo()
+    protected override void UndoImpl()
     {
         foreach (var mem in this.mementos)
         {
@@ -149,7 +149,7 @@ public partial class DragOperation : Operation
     }
 
     /// <inheritdoc/>
-    public override void Redo()
+    protected override void RedoImpl()
     {
         this.Do();
     }

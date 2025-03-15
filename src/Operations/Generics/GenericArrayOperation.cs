@@ -63,16 +63,16 @@ public abstract class GenericArrayOperation<T1, T2> : GenericOperation<T1>
 
         current.Add(newItem);
         this.ArraySetter(this.View, current.Cast<T2>().ToArray());
-        this.SetNeedsDisplay();
+        this.SetNeedsDraw();
     }
 
     /// <summary>
     /// Calls any update/refresh status code that is needed after making changes to collection.
-    /// Default implementation just calls <see cref="View.SetNeedsDisplay()"/> on <see cref="View"/>.
+    /// Default implementation just calls <see cref="View.SetNeedsDraw()"/> on <see cref="View"/>.
     /// </summary>
-    protected virtual void SetNeedsDisplay()
+    protected virtual void SetNeedsDraw()
     {
-        this.View.SetNeedsDisplay();
+        this.View.SetNeedsDraw();
     }
 
     /// <summary>
@@ -92,7 +92,7 @@ public abstract class GenericArrayOperation<T1, T2> : GenericOperation<T1>
 
         current.Remove(toRemove);
         this.ArraySetter(this.View, current.Cast<T2>().ToArray());
-        this.SetNeedsDisplay();
+        this.SetNeedsDraw();
 
         return true;
     }
