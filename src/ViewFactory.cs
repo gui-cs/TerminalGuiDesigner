@@ -47,7 +47,6 @@ public static class ViewFactory
         typeof(Shortcut),
 
         typeof(Tab),
-        typeof(Bar),
         typeof(CharMap),
         typeof(LegendAnnotation),
         typeof(Menuv2),

@@ -11,7 +11,7 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
     public class SetShortcutOperation : GenericArrayElementOperation<StatusBar, Shortcut>
     {
         private Key originalShortcut;
-        private Key? shortcut;
+        private Key shortcut;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetShortcutOperation"/> class.
@@ -27,14 +27,14 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
                   design,
                   statusItem)
         {
-            this.shortcut = shortcut;
+            this.shortcut = shortcut ?? Key.Empty;
             this.originalShortcut = statusItem.Key;
         }
 
         /// <inheritdoc/>
         protected override void RedoImpl()
         {
-            if (this.shortcut == null)
+            if (this.shortcut == Key.Empty)
             {
                 return;
             }
@@ -51,7 +51,7 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
         /// <inheritdoc/>
         protected override bool DoImpl()
         {
-            if (this.shortcut == null)
+            if (this.shortcut == Key.Empty)
             {
                 this.shortcut = Modals.GetShortcut();
             }
