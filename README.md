@@ -37,7 +37,7 @@ Ensure that you match the Terminal.Gui library version you reference to the desi
 
 ### Building
 ----------------
-Build using the dotnet 6.0 sdk
+Build using the dotnet 8.0 sdk
 ```
 cd src
 dotnet run
