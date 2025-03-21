@@ -44,6 +44,8 @@ public class Tests
 
     protected static Design Get10By10View()
     {
+        Application.Top.RemoveAll();
+
         // start with blank slate
         OperationManager.Instance.ClearUndoRedo();
 
@@ -51,12 +53,16 @@ public class Tests
         {
             Width = 10,
             Height = 10,
+            CanFocus = true,
         };
         var d = new Design(new SourceCodeFile(new FileInfo("TenByTen.cs")), Design.RootDesignName, v);
         v.Data = d;
 
         v.BeginInit();
         v.EndInit();
+
+        Application.Top.Add(v);
+        Application.Top.LayoutSubViews();
 
         return d;
     }
@@ -123,7 +129,7 @@ public class Tests
     /// <summary>
     /// Performs a mouse drag from the first coordinates to the second (in screen space)
     /// </summary>
-    /// <param name="root">The root Design.  Make sure you have added it to <see cref="Application.Top"/> and run <see cref="View.LayoutSubviews"/></param>
+    /// <param name="root">The root Design.  Make sure you have added it to <see cref="Application.Top"/> and run <see cref="View.LayoutSubViews"/></param>
     /// <param name="x1">X coordinate to start drag at</param>
     /// <param name="y1">Y coordinate to start drag at</param>
     /// <param name="x2">X coordinate to end drag at</param>
@@ -133,7 +139,7 @@ public class Tests
         var mm = new MouseManager();
 
         mm.HandleMouse(
-            new MouseEvent
+            new MouseEventArgs
             {
                 Position = new Point(x1, y1),
                 Flags = MouseFlags.Button1Pressed,
@@ -141,7 +147,7 @@ public class Tests
 
         // press down at 0,0 of the label
         mm.HandleMouse(
-            new MouseEvent
+            new MouseEventArgs
             {
                 Position = new Point(x2, y2),
                 Flags = MouseFlags.Button1Pressed,
@@ -150,7 +156,7 @@ public class Tests
 
         // release in parent
         mm.HandleMouse(
-            new MouseEvent
+            new MouseEventArgs
             {
                 Position = new Point(x2,y2),
                 Flags = MouseFlags.Button1Released,

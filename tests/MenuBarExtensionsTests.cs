@@ -11,15 +11,22 @@ namespace UnitTests;
 [NonParallelizable]
 internal class MenuBarExtensionsTests : Tests
 {
+    /// <summary>
+    /// Expects menu like
+    /// 0123456789
+    ///  test  next
+    ///
+    /// This tests that the click in screen space finds the menu (File, Edit etc.).
+    /// Furthermore, it tests that works even when the MenuBar is not at the origin
+    /// </summary>
     [Test]
     [NonParallelizable]
     public void ScreenToMenuBarItem_MultipleMenuItems_ReturnsExpectedItem_IfItemsClicked(
-        [Values( 5, 6 )] int clickXCoordinate,
-        [Values( 0, 5 )] int xOffset,
-        [Values( 0, 1 )] int yOffset )
+        [Values( 1, 4 )] int clickXCoordinate,
+        [Values( 0, 3 )] int xOffset,
+        [Values( 0, 1 )] int yOffset,
+        [Values(0)]int expectedMenuItem)
     {
-        const int expectedItemWidth = 6;
-
         RoundTrip<View, MenuBar>( ( d, v ) =>
         {
             Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
@@ -28,8 +35,10 @@ internal class MenuBarExtensionsTests : Tests
             v.X = xOffset;
             v.Y = yOffset;
 
+            v.SuperView!.LayoutSubViews();
+
             // Expect a MenuBar to be rendered that is 
-            // ".test..next..more.." (with 1 unit of preceding whitespace and 2 after each)
+            // ".test..next..more.." (with 1 unit of preceding whitespace and 1 after each)
             // Note that this test is brittle and subject to changes in Terminal.Gui e.g. pushing menus closer together.
             v.Menus[ 0 ].Title = "test";
 
@@ -39,7 +48,9 @@ internal class MenuBarExtensionsTests : Tests
             Assume.That( v.Menus, Has.Exactly( 3 ).InstanceOf<MenuBarItem>( ) );
 
             // Clicks in the "test" region
-            Assert.That( v.ScreenToMenuBarItem( clickXCoordinate + xOffset ), Is.SameAs( v.Menus[ ( clickXCoordinate - 1 ) / expectedItemWidth ] ) );
+            var a = v.ScreenToMenuBarItem(clickXCoordinate + xOffset);
+            var b = v.Menus[expectedMenuItem];
+            Assert.That( a, Is.SameAs(b));
         }, out _ );
     }
 
@@ -56,6 +67,8 @@ internal class MenuBarExtensionsTests : Tests
 
             v.X = xOffset;
             v.Y = yOffset;
+
+            v.SuperView!.LayoutSubViews();
 
             // Expect a MenuBar to be rendered that is 
             // ".test..next..more.." (with 1 unit of preceding whitespace and 2 after each)
@@ -86,6 +99,8 @@ internal class MenuBarExtensionsTests : Tests
             v.X = xOffset;
             v.Y = yOffset;
 
+            v.SuperView!.LayoutSubViews();
+             
             // Expect a MenuBar to be rendered that is 
             // ".test.." (with 1 unit of preceding whitespace and 2 after)
             // Note that this test is brittle and subject to changes in Terminal.Gui e.g. pushing menus closer together.
@@ -111,6 +126,8 @@ internal class MenuBarExtensionsTests : Tests
             v.X = xOffset;
             v.Y = yOffset;
 
+            v.SuperView!.LayoutSubViews();
+
             // Expect a MenuBar to be rendered that is 
             // ".test.." (with 1 unit of preceding whitespace and 2 after)
             // Note that this test is brittle and subject to changes in Terminal.Gui e.g. pushing menus closer together.
@@ -135,6 +152,8 @@ internal class MenuBarExtensionsTests : Tests
 
             v.X = xOffset;
             v.Y = yOffset;
+
+            v.SuperView!.LayoutSubViews();
 
             // Expect a MenuBar to be rendered that is 
             // ".test.." (with 1 unit of preceding whitespace and 2 after)

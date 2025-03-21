@@ -28,7 +28,7 @@ public class AddMenuItemOperation : MenuItemOperation
     }
 
     /// <inheritdoc/>
-    public override void Redo()
+    protected override void RedoImpl()
     {
         if (this.added != null)
         {
@@ -37,7 +37,7 @@ public class AddMenuItemOperation : MenuItemOperation
     }
 
     /// <inheritdoc/>
-    public override void Undo()
+    protected override void UndoImpl()
     {
         if (this.added == null)
         {
@@ -79,7 +79,7 @@ public class AddMenuItemOperation : MenuItemOperation
         children.Insert(insertAt, menuItem);
         this.Parent.Children = children.ToArray();
 
-        this.Bar?.SetNeedsDisplay();
+        this.Bar?.SetNeedsDraw();
 
         return true;
     }

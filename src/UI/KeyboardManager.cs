@@ -30,7 +30,7 @@ public class KeyboardManager
     /// to the rest of the regular Terminal.Gui API layer.
     /// </summary>
     /// <param name="focusedView">The <see cref="View"/> that currently holds focus in <see cref="Editor"/>.</param>
-    /// <param name="keystroke">The key that has been reported by <see cref="Application.RootKey"/>.</param>
+    /// <param name="keystroke">The key that has been reported by <see cref="Application.KeyDown"/>.</param>
     /// <returns><see langword="true"/> if <paramref name="keystroke"/> should be suppressed.</returns>
     public bool HandleKey(View focusedView, Key keystroke)
     {
@@ -111,7 +111,7 @@ public class KeyboardManager
         {
             menuItem.ShortcutKey = Modals.GetShortcut().KeyCode;
 
-            focusedView.SetNeedsDisplay();
+            focusedView.SetNeedsDraw();
             return false;
         }
 
@@ -182,6 +182,16 @@ public class KeyboardManager
             }
         }
 
+        // When menu is being edited let user paste in text e.g. command names
+        if (keystroke == keyMap.Paste)
+        {
+            if (Clipboard.TryGetClipboardData(out string text) && IsValidSimpleStringToPaste(text))
+            {
+                menuItem.Title += text;
+                return true;
+            }
+        }
+
         // Allow typing but also Enter to create a new sub-item
         if ( !this.IsActionableKey( keystroke ) )
         {
@@ -209,12 +219,32 @@ public class KeyboardManager
                 menuItem.Title = newValue;
             }
 
-            focusedView.SetNeedsDisplay();
+            focusedView.SetNeedsDraw();
 
             return true;
         }
 
         return false;
+    }
+
+    private bool IsValidSimpleStringToPaste(string result)
+    {
+        if (string.IsNullOrWhiteSpace(result))
+        {
+            return false;
+        }
+
+        if (result.Contains('\n') || result.Contains('\r'))
+        {
+            return false;
+        }
+
+        if (result.Length > 100)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     private void ChangeKeyTo(Key keystroke, Key newKey)
@@ -270,7 +300,7 @@ public class KeyboardManager
         }
 
         design.View.SetActualText(newStr);
-        design.View.SetNeedsDisplay();
+        design.View.SetNeedsDraw();
         this.currentOperation.NewValue = newStr;
 
         return true;

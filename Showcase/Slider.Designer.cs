@@ -31,7 +31,13 @@ namespace Showcase {
         
         private Terminal.Gui.Slider<string> slider3;
         
+        private Terminal.Gui.Line line;
+        
+        private Terminal.Gui.Slider<double> slider4;
+        
         private void InitializeComponent() {
+            this.slider4 = new Terminal.Gui.Slider<double>();
+            this.line = new Terminal.Gui.Line();
             this.slider3 = new Terminal.Gui.Slider<string>();
             this.lblStringSliderThin = new Terminal.Gui.Label();
             this.slider2 = new Terminal.Gui.Slider<string>();
@@ -44,15 +50,19 @@ namespace Showcase {
             this.Y = 0;
             this.Visible = true;
             this.Arrangement = (Terminal.Gui.ViewArrangement.Movable | Terminal.Gui.ViewArrangement.Overlapped);
+            this.CanFocus = true;
+            this.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.Modal = false;
             this.TextAlignment = Terminal.Gui.Alignment.Start;
-            this.Title = "";
+            this.Title = "Sliders";
             this.label.Width = Dim.Auto();
             this.label.Height = 1;
             this.label.X = 0;
             this.label.Y = 0;
             this.label.Visible = true;
             this.label.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.label.CanFocus = true;
+            this.label.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.label.Data = "label";
             this.label.Text = "Int Slider (0 to 1):";
             this.label.TextAlignment = Terminal.Gui.Alignment.Start;
@@ -63,12 +73,14 @@ namespace Showcase {
             this.slider1.Y = 0;
             this.slider1.Visible = true;
             this.slider1.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.slider1.CanFocus = true;
+            this.slider1.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.slider1.Options = new System.Collections.Generic.List<Terminal.Gui.SliderOption<int>>(new Terminal.Gui.SliderOption<int>[] {
                         new Terminal.Gui.SliderOption<int>("0", new System.Text.Rune('0'), 0),
                         new Terminal.Gui.SliderOption<int>("1", new System.Text.Rune('1'), 1)});
             this.slider1.Orientation = Terminal.Gui.Orientation.Horizontal;
             this.slider1.RangeAllowSingle = false;
-            this.slider1.AllowEmpty = false;
+            this.slider1.AllowEmpty = true;
             this.slider1.MinimumInnerSpacing = 1;
             this.slider1.LegendsOrientation = Terminal.Gui.Orientation.Horizontal;
             this.slider1.ShowLegends = true;
@@ -83,6 +95,8 @@ namespace Showcase {
             this.lblStringSlider.Y = 2;
             this.lblStringSlider.Visible = true;
             this.lblStringSlider.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.lblStringSlider.CanFocus = true;
+            this.lblStringSlider.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.lblStringSlider.Data = "lblStringSlider";
             this.lblStringSlider.Text = "String Slider (Wide):";
             this.lblStringSlider.TextAlignment = Terminal.Gui.Alignment.Start;
@@ -93,6 +107,8 @@ namespace Showcase {
             this.slider2.Y = 2;
             this.slider2.Visible = true;
             this.slider2.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.slider2.CanFocus = true;
+            this.slider2.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.slider2.Options = new System.Collections.Generic.List<Terminal.Gui.SliderOption<string>>(new Terminal.Gui.SliderOption<string>[] {
                         new Terminal.Gui.SliderOption<string>("Fish", new System.Text.Rune('F'), "Fish"),
                         new Terminal.Gui.SliderOption<string>("Cat", new System.Text.Rune('C'), "Cat"),
@@ -114,6 +130,8 @@ namespace Showcase {
             this.lblStringSliderThin.Y = 4;
             this.lblStringSliderThin.Visible = true;
             this.lblStringSliderThin.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.lblStringSliderThin.CanFocus = true;
+            this.lblStringSliderThin.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.lblStringSliderThin.Data = "lblStringSliderThin";
             this.lblStringSliderThin.Text = "String Slider (Thin):";
             this.lblStringSliderThin.TextAlignment = Terminal.Gui.Alignment.Start;
@@ -124,6 +142,8 @@ namespace Showcase {
             this.slider3.Y = 4;
             this.slider3.Visible = true;
             this.slider3.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.slider3.CanFocus = true;
+            this.slider3.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.slider3.Options = new System.Collections.Generic.List<Terminal.Gui.SliderOption<string>>(new Terminal.Gui.SliderOption<string>[] {
                         new Terminal.Gui.SliderOption<string>("Fish", new System.Text.Rune('F'), "Fish"),
                         new Terminal.Gui.SliderOption<string>("Cat", new System.Text.Rune('C'), "Cat"),
@@ -139,6 +159,39 @@ namespace Showcase {
             this.slider3.Data = "slider3";
             this.slider3.TextAlignment = Terminal.Gui.Alignment.Start;
             this.Add(this.slider3);
+            this.line.Width = Dim.Fill(-1);
+            this.line.Height = 1;
+            this.line.X = -1;
+            this.line.Y = 6;
+            this.line.Visible = true;
+            this.line.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.line.CanFocus = true;
+            this.line.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.line.Data = "line";
+            this.line.Text = "";
+            this.line.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.Add(this.line);
+            this.slider4.Width = 5;
+            this.slider4.Height = Dim.Auto();
+            this.slider4.X = 16;
+            this.slider4.Y = 9;
+            this.slider4.Visible = true;
+            this.slider4.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.slider4.CanFocus = true;
+            this.slider4.ShadowStyle = Terminal.Gui.ShadowStyle.Transparent;
+            this.slider4.Options = new System.Collections.Generic.List<Terminal.Gui.SliderOption<double>>(new Terminal.Gui.SliderOption<double>[] {
+                        new Terminal.Gui.SliderOption<double>("Zero", new System.Text.Rune('0'), 0D)});
+            this.slider4.Orientation = Terminal.Gui.Orientation.Horizontal;
+            this.slider4.RangeAllowSingle = false;
+            this.slider4.AllowEmpty = false;
+            this.slider4.MinimumInnerSpacing = 1;
+            this.slider4.LegendsOrientation = Terminal.Gui.Orientation.Horizontal;
+            this.slider4.ShowLegends = true;
+            this.slider4.ShowEndSpacing = false;
+            this.slider4.Type = Terminal.Gui.SliderType.Single;
+            this.slider4.Data = "slider4";
+            this.slider4.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.Add(this.slider4);
         }
     }
 }

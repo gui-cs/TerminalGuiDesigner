@@ -26,12 +26,12 @@ public class OperationFactory
     /// set of <see cref="Design"/> given the mouse state.
     /// </summary>
     /// <param name="selected">All <see cref="Design"/> that are currently selected (see <see cref="SelectionManager"/>).</param>
-    /// <param name="m"><see cref="MouseEvent"/> (if any) that prompted this request e.g. if user right clicks a <see cref="Design"/>.</param>
+    /// <param name="m"><see cref="MouseEventArgs"/> (if any) that prompted this request e.g. if user right clicks a <see cref="Design"/>.</param>
     /// <param name="rightClicked">If <paramref name="m"/> is populated then this should be the <see cref="Design"/> wrapper for
-    /// the <see cref="View"/> that the mouse was over at the time it was clicked (see <see cref="ViewExtensions.HitTest(View, MouseEvent, out bool, out bool, View[])"/>.</param>
+    /// the <see cref="View"/> that the mouse was over at the time it was clicked (see <see cref="ViewExtensions.HitTest(View, MouseEventArgs, out bool, out bool, View[])"/>.</param>
     /// <param name="name">String that represents what the returned <see cref="IOperation"/> act upon e.g. "myLabel" or "8 objects".</param>
     /// <returns>Collection of all <see cref="IOperation"/> that can be offered to user as runnable given the current selection.</returns>
-    public IEnumerable<IOperation> CreateOperations(Design[] selected, MouseEvent? m, Design? rightClicked, out string name)
+    public IEnumerable<IOperation> CreateOperations(Design[] selected, MouseEventArgs? m, Design? rightClicked, out string name)
     {
         List<IOperation> toReturn = new();
 
@@ -99,7 +99,7 @@ public class OperationFactory
         return toReturn;
     }
 
-    private IEnumerable<IOperation> CreateOperations(MouseEvent? m, Design d)
+    private IEnumerable<IOperation> CreateOperations(MouseEventArgs? m, Design d)
     {
         var ops = m == null ?
             d.GetExtraOperations() :

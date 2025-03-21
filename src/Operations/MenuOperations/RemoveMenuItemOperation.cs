@@ -51,13 +51,13 @@ public class RemoveMenuItemOperation : MenuItemOperation
     public bool PrunedTopLevelMenu => this.prunedEmptyTopLevelMenus != null && this.prunedEmptyTopLevelMenus.Any();
 
     /// <inheritdoc/>
-    public override void Redo()
+    protected override void RedoImpl()
     {
         this.Do();
     }
 
     /// <inheritdoc/>
-    public override void Undo()
+    protected override void UndoImpl()
     {
         if (this.Parent == null || this.OperateOn == null)
         {
@@ -70,7 +70,7 @@ public class RemoveMenuItemOperation : MenuItemOperation
             this.OperateOn,
             .. Parent.Children[ removedAtIdx .. ]
         ];
-        this.Bar?.SetNeedsDisplay();
+        this.Bar?.SetNeedsDraw();
 
         // if any MenuBarItem were converted to vanilla MenuItem
         // because we were removed from a sub-menu then convert
@@ -131,7 +131,7 @@ public class RemoveMenuItemOperation : MenuItemOperation
             .. Parent.Children[ ..removedAtIdx ],
             .. Parent.Children[ ( removedAtIdx + 1 ).. ]
         ];
-        this.Bar?.SetNeedsDisplay();
+        this.Bar?.SetNeedsDraw();
 
         if (this.Bar != null)
         {

@@ -47,8 +47,12 @@ public partial class ColorPicker : IValueGetterDialog
         cpForeground.ColorChanged += (s,e) => UpdatePreview();
         cpBackground.ColorChanged += (s,e) => UpdatePreview();
 
-        btnOk.Accept += (s, e) => Ok();
-        btnCancel.Accept += (s, e) => Cancel();
+        btnOk.Accepting += (s, e) =>
+        {
+            e.Cancel = true;
+            Ok();
+        };
+        btnCancel.Accepting += (s, e) => { e.Cancel = true; Cancel(); };
     }
 
     private void Ok()
@@ -67,7 +71,7 @@ public partial class ColorPicker : IValueGetterDialog
     private void UpdatePreview()
     {
         lblPreview.ColorScheme = new ColorScheme(GetColor());
-        lblPreview.SetNeedsDisplay();
+        lblPreview.SetNeedsDraw();
     }
     
     private Attribute GetColor()

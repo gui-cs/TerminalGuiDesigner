@@ -42,8 +42,8 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.genericTypeArgument = genericTypeArgument;
             this.sliderOptionType = typeof(SliderOption<>).MakeGenericType(this.genericTypeArgument);
 
-            btnOk.Accept += BtnOk_Clicked;
-            btnCancel.Accept += BtnCancel_Clicked;
+            btnOk.Accepting += BtnOk_Clicked;
+            btnCancel.Accepting += BtnCancel_Clicked;
 
             lblType.Text = $"({genericTypeArgument.Name})";
 
@@ -68,14 +68,16 @@ namespace TerminalGuiDesigner.UI.Windows {
             }
         }
 
-        private void BtnCancel_Clicked(object sender, EventArgs e)
+        private void BtnCancel_Clicked(object sender, CommandEventArgs e)
         {
+            e.Cancel = true;
             this.Cancelled = true;
             Application.RequestStop();
         }
 
-        private void BtnOk_Clicked(object sender, EventArgs e)
+        private void BtnOk_Clicked(object sender, CommandEventArgs e)
         {
+            e.Cancel = true;
             try
             {
                 this.BuildResult();

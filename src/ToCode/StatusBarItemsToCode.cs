@@ -4,7 +4,7 @@ using Terminal.Gui;
 namespace TerminalGuiDesigner.ToCode;
 
 /// <summary>
-/// Handles generating all <see cref="StatusItem"/> that are stored a the <see cref="StatusBar"/>.
+/// Handles generating all <see cref="Shortcut"/> that are stored a the <see cref="StatusBar"/>.
 /// </summary>
 public class StatusBarItemsToCode : ToCodeBase
 {
@@ -28,7 +28,7 @@ public class StatusBarItemsToCode : ToCodeBase
     }
 
     /// <summary>
-    /// Adds code to .Designer.cs to construct and initialize all <see cref="StatusItem"/>
+    /// Adds code to .Designer.cs to construct and initialize all <see cref="Shortcut"/>
     /// in the <see cref="StatusBar"/>.
     /// </summary>
     /// <param name="args">State object for the .Designer.cs file being generated.</param>

@@ -42,13 +42,13 @@ public class DeleteViewOperation : Operation
     }
 
     /// <inheritdoc/>
-    public override void Redo()
+    protected override void RedoImpl()
     {
         this.Do();
     }
 
     /// <inheritdoc/>
-    public override void Undo()
+    protected override void UndoImpl()
     {
         for (int i = 0; i < this.delete.Length; i++)
         {

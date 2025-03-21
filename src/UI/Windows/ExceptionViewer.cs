@@ -16,6 +16,7 @@ public class ExceptionViewer
     /// <param name="exception"><see cref="Exception"/> to show.</param>
     public static void ShowException(string errorText, Exception exception)
     {
+        Logging.Critical(errorText + exception);
         var msg = GetExceptionText(errorText, exception, false);
 
         var textView = new TextView()
@@ -37,16 +38,21 @@ public class ExceptionViewer
             IsDefault = true
         };
 
-        btnOk.Accept += (s, e) => Application.RequestStop();
+        btnOk.Accepting += (s, e) =>
+        {
+            e.Cancel = true;
+            Application.RequestStop();
+        };
         var btnStack = new Button()
         {
             Text = "Stack"
         };
-        btnStack.Accept += (s, e) =>
+        btnStack.Accepting += (s, e) =>
         {
+            e.Cancel = true;
             // flip between stack / no stack
             textView.Text = GetExceptionText(errorText, exception, toggleStack);
-            textView.SetNeedsDisplay();
+            textView.SetNeedsDraw();
             toggleStack = !toggleStack;
         };
 

@@ -1,6 +1,7 @@
 using System;
 using Terminal.Gui;
 using TerminalGuiDesigner;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UnitTests;
 
@@ -32,12 +33,15 @@ internal class ViewExtensionsTests : Tests
         v.Width = 5;
         v.Height = 3;
 
+        // Hit test does not find things that are not designable
+        v.Data = new Design(new SourceCodeFile("MyView.cs"), "myview", v);
+
         Application.Top.Add(v);
         bool isLowerRight;
         bool isBorder;
 
         var result = v.HitTest(
-            new MouseEvent
+            new MouseEventArgs
         {
                 Position = new Point(x, y),
         }, out isBorder, out isLowerRight);
@@ -49,7 +53,7 @@ internal class ViewExtensionsTests : Tests
         }
         else
         {
-            ClassicAssert.IsNull(result);
+            ClassicAssert.AreSame(Application.Top,result);
         }
 
         ClassicAssert.AreEqual(lowerRight, isLowerRight);
@@ -92,16 +96,19 @@ internal class ViewExtensionsTests : Tests
             Height = 5,
         };
 
+        // Hit test does not find things that are not designable
+        f.Data = new Design(new SourceCodeFile("MyView.cs"), "myframe", f);
+
         w.Add(f);
         Application.Begin(w);
-        w.LayoutSubviews();
+        w.LayoutSubViews();
 
-        ClassicAssert.AreSame(w, w.HitTest(new MouseEvent {Position = new Point(13, 0) }, out var isBorder, out _),
+        ClassicAssert.AreSame(w, w.HitTest(new MouseEventArgs {Position = new Point(13, 0) }, out var isBorder, out _),
             "Expected 0,0 to be the window border (its client area should start at 1,1)");
         ClassicAssert.IsTrue(isBorder);
 
         // 1,1
-        ClassicAssert.AreSame(f, w.HitTest(new MouseEvent {Position = new Point(1, 1) }, out isBorder, out _),
+        ClassicAssert.AreSame(f, w.HitTest(new MouseEventArgs {Position = new Point(1, 1) }, out isBorder, out _),
             "Expected 1,1 to be the Frame border (its client area should start at 1,1)");
         ClassicAssert.IsTrue(isBorder);
     }

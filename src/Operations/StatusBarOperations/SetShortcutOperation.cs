@@ -5,19 +5,19 @@ using TerminalGuiDesigner.UI.Windows;
 namespace TerminalGuiDesigner.Operations.StatusBarOperations
 {
     /// <summary>
-    /// Changes the <see cref="StatusItem.Shortcut"/> of a <see cref="StatusItem"/> on
+    /// Changes the <see cref="Shortcut"/> of a <see cref="Shortcut"/> on
     /// a <see cref="StatusBar"/>.
     /// </summary>
     public class SetShortcutOperation : GenericArrayElementOperation<StatusBar, Shortcut>
     {
         private Key originalShortcut;
-        private Key? shortcut;
+        private Key shortcut;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetShortcutOperation"/> class.
         /// </summary>
         /// <param name="design">Wrapper for a <see cref="StatusBar"/>.</param>
-        /// <param name="statusItem">The <see cref="StatusItem"/> whose shortcut you want to change.</param>
+        /// <param name="statusItem">The <see cref="Shortcut"/> whose shortcut you want to change.</param>
         /// <param name="shortcut">The new shortcut or null to prompt user at runtime.</param>
         public SetShortcutOperation(Design design, Shortcut statusItem, Key? shortcut)
             : base(
@@ -27,14 +27,14 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
                   design,
                   statusItem)
         {
-            this.shortcut = shortcut;
+            this.shortcut = shortcut ?? Key.Empty;
             this.originalShortcut = statusItem.Key;
         }
 
         /// <inheritdoc/>
-        public override void Redo()
+        protected override void RedoImpl()
         {
-            if (this.shortcut == null)
+            if (this.shortcut == Key.Empty)
             {
                 return;
             }
@@ -43,7 +43,7 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
         }
 
         /// <inheritdoc/>
-        public override void Undo()
+        protected override void UndoImpl()
         {
             this.OperateOn.Key = this.originalShortcut;
         }
@@ -51,7 +51,7 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
         /// <inheritdoc/>
         protected override bool DoImpl()
         {
-            if (this.shortcut == null)
+            if (this.shortcut == Key.Empty)
             {
                 this.shortcut = Modals.GetShortcut();
             }

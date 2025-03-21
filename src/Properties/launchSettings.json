@@ -1,7 +1,16 @@
 {
   "profiles": {
-    "TerminalGuiDesigner": {
-      "commandName": "Project"
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": ""
+    },
+    "v2net": {
+      "commandName": "Project",
+      "commandLineArgs": "-d v2net"
+    },
+    "v2win": {
+      "commandName": "Project",
+      "commandLineArgs": "-d v2win"
     }
   }
 }

@@ -47,16 +47,22 @@ public class BigListBox<T>
     /// <param name="displayMember">What to display in the list box (defaults to <see cref="object.ToString"/>.</param>
     /// <param name="addNull">Creates a selection option "Null" that returns a null selection.</param>
     /// <param name="currentSelection">The optional existing value, if present it should be selected in the list.</param>
-    public BigListBox(
-        string prompt,
+    /// <param name="sort"></param>
+    public BigListBox(string prompt,
         string okText,
         in bool addSearch,
         IList<T> collection,
         Func<T?, string> displayMember,
         bool addNull,
-        T? currentSelection)
+        T? currentSelection, bool sort = true)
     {
         this.AspectGetter = displayMember ?? (arg => arg?.ToString() ?? string.Empty);
+
+        // Sort alphabetically according to display member
+        if (sort)
+        {
+            collection = collection.OrderBy(e => AspectGetter(e)).ToList();
+        }
 
         this.publicCollection = collection ?? throw new ArgumentNullException( nameof( collection ) );
         this.addNull = addNull;
@@ -82,15 +88,13 @@ public class BigListBox<T>
             SelectedItem = 0
         };
         listView.SetSource(new ObservableCollection<string>(ErrorStringArray));
-
-        this.listView.KeyDown += this.ListView_KeyPress;
-
+        
         this.listView.MouseClick += this.ListView_MouseClick;
         
         this.collection = this.BuildList(this.GetInitialSource()).ToList();
 
         this.listView.SetSource(
-            new ObservableCollection<T>(this.collection.Select(o=>o.Object).ToArray())
+            new ObservableCollection<ListViewObject<T>>(this.collection.ToArray())
             );
         this.win.Add(this.listView);
 
@@ -100,8 +104,9 @@ public class BigListBox<T>
             IsDefault = true,
             Y = Pos.Bottom(this.listView),
         };
-        btnOk.Accept += (s, e) =>
+        btnOk.Accepting += (s, e) =>
         {
+            e.Cancel = true;
             this.Accept();
         };
 
@@ -110,7 +115,11 @@ public class BigListBox<T>
             Text = "Cancel",
             Y = Pos.Bottom(this.listView),
         };
-        btnCancel.Accept += (s, e) => Application.RequestStop();
+        btnCancel.Accepting += (s, e) =>
+        {
+            e.Cancel = true;
+            Application.RequestStop();
+        };
 
         if (addSearch)
         {
@@ -164,7 +173,7 @@ public class BigListBox<T>
 
         this.callback = Application.AddTimeout(TimeSpan.FromMilliseconds(100), this.Timer);
 
-        this.listView.FocusFirst(TabBehavior.TabStop);
+        this.listView.FocusDeepest(NavigationDirection.Forward,TabBehavior.TabStop);
     }
 
 
@@ -204,29 +213,15 @@ public class BigListBox<T>
         this.Selected = this.collection[selected].Object;
     }
 
-    private void ListView_MouseClick(object? sender, MouseEventEventArgs obj)
+    private void ListView_MouseClick(object? sender, MouseEventArgs obj)
     {
-        if (obj.MouseEvent.Flags.HasFlag(MouseFlags.Button1DoubleClicked))
+        if (obj.Flags.HasFlag(MouseFlags.Button1DoubleClicked))
         {
             obj.Handled = true;
             this.Accept();
         }
     }
-
-    private void ListView_KeyPress(object? sender, Key key)
-    {
-        // if user types in some text change the focus to the text box to enable searching
-        var c = (char)key;
-
-        // backspace or letter/numbers
-        if (key == Key.Backspace || char.IsLetterOrDigit(c))
-        {
-            this.searchBox?.FocusFirst(TabBehavior.TabStop);
-            this.searchBox?.NewKeyDownEvent(key);
-            key.Handled = true;
-        }
-    }
-
+    
     private bool Timer()
     {
         if (this.changes && DateTime.Now.Subtract(this.lastKeypress) > TimeSpan.FromMilliseconds(100))

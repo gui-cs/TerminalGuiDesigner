@@ -16,6 +16,9 @@ namespace TerminalGuiDesigner.UI.Windows {
     using Terminal.Gui;
     using TerminalGuiDesigner.ToCode;
 
+    /// <summary>
+    /// UI for configuring array elements
+    /// </summary>
     public partial class ArrayEditor : IValueGetterDialog {
 
         /// <summary>
@@ -29,8 +32,11 @@ namespace TerminalGuiDesigner.UI.Windows {
         /// <summary>
         /// The new array 
         /// </summary>
-        [CanBeNull]
         public object Result => ResultAsList;
+
+        /// <summary>
+        /// Returns the <see cref="Array"/> being designed as an <see cref="IList"/>
+        /// </summary>
         public IList ResultAsList { get; private set; }
 
 
@@ -56,17 +62,17 @@ namespace TerminalGuiDesigner.UI.Windows {
 
             lvElements.Source = ResultAsList.ToListDataSource();
             lvElements.KeyDown += LvElements_KeyDown;
-            btnOk.Accept += BtnOk_Clicked;
-            btnCancel.Accept += BtnCancel_Clicked;
-            btnAddElement.Accept += BtnAddElement_Clicked;
-            btnDelete.Accept += (s, e) => DeleteSelectedItem();
-            btnMoveDown.Accept += BtnMoveDown_Clicked;
-            btnMoveUp.Accept += BtnMoveUp_Clicked;
-            btnEdit.Accept += BtnEdit_Clicked;
+            btnOk.Accepting += BtnOk_Clicked;
+            btnCancel.Accepting += BtnCancel_Clicked;
+            btnAddElement.Accepting += BtnAddElement_Clicked;
+            btnDelete.Accepting += (s, e) => DeleteSelectedItem();
+            btnMoveDown.Accepting += BtnMoveDown_Clicked;
+            btnMoveUp.Accepting += BtnMoveUp_Clicked;
+            btnEdit.Accepting += BtnEdit_Clicked;
         }
 
 
-        private void BtnMoveUp_Clicked(object sender, EventArgs e)
+        private void BtnMoveUp_Clicked(object sender, CommandEventArgs e)
         {
             // Moving up means reducing the index by 1
             var idx = lvElements.SelectedItem;
@@ -80,11 +86,13 @@ namespace TerminalGuiDesigner.UI.Windows {
 
                 lvElements.Source = ResultAsList.ToListDataSource();
                 lvElements.SelectedItem = newIndex;
-                lvElements.SetNeedsDisplay();
+                lvElements.SetNeedsDraw();
             }
+
+            e.Cancel = true;
         }
 
-        private void BtnMoveDown_Clicked(object sender, EventArgs e)
+        private void BtnMoveDown_Clicked(object sender, CommandEventArgs e)
         {
             // Moving up means increasing the index by 1
             var idx = lvElements.SelectedItem;
@@ -98,8 +106,10 @@ namespace TerminalGuiDesigner.UI.Windows {
 
                 lvElements.Source = ResultAsList.ToListDataSource();
                 lvElements.SelectedItem = newIndex;
-                lvElements.SetNeedsDisplay();
+                lvElements.SetNeedsDraw();
             }
+
+            e.Cancel = true;
         }
 
         private void LvElements_KeyDown(object sender, Key e)
@@ -120,12 +130,12 @@ namespace TerminalGuiDesigner.UI.Windows {
                 ResultAsList.RemoveAt(idx);
 
                 lvElements.Source = ResultAsList.ToListDataSource();
-                lvElements.SetNeedsDisplay();
+                lvElements.SetNeedsDraw();
                 lvElements.SelectedItem = 0;
             }
         }
 
-        private void BtnAddElement_Clicked(object sender, EventArgs e)
+        private void BtnAddElement_Clicked(object sender, CommandEventArgs e)
         {
             if(ValueFactory.GetNewValue("Element Value", design, this.elementType,null, out var newValue,true))
             {
@@ -134,9 +144,10 @@ namespace TerminalGuiDesigner.UI.Windows {
 
             lvElements.Source = ResultAsList.ToListDataSource();
             lvElements.SelectedItem = ResultAsList.Count - 1;
-            lvElements.SetNeedsDisplay();
+            lvElements.SetNeedsDraw();
+            e.Cancel = true;
         }
-        private void BtnEdit_Clicked(object sender, EventArgs e)
+        private void BtnEdit_Clicked(object sender, CommandEventArgs e)
         {
             var idx = lvElements.SelectedItem;
 
@@ -153,18 +164,22 @@ namespace TerminalGuiDesigner.UI.Windows {
 
                 lvElements.Source = ResultAsList.ToListDataSource();
                 lvElements.SelectedItem = idx;
-                lvElements.SetNeedsDisplay();
+                lvElements.SetNeedsDraw();
             }
+
+            e.Cancel = true;
         }
 
-        private void BtnCancel_Clicked(object sender, EventArgs e)
+        private void BtnCancel_Clicked(object sender, CommandEventArgs e)
         {
+            e.Cancel = true;
             Cancelled = true;
             Application.RequestStop();
         }
 
-        private void BtnOk_Clicked(object sender, EventArgs e)
+        private void BtnOk_Clicked(object sender, CommandEventArgs e)
         {
+            e.Cancel = true;
             Cancelled = false;
             Application.RequestStop();
         }

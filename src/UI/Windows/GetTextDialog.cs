@@ -55,9 +55,6 @@ internal class GetTextDialog
         };
         this.textView.KeyDown += this.TextViewKeyPress;
 
-        // make it easier for user to replace this text with something else
-        // by directly selecting it all so next keypress replaces text
-        this.textView.SelectAll();
 
         this.win.Add(this.textView);
 
@@ -71,6 +68,12 @@ internal class GetTextDialog
             SetupMultiLineOptional();
         }
 
+        this.textView.CursorPosition = new(0, 0);
+
+        // make it easier for user to replace this text with something else
+        // by directly selecting it all so next keypress replaces text
+        this.textView.SelectAll();
+
         var btnOk = new Button()
         {
             Text = "Ok",
@@ -78,8 +81,9 @@ internal class GetTextDialog
             Y = Pos.Bottom(this.textView),
             IsDefault = !this.args.MultiLine,
         };
-        btnOk.Accept += (s, e) =>
+        btnOk.Accepting += (s, e) =>
         {
+            e.Cancel = true;
             this.Accept();
         };
 
@@ -90,8 +94,9 @@ internal class GetTextDialog
             Y = Pos.Bottom(this.textView),
             IsDefault = false,
         };
-        btnCancel.Accept += (s, e) =>
+        btnCancel.Accepting += (s, e) =>
         {
+            e.Cancel = true;
             this.okClicked = false;
             Application.RequestStop();
         };
@@ -102,8 +107,9 @@ internal class GetTextDialog
             X = Pos.Right(btnCancel),
             Y = Pos.Bottom(this.textView),
         };
-        btnClear.Accept += (s, e) =>
+        btnClear.Accepting += (s, e) =>
         {
+            e.Cancel = true;
             this.textView.Text = string.Empty;
         };
 

@@ -23,6 +23,7 @@ using TerminalGuiDesigner.UI.Windows;
 public partial class PosEditor : Dialog, IValueGetterDialog {
 
     private Design design;
+    private readonly Dictionary<string, Design> _siblings;
 
     /// <summary>
     /// Users configured <see cref="Pos"/> (assembled from radio button
@@ -52,18 +53,23 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
 
         rgPosType.KeyDown += RgPosType_KeyPress;
 
-        btnOk.Accept += BtnOk_Clicked;
-        btnCancel.Accept += BtnCancel_Clicked;
+        btnOk.Accepting += BtnOk_Clicked;
+        btnCancel.Accepting += BtnCancel_Clicked;
         Cancelled = true;
         Modal = true;
 
-        var siblings = design.GetSiblings().ToListObs();
+        _siblings = design.GetSiblings().ToDictionary(
+            d=>d.FieldName,
+            d=>d);
 
-        ddRelativeTo.SetSource(siblings);
-        ddSide.SetSource(Enum.GetValues(typeof(Side)).Cast<Enum>().ToListObs());
+        tbRelativeTo.Autocomplete.SuggestionGenerator = new SingleWordSuggestionGenerator()
+        {
+            AllSuggestions = _siblings.Keys.OrderBy(a => a).ToList()
+        };
 
         var val = oldValue;
-        if(val.GetPosType(siblings,out var type,out var value,out var relativeTo,out var side, out var offset))
+        if(val.GetPosType(_siblings.Values.ToList(),
+               out var type,out var value,out var relativeTo,out var side, out var offset))
         {
             switch(type)
             {
@@ -76,8 +82,8 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
                 case PosType.Relative:
                     rgPosType.SelectedItem = 2;
                     if(relativeTo != null)
-                        ddRelativeTo.SelectedItem = siblings.IndexOf(relativeTo);
-                    ddSide.SelectedItem = (int)side;
+                        tbRelativeTo.Text = relativeTo.FieldName;
+                    rgSide.SelectedItem = (int)side;
                     break;
                 case PosType.Center:
                     rgPosType.SelectedItem = 3;                        
@@ -104,7 +110,7 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
         // if user types in some text change the focus to the text box to enable entering digits
         if ((key == Key.Backspace || char.IsDigit(c)) && tbValue.Visible)
         {
-            tbValue?.FocusFirst(TabBehavior.TabStop);
+            tbValue?.FocusDeepest(NavigationDirection.Forward,TabBehavior.TabStop);
         }            
     }
 
@@ -120,9 +126,9 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
         {
             case PosType.Percent:
                 lblRelativeTo.Visible = false;
-                ddRelativeTo.Visible = false;
+                tbRelativeTo.Visible = false;
                 lblSide.Visible = false;
-                ddSide.Visible = false;
+                rgSide.Visible = false;
                 
                 lblValue.Y = 1;
                 lblValue.Visible = true;
@@ -134,13 +140,13 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
                 tbOffset.Y = 3;
                 tbOffset.Visible = true;
 
-                SetNeedsDisplay();
+                SetNeedsDraw();
                 break;
             case PosType.Center:
                 lblRelativeTo.Visible = false;
-                ddRelativeTo.Visible = false;
+                tbRelativeTo.Visible = false;
                 lblSide.Visible = false;
-                ddSide.Visible = false;
+                rgSide.Visible = false;
                 
                 lblValue.Visible = false;
                 tbValue.Visible = false;
@@ -150,14 +156,14 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
                 tbOffset.Y = 1;
                 tbOffset.Visible = true;
 
-                SetNeedsDisplay();
+                SetNeedsDraw();
                 break;
             case PosType.Absolute:
             case PosType.AnchorEnd:
-                ddRelativeTo.Visible = false;
+                tbRelativeTo.Visible = false;
                 lblRelativeTo.Visible = false;
                 lblSide.Visible = false;
-                ddSide.Visible = false;
+                rgSide.Visible = false;
 
                 lblValue.Y = 1;
                 lblValue.Visible = true;
@@ -165,44 +171,46 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
 
                 lblOffset.Visible = false;
                 tbOffset.Visible = false;
-                SetNeedsDisplay();
+                SetNeedsDraw();
                 break;
             case PosType.Relative:
                 lblRelativeTo.Y = 1;
                 lblRelativeTo.Visible = true;
-                ddRelativeTo.Y = 1;
-                ddRelativeTo.Visible = true;
+                tbRelativeTo.Y = 1;
+                tbRelativeTo.Visible = true;
 
                 lblSide.Y = 3;
                 lblSide.Visible = true;
 
-                ddSide.IsInitialized = false;
-                ddSide.Y = 3;
-                ddSide.Visible = true;
-                ddSide.IsInitialized = true;
+                rgSide.IsInitialized = false;
+                rgSide.Y = 3;
+                rgSide.Visible = true;
+                rgSide.IsInitialized = true;
 
                 lblValue.Visible = false;
                 tbValue.Visible = false;
 
-                lblOffset.Y = 5;
+                lblOffset.Y = 7;
                 lblOffset.Visible = true;
-                tbOffset.Y = 5;
+                tbOffset.Y = 7;
                 tbOffset.Visible = true;
-                SetNeedsDisplay();
+                SetNeedsDraw();
                 break;
 
             default: throw new ArgumentOutOfRangeException();
         }
     }
 
-    private void BtnCancel_Clicked(object sender, EventArgs e)
+    private void BtnCancel_Clicked(object sender, CommandEventArgs e)
     {
+        e.Cancel = true;
         Cancelled = true;
         Application.RequestStop();
     }
 
-    private void BtnOk_Clicked(object sender, EventArgs e)
+    private void BtnOk_Clicked(object sender, CommandEventArgs e)
     {
+        e.Cancel = true;
         if(GetPosType() == PosType.AnchorEnd && GetValue(out var value) && value <=0)
         {
             if (!ChoicesDialog.Confirm("Anchor Without Margin", "Using AnchorEnd without a margin will result in a point outside of parent bounds.\nAre you sure?"))
@@ -247,7 +255,7 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
 
     private Side? GetSide()
     {
-        return ddSide.SelectedItem == -1 ? null : (Side)ddSide.Source.ToList()[ddSide.SelectedItem];
+        return rgSide.SelectedItem == -1 ? null : (Side)rgSide.SelectedItem;
     }
 
     private bool GetOffset(out int offset)
@@ -272,7 +280,9 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
 
     private bool BuildPosRelative(out Pos result)
     {
-        var relativeTo = ddRelativeTo.SelectedItem == -1 ? null : ddRelativeTo.Source.ToList()[ddRelativeTo.SelectedItem] as Design;
+        var key = tbRelativeTo.Text;
+
+        var relativeTo = (!string.IsNullOrWhiteSpace(key)) && _siblings.TryGetValue(key, out var d) ? d : null;
 
         if (relativeTo != null)
         {

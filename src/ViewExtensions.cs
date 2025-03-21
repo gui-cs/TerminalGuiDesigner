@@ -8,6 +8,10 @@ namespace TerminalGuiDesigner;
 /// </summary>
 public static class ViewExtensions
 {
+    public static View? FindDeepestView(Point screenPoint)
+    {
+        return View.GetViewsUnderMouse(screenPoint).LastOrDefault(v=> v!= null);
+    }
     /// <summary>
     /// Returns the sub-views of <paramref name="v"/> skipping out any
     /// public views used by the Terminal.Gui API e.g. the 'ContentView'
@@ -19,20 +23,14 @@ public static class ViewExtensions
     /// <param name="v"><see cref="View"/> whose children you want to find.</param>
     /// <returns>All <see cref="View"/> that user perceives as within <paramref name="v"/> skipping over
     /// any Terminal.Gui artifacts (e.g. ContentView).</returns>
-    public static IList<View> GetActualSubviews(this View v)
+    public static IReadOnlyCollection<View> GetActualSubviews(this View v)
     {
         if (v is TabView t)
         {
             return t.Tabs.Select(tab => tab.View).Where(v => v != null).ToList();
         }
 
-        // ScrollView has a content view so to reach its children you have to dive down an extra layer
-        if (v is ScrollView sc)
-        {
-            return sc.Subviews[0].Subviews;
-        }
-
-        return v.Subviews;
+        return v.SubViews;
     }
 
     /// <summary>
@@ -202,7 +200,6 @@ public static class ViewExtensions
 
         // TODO: are there any others?
         return
-            v is ScrollView ||
             v is TabView ||
             v is FrameView ||
             v is Window ||
@@ -250,7 +247,7 @@ public static class ViewExtensions
     /// <param name="isLowerRight">True if the click lands in the lower right of the returned <see cref="View"/>.</param>
     /// <param name="ignoring">One or more <see cref="View"/> to ignore (click through) when performing the hit test.</param>
     /// <returns>The <see cref="View"/> at the given screen location or null if none found.</returns>
-    public static View? HitTest(this View w, MouseEvent m, out bool isBorder, out bool isLowerRight, params View[] ignoring)
+    public static View? HitTest(this View w, MouseEventArgs m, out bool isBorder, out bool isLowerRight, params View[] ignoring)
     {
         ignoring = ignoring.Union(w.GetAllNonDesignableSubviews()).ToArray();
 
@@ -259,10 +256,8 @@ public static class ViewExtensions
         {
             v.Visible = false;
         }
-
-        var point = w.ScreenToContent(m.Position);
-
-        var hit = View.FindDeepestView(w, m.Position);
+        
+        var hit = ViewExtensions.FindDeepestView(m.Position);
 
         hit = UnpackHitView(hit);
 
@@ -272,10 +267,10 @@ public static class ViewExtensions
         {
             var screenFrame = hit.FrameToScreen();
 
-            if (point != new Point(screenFrame.X, screenFrame.Y))
+            if (m.Position != new Point(screenFrame.X, screenFrame.Y))
             {
-                isLowerRight = Math.Abs(screenFrame.X + screenFrame.Width - point.X) <= resizeBoxArea
-                && Math.Abs(screenFrame.Y + screenFrame.Height - point.Y) <= resizeBoxArea;
+                isLowerRight = Math.Abs(screenFrame.X + screenFrame.Width - m.Position.X) <= resizeBoxArea
+                && Math.Abs(screenFrame.Y + screenFrame.Height - m.Position.Y) <= resizeBoxArea;
             }
             else
             {
@@ -306,7 +301,7 @@ public static class ViewExtensions
 
     /// <summary>
     /// <para>
-    /// Sometimes <see cref="View.FindDeepestView"/> returns what the library considers
+    /// Sometimes <see cref="View.GetViewsUnderMouse"/> returns what the library considers
     /// the clicked View rather than what the user would expect.  For example clicking in
     /// the <see cref="Border"/> area of a <see cref="View"/>.
     /// </para>
@@ -316,6 +311,7 @@ public static class ViewExtensions
     /// <returns></returns>
     public static View? UnpackHitView(this View? hit)
     {
+        
         if (hit != null && hit.GetType().Name.Equals("TabRowView"))
         {
             hit = hit.SuperView;
@@ -326,6 +322,11 @@ public static class ViewExtensions
         {
             hit = b.Parent;
 
+        }
+
+        if (hit?.IsAdornment() ?? false)
+        {
+            hit = hit.GetAdornmentParent();
         }
 
         // TabView nesting of 'fake' views goes:
@@ -398,8 +399,8 @@ public static class ViewExtensions
     }
 
     /// <summary>
-    /// Returns all subviews that are not Designable.  Beware that designs can be nested
-    /// e.g. calling this on a root view with return subviews that belong to other designed
+    /// Returns all SubViews that are not Designable.  Beware that designs can be nested
+    /// e.g. calling this on a root view with return SubViews that belong to other designed
     /// components that were added to the root designed window.
     /// </summary>
     /// <param name="view"></param>
@@ -412,12 +413,16 @@ public static class ViewExtensions
     }
     private static void RecursivelyIgnoreAllNonDesignableSubviews(View view, List<View> alsoIgnore)
     {
-        foreach (var sub in view.Subviews)
+        foreach (var sub in view.SubViews)
         {
-            if (sub.Data is not Design)
+            // If Data is string then it is likely a View that is going to
+            // end up having a Design but we haven't gotten to it yet (i.e. method is being called mid-load)
+            if (sub.Data is not Design and not string)
             {
                 alsoIgnore.Add(sub);
             }
+
+
 
             RecursivelyIgnoreAllNonDesignableSubviews(sub, alsoIgnore);
         }
@@ -433,5 +438,83 @@ public static class ViewExtensions
         return false;
     }
 
+    /// <summary>
+    /// Returns <see langword="true"/> if <paramref name="v"/> is part of
+    /// a <see cref="Adornment"/> (either directly or embedded sub view of
+    /// one - e.g. <see cref="ShadowView"/>).
+    /// </summary>
+    /// <param name="v"></param>
+    /// <returns></returns>
+    public static bool IsAdornment(this View v)
+    {
+        return v is Adornment || v.AnySuperViewIs<Adornment>();
+    }
 
+    /// <summary>
+    /// Returns <see langword="true"/> if any <see cref="View.SuperView"/> of
+    /// <paramref name="v"/> is of type T.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="v"></param>
+    /// <returns></returns>
+    public static bool AnySuperViewIs<T>(this View v) where T : View
+    {
+        var parent = v.SuperView;
+
+        while (parent != null)
+        {
+            if (parent is T)
+            {
+                return true;
+            }
+            parent = parent.SuperView;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Returns the <see cref="Adornment.Parent"/> of <paramref name="v"/>
+    /// if it is an <see cref="Adornment"/>. Or if <paramref name="v"/> is not
+    /// directly an adornment but <see cref="AnySuperViewIs{T}"/> then the method
+    /// will traverse up <see cref="View.SuperView"/> hierarchy until parent is found.
+    /// </summary>
+    /// <param name="v"></param>
+    /// <returns></returns>
+    public static View? GetAdornmentParent(this View v)
+    {
+        while (v != null)
+        {
+            if (v is Adornment a)
+            {
+                return a.Parent;
+            }
+
+            v = v.SuperView;
+        }
+
+        return null;
+    }
+
+    public static void SetupNiceColorSchemes(this Dialog v)
+    {
+
+        ColorScheme dialogBackground;
+        ColorScheme buttons;     
+        dialogBackground = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4294967295u, 4285953654u));
+        buttons = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4278190080u, 4294967040u));
+
+        v.ColorScheme = dialogBackground;
+
+        void ApplyScheme(View view)
+        {
+            if (view is Button or TableView)
+                view.ColorScheme = buttons;
+
+            foreach (var subView in view.SubViews)
+                ApplyScheme(subView);
+        }
+
+        ApplyScheme(v);
+    }
 }

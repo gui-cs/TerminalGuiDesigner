@@ -20,7 +20,7 @@
 		<PackageOutputPath>./nupkg</PackageOutputPath>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<PackageId>TerminalGuiDesigner</PackageId>
-		<Version>2.0.0-alpha.2203</Version>
+		<Version>2.0.0-develop.4400</Version>
 		<Authors>Thomas Nind</Authors>
 		<Nullable>enable</Nullable>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -33,6 +33,8 @@
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
+			2.0.0-alpha.4400
+			* V2 driver support
 			2.0.0-alpha.2203
 			* True color `ColorPicker`
 			2.0.0-alpha.2189
@@ -129,7 +131,7 @@
 			* Right click context menu support
 			* Increased mouse resizing click hit box
 			* Added progress indicator for creating new Views
-			* Fixed mouse dragging/resizing of views in subviews (e.g. TabViews)
+			* Fixed mouse dragging/resizing of views in SubViews (e.g. TabViews)
 		</PackageReleaseNotes>
 	</PropertyGroup>
 	<ItemGroup>
@@ -143,14 +145,15 @@
 	<ItemGroup>
 		<PackageReference Include="Basic.Reference.Assemblies.Net70" Version="1.7.7" />
 		<PackageReference Include="CommandLineParser" Version="2.9.1" />
-		<PackageReference Include="JetBrains.Annotations" Version="2024.2.0" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="8.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 		<PackageReference Include="NetEscapades.Configuration.Yaml" Version="3.1.0" />
-		<PackageReference Include="Terminal.Gui" Version="2.0.0-v2-develop.2203" />
+		<PackageReference Include="Serilog" Version="4.2.0" />
+		<PackageReference Include="Serilog.Extensions.Logging" Version="9.0.0" />
+		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+		<PackageReference Include="Terminal.Gui" Version="2.0.0-develop.4400" />
 		<PackageReference Include="nlog" Version="5.3.3" />
 		<PackageReference Include="Basic.Reference.Assemblies.Net80" Version="1.7.7" />
 		<PackageReference Include="System.CodeDom" Version="8.0.0" />

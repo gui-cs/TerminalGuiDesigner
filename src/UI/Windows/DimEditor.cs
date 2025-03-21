@@ -48,8 +48,8 @@ public partial class DimEditor : Dialog, IValueGetterDialog
         Title = "Dim Designer";
         Border.BorderStyle = LineStyle.Double;
 
-        btnOk.Accept += BtnOk_Clicked;
-        btnCancel.Accept += BtnCancel_Clicked;
+        btnOk.Accepting += BtnOk_Clicked;
+        btnCancel.Accepting += BtnCancel_Clicked;
         Cancelled = true;
         Modal = true;
         rgDimType.KeyDown += RgDimType_KeyPress;
@@ -88,7 +88,7 @@ public partial class DimEditor : Dialog, IValueGetterDialog
         // if user types in some text change the focus to the text box to enable entering digits
         if ((obj == Key.Backspace || char.IsDigit(c)) && tbValue.Visible)
         {
-            tbValue?.FocusFirst(TabBehavior.TabStop);
+            tbValue?.FocusDeepest(NavigationDirection.Forward,TabBehavior.TabStop);
         }
     }
 
@@ -111,7 +111,7 @@ public partial class DimEditor : Dialog, IValueGetterDialog
 
                 lblOffset.Visible = false;
                 tbOffset.Visible = false;
-                SetNeedsDisplay();
+                SetNeedsDraw();
                 break;
             case DimType.Fill:
                 lblValue.Text = "Margin";
@@ -120,7 +120,7 @@ public partial class DimEditor : Dialog, IValueGetterDialog
 
                 lblOffset.Visible = false;
                 tbOffset.Visible = false;
-                SetNeedsDisplay();
+                SetNeedsDraw();
                 break;
             case DimType.Percent:
                 lblValue.Text = "Factor";
@@ -129,28 +129,30 @@ public partial class DimEditor : Dialog, IValueGetterDialog
 
                 lblOffset.Visible = true;
                 tbOffset.Visible = true;
-                SetNeedsDisplay();
+                SetNeedsDraw();
                 break;
             case DimType.Auto:
                 lblValue.Visible = false;
                 tbValue.Visible = false;
                 lblOffset.Visible = false;
                 tbOffset.Visible = false;
-                SetNeedsDisplay();
+                SetNeedsDraw();
                 break;
 
             default: throw new ArgumentOutOfRangeException();
         }
     }
 
-    private void BtnCancel_Clicked(object sender, EventArgs e)
+    private void BtnCancel_Clicked(object sender, CommandEventArgs e)
     {
+        e.Cancel = true;
         Cancelled = true;
         Application.RequestStop();
     }
 
-    private void BtnOk_Clicked(object sender, EventArgs e)
+    private void BtnOk_Clicked(object sender, CommandEventArgs e)
     {
+        e.Cancel = true;
         Cancelled = false;
         Result = BuildResult();
         Application.RequestStop();

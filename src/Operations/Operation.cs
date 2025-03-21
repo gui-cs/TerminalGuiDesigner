@@ -1,11 +1,17 @@
-﻿namespace TerminalGuiDesigner.Operations;
+﻿using NLog;
+using Terminal.Gui;
+
+namespace TerminalGuiDesigner.Operations;
 
 /// <summary>
 /// Abstract base class for <see cref="IOperation"/>.
 /// </summary>
 public abstract class Operation : IOperation
 {
-    protected int _timesDone;
+    /// <summary>
+    /// The number of times the operation has been performed.
+    /// </summary>
+    private int _timesDone;
 
     /// <summary>
     /// The name to give to all objects which do not have a title/text etc.
@@ -20,7 +26,7 @@ public abstract class Operation : IOperation
     public bool SupportsUndo { get; protected set; } = true;
 
     /// <inheritdoc />
-    public ref int TimesDone => ref _timesDone;
+    public int TimesDone => _timesDone;
 
     /// <inheritdoc/>
     /// <remarks>Defaults to <see cref="Guid.NewGuid"/>.</remarks>
@@ -45,6 +51,8 @@ public abstract class Operation : IOperation
             return false;
         }
 
+        Logging.Information($"Do Operation {UniqueIdentifier} ({GetType().Name})");
+
         if ( this.DoImpl( ) )
         {
             Interlocked.Increment( ref _timesDone );
@@ -55,10 +63,24 @@ public abstract class Operation : IOperation
     }
 
     /// <inheritdoc/>
-    public abstract void Undo();
+    public void Undo()
+    {
+        Logging.Information($"Undo Operation {UniqueIdentifier} ({GetType().Name})");
+        UndoImpl();
+    }
+
+    /// <inheritdoc cref="Undo"/>
+    protected abstract void UndoImpl();
 
     /// <inheritdoc/>
-    public abstract void Redo();
+    public void Redo()
+    {
+        Logging.Information($"Redo Operation {UniqueIdentifier} ({GetType().Name})");
+        RedoImpl();
+    }
+
+    /// <inheritdoc cref="Redo"/>
+    protected abstract void RedoImpl();
 
     /// <inheritdoc cref="IOperation.Do"/>
     protected abstract bool DoImpl();

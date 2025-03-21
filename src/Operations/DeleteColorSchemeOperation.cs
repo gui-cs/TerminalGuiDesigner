@@ -36,13 +36,13 @@ public class DeleteColorSchemeOperation : Operation
     public NamedColorScheme ToDelete { get; }
 
     /// <inheritdoc/>
-    public override void Redo()
+    protected override void RedoImpl()
     {
         this.Do();
     }
 
     /// <inheritdoc/>
-    public override void Undo()
+    protected override void UndoImpl()
     {
         foreach (var u in this.users)
         {

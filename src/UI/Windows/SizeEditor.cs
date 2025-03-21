@@ -17,6 +17,7 @@ using Terminal.Gui;
 public partial class SizeEditor : IValueGetterDialog
 {
 
+
     /// <summary>
     /// The users edited <see cref="Size"/> 
     /// </summary>
@@ -39,8 +40,9 @@ public partial class SizeEditor : IValueGetterDialog
         tfWidth.Text = s.Width.ToString();
         tfHeight.Text = s.Height.ToString();
 
-        btnOk.Accept += (s, e) =>
+        btnOk.Accepting += (s, e) =>
         {
+            e.Cancel = true;
             try
             {
                 Result = new Size(int.Parse(tfWidth.Text.ToString()), int.Parse(tfHeight.Text.ToString()));
@@ -55,8 +57,9 @@ public partial class SizeEditor : IValueGetterDialog
             RequestStop();
         };
 
-        btnCancel.Accept += (s, e) =>
+        btnCancel.Accepting += (s, e) =>
         {
+            e.Cancel = true;
             Cancelled = true;
             RequestStop();
         };

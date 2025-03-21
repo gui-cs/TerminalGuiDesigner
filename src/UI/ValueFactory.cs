@@ -191,7 +191,9 @@ namespace TerminalGuiDesigner.UI
             if (type == typeof(FileSystemInfo))
             {
                 var fd = new FileDialog();
+                fd.SetupNiceColorSchemes();
                 fd.AllowsMultipleSelection = false;
+                fd.Layout();
 
                 int answer = ChoicesDialog.Query(propertyName, $"Directory or File?", "Directory", "File", "Cancel");
 
@@ -246,7 +248,8 @@ namespace TerminalGuiDesigner.UI
                 if (Modals.Get<Type>(
                     property.PropertyInfo.Name,
                     "New Value",
-                    typeof(Label).Assembly.GetTypes().Where(inst.MustBeDerrivedFrom.IsAssignableFrom).ToArray(),
+                    typeof(Label).Assembly.GetTypes()
+                        .Where(t=>inst.MustBeDerivedFrom.IsAssignableFrom(t) && !t.IsAbstract && !t.IsInterface).ToArray(),
                     inst.GetValue()?.GetType(),
                     out Type? typeChosen))
                 {
@@ -305,7 +308,7 @@ namespace TerminalGuiDesigner.UI
             // add the option to jump to custom colors
             offer.Add(custom);
 
-            if (Modals.Get("Color Scheme", "Ok", offer.ToArray(), design.View.ColorScheme, out var selected))
+            if (Modals.Get("Color Scheme", "Ok", offer.ToArray(), design.View.ColorScheme, out var selected,false))
             {
                 // if user clicked "Custom..."
                 if (selected is string s && string.Equals(s, custom))

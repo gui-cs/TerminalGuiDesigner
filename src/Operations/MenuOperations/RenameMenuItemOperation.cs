@@ -28,7 +28,7 @@ public class RenameMenuItemOperation : MenuItemOperation
     }
 
     /// <inheritdoc/>
-    public override void Redo()
+    protected override void RedoImpl()
     {
         if (this.OperateOn != null)
         {
@@ -37,7 +37,7 @@ public class RenameMenuItemOperation : MenuItemOperation
     }
 
     /// <inheritdoc/>
-    public override void Undo()
+    protected override void UndoImpl()
     {
         if (this.OperateOn != null)
         {

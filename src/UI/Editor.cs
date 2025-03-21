@@ -2,12 +2,15 @@ using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Serilog;
 using Terminal.Gui;
 using TerminalGuiDesigner.FromCode;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 using TerminalGuiDesigner.UI.Windows;
 using Attribute = Terminal.Gui.Attribute;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace TerminalGuiDesigner.UI;
 
@@ -43,6 +46,13 @@ public class Editor : Toplevel
     /// </summary>
     internal Guid? LastSavedOperation;
 
+    private static string _logDirectory = string.Empty;
+
+    /// <summary>
+    /// True to disable logging (must be set before constructing <see cref="Editor"/>).
+    /// </summary>
+    public static bool Quiet = false;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="Editor"/> class.
     /// </summary>
@@ -50,6 +60,11 @@ public class Editor : Toplevel
     {
         // Bug: This will have strange inheritance behavior if Editor is inherited from.
         this.CanFocus = true;
+
+        if (!Quiet)
+        {
+            Logging.Logger = CreateLogger();
+        }
 
         try
         {
@@ -71,10 +86,34 @@ public class Editor : Toplevel
         this.BuildRootMenu();
     }
 
+    static ILogger CreateLogger()
+    {
+        _logDirectory = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "TerminalGuiDesigner", "logs");
+
+        // Configure Serilog to write logs to a file
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Verbose() // Verbose includes Trace and Debug
+            .WriteTo.File(Path.Combine(_logDirectory,"logfile.txt"), rollingInterval: RollingInterval.Day)
+            .CreateLogger();
+
+        // Create a logger factory compatible with Microsoft.Extensions.Logging
+        using var loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder
+                .AddSerilog(dispose: true) // Integrate Serilog with ILogger
+                .SetMinimumLevel(LogLevel.Trace); // Set minimum log level
+        });
+
+        // Get an ILogger instance
+        return loggerFactory.CreateLogger("Global Logger");
+    }
+
     /// <summary>
     /// Gets or Sets a value indicating whether <see cref="View"/> that do not have borders
-    /// (e.g. <see cref="ScrollView"/>) should have a dotted line rendered around them so
-    /// users don't lose track of where they are on a same-colored background.
+    ///  should have a dotted line rendered around them so users don't lose track of where
+    /// they are on a same-colored background.
     /// </summary>
     // BUG: Thread-safety
     public static bool ShowBorders { get; set; } = true;
@@ -193,58 +232,79 @@ public class Editor : Toplevel
 
     /// <summary>
     /// Tailors redrawing to add overlays (e.g. showing what is selected etc.).
+    /// Only runs when a view is open and <see cref="viewBeingEdited"/>.
     /// </summary>
-    /// <param name="bounds">The view bounds.</param>
-    public override void OnDrawContent(Rectangle bounds)
+    protected override void OnDrawComplete(DrawContext? context)
     {
-        base.OnDrawContent(bounds);
+        base.OnDrawComplete(context);
 
-        // if we are editing a view
-        if (this.viewBeingEdited != null)
+        // if we are not editing a view
+        if (this.viewBeingEdited == null)
         {
-            if (this.enableShowFocused)
-            {
-                Application.Driver.SetAttribute(this.viewBeingEdited.View.ColorScheme.Normal);
-
-                string? toDisplay = this.GetLowerRightTextIfAny();
-
-                // and have a designable view focused
-                if (toDisplay != null)
-                {
-                    // write its name in the lower right
-                    int y = this.GetContentSize().Height - 1;
-                    int right = bounds.Width - 1;
-                    var len = toDisplay.Length;
-
-                    for (int i = 0; i < len; i++)
-                    {
-                        this.AddRune(right - len + i, y, new Rune(toDisplay[i]));
-                    }
-                }
-            }
-
-            if (this.mouseManager.SelectionBox != null)
-            {
-                var box = this.mouseManager.SelectionBox.Value;
-                for (int x = 0; x < box.Width; x++)
-                {
-                    for (int y = 0; y < box.Height; y++)
-                    {
-                        if (y == 0 || y == box.Height - 1 || x == 0 || x == box.Width - 1)
-                        {
-                            this.AddRune(box.X + x, box.Y + y, new Rune('.'));
-                        }
-                    }
-                }
-            }
-
             return;
         }
-        else
+
+        var bounds = Viewport;
+
+        if (this.enableShowFocused)
         {
-            var top = new Rectangle(0, 0, bounds.Width, rootCommandsListView.Frame.Top - 1);
-            RenderTitle(top);
+            Application.Driver.SetAttribute(this.viewBeingEdited.View.ColorScheme.Normal);
+
+            string? toDisplay = this.GetLowerRightTextIfAny();
+
+            // and have a designable view focused
+            if (toDisplay != null)
+            {
+                // write its name in the lower right
+                int y = this.GetContentSize().Height - 1;
+                int right = bounds.Width - 1;
+                var runes = toDisplay.EnumerateRunes().ToList();
+                var len = runes.Count();
+
+                for (int i = 0; i < len; i++)
+                {
+                    this.AddRune(right - len + i, y, runes[i]);
+                }
+            }
         }
+
+        if (this.mouseManager.SelectionBox != null)
+        {
+            var box = this.mouseManager.SelectionBox.Value;
+            for (int x = 0; x < box.Width; x++)
+            {
+                for (int y = 0; y < box.Height; y++)
+                {
+                    if (y == 0 || y == box.Height - 1 || x == 0 || x == box.Width - 1)
+                    {
+                        this.AddRune(box.X + x, box.Y + y, new Rune('.'));
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Draws title screen when no view is currently open
+    /// </summary>
+    protected override bool OnDrawingContent()
+    {
+        var r = base.OnDrawingContent();
+
+        if (viewBeingEdited != null)
+        {
+            return true;
+        }
+
+        var bounds = Viewport;
+
+        Application.Driver.SetAttribute(new Attribute(Color.Black));
+        Application.Driver.FillRect(bounds,' ');
+
+        var top = new Rectangle(0, 0, bounds.Width, rootCommandsListView.Frame.Top - 1);
+        RenderTitle(top);
+    
+        return r;
     }
 
     private void RenderTitle(Rectangle inArea)
@@ -280,6 +340,7 @@ public class Editor : Toplevel
 
         // The version information line
         string versionLine = $"(Alpha - {informationalVersion} )";
+        string logLine = "Logs - " + _logDirectory;
 
         // Split the ASCII art into lines
         var artLines = artText.Split('\n');
@@ -321,7 +382,7 @@ public class Editor : Toplevel
                 int y = inArea.Y + inArea.Height / 2 - 1; // Center the title vertically
 
                 var colorAtPoint = fill.GetColor(new Point(x, y));
-                Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(ColorName.Black)));
+                Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(Color.Black)));
                 this.AddRune(x, y, (Rune)simpleTitle[i]);
             }
 
@@ -332,7 +393,7 @@ public class Editor : Toplevel
                 int y = inArea.Y + inArea.Height / 2; // Line below the title
 
                 var colorAtPoint = fill.GetColor(new Point(x, y));
-                Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(ColorName.Black)));
+                Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(Color.Black)));
                 this.AddRune(x, y, (Rune)versionLine[i]);
             }
         }
@@ -369,7 +430,7 @@ public class Editor : Toplevel
                     int y = artStartY + i;
 
                     var colorAtPoint = fill.GetColor(new Point(x, y));
-                    Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(ColorName.Black)));
+                    Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(Color.Black)));
                     this.AddRune(x, y, (Rune)line[j]);
                 }
             }
@@ -384,8 +445,27 @@ public class Editor : Toplevel
                 int y = versionLineY;
 
                 var colorAtPoint = fill.GetColor(new Point(x, y));
-                Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(ColorName.Black)));
+                Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(Color.Black)));
                 this.AddRune(x, y, (Rune)versionLine[i]);
+            }
+
+            if (Quiet)
+            {
+                return;
+            }
+
+            // Render the log directory line below the version line
+            int logLineX = inArea.X + (inArea.Width - logLine.Length) / 2;
+            int logLineY = versionLineY+2;
+
+            for (int i = 0; i < logLine.Length; i++)
+            {
+                int x = logLineX + i;
+                int y = logLineY;
+
+                var colorAtPoint = fill.GetColor(new Point(x, y));
+                Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(Color.Black)));
+                this.AddRune(x, y, (Rune)logLine[i]);
             }
         }
     }
@@ -530,14 +610,14 @@ public class Editor : Toplevel
             if (keyString == this.keyMap.ToggleShowFocused)
             {
                 this.enableShowFocused = !this.enableShowFocused;
-                this.SetNeedsDisplay();
+                this.SetNeedsDraw();
                 return true;
             }
 
             if (keyString == this.keyMap.ToggleShowBorders)
             {
                 ShowBorders = !ShowBorders;
-                this.SetNeedsDisplay();
+                this.SetNeedsDraw();
                 return true;
             }
 
@@ -643,6 +723,7 @@ public class Editor : Toplevel
             return savedOp != currentOp;
         }
     }
+
 
     private string GetHelpWithEmptyFormLoaded()
     {
@@ -782,7 +863,7 @@ public class Editor : Toplevel
         }
     }
 
-    private void CreateAndShowContextMenu(MouseEvent? m, Design? rightClicked)
+    private void CreateAndShowContextMenu(MouseEventArgs? m, Design? rightClicked)
     {
         if (this.viewBeingEdited == null)
         {
@@ -850,7 +931,7 @@ public class Editor : Toplevel
         }
 
         var menu = new ContextMenu();
-        menu.MenuItems = new MenuBarItem(all.ToArray());
+        menu.SetMenuItems(new MenuBarItem(all.ToArray()));
 
         if (m != null)
         {
@@ -871,7 +952,8 @@ public class Editor : Toplevel
             m.Handled = true;
         }
 
-        menu.Show();
+        // TODO: rly? you have to pass it its own menu items!?
+        menu.Show(menu.MenuItems);
         menu.MenuBar.MenuAllClosed += (_, _) =>
         {
             this.menuOpen = false;
@@ -984,6 +1066,18 @@ public class Editor : Toplevel
 
     private void ShowHelp()
     {
+        if (menuOpen)
+        {
+            return;
+        }
+        var menuItem = MenuTracker.Instance.CurrentlyOpenMenuItem;
+
+        // if we are in a menu
+        if (menuItem != null)
+        {
+            return;
+        }
+        
         ChoicesDialog.Query("Help", this.GetHelp(), "Ok");
     }
 
@@ -1043,7 +1137,9 @@ public class Editor : Toplevel
         {
             Title = "Open",
             AllowedTypes = new List<IAllowedType>(new[] { new AllowedType("View", SourceCodeFile.ExpectedExtension) })
-        };  
+        };
+        ofd.SetupNiceColorSchemes();
+        ofd.Layout();
 
         Application.Run(ofd, this.ErrorHandler);
 
@@ -1124,6 +1220,8 @@ public class Editor : Toplevel
             AllowedTypes = new List<IAllowedType>() { new AllowedType("C# File", ".cs") },
             Path = "MyView.cs",
         };
+        ofd.Layout();
+        ofd.SetupNiceColorSchemes();
 
         Application.Run(ofd);
 
@@ -1287,7 +1385,7 @@ public class Editor : Toplevel
             this.viewBeingEdited.View.GetType().BaseType ?? throw new Exception("View being edited had no base class"));
 
         this.flashMessage = $"Saved {this.viewBeingEdited.SourceCode.DesignerFile.Name}";
-        this.SetNeedsDisplay();
+        this.SetNeedsDraw();
 
         this.LastSavedOperation = OperationManager.Instance.GetLastAppliedOperation()?.UniqueIdentifier;
     }

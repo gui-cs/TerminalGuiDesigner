@@ -35,7 +35,10 @@ public static class ReflectionHelpers
         ArgumentNullException.ThrowIfNull( item, nameof( item ) );
         ArgumentException.ThrowIfNullOrEmpty( fieldName, nameof( fieldName ) );
 
+        // Try get private field e.g. 'blah'. But because upstream often flips
+        // around the naming of privates lets also look for '_blah'
         FieldInfo selectedField = typeof( TIn ).GetField( fieldName, BindingFlags.NonPublic | BindingFlags.Instance )
+                                  ??typeof(TIn).GetField("_"+fieldName, BindingFlags.NonPublic | BindingFlags.Instance)
                                   ?? throw new MissingFieldException( $"Expected non-public instance field {fieldName} was not present on {typeof( TIn ).Name}" );
 
         if ( selectedField.FieldType != typeof( TOut ) )
