@@ -153,7 +153,7 @@
 		<PackageReference Include="Serilog" Version="4.2.0" />
 		<PackageReference Include="Serilog.Extensions.Logging" Version="9.0.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
-		<PackageReference Include="Terminal.Gui" Version="2.0.0-develop.4387" />
+		<PackageReference Include="Terminal.Gui" Version="2.0.0-develop.4400" />
 		<PackageReference Include="nlog" Version="5.3.3" />
 		<PackageReference Include="Basic.Reference.Assemblies.Net80" Version="1.7.7" />
 		<PackageReference Include="System.CodeDom" Version="8.0.0" />
