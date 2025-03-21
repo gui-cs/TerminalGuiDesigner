@@ -29,6 +29,8 @@ dotnet tool install --global TerminalGuiDesigner --prerelease
 ```
 Ensure that you match the Terminal.Gui library version you reference to the designer version.
 
+![image](https://github.com/user-attachments/assets/1ee4833e-b2c7-4b52-846a-9db288c72440)
+
 ## Demo
 
 ![long-demo](https://github.com/gui-cs/TerminalGuiDesigner/assets/31306100/5df9f545-8c61-4655-bc0c-1e75d1c149d9)
