@@ -15,6 +15,18 @@ namespace TerminalGuiDesigner.UI.Windows {
         
         public KeyBindingsUI() {
             InitializeComponent();
+
+            btnSave.Accepting += (s, e) =>
+            {
+                // Todo Save and reload keybindings
+                e.Cancel = true;
+                Application.RequestStop();
+            };
+            btnCancel.Accepting += (s, e) =>
+            {
+                e.Cancel = true;
+                Application.RequestStop();
+            };
         }
     }
 }

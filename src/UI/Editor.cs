@@ -842,7 +842,8 @@ public class Editor : Toplevel
 
     private void ChangeKeybindings()
     {
-        //new keybi
+        var kb = new KeyBindingsUI();
+        Application.Run(kb);
     }
 
     private void Editor_Closing(object? sender, ToplevelClosingEventArgs obj)
