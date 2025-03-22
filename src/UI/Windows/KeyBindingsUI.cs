@@ -25,8 +25,11 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.keyMap = keyMap;
             InitializeComponent();
 
-            _props = typeof(KeyMap).GetProperties().Where(p=>p.PropertyType == typeof(string)).ToArray();
-
+            _props = typeof(KeyMap).GetProperties()
+                .Where(p=>p.PropertyType == typeof(string))
+                .OrderBy(p=>p.Name)
+                .ToArray();
+            
             tableView.Table = new EnumerableTableSource<PropertyInfo>(_props,
                 new Dictionary<string, Func<PropertyInfo, object>>()
                 {
@@ -57,6 +60,16 @@ namespace TerminalGuiDesigner.UI.Windows {
                 var k = Modals.GetShortcut();
                 prop.SetValue(this.keyMap,k.ToString());
                 this.SetNeedsDraw();
+            };
+            btnReset.Accepting += (s, e) =>
+            {
+                var defaultMap = new KeyMap();
+                foreach (var p in _props)
+                {
+                    var def = p.GetValue(defaultMap);
+                    p.SetValue(this.keyMap, def);
+                    this.SetNeedsDraw();
+                }
             };
 
             btnSave.Accepting += (s, e) =>

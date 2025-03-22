@@ -31,7 +31,10 @@ namespace TerminalGuiDesigner.UI.Windows {
         
         private Terminal.Gui.Button btnCancel;
         
+        private Terminal.Gui.Button btnReset;
+        
         private void InitializeComponent() {
+            this.btnReset = new Terminal.Gui.Button();
             this.btnCancel = new Terminal.Gui.Button();
             this.btnSave = new Terminal.Gui.Button();
             this.buttonPanel = new Terminal.Gui.View();
@@ -129,6 +132,20 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnCancel.TextAlignment = Terminal.Gui.Alignment.Center;
             this.btnCancel.IsDefault = false;
             this.buttonPanel.Add(this.btnCancel);
+            this.btnReset.Width = Dim.Auto();
+            this.btnReset.Height = Dim.Auto();
+            this.btnReset.X = Pos.AnchorEnd(10);
+            this.btnReset.Y = Pos.AnchorEnd(2);
+            this.btnReset.Visible = true;
+            this.btnReset.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.btnReset.CanFocus = true;
+            this.btnReset.ShadowStyle = Terminal.Gui.ShadowStyle.Opaque;
+            this.btnReset.Data = "btnReset";
+            this.btnReset.Text = "Reset";
+            this.btnReset.TextAlignment = Terminal.Gui.Alignment.Center;
+            this.btnReset.IsDefault = false;
+            this.btnReset.ColorScheme = buttons;
+            this.Add(this.btnReset);
         }
     }
 }
