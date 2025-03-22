@@ -769,6 +769,7 @@ public class Editor : Toplevel
             $"{this.keyMap.ShowHelp} - Show Help",
             $"{this.keyMap.New} - New Window/Class",
             $"{this.keyMap.Open} - Open a .Designer.cs file",
+            $"Keybindings",
         };
 
         // center all the commands
@@ -783,7 +784,7 @@ public class Editor : Toplevel
             X = Pos.Center(),
             Y = Pos.Percent(75),
             Width = maxWidth,
-            Height = 3,
+            Height = 4,
             ColorScheme = new ColorScheme
             (
                 new Attribute(new Color(Color.White),new Color(Color.Black)),
@@ -813,6 +814,9 @@ public class Editor : Toplevel
                     case 2:
                         this.Open();
                         break;
+                    case 3:
+                        this.ChangeKeybindings();
+                        break;
                 }
             }
 
@@ -834,6 +838,11 @@ public class Editor : Toplevel
         };
 
         this.Add(this.rootCommandsListView);
+    }
+
+    private void ChangeKeybindings()
+    {
+        //new keybi
     }
 
     private void Editor_Closing(object? sender, ToplevelClosingEventArgs obj)

@@ -92,10 +92,10 @@ public static class ViewFactory
                         IsPublic: true,
                         IsValueType: false
                     })
-                    .Where(filteredType => filteredType.IsSubclassOf(typeof(View)) && filteredType != typeof(Adornment)
-                                           && !filteredType.IsSubclassOf(typeof(Adornment)))
-                    .Where(viewDescendantType => !KnownUnsupportedTypes.Any(viewDescendantType.IsAssignableTo)
-                                                  || viewDescendantType == typeof(Window))
+                    .Where(filteredType => filteredType == typeof(View) || filteredType.IsSubclassOf(typeof(View))
+                        && filteredType != typeof(Adornment)
+                        && !filteredType.IsSubclassOf(typeof(Adornment)))
+                    .Except(KnownUnsupportedTypes)
                     // Slider is an alias of Slider<object> so don't offer that
                     .Where(vt => vt != typeof(Slider));
 
