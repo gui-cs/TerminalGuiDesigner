@@ -23,6 +23,8 @@ namespace TerminalGuiDesigner.UI.Windows {
         
         private Terminal.Gui.ColorScheme buttons;
         
+        private Terminal.Gui.TableView tableView;
+        
         private Terminal.Gui.View buttonPanel;
         
         private Terminal.Gui.Button btnSave;
@@ -33,6 +35,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnCancel = new Terminal.Gui.Button();
             this.btnSave = new Terminal.Gui.Button();
             this.buttonPanel = new Terminal.Gui.View();
+            this.tableView = new Terminal.Gui.TableView();
             this.dialogBackground = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4294967295u, 4285953654u));
             this.buttons = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4278190080u, 4294967040u));
             this.Width = Dim.Percent(90);
@@ -47,6 +50,44 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Modal = true;
             this.TextAlignment = Terminal.Gui.Alignment.Start;
             this.Title = "Keybindings";
+            this.tableView.Width = Dim.Fill(0);
+            this.tableView.Height = Dim.Fill(3);
+            this.tableView.X = 0;
+            this.tableView.Y = 0;
+            this.tableView.Visible = true;
+            this.tableView.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.tableView.CanFocus = true;
+            this.tableView.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.tableView.Data = "tableView";
+            this.tableView.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.tableView.FullRowSelect = false;
+            this.tableView.Style.AlwaysShowHeaders = false;
+            this.tableView.Style.ExpandLastColumn = true;
+            this.tableView.Style.InvertSelectedCellFirstCharacter = false;
+            this.tableView.Style.ShowHorizontalHeaderOverline = true;
+            this.tableView.Style.ShowHorizontalHeaderUnderline = true;
+            this.tableView.Style.ShowVerticalCellLines = true;
+            this.tableView.Style.ShowVerticalHeaderLines = true;
+            System.Data.DataTable tableViewTable;
+            tableViewTable = new System.Data.DataTable();
+            System.Data.DataColumn tableViewTableColumn0;
+            tableViewTableColumn0 = new System.Data.DataColumn();
+            tableViewTableColumn0.ColumnName = "Column 0";
+            tableViewTable.Columns.Add(tableViewTableColumn0);
+            System.Data.DataColumn tableViewTableColumn1;
+            tableViewTableColumn1 = new System.Data.DataColumn();
+            tableViewTableColumn1.ColumnName = "Column 1";
+            tableViewTable.Columns.Add(tableViewTableColumn1);
+            System.Data.DataColumn tableViewTableColumn2;
+            tableViewTableColumn2 = new System.Data.DataColumn();
+            tableViewTableColumn2.ColumnName = "Column 2";
+            tableViewTable.Columns.Add(tableViewTableColumn2);
+            System.Data.DataColumn tableViewTableColumn3;
+            tableViewTableColumn3 = new System.Data.DataColumn();
+            tableViewTableColumn3.ColumnName = "Column 3";
+            tableViewTable.Columns.Add(tableViewTableColumn3);
+            this.tableView.Table = new Terminal.Gui.DataTableSource(tableViewTable);
+            this.Add(this.tableView);
             this.buttonPanel.Width = 32;
             this.buttonPanel.Height = 3;
             this.buttonPanel.X = Pos.Center();

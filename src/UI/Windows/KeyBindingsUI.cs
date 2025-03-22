@@ -7,18 +7,35 @@
 //      You can make changes to this file and they will not be overwritten when saving.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
+
+using System.Reflection;
+
 namespace TerminalGuiDesigner.UI.Windows {
     using Terminal.Gui;
     
     
     public partial class KeyBindingsUI {
-        
-        public KeyBindingsUI() {
+        private readonly KeyMap keyMap;
+        private readonly PropertyInfo[] _props;
+
+        public bool Save { get; set; } = false;
+
+        public KeyBindingsUI(KeyMap keyMap) {
+            this.keyMap = keyMap;
             InitializeComponent();
+
+            _props = typeof(KeyMap).GetProperties().ToArray();
+
+            tableView.Table = new EnumerableTableSource<PropertyInfo>(_props,
+                new Dictionary<string, Func<PropertyInfo, object>>()
+                {
+                    { "Function", p => p.Name },
+                    { "Key", p => p.GetValue(this.keyMap) }
+                });
 
             btnSave.Accepting += (s, e) =>
             {
-                // Todo Save and reload keybindings
+                Save = true;
                 e.Cancel = true;
                 Application.RequestStop();
             };
