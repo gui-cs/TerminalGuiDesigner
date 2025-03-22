@@ -435,6 +435,10 @@ public static class ViewExtensions
             return true;
         }
 
+        if (v.Border.Thickness is { Top: 0, Left: 0, Right: 0, Bottom: 0 })
+        {
+            return true;}
+
         return false;
     }
 

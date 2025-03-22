@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -21,7 +22,7 @@ namespace TerminalGuiDesigner.UI;
 /// </summary>
 public class Editor : Toplevel
 {
-    private readonly KeyMap keyMap;
+    private KeyMap keyMap;
     private readonly KeyboardManager keyboardManager;
     private readonly MouseManager mouseManager;
 
@@ -46,6 +47,7 @@ public class Editor : Toplevel
     /// </summary>
     internal Guid? LastSavedOperation;
 
+    private static string _keymapPath = string.Empty;
     private static string _logDirectory = string.Empty;
 
     /// <summary>
@@ -66,9 +68,32 @@ public class Editor : Toplevel
             Logging.Logger = CreateLogger();
         }
 
+        LoadKeyMap();
+
+        this.keyboardManager = new KeyboardManager(this.keyMap);
+        this.mouseManager = new MouseManager();
+        this.Closing += this.Editor_Closing;
+
+        this.BuildRootMenu();
+    }
+
+    private void LoadKeyMap()
+    {
+        _keymapPath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "TerminalGuiDesigner", "keymap.json");
+
         try
         {
-            this.keyMap = new ConfigurationBuilder( ).AddYamlFile( "Keys.yaml", true ).Build( ).Get<KeyMap>( ) ?? new( );
+            if (File.Exists(_keymapPath))
+            {
+                var json = File.ReadAllText(_keymapPath);
+                this.keyMap = JsonSerializer.Deserialize<KeyMap>(json) ?? new KeyMap();
+            }
+            else
+            {
+                this.keyMap = new KeyMap();
+            }
 
             SelectionManager.Instance.SelectedScheme = this.keyMap.SelectionColor.Scheme;
         }
@@ -78,12 +103,21 @@ public class Editor : Toplevel
             ExceptionViewer.ShowException("Failed to read keybindings from configuration file", ex);
             this.keyMap = new KeyMap();
         }
+    }
 
-        this.keyboardManager = new KeyboardManager(this.keyMap);
-        this.mouseManager = new MouseManager();
-        this.Closing += this.Editor_Closing;
 
-        this.BuildRootMenu();
+    private void SaveKeyMap()
+    {
+        try
+        {
+            var json = JsonSerializer.Serialize(this.keyMap);
+            File.WriteAllText(_keymapPath, json);
+            SelectionManager.Instance.SelectedScheme = this.keyMap.SelectionColor.Scheme;
+        }
+        catch (Exception ex)
+        {
+            ExceptionViewer.ShowException("Failed to save keybindings from configuration file", ex);
+        }
     }
 
     static ILogger CreateLogger()
@@ -769,6 +803,7 @@ public class Editor : Toplevel
             $"{this.keyMap.ShowHelp} - Show Help",
             $"{this.keyMap.New} - New Window/Class",
             $"{this.keyMap.Open} - Open a .Designer.cs file",
+            $"Keybindings",
         };
 
         // center all the commands
@@ -783,7 +818,7 @@ public class Editor : Toplevel
             X = Pos.Center(),
             Y = Pos.Percent(75),
             Width = maxWidth,
-            Height = 3,
+            Height = 4,
             ColorScheme = new ColorScheme
             (
                 new Attribute(new Color(Color.White),new Color(Color.Black)),
@@ -813,6 +848,9 @@ public class Editor : Toplevel
                     case 2:
                         this.Open();
                         break;
+                    case 3:
+                        this.ChangeKeybindings();
+                        break;
                 }
             }
 
@@ -835,6 +873,18 @@ public class Editor : Toplevel
 
         this.Add(this.rootCommandsListView);
     }
+
+    private void ChangeKeybindings()
+    {
+        var kb = new KeyBindingsUI(keyMap);
+        Application.Run(kb);
+        
+        if (kb.Save)
+        {
+            SaveKeyMap();
+        }
+    }
+
 
     private void Editor_Closing(object? sender, ToplevelClosingEventArgs obj)
     {

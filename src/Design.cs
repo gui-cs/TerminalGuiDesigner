@@ -38,7 +38,6 @@ public class Design
         typeof(TabView),
         typeof(Window),
         typeof(Toplevel),
-        typeof(View),
         typeof(GraphView),
         typeof(HexView),
         typeof(LineView),
