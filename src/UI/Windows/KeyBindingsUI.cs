@@ -9,6 +9,7 @@
 // -----------------------------------------------------------------------------
 
 using System.Reflection;
+using System.Text.Json;
 
 namespace TerminalGuiDesigner.UI.Windows {
     using Terminal.Gui;
@@ -24,7 +25,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.keyMap = keyMap;
             InitializeComponent();
 
-            _props = typeof(KeyMap).GetProperties().ToArray();
+            _props = typeof(KeyMap).GetProperties().Where(p=>p.PropertyType == typeof(string)).ToArray();
 
             tableView.Table = new EnumerableTableSource<PropertyInfo>(_props,
                 new Dictionary<string, Func<PropertyInfo, object>>()
@@ -32,6 +33,31 @@ namespace TerminalGuiDesigner.UI.Windows {
                     { "Function", p => p.Name },
                     { "Key", p => p.GetValue(this.keyMap) }
                 });
+
+            var keyStyle = tableView.Style.GetOrCreateColumnStyle(1);
+
+            var badCellColor = CloneColorSchemeButMake(tableView.ColorScheme,Color.Red);
+
+            keyStyle.ColorGetter = (k) =>
+            {
+                var val = _props[k.RowIndex].GetValue(this.keyMap);
+                var matches = _props.Select(k => k.GetValue(this.keyMap)).Count(v => Equals(v,val));
+                if (matches > 1)
+                {
+                    return badCellColor;
+                }
+
+                // Use normal color scheme
+                return null;
+            };
+
+            tableView.CellActivated += (s, e) =>
+            {
+                var prop = _props[e.Row];
+                var k = Modals.GetShortcut();
+                prop.SetValue(this.keyMap,k.ToString());
+                this.SetNeedsDraw();
+            };
 
             btnSave.Accepting += (s, e) =>
             {
@@ -43,6 +69,18 @@ namespace TerminalGuiDesigner.UI.Windows {
             {
                 e.Cancel = true;
                 Application.RequestStop();
+            };
+        }
+
+        private ColorScheme CloneColorSchemeButMake(ColorScheme cs,Color color)
+        {
+            return new ColorScheme
+            {
+                Disabled = cs.Disabled,
+                Focus = cs.Focus,
+                HotFocus = cs.HotFocus,
+                HotNormal = cs.HotNormal,
+                Normal = new Attribute(color, cs.Normal.Background)
             };
         }
     }

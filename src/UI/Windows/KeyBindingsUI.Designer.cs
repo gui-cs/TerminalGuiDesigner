@@ -56,11 +56,12 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.tableView.Y = 0;
             this.tableView.Visible = true;
             this.tableView.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.tableView.ColorScheme = this.buttons;
             this.tableView.CanFocus = true;
             this.tableView.ShadowStyle = Terminal.Gui.ShadowStyle.None;
             this.tableView.Data = "tableView";
             this.tableView.TextAlignment = Terminal.Gui.Alignment.Start;
-            this.tableView.FullRowSelect = false;
+            this.tableView.FullRowSelect = true;
             this.tableView.Style.AlwaysShowHeaders = false;
             this.tableView.Style.ExpandLastColumn = true;
             this.tableView.Style.InvertSelectedCellFirstCharacter = false;
@@ -112,7 +113,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnSave.Data = "btnSave";
             this.btnSave.Text = "Save";
             this.btnSave.TextAlignment = Terminal.Gui.Alignment.Center;
-            this.btnSave.IsDefault = false;
+            this.btnSave.IsDefault = true;
             this.buttonPanel.Add(this.btnSave);
             this.btnCancel.Width = Dim.Auto();
             this.btnCancel.Height = Dim.Auto();

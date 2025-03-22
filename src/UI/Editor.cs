@@ -105,6 +105,21 @@ public class Editor : Toplevel
         }
     }
 
+
+    private void SaveKeyMap()
+    {
+        try
+        {
+            var json = JsonSerializer.Serialize(this.keyMap);
+            File.WriteAllText(_keymapPath, json);
+            SelectionManager.Instance.SelectedScheme = this.keyMap.SelectionColor.Scheme;
+        }
+        catch (Exception ex)
+        {
+            ExceptionViewer.ShowException("Failed to save keybindings from configuration file", ex);
+        }
+    }
+
     static ILogger CreateLogger()
     {
         _logDirectory = Path.Combine(
@@ -866,9 +881,10 @@ public class Editor : Toplevel
         
         if (kb.Save)
         {
-            // TODO: Save
+            SaveKeyMap();
         }
     }
+
 
     private void Editor_Closing(object? sender, ToplevelClosingEventArgs obj)
     {
