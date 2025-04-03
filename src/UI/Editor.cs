@@ -939,13 +939,14 @@ public class Editor : Toplevel
         var setPropsItems = setProps.Select(ToMenuItem).ToArray();
         bool hasPropsItems = setPropsItems.Any();
 
-        var all = new List<MenuItem>();
+        var all = new List<MenuItemv2>();
 
         // only add the set properties category if there are some
         if (hasPropsItems)
         {
-            all.Add(new MenuBarItem(name, setPropsItems)
+            all.Add(new MenuItemv2()
             {
+                Title = name,
                 Action = () =>
                 {
                     if (selected.Length == 1 || rightClicked != null)
@@ -953,6 +954,7 @@ public class Editor : Toplevel
                         this.ShowEditProperties(rightClicked ?? selected[0]);
                     }
                 },
+                SubMenu = new Menuv2(setPropsItems)
             });
         }
 
@@ -970,7 +972,7 @@ public class Editor : Toplevel
                 // Add categories first
                 all.Insert(
                     hasPropsItems ? 1 : 0,
-                    new MenuBarItem(g.Key, g.ToArray()));
+                    new MenuBarItemv2(g.Key, g.ToArray()));
             }
         }
 
@@ -980,18 +982,17 @@ public class Editor : Toplevel
             return;
         }
 
-        var menu = new ContextMenu();
-        menu.SetMenuItems(new MenuBarItem(all.ToArray()));
-
+        var menu = new PopoverMenu(all.ToArray());
+        Point position;
         if (m != null)
         {
-            menu.Position = m.Position;
+            position = m.Position;
         }
         else
         {
             var d = SelectionManager.Instance.Selected.FirstOrDefault() ?? this.viewBeingEdited;
             var pt = d.View.ContentToScreen(new Point(0, 0));
-            menu.Position = new Point(pt.X, pt.Y);
+            position = new Point(pt.X, pt.Y);
         }
 
         this.menuOpen = true;
@@ -1002,18 +1003,19 @@ public class Editor : Toplevel
             m.Handled = true;
         }
 
+        
         // TODO: rly? you have to pass it its own menu items!?
-        menu.Show(menu.MenuItems);
-        menu.MenuBar.MenuAllClosed += (_, _) =>
+        menu.MakeVisible(position);
+        menu.Accepted += (_, _) =>
         {
             this.menuOpen = false;
             SelectionManager.Instance.LockSelection = false;
         };
     }
 
-    private static MenuItem ToMenuItem(IOperation operation)
+    private static MenuItemv2 ToMenuItem(IOperation operation)
     {
-        return new MenuItem(operation.ToString(), string.Empty, () => Try(() => OperationManager.Instance.Do(operation)));
+        return new MenuItemv2(operation.ToString(), string.Empty, () => Try(() => OperationManager.Instance.Do(operation)));
 
         static void Try(Action action)
         {
