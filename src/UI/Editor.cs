@@ -50,6 +50,9 @@ public class Editor : Toplevel
     private static string _keymapPath = string.Empty;
     private static string _logDirectory = string.Empty;
 
+    int step = 0;
+    private int numberOfSteps = 50;
+
     /// <summary>
     /// True to disable logging (must be set before constructing <see cref="Editor"/>).
     /// </summary>
@@ -75,6 +78,13 @@ public class Editor : Toplevel
         this.Closing += this.Editor_Closing;
 
         this.BuildRootMenu();
+
+        Application.AddTimeout(TimeSpan.FromMilliseconds(100), () =>
+        {
+            step = (step + 1) % numberOfSteps;
+            this.SetNeedsDraw();
+            return true;
+        });
     }
 
     private void LoadKeyMap()
@@ -341,6 +351,23 @@ public class Editor : Toplevel
         return r;
     }
 
+    // The main ASCII art text block
+    static readonly string 
+        ArtText = """
+                                     ___________                  .__              .__                           
+                                     \__    ___/__________  _____ |__| ____ _____  |  |                          
+                                       |    |_/ __ \_  __ \/     \|  |/    \\__  \ |  |                          
+                                       |    |\  ___/|  | \/  Y Y  \  |   |  \/ __ \|  |__                        
+                                       |____| \___  >__|  |__|_|  /__|___|  (____  /____/                        
+                                                \/            \/        \/     \/                              
+                         ________      .__  ________                .__                            
+                        /  _____/ __ __|__| \______ \   ____   _____|__| ____   ____   ___________ 
+                       /   \  ___|  |  \  |  |    |  \_/ __ \ /  ___/  |/ ___\ /    \_/ __ \_  __ \
+                       \    \_\  \  |  /  |  |    `   \  ___/ \___ \|  / /_/  >   |  \  ___/|  | \/
+                        \______  /____/|__| /_______  /\___  >____  >__\___  /|___|  /\___  >__|   
+                               \/                   \/     \/     \/  /_____/      \/     \/       
+                     """.Replace("\r\n", "\n");
+
     private void RenderTitle(Rectangle inArea)
     {
         var assembly = typeof(Label).Assembly;
@@ -353,31 +380,12 @@ public class Editor : Toplevel
             informationalVersion = informationalVersion.Substring(0, informationalVersion.IndexOf('+'));
         }
 
-        // The main ASCII art text block
-        string artText = """
-                ___________                  .__              .__                           
-                \__    ___/__________  _____ |__| ____ _____  |  |                          
-                  |    |_/ __ \_  __ \/     \|  |/    \\__  \ |  |                          
-                  |    |\  ___/|  | \/  Y Y  \  |   |  \/ __ \|  |__                        
-                  |____| \___  >__|  |__|_|  /__|___|  (____  /____/                        
-                           \/            \/        \/     \/                              
-    ________      .__  ________                .__                            
-   /  _____/ __ __|__| \______ \   ____   _____|__| ____   ____   ___________ 
-  /   \  ___|  |  \  |  |    |  \_/ __ \ /  ___/  |/ ___\ /    \_/ __ \_  __ \
-  \    \_\  \  |  /  |  |    `   \  ___/ \___ \|  / /_/  >   |  \  ___/|  | \/
-   \______  /____/|__| /_______  /\___  >____  >__\___  /|___|  /\___  >__|   
-          \/                   \/     \/     \/  /_____/      \/     \/       
-""";
-
-        // Standardize the text
-        artText = artText.Replace("\r\n", "\n");
-
         // The version information line
         string versionLine = $"(Alpha - {informationalVersion} )";
         string logLine = "Logs - " + _logDirectory;
 
         // Split the ASCII art into lines
-        var artLines = artText.Split('\n');
+        var artLines = ArtText.Split('\n');
 
         // Calculate the starting point for centering the art text
         int artHeight = artLines.Length;
@@ -438,6 +446,10 @@ public class Editor : Toplevel
             int artStartX = inArea.X + (inArea.Width - artWidth) / 2;
             int artStartY = inArea.Y + (inArea.Height - artHeight - 1) / 2; // -1 for the version line below
 
+            int centerX = inArea.X + inArea.Width / 2;
+            int centerY = inArea.Y + inArea.Height / 2;
+
+
             // Create the gradient
             var gradient = new Gradient(
                 new[]
@@ -454,6 +466,22 @@ public class Editor : Toplevel
             );
             var fill = new GradientFill(inArea, gradient, GradientDirection.Diagonal);
 
+
+            double t = 2 * Math.PI * step / (float)numberOfSteps; // full loop every
+
+            // Scale the figure-eight
+            double fx = Math.Sin(t);
+            double fy = Math.Sin(t) * Math.Cos(t);
+
+            // Define x/y radii of the figure
+            int rx = (int)(inArea.Width * 0.3);  // horizontal stretch
+            int ry = (int)(inArea.Height * 1); // tall figure-eight
+
+            // Convert to screen coordinates
+            int lightX = centerX + (int)(fx * rx);
+            int lightY = centerY + (int)(fy * ry);
+
+
             // Render the ASCII art block
             for (int i = 0; i < artLines.Length; i++)
             {
@@ -463,8 +491,9 @@ public class Editor : Toplevel
                     int x = artStartX + j;
                     int y = artStartY + i;
 
-                    var colorAtPoint = fill.GetColor(new Point(x, y));
-                    Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(Color.Black)));
+                    var baseColor = fill.GetColor(new Point(x, y));
+                    var adjustedColor = AdjustColorForLightDistance(lightX, lightY, baseColor, x, y);
+                    Driver.SetAttribute(new Attribute(new Color(adjustedColor), new Color(Color.Black)));
                     this.AddRune(x, y, (Rune)line[j]);
                 }
             }
@@ -478,10 +507,17 @@ public class Editor : Toplevel
                 int x = versionLineX + i;
                 int y = versionLineY;
 
-                var colorAtPoint = fill.GetColor(new Point(x, y));
-                Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(Color.Black)));
+                var baseColor = fill.GetColor(new Point(x, y));
+                var adjustedColor = AdjustColorForLightDistance(lightX, lightY, baseColor, x, y);
+
+                Driver.SetAttribute(new Attribute(new Color(adjustedColor), new Color(Color.Black)));
                 this.AddRune(x, y, (Rune)versionLine[i]);
             }
+
+            // Optional, to debug 'light' path
+            Driver.SetAttribute(new Attribute(Color.BrightYellow, Color.Black));
+            this.AddRune(lightX, lightY, new Rune('*'));
+
 
             if (Quiet)
             {
@@ -497,14 +533,71 @@ public class Editor : Toplevel
                 int x = logLineX + i;
                 int y = logLineY;
 
-                var colorAtPoint = fill.GetColor(new Point(x, y));
-                Driver.SetAttribute(new Attribute(new Color(colorAtPoint), new Color(Color.Black)));
+                var baseColor = fill.GetColor(new Point(x, y));
+                var adjustedColor = AdjustColorForLightDistance(lightX, lightY, baseColor, x, y);
+
+                Driver.SetAttribute(new Attribute(new Color(adjustedColor), new Color(Color.Black)));
                 this.AddRune(x, y, (Rune)logLine[i]);
             }
         }
     }
 
+    private int AdjustColorForLightDistance(int lightX, int lightY, Color baseColor, int x, int y)
+    {
 
+        // Distance to light source
+        double dx = x - lightX;
+        double dy = y - lightY;
+        double distSq = dx * dx + dy * dy;
+
+        const double maxDistSq = 1600.0; // Bigger influence area (~40 px radius)
+        double normalized = Math.Min(distSq / maxDistSq, 1.0);
+
+        double brightnessDelta;
+
+        if (normalized < 0.2)
+        {
+            // Strong brightening close to light
+            brightnessDelta = 0.4 - (normalized / 0.2) * 0.2; // 0.4 to 0.2
+        }
+        else if (normalized < 0.6)
+        {
+            // Smoothly fade to neutral
+            brightnessDelta = 0.2 - ((normalized - 0.2) / 0.4) * 0.2; // 0.2 to 0
+        }
+        else
+        {
+            // Begin darkening
+            brightnessDelta = -((normalized - 0.6) / 0.4) * 0.6; // 0 to -0.6
+        }
+
+        return AdjustBrightness(baseColor, brightnessDelta);
+    }
+
+
+    private Color AdjustBrightness(Color color, double factor)
+    {
+        int r = color.R;
+        int g = color.G;
+        int b = color.B;
+
+        if (factor > 0)
+        {
+            r += (int)((255 - r) * factor);
+            g += (int)((255 - g) * factor);
+            b += (int)((255 - b) * factor);
+        }
+        else
+        {
+            r = (int)(r * (1.0 + factor)); // factor is negative, dims
+            g = (int)(g * (1.0 + factor));
+            b = (int)(b * (1.0 + factor));
+        }
+
+        return new Color(Clamp(r), Clamp(g), Clamp(b));
+    }
+
+    private int Clamp(int val) => Math.Max(0, Math.Min(255, val));
 
 
     /// <summary>
