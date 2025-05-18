@@ -8,8 +8,8 @@ namespace Showcase
     {
         private static Type[] views = new[]
         {
-            typeof(NumericUpDown) 
-
+            typeof(NumericUpDown) ,
+            typeof(Menu)
         };
         static void Main(string[] args)
         {
