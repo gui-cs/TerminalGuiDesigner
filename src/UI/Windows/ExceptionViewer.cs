@@ -40,7 +40,7 @@ public class ExceptionViewer
 
         btnOk.Accepting += (s, e) =>
         {
-            e.Cancel = true;
+            e.Handled = true;
             Application.RequestStop();
         };
         var btnStack = new Button()
@@ -49,7 +49,7 @@ public class ExceptionViewer
         };
         btnStack.Accepting += (s, e) =>
         {
-            e.Cancel = true;
+            e.Handled = true;
             // flip between stack / no stack
             textView.Text = GetExceptionText(errorText, exception, toggleStack);
             textView.SetNeedsDraw();

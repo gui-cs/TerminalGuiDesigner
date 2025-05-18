@@ -106,7 +106,7 @@ public class BigListBox<T>
         };
         btnOk.Accepting += (s, e) =>
         {
-            e.Cancel = true;
+            e.Handled = true;
             this.Accept();
         };
 
@@ -117,7 +117,7 @@ public class BigListBox<T>
         };
         btnCancel.Accepting += (s, e) =>
         {
-            e.Cancel = true;
+            e.Handled = true;
             Application.RequestStop();
         };
 

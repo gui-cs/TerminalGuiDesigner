@@ -70,14 +70,14 @@ namespace TerminalGuiDesigner.UI.Windows {
 
         private void BtnCancel_Clicked(object sender, CommandEventArgs e)
         {
-            e.Cancel = true;
+            e.Handled = true;
             this.Cancelled = true;
             Application.RequestStop();
         }
 
         private void BtnOk_Clicked(object sender, CommandEventArgs e)
         {
-            e.Cancel = true;
+            e.Handled = true;
             try
             {
                 this.BuildResult();

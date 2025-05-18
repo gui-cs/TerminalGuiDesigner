@@ -49,10 +49,10 @@ public partial class ColorPicker : IValueGetterDialog
 
         btnOk.Accepting += (s, e) =>
         {
-            e.Cancel = true;
+            e.Handled = true;
             Ok();
         };
-        btnCancel.Accepting += (s, e) => { e.Cancel = true; Cancel(); };
+        btnCancel.Accepting += (s, e) => { e.Handled = true; Cancel(); };
     }
 
     private void Ok()

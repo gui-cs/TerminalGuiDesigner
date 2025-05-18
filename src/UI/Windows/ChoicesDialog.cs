@@ -57,7 +57,7 @@ public partial class ChoicesDialog
 
             buttons[i].Accepting += (s,e) => {
                 Result = i2;
-                e.Cancel = true;
+                e.Handled = true;
                 Application.RequestStop();
 
             };

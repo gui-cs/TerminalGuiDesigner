@@ -75,12 +75,12 @@ namespace TerminalGuiDesigner.UI.Windows {
             btnSave.Accepting += (s, e) =>
             {
                 Save = true;
-                e.Cancel = true;
+                e.Handled = true;
                 Application.RequestStop();
             };
             btnCancel.Accepting += (s, e) =>
             {
-                e.Cancel = true;
+                e.Handled = true;
                 Application.RequestStop();
             };
         }

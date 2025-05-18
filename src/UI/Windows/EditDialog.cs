@@ -58,7 +58,7 @@ public class EditDialog : Window
 
         btnSet.Accepting += (s, e) =>
         {
-            e.Cancel = true;
+            e.Handled = true;
             this.SetProperty(false);
         };
 
@@ -70,7 +70,7 @@ public class EditDialog : Window
         };
         btnClose.Accepting += (s, e) =>
         {
-            e.Cancel = true;
+            e.Handled = true;
             Application.RequestStop();
         };
 
