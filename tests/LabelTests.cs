@@ -1,4 +1,6 @@
-﻿namespace UnitTests;
+﻿using Terminal.Gui.ViewBase;
+
+namespace UnitTests;
 
     internal class LabelTests
     {

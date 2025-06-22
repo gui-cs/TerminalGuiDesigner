@@ -1,5 +1,7 @@
 ﻿using Terminal.Gui;
-using Attribute = Terminal.Gui.Attribute;
+using Terminal.Gui.Drawing;
+using Terminal.Gui.ViewBase;
+using Attribute = Terminal.Gui.Drawing.Attribute;
 
 namespace TerminalGuiDesigner;
 

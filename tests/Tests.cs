@@ -1,6 +1,10 @@
 
 
 using System.Runtime.CompilerServices;
+using Terminal.Gui.Drivers;
+using Terminal.Gui.Input;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 
 namespace UnitTests;
 

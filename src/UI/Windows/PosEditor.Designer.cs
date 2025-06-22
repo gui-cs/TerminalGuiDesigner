@@ -25,7 +25,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         
         private Terminal.Gui.RadioGroup rgPosType;
         
-        private Terminal.Gui.LineView lineview1;
+        private Terminal.Gui.Views.LineView lineview1;
         
         private Terminal.Gui.Label lblValue;
         
@@ -43,13 +43,13 @@ namespace TerminalGuiDesigner.UI.Windows {
         
         private Terminal.Gui.TextField tbOffset;
         
-        private Terminal.Gui.Button btnOk;
+        private Terminal.Gui.Views.Button btnOk;
         
-        private Terminal.Gui.Button btnCancel;
+        private Terminal.Gui.Views.Button btnCancel;
         
         private void InitializeComponent() {
-            this.btnCancel = new Terminal.Gui.Button();
-            this.btnOk = new Terminal.Gui.Button();
+            this.btnCancel = new Terminal.Gui.Views.Button();
+            this.btnOk = new Terminal.Gui.Views.Button();
             this.tbOffset = new Terminal.Gui.TextField();
             this.lblOffset = new Terminal.Gui.Label();
             this.rgSide = new Terminal.Gui.RadioGroup();
@@ -58,10 +58,10 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lblRelativeTo = new Terminal.Gui.Label();
             this.tbValue = new Terminal.Gui.TextField();
             this.lblValue = new Terminal.Gui.Label();
-            this.lineview1 = new Terminal.Gui.LineView();
+            this.lineview1 = new Terminal.Gui.Views.LineView();
             this.rgPosType = new Terminal.Gui.RadioGroup();
-            this.dialogBackground = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4294967295u, 4285953654u));
-            this.buttons = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4278190080u, 4294967040u));
+            this.dialogBackground = new Terminal.Gui.ColorScheme(new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u));
+            this.buttons = new Terminal.Gui.ColorScheme(new Terminal.Gui.Drawing.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967040u));
             this.Width = 47;
             this.Height = 16;
             this.X = Pos.Center();

@@ -1,3 +1,5 @@
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 using static Terminal.Gui.SpinnerStyle;
 
 namespace UnitTests;
@@ -47,11 +49,11 @@ internal class SpinnerViewTests : Tests
             var prop = d.GetDesignableProperty(nameof(SpinnerView.Style))
                        ?? throw new ("Property was unexpectedly not designable");
 
-            prop.SetValue(new Triangle());
-            Assert.That(v.Style, Is.InstanceOf<Triangle>( ) );
+            prop.SetValue(new SpinnerStyle.Triangle());
+            Assert.That(v.Style, Is.InstanceOf<SpinnerStyle.Triangle>( ) );
         }, out _);
 
         // Auto-spin original and the one that is read back in
-        Assert.That( backIn.Style, Is.InstanceOf<Triangle>( ) );
+        Assert.That( backIn.Style, Is.InstanceOf<SpinnerStyle.Triangle>( ) );
     }
 }

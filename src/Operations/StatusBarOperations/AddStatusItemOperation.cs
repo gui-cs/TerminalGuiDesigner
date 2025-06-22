@@ -1,4 +1,6 @@
 ﻿using Terminal.Gui;
+using Terminal.Gui.Drivers;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations.Generics;
 
 namespace TerminalGuiDesigner.Operations.StatusBarOperations

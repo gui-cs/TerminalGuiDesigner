@@ -4,10 +4,12 @@ using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Text;
 using Terminal.Gui;
-using Terminal.Gui.TextValidateProviders;
+using Terminal.Gui.Drawing;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner;
 using YamlDotNet.Core.Tokens;
-using Attribute = Terminal.Gui.Attribute;
+using Attribute = Terminal.Gui.Drawing.Attribute;
 
 namespace TerminalGuiDesigner.ToCode;
 

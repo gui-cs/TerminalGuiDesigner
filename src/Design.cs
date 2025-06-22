@@ -1,17 +1,19 @@
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using System.Net.Mime;
 using System.Reflection;
 using System.Xml.Linq;
 using NLog;
 using Terminal.Gui;
+using Terminal.Gui.Input;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.Operations.MenuOperations;
 using TerminalGuiDesigner.Operations.StatusBarOperations;
 using TerminalGuiDesigner.Operations.TableViewOperations;
 using TerminalGuiDesigner.Operations.TabOperations;
 using TerminalGuiDesigner.ToCode;
-using static Terminal.Gui.TableView;
-using static Terminal.Gui.TabView;
 
 namespace TerminalGuiDesigner;
 
@@ -29,7 +31,7 @@ public class Design
     private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
     /// <summary>
-    /// View Types for which <see cref="View.Text"/> does not make sense as a user
+    /// View Types for which <see cref="MediaTypeNames.Text"/> does not make sense as a user
     /// configurable field (e.g. there is a Title field instead).
     /// </summary>
     private readonly HashSet<Type> excludeTextPropertyFor = new()
@@ -100,7 +102,7 @@ public class Design
 
     /// <summary>
     /// Gets the <see cref="View"/> this <see cref="Design"/> wraps.  Do not use
-    /// <see cref="View.Add(Terminal.Gui.View)"/> on this instance.  Instead use
+    /// <see cref="View.Add(Terminal.Gui.ViewBase.View)"/> on this instance.  Instead use
     /// <see cref="AddViewOperation"/> so that new child controls are preserved
     /// for design time changes.
     /// </summary>

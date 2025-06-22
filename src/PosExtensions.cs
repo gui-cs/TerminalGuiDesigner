@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Terminal.Gui;
+using Terminal.Gui.ViewBase;
 
 namespace TerminalGuiDesigner;
 

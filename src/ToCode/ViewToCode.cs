@@ -2,6 +2,8 @@
 using System.CodeDom.Compiler;
 using Microsoft.CSharp;
 using Terminal.Gui;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner.FromCode;
 
 namespace TerminalGuiDesigner.ToCode;

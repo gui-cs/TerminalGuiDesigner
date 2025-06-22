@@ -1,4 +1,6 @@
 ﻿using Terminal.Gui;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 using static Terminal.Gui.TabView;
 
 namespace TerminalGuiDesigner;

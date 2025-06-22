@@ -1,8 +1,10 @@
 using System.IO;
 using System.Linq;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
-using Attribute = Terminal.Gui.Attribute;
+using Attribute = Terminal.Gui.Drawing.Attribute;
 
 namespace UnitTests;
 

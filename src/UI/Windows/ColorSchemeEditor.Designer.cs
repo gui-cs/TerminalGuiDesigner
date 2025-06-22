@@ -31,7 +31,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         
         private Terminal.Gui.Label lblBackgroundNormal;
         
-        private Terminal.Gui.Button btnEditNormal;
+        private Terminal.Gui.Views.Button btnEditNormal;
         
         private Terminal.Gui.Label label22;
         
@@ -41,7 +41,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         
         private Terminal.Gui.Label lblBackgroundHotNormal;
         
-        private Terminal.Gui.Button btnEditHotNormal;
+        private Terminal.Gui.Views.Button btnEditHotNormal;
         
         private Terminal.Gui.Label lblFocus;
         
@@ -51,7 +51,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         
         private Terminal.Gui.Label lblBackgroundFocus;
         
-        private Terminal.Gui.Button btnEditFocus;
+        private Terminal.Gui.Views.Button btnEditFocus;
         
         private Terminal.Gui.Label label223;
         
@@ -61,7 +61,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         
         private Terminal.Gui.Label lblBackgroundHotFocus;
         
-        private Terminal.Gui.Button btnEditHotFocus;
+        private Terminal.Gui.Views.Button btnEditHotFocus;
         
         private Terminal.Gui.Label label2232;
         
@@ -71,42 +71,42 @@ namespace TerminalGuiDesigner.UI.Windows {
         
         private Terminal.Gui.Label lblBackgroundDisabled;
         
-        private Terminal.Gui.Button btnEditDisabled;
+        private Terminal.Gui.Views.Button btnEditDisabled;
         
-        private Terminal.Gui.Button btnOk;
+        private Terminal.Gui.Views.Button btnOk;
         
-        private Terminal.Gui.Button btnCancel;
+        private Terminal.Gui.Views.Button btnCancel;
         
         private void InitializeComponent() {
-            this.btnCancel = new Terminal.Gui.Button();
-            this.btnOk = new Terminal.Gui.Button();
-            this.btnEditDisabled = new Terminal.Gui.Button();
+            this.btnCancel = new Terminal.Gui.Views.Button();
+            this.btnOk = new Terminal.Gui.Views.Button();
+            this.btnEditDisabled = new Terminal.Gui.Views.Button();
             this.lblBackgroundDisabled = new Terminal.Gui.Label();
             this.lblHotNormalSlash32 = new Terminal.Gui.Label();
             this.lblForegroundDisabled = new Terminal.Gui.Label();
             this.label2232 = new Terminal.Gui.Label();
-            this.btnEditHotFocus = new Terminal.Gui.Button();
+            this.btnEditHotFocus = new Terminal.Gui.Views.Button();
             this.lblBackgroundHotFocus = new Terminal.Gui.Label();
             this.lblHotNormalSlash3 = new Terminal.Gui.Label();
             this.lblForegroundHotFocus = new Terminal.Gui.Label();
             this.label223 = new Terminal.Gui.Label();
-            this.btnEditFocus = new Terminal.Gui.Button();
+            this.btnEditFocus = new Terminal.Gui.Views.Button();
             this.lblBackgroundFocus = new Terminal.Gui.Label();
             this.lblHotNormalSlash2 = new Terminal.Gui.Label();
             this.lblForegroundFocus = new Terminal.Gui.Label();
             this.lblFocus = new Terminal.Gui.Label();
-            this.btnEditHotNormal = new Terminal.Gui.Button();
+            this.btnEditHotNormal = new Terminal.Gui.Views.Button();
             this.lblBackgroundHotNormal = new Terminal.Gui.Label();
             this.lblHotNormalSlash = new Terminal.Gui.Label();
             this.lblForegroundHotNormal = new Terminal.Gui.Label();
             this.label22 = new Terminal.Gui.Label();
-            this.btnEditNormal = new Terminal.Gui.Button();
+            this.btnEditNormal = new Terminal.Gui.Views.Button();
             this.lblBackgroundNormal = new Terminal.Gui.Label();
             this.label1 = new Terminal.Gui.Label();
             this.lblForegroundNormal = new Terminal.Gui.Label();
             this.label2 = new Terminal.Gui.Label();
-            this.dialogBackground = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4294967295u, 4285953654u));
-            this.buttons = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4278190080u, 4294967040u));
+            this.dialogBackground = new Terminal.Gui.ColorScheme(new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u));
+            this.buttons = new Terminal.Gui.ColorScheme(new Terminal.Gui.Drawing.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967040u));
             this.Width = 31;
             this.Height = 11;
             this.X = Pos.Center();

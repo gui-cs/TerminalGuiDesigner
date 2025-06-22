@@ -1,6 +1,6 @@
 #nullable disable
 using Terminal.Gui;
-using Attribute = Terminal.Gui.Attribute;
+using Attribute = Terminal.Gui.Drawing.Attribute;
 
 namespace TerminalGuiDesigner.UI.Windows;
 

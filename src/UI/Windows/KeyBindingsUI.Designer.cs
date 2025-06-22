@@ -27,20 +27,20 @@ namespace TerminalGuiDesigner.UI.Windows {
         
         private Terminal.Gui.View buttonPanel;
         
-        private Terminal.Gui.Button btnSave;
+        private Terminal.Gui.Views.Button btnSave;
         
-        private Terminal.Gui.Button btnCancel;
+        private Terminal.Gui.Views.Button btnCancel;
         
-        private Terminal.Gui.Button btnReset;
+        private Terminal.Gui.Views.Button btnReset;
         
         private void InitializeComponent() {
-            this.btnReset = new Terminal.Gui.Button();
-            this.btnCancel = new Terminal.Gui.Button();
-            this.btnSave = new Terminal.Gui.Button();
+            this.btnReset = new Terminal.Gui.Views.Button();
+            this.btnCancel = new Terminal.Gui.Views.Button();
+            this.btnSave = new Terminal.Gui.Views.Button();
             this.buttonPanel = new Terminal.Gui.View();
             this.tableView = new Terminal.Gui.TableView();
-            this.dialogBackground = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4294967295u, 4285953654u));
-            this.buttons = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4278190080u, 4294967040u));
+            this.dialogBackground = new Terminal.Gui.ColorScheme(new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u));
+            this.buttons = new Terminal.Gui.ColorScheme(new Terminal.Gui.Drawing.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967040u));
             this.Width = Dim.Percent(90);
             this.Height = Dim.Percent(80);
             this.X = Pos.Center();

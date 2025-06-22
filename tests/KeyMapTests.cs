@@ -1,3 +1,4 @@
+using Terminal.Gui.Input;
 using TerminalGuiDesigner.UI;
 
 namespace UnitTests;

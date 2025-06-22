@@ -1,3 +1,6 @@
+using Terminal.Gui.Drivers;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations.MenuOperations;
 using TerminalGuiDesigner.UI.Windows;
 

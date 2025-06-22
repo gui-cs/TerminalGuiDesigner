@@ -1,6 +1,9 @@
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using Terminal.Gui;
+using Terminal.Gui.Input;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner.UI.Windows;
 

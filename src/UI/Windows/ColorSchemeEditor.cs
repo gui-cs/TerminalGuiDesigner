@@ -7,10 +7,13 @@
 //      You can make changes to this file and they will not be overwritten when saving.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
+
+using Terminal.Gui.ViewBase;
+
 namespace TerminalGuiDesigner.UI.Windows; 
 using System;
 using Terminal.Gui;
-using Attribute = Terminal.Gui.Attribute;
+using Attribute = Terminal.Gui.Drawing.Attribute;
 
 /// <summary>
 /// Editor for a <see cref="ColorScheme"/>.
@@ -106,7 +109,7 @@ public partial class ColorSchemeEditor {
         };
     }
 
-    private Terminal.Gui.Attribute PickNewColorsFor(Terminal.Gui.Attribute current)
+    private Terminal.Gui.Drawing.Attribute PickNewColorsFor(Terminal.Gui.Drawing.Attribute current)
     {
         var pick = new Windows.ColorPicker(current);
         Application.Run(pick);
@@ -134,6 +137,6 @@ public partial class ColorSchemeEditor {
 
     private void SetColor(Label label, Color color)
     {
-        label.ColorScheme = new ColorScheme{Normal = new Terminal.Gui.Attribute(color,color)};
+        label.ColorScheme = new ColorScheme{Normal = new Terminal.Gui.Drawing.Attribute(color,color)};
     }
 }

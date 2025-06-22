@@ -1,4 +1,5 @@
 ﻿using Terminal.Gui;
+using Terminal.Gui.ViewBase;
 using TerminalGuiDesigner.FromCode;
 
 namespace TerminalGuiDesigner.ToCode;

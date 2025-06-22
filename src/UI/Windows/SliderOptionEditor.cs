@@ -9,6 +9,9 @@
 // -----------------------------------------------------------------------------
 
 
+using Terminal.Gui.Input;
+using Terminal.Gui.Views;
+
 namespace TerminalGuiDesigner.UI.Windows {
     using System.Reflection;
     using System.Text;

@@ -1,12 +1,13 @@
 ﻿using System.CodeDom;
 using Terminal.Gui;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner.ToCode;
 
 namespace TerminalGuiDesigner
 {
     /// <summary>
     /// Provides knowledge about how to handle different T types for generic
-    /// views e.g. <see cref="Slider{T}"/>, <see cref="TreeView{T}"/>
+    /// views e.g. <see cref="Slider"/>, <see cref="TreeView{T}"/>
     /// </summary>
     public static class TTypes
     {

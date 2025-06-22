@@ -1,5 +1,6 @@
 using System.CodeDom;
 using Terminal.Gui;
+using Terminal.Gui.Views;
 using static Terminal.Gui.TabView;
 
 namespace TerminalGuiDesigner.ToCode;

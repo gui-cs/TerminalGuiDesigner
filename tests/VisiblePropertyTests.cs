@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Terminal.Gui;
+using Terminal.Gui.ViewBase;
 using TerminalGuiDesigner;
 
 namespace UnitTests

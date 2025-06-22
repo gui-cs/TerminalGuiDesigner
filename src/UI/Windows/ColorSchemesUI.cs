@@ -7,6 +7,9 @@
 //      You can make changes to this file and they will not be overwritten when saving.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
+
+using Terminal.Gui.Views;
+
 namespace TerminalGuiDesigner.UI.Windows; 
 using System;
 using System.Collections.Generic;
@@ -14,7 +17,7 @@ using System.Data;
 using Terminal.Gui;
 using TerminalGuiDesigner.Operations;
 using static Terminal.Gui.TableView;
-using Attribute = Terminal.Gui.Attribute;
+using Attribute = Terminal.Gui.Drawing.Attribute;
 
 /// <summary>
 /// View that shows all <see cref="ColorScheme"/> tracked by <see cref="ColorSchemeManager"/>.

@@ -7,6 +7,11 @@
 //      You can make changes to this file and they will not be overwritten when saving.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
+
+using Terminal.Gui.Text;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
+
 namespace TerminalGuiDesigner.UI.Windows;
 
 using System.Text;

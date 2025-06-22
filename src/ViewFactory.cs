@@ -2,8 +2,10 @@ using System.Collections.ObjectModel;
 using System.Data;
 using Terminal.Gui;
 using Terminal.Gui.TextValidateProviders;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations.MenuOperations;
-using Attribute = Terminal.Gui.Attribute;
+using Attribute = Terminal.Gui.Drawing.Attribute;
 
 namespace TerminalGuiDesigner;
 

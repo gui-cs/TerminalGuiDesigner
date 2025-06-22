@@ -2,10 +2,12 @@
 using System.Text;
 using Terminal.Gui.TextValidateProviders;
 using Terminal.Gui;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner.ToCode;
 using TerminalGuiDesigner.UI.Windows;
 using ColorPicker = TerminalGuiDesigner.UI.Windows.ColorPicker;
-using Attribute = Terminal.Gui.Attribute;
+using Attribute = Terminal.Gui.Drawing.Attribute;
 
 namespace TerminalGuiDesigner.UI
 {

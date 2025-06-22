@@ -2,7 +2,7 @@
 using Terminal.Gui;
 using YamlDotNet.Core;
 using YamlDotNet.Serialization;
-using Attribute = Terminal.Gui.Attribute;
+using Attribute = Terminal.Gui.Drawing.Attribute;
 
 namespace TerminalGuiDesigner.UI;
 

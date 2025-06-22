@@ -2,6 +2,7 @@ using System.CodeDom;
 using System.Reflection;
 using System.Text;
 using Terminal.Gui;
+using Terminal.Gui.ViewBase;
 
 namespace TerminalGuiDesigner;
 

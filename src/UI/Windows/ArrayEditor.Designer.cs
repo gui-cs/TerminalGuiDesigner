@@ -8,6 +8,9 @@
 //      the code is regenerated.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
+
+using Terminal.Gui.ViewBase;
+
 namespace TerminalGuiDesigner.UI.Windows {
     using System;
     using Terminal.Gui;
@@ -25,37 +28,37 @@ namespace TerminalGuiDesigner.UI.Windows {
         
         private Terminal.Gui.FrameView frameView;
         
-        private Terminal.Gui.ListView lvElements;
+        private Terminal.Gui.Views.ListView lvElements;
         
-        private Terminal.Gui.Button btnAddElement;
+        private Terminal.Gui.Views.Button btnAddElement;
         
-        private Terminal.Gui.Button btnDelete;
+        private Terminal.Gui.Views.Button btnDelete;
         
-        private Terminal.Gui.Button btnMoveUp;
+        private Terminal.Gui.Views.Button btnMoveUp;
         
-        private Terminal.Gui.Button btnMoveDown;
+        private Terminal.Gui.Views.Button btnMoveDown;
         
-        private Terminal.Gui.Button btnEdit;
+        private Terminal.Gui.Views.Button btnEdit;
         
-        private Terminal.Gui.LineView lineView;
+        private Terminal.Gui.Views.LineView lineView;
         
-        private Terminal.Gui.Button btnOk;
+        private Terminal.Gui.Views.Button btnOk;
         
-        private Terminal.Gui.Button btnCancel;
+        private Terminal.Gui.Views.Button btnCancel;
         
         private void InitializeComponent() {
-            this.btnCancel = new Terminal.Gui.Button();
-            this.btnOk = new Terminal.Gui.Button();
-            this.lineView = new Terminal.Gui.LineView();
-            this.btnEdit = new Terminal.Gui.Button();
-            this.btnMoveDown = new Terminal.Gui.Button();
-            this.btnMoveUp = new Terminal.Gui.Button();
-            this.btnDelete = new Terminal.Gui.Button();
-            this.btnAddElement = new Terminal.Gui.Button();
-            this.lvElements = new Terminal.Gui.ListView();
-            this.frameView = new Terminal.Gui.FrameView();
-            this.dialogBackground = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4294967295u, 4285953654u));
-            this.buttons = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4278190080u, 4294967040u));
+            this.btnCancel = new Terminal.Gui.Views.Button();
+            this.btnOk = new Terminal.Gui.Views.Button();
+            this.lineView = new Terminal.Gui.Views.LineView();
+            this.btnEdit = new Terminal.Gui.Views.Button();
+            this.btnMoveDown = new Terminal.Gui.Views.Button();
+            this.btnMoveUp = new Terminal.Gui.Views.Button();
+            this.btnDelete = new Terminal.Gui.Views.Button();
+            this.btnAddElement = new Terminal.Gui.Views.Button();
+            this.lvElements = new Terminal.Gui.Views.ListView();
+            this.frameView = new Terminal.Gui.Views.FrameView();
+            this.dialogBackground = new Terminal.Gui.ColorScheme(new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u));
+            this.buttons = new Terminal.Gui.ColorScheme(new Terminal.Gui.Drawing.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967040u));
             this.Width = Dim.Percent(85);
             this.Height = Dim.Percent(85);
             this.X = Pos.Center();

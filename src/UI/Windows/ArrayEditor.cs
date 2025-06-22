@@ -10,6 +10,7 @@
 
 using System.Collections.ObjectModel;
 using JetBrains.Annotations;
+using Terminal.Gui.Input;
 
 namespace TerminalGuiDesigner.UI.Windows {
     using System.Collections;
