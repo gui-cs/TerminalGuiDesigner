@@ -88,7 +88,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.cpForeground.Data = "cpForeground";
             this.cpForeground.Text = "";
             this.cpForeground.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
-            this.cpForeground.Style.ColorModel = Terminal.Gui.ColorModel.HSV;
+            this.cpForeground.Style.ColorModel = Terminal.Gui.Drawing.ColorModel.HSV;
             this.cpForeground.Style.ShowColorName = true;
             this.cpForeground.Style.ShowTextFields = true;
             this.cpForeground.ApplyStyleChanges();
