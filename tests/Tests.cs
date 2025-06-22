@@ -43,7 +43,7 @@ public class Tests
 
         SelectionManager.Instance.LockSelection = false;
         SelectionManager.Instance.Clear();
-        ColorSchemeManager.Instance.Clear();
+        SchemeManager.Instance.Clear();
     }
 
     protected static Design Get10By10View()

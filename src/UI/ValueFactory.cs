@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Text;
-using Terminal.Gui.TextValidateProviders;
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 using TerminalGuiDesigner.ToCode;
@@ -55,9 +55,9 @@ namespace TerminalGuiDesigner.UI
             {
                 return RunEditor(new SliderOptionEditor(type.GetGenericArguments()[0], oldValue), out newValue);
             }
-            if (type == typeof(ColorScheme))
+            if (type == typeof(Scheme))
             {
-                return GetNewColorSchemeValue(design, out newValue);
+                return GetNewSchemeValue(design, out newValue);
             }
             if (type == typeof(Attribute) || type == typeof(Attribute?))
             {
@@ -193,7 +193,7 @@ namespace TerminalGuiDesigner.UI
             if (type == typeof(FileSystemInfo))
             {
                 var fd = new FileDialog();
-                fd.SetupNiceColorSchemes();
+                fd.SetupNiceSchemes();
                 fd.AllowsMultipleSelection = false;
                 fd.Layout();
 
@@ -286,20 +286,20 @@ namespace TerminalGuiDesigner.UI
             return false;
         }
 
-        private static bool GetNewColorSchemeValue(Design design, out object? newValue)
+        private static bool GetNewSchemeValue(Design design, out object? newValue)
         {
             const string custom = "Edit Color Schemes...";
             List<object> offer = new();
 
-            var defaults = new DefaultColorSchemes();
-            var schemes = ColorSchemeManager.Instance.Schemes.ToList();
+            var defaults = new DefaultSchemes();
+            var schemes = SchemeManager.Instance.Schemes.ToList();
 
             offer.AddRange(schemes);
 
             foreach (var d in defaults.GetDefaultSchemes())
             {
                 // user is already explicitly using this default and may even have modified it
-                if (offer.OfType<NamedColorScheme>().Any(s => s.Name.Equals(d.Name)))
+                if (offer.OfType<NamedScheme>().Any(s => s.Name.Equals(d.Name)))
                 {
                     continue;
                 }
@@ -310,26 +310,26 @@ namespace TerminalGuiDesigner.UI
             // add the option to jump to custom colors
             offer.Add(custom);
 
-            if (Modals.Get("Color Scheme", "Ok", offer.ToArray(), design.View.ColorScheme, out var selected,false))
+            if (Modals.Get("Color Scheme", "Ok", offer.ToArray(), design.View.Scheme, out var selected,false))
             {
                 // if user clicked "Custom..."
                 if (selected is string s && string.Equals(s, custom))
                 {
                     // show the custom colors dialog
-                    var colorSchemesUI = new ColorSchemesUI(design);
-                    Application.Run(colorSchemesUI);
+                    var SchemesUI = new SchemesUI(design);
+                    Application.Run(SchemesUI);
                     newValue = null;
                     return false;
                 }
 
-                if (selected is NamedColorScheme ns)
+                if (selected is NamedScheme ns)
                 {
                     newValue = ns.Scheme;
 
-                    // if it was a default one, tell ColorSchemeManager we are now using it
+                    // if it was a default one, tell SchemeManager we are now using it
                     if (!schemes.Contains(ns))
                     {
-                        ColorSchemeManager.Instance.AddOrUpdateScheme(ns.Name, ns.Scheme, design.GetRootDesign());
+                        SchemeManager.Instance.AddOrUpdateScheme(ns.Name, ns.Scheme, design.GetRootDesign());
                     }
 
                     return true;

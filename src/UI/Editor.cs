@@ -288,7 +288,7 @@ public class Editor : Toplevel
 
         if (this.enableShowFocused)
         {
-            Application.Driver.SetAttribute(this.viewBeingEdited.View.ColorScheme.Normal);
+            Application.Driver.SetAttribute(this.viewBeingEdited.View.Scheme.Normal);
 
             string? toDisplay = this.GetLowerRightTextIfAny();
 
@@ -558,9 +558,9 @@ public class Editor : Toplevel
                 return true;
             }
 
-            if (keyString == this.keyMap.ShowColorSchemes)
+            if (keyString == this.keyMap.ShowSchemes)
             {
-                this.ShowColorSchemes();
+                this.ShowSchemes();
                 return true;
             }
 
@@ -780,7 +780,7 @@ public class Editor : Toplevel
                 {this.keyMap.Save} - Save an opened .Designer.cs file
                 {this.keyMap.ShowContextMenu} - Show right click context menu;
                 {this.keyMap.AddView} - Add View
-                {this.keyMap.ShowColorSchemes} - Color Schemes
+                {this.keyMap.ShowSchemes} - Color Schemes
                 {this.keyMap.ToggleDragging} - Toggle mouse dragging on/off
                 {this.keyMap.ToggleShowFocused} - Toggle show focused view field name
                 {this.keyMap.ToggleShowBorders} - Toggle dotted borders for frameless views
@@ -825,7 +825,7 @@ public class Editor : Toplevel
             Y = Pos.Percent(75),
             Width = maxWidth,
             Height = 4,
-            ColorScheme = new ColorScheme
+            Scheme = new Scheme
             (
                 new Attribute(new Color(Color.White),new Color(Color.Black)),
                 new Attribute(new Color(Color.Black),new Color(Color.White)),
@@ -1196,7 +1196,7 @@ public class Editor : Toplevel
             Title = "Open",
             AllowedTypes = new List<IAllowedType>(new[] { new AllowedType("View", SourceCodeFile.ExpectedExtension) })
         };
-        ofd.SetupNiceColorSchemes();
+        ofd.SetupNiceSchemes();
         ofd.Layout();
 
         Application.Run(ofd, this.ErrorHandler);
@@ -1279,7 +1279,7 @@ public class Editor : Toplevel
             Path = "MyView.cs",
         };
         ofd.Layout();
-        ofd.SetupNiceColorSchemes();
+        ofd.SetupNiceSchemes();
 
         Application.Run(ofd);
 
@@ -1422,7 +1422,7 @@ public class Editor : Toplevel
             this.viewBeingEdited = design;
 
             // TODO: Find a better place for this
-            ColorSchemeManager.Instance.FindDeclaredColorSchemes(this.viewBeingEdited);
+            SchemeManager.Instance.FindDeclaredSchemes(this.viewBeingEdited);
 
             // And add it to the editing window
             this.Add(this.viewBeingEdited.View);
@@ -1477,14 +1477,14 @@ public class Editor : Toplevel
         Application.Run(edit, this.ErrorHandler);
     }
 
-    private void ShowColorSchemes()
+    private void ShowSchemes()
     {
         if (this.viewBeingEdited == null)
         {
             return;
         }
 
-        var schemes = new ColorSchemesUI(this.viewBeingEdited);
+        var schemes = new SchemesUI(this.viewBeingEdited);
         Application.Run(schemes);
     }
 }

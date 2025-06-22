@@ -231,7 +231,7 @@ internal class CopyPasteTests : Tests
     }
 
     [Test]
-    public void CopyPasteColorScheme()
+    public void CopyPasteScheme()
     {
         Design? rootDesign = null;
         Label? lbl = null;
@@ -262,30 +262,30 @@ internal class CopyPasteTests : Tests
 
         SelectionManager selected = SelectionManager.Instance;
 
-        ColorScheme green = new() { Normal = new(Color.Green, Color.Cyan) };
-        Assume.That( green, Is.Not.Null.And.InstanceOf<ColorScheme>( ) );
+        Scheme green = new() { Normal = new(Color.Green, Color.Cyan) };
+        Assume.That( green, Is.Not.Null.And.InstanceOf<Scheme>( ) );
 
-        Assume.That( labelDesign!.GetDesignableProperties( ).OfType<ColorSchemeProperty>( ).ToArray( ),
+        Assume.That( labelDesign!.GetDesignableProperties( ).OfType<SchemeProperty>( ).ToArray( ),
                      Has.Length.EqualTo( 1 ),
-                     "Should only be one ColorScheme property" );
+                     "Should only be one Scheme property" );
         
-        ColorScheme addedScheme = ColorSchemeManager.Instance.AddOrUpdateScheme("green", green, rootDesign!);
+        Scheme addedScheme = SchemeManager.Instance.AddOrUpdateScheme("green", green, rootDesign!);
         Assume.That( addedScheme, Is.SameAs( green ) );
 
-        Assume.That( textFieldDesign!.TryGetDesignableProperty( nameof( ColorScheme ), out Property? colorSchemeProperty ) );
-        Assume.That( colorSchemeProperty, Is.Not.Null.And.InstanceOf<Property>( ) );
-        Assume.That( ( ) => colorSchemeProperty.SetValue( green ), Throws.Nothing );
+        Assume.That( textFieldDesign!.TryGetDesignableProperty( nameof( Scheme ), out Property? SchemeProperty ) );
+        Assume.That( SchemeProperty, Is.Not.Null.And.InstanceOf<Property>( ) );
+        Assume.That( ( ) => SchemeProperty.SetValue( green ), Throws.Nothing );
         
-        rootDesign!.View.ColorScheme = green;
+        rootDesign!.View.Scheme = green;
 
-        Assume.That( lbl!.ColorScheme, Is.SameAs( green ), "The label should inherit color scheme from the parent" );
+        Assume.That( lbl!.Scheme, Is.SameAs( green ), "The label should inherit color scheme from the parent" );
 
-        Assume.That( labelDesign!.GetDesignableProperties( ).OfType<ColorSchemeProperty>( ).Single( ).ToString( ),
-                     Is.EqualTo( "ColorScheme:(Inherited)" ),
-                     "Expected ColorScheme to be known to be inherited" );
+        Assume.That( labelDesign!.GetDesignableProperties( ).OfType<SchemeProperty>( ).Single( ).ToString( ),
+                     Is.EqualTo( "Scheme:(Inherited)" ),
+                     "Expected Scheme to be known to be inherited" );
 
-        Assume.That( textFieldDesign.GetDesignableProperties( ).OfType<ColorSchemeProperty>( ).Single( ).ToString( ),
-                     Is.EqualTo( "ColorScheme:green" ),
+        Assume.That( textFieldDesign.GetDesignableProperties( ).OfType<SchemeProperty>( ).Single( ).ToString( ),
+                     Is.EqualTo( "Scheme:green" ),
                      "TextBox inherits but also is explicitly marked as green" );
 
         SelectionManager.Instance.SetSelection(labelDesign, textFieldDesign);

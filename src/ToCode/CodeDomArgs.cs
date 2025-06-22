@@ -32,7 +32,7 @@ public class CodeDomArgs
     /// <summary>
     /// Gets the CodeDOM object representing the root class that is being designed
     /// as it is declared in the .Designer.cs file e.g.:
-    /// <code>public partial class MyWindow : Terminal.Gui.Window</code>
+    /// <code>public partial class MyWindow : Terminal.Gui.Views.Window</code>
     /// <para>Use this property to add new fields for each sub-view and subcomponent needed
     /// by the class.</para>
     /// </summary>

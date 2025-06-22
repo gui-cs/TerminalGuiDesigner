@@ -29,7 +29,7 @@
     "DisabledBackground": "Green"
   },
   "SetShortcut": "Ctrl+T",
-  "ShowColorSchemes": "F6",
+  "ShowSchemes": "F6",
   "ShowContextMenu": "Enter",
   "ShowHelp": "F1",
   "ToggleDragging": "F3",

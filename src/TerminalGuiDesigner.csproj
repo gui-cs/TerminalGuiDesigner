@@ -52,7 +52,7 @@
 			v1.0.22
 			* Allow adding `Window` as a content view (handy when designing a Toplevel)
 			v1.0.21
-			* Add Default (Blue/Yellow) ColorScheme
+			* Add Default (Blue/Yellow) Scheme
 			* Take `Toplevel` and `View` root Types out of Experimental mode
 			* Update Terminal.Gui dependency to 1.9.0
 			v1.0.20
@@ -78,7 +78,7 @@
 			* Fixed bug where code generated for PosRelative could not compile due to statement sequence order
 			* Updated to use Terminal.Gui 1.7.1 package
 			v1.0.16
-			* Support for designing ColorSchemes
+			* Support for designing Schemes
 			* Ability to update the same field on multiple selected Views at once (e.g. set all width to 10)
 			* Selection color (defaults to green) is now applied to single selections (e.g. tab/mouse selection).  Previously this scheme was only used for multi selection
 			* Lower right status text now shows when there is an ongoing multi selection (e.g. 'Selected: 3 objects')

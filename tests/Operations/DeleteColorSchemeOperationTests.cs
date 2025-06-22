@@ -7,35 +7,35 @@ using TerminalGuiDesigner.ToCode;
 
 namespace UnitTests.Operations;
 
-internal class DeleteColorSchemeOperationTests : Tests
+internal class DeleteSchemeOperationTests : Tests
 {
     [TestCase(true)]
     [TestCase(false)]
-    public void Test_DeleteColorSchemeOperation_DoThenUndo_RoundTrip(bool withSelected)
+    public void Test_DeleteSchemeOperation_DoThenUndo_RoundTrip(bool withSelected)
     {
-        var scheme = new ColorScheme();
+        var scheme = new Scheme();
 
         var lblIn = RoundTrip<Dialog, Label>(
             (d, v) =>
         {
             // Clear known default colors
-            ColorSchemeManager.Instance.Clear();
-            ClassicAssert.IsEmpty(ColorSchemeManager.Instance.Schemes);
+            SchemeManager.Instance.Clear();
+            ClassicAssert.IsEmpty(SchemeManager.Instance.Schemes);
 
             // Add a new color for our Label
-            ColorSchemeManager.Instance.AddOrUpdateScheme("yarg", scheme, d.GetRootDesign());
-            ClassicAssert.AreEqual(1, ColorSchemeManager.Instance.Schemes.Count);
+            SchemeManager.Instance.AddOrUpdateScheme("yarg", scheme, d.GetRootDesign());
+            ClassicAssert.AreEqual(1, SchemeManager.Instance.Schemes.Count);
 
             // Assign the new color to the view
-            var prop = new SetPropertyOperation(d, new ColorSchemeProperty(d), null, scheme);
+            var prop = new SetPropertyOperation(d, new SchemeProperty(d), null, scheme);
             prop.Do();
         }, out _);
 
         var lblInDesign = (Design)lblIn.Data ?? throw new Exception("Expected Design to exist on the label read in");
 
-        ColorSchemeManager.Instance.Clear();
-        ColorSchemeManager.Instance.FindDeclaredColorSchemes(lblInDesign.GetRootDesign());
-        ClassicAssert.AreEqual(1, ColorSchemeManager.Instance.Schemes.Count, "Reloading the view should find the explicitly declared scheme 'yarg'");
+        SchemeManager.Instance.Clear();
+        SchemeManager.Instance.FindDeclaredSchemes(lblInDesign.GetRootDesign());
+        ClassicAssert.AreEqual(1, SchemeManager.Instance.Schemes.Count, "Reloading the view should find the explicitly declared scheme 'yarg'");
 
         var rootDesignIn = lblInDesign.GetRootDesign();
 
@@ -45,13 +45,13 @@ internal class DeleteColorSchemeOperationTests : Tests
         }
 
         // now delete the scheme
-        var yarg = ColorSchemeManager.Instance.GetNamedColorScheme("yarg");
-        var deleteOp = new DeleteColorSchemeOperation(rootDesignIn, yarg);
+        var yarg = SchemeManager.Instance.GetNamedScheme("yarg");
+        var deleteOp = new DeleteSchemeOperation(rootDesignIn, yarg);
 
         ClassicAssert.IsTrue(deleteOp.Do());
 
         // after deleting the color scheme nobody should be using it
-        ClassicAssert.IsNull(lblIn.GetExplicitColorScheme());
+        ClassicAssert.IsNull(lblIn.GetExplicitScheme());
         ClassicAssert.IsNull(lblInDesign.State.OriginalScheme);
 
         // throw a curve ball, all these should do nothing
@@ -65,11 +65,11 @@ internal class DeleteColorSchemeOperationTests : Tests
 
         ClassicAssert.AreEqual(
             "yarg",
-            ColorSchemeManager.Instance.GetNameForColorScheme(
-            lblIn.GetExplicitColorScheme() ?? throw new Exception("Expected lblIn to have the scheme again")),
-            "Expected designer to still know the name of lblIn ColorScheme");
+            SchemeManager.Instance.GetNameForScheme(
+            lblIn.GetExplicitScheme() ?? throw new Exception("Expected lblIn to have the scheme again")),
+            "Expected designer to still know the name of lblIn Scheme");
 
-        ClassicAssert.AreEqual(yarg.Scheme, lblIn.GetExplicitColorScheme() ?? throw new Exception("View was unexpected no longer using our color scheme after Redo"));
+        ClassicAssert.AreEqual(yarg.Scheme, lblIn.GetExplicitScheme() ?? throw new Exception("View was unexpected no longer using our color scheme after Redo"));
         ClassicAssert.AreEqual(yarg.Scheme, lblInDesign.State.OriginalScheme ?? throw new Exception("View was unexpected no longer using our color scheme after Redo"));
     }
 }

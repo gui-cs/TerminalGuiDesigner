@@ -16,49 +16,48 @@ using System.Collections.Generic;
 using System.Data;
 using Terminal.Gui;
 using TerminalGuiDesigner.Operations;
-using static Terminal.Gui.TableView;
 using Attribute = Terminal.Gui.Drawing.Attribute;
 
 /// <summary>
-/// View that shows all <see cref="ColorScheme"/> tracked by <see cref="ColorSchemeManager"/>.
+/// View that shows all <see cref="Scheme"/> tracked by <see cref="SchemeManager"/>.
 /// This is all the custom schemes user has created plus any default ones supplied with the designer.
 /// </summary>
-public partial class ColorSchemesUI {
+public partial class SchemesUI {
     const string NameColumn = "Name";
     const string EditColumnName = " ";
     const string DeleteColumnName = "  ";
 
     private Design design;
 
-    private NamedColorScheme[] _schemes;
+    private NamedScheme[] _schemes;
 
     /// <summary>
-    /// Creates a new instance of the <see cref="ColorSchemesUI"/> class.
+    /// Creates a new instance of the <see cref="SchemesUI"/> class.
     /// </summary>
     /// <param name="design"></param>
-    public ColorSchemesUI(Design design) {
+    public SchemesUI(Design design) {
         
         InitializeComponent();
 
         this.design = design;
 
-        tvColorSchemes.NullSymbol = " ";
+        tvSchemes.NullSymbol = " ";
 
-        var tbl = tvColorSchemesTable;
+        var tbl = tvSchemesTable;
         
         foreach(DataColumn col in tbl.Columns)
         {
             col.DataType = typeof(int);
         }
 
-        var sName = tvColorSchemes.Style.GetOrCreateColumnStyle(tbl.Columns[NameColumn].Ordinal);
+        var sName = tvSchemes.Style.GetOrCreateColumnStyle(tbl.Columns[NameColumn].Ordinal);
         sName.RepresentationGetter = GetName;
 
-        var sEdit = tvColorSchemes.Style.GetOrCreateColumnStyle(tbl.Columns[EditColumnName].Ordinal);
+        var sEdit = tvSchemes.Style.GetOrCreateColumnStyle(tbl.Columns[EditColumnName].Ordinal);
         sEdit.RepresentationGetter = GetEditString;
         sEdit.MinWidth = 7;
         
-        var sDelete = tvColorSchemes.Style.GetOrCreateColumnStyle(tbl.Columns[DeleteColumnName].Ordinal);
+        var sDelete = tvSchemes.Style.GetOrCreateColumnStyle(tbl.Columns[DeleteColumnName].Ordinal);
         sDelete.RepresentationGetter = GetDeleteString;
         sDelete.MinWidth = 8;
 
@@ -77,44 +76,44 @@ public partial class ColorSchemesUI {
 
         BuildDataTableRows();
 
-        tvColorSchemes.CellActivated += CellActivated;
-        tvColorSchemes.SelectedCellChanged += CellChanged;
+        tvSchemes.CellActivated += CellActivated;
+        tvSchemes.SelectedCellChanged += CellChanged;
 
         // When entering control for the first time ensure a valid selection
         CellChanged(this,
             new SelectedCellChangedEventArgs(
-                tvColorSchemes.Table,
-                tvColorSchemes.SelectedColumn,
-                tvColorSchemes.SelectedColumn,
-                tvColorSchemes.SelectedRow,
-                tvColorSchemes.SelectedRow));
+                tvSchemes.Table,
+                tvSchemes.SelectedColumn,
+                tvSchemes.SelectedColumn,
+                tvSchemes.SelectedRow,
+                tvSchemes.SelectedRow));
     }
 
     private void CellChanged(object sender, SelectedCellChangedEventArgs e)
     {
         // don't let user select the color swatches
         if(e.NewCol > 2)
-            tvColorSchemes.SelectedColumn = 2;
+            tvSchemes.SelectedColumn = 2;
 
         // if selecting last row in the table
-        if(e.NewRow == tvColorSchemes.Table.Rows-1)
+        if(e.NewRow == tvSchemes.Table.Rows-1)
         {
             // only let them press the Add button
-            tvColorSchemes.SelectedColumn = 2;
+            tvSchemes.SelectedColumn = 2;
         }
     }
 
-    private void SetupSwatchColumn(DataTable tbl, DataColumn col, Func<ColorScheme, Color> func)
+    private void SetupSwatchColumn(DataTable tbl, DataColumn col, Func<Scheme, Color> func)
     {
-        var colStyle = tvColorSchemes.Style.GetOrCreateColumnStyle(col.Ordinal);
+        var colStyle = tvSchemes.Style.GetOrCreateColumnStyle(col.Ordinal);
 
         colStyle.RepresentationGetter = (o)=> " ";
         colStyle.ColorGetter = (e)=>(int)e.CellValue == int.MaxValue ? null : ColorToScheme(func(_schemes[(int)e.CellValue].Scheme));
     }
 
-    private ColorScheme ColorToScheme(Color color)
+    private Scheme ColorToScheme(Color color)
     {
-        return new ColorScheme{
+        return new Scheme{
             Normal = new Attribute(color,color),
             HotNormal = new Attribute(color,color),
             Focus = new Attribute(color,color),
@@ -126,18 +125,18 @@ public partial class ColorSchemesUI {
     private void CellActivated(object sender, CellActivatedEventArgs e)
     {
         
-        var col = tvColorSchemesTable.Columns[e.Col];
-        var val = (int)tvColorSchemesTable.Rows[e.Row][e.Col];
+        var col = tvSchemesTable.Columns[e.Col];
+        var val = (int)tvSchemesTable.Rows[e.Row][e.Col];
 
         if(col.ColumnName == EditColumnName && val < _schemes.Length)
         {
-            var edit = new ColorSchemeEditor(_schemes[val].Scheme);
+            var edit = new SchemeEditor(_schemes[val].Scheme);
             Application.Run(edit);
 
             if (edit.Cancelled)
                 return;
             
-            ColorSchemeManager.Instance.AddOrUpdateScheme(_schemes[val].Name, edit.Result, design.GetRootDesign());
+            SchemeManager.Instance.AddOrUpdateScheme(_schemes[val].Name, edit.Result, design.GetRootDesign());
             BuildDataTableRows();
         }
 
@@ -146,7 +145,7 @@ public partial class ColorSchemesUI {
             var oldName = GetName(val);
             if(Modals.GetString("Rename Color Scheme","Name",oldName,out var newName) && !string.IsNullOrWhiteSpace(newName))
             {
-                ColorSchemeManager.Instance.RenameScheme(oldName,design.GetUniqueFieldName(newName));
+                SchemeManager.Instance.RenameScheme(oldName,design.GetUniqueFieldName(newName));
                 BuildDataTableRows();
             }
         }
@@ -156,13 +155,13 @@ public partial class ColorSchemesUI {
             // actually its the [+] button
             if(val == int.MaxValue)
             {
-                ColorSchemeManager.Instance.AddOrUpdateScheme(GetNewColorName(),new ColorScheme(), design.GetRootDesign());
+                SchemeManager.Instance.AddOrUpdateScheme(GetNewColorName(),new Scheme(), design.GetRootDesign());
                 BuildDataTableRows();
-                tvColorSchemes.SelectedRow++;
+                tvSchemes.SelectedRow++;
             }
             else
             {
-                var cmd = new DeleteColorSchemeOperation(design,_schemes[val]);
+                var cmd = new DeleteSchemeOperation(design,_schemes[val]);
                 
                 if(cmd.IsImpossible)
                     return;
@@ -170,7 +169,7 @@ public partial class ColorSchemesUI {
                 OperationManager.Instance.Do(cmd);
 
                 BuildDataTableRows();
-                tvColorSchemes.SelectedRow--;
+                tvSchemes.SelectedRow--;
             }
         }
     }
@@ -201,10 +200,10 @@ public partial class ColorSchemesUI {
 
     private void BuildDataTableRows()
     {
-        var tbl = tvColorSchemesTable;
+        var tbl = tvSchemesTable;
         tbl.Rows.Clear();
 
-        _schemes = ColorSchemeManager.Instance.Schemes.ToArray();
+        _schemes = SchemeManager.Instance.Schemes.ToArray();
 
         for(int i = 0 ; i < _schemes.Length;i++)
         {
@@ -213,12 +212,12 @@ public partial class ColorSchemesUI {
 
         // Add one last blank row to table for the add row button
         AddRowToTableWithAllCellsHavingValue(int.MaxValue);
-        tvColorSchemes.Update();
+        tvSchemes.Update();
     }
 
     private void AddRowToTableWithAllCellsHavingValue(int i)
     {            
-        var tbl = tvColorSchemesTable;
+        var tbl = tvSchemesTable;
 
         var r = tbl.Rows.Add();
         for(int j = 0;j<tbl.Columns.Count;j++)

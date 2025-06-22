@@ -17,41 +17,41 @@ namespace TerminalGuiDesigner {
     using System.Drawing;
     
     
-    public partial class LoadingDialog : Terminal.Gui.Dialog {
+    public partial class LoadingDialog : Terminal.Gui.Views.Dialog {
         
-        private Terminal.Gui.Label lblLoading;
+        private Terminal.Gui.Views.Label lblLoading;
 
-        private Terminal.Gui.ColorScheme dialogBackground;
+        private Terminal.Gui.Drawing.Scheme dialogBackground;
 
-        private Terminal.Gui.ColorScheme buttons;
+        private Terminal.Gui.Drawing.Scheme buttons;
 
         private void InitializeComponent() {
-            this.lblLoading = new Terminal.Gui.Label();
+            this.lblLoading = new Terminal.Gui.Views.Label();
             this.Width = 40;
             this.Height = 6;
             this.X = Pos.Center();
             this.Y = Pos.Center();
             this.Visible = true;
-            this.dialogBackground = new Terminal.Gui.ColorScheme(new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u));
-            this.buttons = new Terminal.Gui.ColorScheme(new Terminal.Gui.Drawing.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967040u));
-            this.ColorScheme = this.dialogBackground;
-            this.Arrangement = (Terminal.Gui.ViewArrangement.Movable | Terminal.Gui.ViewArrangement.Overlapped);
+            this.dialogBackground = new Terminal.Gui.Drawing.Scheme(new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u));
+            this.buttons = new Terminal.Gui.Drawing.Scheme(new Terminal.Gui.Drawing.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967040u));
+            this.Scheme = this.dialogBackground;
+            this.Arrangement = (Terminal.Gui.ViewBase.ViewArrangement.Movable | Terminal.Gui.ViewBase.ViewArrangement.Overlapped);
             this.CanFocus = true;
-            this.ShadowStyle = Terminal.Gui.ShadowStyle.Transparent;
+            this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Transparent;
             this.Modal = true;
-            this.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Title = "Loading...";
             this.lblLoading.Width = 36;
             this.lblLoading.Height = 1;
             this.lblLoading.X = 1;
             this.lblLoading.Y = 1;
             this.lblLoading.Visible = true;
-            this.lblLoading.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.lblLoading.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.lblLoading.CanFocus = false;
-            this.lblLoading.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.lblLoading.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.lblLoading.Data = "lblLoading";
             this.lblLoading.Text = "Please wait ...";
-            this.lblLoading.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.lblLoading.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.lblLoading);
         }
     }

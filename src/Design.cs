@@ -93,7 +93,7 @@ public class Design
 
     /// <summary>
     /// Gets the record of user configured values of otherwise volatile <see cref="View"/> settings.
-    /// <para>For example while <see cref="View.ColorScheme"/> can change based on selection
+    /// <para>For example while <see cref="View.Scheme"/> can change based on selection
     /// (see <see cref="SelectionManager.SelectedScheme"/> the <see cref="DesignState.OriginalScheme"/>
     /// will not change.
     /// </para>
@@ -260,20 +260,20 @@ public class Design
 
     /// <summary>
     /// <para>
-    /// Returns true if there is an explicit ColorScheme set
+    /// Returns true if there is an explicit Scheme set
     /// on this Design's View or false if it is inherited from
     /// a View further up the Layout (or a library default scheme).
     /// </para>
-    /// <para> If a scheme is found that is not known about by ColorSchemeManager
+    /// <para> If a scheme is found that is not known about by SchemeManager
     /// then false is returned.</para>
     /// </summary>
-    /// <returns>True if view explicitly uses one in <see cref="ColorSchemeManager"/>
+    /// <returns>True if view explicitly uses one in <see cref="SchemeManager"/>
     /// because user explicitly allocated it to the <see cref="View"/> (rather than inheriting).</returns>
-    public bool HasKnownColorScheme()
+    public bool HasKnownScheme()
     {
-        var userDefinedColorScheme = this.State.OriginalScheme ?? this.View.GetExplicitColorScheme();
+        var userDefinedScheme = this.State.OriginalScheme ?? this.View.GetExplicitScheme();
 
-        if (userDefinedColorScheme == null)
+        if (userDefinedScheme == null)
         {
             return false;
         }
@@ -281,13 +281,13 @@ public class Design
         // theres a color scheme defined but we aren't tracking it
         // so report it as inherited since it must have got it from
         // the API somehow
-        if (Colors.ColorSchemes.Values.Contains(userDefinedColorScheme))
+        if (Colors.Schemes.Values.Contains(userDefinedScheme))
         {
             return false;
         }
 
-        // it has a ColorScheme but not one we are tracking
-        if (ColorSchemeManager.Instance.GetNameForColorScheme(userDefinedColorScheme) == null)
+        // it has a Scheme but not one we are tracking
+        if (SchemeManager.Instance.GetNameForScheme(userDefinedScheme) == null)
         {
             return false;
         }
@@ -298,15 +298,15 @@ public class Design
     /// <summary>
     /// True if this view EXPLICITLY states that it uses the scheme
     /// False if its scheme is inherited from a parent or it explicitly
-    /// uses a different ColorScheme.
+    /// uses a different Scheme.
     /// </summary>
     /// <param name="scheme">The scheme you want to know if <see cref="View"/> is using.</param>
     /// <returns>True if <see cref="View"/> uses <paramref name="scheme"/> explicitly.</returns>
-    public bool UsesColorScheme(ColorScheme scheme)
+    public bool UsesScheme(Scheme scheme)
     {
         // we use this scheme if it is a known scheme
-        return this.HasKnownColorScheme() &&
-            (this.View.ColorScheme.Equals(scheme) || (this.State.OriginalScheme?.Equals(scheme) ?? false));
+        return this.HasKnownScheme() &&
+            (this.View.Scheme.Equals(scheme) || (this.State.OriginalScheme?.Equals(scheme) ?? false));
     }
 
     /// <summary>
@@ -563,7 +563,7 @@ public class Design
 
         // what field names are already taken by other objects?
         var usedFieldNames = allDesigns.Select(d => d.FieldName).ToList();
-        usedFieldNames.AddRange(ColorSchemeManager.Instance.Schemes.Select(k => k.Name));
+        usedFieldNames.AddRange(SchemeManager.Instance.Schemes.Select(k => k.Name));
 
         return candidate.MakeUnique(usedFieldNames);
     }
@@ -664,7 +664,7 @@ public class Design
         yield return this.CreateSuppressedProperty(nameof(this.View.Arrangement), ViewArrangement.Fixed);
         
 
-        yield return new ColorSchemeProperty(this);
+        yield return new SchemeProperty(this);
 
         yield return this.CreateSuppressedProperty(nameof(View.CanFocus), true);
         yield return this.CreateProperty(nameof(this.View.ShadowStyle));

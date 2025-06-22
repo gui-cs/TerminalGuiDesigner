@@ -13,7 +13,7 @@ namespace TerminalGuiDesigner;
 public class SelectionManager
 {
     private readonly List<Design> selection = new();
-    private ColorScheme? selectedScheme;
+    private Scheme? selectedScheme;
 
     private SelectionManager()
     {
@@ -40,13 +40,13 @@ public class SelectionManager
     /// <summary>
     /// Gets or Sets the color scheme to assign to controls that have been selected.
     /// </summary>
-    public ColorScheme SelectedScheme
+    public Scheme SelectedScheme
     {
         get
         {
             if (this.selectedScheme == null)
             {
-                return this.selectedScheme = new ColorScheme()
+                return this.selectedScheme = new Scheme()
                 {
                     Normal = new Attribute(Color.BrightGreen, Color.Green),
                     Focus = new Attribute(Color.BrightYellow, Color.Green),
@@ -104,7 +104,7 @@ public class SelectionManager
         // reset old color schemes so views don't still look selected
         foreach (var d in selected)
         {
-            d.View.ColorScheme = d.State.OriginalScheme;
+            d.View.Scheme = d.State.OriginalScheme;
         }
     }
 
@@ -152,7 +152,7 @@ public class SelectionManager
         foreach (var d in this.selection)
         {
             // since the view is selected mark it so
-            d.View.ColorScheme = this.SelectedScheme;
+            d.View.Scheme = this.SelectedScheme;
         }
     }
 }

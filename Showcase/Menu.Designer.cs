@@ -17,7 +17,7 @@ namespace Showcase {
     using System.Drawing;
     
     
-    public partial class Menu : Terminal.Gui.Window {
+    public partial class Menu : Terminal.Gui.Views.Window {
         
         private Terminal.Gui.MenuBar menuBar;
         
@@ -106,22 +106,22 @@ namespace Showcase {
             this.X = 0;
             this.Y = 0;
             this.Visible = true;
-            this.Arrangement = Terminal.Gui.ViewArrangement.Overlapped;
+            this.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Overlapped;
             this.CanFocus = true;
-            this.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.Modal = false;
-            this.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Title = "";
             this.menuBar.Width = Dim.Fill(0);
             this.menuBar.Height = 1;
             this.menuBar.X = 0;
             this.menuBar.Y = 0;
             this.menuBar.Visible = true;
-            this.menuBar.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.menuBar.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.menuBar.CanFocus = false;
-            this.menuBar.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.menuBar.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.menuBar.Data = "menuBar";
-            this.menuBar.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.menuBar.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.fileF9Menu = new Terminal.Gui.MenuBarItem();
             this.fileF9Menu.Title = "_File (F9)";
             this.newMenu = new Terminal.Gui.MenuBarItem();

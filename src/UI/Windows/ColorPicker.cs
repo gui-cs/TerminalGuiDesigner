@@ -41,7 +41,7 @@ public partial class ColorPicker : IValueGetterDialog
             cpBackground.SelectedColor = currentValue.Value.Background;
         }
 
-        lblPreview.ColorScheme = new ColorScheme();
+        lblPreview.Scheme = new Scheme();
         UpdatePreview();
 
         cpForeground.ColorChanged += (s,e) => UpdatePreview();
@@ -70,7 +70,7 @@ public partial class ColorPicker : IValueGetterDialog
 
     private void UpdatePreview()
     {
-        lblPreview.ColorScheme = new ColorScheme(GetColor());
+        lblPreview.Scheme = new Scheme(GetColor());
         lblPreview.SetNeedsDraw();
     }
     

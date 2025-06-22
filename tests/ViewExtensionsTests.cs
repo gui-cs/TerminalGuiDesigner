@@ -4,7 +4,6 @@ using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 using TerminalGuiDesigner;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UnitTests;
 

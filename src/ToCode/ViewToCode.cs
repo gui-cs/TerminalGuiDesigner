@@ -159,7 +159,7 @@ public class ViewToCode
 
         var args = new CodeDomArgs(class1, initMethod);
 
-        this.AddColorSchemesToClass(args);
+        this.AddSchemesToClass(args);
 
         // Add designable root properties to the InitializeComponent method
         foreach (var prop in rootDesign.GetDesignableProperties())
@@ -329,11 +329,11 @@ public class ViewToCode
             "------------------------------------------"));
     }
 
-    private void AddColorSchemesToClass(CodeDomArgs args)
+    private void AddSchemesToClass(CodeDomArgs args)
     {
-        foreach (var scheme in ColorSchemeManager.Instance.Schemes)
+        foreach (var scheme in SchemeManager.Instance.Schemes)
         {
-            var toCode = new ColorSchemeToCode(scheme);
+            var toCode = new SchemeToCode(scheme);
             toCode.ToCode(args);
         }
     }

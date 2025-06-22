@@ -1,7 +1,6 @@
 ﻿using Terminal.Gui.Drawing;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
-using static Terminal.Gui.SpinnerStyle;
 
 namespace UnitTests;
 

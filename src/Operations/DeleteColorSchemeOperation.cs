@@ -4,10 +4,10 @@ using Terminal.Gui.Views;
 namespace TerminalGuiDesigner.Operations;
 
 /// <summary>
-/// Removes a <see cref="NamedColorScheme"/> from all users and clears it from
-/// <see cref="ColorSchemeManager"/>.
+/// Removes a <see cref="NamedScheme"/> from all users and clears it from
+/// <see cref="SchemeManager"/>.
 /// </summary>
-public class DeleteColorSchemeOperation : Operation
+public class DeleteSchemeOperation : Operation
 {
     /// <summary>
     /// All users of <see cref="ToDelete"/> which were found at the time the operation
@@ -17,24 +17,24 @@ public class DeleteColorSchemeOperation : Operation
     private Design rootDesign;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="DeleteColorSchemeOperation"/> class.
+    /// Initializes a new instance of the <see cref="DeleteSchemeOperation"/> class.
     /// </summary>
     /// <param name="design">Any <see cref="Design"/> from which the root design can be obtained (required
     /// to find users of <paramref name="toDelete"/>.</param>
-    /// <param name="toDelete">The <see cref="NamedColorScheme"/> to delete.  Any <see cref="Design"/> that
+    /// <param name="toDelete">The <see cref="NamedScheme"/> to delete.  Any <see cref="Design"/> that
     /// use this scheme will revert to '(Inherited)' (null).</param>
-    public DeleteColorSchemeOperation(Design design, NamedColorScheme toDelete)
+    public DeleteSchemeOperation(Design design, NamedScheme toDelete)
     {
         this.ToDelete = toDelete;
-        this.users = design.GetAllDesigns().Where(d => d.UsesColorScheme(toDelete.Scheme)).ToArray();
+        this.users = design.GetAllDesigns().Where(d => d.UsesScheme(toDelete.Scheme)).ToArray();
         this.rootDesign = design;
     }
 
     /// <summary>
-    /// Gets the <see cref="NamedColorScheme"/> that will be deleted when operation is run (see <see cref="Operation.Do"/>).
-    /// This will be removed from <see cref="ColorSchemeManager"/> and all users.
+    /// Gets the <see cref="NamedScheme"/> that will be deleted when operation is run (see <see cref="Operation.Do"/>).
+    /// This will be removed from <see cref="SchemeManager"/> and all users.
     /// </summary>
-    public NamedColorScheme ToDelete { get; }
+    public NamedScheme ToDelete { get; }
 
     /// <inheritdoc/>
     protected override void RedoImpl()
@@ -49,10 +49,10 @@ public class DeleteColorSchemeOperation : Operation
         {
             // go back to using this explicit scheme before we deleted it
             u.State.OriginalScheme = this.ToDelete.Scheme;
-            u.View.ColorScheme = this.ToDelete.Scheme;
+            u.View.Scheme = this.ToDelete.Scheme;
         }
 
-        ColorSchemeManager.Instance.AddOrUpdateScheme(this.ToDelete.Name, this.ToDelete.Scheme, this.rootDesign);
+        SchemeManager.Instance.AddOrUpdateScheme(this.ToDelete.Name, this.ToDelete.Scheme, this.rootDesign);
     }
 
     /// <inheritdoc/>
@@ -64,21 +64,21 @@ public class DeleteColorSchemeOperation : Operation
             u.State.OriginalScheme = null;
 
             // we use the default (usually thats to inherit from parent)
-            u.View.ColorScheme = this.GetDefaultColorScheme(u);
+            u.View.Scheme = this.GetDefaultScheme(u);
         }
 
-        ColorSchemeManager.Instance.Remove(this.ToDelete);
+        SchemeManager.Instance.Remove(this.ToDelete);
         return true;
     }
 
-    private ColorScheme? GetDefaultColorScheme(Design d)
+    private Scheme? GetDefaultScheme(Design d)
     {
         if (d.IsRoot)
         {
             switch (d.View)
             {
-                case Dialog: return Colors.ColorSchemes["Dialog"];
-                case Window: return Colors.ColorSchemes["Base"];
+                case Dialog: return Colors.Schemes["Dialog"];
+                case Window: return Colors.Schemes["Base"];
                 default: return null;
             }
         }
@@ -86,7 +86,7 @@ public class DeleteColorSchemeOperation : Operation
         if (d.View is MenuBar)
         {
             
-            return Colors.ColorSchemes["Menu"];
+            return Colors.Schemes["Menu"];
         }
 
         return null;

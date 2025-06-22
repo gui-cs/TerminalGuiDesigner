@@ -9,9 +9,9 @@ using Attribute = Terminal.Gui.Drawing.Attribute;
 namespace UnitTests;
 
 [TestFixture]
-[TestOf(typeof(ColorSchemeManager))]
+[TestOf(typeof(SchemeManager))]
 [Category("Core")]
-internal class ColorSchemeTests : Tests
+internal class SchemeTests : Tests
 {
     [Test]
     public void RenameScheme( )
@@ -22,35 +22,35 @@ internal class ColorSchemeTests : Tests
 
         var state = Application.Begin( window );
 
-        Assume.That( d.View.ColorScheme, Is.Not.Null.And.SameAs( Colors.ColorSchemes["Base"] ) );
-        Assume.That( d.HasKnownColorScheme( ), Is.False );
+        Assume.That( d.View.Scheme, Is.Not.Null.And.SameAs( Colors.Schemes["Base"] ) );
+        Assume.That( d.HasKnownScheme( ), Is.False );
 
-        var scheme = new ColorScheme( );
-        var prop = new SetPropertyOperation( d, d.GetDesignableProperty( nameof( View.ColorScheme ) )
+        var scheme = new Scheme( );
+        var prop = new SetPropertyOperation( d, d.GetDesignableProperty( nameof( View.Scheme ) )
                                                 ?? throw new Exception( "Expected Property did not exist or was not designable" ), null, scheme );
 
         prop.Do( );
 
         // we still don't know about this scheme yet
-        Assume.That( d.HasKnownColorScheme( ), Is.False );
+        Assume.That( d.HasKnownScheme( ), Is.False );
 
         const string oldName = "fff";
-        ColorSchemeManager.Instance.AddOrUpdateScheme( oldName, scheme, d );
-        var originalNamedColorScheme = ColorSchemeManager.Instance.GetNamedColorScheme( oldName );
-        Assume.That( d.HasKnownColorScheme );
+        SchemeManager.Instance.AddOrUpdateScheme( oldName, scheme, d );
+        var originalNamedScheme = SchemeManager.Instance.GetNamedScheme( oldName );
+        Assume.That( d.HasKnownScheme );
 
         // Now rename it and verify
 
         const string newName = "FancyNewName";
-        ColorSchemeManager.Instance.RenameScheme( oldName, newName );
-        Assert.That( d.HasKnownColorScheme );
-        NamedColorScheme renamedColorScheme = ColorSchemeManager.Instance.GetNamedColorScheme( newName );
-        Assert.That( renamedColorScheme, Is.SameAs( originalNamedColorScheme ) );
-        Assert.That( renamedColorScheme.Name, Is.EqualTo( newName ) );
+        SchemeManager.Instance.RenameScheme( oldName, newName );
+        Assert.That( d.HasKnownScheme );
+        NamedScheme renamedScheme = SchemeManager.Instance.GetNamedScheme( newName );
+        Assert.That( renamedScheme, Is.SameAs( originalNamedScheme ) );
+        Assert.That( renamedScheme.Name, Is.EqualTo( newName ) );
     }
 
     [Test]
-    public void HasColorScheme([Values]bool whenMultiSelected)
+    public void HasScheme([Values]bool whenMultiSelected)
     {
         var window = new Window();
         var d = new Design(new SourceCodeFile(new FileInfo("TenByTen.cs")), Design.RootDesignName, window);
@@ -58,19 +58,19 @@ internal class ColorSchemeTests : Tests
 
         var state = Application.Begin(window);
 
-        Assert.That( d.View.ColorScheme, Is.Not.Null.And.SameAs( Colors.ColorSchemes["Base"] ) );
-        Assert.That( d.HasKnownColorScheme(), Is.False );
+        Assert.That( d.View.Scheme, Is.Not.Null.And.SameAs( Colors.Schemes["Base"] ) );
+        Assert.That( d.HasKnownScheme(), Is.False );
 
-        var scheme = new ColorScheme();
-        var prop = new SetPropertyOperation(d, d.GetDesignableProperty(nameof(View.ColorScheme))
+        var scheme = new Scheme();
+        var prop = new SetPropertyOperation(d, d.GetDesignableProperty(nameof(View.Scheme))
             ?? throw new Exception("Expected Property did not exist or was not designable"), null, scheme);
 
         prop.Do();
 
         // we still don't know about this scheme yet
-        Assert.That( d.HasKnownColorScheme(), Is.False );
+        Assert.That( d.HasKnownScheme(), Is.False );
 
-        ColorSchemeManager.Instance.AddOrUpdateScheme("fff", scheme, d);
+        SchemeManager.Instance.AddOrUpdateScheme("fff", scheme, d);
 
         if (whenMultiSelected)
         {
@@ -78,28 +78,28 @@ internal class ColorSchemeTests : Tests
         }
 
         // now we know about it
-        Assert.That( d.HasKnownColorScheme() );
+        Assert.That( d.HasKnownScheme() );
 
-        ColorSchemeManager.Instance.Clear();
+        SchemeManager.Instance.Clear();
 
         Application.End(state);
     }
 
     [Test]
-    public void TestTrackingColorSchemes()
+    public void TestTrackingSchemes()
     {
-        var mgr = ColorSchemeManager.Instance;
+        var mgr = SchemeManager.Instance;
         mgr.Clear();
 
         var view = new TestClass();
 
-        var d = new Design(new SourceCodeFile(new FileInfo("TestTrackingColorSchemes.cs")), Design.RootDesignName, view);
+        var d = new Design(new SourceCodeFile(new FileInfo("TestTrackingSchemes.cs")), Design.RootDesignName, view);
 
         Assume.That( mgr.Schemes, Is.Empty );
-        mgr.FindDeclaredColorSchemes(d);
+        mgr.FindDeclaredSchemes(d);
         Assert.That( mgr.Schemes, Has.Count.EqualTo( 2 ) );
 
-        var found = mgr.GetNameForColorScheme(new ColorScheme
+        var found = mgr.GetNameForScheme(new Scheme
         {
             Normal = new Attribute(Color.Magenta, Color.Black),
             Focus = new Attribute(Color.Cyan, Color.Black),
@@ -111,10 +111,10 @@ internal class ColorSchemeTests : Tests
     }
 
     [Test]
-    public void TestColorSchemeProperty_ToString([Values]bool testMultiSelectingSeveralTimes)
+    public void TestSchemeProperty_ToString([Values]bool testMultiSelectingSeveralTimes)
     {
         // default when creating a new view is to have no explicit
-        // ColorScheme defined and just inherit from parent
+        // Scheme defined and just inherit from parent
         var v = Get10By10View();
 
         var btn = new Button{ Text = "Hey" };
@@ -122,16 +122,16 @@ internal class ColorSchemeTests : Tests
         op.Do();
         Design btnDesign = (Design)btn.Data;
 
-        var p = (ColorSchemeProperty?)(btnDesign.GetDesignableProperty(nameof(View.ColorScheme)));
+        var p = (SchemeProperty?)(btnDesign.GetDesignableProperty(nameof(View.Scheme)));
 
         Assert.That( p, Is.Not.Null );
-        Assert.That( p!.ToString(), Is.EqualTo( "ColorScheme:(Inherited)" ) );
+        Assert.That( p!.ToString(), Is.EqualTo( "Scheme:(Inherited)" ) );
 
         // Define a new color scheme
-        var mgr = ColorSchemeManager.Instance;
+        var mgr = SchemeManager.Instance;
         mgr.Clear();
 
-        var pink = new ColorScheme
+        var pink = new Scheme
         {
             Normal = new Attribute(Color.Magenta, Color.Black),
             Focus = new Attribute(Color.Cyan, Color.Black),
@@ -140,7 +140,7 @@ internal class ColorSchemeTests : Tests
         mgr.AddOrUpdateScheme("pink", pink, btnDesign);
 
         p.SetValue(pink);
-        Assert.That( p.ToString(), Is.EqualTo( "ColorScheme:pink" ) );
+        Assert.That( p.ToString(), Is.EqualTo( "Scheme:pink" ) );
 
         // when multi-selecting (with a selection box) a bunch of views
         // all the views turn to green.  But we shouldn't lose track
@@ -156,36 +156,36 @@ internal class ColorSchemeTests : Tests
             selection.SetSelection(p.Design);
             selection.Clear();
 
-            Assert.That( p.Design.View.ColorScheme, Is.EqualTo( pink ) );
+            Assert.That( p.Design.View.Scheme, Is.EqualTo( pink ) );
         }
 
         selection.SetSelection(p.Design);
         Assert.Multiple( ( ) =>
         {
-            Assert.That( p.Design.View.ColorScheme, Is.Not.EqualTo( pink ), "Expected view to be selected to be green, not pink");
-            Assert.That( p.ToString(), Is.EqualTo( "ColorScheme:pink" ), "Expected us to know it was pink under the hood even while selected");
+            Assert.That( p.Design.View.Scheme, Is.Not.EqualTo( pink ), "Expected view to be selected to be green, not pink");
+            Assert.That( p.ToString(), Is.EqualTo( "Scheme:pink" ), "Expected us to know it was pink under the hood even while selected");
         } );
         selection.Clear();
 
-        Assert.That( p.Design.View.ColorScheme, Is.EqualTo( pink ) );
+        Assert.That( p.Design.View.Scheme, Is.EqualTo( pink ) );
     }
 
     [Test]
-    public void TestColorSchemeProperty_ToString_SelectThenSetScheme()
+    public void TestSchemeProperty_ToString_SelectThenSetScheme()
     {
         // default when creating a new view is to have no explicit
-        // ColorScheme defined and just inherit from parent
+        // Scheme defined and just inherit from parent
         var v = Get10By10View();
-        var p = (ColorSchemeProperty?)v.GetDesignableProperty(nameof(View.ColorScheme));
+        var p = (SchemeProperty?)v.GetDesignableProperty(nameof(View.Scheme));
 
         Assume.That( p, Is.Not.Null );
-        Assert.That( p!.ToString(), Is.EqualTo( "ColorScheme:(Inherited)" ) );
+        Assert.That( p!.ToString(), Is.EqualTo( "Scheme:(Inherited)" ) );
 
         // Define a new color scheme
-        var mgr = ColorSchemeManager.Instance;
+        var mgr = SchemeManager.Instance;
         mgr.Clear();
 
-        var pink = new ColorScheme
+        var pink = new Scheme
         {
             Normal = new Attribute(Color.Magenta, Color.Black),
             Focus = new Attribute(Color.Cyan, Color.Black),
@@ -197,33 +197,33 @@ internal class ColorSchemeTests : Tests
         SelectionManager.Instance.SetSelection(p.Design);
 
         p.SetValue(pink);
-        Assert.That( p.ToString(), Is.EqualTo( "ColorScheme:pink" ) );
+        Assert.That( p.ToString(), Is.EqualTo( "Scheme:pink" ) );
 
         SelectionManager.Instance.Clear();
-        Assert.That( p.ToString(), Is.EqualTo( "ColorScheme:pink" ), "Expected clearing selection not to reset an old scheme");
+        Assert.That( p.ToString(), Is.EqualTo( "Scheme:pink" ), "Expected clearing selection not to reset an old scheme");
     }
 
     /// <summary>
     /// <para>
-    /// Tests that setting a <see cref="ColorScheme"/> on a view saving and reloading
-    /// the .Designer.cs file results in a loaded View with the same ColorScheme as when
+    /// Tests that setting a <see cref="Scheme"/> on a view saving and reloading
+    /// the .Designer.cs file results in a loaded View with the same Scheme as when
     /// saving.
     /// </para>
-    /// <para>Multi select changes ColorScheme to a selection color, so we also want to test
+    /// <para>Multi select changes Scheme to a selection color, so we also want to test
     /// that that doesn't interfere with things</para>
     /// </summary>
     /// <param name="multiSelectBeforeSaving"></param>
     [Test]
     [Category( "Code Generation" )]
-    public void TestColorScheme_RoundTrip([Values]bool multiSelectBeforeSaving)
+    public void TestScheme_RoundTrip([Values]bool multiSelectBeforeSaving)
     {
-        var mgr = ColorSchemeManager.Instance;
+        var mgr = SchemeManager.Instance;
 
         var lblIn = RoundTrip<Dialog, Label>(
             (d, l) =>
         {
             mgr.Clear();
-            mgr.AddOrUpdateScheme("pink", new ColorScheme
+            mgr.AddOrUpdateScheme("pink", new Scheme
             {
                 Normal = new Attribute(Color.Magenta, Color.Black),
                 Focus = new Attribute(Color.Cyan, Color.Black),
@@ -231,23 +231,23 @@ internal class ColorSchemeTests : Tests
 
             // unselect it so it is rendered with correct scheme
             SelectionManager.Instance.Clear();
-            l.ColorScheme = d.State.OriginalScheme = mgr.Schemes.Single().Scheme;
+            l.Scheme = d.State.OriginalScheme = mgr.Schemes.Single().Scheme;
 
             if (multiSelectBeforeSaving)
             {
-                Assert.That(l.ColorScheme, Is.EqualTo( mgr.Schemes.Single().Scheme ) );
+                Assert.That(l.Scheme, Is.EqualTo( mgr.Schemes.Single().Scheme ) );
                 SelectionManager.Instance.SetSelection((Design)l.Data);
-                Assert.That(l.ColorScheme, Is.Not.EqualTo( mgr.Schemes.Single().Scheme ), "Expected multi selecting the view to change its color to the selected color");
+                Assert.That(l.Scheme, Is.Not.EqualTo( mgr.Schemes.Single().Scheme ), "Expected multi selecting the view to change its color to the selected color");
             }
         }, out _);
 
         var lblDesignIn = (Design)lblIn.Data;
-        Assert.That( lblDesignIn.HasKnownColorScheme() );
+        Assert.That( lblDesignIn.HasKnownScheme() );
 
         // clear the selection before we do the comparison
         SelectionManager.Instance.Clear();
 
-        Assert.That( mgr.GetNameForColorScheme(lblDesignIn.View.ColorScheme), Is.EqualTo( "pink" ) );
+        Assert.That( mgr.GetNameForScheme(lblDesignIn.View.Scheme), Is.EqualTo( "pink" ) );
 
         mgr.Clear();
     }
@@ -255,13 +255,13 @@ internal class ColorSchemeTests : Tests
     [Test]
     public void TestDefaultColors()
     {
-        var defaultColorSchemes = new DefaultColorSchemes();
-        var colorSchemes = defaultColorSchemes.GetDefaultSchemes().ToArray();
+        var defaultSchemes = new DefaultSchemes();
+        var Schemes = defaultSchemes.GetDefaultSchemes().ToArray();
         Assert.Multiple( ( ) =>
         {
-            Assert.That( colorSchemes, Does.Contain( defaultColorSchemes.GreenOnBlack ) );
-            Assert.That( colorSchemes, Does.Contain( defaultColorSchemes.RedOnBlack ) );
-            Assert.That( colorSchemes, Does.Contain( defaultColorSchemes.BlueOnBlack ) );
+            Assert.That( Schemes, Does.Contain( defaultSchemes.GreenOnBlack ) );
+            Assert.That( Schemes, Does.Contain( defaultSchemes.RedOnBlack ) );
+            Assert.That( Schemes, Does.Contain( defaultSchemes.BlueOnBlack ) );
         } );
     }
 
@@ -269,22 +269,22 @@ internal class ColorSchemeTests : Tests
     [Category( "Code Generation" )]
     public void TestEditingSchemeAfterLoad([Values]bool withSelection)
     {
-        var scheme = new ColorScheme();
+        var scheme = new Scheme();
 
         const string expectedSchemeName = "yarg";
         var lblIn = RoundTrip<Dialog, Label>(
             (d, _) =>
             {
                 // Clear known default colors
-                ColorSchemeManager.Instance.Clear();
-                Assert.That(ColorSchemeManager.Instance.Schemes, Is.Empty );
+                SchemeManager.Instance.Clear();
+                Assert.That(SchemeManager.Instance.Schemes, Is.Empty );
 
                 // Add a new color for our Label
-                ColorSchemeManager.Instance.AddOrUpdateScheme(expectedSchemeName, scheme, d.GetRootDesign());
-                Assert.That(ColorSchemeManager.Instance.Schemes, Has.Count.EqualTo( 1 ) );
+                SchemeManager.Instance.AddOrUpdateScheme(expectedSchemeName, scheme, d.GetRootDesign());
+                Assert.That(SchemeManager.Instance.Schemes, Has.Count.EqualTo( 1 ) );
 
                 // Assign the new color to the view
-                var prop = new SetPropertyOperation(d, new ColorSchemeProperty(d), null, scheme);
+                var prop = new SetPropertyOperation(d, new SchemeProperty(d), null, scheme);
                 prop.Do();
 
                 if (withSelection)
@@ -301,47 +301,47 @@ internal class ColorSchemeTests : Tests
             SelectionManager.Instance.ForceSetSelection(lblInDesign!);
         }
 
-        ColorSchemeManager.Instance.Clear();
-        ColorSchemeManager.Instance.FindDeclaredColorSchemes(lblInDesign!.GetRootDesign());
-        Assert.That( ColorSchemeManager.Instance.Schemes.Count, Is.EqualTo( 1 ), "Reloading the view should find the explicitly declared scheme 'yarg'");
+        SchemeManager.Instance.Clear();
+        SchemeManager.Instance.FindDeclaredSchemes(lblInDesign!.GetRootDesign());
+        Assert.That( SchemeManager.Instance.Schemes.Count, Is.EqualTo( 1 ), "Reloading the view should find the explicitly declared scheme 'yarg'");
 
-        var schemeBeforeUpdate = withSelection ? lblInDesign.State.OriginalScheme : lblIn.GetExplicitColorScheme();
-        Assert.That( schemeBeforeUpdate, Is.Not.Null, "Expected lblIn to have an explicit ColorScheme");
-        var schemeBeforeUpdateName = ColorSchemeManager.Instance.GetNameForColorScheme( schemeBeforeUpdate! );
-        Assert.That( schemeBeforeUpdateName, Is.Not.Null, "Expected lblIn to have an explicit ColorScheme");
+        var schemeBeforeUpdate = withSelection ? lblInDesign.State.OriginalScheme : lblIn.GetExplicitScheme();
+        Assert.That( schemeBeforeUpdate, Is.Not.Null, "Expected lblIn to have an explicit Scheme");
+        var schemeBeforeUpdateName = SchemeManager.Instance.GetNameForScheme( schemeBeforeUpdate! );
+        Assert.That( schemeBeforeUpdateName, Is.Not.Null, "Expected lblIn to have an explicit Scheme");
         
         Assert.That( schemeBeforeUpdateName,
                      Is.EqualTo( expectedSchemeName ),
                      "Expected designer to know the name of the labels color scheme" );
 
         // make a change to the yarg scheme (e.g. if user opened the color designer and made some changes)
-        ColorSchemeManager.Instance.AddOrUpdateScheme(expectedSchemeName, new ColorScheme { Normal = new Attribute(Color.Cyan, Color.BrightBlue) }, lblInDesign.GetRootDesign());
+        SchemeManager.Instance.AddOrUpdateScheme(expectedSchemeName, new Scheme { Normal = new Attribute(Color.Cyan, Color.BrightBlue) }, lblInDesign.GetRootDesign());
 
-        var schemeAfterUpdate = withSelection ? lblInDesign.State.OriginalScheme : lblIn.GetExplicitColorScheme();
-        Assert.That( schemeAfterUpdate, Is.Not.Null, "Expected lblIn to have an explicit ColorScheme" );
-        var schemeAfterUpdateName = ColorSchemeManager.Instance.GetNameForColorScheme( schemeAfterUpdate! );
-        Assert.That( schemeAfterUpdateName, Is.Not.Null, "Expected lblIn to have an explicit ColorScheme");
+        var schemeAfterUpdate = withSelection ? lblInDesign.State.OriginalScheme : lblIn.GetExplicitScheme();
+        Assert.That( schemeAfterUpdate, Is.Not.Null, "Expected lblIn to have an explicit Scheme" );
+        var schemeAfterUpdateName = SchemeManager.Instance.GetNameForScheme( schemeAfterUpdate! );
+        Assert.That( schemeAfterUpdateName, Is.Not.Null, "Expected lblIn to have an explicit Scheme");
 
         Assert.That( schemeAfterUpdateName,
                      Is.EqualTo( expectedSchemeName ),
-                     "Expected designer to still know the name of lblIn ColorScheme" );
+                     "Expected designer to still know the name of lblIn Scheme" );
 
         Assert.Multiple( ( ) =>
         {
-            Assert.That( lblIn.ColorScheme.Normal.Foreground, Is.EqualTo( new Color(Color.Cyan) ), "Expected Label to be updated with the new color after being changed in designer");
+            Assert.That( lblIn.Scheme.Normal.Foreground, Is.EqualTo( new Color(Color.Cyan) ), "Expected Label to be updated with the new color after being changed in designer");
             Assert.That( lblInDesign.State.OriginalScheme?.Normal.Foreground, Is.EqualTo( new Color(Color.Cyan) ), "Expected Label Design to also be updated with the new color");
         } );
     }
 
     private class TestClass : View
     {
-        private ColorScheme aaa = new ColorScheme
+        private Scheme aaa = new Scheme
         {
             Normal = new Attribute(Color.Magenta, Color.Black),
             Focus = new Attribute(Color.Cyan, Color.Black),
         };
 
-        private ColorScheme bbb = new ColorScheme
+        private Scheme bbb = new Scheme
         {
             Normal = new Attribute(Color.Green, Color.Black),
             Focus = new Attribute(Color.Cyan, Color.Black),

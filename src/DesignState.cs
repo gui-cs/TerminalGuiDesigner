@@ -22,18 +22,18 @@ public class DesignState
     public DesignState(Design design)
     {
         this.Design = design;
-        this.OriginalScheme = this.Design.View.GetExplicitColorScheme();
+        this.OriginalScheme = this.Design.View.GetExplicitScheme();
         this.Design.View.DrawComplete += this.DrawContentComplete;
         this.Design.View.HasFocusChanged += this.Enter;
     }
 
     /// <summary>
-    /// Gets or Sets the explicitly defined <see cref="ColorScheme"/> that the user wants for their <see cref="View"/>.
+    /// Gets or Sets the explicitly defined <see cref="Scheme"/> that the user wants for their <see cref="View"/>.
     /// This is what is used when writing to code/showing properties in editor.  This may differ from the
     /// actual color the <see cref="View"/> currently has within the editor (e.g. if it is selected and
     /// has a temporary color indicating it is selected - see <see cref="SelectionManager.SelectedScheme"/>).
     /// </summary>
-    public ColorScheme? OriginalScheme { get; set; }
+    public Scheme? OriginalScheme { get; set; }
 
     /// <summary>
     /// Gets the parent <see cref="Design"/> that this class stores state for.
@@ -69,7 +69,7 @@ public class DesignState
 
         var color = isSelected ?
             SelectionManager.Instance.SelectedScheme.Normal :
-            this.Design.View.ColorScheme.Normal;
+            this.Design.View.Scheme.Normal;
 
         Application.Driver.SetAttribute(color);
 

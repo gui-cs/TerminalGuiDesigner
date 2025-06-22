@@ -16,17 +16,17 @@ using Terminal.Gui;
 using Attribute = Terminal.Gui.Drawing.Attribute;
 
 /// <summary>
-/// Editor for a <see cref="ColorScheme"/>.
+/// Editor for a <see cref="Scheme"/>.
 /// </summary>
-public partial class ColorSchemeEditor {
+public partial class SchemeEditor {
     
     
     /// <summary>
     /// All colors to use in all <see cref="View"/> states (focused, normal etc).
     /// </summary>
-    public ColorScheme Result => _result.ToColorScheme();
+    public Scheme Result => _result.ToScheme();
 
-    MutableColorScheme _result;
+    MutableScheme _result;
 
     /// <summary>
     /// True if dialog was closed without clicking Ok (e.g. Cancel or Ctrl+Q).
@@ -34,10 +34,10 @@ public partial class ColorSchemeEditor {
     public bool Cancelled { get; set; } = true;
 
     /// <summary>
-    /// Creates a new instance of the <see cref="ColorSchemeEditor"/> class.
+    /// Creates a new instance of the <see cref="SchemeEditor"/> class.
     /// </summary>
     /// <param name="scheme"></param>
-    public ColorSchemeEditor(ColorScheme scheme) {
+    public SchemeEditor(Scheme scheme) {
         InitializeComponent();
 
         _result = Clone(scheme);
@@ -97,9 +97,9 @@ public partial class ColorSchemeEditor {
         
     }
 
-    private MutableColorScheme Clone(ColorScheme scheme)
+    private MutableScheme Clone(Scheme scheme)
     {
-        return new MutableColorScheme
+        return new MutableScheme
         {
             Normal = new Attribute(scheme.Normal.Foreground,scheme.Normal.Background),
             HotNormal = new Attribute(scheme.HotNormal.Foreground,scheme.HotNormal.Background),
@@ -137,6 +137,6 @@ public partial class ColorSchemeEditor {
 
     private void SetColor(Label label, Color color)
     {
-        label.ColorScheme = new ColorScheme{Normal = new Terminal.Gui.Drawing.Attribute(color,color)};
+        label.Scheme = new Scheme{Normal = new Terminal.Gui.Drawing.Attribute(color,color)};
     }
 }

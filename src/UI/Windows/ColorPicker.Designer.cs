@@ -17,23 +17,23 @@ namespace TerminalGuiDesigner.UI.Windows {
     using System.Drawing;
     
     
-    public partial class ColorPicker : Terminal.Gui.Dialog {
+    public partial class ColorPicker : Terminal.Gui.Views.Dialog {
         
-        private Terminal.Gui.ColorScheme dialogBackground;
+        private Terminal.Gui.Drawing.Scheme dialogBackground;
         
-        private Terminal.Gui.ColorScheme buttons;
+        private Terminal.Gui.Drawing.Scheme buttons;
         
-        private Terminal.Gui.Label lblForeground;
+        private Terminal.Gui.Views.Label lblForeground;
         
         private Terminal.Gui.ColorPicker cpForeground;
         
-        private Terminal.Gui.Label lblBackground;
+        private Terminal.Gui.Views.Label lblBackground;
         
         private Terminal.Gui.ColorPicker cpBackground;
         
-        private Terminal.Gui.Label lblResult;
+        private Terminal.Gui.Views.Label lblResult;
         
-        private Terminal.Gui.Label lblPreview;
+        private Terminal.Gui.Views.Label lblPreview;
         
         private Terminal.Gui.Views.Button btnOk;
         
@@ -42,49 +42,49 @@ namespace TerminalGuiDesigner.UI.Windows {
         private void InitializeComponent() {
             this.btnCancel = new Terminal.Gui.Views.Button();
             this.btnOk = new Terminal.Gui.Views.Button();
-            this.lblPreview = new Terminal.Gui.Label();
-            this.lblResult = new Terminal.Gui.Label();
+            this.lblPreview = new Terminal.Gui.Views.Label();
+            this.lblResult = new Terminal.Gui.Views.Label();
             this.cpBackground = new Terminal.Gui.ColorPicker();
-            this.lblBackground = new Terminal.Gui.Label();
+            this.lblBackground = new Terminal.Gui.Views.Label();
             this.cpForeground = new Terminal.Gui.ColorPicker();
-            this.lblForeground = new Terminal.Gui.Label();
-            this.dialogBackground = new Terminal.Gui.ColorScheme(new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u));
-            this.buttons = new Terminal.Gui.ColorScheme(new Terminal.Gui.Drawing.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967040u));
+            this.lblForeground = new Terminal.Gui.Views.Label();
+            this.dialogBackground = new Terminal.Gui.Drawing.Scheme(new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u));
+            this.buttons = new Terminal.Gui.Drawing.Scheme(new Terminal.Gui.Drawing.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967040u));
             this.Width = Dim.Fill(2);
             this.Height = 19;
             this.X = Pos.Center();
             this.Y = Pos.Center();
             this.Visible = true;
-            this.Arrangement = Terminal.Gui.ViewArrangement.Movable;
-            this.ColorScheme = this.dialogBackground;
+            this.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Movable;
+            this.Scheme = this.dialogBackground;
             this.CanFocus = true;
-            this.ShadowStyle = Terminal.Gui.ShadowStyle.Transparent;
+            this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Transparent;
             this.Modal = true;
-            this.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Title = "Color Picker";
             this.lblForeground.Width = 11;
             this.lblForeground.Height = 1;
             this.lblForeground.X = 0;
             this.lblForeground.Y = 0;
             this.lblForeground.Visible = true;
-            this.lblForeground.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.lblForeground.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.lblForeground.CanFocus = false;
-            this.lblForeground.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.lblForeground.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.lblForeground.Data = "lblForeground";
             this.lblForeground.Text = "Foreground:";
-            this.lblForeground.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.lblForeground.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.lblForeground);
             this.cpForeground.Width = Dim.Fill(1);
             this.cpForeground.Height = Dim.Auto();
             this.cpForeground.X = 2;
             this.cpForeground.Y = 1;
             this.cpForeground.Visible = true;
-            this.cpForeground.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.cpForeground.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.cpForeground.CanFocus = true;
-            this.cpForeground.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.cpForeground.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.cpForeground.Data = "cpForeground";
             this.cpForeground.Text = "";
-            this.cpForeground.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.cpForeground.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.cpForeground.Style.ColorModel = Terminal.Gui.ColorModel.HSV;
             this.cpForeground.Style.ShowColorName = true;
             this.cpForeground.Style.ShowTextFields = true;
@@ -95,24 +95,24 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lblBackground.X = 0;
             this.lblBackground.Y = 6;
             this.lblBackground.Visible = true;
-            this.lblBackground.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.lblBackground.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.lblBackground.CanFocus = false;
-            this.lblBackground.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.lblBackground.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.lblBackground.Data = "lblBackground";
             this.lblBackground.Text = "Background:";
-            this.lblBackground.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.lblBackground.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.lblBackground);
             this.cpBackground.Width = Dim.Fill(1);
             this.cpBackground.Height = Dim.Auto();
             this.cpBackground.X = 2;
             this.cpBackground.Y = 7;
             this.cpBackground.Visible = true;
-            this.cpBackground.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.cpBackground.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.cpBackground.CanFocus = true;
-            this.cpBackground.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.cpBackground.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.cpBackground.Data = "cpBackground";
             this.cpBackground.Text = "";
-            this.cpBackground.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.cpBackground.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.cpBackground.Style.ColorModel = Terminal.Gui.ColorModel.HSV;
             this.cpBackground.Style.ShowColorName = true;
             this.cpBackground.Style.ShowTextFields = true;
@@ -123,37 +123,37 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lblResult.X = 0;
             this.lblResult.Y = 12;
             this.lblResult.Visible = true;
-            this.lblResult.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.lblResult.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.lblResult.CanFocus = false;
-            this.lblResult.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.lblResult.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.lblResult.Data = "lblResult";
             this.lblResult.Text = "Preview:";
-            this.lblResult.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.lblResult.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.lblResult);
             this.lblPreview.Width = Dim.Fill(0);
             this.lblPreview.Height = 1;
             this.lblPreview.X = -1;
             this.lblPreview.Y = 13;
             this.lblPreview.Visible = true;
-            this.lblPreview.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.lblPreview.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.lblPreview.CanFocus = false;
-            this.lblPreview.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.lblPreview.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.lblPreview.Data = "lblPreview";
             this.lblPreview.Text = "\"Sample Text\"";
-            this.lblPreview.TextAlignment = Terminal.Gui.Alignment.Center;
+            this.lblPreview.TextAlignment = Terminal.Gui.ViewBase.Alignment.Center;
             this.Add(this.lblPreview);
             this.btnOk.Width = 8;
             this.btnOk.Height = Dim.Auto();
             this.btnOk.X = Pos.Left(btnCancel) - 10;
             this.btnOk.Y = 14;
             this.btnOk.Visible = true;
-            this.btnOk.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
-            this.btnOk.ColorScheme = this.buttons;
+            this.btnOk.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
+            this.btnOk.Scheme = this.buttons;
             this.btnOk.CanFocus = true;
-            this.btnOk.ShadowStyle = Terminal.Gui.ShadowStyle.Opaque;
+            this.btnOk.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btnOk.Data = "btnOk";
             this.btnOk.Text = "Ok";
-            this.btnOk.TextAlignment = Terminal.Gui.Alignment.Center;
+            this.btnOk.TextAlignment = Terminal.Gui.ViewBase.Alignment.Center;
             this.btnOk.IsDefault = true;
             this.Add(this.btnOk);
             this.btnCancel.Width = 10;
@@ -161,13 +161,13 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnCancel.X = Pos.Percent(48);
             this.btnCancel.Y = 14;
             this.btnCancel.Visible = true;
-            this.btnCancel.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
-            this.btnCancel.ColorScheme = this.buttons;
+            this.btnCancel.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
+            this.btnCancel.Scheme = this.buttons;
             this.btnCancel.CanFocus = true;
-            this.btnCancel.ShadowStyle = Terminal.Gui.ShadowStyle.Opaque;
+            this.btnCancel.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btnCancel.Data = "btnCancel";
             this.btnCancel.Text = "Cancel";
-            this.btnCancel.TextAlignment = Terminal.Gui.Alignment.Center;
+            this.btnCancel.TextAlignment = Terminal.Gui.ViewBase.Alignment.Center;
             this.btnCancel.IsDefault = false;
             this.Add(this.btnCancel);
         }

@@ -329,10 +329,10 @@ public class BigListBox<T>
             return;
         }
 
-        if (currentSelection is ColorScheme colorScheme)
+        if (currentSelection is Scheme Scheme)
         {
-            var colorSchemeName = ColorSchemeManager.Instance.GetNameForColorScheme(colorScheme);
-            var currentSelectionInCollection = this.collection.FirstOrDefault(o => o.Object != null && o.Object is NamedColorScheme scheme && scheme.Name == colorSchemeName);
+            var SchemeName = SchemeManager.Instance.GetNameForScheme(Scheme);
+            var currentSelectionInCollection = this.collection.FirstOrDefault(o => o.Object != null && o.Object is NamedScheme scheme && scheme.Name == SchemeName);
 
             if (currentSelectionInCollection != null)
             {

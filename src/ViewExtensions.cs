@@ -365,25 +365,25 @@ public static class ViewExtensions
     }
 
     /// <summary>
-    /// <para>Returns the explicitly defined private ColorScheme on the view
+    /// <para>Returns the explicitly defined private Scheme on the view
     /// Or null if it inherits it from its parent or a global scheme.</para>
     /// <para>
-    /// The private backing field value for <see cref="View.ColorScheme"/> is
-    /// queried with reflection.  This is necessary because <see cref="View.ColorScheme"/> getter
+    /// The private backing field value for <see cref="View.Scheme"/> is
+    /// queried with reflection.  This is necessary because <see cref="View.Scheme"/> getter
     /// returns from parent (inherited) if setter has not been called but we want to know
     /// if the <see cref="View"/> really has a 'user intended' scheme assigned.
     /// </para>
     /// </summary>
     /// <param name="v">The <see cref="View"/> you want to get 'user intended' explicitly set
-    /// <see cref="ColorScheme"/> for.</param>
-    /// <returns>The value that was used to call <see cref="View.ColorScheme"/> setter or null
-    /// if never called (i.e. <see cref="View.ColorScheme"/> getter is returning inherited parent value).</returns>
-    public static ColorScheme? GetExplicitColorScheme(this View v)
+    /// <see cref="Scheme"/> for.</param>
+    /// <returns>The value that was used to call <see cref="View.Scheme"/> setter or null
+    /// if never called (i.e. <see cref="View.Scheme"/> getter is returning inherited parent value).</returns>
+    public static Scheme? GetExplicitScheme(this View v)
     {
-        var explicitColorSchemeField = typeof(View).GetField("_colorScheme", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
-            ?? throw new Exception("ColorScheme private backing field no longer exists");
+        var explicitSchemeField = typeof(View).GetField("_Scheme", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+            ?? throw new Exception("Scheme private backing field no longer exists");
 
-        return (ColorScheme?)explicitColorSchemeField.GetValue(v);
+        return (Scheme?)explicitSchemeField.GetValue(v);
     }
 
     /// <summary>
@@ -504,20 +504,20 @@ public static class ViewExtensions
         return null;
     }
 
-    public static void SetupNiceColorSchemes(this Dialog v)
+    public static void SetupNiceSchemes(this Dialog v)
     {
 
-        ColorScheme dialogBackground;
-        ColorScheme buttons;     
-        dialogBackground = new Terminal.Gui.ColorScheme(new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u));
-        buttons = new Terminal.Gui.ColorScheme(new Terminal.Gui.Drawing.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967040u));
+        Scheme dialogBackground;
+        Scheme buttons;     
+        dialogBackground = new Terminal.Gui.Drawing.Scheme(new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u));
+        buttons = new Terminal.Gui.Drawing.Scheme(new Terminal.Gui.Drawing.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967040u));
 
-        v.ColorScheme = dialogBackground;
+        v.Scheme = dialogBackground;
 
         void ApplyScheme(View view)
         {
             if (view is Button or TableView)
-                view.ColorScheme = buttons;
+                view.Scheme = buttons;
 
             foreach (var subView in view.SubViews)
                 ApplyScheme(subView);

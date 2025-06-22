@@ -5,9 +5,9 @@ using Attribute = Terminal.Gui.Drawing.Attribute;
 namespace TerminalGuiDesigner.UI.Windows;
 
 /// <summary>
-/// Version of <see cref="ColorScheme"/> with setters, for use with <see cref="ColorSchemeEditor"/>
+/// Version of <see cref="Scheme"/> with setters, for use with <see cref="SchemeEditor"/>
 /// </summary>
-class MutableColorScheme
+class MutableScheme
 {
     public Attribute Disabled { get; set; }
     public Attribute Focus { get; set; }
@@ -15,9 +15,9 @@ class MutableColorScheme
     public Attribute HotNormal { get; set; }
     public Attribute Normal { get; set; }
 
-    internal ColorScheme ToColorScheme()
+    internal Scheme ToScheme()
     {
-        return new ColorScheme
+        return new Scheme
         {
             Normal = Normal,
             HotNormal = HotNormal,

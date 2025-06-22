@@ -91,8 +91,8 @@ public class Property : ToCodeBase
     }
 
     /// <summary>
-    /// Sets a new value for the <see cref="PropertyInfo"/>.  For complex properties like <see cref="View.ColorScheme"/>
-    /// this may involve other steps (e.g. interacting with <see cref="ColorSchemeManager"/>).
+    /// Sets a new value for the <see cref="PropertyInfo"/>.  For complex properties like <see cref="View.Scheme"/>
+    /// this may involve other steps (e.g. interacting with <see cref="SchemeManager"/>).
     /// </summary>
     /// <param name="value">New value to set.</param>
     /// <exception cref="ArgumentException">Thrown if invalid values are passed.</exception>
