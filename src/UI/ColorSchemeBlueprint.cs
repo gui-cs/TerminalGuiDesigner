@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using Terminal.Gui;
+using Terminal.Gui.Drawing;
 using YamlDotNet.Core;
 using YamlDotNet.Serialization;
 using Attribute = Terminal.Gui.Drawing.Attribute;
@@ -13,7 +14,7 @@ namespace TerminalGuiDesigner.UI;
 public record SchemeBlueprint( Color NormalForeground, Color NormalBackground, Color HotNormalForeground, Color HotNormalBackground, Color FocusForeground, Color FocusBackground, Color HotFocusForeground, Color HotFocusBackground, Color DisabledForeground, Color DisabledBackground )
 {
     /// <summary>
-    /// Gets the <see cref="Color"/> to use for <see cref="Scheme.Normal"/> <see cref="Attribute.Foreground"/>.
+    /// Gets the <see cref="Color"/> to use for <see cref="Terminal.Gui.Drawing.Scheme.Normal"/> <see cref="Attribute.Foreground"/>.
     /// </summary>
     public Color NormalForeground { get; init; } = NormalForeground;
 

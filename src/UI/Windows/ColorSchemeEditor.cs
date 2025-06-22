@@ -8,6 +8,7 @@
 //  </auto-generated>
 // -----------------------------------------------------------------------------
 
+using Terminal.Gui.Drawing;
 using Terminal.Gui.ViewBase;
 
 namespace TerminalGuiDesigner.UI.Windows; 

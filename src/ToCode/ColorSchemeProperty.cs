@@ -1,14 +1,15 @@
 using System.CodeDom;
 using Terminal.Gui;
+using Terminal.Gui.Drawing;
 using Terminal.Gui.ViewBase;
 
 namespace TerminalGuiDesigner.ToCode;
 
 /// <summary>
-/// <para><see cref="Property"/> wrapper for <see cref="View.Scheme"/>.
+/// <para><see cref="Property"/> wrapper for <see cref="Scheme"/>.
 /// </para>
 /// <para>
-/// In Terminal.Gui the <see cref="View.Scheme"/> has inbuilt inheritance
+/// In Terminal.Gui the <see cref="Scheme"/> has inbuilt inheritance
 /// to parental containers.  This class handles detecting if the current value comes
 /// from a parent or is explicitly declared.  Also interacts with <see cref="SchemeManager"/>
 /// which tracks what <see cref="Scheme"/> user has declared and/or is using in
@@ -21,9 +22,9 @@ public class SchemeProperty : Property
     /// Initializes a new instance of the <see cref="SchemeProperty"/> class.
     /// </summary>
     /// <param name="design">Wrapper for a <see cref="View"/> upon which the
-    /// <see cref="View.Scheme"/> is to be managed.</param>
+    /// <see cref="Scheme"/> is to be managed.</param>
     /// <exception cref="Exception">Thrown if Terminal.Gui public API is
-    /// changed and <see cref="View.Scheme"/> can no longer be found
+    /// changed and <see cref="Scheme"/> can no longer be found
     /// with reflection.</exception>
     public SchemeProperty(Design design)
         : base(

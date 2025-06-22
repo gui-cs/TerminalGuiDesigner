@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Xml.Linq;
 using NLog;
 using Terminal.Gui;
+using Terminal.Gui.Drawing;
 using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
@@ -93,7 +94,7 @@ public class Design
 
     /// <summary>
     /// Gets the record of user configured values of otherwise volatile <see cref="View"/> settings.
-    /// <para>For example while <see cref="View.Scheme"/> can change based on selection
+    /// <para>For example while <see cref="Scheme"/> can change based on selection
     /// (see <see cref="SelectionManager.SelectedScheme"/> the <see cref="DesignState.OriginalScheme"/>
     /// will not change.
     /// </para>

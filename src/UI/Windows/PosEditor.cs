@@ -8,6 +8,11 @@
 //------------------------------------------------------------------------------
 
 using JetBrains.Annotations;
+using Terminal.Gui.App;
+using Terminal.Gui.Drawing;
+using Terminal.Gui.Input;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner.UI.Windows;
 
@@ -203,14 +208,14 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
 
     private void BtnCancel_Clicked(object sender, CommandEventArgs e)
     {
-        e.Cancel = true;
+        e.Handled = true;
         Cancelled = true;
         Application.RequestStop();
     }
 
     private void BtnOk_Clicked(object sender, CommandEventArgs e)
     {
-        e.Cancel = true;
+        e.Handled = true;
         if(GetPosType() == PosType.AnchorEnd && GetValue(out var value) && value <=0)
         {
             if (!ChoicesDialog.Confirm("Anchor Without Margin", "Using AnchorEnd without a margin will result in a point outside of parent bounds.\nAre you sure?"))

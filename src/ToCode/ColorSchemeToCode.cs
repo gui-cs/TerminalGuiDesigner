@@ -1,5 +1,6 @@
 using System.CodeDom;
 using Terminal.Gui;
+using Terminal.Gui.Drawing;
 using Attribute = Terminal.Gui.Drawing.Attribute;
 
 namespace TerminalGuiDesigner.ToCode;

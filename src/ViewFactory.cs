@@ -1,7 +1,8 @@
 using System.Collections.ObjectModel;
 using System.Data;
 using Terminal.Gui;
-using Terminal.Gui.TextValidateProviders;
+using Terminal.Gui.Drawing;
+using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations.MenuOperations;

@@ -91,7 +91,7 @@ public class Property : ToCodeBase
     }
 
     /// <summary>
-    /// Sets a new value for the <see cref="PropertyInfo"/>.  For complex properties like <see cref="View.Scheme"/>
+    /// Sets a new value for the <see cref="PropertyInfo"/>.  For complex properties like <see cref="Scheme"/>
     /// this may involve other steps (e.g. interacting with <see cref="SchemeManager"/>).
     /// </summary>
     /// <param name="value">New value to set.</param>

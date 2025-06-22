@@ -2,6 +2,7 @@
 using System.Text;
 using Terminal.Gui;
 using Terminal.Gui.App;
+using Terminal.Gui.Drawing;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 using TerminalGuiDesigner.ToCode;

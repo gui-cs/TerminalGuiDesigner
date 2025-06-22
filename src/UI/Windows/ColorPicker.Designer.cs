@@ -8,6 +8,9 @@
 //      the code is regenerated.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
+
+using Terminal.Gui.ViewBase;
+
 namespace TerminalGuiDesigner.UI.Windows {
     using System;
     using Terminal.Gui;
@@ -25,11 +28,11 @@ namespace TerminalGuiDesigner.UI.Windows {
         
         private Terminal.Gui.Views.Label lblForeground;
         
-        private Terminal.Gui.ColorPicker cpForeground;
+        private Terminal.Gui.Views.ColorPicker cpForeground;
         
         private Terminal.Gui.Views.Label lblBackground;
         
-        private Terminal.Gui.ColorPicker cpBackground;
+        private Terminal.Gui.Views.ColorPicker cpBackground;
         
         private Terminal.Gui.Views.Label lblResult;
         
@@ -44,9 +47,9 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnOk = new Terminal.Gui.Views.Button();
             this.lblPreview = new Terminal.Gui.Views.Label();
             this.lblResult = new Terminal.Gui.Views.Label();
-            this.cpBackground = new Terminal.Gui.ColorPicker();
+            this.cpBackground = new Terminal.Gui.Views.ColorPicker();
             this.lblBackground = new Terminal.Gui.Views.Label();
-            this.cpForeground = new Terminal.Gui.ColorPicker();
+            this.cpForeground = new Terminal.Gui.Views.ColorPicker();
             this.lblForeground = new Terminal.Gui.Views.Label();
             this.dialogBackground = new Terminal.Gui.Drawing.Scheme(new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u));
             this.buttons = new Terminal.Gui.Drawing.Scheme(new Terminal.Gui.Drawing.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967040u));
@@ -113,7 +116,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.cpBackground.Data = "cpBackground";
             this.cpBackground.Text = "";
             this.cpBackground.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
-            this.cpBackground.Style.ColorModel = Terminal.Gui.ColorModel.HSV;
+            this.cpBackground.Style.ColorModel = Terminal.Gui.Drawing.ColorModel.HSV;
             this.cpBackground.Style.ShowColorName = true;
             this.cpBackground.Style.ShowTextFields = true;
             this.cpBackground.ApplyStyleChanges();

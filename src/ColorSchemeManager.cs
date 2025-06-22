@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Reflection;
 using Terminal.Gui;
+using Terminal.Gui.Drawing;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
 

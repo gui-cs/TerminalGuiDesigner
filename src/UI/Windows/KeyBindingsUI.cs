@@ -10,7 +10,9 @@
 
 using System.Reflection;
 using System.Text.Json;
+using Terminal.Gui.Drawing;
 using Terminal.Gui.Views;
+using Attribute = System.Attribute;
 
 namespace TerminalGuiDesigner.UI.Windows {
     using Terminal.Gui;

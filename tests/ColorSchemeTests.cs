@@ -1,5 +1,6 @@
 using System.IO;
 using System.Linq;
+using Terminal.Gui.Drawing;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations;

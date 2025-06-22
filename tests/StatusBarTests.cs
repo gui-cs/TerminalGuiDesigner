@@ -1,4 +1,5 @@
 ﻿using Terminal.Gui.Drivers;
+using Terminal.Gui.Input;
 using Terminal.Gui.Views;
 
 namespace UnitTests;

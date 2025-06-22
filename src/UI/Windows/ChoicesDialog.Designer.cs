@@ -8,6 +8,9 @@
 //      the code is regenerated.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
+
+using Terminal.Gui.ViewBase;
+
 namespace TerminalGuiDesigner.UI.Windows {
     using System;
     using Terminal.Gui;

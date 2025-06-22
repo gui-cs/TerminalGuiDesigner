@@ -2,8 +2,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using Terminal.Gui;
 using Terminal.Gui.Drivers;
+using Terminal.Gui.Input;
 using YamlDotNet.Core.Tokens;
-using Key = Terminal.Gui.Key;
+using Key = Terminal.Gui.Input.Key;
 
 namespace TerminalGuiDesigner.UI.Windows;
 
@@ -177,7 +178,7 @@ public class Modals
         return false;
     }
 
-    internal static Terminal.Gui.Key GetShortcut()
+    internal static Key GetShortcut()
     {
         Key key = KeyCode.Null;
         var dlg = new LoadingDialog("Press Shortcut or Del");

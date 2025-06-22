@@ -368,16 +368,16 @@ public static class ViewExtensions
     /// <para>Returns the explicitly defined private Scheme on the view
     /// Or null if it inherits it from its parent or a global scheme.</para>
     /// <para>
-    /// The private backing field value for <see cref="View.Scheme"/> is
-    /// queried with reflection.  This is necessary because <see cref="View.Scheme"/> getter
+    /// The private backing field value for <see cref="Scheme"/> is
+    /// queried with reflection.  This is necessary because <see cref="Scheme"/> getter
     /// returns from parent (inherited) if setter has not been called but we want to know
     /// if the <see cref="View"/> really has a 'user intended' scheme assigned.
     /// </para>
     /// </summary>
     /// <param name="v">The <see cref="View"/> you want to get 'user intended' explicitly set
     /// <see cref="Scheme"/> for.</param>
-    /// <returns>The value that was used to call <see cref="View.Scheme"/> setter or null
-    /// if never called (i.e. <see cref="View.Scheme"/> getter is returning inherited parent value).</returns>
+    /// <returns>The value that was used to call <see cref="Scheme"/> setter or null
+    /// if never called (i.e. <see cref="Scheme"/> getter is returning inherited parent value).</returns>
     public static Scheme? GetExplicitScheme(this View v)
     {
         var explicitSchemeField = typeof(View).GetField("_Scheme", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
