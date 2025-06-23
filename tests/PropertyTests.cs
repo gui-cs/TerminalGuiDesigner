@@ -4,7 +4,6 @@ using Terminal.Gui.Drawing;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 using TerminalGuiAttribute = Terminal.Gui.Drawing.Attribute;
-using TerminalGuiConfigurationManager = Terminal.Gui.ConfigurationManager;
 
 namespace UnitTests;
 

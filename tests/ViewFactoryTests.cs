@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using Terminal.Gui.App;
 using Terminal.Gui.Drivers;
-using Terminal.Gui.TextValidateProviders;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 

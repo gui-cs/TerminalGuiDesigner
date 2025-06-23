@@ -44,7 +44,6 @@ public class Tests
 
         SelectionManager.Instance.LockSelection = false;
         SelectionManager.Instance.Clear();
-        SchemeManager.Instance.Clear();
     }
 
     protected static Design Get10By10View()

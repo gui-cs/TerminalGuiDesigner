@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 
 namespace UnitTests
 {
