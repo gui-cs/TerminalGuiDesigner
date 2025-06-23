@@ -107,7 +107,7 @@ public class TreeObjectsProperty<T> : Property, ITreeObjectsProperty where T : c
     {
         return new CodeSnippetExpression("""
                                                                         
-                                            new Terminal.Gui.DelegateTreeBuilder<System.IO.FileSystemInfo>((p) =>
+                                            new Terminal.Gui.Views.DelegateTreeBuilder<System.IO.FileSystemInfo>((p) =>
                                             {
                                                 try
                                                 {
