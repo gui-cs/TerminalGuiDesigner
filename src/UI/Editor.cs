@@ -288,8 +288,6 @@ public class Editor : Toplevel
 
         if (this.enableShowFocused)
         {
-            Application.Driver.SetAttribute(this.viewBeingEdited.View.Scheme.Normal);
-
             string? toDisplay = this.GetLowerRightTextIfAny();
 
             // and have a designable view focused
@@ -558,12 +556,6 @@ public class Editor : Toplevel
                 return true;
             }
 
-            if (keyString == this.keyMap.ShowSchemes)
-            {
-                this.ShowSchemes();
-                return true;
-            }
-
             if (keyString == this.keyMap.Copy)
             {
                 this.Copy();
@@ -825,15 +817,16 @@ public class Editor : Toplevel
             Y = Pos.Percent(75),
             Width = maxWidth,
             Height = 4,
-            Scheme = new Scheme
-            (
-                new Attribute(new Color(Color.White),new Color(Color.Black)),
-                new Attribute(new Color(Color.Black),new Color(Color.White)),
-            new Attribute(new Color(Color.White), new Color(Color.Black)),
-            new Attribute(new Color(Color.White), new Color(Color.Black)),
-            new Attribute(new Color(Color.Black), new Color(Color.White))
-                ),
         };
+        rootCommandsListView.SetScheme(new Scheme
+            {
+            Normal = new Attribute(new Color(Color.White), new Color(Color.Black)),
+            Focus = new Attribute(new Color(Color.Black), new Color(Color.White)),
+            HotNormal = new Attribute(new Color(Color.White), new Color(Color.Black)),
+            HotFocus = new Attribute(new Color(Color.White), new Color(Color.Black)),
+            Disabled = new Attribute(new Color(Color.Black), new Color(Color.White))
+        });
+
         this.rootCommandsListView.SetSource(rootCommands);
         this.rootCommandsListView.SelectedItem = 0;
 
@@ -1196,7 +1189,6 @@ public class Editor : Toplevel
             Title = "Open",
             AllowedTypes = new List<IAllowedType>(new[] { new AllowedType("View", SourceCodeFile.ExpectedExtension) })
         };
-        ofd.SetupNiceSchemes();
         ofd.Layout();
 
         Application.Run(ofd, this.ErrorHandler);
@@ -1279,7 +1271,6 @@ public class Editor : Toplevel
             Path = "MyView.cs",
         };
         ofd.Layout();
-        ofd.SetupNiceSchemes();
 
         Application.Run(ofd);
 
@@ -1421,9 +1412,6 @@ public class Editor : Toplevel
             // Load new instance
             this.viewBeingEdited = design;
 
-            // TODO: Find a better place for this
-            SchemeManager.Instance.FindDeclaredSchemes(this.viewBeingEdited);
-
             // And add it to the editing window
             this.Add(this.viewBeingEdited.View);
         });
@@ -1475,16 +1463,5 @@ public class Editor : Toplevel
     {
         var edit = new EditDialog(d);
         Application.Run(edit, this.ErrorHandler);
-    }
-
-    private void ShowSchemes()
-    {
-        if (this.viewBeingEdited == null)
-        {
-            return;
-        }
-
-        var schemes = new SchemesUI(this.viewBeingEdited);
-        Application.Run(schemes);
     }
 }

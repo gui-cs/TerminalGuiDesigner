@@ -164,12 +164,6 @@ public sealed record KeyMap(
     /// <summary>Gets the string to assign a new shortcut to a <see cref="MenuItem" />.</summary>
     public string SetShortcut { get; init; } = SetShortcut;
 
-    /// <summary>
-    ///   Gets the string to open the <see cref="SchemesUI" /> window for creating/deleting <see cref="Scheme" /> that can be
-    ///   used in the <see cref="Editor" />.
-    /// </summary>
-    public string ShowSchemes { get; init; } = ShowSchemes;
-
     /// <summary>Gets the string to pop up the right click context menu.</summary>
     public string ShowContextMenu { get; init; } = ShowContextMenu;
 

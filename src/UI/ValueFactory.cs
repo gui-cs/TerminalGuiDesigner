@@ -7,7 +7,6 @@ using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 using TerminalGuiDesigner.ToCode;
 using TerminalGuiDesigner.UI.Windows;
-using ColorPicker = TerminalGuiDesigner.UI.Windows.ColorPicker;
 using Attribute = Terminal.Gui.Drawing.Attribute;
 
 namespace TerminalGuiDesigner.UI
@@ -55,10 +54,6 @@ namespace TerminalGuiDesigner.UI
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(SliderOption<>))
             {
                 return RunEditor(new SliderOptionEditor(type.GetGenericArguments()[0], oldValue), out newValue);
-            }
-            if (type == typeof(Attribute) || type == typeof(Attribute?))
-            {
-                return RunEditor(new ColorPicker((Attribute?)oldValue), out newValue);
             }
             if (type == typeof(Pos))
             {
@@ -190,7 +185,6 @@ namespace TerminalGuiDesigner.UI
             if (type == typeof(FileSystemInfo))
             {
                 var fd = new FileDialog();
-                fd.SetupNiceSchemes();
                 fd.AllowsMultipleSelection = false;
                 fd.Layout();
 

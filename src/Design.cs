@@ -514,8 +514,7 @@ public class Design
 
         // what field names are already taken by other objects?
         var usedFieldNames = allDesigns.Select(d => d.FieldName).ToList();
-        usedFieldNames.AddRange(SchemeManager.Instance.Schemes.Select(k => k.Name));
-
+        
         return candidate.MakeUnique(usedFieldNames);
     }
 
@@ -613,9 +612,6 @@ public class Design
         yield return this.CreateSuppressedProperty(nameof(this.View.Visible), true);
 
         yield return this.CreateSuppressedProperty(nameof(this.View.Arrangement), ViewArrangement.Fixed);
-        
-
-        yield return new SchemeProperty(this);
 
         yield return this.CreateSuppressedProperty(nameof(View.CanFocus), true);
         yield return this.CreateProperty(nameof(this.View.ShadowStyle));

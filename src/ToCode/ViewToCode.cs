@@ -158,9 +158,7 @@ public class ViewToCode
         initMethod.Name = SourceCodeFile.InitializeComponentMethodName;
 
         var args = new CodeDomArgs(class1, initMethod);
-
-        this.AddSchemesToClass(args);
-
+        
         // Add designable root properties to the InitializeComponent method
         foreach (var prop in rootDesign.GetDesignableProperties())
         {
@@ -327,14 +325,5 @@ public class ViewToCode
         nSpace.Comments.Add(new CodeCommentStatement(
             "-----------------------------------" +
             "------------------------------------------"));
-    }
-
-    private void AddSchemesToClass(CodeDomArgs args)
-    {
-        foreach (var scheme in SchemeManager.Instance.Schemes)
-        {
-            var toCode = new SchemeToCode(scheme);
-            toCode.ToCode(args);
-        }
     }
 }

@@ -8,6 +8,9 @@
 //      the code is regenerated.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
+
+using Terminal.Gui.ViewBase;
+
 namespace TerminalGuiDesigner.UI.Windows {
     using System;
     using Terminal.Gui;
@@ -47,7 +50,6 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Y = Pos.Center();
             this.Visible = true;
             this.Arrangement = (Terminal.Gui.ViewBase.ViewArrangement.Movable | Terminal.Gui.ViewBase.ViewArrangement.Overlapped);
-            this.Scheme = this.dialogBackground;
             this.CanFocus = true;
             this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Transparent;
             this.Modal = true;

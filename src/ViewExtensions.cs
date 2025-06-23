@@ -504,26 +504,4 @@ public static class ViewExtensions
 
         return null;
     }
-
-    public static void SetupNiceSchemes(this Dialog v)
-    {
-
-        Scheme dialogBackground;
-        Scheme buttons;     
-        dialogBackground = new Terminal.Gui.Drawing.Scheme(new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u));
-        buttons = new Terminal.Gui.Drawing.Scheme(new Terminal.Gui.Drawing.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967040u));
-
-        v.Scheme = dialogBackground;
-
-        void ApplyScheme(View view)
-        {
-            if (view is Button or TableView)
-                view.Scheme = buttons;
-
-            foreach (var subView in view.SubViews)
-                ApplyScheme(subView);
-        }
-
-        ApplyScheme(v);
-    }
 }

@@ -42,15 +42,12 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnSave = new Terminal.Gui.Views.Button();
             this.buttonPanel = new Terminal.Gui.ViewBase.View();
             this.tableView = new Terminal.Gui.Views.TableView();
-            this.dialogBackground = new Terminal.Gui.Drawing.Scheme(new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u));
-            this.buttons = new Terminal.Gui.Drawing.Scheme(new Terminal.Gui.Drawing.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967040u));
             this.Width = Dim.Percent(90);
             this.Height = Dim.Percent(80);
             this.X = Pos.Center();
             this.Y = Pos.Center();
             this.Visible = true;
             this.Arrangement = (Terminal.Gui.ViewBase.ViewArrangement.Movable | Terminal.Gui.ViewBase.ViewArrangement.Overlapped);
-            this.Scheme = this.dialogBackground;
             this.CanFocus = true;
             this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Transparent;
             this.Modal = true;
@@ -92,7 +89,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             tableViewTableColumn3 = new System.Data.DataColumn();
             tableViewTableColumn3.ColumnName = "Column 3";
             tableViewTable.Columns.Add(tableViewTableColumn3);
-            this.tableView.Table = new Terminal.Gui.DataTableSource(tableViewTable);
+            this.tableView.Table = new Terminal.Gui.Views.DataTableSource(tableViewTable);
             this.Add(this.tableView);
             this.buttonPanel.Width = 32;
             this.buttonPanel.Height = 3;

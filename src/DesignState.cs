@@ -70,7 +70,7 @@ public class DesignState
 
         var color = isSelected ?
             SelectionManager.Instance.SelectedScheme.Normal :
-            this.Design.View.Scheme.Normal;
+            this.Design.View.GetScheme().Normal;
 
         Application.Driver.SetAttribute(color);
 

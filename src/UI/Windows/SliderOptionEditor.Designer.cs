@@ -8,6 +8,9 @@
 //      the code is regenerated.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
+
+using Terminal.Gui.ViewBase;
+
 namespace TerminalGuiDesigner.UI.Windows {
     using System;
     using Terminal.Gui;
@@ -58,17 +61,12 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.label2 = new Terminal.Gui.Views.Label();
             this.tfLegend = new Terminal.Gui.Views.TextField();
             this.label = new Terminal.Gui.Views.Label();
-            this.dialogBackground = new Terminal.Gui.Drawing.Scheme(new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4294967295u, 4285953654u));
-            this.buttons = new Terminal.Gui.Drawing.Scheme(new Terminal.Gui.Drawing.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Drawing.Attribute(4278190080u, 4294967040u));
-            this.redOnBlack = new Terminal.Gui.Drawing.Scheme(new Terminal.Gui.Drawing.Attribute(4291104543u, 4278979596u), new Terminal.Gui.Drawing.Attribute(4291104543u, 4286595104u), new Terminal.Gui.Drawing.Attribute(4293347414u, 4278979596u), new Terminal.Gui.Drawing.Attribute(4291611852u, 4278979596u), new Terminal.Gui.Drawing.Attribute(4293347414u, 4286595104u));
-            this.tgDefault = new Terminal.Gui.Drawing.Scheme(new Terminal.Gui.Drawing.Attribute(4294111986u, 4278204378u), new Terminal.Gui.Drawing.Attribute(4278979596u, 4291611852u), new Terminal.Gui.Drawing.Attribute(4284602070u, 4278204378u), new Terminal.Gui.Drawing.Attribute(4286595104u, 4278204378u), new Terminal.Gui.Drawing.Attribute(4282087679u, 4291611852u));
             this.Width = 50;
             this.Height = 10;
             this.X = Pos.Center();
             this.Y = Pos.Center();
             this.Visible = true;
             this.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Movable;
-            this.Scheme = this.dialogBackground;
             this.CanFocus = true;
             this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Transparent;
             this.Modal = true;

@@ -43,7 +43,7 @@ namespace TerminalGuiDesigner.UI.Windows {
 
             var keyStyle = tableView.Style.GetOrCreateColumnStyle(1);
 
-            var badCellColor = CloneSchemeButMake(tableView.Scheme,Color.Red);
+            var badCellColor = CloneSchemeButMake(tableView.GetScheme(),Color.Red);
 
             keyStyle.ColorGetter = (k) =>
             {
@@ -97,7 +97,7 @@ namespace TerminalGuiDesigner.UI.Windows {
                 Focus = cs.Focus,
                 HotFocus = cs.HotFocus,
                 HotNormal = cs.HotNormal,
-                Normal = new Attribute(color, cs.Normal.Background)
+                Normal = new Terminal.Gui.Drawing.Attribute(color, cs.Normal.Background)
             };
         }
     }
