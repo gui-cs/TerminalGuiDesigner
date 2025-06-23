@@ -83,8 +83,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.rgPosType.Y = 1;
             this.rgPosType.Visible = true;
             this.rgPosType.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-            this.rgPosType.Scheme = this.buttons;
-            this.rgPosType.CanFocus = true;
+                        this.rgPosType.CanFocus = true;
             this.rgPosType.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.rgPosType.Data = "rgPosType";
             this.rgPosType.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
@@ -217,8 +216,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnOk.Y = 11;
             this.btnOk.Visible = true;
             this.btnOk.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-            this.btnOk.Scheme = this.buttons;
-            this.btnOk.CanFocus = true;
+                        this.btnOk.CanFocus = true;
             this.btnOk.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btnOk.Data = "btnOk";
             this.btnOk.Text = "Ok";
@@ -231,8 +229,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnCancel.Y = 11;
             this.btnCancel.Visible = true;
             this.btnCancel.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-            this.btnCancel.Scheme = this.buttons;
-            this.btnCancel.CanFocus = true;
+                        this.btnCancel.CanFocus = true;
             this.btnCancel.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btnCancel.Data = "btnCancel";
             this.btnCancel.Text = "Cancel";

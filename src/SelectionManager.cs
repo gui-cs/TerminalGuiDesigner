@@ -1,5 +1,4 @@
-﻿using Terminal.Gui;
-using Terminal.Gui.Drawing;
+﻿using Terminal.Gui.Drawing;
 using Terminal.Gui.ViewBase;
 using Attribute = Terminal.Gui.Drawing.Attribute;
 
@@ -104,7 +103,7 @@ public class SelectionManager
         // reset old color schemes so views don't still look selected
         foreach (var d in selected)
         {
-            d.View.Scheme = d.State.OriginalScheme;
+            d.View.SetScheme(d.State.OriginalScheme );
         }
     }
 
@@ -152,7 +151,7 @@ public class SelectionManager
         foreach (var d in this.selection)
         {
             // since the view is selected mark it so
-            d.View.Scheme = this.SelectedScheme;
+            d.View.SetScheme(this.SelectedScheme);
         }
     }
 }

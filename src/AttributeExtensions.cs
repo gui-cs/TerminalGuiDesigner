@@ -12,6 +12,6 @@ public static class AttributeExtensions
     /// <returns>Code construct <paramref name="a"/>.</returns>
     public static string ToCode(this Terminal.Gui.Drawing.Attribute a)
     {
-        return $"new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Color.{a.Foreground},Terminal.Gui.Color.{a.Background})";
+        return $"new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Drawing.Color.{a.Foreground},Terminal.Gui.Drawing.Color.{a.Background})";
     }
 }

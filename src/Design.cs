@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Xml.Linq;
 using NLog;
 using Terminal.Gui;
+using Terminal.Gui.Configuration;
 using Terminal.Gui.Drawing;
 using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
@@ -257,57 +258,6 @@ public class Design
         
         var d = new Design(this.SourceCode, name, subView);
         return d;
-    }
-
-    /// <summary>
-    /// <para>
-    /// Returns true if there is an explicit Scheme set
-    /// on this Design's View or false if it is inherited from
-    /// a View further up the Layout (or a library default scheme).
-    /// </para>
-    /// <para> If a scheme is found that is not known about by SchemeManager
-    /// then false is returned.</para>
-    /// </summary>
-    /// <returns>True if view explicitly uses one in <see cref="SchemeManager"/>
-    /// because user explicitly allocated it to the <see cref="View"/> (rather than inheriting).</returns>
-    public bool HasKnownScheme()
-    {
-        var userDefinedScheme = this.State.OriginalScheme ?? this.View.GetExplicitScheme();
-
-        if (userDefinedScheme == null)
-        {
-            return false;
-        }
-
-        // theres a color scheme defined but we aren't tracking it
-        // so report it as inherited since it must have got it from
-        // the API somehow
-        if (Colors.Schemes.Values.Contains(userDefinedScheme))
-        {
-            return false;
-        }
-
-        // it has a Scheme but not one we are tracking
-        if (SchemeManager.Instance.GetNameForScheme(userDefinedScheme) == null)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    /// <summary>
-    /// True if this view EXPLICITLY states that it uses the scheme
-    /// False if its scheme is inherited from a parent or it explicitly
-    /// uses a different Scheme.
-    /// </summary>
-    /// <param name="scheme">The scheme you want to know if <see cref="View"/> is using.</param>
-    /// <returns>True if <see cref="View"/> uses <paramref name="scheme"/> explicitly.</returns>
-    public bool UsesScheme(Scheme scheme)
-    {
-        // we use this scheme if it is a known scheme
-        return this.HasKnownScheme() &&
-            (this.View.Scheme.Equals(scheme) || (this.State.OriginalScheme?.Equals(scheme) ?? false));
     }
 
     /// <summary>

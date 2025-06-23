@@ -1,5 +1,6 @@
 ﻿using CommandLine;
 using Terminal.Gui;
+using Terminal.Gui.App;
 using TerminalGuiDesigner.UI;
 
 namespace TerminalGuiDesigner;

@@ -19,36 +19,36 @@ public class DefaultSchemes
     {
         this.RedOnBlack = new NamedScheme("redOnBlack",
             new Scheme(
-        normal: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Color.Red, Terminal.Gui.Color.Black),
-        hotNormal: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Color.BrightRed, Terminal.Gui.Color.Black),
-        focus: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Color.Red, Terminal.Gui.Color.Yellow),
-        hotFocus: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Color.BrightRed, Terminal.Gui.Color.Yellow),
-        disabled: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Color.Gray, Terminal.Gui.Color.Black)
+        normal: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Drawing.Color.Red, Terminal.Gui.Drawing.Color.Black),
+        hotNormal: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Drawing.Color.BrightRed, Terminal.Gui.Drawing.Color.Black),
+        focus: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Drawing.Color.Red, Terminal.Gui.Drawing.Color.Yellow),
+        hotFocus: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Drawing.Color.BrightRed, Terminal.Gui.Drawing.Color.Yellow),
+        disabled: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Drawing.Color.Gray, Terminal.Gui.Drawing.Color.Black)
             ));
 
         this.GreenOnBlack = new NamedScheme("greenOnBlack",
             new Scheme(
-        normal : new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Color.Green, Terminal.Gui.Color.Black),
-        hotNormal: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Color.BrightGreen, Terminal.Gui.Color.Black),
-        focus: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Color.Green, Terminal.Gui.Color.Magenta),
-        hotFocus: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Color.BrightGreen, Terminal.Gui.Color.Magenta),
-        disabled : new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Color.Gray, Terminal.Gui.Color.Black)));
+        normal : new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Drawing.Color.Green, Terminal.Gui.Drawing.Color.Black),
+        hotNormal: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Drawing.Color.BrightGreen, Terminal.Gui.Drawing.Color.Black),
+        focus: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Drawing.Color.Green, Terminal.Gui.Drawing.Color.Magenta),
+        hotFocus: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Drawing.Color.BrightGreen, Terminal.Gui.Drawing.Color.Magenta),
+        disabled : new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Drawing.Color.Gray, Terminal.Gui.Drawing.Color.Black)));
 
         this.BlueOnBlack = new NamedScheme("blueOnBlack",
             new Scheme(
-        normal : new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Color.BrightBlue, Terminal.Gui.Color.Black),
-        hotNormal: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Color.Cyan, Terminal.Gui.Color.Black),
-        focus: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Color.BrightBlue, Terminal.Gui.Color.BrightYellow),
-        hotFocus: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Color.Cyan, Terminal.Gui.Color.BrightYellow),
-        disabled: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Color.Gray, Terminal.Gui.Color.Black)));
+        normal : new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Drawing.Color.BrightBlue, Terminal.Gui.Drawing.Color.Black),
+        hotNormal: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Drawing.Color.Cyan, Terminal.Gui.Drawing.Color.Black),
+        focus: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Drawing.Color.BrightBlue, Terminal.Gui.Drawing.Color.BrightYellow),
+        hotFocus: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Drawing.Color.Cyan, Terminal.Gui.Drawing.Color.BrightYellow),
+        disabled: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Drawing.Color.Gray, Terminal.Gui.Drawing.Color.Black)));
 
         this.GrayOnBlack = new NamedScheme("greyOnBlack",
             new Scheme(
-        normal : new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Color.DarkGray, Terminal.Gui.Color.Black),
-        hotNormal: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Color.DarkGray, Terminal.Gui.Color.Black),
-        focus: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.DarkGray),
-        hotFocus: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Color.Black, Terminal.Gui.Color.DarkGray),
-        disabled: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Color.DarkGray, Terminal.Gui.Color.Black)));
+        normal : new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Drawing.Color.DarkGray, Terminal.Gui.Drawing.Color.Black),
+        hotNormal: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Drawing.Color.DarkGray, Terminal.Gui.Drawing.Color.Black),
+        focus: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Drawing.Color.Black, Terminal.Gui.Drawing.Color.DarkGray),
+        hotFocus: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Drawing.Color.Black, Terminal.Gui.Drawing.Color.DarkGray),
+        disabled: new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Drawing.Color.DarkGray, Terminal.Gui.Drawing.Color.Black)));
 
         this.TerminalGuiDefault = new NamedScheme("tgDefault",
             new Scheme(

@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Terminal.Gui.App;
 using Terminal.Gui.Drivers;
 using Terminal.Gui.TextValidateProviders;
 using Terminal.Gui.ViewBase;

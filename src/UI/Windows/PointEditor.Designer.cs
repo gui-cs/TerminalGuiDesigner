@@ -125,8 +125,7 @@ namespace TerminalGuiDesigner {
             this.btnCancel.Y = 5;
             this.btnCancel.Visible = true;
             this.btnCancel.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-            this.btnCancel.Scheme = this.dialogBackground;
-            this.btnCancel.CanFocus = true;
+                        this.btnCancel.CanFocus = true;
             this.btnCancel.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btnCancel.Data = "btnCancel";
             this.btnCancel.Text = "Cancel";

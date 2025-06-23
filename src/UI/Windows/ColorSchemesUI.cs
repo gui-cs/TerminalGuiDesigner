@@ -8,6 +8,7 @@
 //  </auto-generated>
 // -----------------------------------------------------------------------------
 
+using Terminal.Gui.App;
 using Terminal.Gui.Drawing;
 using Terminal.Gui.Views;
 

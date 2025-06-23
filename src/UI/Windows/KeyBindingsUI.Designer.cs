@@ -62,8 +62,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.tableView.Y = 0;
             this.tableView.Visible = true;
             this.tableView.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-            this.tableView.Scheme = this.buttons;
-            this.tableView.CanFocus = true;
+                        this.tableView.CanFocus = true;
             this.tableView.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.tableView.Data = "tableView";
             this.tableView.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
@@ -113,8 +112,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnSave.Y = 1;
             this.btnSave.Visible = true;
             this.btnSave.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-            this.btnSave.Scheme = this.buttons;
-            this.btnSave.CanFocus = true;
+                        this.btnSave.CanFocus = true;
             this.btnSave.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btnSave.Data = "btnSave";
             this.btnSave.Text = "Save";
@@ -127,8 +125,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnCancel.Y = 1;
             this.btnCancel.Visible = true;
             this.btnCancel.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-            this.btnCancel.Scheme = this.buttons;
-            this.btnCancel.CanFocus = true;
+                        this.btnCancel.CanFocus = true;
             this.btnCancel.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btnCancel.Data = "btnCancel";
             this.btnCancel.Text = "Cancel";
@@ -147,8 +144,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnReset.Text = "Reset";
             this.btnReset.TextAlignment = Terminal.Gui.ViewBase.Alignment.Center;
             this.btnReset.IsDefault = false;
-            this.btnReset.Scheme = buttons;
-            this.Add(this.btnReset);
+                        this.Add(this.btnReset);
         }
     }
 }

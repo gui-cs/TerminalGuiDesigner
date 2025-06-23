@@ -89,8 +89,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btn1.Y = Pos.AnchorEnd(2);
             this.btn1.Visible = true;
             this.btn1.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-            this.btn1.Scheme = this.buttons;
-            this.btn1.CanFocus = true;
+                        this.btn1.CanFocus = true;
             this.btn1.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btn1.Data = "btn1";
             this.btn1.Text = "btn1";
@@ -103,8 +102,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btn2.Y = Pos.AnchorEnd(2);
             this.btn2.Visible = true;
             this.btn2.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-            this.btn2.Scheme = this.buttons;
-            this.btn2.CanFocus = true;
+                        this.btn2.CanFocus = true;
             this.btn2.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btn2.Data = "btn2";
             this.btn2.Text = "btn2";
@@ -117,8 +115,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btn3.Y = Pos.AnchorEnd(2);
             this.btn3.Visible = true;
             this.btn3.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-            this.btn3.Scheme = this.buttons;
-            this.btn3.CanFocus = true;
+                        this.btn3.CanFocus = true;
             this.btn3.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btn3.Data = "btn3";
             this.btn3.Text = "btn3";
@@ -131,8 +128,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btn4.Y = Pos.AnchorEnd(2);
             this.btn4.Visible = true;
             this.btn4.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-            this.btn4.Scheme = this.buttons;
-            this.btn4.CanFocus = true;
+                        this.btn4.CanFocus = true;
             this.btn4.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btn4.Data = "btn4";
             this.btn4.Text = "btn4";

@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Drawing;
 using Terminal.Gui.ViewBase;
 using TerminalGuiDesigner.UI;
@@ -23,8 +24,7 @@ public class DesignState
     public DesignState(Design design)
     {
         this.Design = design;
-        this.OriginalScheme = this.Design.View.GetExplicitScheme();
-        this.Design.View.DrawComplete += this.DrawContentComplete;
+                this.Design.View.DrawComplete += this.DrawContentComplete;
         this.Design.View.HasFocusChanged += this.Enter;
     }
 

@@ -56,10 +56,6 @@ namespace TerminalGuiDesigner.UI
             {
                 return RunEditor(new SliderOptionEditor(type.GetGenericArguments()[0], oldValue), out newValue);
             }
-            if (type == typeof(Scheme))
-            {
-                return GetNewSchemeValue(design, out newValue);
-            }
             if (type == typeof(Attribute) || type == typeof(Attribute?))
             {
                 return RunEditor(new ColorPicker((Attribute?)oldValue), out newValue);
@@ -285,66 +281,6 @@ namespace TerminalGuiDesigner.UI
             }
 
             return false;
-        }
-
-        private static bool GetNewSchemeValue(Design design, out object? newValue)
-        {
-            const string custom = "Edit Color Schemes...";
-            List<object> offer = new();
-
-            var defaults = new DefaultSchemes();
-            var schemes = SchemeManager.Instance.Schemes.ToList();
-
-            offer.AddRange(schemes);
-
-            foreach (var d in defaults.GetDefaultSchemes())
-            {
-                // user is already explicitly using this default and may even have modified it
-                if (offer.OfType<NamedScheme>().Any(s => s.Name.Equals(d.Name)))
-                {
-                    continue;
-                }
-
-                offer.Add(d);
-            }
-
-            // add the option to jump to custom colors
-            offer.Add(custom);
-
-            if (Modals.Get("Color Scheme", "Ok", offer.ToArray(), design.View.Scheme, out var selected,false))
-            {
-                // if user clicked "Custom..."
-                if (selected is string s && string.Equals(s, custom))
-                {
-                    // show the custom colors dialog
-                    var SchemesUI = new SchemesUI(design);
-                    Application.Run(SchemesUI);
-                    newValue = null;
-                    return false;
-                }
-
-                if (selected is NamedScheme ns)
-                {
-                    newValue = ns.Scheme;
-
-                    // if it was a default one, tell SchemeManager we are now using it
-                    if (!schemes.Contains(ns))
-                    {
-                        SchemeManager.Instance.AddOrUpdateScheme(ns.Name, ns.Scheme, design.GetRootDesign());
-                    }
-
-                    return true;
-                }
-
-                newValue = null;
-                return false;
-            }
-            else
-            {
-                // user cancelled selecting scheme
-                newValue = null;
-                return false;
-            }
         }
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Drawing;
 using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
@@ -110,7 +111,7 @@ public class BigListBox<T>
         };
         btnOk.Accepting += (s, e) =>
         {
-            e.Cancel = true;
+            e.Handled = true;
             this.Accept();
         };
 
@@ -121,7 +122,7 @@ public class BigListBox<T>
         };
         btnCancel.Accepting += (s, e) =>
         {
-            e.Cancel = true;
+            e.Handled = true;
             Application.RequestStop();
         };
 
@@ -329,26 +330,14 @@ public class BigListBox<T>
         {
             return;
         }
+        
+        var currentSelectionInCollection = this.collection.FirstOrDefault(o => o.Object != null && object.Equals(o.Object, currentSelection));
 
-        if (currentSelection is Scheme Scheme)
+        if (currentSelectionInCollection != null)
         {
-            var SchemeName = SchemeManager.Instance.GetNameForScheme(Scheme);
-            var currentSelectionInCollection = this.collection.FirstOrDefault(o => o.Object != null && o.Object is NamedScheme scheme && scheme.Name == SchemeName);
-
-            if (currentSelectionInCollection != null)
-            {
-                this.listView.SelectedItem = this.collection.IndexOf(currentSelectionInCollection);
-            }
+            this.listView.SelectedItem = this.collection.IndexOf(currentSelectionInCollection);
         }
-        else
-        {
-            var currentSelectionInCollection = this.collection.FirstOrDefault(o => o.Object != null && object.Equals(o.Object, currentSelection));
-
-            if (currentSelectionInCollection != null)
-            {
-                this.listView.SelectedItem = this.collection.IndexOf(currentSelectionInCollection);
-            }
-        }
+        
     }
 
     private class ListViewObject<T2>

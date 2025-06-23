@@ -8,6 +8,9 @@
 //      the code is regenerated.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
+
+using Terminal.Gui.ViewBase;
+
 namespace TerminalGuiDesigner.UI.Windows {
     using System;
     using Terminal.Gui;
@@ -173,8 +176,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnEditNormal.Y = 0;
             this.btnEditNormal.Visible = true;
             this.btnEditNormal.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-            this.btnEditNormal.Scheme = this.buttons;
-            this.btnEditNormal.CanFocus = true;
+                        this.btnEditNormal.CanFocus = true;
             this.btnEditNormal.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.btnEditNormal.Data = "btnEditNormal";
             this.btnEditNormal.Text = "Choose...";
@@ -235,8 +237,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnEditHotNormal.Y = 1;
             this.btnEditHotNormal.Visible = true;
             this.btnEditHotNormal.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-            this.btnEditHotNormal.Scheme = this.buttons;
-            this.btnEditHotNormal.CanFocus = true;
+                        this.btnEditHotNormal.CanFocus = true;
             this.btnEditHotNormal.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.btnEditHotNormal.Data = "btnEditHotNormal";
             this.btnEditHotNormal.Text = "Choose...";
@@ -297,8 +298,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnEditFocus.Y = 2;
             this.btnEditFocus.Visible = true;
             this.btnEditFocus.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-            this.btnEditFocus.Scheme = this.buttons;
-            this.btnEditFocus.CanFocus = true;
+                        this.btnEditFocus.CanFocus = true;
             this.btnEditFocus.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.btnEditFocus.Data = "btnEditFocus";
             this.btnEditFocus.Text = "Choose...";
@@ -359,8 +359,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnEditHotFocus.Y = 3;
             this.btnEditHotFocus.Visible = true;
             this.btnEditHotFocus.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-            this.btnEditHotFocus.Scheme = this.buttons;
-            this.btnEditHotFocus.CanFocus = true;
+                        this.btnEditHotFocus.CanFocus = true;
             this.btnEditHotFocus.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.btnEditHotFocus.Data = "btnEditHotFocus";
             this.btnEditHotFocus.Text = "Choose...";
@@ -421,8 +420,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnEditDisabled.Y = 4;
             this.btnEditDisabled.Visible = true;
             this.btnEditDisabled.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-            this.btnEditDisabled.Scheme = this.buttons;
-            this.btnEditDisabled.CanFocus = true;
+                        this.btnEditDisabled.CanFocus = true;
             this.btnEditDisabled.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.btnEditDisabled.Data = "btnEditDisabled";
             this.btnEditDisabled.Text = "Choose...";
@@ -435,8 +433,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnOk.Y = 6;
             this.btnOk.Visible = true;
             this.btnOk.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-            this.btnOk.Scheme = this.buttons;
-            this.btnOk.CanFocus = true;
+                        this.btnOk.CanFocus = true;
             this.btnOk.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btnOk.Data = "btnOk";
             this.btnOk.Text = "Ok";
@@ -449,8 +446,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnCancel.Y = 6;
             this.btnCancel.Visible = true;
             this.btnCancel.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-            this.btnCancel.Scheme = this.buttons;
-            this.btnCancel.CanFocus = true;
+                        this.btnCancel.CanFocus = true;
             this.btnCancel.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btnCancel.Data = "btnCancel";
             this.btnCancel.Text = "Cancel";

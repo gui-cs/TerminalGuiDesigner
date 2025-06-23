@@ -1,6 +1,7 @@
 
 
 using System.Runtime.CompilerServices;
+using Terminal.Gui.App;
 using Terminal.Gui.Drivers;
 using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;

@@ -10,6 +10,7 @@
 
 using System.Reflection;
 using System.Text.Json;
+using Terminal.Gui.App;
 using Terminal.Gui.Drawing;
 using Terminal.Gui.Views;
 using Attribute = System.Attribute;
@@ -78,12 +79,12 @@ namespace TerminalGuiDesigner.UI.Windows {
             btnSave.Accepting += (s, e) =>
             {
                 Save = true;
-                e.Cancel = true;
+                e.Handled = true;
                 Application.RequestStop();
             };
             btnCancel.Accepting += (s, e) =>
             {
-                e.Cancel = true;
+                e.Handled = true;
                 Application.RequestStop();
             };
         }
