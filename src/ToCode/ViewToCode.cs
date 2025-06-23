@@ -140,6 +140,12 @@ public class ViewToCode
         var ns = new CodeNamespace(rosylyn.Namespace);
         ns.Imports.Add(new CodeNamespaceImport("System"));
         ns.Imports.Add(new CodeNamespaceImport("Terminal.Gui"));
+        ns.Imports.Add(new CodeNamespaceImport("Terminal.Gui.App"));
+        ns.Imports.Add(new CodeNamespaceImport("Terminal.Gui.Drawing"));
+        ns.Imports.Add(new CodeNamespaceImport("Terminal.Gui.Input"));
+        ns.Imports.Add(new CodeNamespaceImport("Terminal.Gui.ViewBase"));
+        ns.Imports.Add(new CodeNamespaceImport("Terminal.Gui.Views"));
+
         ns.Imports.Add(new CodeNamespaceImport("System.Collections"));
         ns.Imports.Add(new CodeNamespaceImport("System.Collections.Generic"));
         ns.Imports.Add(new CodeNamespaceImport("System.Collections.ObjectModel"));
