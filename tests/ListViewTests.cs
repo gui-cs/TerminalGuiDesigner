@@ -85,7 +85,7 @@ internal class ListViewTests : Tests
         Assert.That(
             code.Trim().ReplaceLineEndings("\n"), Is.EqualTo( 
                 @"
-new Terminal.Gui.ListWrapper<string>(new System.Collections.ObjectModel.ObservableCollection<string>(new string[] {
+new Terminal.Gui.Views.ListWrapper<string>(new System.Collections.ObjectModel.ObservableCollection<string>(new string[] {
                 ""hi there"",
                 ""my friend""}))".Trim().ReplaceLineEndings("\n")));
     }
