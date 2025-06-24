@@ -20,7 +20,7 @@
 		<PackageOutputPath>./nupkg</PackageOutputPath>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<PackageId>TerminalGuiDesigner</PackageId>
-		<Version>2.0.0-develop.4401</Version>
+		<Version>2.0.0-develop.4402</Version>
 		<Authors>Thomas Nind</Authors>
 		<Nullable>enable</Nullable>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -33,7 +33,7 @@
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
-			2.0.0-alpha.4401
+			2.0.0-alpha.4402
 			* Bugfix for clicking views in tabviews.
 			2.0.0-alpha.4400
 			* V2 driver support
