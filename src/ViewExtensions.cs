@@ -254,8 +254,6 @@ public static class ViewExtensions
     /// <returns>The <see cref="View"/> at the given screen location or null if none found.</returns>
     public static View? HitTest(this View w, MouseEventArgs m, out bool isBorder, out bool isLowerRight, params View[] ignoring)
     {
-        //ignoring = ignoring.Union(w.GetAllNonDesignableSubviews()).ToArray();
-
         // hide the views while we perform the hit test
         foreach (View v in ignoring)
         {

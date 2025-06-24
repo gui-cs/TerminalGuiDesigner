@@ -33,6 +33,8 @@
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
+			2.0.0-alpha.4402
+			* Bugfix for clicking views in tabviews.
 			2.0.0-alpha.4401
 			* Add keybinding screen and save in app data
 			2.0.0-alpha.4400
