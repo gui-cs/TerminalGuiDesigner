@@ -1270,6 +1270,7 @@ public class Editor : Toplevel
             AllowedTypes = new List<IAllowedType>() { new AllowedType("C# File", ".cs") },
             Path = "MyView.cs",
         };
+        ofd.Style.PreserveFilenameOnDirectoryChanges = true;
         ofd.Layout();
 
         Application.Run(ofd);
