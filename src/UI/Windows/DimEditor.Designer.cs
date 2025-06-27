@@ -8,12 +8,14 @@
 //      the code is regenerated.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
-
-using Terminal.Gui.ViewBase;
-
 namespace TerminalGuiDesigner.UI.Windows {
     using System;
     using Terminal.Gui;
+    using Terminal.Gui.App;
+    using Terminal.Gui.Drawing;
+    using Terminal.Gui.Input;
+    using Terminal.Gui.ViewBase;
+    using Terminal.Gui.Views;
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -21,10 +23,6 @@ namespace TerminalGuiDesigner.UI.Windows {
     
     
     public partial class DimEditor : Terminal.Gui.Views.Dialog {
-        
-        private Terminal.Gui.Drawing.Scheme dialogBackground;
-        
-        private Terminal.Gui.Drawing.Scheme buttons;
         
         private Terminal.Gui.Views.RadioGroup rgDimType;
         
@@ -68,7 +66,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.rgDimType.Y = 1;
             this.rgDimType.Visible = true;
             this.rgDimType.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-                        this.rgDimType.CanFocus = true;
+            this.rgDimType.CanFocus = true;
             this.rgDimType.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.rgDimType.Data = "rgDimType";
             this.rgDimType.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
@@ -147,7 +145,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnOk.Y = 6;
             this.btnOk.Visible = true;
             this.btnOk.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-                        this.btnOk.CanFocus = true;
+            this.btnOk.CanFocus = true;
             this.btnOk.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btnOk.Data = "btnOk";
             this.btnOk.Text = "Ok";
@@ -160,7 +158,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnCancel.Y = 6;
             this.btnCancel.Visible = true;
             this.btnCancel.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-                        this.btnCancel.CanFocus = true;
+            this.btnCancel.CanFocus = true;
             this.btnCancel.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btnCancel.Data = "btnCancel";
             this.btnCancel.Text = "Cancel";

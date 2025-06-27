@@ -8,12 +8,14 @@
 //      the code is regenerated.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
-
-using Terminal.Gui.ViewBase;
-
 namespace TerminalGuiDesigner {
     using System;
     using Terminal.Gui;
+    using Terminal.Gui.App;
+    using Terminal.Gui.Drawing;
+    using Terminal.Gui.Input;
+    using Terminal.Gui.ViewBase;
+    using Terminal.Gui.Views;
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -23,11 +25,7 @@ namespace TerminalGuiDesigner {
     public partial class LoadingDialog : Terminal.Gui.Views.Dialog {
         
         private Terminal.Gui.Views.Label lblLoading;
-
-        private Terminal.Gui.Drawing.Scheme dialogBackground;
-
-        private Terminal.Gui.Drawing.Scheme buttons;
-
+        
         private void InitializeComponent() {
             this.lblLoading = new Terminal.Gui.Views.Label();
             this.Width = 40;

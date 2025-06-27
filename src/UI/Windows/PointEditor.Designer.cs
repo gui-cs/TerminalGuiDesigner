@@ -8,12 +8,14 @@
 //      the code is regenerated.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
-
-using Terminal.Gui.ViewBase;
-
 namespace TerminalGuiDesigner {
     using System;
     using Terminal.Gui;
+    using Terminal.Gui.App;
+    using Terminal.Gui.Drawing;
+    using Terminal.Gui.Input;
+    using Terminal.Gui.ViewBase;
+    using Terminal.Gui.Views;
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -21,10 +23,6 @@ namespace TerminalGuiDesigner {
     
     
     public partial class PointEditor : Terminal.Gui.Views.Dialog {
-        
-        private Terminal.Gui.Drawing.Scheme dialogBackground;
-        
-        private Terminal.Gui.Drawing.Scheme buttons;
         
         private Terminal.Gui.Views.Label lblX;
         
@@ -125,7 +123,7 @@ namespace TerminalGuiDesigner {
             this.btnCancel.Y = 5;
             this.btnCancel.Visible = true;
             this.btnCancel.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-                        this.btnCancel.CanFocus = true;
+            this.btnCancel.CanFocus = true;
             this.btnCancel.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btnCancel.Data = "btnCancel";
             this.btnCancel.Text = "Cancel";

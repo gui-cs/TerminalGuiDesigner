@@ -8,12 +8,14 @@
 //      the code is regenerated.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
-
-using Terminal.Gui.ViewBase;
-
 namespace TerminalGuiDesigner.UI.Windows {
     using System;
     using Terminal.Gui;
+    using Terminal.Gui.App;
+    using Terminal.Gui.Drawing;
+    using Terminal.Gui.Input;
+    using Terminal.Gui.ViewBase;
+    using Terminal.Gui.Views;
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
@@ -21,10 +23,6 @@ namespace TerminalGuiDesigner.UI.Windows {
     
     
     public partial class ChoicesDialog : Terminal.Gui.Views.Window {
-        
-        private Terminal.Gui.Drawing.Scheme dialogBackground;
-        
-        private Terminal.Gui.Drawing.Scheme buttons;
         
         private Terminal.Gui.Views.Label label1;
         
@@ -78,6 +76,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.buttonPanel.CanFocus = true;
             this.buttonPanel.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.buttonPanel.Data = "buttonPanel";
+            this.buttonPanel.Text = "";
             this.buttonPanel.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.buttonPanel);
             this.btn1.Width = Dim.Auto();
@@ -86,7 +85,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btn1.Y = Pos.AnchorEnd(2);
             this.btn1.Visible = true;
             this.btn1.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-                        this.btn1.CanFocus = true;
+            this.btn1.CanFocus = true;
             this.btn1.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btn1.Data = "btn1";
             this.btn1.Text = "btn1";
@@ -99,7 +98,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btn2.Y = Pos.AnchorEnd(2);
             this.btn2.Visible = true;
             this.btn2.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-                        this.btn2.CanFocus = true;
+            this.btn2.CanFocus = true;
             this.btn2.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btn2.Data = "btn2";
             this.btn2.Text = "btn2";
@@ -112,7 +111,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btn3.Y = Pos.AnchorEnd(2);
             this.btn3.Visible = true;
             this.btn3.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-                        this.btn3.CanFocus = true;
+            this.btn3.CanFocus = true;
             this.btn3.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btn3.Data = "btn3";
             this.btn3.Text = "btn3";
@@ -125,7 +124,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btn4.Y = Pos.AnchorEnd(2);
             this.btn4.Visible = true;
             this.btn4.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-                        this.btn4.CanFocus = true;
+            this.btn4.CanFocus = true;
             this.btn4.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btn4.Data = "btn4";
             this.btn4.Text = "btn4";
