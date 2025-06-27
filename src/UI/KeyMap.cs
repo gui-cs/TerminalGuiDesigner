@@ -2,6 +2,10 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Configuration;
 using Terminal.Gui;
+using Terminal.Gui.Drawing;
+using Terminal.Gui.Input;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 using TerminalGuiDesigner.UI.Windows;
@@ -36,7 +40,7 @@ public sealed record KeyMap(
     string MoveLeft,
     string MoveUp,
     string MoveDown,
-    string ShowColorSchemes )
+    string ShowSchemes )
 {
     /// <summary>Initializes a new instance of the <see cref="KeyMap" /> class.</summary>
     public KeyMap( )
@@ -139,13 +143,13 @@ public sealed record KeyMap(
     public string SelectAll { get; init; } = SelectAll;
 
     /// <summary>
-    ///   Gets a custom <see cref="ColorScheme" /> to apply to multi selections in designer.
+    ///   Gets a custom <see cref="Scheme" /> to apply to multi selections in designer.
     ///   <remarks>
     ///     Default color is green, this is useful if you have a heavily green theme where it could get confusing what is multi selected
     ///     and what just has focus/uses your custom scheme
     ///   </remarks>
     /// </summary>
-    public ColorSchemeBlueprint SelectionColor { get; init; } = new(
+    public SchemeBlueprint SelectionColor { get; init; } = new(
         Color.BrightGreen,
         Color.Green,
         Color.BrightGreen,
@@ -159,12 +163,6 @@ public sealed record KeyMap(
 
     /// <summary>Gets the string to assign a new shortcut to a <see cref="MenuItem" />.</summary>
     public string SetShortcut { get; init; } = SetShortcut;
-
-    /// <summary>
-    ///   Gets the string to open the <see cref="ColorSchemesUI" /> window for creating/deleting <see cref="ColorScheme" /> that can be
-    ///   used in the <see cref="Editor" />.
-    /// </summary>
-    public string ShowColorSchemes { get; init; } = ShowColorSchemes;
 
     /// <summary>Gets the string to pop up the right click context menu.</summary>
     public string ShowContextMenu { get; init; } = ShowContextMenu;

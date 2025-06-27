@@ -10,6 +10,8 @@
 
 using System.Collections.ObjectModel;
 using JetBrains.Annotations;
+using Terminal.Gui.App;
+using Terminal.Gui.Input;
 
 namespace TerminalGuiDesigner.UI.Windows {
     using System.Collections;
@@ -89,7 +91,7 @@ namespace TerminalGuiDesigner.UI.Windows {
                 lvElements.SetNeedsDraw();
             }
 
-            e.Cancel = true;
+            e.Handled = true;
         }
 
         private void BtnMoveDown_Clicked(object sender, CommandEventArgs e)
@@ -109,7 +111,7 @@ namespace TerminalGuiDesigner.UI.Windows {
                 lvElements.SetNeedsDraw();
             }
 
-            e.Cancel = true;
+            e.Handled = true;
         }
 
         private void LvElements_KeyDown(object sender, Key e)
@@ -145,7 +147,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             lvElements.Source = ResultAsList.ToListDataSource();
             lvElements.SelectedItem = ResultAsList.Count - 1;
             lvElements.SetNeedsDraw();
-            e.Cancel = true;
+            e.Handled = true;
         }
         private void BtnEdit_Clicked(object sender, CommandEventArgs e)
         {
@@ -167,19 +169,19 @@ namespace TerminalGuiDesigner.UI.Windows {
                 lvElements.SetNeedsDraw();
             }
 
-            e.Cancel = true;
+            e.Handled = true;
         }
 
         private void BtnCancel_Clicked(object sender, CommandEventArgs e)
         {
-            e.Cancel = true;
+            e.Handled = true;
             Cancelled = true;
             Application.RequestStop();
         }
 
         private void BtnOk_Clicked(object sender, CommandEventArgs e)
         {
-            e.Cancel = true;
+            e.Handled = true;
             Cancelled = false;
             Application.RequestStop();
         }

@@ -7,6 +7,9 @@
 //      You can make changes to this file and they will not be overwritten when saving.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
+
+using Terminal.Gui.Views;
+
 namespace TerminalGuiDesigner.UI.Windows;
 
 using Terminal.Gui;
@@ -42,7 +45,7 @@ public partial class SizeEditor : IValueGetterDialog
 
         btnOk.Accepting += (s, e) =>
         {
-            e.Cancel = true;
+            e.Handled = true;
             try
             {
                 Result = new Size(int.Parse(tfWidth.Text.ToString()), int.Parse(tfHeight.Text.ToString()));
@@ -59,7 +62,7 @@ public partial class SizeEditor : IValueGetterDialog
 
         btnCancel.Accepting += (s, e) =>
         {
-            e.Cancel = true;
+            e.Handled = true;
             Cancelled = true;
             RequestStop();
         };

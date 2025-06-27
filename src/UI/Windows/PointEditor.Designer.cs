@@ -11,112 +11,110 @@
 namespace TerminalGuiDesigner {
     using System;
     using Terminal.Gui;
+    using Terminal.Gui.App;
+    using Terminal.Gui.Drawing;
+    using Terminal.Gui.Input;
+    using Terminal.Gui.ViewBase;
+    using Terminal.Gui.Views;
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Drawing;
     
     
-    public partial class PointEditor : Terminal.Gui.Dialog {
+    public partial class PointEditor : Terminal.Gui.Views.Dialog {
         
-        private Terminal.Gui.ColorScheme dialogBackground;
+        private Terminal.Gui.Views.Label lblX;
         
-        private Terminal.Gui.ColorScheme buttons;
+        private Terminal.Gui.Views.TextField tbX;
         
-        private Terminal.Gui.Label lblX;
+        private Terminal.Gui.Views.Label lblY;
         
-        private Terminal.Gui.TextField tbX;
+        private Terminal.Gui.Views.TextField tbY;
         
-        private Terminal.Gui.Label lblY;
+        private Terminal.Gui.Views.Button btnOk;
         
-        private Terminal.Gui.TextField tbY;
-        
-        private Terminal.Gui.Button btnOk;
-        
-        private Terminal.Gui.Button btnCancel;
+        private Terminal.Gui.Views.Button btnCancel;
         
         private void InitializeComponent() {
-            this.btnCancel = new Terminal.Gui.Button();
-            this.btnOk = new Terminal.Gui.Button();
-            this.tbY = new Terminal.Gui.TextField();
-            this.lblY = new Terminal.Gui.Label();
-            this.tbX = new Terminal.Gui.TextField();
-            this.lblX = new Terminal.Gui.Label();
-            this.dialogBackground = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4294967295u, 4285953654u));
-            this.buttons = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4278190080u, 4294967040u));
+            this.btnCancel = new Terminal.Gui.Views.Button();
+            this.btnOk = new Terminal.Gui.Views.Button();
+            this.tbY = new Terminal.Gui.Views.TextField();
+            this.lblY = new Terminal.Gui.Views.Label();
+            this.tbX = new Terminal.Gui.Views.TextField();
+            this.lblX = new Terminal.Gui.Views.Label();
             this.Width = 25;
             this.Height = 10;
             this.X = Pos.Center();
             this.Y = Pos.Center();
             this.Visible = true;
-            this.Arrangement = (Terminal.Gui.ViewArrangement.Movable | Terminal.Gui.ViewArrangement.Overlapped);
-            this.ColorScheme = this.dialogBackground;
+            this.Arrangement = (Terminal.Gui.ViewBase.ViewArrangement.Movable | Terminal.Gui.ViewBase.ViewArrangement.Overlapped);
             this.CanFocus = true;
-            this.ShadowStyle = Terminal.Gui.ShadowStyle.Transparent;
+            this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Transparent;
             this.Modal = true;
-            this.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Title = "Point Designer";
             this.lblX.Width = 2;
             this.lblX.Height = 1;
             this.lblX.X = 2;
             this.lblX.Y = 1;
             this.lblX.Visible = true;
-            this.lblX.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.lblX.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.lblX.CanFocus = false;
-            this.lblX.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.lblX.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.lblX.Data = "lblX";
             this.lblX.Text = "X:";
-            this.lblX.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.lblX.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.lblX);
             this.tbX.Width = 10;
             this.tbX.Height = 1;
             this.tbX.X = 5;
             this.tbX.Y = 1;
             this.tbX.Visible = true;
-            this.tbX.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.tbX.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.tbX.CanFocus = true;
-            this.tbX.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.tbX.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.tbX.Secret = false;
             this.tbX.Data = "tbX";
             this.tbX.Text = "";
-            this.tbX.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.tbX.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.tbX);
             this.lblY.Width = 2;
             this.lblY.Height = 1;
             this.lblY.X = 2;
             this.lblY.Y = 3;
             this.lblY.Visible = true;
-            this.lblY.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.lblY.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.lblY.CanFocus = false;
-            this.lblY.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.lblY.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.lblY.Data = "lblY";
             this.lblY.Text = "Y:";
-            this.lblY.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.lblY.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.lblY);
             this.tbY.Width = 10;
             this.tbY.Height = 1;
             this.tbY.X = 5;
             this.tbY.Y = 3;
             this.tbY.Visible = true;
-            this.tbY.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.tbY.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.tbY.CanFocus = true;
-            this.tbY.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.tbY.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.tbY.Secret = false;
             this.tbY.Data = "tbY";
             this.tbY.Text = "";
-            this.tbY.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.tbY.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.tbY);
             this.btnOk.Width = 8;
             this.btnOk.Height = Dim.Auto();
             this.btnOk.X = 1;
             this.btnOk.Y = 5;
             this.btnOk.Visible = true;
-            this.btnOk.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.btnOk.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.btnOk.CanFocus = true;
-            this.btnOk.ShadowStyle = Terminal.Gui.ShadowStyle.Opaque;
+            this.btnOk.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btnOk.Data = "btnOk";
             this.btnOk.Text = "Ok";
-            this.btnOk.TextAlignment = Terminal.Gui.Alignment.Center;
+            this.btnOk.TextAlignment = Terminal.Gui.ViewBase.Alignment.Center;
             this.btnOk.IsDefault = true;
             this.Add(this.btnOk);
             this.btnCancel.Width = Dim.Auto();
@@ -124,13 +122,12 @@ namespace TerminalGuiDesigner {
             this.btnCancel.X = 10;
             this.btnCancel.Y = 5;
             this.btnCancel.Visible = true;
-            this.btnCancel.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
-            this.btnCancel.ColorScheme = this.dialogBackground;
+            this.btnCancel.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.btnCancel.CanFocus = true;
-            this.btnCancel.ShadowStyle = Terminal.Gui.ShadowStyle.Opaque;
+            this.btnCancel.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btnCancel.Data = "btnCancel";
             this.btnCancel.Text = "Cancel";
-            this.btnCancel.TextAlignment = Terminal.Gui.Alignment.Center;
+            this.btnCancel.TextAlignment = Terminal.Gui.ViewBase.Alignment.Center;
             this.btnCancel.IsDefault = false;
             this.Add(this.btnCancel);
         }

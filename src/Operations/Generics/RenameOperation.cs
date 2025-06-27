@@ -1,4 +1,6 @@
 ﻿using Terminal.Gui;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner.UI.Windows;
 
 namespace TerminalGuiDesigner.Operations.Generics;

@@ -32,7 +32,7 @@
       <Property Name="View" />
     </ShowAsAssociation>
   </Class>
-  <Class Name="Terminal.Gui.View" Collapsed="true">
+  <Class Name="Terminal.Gui.ViewBase.View" Collapsed="true">
     <Position X="6.75" Y="4.25" Width="1.5" />
     <TypeIdentifier />
   </Class>
@@ -154,11 +154,11 @@
       <FileName>SourceCodeFile.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TerminalGuiDesigner.ColorSchemeManager" Collapsed="true">
+  <Class Name="TerminalGuiDesigner.SchemeManager" Collapsed="true">
     <Position X="8.5" Y="3.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAIBBAAQAAAQgAAAAAAABAAAAAAAAAAAQAAAAABAgAA=</HashCode>
-      <FileName>ColorSchemeManager.cs</FileName>
+      <FileName>SchemeManager.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TerminalGuiDesigner.SelectionManager" Collapsed="true">
@@ -171,18 +171,18 @@
       <Property Name="Selected" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="TerminalGuiDesigner.ToCode.ColorSchemeToCode" Collapsed="true">
+  <Class Name="TerminalGuiDesigner.ToCode.SchemeToCode" Collapsed="true">
     <Position X="20" Y="1.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAEAAAAAAAAAAAAIAABAAAAAAABAAAAAAAAAAAAAA=</HashCode>
-      <FileName>ToCode\ColorSchemeToCode.cs</FileName>
+      <FileName>ToCode\SchemeToCode.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="TerminalGuiDesigner.ToCode.ColorSchemeProperty" Collapsed="true">
+  <Class Name="TerminalGuiDesigner.ToCode.SchemeProperty" Collapsed="true">
     <Position X="6.5" Y="2.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAEAAAKAAAAgAAAAAAAAAAAAAAAAABAAAAAAAAAAA=</HashCode>
-      <FileName>ToCode\ColorSchemeProperty.cs</FileName>
+      <FileName>ToCode\SchemeProperty.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TerminalGuiDesigner.Operations.OperationFactory" Collapsed="true">

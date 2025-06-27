@@ -11,9 +11,9 @@ namespace Showcase {
     using Terminal.Gui;
     
     
-    public partial class NumericUpDown {
+    public partial class Tabs {
         
-        public NumericUpDown() {
+        public Tabs() {
             InitializeComponent();
         }
     }

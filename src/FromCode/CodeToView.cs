@@ -11,8 +11,9 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Emit;
 using NLog;
 using Terminal.Gui;
+using Terminal.Gui.ViewBase;
 using TerminalGuiDesigner.ToCode;
-using static Terminal.Gui.SpinnerStyle;
+
 
 namespace TerminalGuiDesigner.FromCode;
 

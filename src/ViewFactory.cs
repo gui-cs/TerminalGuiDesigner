@@ -1,9 +1,12 @@
 using System.Collections.ObjectModel;
 using System.Data;
 using Terminal.Gui;
-using Terminal.Gui.TextValidateProviders;
+using Terminal.Gui.Drawing;
+using Terminal.Gui.Input;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations.MenuOperations;
-using Attribute = Terminal.Gui.Attribute;
+using Attribute = Terminal.Gui.Drawing.Attribute;
 
 namespace TerminalGuiDesigner;
 
@@ -55,7 +58,8 @@ public static class ViewFactory
         typeof(TileView),
 
         // Terminal.Gui combo boxes do not really work properly
-        typeof(ComboBox)
+        typeof(ComboBox),
+        typeof(FlagSelector<>)
     ];
 
     /// <summary>
@@ -94,7 +98,8 @@ public static class ViewFactory
                     })
                     .Where(filteredType => filteredType == typeof(View) || filteredType.IsSubclassOf(typeof(View))
                         && filteredType != typeof(Adornment)
-                        && !filteredType.IsSubclassOf(typeof(Adornment)))
+                        && filteredType != typeof(FlagSelector<>)
+                        && filteredType != typeof(FlagSelector<>))
                     .Except(KnownUnsupportedTypes)
                     // Slider is an alias of Slider<object> so don't offer that
                     .Where(vt => vt != typeof(Slider));

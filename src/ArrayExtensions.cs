@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.ObjectModel;
 using Terminal.Gui;
+using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner;
 

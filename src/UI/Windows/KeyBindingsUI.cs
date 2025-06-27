@@ -10,6 +10,10 @@
 
 using System.Reflection;
 using System.Text.Json;
+using Terminal.Gui.App;
+using Terminal.Gui.Drawing;
+using Terminal.Gui.Views;
+using Attribute = System.Attribute;
 
 namespace TerminalGuiDesigner.UI.Windows {
     using Terminal.Gui;
@@ -39,7 +43,7 @@ namespace TerminalGuiDesigner.UI.Windows {
 
             var keyStyle = tableView.Style.GetOrCreateColumnStyle(1);
 
-            var badCellColor = CloneColorSchemeButMake(tableView.ColorScheme,Color.Red);
+            var badCellColor = CloneSchemeButMake(tableView.GetScheme(),Color.Red);
 
             keyStyle.ColorGetter = (k) =>
             {
@@ -75,25 +79,25 @@ namespace TerminalGuiDesigner.UI.Windows {
             btnSave.Accepting += (s, e) =>
             {
                 Save = true;
-                e.Cancel = true;
+                e.Handled = true;
                 Application.RequestStop();
             };
             btnCancel.Accepting += (s, e) =>
             {
-                e.Cancel = true;
+                e.Handled = true;
                 Application.RequestStop();
             };
         }
 
-        private ColorScheme CloneColorSchemeButMake(ColorScheme cs,Color color)
+        private Scheme CloneSchemeButMake(Scheme cs,Color color)
         {
-            return new ColorScheme
+            return new Scheme
             {
                 Disabled = cs.Disabled,
                 Focus = cs.Focus,
                 HotFocus = cs.HotFocus,
                 HotNormal = cs.HotNormal,
-                Normal = new Attribute(color, cs.Normal.Background)
+                Normal = new Terminal.Gui.Drawing.Attribute(color, cs.Normal.Background)
             };
         }
     }

@@ -1,4 +1,6 @@
 ﻿using Terminal.Gui;
+using Terminal.Gui.Input;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations.MenuOperations;
 
 namespace UnitTests.Operations;

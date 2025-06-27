@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terminal.Gui;
+using Terminal.Gui.Drawing;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.Operations.TabOperations;
@@ -226,107 +229,6 @@ internal class CopyPasteTests : Tests
         Assert.That( side, Is.EqualTo( Side.Right ) );
 
         Assert.That( relativeTo, Is.SameAs( lbl.Data ), "Pasted clone should be relative to the original label");
-    }
-
-    [Test]
-    public void CopyPasteColorScheme()
-    {
-        Design? rootDesign = null;
-        Label? lbl = null;
-        TextField? tb = null;
-        
-        Assume.That( ( ) => rootDesign = Get10By10View( ), Throws.Nothing );
-        Assume.That( ( ) => lbl = ViewFactory.Create<Label>( null, null, "Name:" ), Throws.Nothing );
-        Assume.That( ( ) =>  tb = ViewFactory.Create<TextField>( ), Throws.Nothing );
-        
-        Assume.That( rootDesign, Is.Not.Null.And.InstanceOf<Design>( ) );
-        Assume.That( lbl, Is.Not.Null.And.InstanceOf<Label>( ) );
-        Assume.That( tb, Is.Not.Null.And.InstanceOf<TextField>( ) );
-
-        bool addLabelOperationSucceeded = false;
-        bool addTextFieldOperationSucceeded = false;
-        
-        Assume.That( ( ) => addLabelOperationSucceeded = new AddViewOperation( lbl!, rootDesign!, "lbl" ).Do( ), Throws.Nothing );
-        Assume.That( ( ) => addTextFieldOperationSucceeded = new AddViewOperation( tb!, rootDesign!, "tb" ).Do( ), Throws.Nothing );
-        Assume.That( addLabelOperationSucceeded );
-        Assume.That( addTextFieldOperationSucceeded );
-
-        Design? labelDesign = null;
-        Design? textFieldDesign = null;
-        Assume.That( ( ) => labelDesign = rootDesign!.GetAllDesigns().SingleOrDefault(d => d.FieldName == "lbl"), Throws.Nothing );
-        Assume.That( ( ) => textFieldDesign = rootDesign!.GetAllDesigns().SingleOrDefault(d => d.FieldName == "tb"), Throws.Nothing );
-        Assume.That( labelDesign, Is.Not.Null.And.InstanceOf<Design>( ) );
-        Assume.That( textFieldDesign, Is.Not.Null.And.InstanceOf<Design>( ) );
-
-        SelectionManager selected = SelectionManager.Instance;
-
-        ColorScheme green = new() { Normal = new(Color.Green, Color.Cyan) };
-        Assume.That( green, Is.Not.Null.And.InstanceOf<ColorScheme>( ) );
-
-        Assume.That( labelDesign!.GetDesignableProperties( ).OfType<ColorSchemeProperty>( ).ToArray( ),
-                     Has.Length.EqualTo( 1 ),
-                     "Should only be one ColorScheme property" );
-        
-        ColorScheme addedScheme = ColorSchemeManager.Instance.AddOrUpdateScheme("green", green, rootDesign!);
-        Assume.That( addedScheme, Is.SameAs( green ) );
-
-        Assume.That( textFieldDesign!.TryGetDesignableProperty( nameof( ColorScheme ), out Property? colorSchemeProperty ) );
-        Assume.That( colorSchemeProperty, Is.Not.Null.And.InstanceOf<Property>( ) );
-        Assume.That( ( ) => colorSchemeProperty.SetValue( green ), Throws.Nothing );
-        
-        rootDesign!.View.ColorScheme = green;
-
-        Assume.That( lbl!.ColorScheme, Is.SameAs( green ), "The label should inherit color scheme from the parent" );
-
-        Assume.That( labelDesign!.GetDesignableProperties( ).OfType<ColorSchemeProperty>( ).Single( ).ToString( ),
-                     Is.EqualTo( "ColorScheme:(Inherited)" ),
-                     "Expected ColorScheme to be known to be inherited" );
-
-        Assume.That( textFieldDesign.GetDesignableProperties( ).OfType<ColorSchemeProperty>( ).Single( ).ToString( ),
-                     Is.EqualTo( "ColorScheme:green" ),
-                     "TextBox inherits but also is explicitly marked as green" );
-
-        SelectionManager.Instance.SetSelection(labelDesign, textFieldDesign);
-        Assume.That( SelectionManager.Instance.Selected, Does.Contain( labelDesign ).And.Contains( textFieldDesign ) );
-
-        CopyOperation copyOperation = new( SelectionManager.Instance.Selected.ToArray( ) );
-        Assert.That( copyOperation, Is.Not.Null.And.InstanceOf<CopyOperation>( ) );
-        Assert.Multiple( ( ) =>
-        {
-            Assert.That( copyOperation.IsImpossible, Is.False );
-            Assert.That( copyOperation.SupportsUndo, Is.False, "What would it even mean to undo a copy?" );
-        } );
-
-        bool copyOperationSucceeded = false;
-        Assert.That( ( ) => copyOperationSucceeded = copyOperation.Do( ), Throws.Nothing );
-        Assert.That( copyOperationSucceeded );
-
-        SelectionManager.Instance.SetSelection(labelDesign, textFieldDesign);
-        Assume.That( SelectionManager.Instance.Selected, Does.Contain( labelDesign ).And.Contains( textFieldDesign ) );
-
-        PasteOperation pasteOperation = new (rootDesign);
-        Assume.That( pasteOperation, Is.Not.Null.And.InstanceOf<PasteOperation>( ) );
-
-        Assert.That(pasteOperation.IsImpossible, Is.False );
-        Assert.That(pasteOperation.SupportsUndo );
-        
-        bool pasteOperationSucceeded = false;
-        Assert.That( ( ) => pasteOperationSucceeded = pasteOperation.Do( ), Throws.Nothing );
-        Assert.That( pasteOperationSucceeded );
-
-        // (Root + 2 original + 2 cloned)
-        Design[] allDesigns = rootDesign.GetAllDesigns( ).ToArray( );
-        Assert.That( allDesigns, Has.Length.EqualTo( 5 ) );
-        
-        // Reference equality should be maintained through the copy/paste operation
-        Assert.Multiple( ( ) =>
-        {
-            Assert.That( allDesigns, Has.One.SameAs( labelDesign ) );
-            Assert.That( allDesigns, Has.One.SameAs( textFieldDesign ) );
-        } );
-        
-        // clear whatever the current selection is (probably the pasted views)
-        SelectionManager.Instance.Clear();
     }
 
     [Test]

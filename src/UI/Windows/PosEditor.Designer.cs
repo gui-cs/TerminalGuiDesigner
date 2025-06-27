@@ -11,80 +11,77 @@
 namespace TerminalGuiDesigner.UI.Windows {
     using System;
     using Terminal.Gui;
+    using Terminal.Gui.App;
+    using Terminal.Gui.Drawing;
+    using Terminal.Gui.Input;
+    using Terminal.Gui.ViewBase;
+    using Terminal.Gui.Views;
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Drawing;
     
     
-    public partial class PosEditor : Terminal.Gui.Dialog {
+    public partial class PosEditor : Terminal.Gui.Views.Dialog {
         
-        private Terminal.Gui.ColorScheme dialogBackground;
+        private Terminal.Gui.Views.RadioGroup rgPosType;
         
-        private Terminal.Gui.ColorScheme buttons;
+        private Terminal.Gui.Views.LineView lineview1;
         
-        private Terminal.Gui.RadioGroup rgPosType;
+        private Terminal.Gui.Views.Label lblValue;
         
-        private Terminal.Gui.LineView lineview1;
+        private Terminal.Gui.Views.TextField tbValue;
         
-        private Terminal.Gui.Label lblValue;
+        private Terminal.Gui.Views.Label lblRelativeTo;
         
-        private Terminal.Gui.TextField tbValue;
+        private Terminal.Gui.Views.TextField tbRelativeTo;
         
-        private Terminal.Gui.Label lblRelativeTo;
+        private Terminal.Gui.Views.Label lblSide;
         
-        private Terminal.Gui.TextField tbRelativeTo;
+        private Terminal.Gui.Views.RadioGroup rgSide;
         
-        private Terminal.Gui.Label lblSide;
+        private Terminal.Gui.Views.Label lblOffset;
         
-        private Terminal.Gui.RadioGroup rgSide;
+        private Terminal.Gui.Views.TextField tbOffset;
         
-        private Terminal.Gui.Label lblOffset;
+        private Terminal.Gui.Views.Button btnOk;
         
-        private Terminal.Gui.TextField tbOffset;
-        
-        private Terminal.Gui.Button btnOk;
-        
-        private Terminal.Gui.Button btnCancel;
+        private Terminal.Gui.Views.Button btnCancel;
         
         private void InitializeComponent() {
-            this.btnCancel = new Terminal.Gui.Button();
-            this.btnOk = new Terminal.Gui.Button();
-            this.tbOffset = new Terminal.Gui.TextField();
-            this.lblOffset = new Terminal.Gui.Label();
-            this.rgSide = new Terminal.Gui.RadioGroup();
-            this.lblSide = new Terminal.Gui.Label();
-            this.tbRelativeTo = new Terminal.Gui.TextField();
-            this.lblRelativeTo = new Terminal.Gui.Label();
-            this.tbValue = new Terminal.Gui.TextField();
-            this.lblValue = new Terminal.Gui.Label();
-            this.lineview1 = new Terminal.Gui.LineView();
-            this.rgPosType = new Terminal.Gui.RadioGroup();
-            this.dialogBackground = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4294967295u, 4285953654u));
-            this.buttons = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4278190080u, 4294967040u));
+            this.btnCancel = new Terminal.Gui.Views.Button();
+            this.btnOk = new Terminal.Gui.Views.Button();
+            this.tbOffset = new Terminal.Gui.Views.TextField();
+            this.lblOffset = new Terminal.Gui.Views.Label();
+            this.rgSide = new Terminal.Gui.Views.RadioGroup();
+            this.lblSide = new Terminal.Gui.Views.Label();
+            this.tbRelativeTo = new Terminal.Gui.Views.TextField();
+            this.lblRelativeTo = new Terminal.Gui.Views.Label();
+            this.tbValue = new Terminal.Gui.Views.TextField();
+            this.lblValue = new Terminal.Gui.Views.Label();
+            this.lineview1 = new Terminal.Gui.Views.LineView();
+            this.rgPosType = new Terminal.Gui.Views.RadioGroup();
             this.Width = 47;
             this.Height = 16;
             this.X = Pos.Center();
             this.Y = Pos.Center();
             this.Visible = true;
-            this.Arrangement = (Terminal.Gui.ViewArrangement.Movable | Terminal.Gui.ViewArrangement.Overlapped);
-            this.ColorScheme = this.dialogBackground;
+            this.Arrangement = (Terminal.Gui.ViewBase.ViewArrangement.Movable | Terminal.Gui.ViewBase.ViewArrangement.Overlapped);
             this.CanFocus = true;
-            this.ShadowStyle = Terminal.Gui.ShadowStyle.Transparent;
+            this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Transparent;
             this.Modal = true;
-            this.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Title = "";
             this.rgPosType.Width = 12;
             this.rgPosType.Height = 5;
             this.rgPosType.X = 1;
             this.rgPosType.Y = 1;
             this.rgPosType.Visible = true;
-            this.rgPosType.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
-            this.rgPosType.ColorScheme = this.buttons;
+            this.rgPosType.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.rgPosType.CanFocus = true;
-            this.rgPosType.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.rgPosType.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.rgPosType.Data = "rgPosType";
-            this.rgPosType.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.rgPosType.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.rgPosType.RadioLabels = new string[] {
                     "Absolute",
                     "Percent",
@@ -97,86 +94,86 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lineview1.X = 14;
             this.lineview1.Y = 1;
             this.lineview1.Visible = true;
-            this.lineview1.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.lineview1.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.lineview1.CanFocus = false;
-            this.lineview1.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.lineview1.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.lineview1.Data = "lineview1";
-            this.lineview1.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.lineview1.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.lineview1.LineRune = new System.Text.Rune('│');
-            this.lineview1.Orientation = Terminal.Gui.Orientation.Vertical;
+            this.lineview1.Orientation = Terminal.Gui.ViewBase.Orientation.Vertical;
             this.Add(this.lineview1);
             this.lblValue.Width = 6;
             this.lblValue.Height = 1;
             this.lblValue.X = 22;
             this.lblValue.Y = 1;
             this.lblValue.Visible = true;
-            this.lblValue.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.lblValue.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.lblValue.CanFocus = false;
-            this.lblValue.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.lblValue.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.lblValue.Data = "lblValue";
             this.lblValue.Text = "Value:";
-            this.lblValue.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.lblValue.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.lblValue);
             this.tbValue.Width = 15;
             this.tbValue.Height = 1;
             this.tbValue.X = Pos.Right(lblValue) + 1;
             this.tbValue.Y = Pos.Top(lblValue);
             this.tbValue.Visible = true;
-            this.tbValue.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.tbValue.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.tbValue.CanFocus = true;
-            this.tbValue.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.tbValue.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.tbValue.Secret = false;
             this.tbValue.Data = "tbValue";
             this.tbValue.Text = "";
-            this.tbValue.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.tbValue.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.tbValue);
             this.lblRelativeTo.Width = 12;
             this.lblRelativeTo.Height = 1;
             this.lblRelativeTo.X = 16;
             this.lblRelativeTo.Y = 3;
             this.lblRelativeTo.Visible = true;
-            this.lblRelativeTo.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.lblRelativeTo.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.lblRelativeTo.CanFocus = false;
-            this.lblRelativeTo.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.lblRelativeTo.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.lblRelativeTo.Data = "lblRelativeTo";
             this.lblRelativeTo.Text = "Relative To:";
-            this.lblRelativeTo.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.lblRelativeTo.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.lblRelativeTo);
             this.tbRelativeTo.Width = 15;
             this.tbRelativeTo.Height = 1;
             this.tbRelativeTo.X = Pos.Right(lblOffset) + 1;
             this.tbRelativeTo.Y = 3;
             this.tbRelativeTo.Visible = true;
-            this.tbRelativeTo.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.tbRelativeTo.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.tbRelativeTo.CanFocus = true;
-            this.tbRelativeTo.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.tbRelativeTo.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.tbRelativeTo.Secret = false;
             this.tbRelativeTo.Data = "tbRelativeTo";
             this.tbRelativeTo.Text = "";
-            this.tbRelativeTo.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.tbRelativeTo.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.tbRelativeTo);
             this.lblSide.Width = 5;
             this.lblSide.Height = 1;
             this.lblSide.X = 23;
             this.lblSide.Y = 5;
             this.lblSide.Visible = true;
-            this.lblSide.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.lblSide.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.lblSide.CanFocus = false;
-            this.lblSide.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.lblSide.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.lblSide.Data = "lblSide";
             this.lblSide.Text = "Side:";
-            this.lblSide.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.lblSide.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.lblSide);
             this.rgSide.Width = 10;
             this.rgSide.Height = 4;
             this.rgSide.X = 30;
             this.rgSide.Y = 5;
             this.rgSide.Visible = true;
-            this.rgSide.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.rgSide.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.rgSide.CanFocus = true;
-            this.rgSide.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.rgSide.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.rgSide.Data = "rgSide";
-            this.rgSide.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.rgSide.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.rgSide.RadioLabels = new string[] {
                     "Left",
                     "Top",
@@ -188,38 +185,37 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lblOffset.X = 21;
             this.lblOffset.Y = 9;
             this.lblOffset.Visible = true;
-            this.lblOffset.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.lblOffset.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.lblOffset.CanFocus = false;
-            this.lblOffset.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.lblOffset.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.lblOffset.Data = "lblOffset";
             this.lblOffset.Text = "Offset:";
-            this.lblOffset.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.lblOffset.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.lblOffset);
             this.tbOffset.Width = 15;
             this.tbOffset.Height = 1;
             this.tbOffset.X = Pos.Right(lblOffset) + 1;
             this.tbOffset.Y = 9;
             this.tbOffset.Visible = true;
-            this.tbOffset.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.tbOffset.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.tbOffset.CanFocus = true;
-            this.tbOffset.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.tbOffset.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.tbOffset.Secret = false;
             this.tbOffset.Data = "tbOffset";
             this.tbOffset.Text = "";
-            this.tbOffset.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.tbOffset.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.tbOffset);
             this.btnOk.Width = Dim.Auto();
             this.btnOk.Height = Dim.Auto();
             this.btnOk.X = 14;
             this.btnOk.Y = 11;
             this.btnOk.Visible = true;
-            this.btnOk.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
-            this.btnOk.ColorScheme = this.buttons;
+            this.btnOk.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.btnOk.CanFocus = true;
-            this.btnOk.ShadowStyle = Terminal.Gui.ShadowStyle.Opaque;
+            this.btnOk.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btnOk.Data = "btnOk";
             this.btnOk.Text = "Ok";
-            this.btnOk.TextAlignment = Terminal.Gui.Alignment.Center;
+            this.btnOk.TextAlignment = Terminal.Gui.ViewBase.Alignment.Center;
             this.btnOk.IsDefault = true;
             this.Add(this.btnOk);
             this.btnCancel.Width = Dim.Auto();
@@ -227,13 +223,12 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnCancel.X = 23;
             this.btnCancel.Y = 11;
             this.btnCancel.Visible = true;
-            this.btnCancel.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
-            this.btnCancel.ColorScheme = this.buttons;
+            this.btnCancel.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.btnCancel.CanFocus = true;
-            this.btnCancel.ShadowStyle = Terminal.Gui.ShadowStyle.Opaque;
+            this.btnCancel.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btnCancel.Data = "btnCancel";
             this.btnCancel.Text = "Cancel";
-            this.btnCancel.TextAlignment = Terminal.Gui.Alignment.Center;
+            this.btnCancel.TextAlignment = Terminal.Gui.ViewBase.Alignment.Center;
             this.btnCancel.IsDefault = false;
             this.Add(this.btnCancel);
         }

@@ -8,6 +8,9 @@
 //------------------------------------------------------------------------------
 
 using JetBrains.Annotations;
+using Terminal.Gui.App;
+using Terminal.Gui.Input;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner.UI.Windows;
 
 namespace TerminalGuiDesigner; 
@@ -54,14 +57,14 @@ public partial class PointEditor : IValueGetterDialog {
 
     private void Cancel(object sender, CommandEventArgs e)
     {
-        e.Cancel = true;
+        e.Handled = true;
         Cancelled = true;
         Application.RequestStop();
     }
 
     private void Ok(object sender, CommandEventArgs e)
     {
-        e.Cancel = true;
+        e.Handled = true;
         if(int.TryParse(tbX.Text.ToString(), out var x))
         {
             if(int.TryParse(tbY.Text.ToString(), out var y))

@@ -1,5 +1,6 @@
 using System.Reflection;
 using Terminal.Gui;
+using Terminal.Gui.ViewBase;
 using TerminalGuiDesigner.ToCode;
 using TerminalGuiDesigner.UI.Windows;
 

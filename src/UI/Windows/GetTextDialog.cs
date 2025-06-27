@@ -1,4 +1,8 @@
 using Terminal.Gui;
+using Terminal.Gui.App;
+using Terminal.Gui.Input;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner.UI.Windows;
 
@@ -83,7 +87,7 @@ internal class GetTextDialog
         };
         btnOk.Accepting += (s, e) =>
         {
-            e.Cancel = true;
+            e.Handled = true;
             this.Accept();
         };
 
@@ -96,7 +100,7 @@ internal class GetTextDialog
         };
         btnCancel.Accepting += (s, e) =>
         {
-            e.Cancel = true;
+            e.Handled = true;
             this.okClicked = false;
             Application.RequestStop();
         };
@@ -109,7 +113,7 @@ internal class GetTextDialog
         };
         btnClear.Accepting += (s, e) =>
         {
-            e.Cancel = true;
+            e.Handled = true;
             this.textView.Text = string.Empty;
         };
 
@@ -143,7 +147,7 @@ internal class GetTextDialog
         };
         cbMultiLine.CheckedStateChanging += (s, e) =>
         {
-            SetEnableNewlines(e.NewValue);
+            SetEnableNewlines(e.Result);
         };
         win.Add(cbMultiLine);
     }

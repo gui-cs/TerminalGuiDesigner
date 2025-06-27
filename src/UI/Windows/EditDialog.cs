@@ -2,10 +2,13 @@ using System.Collections;
 using System.ComponentModel.Design;
 using System.Text;
 using Terminal.Gui;
-using Terminal.Gui.TextValidateProviders;
+using Terminal.Gui.App;
+using Terminal.Gui.Input;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
-using Attribute = Terminal.Gui.Attribute;
+using Attribute = Terminal.Gui.Drawing.Attribute;
 
 namespace TerminalGuiDesigner.UI.Windows;
 
@@ -58,7 +61,7 @@ public class EditDialog : Window
 
         btnSet.Accepting += (s, e) =>
         {
-            e.Cancel = true;
+            e.Handled = true;
             this.SetProperty(false);
         };
 
@@ -70,7 +73,7 @@ public class EditDialog : Window
         };
         btnClose.Accepting += (s, e) =>
         {
-            e.Cancel = true;
+            e.Handled = true;
             Application.RequestStop();
         };
 

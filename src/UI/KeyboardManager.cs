@@ -1,4 +1,9 @@
 using Terminal.Gui;
+using Terminal.Gui.App;
+using Terminal.Gui.Drivers;
+using Terminal.Gui.Input;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.Operations.MenuOperations;
 using TerminalGuiDesigner.ToCode;

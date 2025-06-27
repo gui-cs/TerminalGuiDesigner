@@ -1,6 +1,11 @@
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using Terminal.Gui;
+using Terminal.Gui.App;
+using Terminal.Gui.Drawing;
+using Terminal.Gui.Input;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner.UI.Windows;
 
@@ -106,7 +111,7 @@ public class BigListBox<T>
         };
         btnOk.Accepting += (s, e) =>
         {
-            e.Cancel = true;
+            e.Handled = true;
             this.Accept();
         };
 
@@ -117,7 +122,7 @@ public class BigListBox<T>
         };
         btnCancel.Accepting += (s, e) =>
         {
-            e.Cancel = true;
+            e.Handled = true;
             Application.RequestStop();
         };
 
@@ -325,26 +330,14 @@ public class BigListBox<T>
         {
             return;
         }
+        
+        var currentSelectionInCollection = this.collection.FirstOrDefault(o => o.Object != null && object.Equals(o.Object, currentSelection));
 
-        if (currentSelection is ColorScheme colorScheme)
+        if (currentSelectionInCollection != null)
         {
-            var colorSchemeName = ColorSchemeManager.Instance.GetNameForColorScheme(colorScheme);
-            var currentSelectionInCollection = this.collection.FirstOrDefault(o => o.Object != null && o.Object is NamedColorScheme scheme && scheme.Name == colorSchemeName);
-
-            if (currentSelectionInCollection != null)
-            {
-                this.listView.SelectedItem = this.collection.IndexOf(currentSelectionInCollection);
-            }
+            this.listView.SelectedItem = this.collection.IndexOf(currentSelectionInCollection);
         }
-        else
-        {
-            var currentSelectionInCollection = this.collection.FirstOrDefault(o => o.Object != null && object.Equals(o.Object, currentSelection));
-
-            if (currentSelectionInCollection != null)
-            {
-                this.listView.SelectedItem = this.collection.IndexOf(currentSelectionInCollection);
-            }
-        }
+        
     }
 
     private class ListViewObject<T2>

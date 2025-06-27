@@ -1,5 +1,6 @@
 ﻿using System.CodeDom;
 using Terminal.Gui;
+using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner.ToCode;
 
@@ -106,7 +107,7 @@ public class TreeObjectsProperty<T> : Property, ITreeObjectsProperty where T : c
     {
         return new CodeSnippetExpression("""
                                                                         
-                                            new Terminal.Gui.DelegateTreeBuilder<System.IO.FileSystemInfo>((p) =>
+                                            new Terminal.Gui.Views.DelegateTreeBuilder<System.IO.FileSystemInfo>((p) =>
                                             {
                                                 try
                                                 {

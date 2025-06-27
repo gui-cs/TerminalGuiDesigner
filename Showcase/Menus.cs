@@ -11,9 +11,9 @@ namespace Showcase {
     using Terminal.Gui;
     
     
-    public partial class Slider {
+    public partial class Menus {
         
-        public Slider() {
+        public Menus() {
             InitializeComponent();
         }
     }

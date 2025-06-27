@@ -1,3 +1,4 @@
+using Terminal.Gui.Input;
 using TerminalGuiDesigner.UI;
 
 namespace UnitTests;
@@ -36,7 +37,7 @@ internal class KeyMapTests
         MoveLeft: Shift+CursorLeft
         MoveUp: Shift+CursorUp
         MoveDown: Shift+CursorDown
-        ShowColorSchemes: F6
+        ShowSchemes: F6
         SelectionColor:
           NormalForeground: BrightGreen
           NormalBackground: Green

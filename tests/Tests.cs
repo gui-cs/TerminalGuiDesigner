@@ -1,6 +1,11 @@
 
 
 using System.Runtime.CompilerServices;
+using Terminal.Gui.App;
+using Terminal.Gui.Drivers;
+using Terminal.Gui.Input;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 
 namespace UnitTests;
 
@@ -39,7 +44,6 @@ public class Tests
 
         SelectionManager.Instance.LockSelection = false;
         SelectionManager.Instance.Clear();
-        ColorSchemeManager.Instance.Clear();
     }
 
     protected static Design Get10By10View()

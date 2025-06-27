@@ -11,59 +11,56 @@
 namespace TerminalGuiDesigner.UI.Windows {
     using System;
     using Terminal.Gui;
+    using Terminal.Gui.App;
+    using Terminal.Gui.Drawing;
+    using Terminal.Gui.Input;
+    using Terminal.Gui.ViewBase;
+    using Terminal.Gui.Views;
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Drawing;
     
     
-    public partial class KeyBindingsUI : Terminal.Gui.Dialog {
+    public partial class KeyBindingsUI : Terminal.Gui.Views.Dialog {
         
-        private Terminal.Gui.ColorScheme dialogBackground;
+        private Terminal.Gui.Views.TableView tableView;
         
-        private Terminal.Gui.ColorScheme buttons;
+        private Terminal.Gui.ViewBase.View buttonPanel;
         
-        private Terminal.Gui.TableView tableView;
+        private Terminal.Gui.Views.Button btnSave;
         
-        private Terminal.Gui.View buttonPanel;
+        private Terminal.Gui.Views.Button btnCancel;
         
-        private Terminal.Gui.Button btnSave;
-        
-        private Terminal.Gui.Button btnCancel;
-        
-        private Terminal.Gui.Button btnReset;
+        private Terminal.Gui.Views.Button btnReset;
         
         private void InitializeComponent() {
-            this.btnReset = new Terminal.Gui.Button();
-            this.btnCancel = new Terminal.Gui.Button();
-            this.btnSave = new Terminal.Gui.Button();
-            this.buttonPanel = new Terminal.Gui.View();
-            this.tableView = new Terminal.Gui.TableView();
-            this.dialogBackground = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4294967295u, 4285953654u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4294967295u, 4285953654u));
-            this.buttons = new Terminal.Gui.ColorScheme(new Terminal.Gui.Attribute(4285953654u, 4294967295u), new Terminal.Gui.Attribute(4294901760u, 4294967040u), new Terminal.Gui.Attribute(4278190080u, 4294967295u), new Terminal.Gui.Attribute(4278190080u, 4278190080u), new Terminal.Gui.Attribute(4278190080u, 4294967040u));
+            this.btnReset = new Terminal.Gui.Views.Button();
+            this.btnCancel = new Terminal.Gui.Views.Button();
+            this.btnSave = new Terminal.Gui.Views.Button();
+            this.buttonPanel = new Terminal.Gui.ViewBase.View();
+            this.tableView = new Terminal.Gui.Views.TableView();
             this.Width = Dim.Percent(90);
             this.Height = Dim.Percent(80);
             this.X = Pos.Center();
             this.Y = Pos.Center();
             this.Visible = true;
-            this.Arrangement = (Terminal.Gui.ViewArrangement.Movable | Terminal.Gui.ViewArrangement.Overlapped);
-            this.ColorScheme = this.dialogBackground;
+            this.Arrangement = (Terminal.Gui.ViewBase.ViewArrangement.Movable | Terminal.Gui.ViewBase.ViewArrangement.Overlapped);
             this.CanFocus = true;
-            this.ShadowStyle = Terminal.Gui.ShadowStyle.Transparent;
+            this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Transparent;
             this.Modal = true;
-            this.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Title = "Keybindings";
             this.tableView.Width = Dim.Fill(0);
             this.tableView.Height = Dim.Fill(3);
             this.tableView.X = 0;
             this.tableView.Y = 0;
             this.tableView.Visible = true;
-            this.tableView.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
-            this.tableView.ColorScheme = this.buttons;
+            this.tableView.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.tableView.CanFocus = true;
-            this.tableView.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.tableView.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.tableView.Data = "tableView";
-            this.tableView.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.tableView.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.tableView.FullRowSelect = true;
             this.tableView.Style.AlwaysShowHeaders = false;
             this.tableView.Style.ExpandLastColumn = true;
@@ -90,32 +87,31 @@ namespace TerminalGuiDesigner.UI.Windows {
             tableViewTableColumn3 = new System.Data.DataColumn();
             tableViewTableColumn3.ColumnName = "Column 3";
             tableViewTable.Columns.Add(tableViewTableColumn3);
-            this.tableView.Table = new Terminal.Gui.DataTableSource(tableViewTable);
+            this.tableView.Table = new Terminal.Gui.Views.DataTableSource(tableViewTable);
             this.Add(this.tableView);
             this.buttonPanel.Width = 32;
             this.buttonPanel.Height = 3;
             this.buttonPanel.X = Pos.Center();
             this.buttonPanel.Y = Pos.AnchorEnd(3);
             this.buttonPanel.Visible = true;
-            this.buttonPanel.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.buttonPanel.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.buttonPanel.CanFocus = true;
-            this.buttonPanel.ShadowStyle = Terminal.Gui.ShadowStyle.None;
+            this.buttonPanel.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.buttonPanel.Data = "buttonPanel";
             this.buttonPanel.Text = "";
-            this.buttonPanel.TextAlignment = Terminal.Gui.Alignment.Start;
+            this.buttonPanel.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.buttonPanel);
             this.btnSave.Width = Dim.Auto();
             this.btnSave.Height = Dim.Auto();
             this.btnSave.X = 1;
             this.btnSave.Y = 1;
             this.btnSave.Visible = true;
-            this.btnSave.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
-            this.btnSave.ColorScheme = this.buttons;
+            this.btnSave.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.btnSave.CanFocus = true;
-            this.btnSave.ShadowStyle = Terminal.Gui.ShadowStyle.Opaque;
+            this.btnSave.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btnSave.Data = "btnSave";
             this.btnSave.Text = "Save";
-            this.btnSave.TextAlignment = Terminal.Gui.Alignment.Center;
+            this.btnSave.TextAlignment = Terminal.Gui.ViewBase.Alignment.Center;
             this.btnSave.IsDefault = true;
             this.buttonPanel.Add(this.btnSave);
             this.btnCancel.Width = Dim.Auto();
@@ -123,13 +119,12 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnCancel.X = 19;
             this.btnCancel.Y = 1;
             this.btnCancel.Visible = true;
-            this.btnCancel.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
-            this.btnCancel.ColorScheme = this.buttons;
+            this.btnCancel.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.btnCancel.CanFocus = true;
-            this.btnCancel.ShadowStyle = Terminal.Gui.ShadowStyle.Opaque;
+            this.btnCancel.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btnCancel.Data = "btnCancel";
             this.btnCancel.Text = "Cancel";
-            this.btnCancel.TextAlignment = Terminal.Gui.Alignment.Center;
+            this.btnCancel.TextAlignment = Terminal.Gui.ViewBase.Alignment.Center;
             this.btnCancel.IsDefault = false;
             this.buttonPanel.Add(this.btnCancel);
             this.btnReset.Width = Dim.Auto();
@@ -137,14 +132,13 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnReset.X = Pos.AnchorEnd(10);
             this.btnReset.Y = Pos.AnchorEnd(2);
             this.btnReset.Visible = true;
-            this.btnReset.Arrangement = Terminal.Gui.ViewArrangement.Fixed;
+            this.btnReset.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.btnReset.CanFocus = true;
-            this.btnReset.ShadowStyle = Terminal.Gui.ShadowStyle.Opaque;
+            this.btnReset.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
             this.btnReset.Data = "btnReset";
             this.btnReset.Text = "Reset";
-            this.btnReset.TextAlignment = Terminal.Gui.Alignment.Center;
+            this.btnReset.TextAlignment = Terminal.Gui.ViewBase.Alignment.Center;
             this.btnReset.IsDefault = false;
-            this.btnReset.ColorScheme = buttons;
             this.Add(this.btnReset);
         }
     }

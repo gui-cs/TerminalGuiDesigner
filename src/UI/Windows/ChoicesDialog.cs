@@ -7,6 +7,12 @@
 //      You can make changes to this file and they will not be overwritten when saving.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
+
+using Terminal.Gui.App;
+using Terminal.Gui.Text;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
+
 namespace TerminalGuiDesigner.UI.Windows;
 
 using System.Text;
@@ -57,7 +63,7 @@ public partial class ChoicesDialog
 
             buttons[i].Accepting += (s,e) => {
                 Result = i2;
-                e.Cancel = true;
+                e.Handled = true;
                 Application.RequestStop();
 
             };

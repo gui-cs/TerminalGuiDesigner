@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Terminal.Gui;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations.TabOperations;
 
 namespace UnitTests.Operations;

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using Terminal.Gui;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner;
 using TerminalGuiDesigner.Operations.MenuOperations;
 
@@ -84,16 +86,16 @@ internal class AddMenuOperationTests : Tests
         FileAssert.Exists(((Design)viewIn.Data).SourceCode.DesignerFile);
         var code = File.ReadAllText(((Design)viewIn.Data).SourceCode.DesignerFile.FullName);
 
-        StringAssert.Contains("private Terminal.Gui.MenuBarItem fileF9Menu;", code);
-        StringAssert.Contains("private Terminal.Gui.MenuBarItem fishMenu;", code);
-        StringAssert.Contains("private Terminal.Gui.MenuBarItem fish2Menu;", code);
+        StringAssert.Contains("private Terminal.Gui.Views.MenuBarItem fileF9Menu;", code);
+        StringAssert.Contains("private Terminal.Gui.Views.MenuBarItem fishMenu;", code);
+        StringAssert.Contains("private Terminal.Gui.Views.MenuBarItem fish2Menu;", code);
 
 
         StringAssert.Contains(
-            "private Terminal.Gui.MenuItem editMeMenuItem;",
+            "private Terminal.Gui.Views.MenuItem editMeMenuItem;",
             code,
             "Expected these to be created as template items under the new top level menus");
-        StringAssert.Contains("private Terminal.Gui.MenuItem editMeMenuItem2;", code);
+        StringAssert.Contains("private Terminal.Gui.Views.MenuItem editMeMenuItem2;", code);
     }
     [Test]
     public void TestAddingMenu_AtRoot_UnDo()

@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using System.Reflection;
 using Terminal.Gui;
+using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner.ToCode;
 

@@ -2,6 +2,8 @@
 using System.CodeDom.Compiler;
 using Microsoft.CSharp;
 using Terminal.Gui;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner.FromCode;
 
 namespace TerminalGuiDesigner.ToCode;
@@ -138,6 +140,12 @@ public class ViewToCode
         var ns = new CodeNamespace(rosylyn.Namespace);
         ns.Imports.Add(new CodeNamespaceImport("System"));
         ns.Imports.Add(new CodeNamespaceImport("Terminal.Gui"));
+        ns.Imports.Add(new CodeNamespaceImport("Terminal.Gui.App"));
+        ns.Imports.Add(new CodeNamespaceImport("Terminal.Gui.Drawing"));
+        ns.Imports.Add(new CodeNamespaceImport("Terminal.Gui.Input"));
+        ns.Imports.Add(new CodeNamespaceImport("Terminal.Gui.ViewBase"));
+        ns.Imports.Add(new CodeNamespaceImport("Terminal.Gui.Views"));
+
         ns.Imports.Add(new CodeNamespaceImport("System.Collections"));
         ns.Imports.Add(new CodeNamespaceImport("System.Collections.Generic"));
         ns.Imports.Add(new CodeNamespaceImport("System.Collections.ObjectModel"));
@@ -156,9 +164,7 @@ public class ViewToCode
         initMethod.Name = SourceCodeFile.InitializeComponentMethodName;
 
         var args = new CodeDomArgs(class1, initMethod);
-
-        this.AddColorSchemesToClass(args);
-
+        
         // Add designable root properties to the InitializeComponent method
         foreach (var prop in rootDesign.GetDesignableProperties())
         {
@@ -325,14 +331,5 @@ public class ViewToCode
         nSpace.Comments.Add(new CodeCommentStatement(
             "-----------------------------------" +
             "------------------------------------------"));
-    }
-
-    private void AddColorSchemesToClass(CodeDomArgs args)
-    {
-        foreach (var scheme in ColorSchemeManager.Instance.Schemes)
-        {
-            var toCode = new ColorSchemeToCode(scheme);
-            toCode.ToCode(args);
-        }
     }
 }

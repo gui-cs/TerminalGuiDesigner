@@ -1,13 +1,15 @@
 ﻿using System.CodeDom;
 using Terminal.Gui;
+using Terminal.Gui.Drivers;
+using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner.ToCode;
 
 /// <summary>
 /// Handles generating code for building all the <see cref="MenuItem"/> in
-/// a <see cref="Terminal.Gui.MenuBar"/> into .Designer.cs (See <see cref="CodeDomArgs"/>).
+/// a <see cref="MenuBar"/> into .Designer.cs (See <see cref="CodeDomArgs"/>).
 /// This will then be assigned to the <see cref="MenuBar.Menus"/> property of the
-/// <see cref="Terminal.Gui.MenuBar"/>.
+/// <see cref="MenuBar"/>.
 /// </summary>
 public class MenuBarItemsToCode : ToCodeBase
 {

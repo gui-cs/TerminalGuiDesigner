@@ -1,6 +1,7 @@
 ﻿using CommandLine;
 using CommandLine.Text;
 using Terminal.Gui;
+using Terminal.Gui.ViewBase;
 
 namespace TerminalGuiDesigner;
 

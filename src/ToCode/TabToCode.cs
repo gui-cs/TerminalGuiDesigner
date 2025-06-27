@@ -1,6 +1,6 @@
 using System.CodeDom;
 using Terminal.Gui;
-using static Terminal.Gui.TabView;
+using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner.ToCode;
 
@@ -50,6 +50,7 @@ public class TabToCode : ToCodeBase
         // make the Tab.View Dim.Fill
         this.AddPropertyAssignment(args, $"{tabName}.View.Width", new CodeSnippetExpression("Dim.Fill()"));
         this.AddPropertyAssignment(args, $"{tabName}.View.Height", new CodeSnippetExpression("Dim.Fill()"));
+        this.AddPropertyAssignment(args, $"{tabName}.View.CanFocus", new CodeSnippetExpression("true"));
 
         // create code statements for everything in the Tab (recursive)
         var viewToCode = new ViewToCode();

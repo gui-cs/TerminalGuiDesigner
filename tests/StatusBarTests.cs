@@ -1,4 +1,8 @@
-﻿namespace UnitTests;
+﻿using Terminal.Gui.Drivers;
+using Terminal.Gui.Input;
+using Terminal.Gui.Views;
+
+namespace UnitTests;
 
 [TestFixture]
 [Category( "Code Generation" )]

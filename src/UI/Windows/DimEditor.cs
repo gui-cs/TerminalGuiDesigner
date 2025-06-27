@@ -8,6 +8,11 @@
 //------------------------------------------------------------------------------
 
 using JetBrains.Annotations;
+using Terminal.Gui.App;
+using Terminal.Gui.Drawing;
+using Terminal.Gui.Input;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner.UI.Windows;
 
@@ -145,14 +150,14 @@ public partial class DimEditor : Dialog, IValueGetterDialog
 
     private void BtnCancel_Clicked(object sender, CommandEventArgs e)
     {
-        e.Cancel = true;
+        e.Handled = true;
         Cancelled = true;
         Application.RequestStop();
     }
 
     private void BtnOk_Clicked(object sender, CommandEventArgs e)
     {
-        e.Cancel = true;
+        e.Handled = true;
         Cancelled = false;
         Result = BuildResult();
         Application.RequestStop();

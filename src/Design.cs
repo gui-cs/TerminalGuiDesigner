@@ -1,17 +1,21 @@
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
+using System.Net.Mime;
 using System.Reflection;
 using System.Xml.Linq;
 using NLog;
 using Terminal.Gui;
+using Terminal.Gui.Configuration;
+using Terminal.Gui.Drawing;
+using Terminal.Gui.Input;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.Operations.MenuOperations;
 using TerminalGuiDesigner.Operations.StatusBarOperations;
 using TerminalGuiDesigner.Operations.TableViewOperations;
 using TerminalGuiDesigner.Operations.TabOperations;
 using TerminalGuiDesigner.ToCode;
-using static Terminal.Gui.TableView;
-using static Terminal.Gui.TabView;
 
 namespace TerminalGuiDesigner;
 
@@ -29,7 +33,7 @@ public class Design
     private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
     /// <summary>
-    /// View Types for which <see cref="View.Text"/> does not make sense as a user
+    /// View Types for which <see cref="MediaTypeNames.Text"/> does not make sense as a user
     /// configurable field (e.g. there is a Title field instead).
     /// </summary>
     private readonly HashSet<Type> excludeTextPropertyFor = new()
@@ -91,7 +95,7 @@ public class Design
 
     /// <summary>
     /// Gets the record of user configured values of otherwise volatile <see cref="View"/> settings.
-    /// <para>For example while <see cref="View.ColorScheme"/> can change based on selection
+    /// <para>For example while <see cref="Scheme"/> can change based on selection
     /// (see <see cref="SelectionManager.SelectedScheme"/> the <see cref="DesignState.OriginalScheme"/>
     /// will not change.
     /// </para>
@@ -100,7 +104,7 @@ public class Design
 
     /// <summary>
     /// Gets the <see cref="View"/> this <see cref="Design"/> wraps.  Do not use
-    /// <see cref="View.Add(Terminal.Gui.View)"/> on this instance.  Instead use
+    /// <see cref="View.Add(Terminal.Gui.ViewBase.View)"/> on this instance.  Instead use
     /// <see cref="AddViewOperation"/> so that new child controls are preserved
     /// for design time changes.
     /// </summary>
@@ -254,57 +258,6 @@ public class Design
         
         var d = new Design(this.SourceCode, name, subView);
         return d;
-    }
-
-    /// <summary>
-    /// <para>
-    /// Returns true if there is an explicit ColorScheme set
-    /// on this Design's View or false if it is inherited from
-    /// a View further up the Layout (or a library default scheme).
-    /// </para>
-    /// <para> If a scheme is found that is not known about by ColorSchemeManager
-    /// then false is returned.</para>
-    /// </summary>
-    /// <returns>True if view explicitly uses one in <see cref="ColorSchemeManager"/>
-    /// because user explicitly allocated it to the <see cref="View"/> (rather than inheriting).</returns>
-    public bool HasKnownColorScheme()
-    {
-        var userDefinedColorScheme = this.State.OriginalScheme ?? this.View.GetExplicitColorScheme();
-
-        if (userDefinedColorScheme == null)
-        {
-            return false;
-        }
-
-        // theres a color scheme defined but we aren't tracking it
-        // so report it as inherited since it must have got it from
-        // the API somehow
-        if (Colors.ColorSchemes.Values.Contains(userDefinedColorScheme))
-        {
-            return false;
-        }
-
-        // it has a ColorScheme but not one we are tracking
-        if (ColorSchemeManager.Instance.GetNameForColorScheme(userDefinedColorScheme) == null)
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    /// <summary>
-    /// True if this view EXPLICITLY states that it uses the scheme
-    /// False if its scheme is inherited from a parent or it explicitly
-    /// uses a different ColorScheme.
-    /// </summary>
-    /// <param name="scheme">The scheme you want to know if <see cref="View"/> is using.</param>
-    /// <returns>True if <see cref="View"/> uses <paramref name="scheme"/> explicitly.</returns>
-    public bool UsesColorScheme(ColorScheme scheme)
-    {
-        // we use this scheme if it is a known scheme
-        return this.HasKnownColorScheme() &&
-            (this.View.ColorScheme.Equals(scheme) || (this.State.OriginalScheme?.Equals(scheme) ?? false));
     }
 
     /// <summary>
@@ -561,8 +514,7 @@ public class Design
 
         // what field names are already taken by other objects?
         var usedFieldNames = allDesigns.Select(d => d.FieldName).ToList();
-        usedFieldNames.AddRange(ColorSchemeManager.Instance.Schemes.Select(k => k.Name));
-
+        
         return candidate.MakeUnique(usedFieldNames);
     }
 
@@ -660,9 +612,6 @@ public class Design
         yield return this.CreateSuppressedProperty(nameof(this.View.Visible), true);
 
         yield return this.CreateSuppressedProperty(nameof(this.View.Arrangement), ViewArrangement.Fixed);
-        
-
-        yield return new ColorSchemeProperty(this);
 
         yield return this.CreateSuppressedProperty(nameof(View.CanFocus), true);
         yield return this.CreateProperty(nameof(this.View.ShadowStyle));

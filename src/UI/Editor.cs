@@ -6,11 +6,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Terminal.Gui;
+using Terminal.Gui.App;
+using Terminal.Gui.Drawing;
+using Terminal.Gui.Drivers;
+using Terminal.Gui.Input;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 using TerminalGuiDesigner.FromCode;
 using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.ToCode;
 using TerminalGuiDesigner.UI.Windows;
-using Attribute = Terminal.Gui.Attribute;
+using Attribute = Terminal.Gui.Drawing.Attribute;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace TerminalGuiDesigner.UI;
@@ -282,8 +288,6 @@ public class Editor : Toplevel
 
         if (this.enableShowFocused)
         {
-            Application.Driver.SetAttribute(this.viewBeingEdited.View.ColorScheme.Normal);
-
             string? toDisplay = this.GetLowerRightTextIfAny();
 
             // and have a designable view focused
@@ -552,12 +556,6 @@ public class Editor : Toplevel
                 return true;
             }
 
-            if (keyString == this.keyMap.ShowColorSchemes)
-            {
-                this.ShowColorSchemes();
-                return true;
-            }
-
             if (keyString == this.keyMap.Copy)
             {
                 this.Copy();
@@ -774,7 +772,7 @@ public class Editor : Toplevel
                 {this.keyMap.Save} - Save an opened .Designer.cs file
                 {this.keyMap.ShowContextMenu} - Show right click context menu;
                 {this.keyMap.AddView} - Add View
-                {this.keyMap.ShowColorSchemes} - Color Schemes
+                {this.keyMap.ShowSchemes} - Color Schemes
                 {this.keyMap.ToggleDragging} - Toggle mouse dragging on/off
                 {this.keyMap.ToggleShowFocused} - Toggle show focused view field name
                 {this.keyMap.ToggleShowBorders} - Toggle dotted borders for frameless views
@@ -819,15 +817,16 @@ public class Editor : Toplevel
             Y = Pos.Percent(75),
             Width = maxWidth,
             Height = 4,
-            ColorScheme = new ColorScheme
-            (
-                new Attribute(new Color(Color.White),new Color(Color.Black)),
-                new Attribute(new Color(Color.Black),new Color(Color.White)),
-            new Attribute(new Color(Color.White), new Color(Color.Black)),
-            new Attribute(new Color(Color.White), new Color(Color.Black)),
-            new Attribute(new Color(Color.Black), new Color(Color.White))
-                ),
         };
+        rootCommandsListView.SetScheme(new Scheme
+        {
+            Normal = new Attribute(new Color(Color.White), new Color(Color.Black)),
+            Focus = new Attribute(new Color(Color.Black), new Color(Color.White)),
+            HotNormal = new Attribute(new Color(Color.White), new Color(Color.Black)),
+            HotFocus = new Attribute(new Color(Color.White), new Color(Color.Black)),
+            Disabled = new Attribute(new Color(Color.Black), new Color(Color.White))
+        });
+
         this.rootCommandsListView.SetSource(rootCommands);
         this.rootCommandsListView.SelectedItem = 0;
 
@@ -939,13 +938,14 @@ public class Editor : Toplevel
         var setPropsItems = setProps.Select(ToMenuItem).ToArray();
         bool hasPropsItems = setPropsItems.Any();
 
-        var all = new List<MenuItem>();
+        var all = new List<MenuItemv2>();
 
         // only add the set properties category if there are some
         if (hasPropsItems)
         {
-            all.Add(new MenuBarItem(name, setPropsItems)
+            all.Add(new MenuItemv2()
             {
+                Title = name,
                 Action = () =>
                 {
                     if (selected.Length == 1 || rightClicked != null)
@@ -953,6 +953,7 @@ public class Editor : Toplevel
                         this.ShowEditProperties(rightClicked ?? selected[0]);
                     }
                 },
+                SubMenu = new Menuv2(setPropsItems)
             });
         }
 
@@ -970,7 +971,11 @@ public class Editor : Toplevel
                 // Add categories first
                 all.Insert(
                     hasPropsItems ? 1 : 0,
-                    new MenuBarItem(g.Key, g.ToArray()));
+                    new MenuItemv2()
+                    {
+                        Title = g.Key,
+                        SubMenu = new Menuv2(g.ToArray())
+                    });
             }
         }
 
@@ -980,18 +985,17 @@ public class Editor : Toplevel
             return;
         }
 
-        var menu = new ContextMenu();
-        menu.SetMenuItems(new MenuBarItem(all.ToArray()));
-
+        var menu = new PopoverMenu(all.ToArray());
+        Point position;
         if (m != null)
         {
-            menu.Position = m.Position;
+            position = m.Position;
         }
         else
         {
             var d = SelectionManager.Instance.Selected.FirstOrDefault() ?? this.viewBeingEdited;
             var pt = d.View.ContentToScreen(new Point(0, 0));
-            menu.Position = new Point(pt.X, pt.Y);
+            position = new Point(pt.X, pt.Y);
         }
 
         this.menuOpen = true;
@@ -1002,18 +1006,19 @@ public class Editor : Toplevel
             m.Handled = true;
         }
 
+        
         // TODO: rly? you have to pass it its own menu items!?
-        menu.Show(menu.MenuItems);
-        menu.MenuBar.MenuAllClosed += (_, _) =>
+        menu.MakeVisible(position);
+        menu.Accepted += (_, _) =>
         {
             this.menuOpen = false;
             SelectionManager.Instance.LockSelection = false;
         };
     }
 
-    private static MenuItem ToMenuItem(IOperation operation)
+    private static MenuItemv2 ToMenuItem(IOperation operation)
     {
-        return new MenuItem(operation.ToString(), string.Empty, () => Try(() => OperationManager.Instance.Do(operation)));
+        return new MenuItemv2(operation.ToString(), string.Empty, () => Try(() => OperationManager.Instance.Do(operation)));
 
         static void Try(Action action)
         {
@@ -1188,7 +1193,6 @@ public class Editor : Toplevel
             Title = "Open",
             AllowedTypes = new List<IAllowedType>(new[] { new AllowedType("View", SourceCodeFile.ExpectedExtension) })
         };
-        ofd.SetupNiceColorSchemes();
         ofd.Layout();
 
         Application.Run(ofd, this.ErrorHandler);
@@ -1270,8 +1274,8 @@ public class Editor : Toplevel
             AllowedTypes = new List<IAllowedType>() { new AllowedType("C# File", ".cs") },
             Path = "MyView.cs",
         };
+        ofd.Style.PreserveFilenameOnDirectoryChanges = true;
         ofd.Layout();
-        ofd.SetupNiceColorSchemes();
 
         Application.Run(ofd);
 
@@ -1413,9 +1417,6 @@ public class Editor : Toplevel
             // Load new instance
             this.viewBeingEdited = design;
 
-            // TODO: Find a better place for this
-            ColorSchemeManager.Instance.FindDeclaredColorSchemes(this.viewBeingEdited);
-
             // And add it to the editing window
             this.Add(this.viewBeingEdited.View);
         });
@@ -1467,16 +1468,5 @@ public class Editor : Toplevel
     {
         var edit = new EditDialog(d);
         Application.Run(edit, this.ErrorHandler);
-    }
-
-    private void ShowColorSchemes()
-    {
-        if (this.viewBeingEdited == null)
-        {
-            return;
-        }
-
-        var schemes = new ColorSchemesUI(this.viewBeingEdited);
-        Application.Run(schemes);
     }
 }

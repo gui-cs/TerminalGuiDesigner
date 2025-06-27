@@ -1,7 +1,9 @@
 using System.CodeDom;
 using System.Text;
-using TerminalGuiAttribute = Terminal.Gui.Attribute;
-using TerminalGuiConfigurationManager = Terminal.Gui.ConfigurationManager;
+using Terminal.Gui.Drawing;
+using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
+using TerminalGuiAttribute = Terminal.Gui.Drawing.Attribute;
 
 namespace UnitTests;
 
@@ -47,7 +49,7 @@ internal class PropertyTests : Tests
         } );
     }
 
-    [Test( ExpectedResult = "new Terminal.Gui.Attribute(Terminal.Gui.Color.BrightMagenta,Terminal.Gui.Color.Blue)")]
+    [Test( ExpectedResult = "new Terminal.Gui.Drawing.Attribute(Terminal.Gui.Drawing.Color.BrightMagenta,Terminal.Gui.Drawing.Color.Blue)")]
     public string PropertyOfType_Attribute( )
     {
         using GraphView graphView = new( );
