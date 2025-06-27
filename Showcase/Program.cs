@@ -12,7 +12,8 @@ namespace Showcase
     {
         private static Type[] views = new[]
         {
-            typeof(NumericUpDown) 
+            typeof(Menus),
+            typeof(Tabs)
 
         };
         static void Main(string[] args)
