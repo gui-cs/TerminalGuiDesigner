@@ -819,7 +819,7 @@ public class Editor : Toplevel
             Height = 4,
         };
         rootCommandsListView.SetScheme(new Scheme
-            {
+        {
             Normal = new Attribute(new Color(Color.White), new Color(Color.Black)),
             Focus = new Attribute(new Color(Color.Black), new Color(Color.White)),
             HotNormal = new Attribute(new Color(Color.White), new Color(Color.Black)),
