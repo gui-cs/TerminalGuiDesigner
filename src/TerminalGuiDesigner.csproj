@@ -20,7 +20,7 @@
 		<PackageOutputPath>./nupkg</PackageOutputPath>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<PackageId>TerminalGuiDesigner</PackageId>
-		<Version>2.0.0-develop.4519</Version>
+		<Version>2.0.0-alpha.4519</Version>
 		<Authors>Thomas Nind</Authors>
 		<Nullable>enable</Nullable>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -33,6 +33,10 @@
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
+			2.0.0-alpha.4519
+			* Update to latest nuget package
+			* Handle breaking changes of introduction of new namespaces
+			* Remove ColorScheme designability (for now - use ConfigurationManager instead)
 			2.0.0-alpha.4402
 			* Bugfix for clicking views in tabviews.
 			2.0.0-alpha.4401
