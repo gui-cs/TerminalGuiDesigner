@@ -971,7 +971,11 @@ public class Editor : Toplevel
                 // Add categories first
                 all.Insert(
                     hasPropsItems ? 1 : 0,
-                    new MenuBarItemv2(g.Key, g.ToArray()));
+                    new MenuItemv2()
+                    {
+                        Title = g.Key,
+                        SubMenu = new Menuv2(g.ToArray())
+                    });
             }
         }
 
