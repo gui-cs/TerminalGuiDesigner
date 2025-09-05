@@ -198,6 +198,13 @@ public class MouseManager
                     // we are dragging into a new container
                     this.dragOperation.DropInto = into.View;
 
+                   /*
+                    TODO: Do this
+                    if (this.dragOperation.IsImpossible)
+                    {
+                        Editor.FlashMessageIfAble($"{Editor.Error}")
+                    }*/
+
                     // end drag
                     OperationManager.Instance.Do(this.dragOperation);
                     this.dragOperation = null;

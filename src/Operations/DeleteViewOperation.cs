@@ -13,9 +13,9 @@ public class DeleteViewOperation : Operation
     private readonly View[] from;
     private readonly Design[] originalSelection;
 
-
     /// <summary>
-    /// Views which reference the <see cref="Design"/> being operated on
+    /// Views which reference the <see cref="Design"/> being operated on and so would
+    /// crash or break if the view were deleted
     /// </summary>
     public Design[] PreventDeleting { get; set; }
 
