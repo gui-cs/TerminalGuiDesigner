@@ -322,4 +322,161 @@ internal class DragOperationTests : Tests
 
         }, out _);
     }
+
+    [Test]
+    public void TestDropInto_SelfIgnored()
+    {
+        var d = Get10By10View();
+        var lbl = new Label { X = 1, Y = 1, Text = "Hello" };
+        var lblDesign = new Design(d.SourceCode, "lbl", lbl);
+        lbl.Data = lblDesign;
+        d.View.Add(lbl);
+
+        var drag = new DragOperation(lblDesign, 1, 1, null);
+
+        // Try to set DropInto to itself
+        drag.DropInto = lbl;
+
+        ClassicAssert.IsNull(drag.DropInto, "Should ignore attempts to drop a view into itself");
+    }
+
+    [Test]
+    public void TestDropInto_NonContainerIgnored()
+    {
+        var d = Get10By10View();
+
+        var lbl = new Label { X = 1, Y = 1, Text = "Hello" };
+        var lblDesign = new Design(d.SourceCode, "lbl", lbl);
+        lbl.Data = lblDesign;
+        d.View.Add(lbl);
+
+        var btn = new Button { Text = "Not a container" };
+        d.View.Add(btn);
+
+        var drag = new DragOperation(lblDesign, 1, 1, null);
+
+        // Try to drop into a non-container view
+        drag.DropInto = btn;
+
+        ClassicAssert.IsNull(drag.DropInto, "Should ignore attempts to drop into non-container views");
+    }
+
+    [Test]
+    public void TestDropInto_DependentViews_MakesImpossible()
+    {
+        var d = Get10By10View();
+
+        // Parent container
+        var container1 = new View { Width = 10, Height = 10 };
+        container1.Data = new Design(d.SourceCode, "c1", container1);
+        d.View.Add(container1);
+
+        // Another container to drop into
+        var container2 = new View { Width = 10, Height = 10 };
+        container2.Data = new Design(d.SourceCode, "c2", container2);
+        d.View.Add(container2);
+
+        // Label inside container1
+        var lbl = new Label { X = 1, Y = 1, Text = "Hello" };
+        var lblDesign = new Design(d.SourceCode, "lbl", lbl);
+        lbl.Data = lblDesign;
+        container1.Add(lbl);
+
+        // Another label that depends on lbl for positioning
+        var lbl2 = new Label { X = Pos.Right(lbl) + 1, Y = 1, Text = "World" };
+        var lblDesign2 = new Design(d.SourceCode, "lbl2", lbl2);
+        lbl2.Data = lblDesign2;
+        container1.Add(lbl2);
+
+        var drag = new DragOperation(lblDesign, 1, 1, null);
+
+        // Try to move lbl into container2
+        drag.DropInto = container2;
+
+        ClassicAssert.IsTrue(drag.IsImpossible, "Should be impossible to drop when dependent views exist that are not part of the drag");
+        ClassicAssert.Contains(lbl2, container1.SubViews.ToArray(), "Dependent view should remain in original container");
+    }
+
+    [Test]
+    public void TestDropInto_AllDependantsDragged_Allowed()
+    {
+        var d = Get10By10View();
+
+        var container1 = new View { Width = 10, Height = 10 };
+        container1.Data = new Design(d.SourceCode, "c1", container1);
+        d.View.Add(container1);
+
+        var container2 = new View { Width = 10, Height = 10 };
+        container2.Data = new Design(d.SourceCode, "c2", container2);
+        d.View.Add(container2);
+
+        // First label
+        var lbl1 = new Label { X = 1, Y = 1, Text = "One" };
+        var lblDesign1 = new Design(d.SourceCode, "lbl1", lbl1);
+        lbl1.Data = lblDesign1;
+        container1.Add(lbl1);
+
+        // Second label depends on lbl1
+        var lbl2 = new Label { X = Pos.Right(lbl1) + 1, Y = 1, Text = "Two" };
+        var lblDesign2 = new Design(d.SourceCode, "lbl2", lbl2);
+        lbl2.Data = lblDesign2;
+        container1.Add(lbl2);
+
+        // Drag lbl1 and lbl2 together
+        var drag = new DragOperation(lblDesign1, 1, 1, new[] { lblDesign2 });
+
+        // Try to drop into container2
+        drag.DropInto = container2;
+
+        ClassicAssert.IsFalse(drag.IsImpossible, "Dragging both dependants together should be allowed");
+        drag.Do();
+
+        ClassicAssert.Contains(lbl1, container2.SubViews.ToArray());
+        ClassicAssert.Contains(lbl2, container2.SubViews.ToArray());
+    }
+    [Test]
+    public void TestAbandon_RestoresOriginalPosition()
+    {
+        var d = Get10By10View();
+
+        var container1 = new View { Width = 10, Height = 10 };
+        container1.Data = new Design(d.SourceCode, "c1", container1);
+        d.View.Add(container1);
+
+        var container2 = new View { Width = 10, Height = 10 };
+        container2.Data = new Design(d.SourceCode, "c2", container2);
+        d.View.Add(container2);
+
+        // Label in container1
+        var lbl = new Label { X = 1, Y = 2, Text = "Hello" };
+        var lblDesign = new Design(d.SourceCode, "lbl", lbl);
+        lbl.Data = lblDesign;
+        container1.Add(lbl);
+
+        // Another label depending on the first
+        var lbl2 = new Label { X = Pos.Right(lbl) + 1, Y = 2, Text = "World" };
+        var lblDesign2 = new Design(d.SourceCode, "lbl2", lbl2);
+        lbl2.Data = lblDesign2;
+        container1.Add(lbl2);
+
+        var drag = new DragOperation(lblDesign, 1, 2, null);
+
+        // Move to a legal new position
+        drag.ContinueDrag(new Point(3, 4));
+        ClassicAssert.AreEqual(Pos.Absolute(3), lbl.X);
+        ClassicAssert.AreEqual(Pos.Absolute(4), lbl.Y);
+
+        // Now try to drop into container2 (impossible, because lbl2 depends on lbl)
+        drag.DropInto = container2;
+        ClassicAssert.IsTrue(drag.IsImpossible);
+
+        // Call Abandon — should snap lbl back to original
+        drag.Abandon();
+
+        ClassicAssert.AreEqual(Pos.Absolute(1), lbl.X);
+        ClassicAssert.AreEqual(Pos.Absolute(2), lbl.Y);
+        ClassicAssert.Contains(lbl, container1.SubViews.ToArray(), "Expected abandon to restore original container");
+    }
+
+
 }

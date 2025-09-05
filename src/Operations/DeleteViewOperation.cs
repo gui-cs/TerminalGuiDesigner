@@ -14,6 +14,12 @@ public class DeleteViewOperation : Operation
     private readonly Design[] originalSelection;
 
     /// <summary>
+    /// Views which reference the <see cref="Design"/> being operated on and so would
+    /// crash or break if the view were deleted
+    /// </summary>
+    public Design[] PreventDeleting { get; set; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="DeleteViewOperation"/> class.
     /// </summary>
     /// <param name="delete">Wrappers for the <see cref="View"/> you want to delete.</param>
@@ -34,7 +40,9 @@ public class DeleteViewOperation : Operation
 
             // there are view(s) that depend on us (e.g. for positioning)
             // that are not also being deleted themselves
-            if (design.GetDependantDesigns().Any(dep => !delete.Contains(dep)))
+            PreventDeleting = design.GetDependantDesigns().Where(dep => !delete.Contains(dep)).ToArray();
+            
+            if (PreventDeleting.Length > 0)
             {
                 // Prevent deleting - so there are no orphan references from existing Views e.g. Pos.Right(thingIJustDeleted);
                 this.IsImpossible = true;

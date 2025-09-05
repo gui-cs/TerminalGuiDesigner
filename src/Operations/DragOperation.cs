@@ -14,6 +14,13 @@ public partial class DragOperation : Operation
 
     private View? dropInto;
 
+
+    /// <summary>
+    /// Views which reference the <see cref="Design"/> being operated on and so would
+    /// crash or break if the view were moved to another container (see <see cref="DropInto"/>)
+    /// </summary>
+    public Design[] PreventDrag { get; set; }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="DragOperation"/> class.
     /// Begins a drag operation in which <paramref name="beingDragged"/> is moved.
@@ -136,7 +143,15 @@ public partial class DragOperation : Operation
             }
 
             this.dropInto = value;
+
+
+            IsImpossible = dropInto != null && IsChangingContainer() && this.mementos.Any(HasDependantsThatAreNotAlsoPartOfDrag);
         }
+    }
+
+    private bool IsChangingContainer()
+    {
+        return mementos.Any(m => m.OriginalSuperView != DropInto);
     }
 
     /// <summary>
@@ -172,6 +187,18 @@ public partial class DragOperation : Operation
             this.ContinueDrag(mem, dest);
         }
     }
+
+    private bool HasDependantsThatAreNotAlsoPartOfDrag(DragMemento arg)
+    {
+        // there are view(s) that depend on us (e.g. for positioning)
+        // that are not also being deleted themselves
+
+        var alsoBeingDragged = new HashSet<Design>(mementos.Select(m => m.Design));
+        PreventDrag = arg.Design.GetDependantDesigns().Where(dep => !alsoBeingDragged.Contains(dep)).ToArray();
+
+        return PreventDrag.Any();
+    }
+
 
     /// <inheritdoc/>
     protected override bool DoImpl()
@@ -259,5 +286,14 @@ public partial class DragOperation : Operation
         }
 
         this.DestinationY = dest.Y;
+    }
+
+    /// <summary>
+    /// Restores all mementos to original locations
+    /// </summary>
+    /// <exception cref="NotImplementedException"></exception>
+    public void Abandon()
+    {
+        UndoImpl();
     }
 }

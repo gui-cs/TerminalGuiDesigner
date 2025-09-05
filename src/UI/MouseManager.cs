@@ -34,6 +34,12 @@ public class MouseManager
     public Rectangle? SelectionBox => RectExtensions.FromBetweenPoints(this.selectionStart, this.selectionEnd);
 
     /// <summary>
+    /// Set to report impossible commands as they are executed i.e. to give info
+    /// to user about why operation failed etc.
+    /// </summary>
+    public IErrorReporter? ErrorReporter;
+
+    /// <summary>
     /// Responds to <see cref="Application.MouseEvent"/>(by changing a 'drag a box' selection area
     /// or starting a resize etc).
     /// </summary>
@@ -197,6 +203,13 @@ public class MouseManager
                 {
                     // we are dragging into a new container
                     this.dragOperation.DropInto = into.View;
+
+                   
+                    if (this.dragOperation.IsImpossible && this.dragOperation.PreventDrag.Any())
+                    {
+                        ErrorReporter?.ShowErrorThatViewIsUsedByOthers(this.dragOperation.PreventDrag);
+                        this.dragOperation.Abandon();
+                    }
 
                     // end drag
                     OperationManager.Instance.Do(this.dragOperation);
