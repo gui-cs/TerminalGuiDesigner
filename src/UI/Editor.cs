@@ -62,6 +62,11 @@ public class Editor : Toplevel
     public static bool Quiet = false;
 
     /// <summary>
+    /// Start your message with this if you want it to be visually highlighted as bad.
+    /// </summary>
+    public const string Error = "Error";
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="Editor"/> class.
     /// </summary>
     public Editor()
@@ -293,6 +298,13 @@ public class Editor : Toplevel
             // and have a designable view focused
             if (toDisplay != null)
             {
+                var before = GetCurrentAttribute();
+
+                if (toDisplay.StartsWith(Error))
+                {
+                    SetAttribute(new Attribute(Color.Red, Color.Black));
+                }
+
                 // write its name in the lower right
                 int y = this.GetContentSize().Height - 1;
                 int right = bounds.Width - 1;
@@ -303,6 +315,8 @@ public class Editor : Toplevel
                 {
                     this.AddRune(right - len + i, y, runes[i]);
                 }
+
+                SetAttribute(before);
             }
         }
 
@@ -1151,8 +1165,29 @@ public class Editor : Toplevel
         if (SelectionManager.Instance.Selected.Any())
         {
             var cmd = new DeleteViewOperation(SelectionManager.Instance.Selected.ToArray());
+            
+            
+            if (cmd.IsImpossible && cmd.PreventDeleting.Any())
+            {
+                ShowErrorThatViewIsUsedByOthers(cmd.PreventDeleting);
+                return;
+            }
+
             OperationManager.Instance.Do(cmd);
         }
+    }
+
+    private void ShowErrorThatViewIsUsedByOthers(Design[] usedBy)
+    {
+        if (usedBy.Length == 1)
+        {
+            flashMessage = $"{Error}, view referenced by " + usedBy[0].FieldName;
+        }
+        else
+        {
+            flashMessage = $"{Error}, view referenced by {usedBy.Length} views";
+        }
+        this.SetNeedsDraw();
     }
 
     private void DoForSelectedViews(Func<Design, Operation> operationFunc, bool allowOnRoot = false)
