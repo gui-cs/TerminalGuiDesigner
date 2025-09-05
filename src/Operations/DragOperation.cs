@@ -287,4 +287,13 @@ public partial class DragOperation : Operation
 
         this.DestinationY = dest.Y;
     }
+
+    /// <summary>
+    /// Restores all mementos to original locations
+    /// </summary>
+    /// <exception cref="NotImplementedException"></exception>
+    public void Abandon()
+    {
+        UndoImpl();
+    }
 }

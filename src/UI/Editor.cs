@@ -26,7 +26,7 @@ namespace TerminalGuiDesigner.UI;
 /// application.  Hooks key and mouse events and mounts as a sub-view whatever file
 /// the user opens.
 /// </summary>
-public class Editor : Toplevel
+public class Editor : Toplevel, IErrorReporter
 {
     private KeyMap keyMap;
     private readonly KeyboardManager keyboardManager;
@@ -82,7 +82,10 @@ public class Editor : Toplevel
         LoadKeyMap();
 
         this.keyboardManager = new KeyboardManager(this.keyMap);
-        this.mouseManager = new MouseManager();
+        this.mouseManager = new MouseManager()
+        {
+            ErrorReporter = this
+        };
         this.Closing += this.Editor_Closing;
 
         this.BuildRootMenu();
@@ -1177,7 +1180,7 @@ public class Editor : Toplevel
         }
     }
 
-    private void ShowErrorThatViewIsUsedByOthers(Design[] usedBy)
+    public void ShowErrorThatViewIsUsedByOthers(Design[] usedBy)
     {
         if (usedBy.Length == 1)
         {
