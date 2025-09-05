@@ -103,4 +103,49 @@ internal class DeleteViewOperationTests : Tests
         ClassicAssert.AreEqual(2, designOut.GetAllDesigns().Count());
         ClassicAssert.Contains(lbl1Design, SelectionManager.Instance.Selected.ToArray(), "Undoing a delete operation should restore the previous selection");
     }
+
+    [Test]
+    public void TestPreventDeleting_PopulatedWhenDependenciesExist()
+    {
+        var viewToCode = new ViewToCode();
+        var file = new FileInfo("TestPreventDeleting_PopulatedWhenDependenciesExist.cs");
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(View));
+
+        var lbl1 = ViewFactory.Create<Label>();
+        var lbl2 = ViewFactory.Create<Label>();
+
+        // add 2 labels
+        new AddViewOperation(lbl1, designOut, "lbl1").Do();
+        new AddViewOperation(lbl2, designOut, "lbl2").Do();
+
+        // Add dependency: lbl2 depends on lbl1
+        lbl2.X = Pos.Right(lbl1) + 5;
+
+        var cmd = new DeleteViewOperation((Design)lbl1.Data);
+
+        ClassicAssert.IsTrue(cmd.IsImpossible, "Deleting lbl1 should be impossible because lbl2 depends on it");
+        ClassicAssert.AreEqual(1, cmd.PreventDeleting.Length, "PreventDeleting should contain exactly one dependent design");
+        ClassicAssert.AreSame(lbl2.Data, cmd.PreventDeleting[0], "PreventDeleting should contain lbl2 because it depends on lbl1");
+    }
+
+    [Test]
+    public void TestPreventDeleting_EmptyWhenNoDependencies()
+    {
+        var viewToCode = new ViewToCode();
+        var file = new FileInfo("TestPreventDeleting_EmptyWhenNoDependencies.cs");
+        var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(View));
+
+        var lbl1 = ViewFactory.Create<Label>();
+        var lbl2 = ViewFactory.Create<Label>();
+
+        // add 2 labels (no dependencies between them)
+        new AddViewOperation(lbl1, designOut, "lbl1").Do();
+        new AddViewOperation(lbl2, designOut, "lbl2").Do();
+
+        var cmd = new DeleteViewOperation((Design)lbl1.Data);
+
+        ClassicAssert.IsFalse(cmd.IsImpossible, "Deleting lbl1 should be possible because nothing depends on it");
+        ClassicAssert.IsEmpty(cmd.PreventDeleting, "PreventDeleting should be empty when no dependents exist");
+    }
+
 }
