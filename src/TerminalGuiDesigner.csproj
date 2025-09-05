@@ -20,7 +20,7 @@
 		<PackageOutputPath>./nupkg</PackageOutputPath>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<PackageId>TerminalGuiDesigner</PackageId>
-		<Version>2.0.0-develop.4519</Version>
+		<Version>2.0.0-develop.4538</Version>
 		<Authors>Thomas Nind</Authors>
 		<Nullable>enable</Nullable>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -33,6 +33,9 @@
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
+			2.0.0-alpha.4538
+			* Update to latest nuget package
+			* Fix crash caused moving PosRelative view without its pair into different container View
 			2.0.0-alpha.4519
 			* Update to latest nuget package
 			* Handle breaking changes of introduction of new namespaces
@@ -153,6 +156,7 @@
 	<ItemGroup>
 		<PackageReference Include="Basic.Reference.Assemblies.Net70" Version="1.7.7" />
 		<PackageReference Include="CommandLineParser" Version="2.9.1" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="8.0.1" />
@@ -161,7 +165,7 @@
 		<PackageReference Include="Serilog" Version="4.2.0" />
 		<PackageReference Include="Serilog.Extensions.Logging" Version="9.0.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
-		<PackageReference Include="Terminal.Gui" Version="2.0.0-develop.4519" />
+		<PackageReference Include="Terminal.Gui" Version="2.0.0-develop.4538" />
 		<PackageReference Include="nlog" Version="5.3.3" />
 		<PackageReference Include="Basic.Reference.Assemblies.Net80" Version="1.7.7" />
 		<PackageReference Include="System.CodeDom" Version="8.0.0" />
