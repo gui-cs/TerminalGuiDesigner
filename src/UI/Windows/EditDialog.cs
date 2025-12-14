@@ -19,6 +19,7 @@ namespace TerminalGuiDesigner.UI.Windows;
 public class EditDialog : Window
 {
     private readonly ListView list;
+    private readonly IApplication app;
     private readonly Design design;
     private readonly List<Property> collection = new();
 
@@ -26,8 +27,9 @@ public class EditDialog : Window
     /// Initializes a new instance of the <see cref="EditDialog"/> class.
     /// </summary>
     /// <param name="design">The <see cref="Design"/> on which you want to set properties.</param>
-    public EditDialog(Design design)
+    public EditDialog(IApplication app, Design design)
     {
+        this.app = app;
         this.design = design;
         this.collection.Clear( );
         this.collection.AddRange( this.design.GetDesignableProperties( )
@@ -93,10 +95,10 @@ public class EditDialog : Window
     }
 
 
-    internal static bool SetPropertyToNewValue(Design design, Property p, object? oldValue)
+    internal static bool SetPropertyToNewValue(IApplication app, Design design, Property p, object? oldValue)
     {
         // user wants to give us a new value for this property
-        if (ValueFactory.GetNewValue(design, p, p.GetValue(), out object? newValue))
+        if (ValueFactory.GetNewValue(app, design, p, p.GetValue(), out object? newValue))
         {
             OperationManager.Instance.Do(
                 new SetPropertyOperation(design, p, oldValue, newValue));
@@ -124,7 +126,7 @@ public class EditDialog : Window
                 }
                 else
                 {
-                    if (!SetPropertyToNewValue(this.design, p, oldValue))
+                    if (!SetPropertyToNewValue(app, this.design, p, oldValue))
                     {
                         // user cancelled editing the value
                         return;
@@ -138,7 +140,7 @@ public class EditDialog : Window
             }
             catch (Exception e)
             {
-                ExceptionViewer.ShowException("Failed to set Property", e);
+                ExceptionViewer.ShowException(app, "Failed to set Property", e);
             }
         }
     }

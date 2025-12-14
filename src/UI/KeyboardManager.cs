@@ -17,15 +17,18 @@ namespace TerminalGuiDesigner.UI;
 /// </summary>
 public class KeyboardManager
 {
+    private readonly IApplication app;
     private readonly KeyMap keyMap;
     private SetPropertyOperation? currentOperation;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="KeyboardManager"/> class.
     /// </summary>
+    /// <param name="app"></param>
     /// <param name="keyMap">User configurable keybindings for class functionality.</param>
-    public KeyboardManager(KeyMap keyMap)
+    public KeyboardManager(IApplication app, KeyMap keyMap)
     {
+        this.app = app;
         this.keyMap = keyMap;
     }
 
@@ -73,7 +76,7 @@ public class KeyboardManager
             var nameProp = d.GetDesignableProperties().OfType<NameProperty>().FirstOrDefault();
             if (nameProp != null)
             {
-                EditDialog.SetPropertyToNewValue(d, nameProp, nameProp.GetValue());
+                EditDialog.SetPropertyToNewValue(app, d, nameProp, nameProp.GetValue());
                 return true;
             }
         }

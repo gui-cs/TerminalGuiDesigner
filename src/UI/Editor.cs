@@ -82,7 +82,7 @@ public class Editor : Runnable, IErrorReporter
 
         LoadKeyMap();
 
-        this.keyboardManager = new KeyboardManager(this.keyMap);
+        this.keyboardManager = new KeyboardManager(app, this.keyMap);
         this.mouseManager = new MouseManager()
         {
             ErrorReporter = this
@@ -117,7 +117,7 @@ public class Editor : Runnable, IErrorReporter
         catch (Exception ex)
         {
             // if there is bad yaml use the defaults
-            ExceptionViewer.ShowException("Failed to read keybindings from configuration file", ex);
+            ExceptionViewer.ShowException(app,"Failed to read keybindings from configuration file", ex);
             this.keyMap = new KeyMap();
         }
     }
@@ -133,7 +133,7 @@ public class Editor : Runnable, IErrorReporter
         }
         catch (Exception ex)
         {
-            ExceptionViewer.ShowException("Failed to save keybindings from configuration file", ex);
+            ExceptionViewer.ShowException(app, "Failed to save keybindings from configuration file", ex);
         }
     }
 
@@ -228,7 +228,7 @@ public class Editor : Runnable, IErrorReporter
             }
             catch (Exception ex)
             {
-                ExceptionViewer.ShowException("Error processing keystroke", ex);
+                ExceptionViewer.ShowException(app, "Error processing keystroke", ex);
             }
         };
 
@@ -272,7 +272,7 @@ public class Editor : Runnable, IErrorReporter
             }
             catch (Exception ex)
             {
-                ExceptionViewer.ShowException("Error processing mouse", ex);
+                ExceptionViewer.ShowException(app,"Error processing mouse", ex);
             }
         };
 
@@ -353,9 +353,9 @@ public class Editor : Runnable, IErrorReporter
         }
 
         var bounds = Viewport;
-
-        app.Driver.SetAttribute(new Attribute(Color.Black));
-        app.Driver.FillRect(bounds,' ');
+        
+        SetAttribute(new Attribute(Color.Black));
+        FillRect(bounds,new Rune(' '));
 
         var top = new Rectangle(0, 0, bounds.Width, rootCommandsListView.Frame.Top - 1);
         RenderTitle(top);
@@ -738,7 +738,7 @@ public class Editor : Runnable, IErrorReporter
         }
         catch (Exception ex)
         {
-            ExceptionViewer.ShowException("Error", ex);
+            ExceptionViewer.ShowException(app, "Error", ex);
         }
         finally
         {
@@ -941,7 +941,7 @@ public class Editor : Runnable, IErrorReporter
 
         // BUG: This is an improper exception here and could have unexpected behavior if this method is ever called asynchronously.
         var factory = new OperationFactory(
-                (p, v) => ValueFactory.GetNewValue(p.Design, p, v, out var newValue) ? newValue : throw new OperationCanceledException() );
+                (p, v) => ValueFactory.GetNewValue(app, p.Design, p, v, out var newValue) ? newValue : throw new OperationCanceledException() );
 
         var operations = factory
             .CreateOperations(selected, m, rightClicked, out string name)
@@ -951,9 +951,9 @@ public class Editor : Runnable, IErrorReporter
         var setProps = operations.OfType<SetPropertyOperation>();
         var others = operations
             .Except(setProps)
-            .GroupBy(k => k.Category, ToMenuItem);
+            .GroupBy(k => k.Category, p=>ToMenuItem(app,p));
 
-        var setPropsItems = setProps.Select(ToMenuItem).ToArray();
+        var setPropsItems = setProps.Select(p=>ToMenuItem(app,p)).ToArray();
         bool hasPropsItems = setPropsItems.Any();
 
         var all = new List<MenuItem>();
@@ -1038,11 +1038,11 @@ public class Editor : Runnable, IErrorReporter
         };
     }
 
-    private static MenuItem ToMenuItem(IOperation operation)
+    private static MenuItem ToMenuItem(IApplication application, IOperation operation)
     {
-        return new MenuItem(operation.ToString(), string.Empty, () => Try(() => OperationManager.Instance.Do(operation)));
+        return new MenuItem(operation.ToString(), string.Empty, () => Try(application,() => OperationManager.Instance.Do(operation)));
 
-        static void Try(Action action)
+        static void Try(IApplication application, Action action)
         {
             try
             {
@@ -1053,7 +1053,7 @@ public class Editor : Runnable, IErrorReporter
             }
             catch (Exception ex)
             {
-                ExceptionViewer.ShowException("Operation failed", ex);
+                ExceptionViewer.ShowException(application, "Operation failed", ex);
             }
             finally
             {
@@ -1255,14 +1255,14 @@ public class Editor : Runnable, IErrorReporter
             }
             catch (Exception ex)
             {
-                ExceptionViewer.ShowException($"Failed to open '{ofd.Path}'", ex);
+                ExceptionViewer.ShowException(app,$"Failed to open '{ofd.Path}'", ex);
             }
         }
     }
 
     private bool ErrorHandler(Exception arg)
     {
-        ExceptionViewer.ShowException("Global Exception", arg);
+        ExceptionViewer.ShowException(app,"Global Exception", arg);
         return true;
     }
 
@@ -1289,7 +1289,7 @@ public class Editor : Runnable, IErrorReporter
                 if (t.Exception != null)
                 {
                     Application.Invoke(() =>
-                        ExceptionViewer.ShowException($"Failed to open '{toOpen.Name}'", t.Exception));
+                        ExceptionViewer.ShowException(app, $"Failed to open '{toOpen.Name}'", t.Exception));
                     return;
                 }
 
@@ -1369,7 +1369,7 @@ public class Editor : Runnable, IErrorReporter
             }
             catch (Exception ex)
             {
-                ExceptionViewer.ShowException($"Failed to create '{ofd.Path}'", ex);
+                ExceptionViewer.ShowException(app, $"Failed to create '{ofd.Path}'", ex);
                 throw;
             }
         }
@@ -1427,7 +1427,7 @@ public class Editor : Runnable, IErrorReporter
                 if (t.Exception != null)
                 {
                     Application.Invoke(() =>
-                        ExceptionViewer.ShowException($"Failed to create '{toOpen.Name}'", t.Exception));
+                        ExceptionViewer.ShowException(app, $"Failed to create '{toOpen.Name}'", t.Exception));
                     return;
                 }
 
@@ -1510,7 +1510,7 @@ public class Editor : Runnable, IErrorReporter
 
     private void ShowEditProperties(Design d)
     {
-        var edit = new EditDialog(d);
-        Application.Run(edit, this.ErrorHandler);
+        var edit = new EditDialog(app, d);
+        app.Run(edit, this.ErrorHandler);
     }
 }

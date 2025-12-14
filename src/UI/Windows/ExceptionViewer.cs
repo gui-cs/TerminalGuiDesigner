@@ -14,10 +14,11 @@ public class ExceptionViewer
     /// <summary>
     /// Launches a new modal instance of <see cref="ExceptionViewer"/> showing <paramref name="exception"/>.
     /// </summary>
+    /// <param name="app"></param>
     /// <param name="errorText">Message that describes what was going on when <paramref name="exception"/>
-    /// occurred (e.g. "Could not open file x").</param>
+    ///     occurred (e.g. "Could not open file x").</param>
     /// <param name="exception"><see cref="Exception"/> to show.</param>
-    public static void ShowException(string errorText, Exception exception)
+    public static void ShowException(IApplication app, string errorText, Exception exception)
     {
         Logging.Critical(errorText + exception);
         var msg = GetExceptionText(errorText, exception, false);

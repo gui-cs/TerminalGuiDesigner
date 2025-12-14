@@ -28,6 +28,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         /// </summary>
         public bool Cancelled { get; private set; } = true;
 
+        private readonly IApplication app;
         private readonly Design design;
         private Type elementType;
 
@@ -46,11 +47,13 @@ namespace TerminalGuiDesigner.UI.Windows {
         /// Creates a new instance of the editor configured to build lists of <paramref name="elementType"/>
         /// and showing initial values held in <paramref name="oldValue"/> (if any).
         /// </summary>
+        /// <param name="app"></param>
         /// <param name="design"></param>
         /// <param name="elementType"></param>
         /// <param name="oldValue"></param>
-        public ArrayEditor(Design design, Type elementType, IList oldValue) {
+        public ArrayEditor(IApplication app, Design design, Type elementType, IList oldValue) {
             InitializeComponent();
+            this.app = app;
             this.design = design;
             this.elementType = elementType;
             
@@ -139,7 +142,7 @@ namespace TerminalGuiDesigner.UI.Windows {
 
         private void BtnAddElement_Clicked(object sender, CommandEventArgs e)
         {
-            if(ValueFactory.GetNewValue("Element Value", design, this.elementType,null, out var newValue,true))
+            if(ValueFactory.GetNewValue(app, "Element Value", design, this.elementType,null, out var newValue,true))
             {
                 ResultAsList.Add(newValue);                
             }
@@ -157,7 +160,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             {
                 var toEdit = ResultAsList[idx];
 
-                if (ValueFactory.GetNewValue("Element Value", design, this.elementType, toEdit, out var newValue, true))
+                if (ValueFactory.GetNewValue(app, "Element Value", design, this.elementType, toEdit, out var newValue, true))
                 {
                     // Replace old with new
                     ResultAsList.RemoveAt(idx);

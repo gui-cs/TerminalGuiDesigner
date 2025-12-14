@@ -14,13 +14,12 @@ using Terminal.Gui.Input;
 using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner.UI.Windows {
-    using System.Reflection;
     using System.Text;
-    using Terminal.Gui;
-    
-    
+
+
     public partial class SliderOptionEditor : IValueGetterDialog
     {
+        private readonly IApplication app;
         private readonly Type genericTypeArgument;
         private readonly Type sliderOptionType;
 
@@ -40,9 +39,10 @@ namespace TerminalGuiDesigner.UI.Windows {
         /// </summary>
         /// <param name="genericTypeArgument">The T Type of the <see cref="SliderOption{T}"/> you want to design</param>
         /// <param name="oldValue">Previous value (if editing an existing instance).</param>
-        public SliderOptionEditor(Type genericTypeArgument, object? oldValue) {
+        public SliderOptionEditor(IApplication app, Type genericTypeArgument, object? oldValue) {
             InitializeComponent();
 
+            this.app = app;
             this.genericTypeArgument = genericTypeArgument;
             this.sliderOptionType = typeof(SliderOption<>).MakeGenericType(this.genericTypeArgument);
 
@@ -76,7 +76,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         {
             e.Handled = true;
             this.Cancelled = true;
-            Application.RequestStop();
+            app.RequestStop();
         }
 
         private void BtnOk_Clicked(object sender, CommandEventArgs e)
@@ -88,12 +88,12 @@ namespace TerminalGuiDesigner.UI.Windows {
             }
             catch(Exception ex)
             {
-                ExceptionViewer.ShowException("Could not build result", ex);
+                ExceptionViewer.ShowException(app, "Could not build result", ex);
                 return;
             }
 
             this.Cancelled = false;
-            Application.RequestStop();
+            app.RequestStop();
         }
 
         private void BuildResult()

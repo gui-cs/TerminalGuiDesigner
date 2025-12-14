@@ -47,13 +47,13 @@ namespace TerminalGuiDesigner.UI
             typeof(DateTime?)
         };
 
-        internal static bool GetNewValue(string propertyName, Design design, Type type, object? oldValue, out object? newValue, bool allowMultiLine)
+        internal static bool GetNewValue(IApplication app, string propertyName, Design design, Type type, object? oldValue, out object? newValue, bool allowMultiLine)
         {
             newValue = null;
 
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(SliderOption<>))
             {
-                return RunEditor(new SliderOptionEditor(type.GetGenericArguments()[0], oldValue), out newValue);
+                return RunEditor(new SliderOptionEditor(app, type.GetGenericArguments()[0], oldValue), out newValue);
             }
             if (type == typeof(Pos))
             {
@@ -114,7 +114,7 @@ namespace TerminalGuiDesigner.UI
                 }
                 else
                 {
-                    var designer = new ArrayEditor(design, type.GetElementTypeEx(), (IList)oldValue);
+                    var designer = new ArrayEditor(app, design, type.GetElementTypeEx(), (IList)oldValue);
                     Application.Run(designer);
 
                     if (!designer.Cancelled)
@@ -234,7 +234,7 @@ namespace TerminalGuiDesigner.UI
             return true;
         }
 
-        internal static bool GetNewValue(Design design, Property property, object? oldValue, out object? newValue)
+        internal static bool GetNewValue(IApplication app, Design design, Property property, object? oldValue, out object? newValue)
         {
             if (property is InstanceOfProperty inst)
             {
@@ -262,7 +262,7 @@ namespace TerminalGuiDesigner.UI
             }
             else
             {
-                return GetNewValue(property.PropertyInfo.Name, design, property.PropertyInfo.PropertyType, oldValue, out newValue, ValueFactory.AllowMultiLine(property));
+                return GetNewValue(app, property.PropertyInfo.Name, design, property.PropertyInfo.PropertyType, oldValue, out newValue, ValueFactory.AllowMultiLine(property));
             }
 
         }
