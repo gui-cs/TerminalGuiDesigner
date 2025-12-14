@@ -207,7 +207,7 @@ public class Editor : Runnable, IErrorReporter
             }
             catch (Exception ex)
             {
-                MessageBox.ErrorQuery(null, "Error Loading Designer", ex.Message, "Ok");
+                MessageBox.ErrorQuery(app, "Error Loading Designer", ex.Message, "Ok");
                 return;
             }
         }
@@ -1400,8 +1400,7 @@ public class Editor : Runnable, IErrorReporter
         // Validate the namespace
         if (string.IsNullOrWhiteSpace(ns) || ns.Contains(' ') || char.IsDigit(ns.First()))
         {
-            // TODO: app should be null?
-            MessageBox.ErrorQuery(null, "Invalid Namespace", "Namespace must not contain spaces, be empty or begin with a number", "Ok");
+            MessageBox.ErrorQuery(app, "Invalid Namespace", "Namespace must not contain spaces, be empty or begin with a number", "Ok");
             return;
         }
 

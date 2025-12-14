@@ -61,7 +61,7 @@ namespace TerminalGuiDesigner.UI
             }
             if (type == typeof(Size))
             {
-                return RunEditor(app, new SizeEditor((Size)(oldValue ?? throw new Exception($"Property {propertyName} is of Type Size but its current value is null"))), out newValue);
+                return RunEditor(app, new SizeEditor(app, (Size)(oldValue ?? throw new Exception($"Property {propertyName} is of Type Size but its current value is null"))), out newValue);
             }
             if (type == typeof(Point))
             {

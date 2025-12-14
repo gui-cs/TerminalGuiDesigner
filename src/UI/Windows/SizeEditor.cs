@@ -13,16 +13,17 @@ using Terminal.Gui.Views;
 namespace TerminalGuiDesigner.UI.Windows;
 
 using Terminal.Gui;
+using Terminal.Gui.App;
 
 /// <summary>
 /// Popup editor for the <see cref="Size"/> class.
 /// </summary>
 public partial class SizeEditor : IValueGetterDialog
 {
-
+    private readonly IApplication app;
 
     /// <summary>
-    /// The users edited <see cref="Size"/> 
+    /// The users edited <see cref="Size"/>
     /// </summary>
     public object? Result { get; private set; }
 
@@ -34,9 +35,11 @@ public partial class SizeEditor : IValueGetterDialog
     /// <summary>
     /// Creates a new instance of the <see cref="SizeEditor"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="s"></param>
-    public SizeEditor(Size s)
+    public SizeEditor(IApplication app, Size s)
     {
+        this.app = app;
         InitializeComponent();
         Result = s;
 
@@ -52,7 +55,7 @@ public partial class SizeEditor : IValueGetterDialog
             }
             catch (Exception ex)
             {
-                MessageBox.ErrorQuery(null, "Bad Value", ex.Message);
+                MessageBox.ErrorQuery(app, "Bad Value", ex.Message);
                 return;
             }
 
