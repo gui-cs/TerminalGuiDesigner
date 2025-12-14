@@ -74,7 +74,7 @@ public abstract class RenameOperation<T1, T2> : GenericArrayElementOperation<T1,
     {
         if (string.IsNullOrWhiteSpace(this.newName))
         {
-            if (Modals.GetString($"Rename {typeof(T2).Name}", "Name", this.originalName?.ToString(), out string? n) && n != null)
+            if (Modals.GetString(App!, $"Rename {typeof(T2).Name}", "Name", this.originalName?.ToString(), out string? n) && n != null)
             {
                 this.newName = n;
             }

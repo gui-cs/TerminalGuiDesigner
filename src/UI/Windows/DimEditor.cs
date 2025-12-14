@@ -25,6 +25,7 @@ using TerminalGuiDesigner.ToCode;
 /// </summary>
 public partial class DimEditor : Dialog, IValueGetterDialog
 {
+    private readonly IApplication app;
     private Design design;
 
     /// <summary>
@@ -42,11 +43,13 @@ public partial class DimEditor : Dialog, IValueGetterDialog
     /// <summary>
     /// Creates a new instance of the <see cref="DimEditor"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="design"></param>
     /// <param name="oldValue">Old value (if editing an existing instance)</param>
-    public DimEditor(Design design, Dim oldValue) {
+    public DimEditor(IApplication app, Design design, Dim oldValue) {
         InitializeComponent();
-        
+
+        this.app = app;
         this.design = design;
 
 
@@ -151,7 +154,7 @@ public partial class DimEditor : Dialog, IValueGetterDialog
     {
         e.Handled = true;
         Cancelled = true;
-        Application.RequestStop();
+        app.RequestStop();
     }
 
     private void BtnOk_Clicked(object sender, CommandEventArgs e)
@@ -159,7 +162,7 @@ public partial class DimEditor : Dialog, IValueGetterDialog
         e.Handled = true;
         Cancelled = false;
         Result = BuildResult();
-        Application.RequestStop();
+        app.RequestStop();
     }
 
     private Dim BuildResult()

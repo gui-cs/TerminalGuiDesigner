@@ -41,6 +41,19 @@ public class AddViewOperation : Operation
     /// Initializes a new instance of the <see cref="AddViewOperation"/> class.
     /// This overload asks users what view type they want at runtime (See <see cref="Operation.Do"/>).
     /// </summary>
+    /// <param name="app">The application instance.</param>
+    /// <param name="design">A <see cref="Design"/> (which should be <see cref="Design.IsContainerView"/>)
+    /// to add any newly created <see cref="View"/> to.</param>
+    public AddViewOperation(IApplication app, Design design)
+    {
+        this.App = app;
+        this.to = design;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AddViewOperation"/> class.
+    /// This overload asks users what view type they want at runtime (See <see cref="Operation.Do"/>).
+    /// </summary>
     /// <param name="design">A <see cref="Design"/> (which should be <see cref="Design.IsContainerView"/>)
     /// to add any newly created <see cref="View"/> to.</param>
     public AddViewOperation(Design design)
@@ -79,15 +92,20 @@ public class AddViewOperation : Operation
     {
         if (this.add == null)
         {
+            if (this.App == null)
+            {
+                throw new InvalidOperationException("App is required for interactive add operations");
+            }
+
             var selectable = ViewFactory.SupportedViewTypes.ToArray();
 
-            if (Modals.Get("Type of Control", "Add", true, selectable, this.TypeNameDelegate, false, null, out var selected) && selected != null)
+            if (Modals.Get(this.App, "Type of Control", "Add", true, selectable, this.TypeNameDelegate, false, null, out var selected) && selected != null)
             {
                 if (selected.IsGenericType)
                 {
                     var allowedTTypes = TTypes.GetSupportedTTypesForGenericViewOfType(selected).ToArray();
 
-                    if(Modals.Get("Enter a Type for <T>", "Choose", true, allowedTTypes, this.TypeNameDelegate, false, null, out var selectedTType) && selectedTType != null)
+                    if(Modals.Get(this.App, "Enter a Type for <T>", "Choose", true, allowedTTypes, this.TypeNameDelegate, false, null, out var selectedTType) && selectedTType != null)
                     {
                         selected = selected.MakeGenericType(new[] { selectedTType });
                     }

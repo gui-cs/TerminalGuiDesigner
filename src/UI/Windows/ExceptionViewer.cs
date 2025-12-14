@@ -45,7 +45,7 @@ public class ExceptionViewer
         btnOk.Accepting += (s, e) =>
         {
             e.Handled = true;
-            Application.RequestStop();
+            app.RequestStop();
         };
         var btnStack = new Button()
         {
@@ -71,7 +71,7 @@ public class ExceptionViewer
         };
         dlg.Add(textView);
 
-        Application.Run(dlg);
+        app.Run(dlg);
     }
 
     private static string GetExceptionText(string errorText, Exception exception, bool includeStackTrace)

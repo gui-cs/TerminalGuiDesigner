@@ -893,9 +893,9 @@ public class Editor : Runnable, IErrorReporter
 
     private void ChangeKeybindings()
     {
-        var kb = new KeyBindingsUI(keyMap);
-        Application.Run(kb);
-        
+        var kb = new KeyBindingsUI(app, keyMap);
+        app.Run(kb);
+
         if (kb.Save)
         {
             SaveKeyMap();
@@ -912,7 +912,7 @@ public class Editor : Runnable, IErrorReporter
 
         if (this.HasUnsavedChanges)
         {
-            int answer = ChoicesDialog.Query("Unsaved Changes", $"You have unsaved changes to {this.viewBeingEdited.SourceCode.DesignerFile.Name}", "Save", "Don't Save", "Cancel");
+            int answer = ChoicesDialog.Query(app, "Unsaved Changes", $"You have unsaved changes to {this.viewBeingEdited.SourceCode.DesignerFile.Name}", "Save", "Don't Save", "Cancel");
 
             if (answer == 0)
             {
@@ -1134,7 +1134,7 @@ public class Editor : Runnable, IErrorReporter
         {
             var options = d.GetExtraOperations().Where(o => !o.IsImpossible).ToArray();
 
-            if (options.Any() && Modals.Get("Operations", "Ok", options, null, out var selected) && selected != null)
+            if (options.Any() && Modals.Get(app, "Operations", "Ok", options, null, out var selected) && selected != null)
             {
                 OperationManager.Instance.Do(selected);
             }
@@ -1154,8 +1154,8 @@ public class Editor : Runnable, IErrorReporter
         {
             return;
         }
-        
-        ChoicesDialog.Query("Help", this.GetHelp(), "Ok");
+
+        ChoicesDialog.Query(app, "Help", this.GetHelp(), "Ok");
     }
 
     private void MoveControl(int deltaX, int deltaY)
@@ -1238,7 +1238,7 @@ public class Editor : Runnable, IErrorReporter
         };
         ofd.Layout();
 
-        Application.Run(ofd, this.ErrorHandler);
+        app.Run(ofd, this.ErrorHandler);
 
         if (!ofd.Canceled)
         {
@@ -1284,7 +1284,7 @@ public class Editor : Runnable, IErrorReporter
             (t, _) =>
             {
                 // no longer loading
-                Application.Invoke(() => Application.RequestStop());
+                Application.Invoke(() => app.RequestStop());
 
                 if (t.Exception != null)
                 {
@@ -1301,12 +1301,12 @@ public class Editor : Runnable, IErrorReporter
             },
             TaskScheduler.FromCurrentSynchronizationContext());
 
-        Application.Run(open, this.ErrorHandler);
+        app.Run(open, this.ErrorHandler);
     }
 
     private void New()
     {
-        if (!Modals.Get("Create New View", "Ok", GetSupportedRootViews(), null, out var selected))
+        if (!Modals.Get(app, "Create New View", "Ok", GetSupportedRootViews(), null, out var selected))
         {
             return;
         }
@@ -1320,7 +1320,7 @@ public class Editor : Runnable, IErrorReporter
         ofd.Style.PreserveFilenameOnDirectoryChanges = true;
         ofd.Layout();
 
-        Application.Run(ofd);
+        app.Run(ofd);
 
         if (!ofd.Canceled)
         {
@@ -1341,7 +1341,7 @@ public class Editor : Runnable, IErrorReporter
 
                 if(!CodeDomArgs.IsValidIdentifier(files.ClassName))
                 {
-                    ChoicesDialog.Query("Invalid Name",$"Invalid class name '{files.ClassName}'","Ok");
+                    ChoicesDialog.Query(app, "Invalid Name",$"Invalid class name '{files.ClassName}'","Ok");
                     return;
                 }
 
@@ -1359,7 +1359,7 @@ public class Editor : Runnable, IErrorReporter
 
                 if (sb.Length > 0)
                 {
-                    if (!ChoicesDialog.Confirm("Overwrite Files?", $"The following files will be overwritten:{Environment.NewLine}{sb.ToString().TrimEnd()}", "Ok", "Cancel"))
+                    if (!ChoicesDialog.Confirm(app, "Overwrite Files?", $"The following files will be overwritten:{Environment.NewLine}{sb.ToString().TrimEnd()}", "Ok", "Cancel"))
                     {
                         return; // user canceled overwrite
                     }
@@ -1390,7 +1390,7 @@ public class Editor : Runnable, IErrorReporter
         if (string.IsNullOrWhiteSpace(ns))
         {
             // prompt user for namespace
-            if (!Modals.GetString("Namespace", "Enter the namespace for your class", "YourNamespace", out ns))
+            if (!Modals.GetString(app, "Namespace", "Enter the namespace for your class", "YourNamespace", out ns))
             {
                 // user cancelled typing a namespace
                 return;
@@ -1422,7 +1422,7 @@ public class Editor : Runnable, IErrorReporter
             (t, _) =>
             {
                 // no longer loading
-                Application.Invoke(() => Application.RequestStop());
+                Application.Invoke(() => app.RequestStop());
 
                 if (t.Exception != null)
                 {
@@ -1439,7 +1439,7 @@ public class Editor : Runnable, IErrorReporter
             },
             TaskScheduler.FromCurrentSynchronizationContext());
 
-        Application.Run(open, this.ErrorHandler);
+        app.Run(open, this.ErrorHandler);
     }
 
     private void ReplaceViewBeingEdited(Design design)
@@ -1496,7 +1496,7 @@ public class Editor : Runnable, IErrorReporter
         var toAddTo = SelectionManager.Instance.GetMostSelectedContainerOrNull() ?? this.viewBeingEdited;
 
         OperationManager.Instance.Do(
-            new AddViewOperation(toAddTo));
+            new AddViewOperation(app, toAddTo));
     }
 
     private void ShowEditProperties()

@@ -76,7 +76,7 @@ public class EditDialog : Window
         btnClose.Accepting += (s, e) =>
         {
             e.Handled = true;
-            Application.RequestStop();
+            app.RequestStop();
         };
 
         this.list.KeyDown += (s, e) =>
@@ -150,7 +150,7 @@ public class EditDialog : Window
         // TODO: Should really be using the _keyMap here
         if (obj == Key.DeleteChar)
         {
-            int rly = ChoicesDialog.Query("Clear", "Clear Property Value?", "Yes", "Cancel");
+            int rly = ChoicesDialog.Query(app, "Clear", "Clear Property Value?", "Yes", "Cancel");
             obj.Handled = true;
 
             if (rly == 0)

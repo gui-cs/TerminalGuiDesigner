@@ -11,6 +11,7 @@ namespace TerminalGuiDesigner.UI.Windows;
 /// </summary>
 internal class GetTextDialog
 {
+    private readonly IApplication app;
     private readonly DialogArgs args;
     private readonly string? initialValue;
     private readonly Window win;
@@ -19,8 +20,9 @@ internal class GetTextDialog
     private static CheckState lastKnownEnableNewlines = CheckState.UnChecked;
     private bool? multiLineChecked;
 
-    public GetTextDialog(DialogArgs args, string? initialValue)
+    public GetTextDialog(IApplication app, DialogArgs args, string? initialValue)
     {
+        this.app = app;
         this.args = args;
         this.initialValue = initialValue;
 
@@ -101,7 +103,7 @@ internal class GetTextDialog
         {
             e.Handled = true;
             this.okClicked = false;
-            Application.RequestStop();
+            app.RequestStop();
         };
 
         var btnClear = new Button()
@@ -166,7 +168,7 @@ internal class GetTextDialog
 
     public bool ShowDialog()
     {
-        Application.Run(this.win);
+        app.Run(this.win);
 
         return this.okClicked;
     }
@@ -175,7 +177,7 @@ internal class GetTextDialog
     {
         this.okClicked = true;
         this.ResultText = this.textView.Text.ToString();
-        Application.RequestStop();
+        app.RequestStop();
     }
 
     private void TextViewKeyPress(object? sender, Key key)

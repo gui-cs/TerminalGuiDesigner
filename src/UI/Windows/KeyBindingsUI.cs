@@ -18,14 +18,16 @@ using Attribute = System.Attribute;
 namespace TerminalGuiDesigner.UI.Windows {
     using Terminal.Gui;
     
-    
+
     public partial class KeyBindingsUI {
+        private readonly IApplication app;
         private readonly KeyMap keyMap;
         private readonly PropertyInfo[] _props;
 
         public bool Save { get; set; } = false;
 
-        public KeyBindingsUI(KeyMap keyMap) {
+        public KeyBindingsUI(IApplication app, KeyMap keyMap) {
+            this.app = app;
             this.keyMap = keyMap;
             InitializeComponent();
 
@@ -61,7 +63,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             tableView.CellActivated += (s, e) =>
             {
                 var prop = _props[e.Row];
-                var k = Modals.GetShortcut();
+                var k = Modals.GetShortcut(app);
                 prop.SetValue(this.keyMap,k.ToString());
                 this.SetNeedsDraw();
             };
@@ -80,12 +82,12 @@ namespace TerminalGuiDesigner.UI.Windows {
             {
                 Save = true;
                 e.Handled = true;
-                Application.RequestStop();
+                app.RequestStop();
             };
             btnCancel.Accepting += (s, e) =>
             {
                 e.Handled = true;
-                Application.RequestStop();
+                app.RequestStop();
             };
         }
 

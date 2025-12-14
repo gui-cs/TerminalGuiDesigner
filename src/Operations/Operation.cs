@@ -10,6 +10,11 @@ namespace TerminalGuiDesigner.Operations;
 public abstract class Operation : IOperation
 {
     /// <summary>
+    /// The application instance. May be null for operations that don't need to show dialogs.
+    /// </summary>
+    protected IApplication? App { get; set; }
+
+    /// <summary>
     /// The number of times the operation has been performed.
     /// </summary>
     private int _timesDone;

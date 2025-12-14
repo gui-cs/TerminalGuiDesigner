@@ -55,7 +55,7 @@ public class RenameMenuItemOperation : MenuItemOperation
         }
 
         // TODO: make this an optional constructor field so it can be unit tested
-        if (Modals.GetString("Menu Item Name", "Name", this.originalName, out string? newName))
+        if (Modals.GetString(App!, "Menu Item Name", "Name", this.originalName, out string? newName))
         {
             if (string.IsNullOrWhiteSpace(newName))
             {

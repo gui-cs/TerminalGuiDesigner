@@ -27,6 +27,7 @@ using TerminalGuiDesigner.UI.Windows;
 /// </summary>
 public partial class PosEditor : Dialog, IValueGetterDialog {
 
+    private readonly IApplication app;
     private Design design;
     private readonly Dictionary<string, Design> _siblings;
 
@@ -46,11 +47,13 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
     /// Prompt user to create a new <see cref="Pos"/> value to populate
     /// on <paramref name="design"/> with.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="design">What to set the value on.</param>
     /// <param name="oldValue">The current value for the property.</param>
-    public PosEditor(Design design, Pos oldValue) {
+    public PosEditor(IApplication app, Design design, Pos oldValue) {
         InitializeComponent();
-        
+
+        this.app = app;
         this.design = design;
 
         Title = "Pos Designer";
@@ -209,7 +212,7 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
     {
         e.Handled = true;
         Cancelled = true;
-        Application.RequestStop();
+        app.RequestStop();
     }
 
     private void BtnOk_Clicked(object sender, CommandEventArgs e)
@@ -217,15 +220,15 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
         e.Handled = true;
         if(GetPosType() == PosType.AnchorEnd && GetValue(out var value) && value <=0)
         {
-            if (!ChoicesDialog.Confirm("Anchor Without Margin", "Using AnchorEnd without a margin will result in a point outside of parent bounds.\nAre you sure?"))
+            if (!ChoicesDialog.Confirm(app, "Anchor Without Margin", "Using AnchorEnd without a margin will result in a point outside of parent bounds.\nAre you sure?"))
             {
                 return;
-            }   
+            }
         }
 
         Cancelled = !BuildPos(out var result);
         Result = result;
-        Application.RequestStop();
+        app.RequestStop();
     }
 
     private bool BuildPos(out Pos result)

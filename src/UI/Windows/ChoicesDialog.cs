@@ -24,6 +24,8 @@ using Terminal.Gui;
 /// </summary>
 public partial class ChoicesDialog
 {
+    private readonly IApplication app;
+
     /// <summary>
     /// The index of the button user clicked (starting at 0).
     /// </summary>
@@ -32,16 +34,18 @@ public partial class ChoicesDialog
     private string _title;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="title"></param>
     /// <param name="message"></param>
     /// <param name="options"></param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public ChoicesDialog(string title, string message, params string[] options) {
-        
+    public ChoicesDialog(IApplication app, string title, string message, params string[] options) {
+
         const int defaultWidth = 50;
 
+        this.app = app;
         InitializeComponent();
 
         if (options.Length == 0 || options.Length > 4)
@@ -64,7 +68,7 @@ public partial class ChoicesDialog
             buttons[i].Accepting += (s,e) => {
                 Result = i2;
                 e.Handled = true;
-                Application.RequestStop();
+                app.RequestStop();
 
             };
         }
@@ -104,16 +108,16 @@ public partial class ChoicesDialog
         btn1.FocusDeepest(NavigationDirection.Forward, TabBehavior.TabGroup);
     }
 
-    internal static int Query(string title, string message, params string[] options)
+    internal static int Query(IApplication app, string title, string message, params string[] options)
     {
-        var dlg = new ChoicesDialog(title, message, options);
-        Application.Run(dlg);
+        var dlg = new ChoicesDialog(app, title, message, options);
+        app.Run(dlg);
         return dlg.Result;
     }
-    internal static bool Confirm(string title, string message, string okText = "Yes", string cancelText = "No")
+    internal static bool Confirm(IApplication app, string title, string message, string okText = "Yes", string cancelText = "No")
     {
-        var dlg = new ChoicesDialog(title, message, okText, cancelText);
-        Application.Run(dlg);
+        var dlg = new ChoicesDialog(app, title, message, okText, cancelText);
+        app.Run(dlg);
         return dlg.Result == 0;
     }
 }

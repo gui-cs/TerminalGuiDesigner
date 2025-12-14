@@ -179,14 +179,14 @@ namespace TerminalGuiDesigner.UI.Windows {
         {
             e.Handled = true;
             Cancelled = true;
-            Application.RequestStop();
+            app.RequestStop();
         }
 
         private void BtnOk_Clicked(object sender, CommandEventArgs e)
         {
             e.Handled = true;
             Cancelled = false;
-            Application.RequestStop();
+            app.RequestStop();
         }
     }
 }

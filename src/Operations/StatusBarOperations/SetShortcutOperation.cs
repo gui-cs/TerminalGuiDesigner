@@ -55,7 +55,7 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
         {
             if (this.shortcut == Key.Empty)
             {
-                this.shortcut = Modals.GetShortcut();
+                this.shortcut = Modals.GetShortcut(App!);
             }
 
             this.OperateOn.Key = this.shortcut;
