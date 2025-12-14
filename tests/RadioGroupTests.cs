@@ -7,12 +7,12 @@ namespace UnitTests;
 [TestOf( typeof( CodeToView ) )]
 [TestOf( typeof( ViewToCode ) )]
 [Category( "Code Generation" )]
-internal class RadioGroupTests : Tests
+internal class OptionSelectorTests : Tests
 {
     [Test]
-    public void RoundTrip_PreserveRadioGroups( )
+    public void RoundTrip_PreserveOptionSelectors( )
     {
-        var rgIn = RoundTrip<Window, RadioGroup>( static ( _, _ ) => { }, out _ );
+        var rgIn = RoundTrip<Window, OptionSelector>( static ( _, _ ) => { }, out _ );
 
         Assert.That( rgIn.RadioLabels, Has.Length.EqualTo( 2 ) );
 
@@ -24,9 +24,9 @@ internal class RadioGroupTests : Tests
     }
 
     [Test]
-    public void RoundTrip_PreserveRadioGroups_Custom( )
+    public void RoundTrip_PreserveOptionSelectors_Custom( )
     {
-        var rgIn = RoundTrip<Window, RadioGroup>( static ( _, r ) => { r.RadioLabels = ["Fish", "Cat", "Balloon"]; }, out _ );
+        var rgIn = RoundTrip<Window, OptionSelector>( static ( _, r ) => { r.RadioLabels = ["Fish", "Cat", "Balloon"]; }, out _ );
 
         Assert.That( rgIn.RadioLabels, Has.Length.EqualTo( 3 ) );
 
@@ -39,9 +39,9 @@ internal class RadioGroupTests : Tests
     }
 
     [Test]
-    public void RoundTrip_PreserveRadioGroups_Empty( )
+    public void RoundTrip_PreserveOptionSelectors_Empty( )
     {
-        var rgIn = RoundTrip<Window, RadioGroup>( static ( _, r ) => { r.RadioLabels = []; }, out _ );
+        var rgIn = RoundTrip<Window, OptionSelector>( static ( _, r ) => { r.RadioLabels = []; }, out _ );
 
         Assert.That( rgIn.RadioLabels, Is.Empty );
     }

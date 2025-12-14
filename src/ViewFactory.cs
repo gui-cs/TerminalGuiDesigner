@@ -216,7 +216,7 @@ public static class ViewFactory
             case StatusBar sb:
                 sb.SetShortcuts(new[] { new Shortcut( Key.F1, "F1 - Edit Me", null ) });
                 break;
-            case RadioGroup rg:
+            case OptionSelector rg:
                 rg.RadioLabels = new string[] { "Option 1", "Option 2" };
                 SetDefaultDimensions( newView, width ?? 10, height ?? 2 );
                 break;
@@ -236,7 +236,7 @@ public static class ViewFactory
             case Window:
                 SetDefaultDimensions( newView, width ?? 10, height ?? 5 );
                 break;
-            case LineView:
+            case Line:
                 SetDefaultDimensions( newView, width ?? 8, height ?? 1 );
                 break;
             case TreeView:
@@ -343,7 +343,7 @@ public static class ViewFactory
             { } t when t.IsAssignableTo( typeof( CheckBox ) ) => Create<CheckBox>( ),
             { } t when t.IsAssignableTo( typeof( TableView ) ) => Create<TableView>( ),
             { } t when t.IsAssignableTo( typeof( TabView ) ) => Create<TabView>( ),
-            { } t when t.IsAssignableTo( typeof( RadioGroup ) ) => Create<RadioGroup>( ),
+            { } t when t.IsAssignableTo( typeof( OptionSelector ) ) => Create<OptionSelector>( ),
             { } t when t.IsAssignableTo( typeof( MenuBar ) ) => Create<MenuBar>( ),
             { } t when t.IsAssignableTo( typeof( StatusBar ) ) => Create<StatusBar>( ),
             { } t when t == typeof( TextValidateField ) => Create<TextValidateField>( ),
@@ -355,7 +355,7 @@ public static class ViewFactory
             { } t when t == typeof( TextField ) => Create<TextField>( ),
             { } t when t.IsAssignableTo( typeof( GraphView ) ) => Create<GraphView>( ),
             { } t when t.IsAssignableTo( typeof( ListView ) ) => Create<ListView>( ),
-            { } t when t == typeof( LineView ) => Create<LineView>( ),
+            { } t when t == typeof( Line ) => Create<Line>( ),
             { } t when t == typeof( TreeView ) => Create<TreeView>( ),
             { } t when t.IsAssignableTo( typeof( SpinnerView ) ) => Create<SpinnerView>( ),
             { } t when t.IsAssignableTo( typeof( FrameView ) ) => Create<FrameView>( ),

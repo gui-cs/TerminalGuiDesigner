@@ -13,10 +13,10 @@ namespace UnitTests;
 internal class PropertyTests : Tests
 {
     [Test]
-    public void Changing_LineViewOrientation( )
+    public void Changing_LineOrientation( )
     {
         Design v = Get10By10View( );
-        using LineView lv = ViewFactory.Create<LineView>( );
+        using Line lv = ViewFactory.Create<Line>( );
         Design d = new( v.SourceCode, "lv", lv );
 
         v.View.Add( lv );
@@ -28,7 +28,7 @@ internal class PropertyTests : Tests
             Assert.That( lv.LineRune, Is.EqualTo( new Rune( '─' ) ) );
         } );
 
-        Property? prop = d.GetDesignableProperty( nameof( LineView.Orientation ) );
+        Property? prop = d.GetDesignableProperty( nameof( Line.Orientation ) );
 
         Assert.That( prop, Is.Not.Null );
         prop?.SetValue( Orientation.Vertical );
@@ -103,7 +103,7 @@ internal class PropertyTests : Tests
     public void PropertyOfType_Rune( [Values( 'a', 'A', 'f', 'F' )] char runeCharacter )
     {
         FileInfo file = new( $"{nameof( PropertyOfType_Rune )}_{runeCharacter}.cs" );
-        using LineView lv = new( );
+        using Line lv = new( );
         Design d = new( new( file ), "lv", lv );
         Property prop = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( "LineRune" ) );
 

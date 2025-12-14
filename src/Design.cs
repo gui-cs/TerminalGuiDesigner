@@ -44,7 +44,7 @@ public class Design
         typeof(Toplevel),
         typeof(GraphView),
         typeof(HexView),
-        typeof(LineView),
+        typeof(Line),
         typeof(ListView),
         typeof(MenuBar),
         typeof(TableView),
@@ -696,10 +696,10 @@ public class Design
             yield return this.CreateProperty(nameof(Button.IsDefault));
         }
 
-        if (this.View is LineView)
+        if (this.View is Line)
         {
-            yield return this.CreateProperty(nameof(LineView.LineRune));
-            yield return this.CreateProperty(nameof(LineView.Orientation));
+            yield return this.CreateProperty(nameof(Line.LineRune));
+            yield return this.CreateProperty(nameof(Line.Orientation));
         }
 
         if (this.View is ProgressBar)
@@ -798,9 +798,9 @@ public class Design
             yield return this.CreateSubProperty(nameof(TabStyle.TabsOnBottom), nameof(TabView.Style), tabView.Style);
         }
 
-        if (this.View is RadioGroup)
+        if (this.View is OptionSelector)
         {
-            yield return this.CreateProperty(nameof(RadioGroup.RadioLabels));
+            yield return this.CreateProperty(nameof(OptionSelector.RadioLabels));
         }
 
         if (viewType.IsGenericType(typeof(NumericUpDown<>)))
@@ -840,7 +840,7 @@ public class Design
         }
 
         // Do not let Text be set on Slider or Slider<> implementations as weird stuff happens
-        if(this.View.GetType().Name.StartsWith("Slider") || View is RadioGroup || View.GetType().IsGenericType(typeof(NumericUpDown<>)))
+        if(this.View.GetType().Name.StartsWith("Slider") || View is OptionSelector || View.GetType().IsGenericType(typeof(NumericUpDown<>)))
         {
             return false;
         }

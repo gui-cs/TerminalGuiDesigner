@@ -38,7 +38,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         
         private Terminal.Gui.Views.Button btnEdit;
         
-        private Terminal.Gui.Views.LineView lineView;
+        private Terminal.Gui.Views.Line Line;
         
         private Terminal.Gui.Views.Button btnOk;
         
@@ -47,7 +47,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         private void InitializeComponent() {
             this.btnCancel = new Terminal.Gui.Views.Button();
             this.btnOk = new Terminal.Gui.Views.Button();
-            this.lineView = new Terminal.Gui.Views.LineView();
+            this.Line = new Terminal.Gui.Views.Line();
             this.btnEdit = new Terminal.Gui.Views.Button();
             this.btnMoveDown = new Terminal.Gui.Views.Button();
             this.btnMoveUp = new Terminal.Gui.Views.Button();
@@ -160,19 +160,19 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnEdit.TextAlignment = Terminal.Gui.ViewBase.Alignment.Center;
             this.btnEdit.IsDefault = false;
             this.Add(this.btnEdit);
-            this.lineView.Width = Dim.Fill(1);
-            this.lineView.Height = 1;
-            this.lineView.X = -1;
-            this.lineView.Y = Pos.AnchorEnd(3);
-            this.lineView.Visible = true;
-            this.lineView.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-            this.lineView.CanFocus = true;
-            this.lineView.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
-            this.lineView.Data = "lineView";
-            this.lineView.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
-            this.lineView.LineRune = new System.Text.Rune('─');
-            this.lineView.Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal;
-            this.Add(this.lineView);
+            this.Line.Width = Dim.Fill(1);
+            this.Line.Height = 1;
+            this.Line.X = -1;
+            this.Line.Y = Pos.AnchorEnd(3);
+            this.Line.Visible = true;
+            this.Line.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
+            this.Line.CanFocus = true;
+            this.Line.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
+            this.Line.Data = "Line";
+            this.Line.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
+            this.Line.LineRune = new System.Text.Rune('─');
+            this.Line.Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal;
+            this.Add(this.Line);
             this.btnOk.Width = Dim.Auto();
             this.btnOk.Height = Dim.Auto();
             this.btnOk.X = 0;

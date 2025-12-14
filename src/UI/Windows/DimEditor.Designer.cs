@@ -24,9 +24,9 @@ namespace TerminalGuiDesigner.UI.Windows {
     
     public partial class DimEditor : Terminal.Gui.Views.Dialog {
         
-        private Terminal.Gui.Views.RadioGroup rgDimType;
+        private Terminal.Gui.Views.OptionSelector rgDimType;
         
-        private Terminal.Gui.Views.LineView lineview1;
+        private Terminal.Gui.Views.Line Line1;
         
         private Terminal.Gui.Views.Label lblValue;
         
@@ -47,8 +47,8 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lblOffset = new Terminal.Gui.Views.Label();
             this.tbValue = new Terminal.Gui.Views.TextField();
             this.lblValue = new Terminal.Gui.Views.Label();
-            this.lineview1 = new Terminal.Gui.Views.LineView();
-            this.rgDimType = new Terminal.Gui.Views.RadioGroup();
+            this.Line1 = new Terminal.Gui.Views.Line();
+            this.rgDimType = new Terminal.Gui.Views.OptionSelector();
             this.Width = 40;
             this.Height = 11;
             this.X = Pos.Center();
@@ -76,19 +76,19 @@ namespace TerminalGuiDesigner.UI.Windows {
                     "Fill",
                     "Auto"};
             this.Add(this.rgDimType);
-            this.lineview1.Width = 1;
-            this.lineview1.Height = 3;
-            this.lineview1.X = 12;
-            this.lineview1.Y = 1;
-            this.lineview1.Visible = true;
-            this.lineview1.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-            this.lineview1.CanFocus = false;
-            this.lineview1.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
-            this.lineview1.Data = "lineview1";
-            this.lineview1.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
-            this.lineview1.LineRune = new System.Text.Rune('│');
-            this.lineview1.Orientation = Terminal.Gui.ViewBase.Orientation.Vertical;
-            this.Add(this.lineview1);
+            this.Line1.Width = 1;
+            this.Line1.Height = 3;
+            this.Line1.X = 12;
+            this.Line1.Y = 1;
+            this.Line1.Visible = true;
+            this.Line1.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
+            this.Line1.CanFocus = false;
+            this.Line1.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
+            this.Line1.Data = "Line1";
+            this.Line1.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
+            this.Line1.LineRune = new System.Text.Rune('│');
+            this.Line1.Orientation = Terminal.Gui.ViewBase.Orientation.Vertical;
+            this.Add(this.Line1);
             this.lblValue.Width = 6;
             this.lblValue.Height = 1;
             this.lblValue.X = 14;
