@@ -78,22 +78,22 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
             switch(type)
             {
                 case PosType.Absolute:
-                    rgPosType.SelectedItem = 0;
+                    rgPosType.Value = 0;
                     break;
                 case PosType.Percent:
-                    rgPosType.SelectedItem = 1;
+                    rgPosType.Value = 1;
                     break;
                 case PosType.Relative:
-                    rgPosType.SelectedItem = 2;
+                    rgPosType.Value = 2;
                     if(relativeTo != null)
                         tbRelativeTo.Text = relativeTo.FieldName;
-                    rgSide.SelectedItem = (int)side;
+                    rgSide.Value = (int)side;
                     break;
                 case PosType.Center:
-                    rgPosType.SelectedItem = 3;                        
+                    rgPosType.Value = 3;                        
                     break;
                 case PosType.AnchorEnd:
-                    rgPosType.SelectedItem = 4;
+                    rgPosType.Value = 4;
                     break;
             }
 
@@ -103,7 +103,7 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
 
         SetupForCurrentPosType();
 
-        rgPosType.SelectedItemChanged += DdType_SelectedItemChanged;
+        rgPosType.ValueChanged += DdType_SelectedItemChanged;
 
     }
 
@@ -118,7 +118,7 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
         }            
     }
 
-    private void DdType_SelectedItemChanged(object sender, SelectedItemChangedArgs obj)
+    private void DdType_SelectedItemChanged(object sender, EventArgs<int?> e)
     {
         SetupForCurrentPosType();            
     }
@@ -253,13 +253,13 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
 
     private PosType GetPosType()
     {
-        return Enum.Parse<PosType>(rgPosType.RadioLabels[rgPosType.SelectedItem].ToString());
+        return Enum.Parse<PosType>(rgPosType.Labels[rgPosType.Value ?? 0].ToString());
     }
 
 
     private Side? GetSide()
     {
-        return rgSide.SelectedItem == -1 ? null : (Side)rgSide.SelectedItem;
+        return rgSide.Value == null ? null : (Side)rgSide.Value;
     }
 
     private bool GetOffset(out int offset)

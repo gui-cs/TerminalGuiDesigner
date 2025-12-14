@@ -63,16 +63,16 @@ public partial class DimEditor : Dialog, IValueGetterDialog
             switch(type)
             {
                 case DimType.Absolute:
-                    rgDimType.SelectedItem = 0;
+                    rgDimType.Value = 0;
                     break;
                 case DimType.Percent:
-                    rgDimType.SelectedItem = 1;
+                    rgDimType.Value = 1;
                     break;
                 case DimType.Fill:
-                    rgDimType.SelectedItem = 2;
+                    rgDimType.Value = 2;
                     break;
                 case DimType.Auto:
-                    rgDimType.SelectedItem = 3;
+                    rgDimType.Value = 3;
                     break;
             }
 
@@ -82,7 +82,7 @@ public partial class DimEditor : Dialog, IValueGetterDialog
 
         SetupForCurrentDimType();
 
-        rgDimType.SelectedItemChanged += DdType_SelectedItemChanged;
+        rgDimType.ValueChanged += DdType_SelectedItemChanged;
     }
 
     private void RgDimType_KeyPress(object sender, Key obj)
@@ -96,13 +96,13 @@ public partial class DimEditor : Dialog, IValueGetterDialog
         }
     }
 
-    private void DdType_SelectedItemChanged(object sender, SelectedItemChangedArgs obj)
+    private void DdType_SelectedItemChanged(object sender, EventArgs<int?> e)
     {
         SetupForCurrentDimType();
     }
     private DimType GetDimType()
     {
-        return Enum.Parse<DimType>(rgDimType.RadioLabels[rgDimType.SelectedItem].ToString());
+        return Enum.Parse<DimType>(rgDimType.Labels[rgDimType.Value??0].ToString());
     }
     private void SetupForCurrentDimType()
     {

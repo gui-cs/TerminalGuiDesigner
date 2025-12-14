@@ -26,7 +26,7 @@ namespace TerminalGuiDesigner.UI;
 /// application.  Hooks key and mouse events and mounts as a sub-view whatever file
 /// the user opens.
 /// </summary>
-public class Editor : View, IErrorReporter
+public class Editor : Runnable, IErrorReporter
 {
     private KeyMap keyMap;
     private readonly KeyboardManager keyboardManager;

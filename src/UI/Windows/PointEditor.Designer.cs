@@ -51,7 +51,6 @@ namespace TerminalGuiDesigner {
             this.Arrangement = (Terminal.Gui.ViewBase.ViewArrangement.Movable | Terminal.Gui.ViewBase.ViewArrangement.Overlapped);
             this.CanFocus = true;
             this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Transparent;
-            this.Modal = true;
             this.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Title = "Point Designer";
             this.lblX.Width = 2;

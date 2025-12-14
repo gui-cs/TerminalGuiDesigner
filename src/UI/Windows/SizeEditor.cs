@@ -52,7 +52,7 @@ public partial class SizeEditor : IValueGetterDialog
             }
             catch (Exception ex)
             {
-                MessageBox.ErrorQuery("Bad Value", ex.Message);
+                MessageBox.ErrorQuery(null, "Bad Value", ex.Message);
                 return;
             }
 

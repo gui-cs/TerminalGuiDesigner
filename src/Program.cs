@@ -21,8 +21,8 @@ public partial class Program
                    {
                        Editor.Experimental = o.Experimental;
                        Editor.Quiet = o.Quiet;
-                       
-                       Application.Init(null,o.Driver);
+
+                       using var app = Application.Create().Init(o.Driver);
                        var editor = new Editor();
                        editor.Run(o);
                    });

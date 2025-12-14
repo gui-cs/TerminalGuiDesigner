@@ -57,7 +57,6 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Movable;
             this.CanFocus = true;
             this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Transparent;
-            this.Modal = true;
             this.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Title = "";
             this.rgDimType.Width = 11;
@@ -70,7 +69,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.rgDimType.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.rgDimType.Data = "rgDimType";
             this.rgDimType.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
-            this.rgDimType.RadioLabels = new string[] {
+            this.rgDimType.Labels = new string[] {
                     "Absolute",
                     "Percent",
                     "Fill",
@@ -86,7 +85,6 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Line1.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.Line1.Data = "Line1";
             this.Line1.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
-            this.Line1.LineRune = new System.Text.Rune('│');
             this.Line1.Orientation = Terminal.Gui.ViewBase.Orientation.Vertical;
             this.Add(this.Line1);
             this.lblValue.Width = 6;

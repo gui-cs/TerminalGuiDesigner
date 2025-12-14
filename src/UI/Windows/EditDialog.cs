@@ -109,11 +109,11 @@ public class EditDialog : Window
 
     private void SetProperty(bool setNull)
     {
-        if (this.list.SelectedItem != -1)
+        if (this.list.SelectedItem.HasValue)
         {
             try
             {
-                var p = this.collection[this.list.SelectedItem];
+                var p = this.collection[this.list.SelectedItem.Value];
                 var oldValue = p.GetValue();
 
                 if (setNull)

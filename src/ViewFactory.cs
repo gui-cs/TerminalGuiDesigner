@@ -209,7 +209,7 @@ public static class ViewFactory
                 sb.SetShortcuts(new[] { new Shortcut( Key.F1, "F1 - Edit Me", null ) });
                 break;
             case OptionSelector rg:
-                rg.lab = new string[] { "Option 1", "Option 2" };
+                rg.Labels = new string[] { "Option 1", "Option 2" };
                 SetDefaultDimensions( newView, width ?? 10, height ?? 2 );
                 break;
             case GraphView gv:

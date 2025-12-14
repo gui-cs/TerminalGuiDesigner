@@ -77,7 +77,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         private void BtnMoveUp_Clicked(object sender, CommandEventArgs e)
         {
             // Moving up means reducing the index by 1
-            var idx = lvElements.SelectedItem;
+            var idx = lvElements.SelectedItem ?? -1;
 
             if (idx >= 1 && idx < ResultAsList.Count)
             { 
@@ -97,7 +97,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         private void BtnMoveDown_Clicked(object sender, CommandEventArgs e)
         {
             // Moving up means increasing the index by 1
-            var idx = lvElements.SelectedItem;
+            var idx = lvElements.SelectedItem ?? -1;
 
             if (idx >= 0 && idx < ResultAsList.Count-1)
             {
@@ -125,7 +125,7 @@ namespace TerminalGuiDesigner.UI.Windows {
 
         private void DeleteSelectedItem()
         {
-            var idx = lvElements.SelectedItem;
+            var idx = lvElements.SelectedItem??-1;
 
             if (idx >= 0 && idx < ResultAsList.Count)
             {
@@ -151,7 +151,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         }
         private void BtnEdit_Clicked(object sender, CommandEventArgs e)
         {
-            var idx = lvElements.SelectedItem;
+            var idx = lvElements.SelectedItem ?? -1;
 
             if (idx >= 0 && idx < ResultAsList.Count)
             {

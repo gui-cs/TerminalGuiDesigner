@@ -51,7 +51,6 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Arrangement = (Terminal.Gui.ViewBase.ViewArrangement.Movable | Terminal.Gui.ViewBase.ViewArrangement.Overlapped);
             this.CanFocus = true;
             this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Transparent;
-            this.Modal = true;
             this.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Title = "Size";
             this.label1.Width = Dim.Auto();

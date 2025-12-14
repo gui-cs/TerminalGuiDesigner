@@ -63,7 +63,6 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Movable;
             this.CanFocus = true;
             this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Transparent;
-            this.Modal = true;
             this.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Title = "OptionEditor";
             this.label.Width = Dim.Auto();

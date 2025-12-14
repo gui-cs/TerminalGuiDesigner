@@ -65,7 +65,7 @@ public class AddMenuItemOperation : MenuItemOperation
             return false;
         }
 
-        var children = this.Parent.Children.ToList<MenuItem>();
+        var children = this.Parent.SubViews.OfType<MenuItem>().ToList();
         var currentItemIdx = children.IndexOf(this.OperateOn);
 
         // We are the parent but parents children don't contain
