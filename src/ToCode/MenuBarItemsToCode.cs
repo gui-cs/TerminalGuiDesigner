@@ -50,6 +50,7 @@ public class MenuBarItemsToCode : ToCodeBase
         mb.Menus = new []{m1};
         */
 
+        /*
         // TODO: Let user name these
         List<string> menus = new();
         foreach (var child in this.menuBar.Menus)
@@ -66,8 +67,9 @@ public class MenuBarItemsToCode : ToCodeBase
                 menus.Select(c =>
                     new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), c))
                     .ToArray()));
+        */
     }
-
+    /*
     private void ToCode(CodeDomArgs args, MenuBarItem child, out string fieldName)
     {
         fieldName = this.GetUniqueFieldName(args, child);
@@ -104,7 +106,7 @@ public class MenuBarItemsToCode : ToCodeBase
                 {
                     this.AddPropertyAssignment(
                     args,
-                    $"this.{subFieldName}.{nameof(MenuItem.ShortcutKey)}",
+                    $"this.{subFieldName}.{nameof(MenuItem.Key)}",
                     new CodeCastExpression(
                         new CodeTypeReference(typeof(KeyCode)),
                         new CodePrimitiveExpression((uint)sub.ShortcutKey)));
@@ -114,11 +116,13 @@ public class MenuBarItemsToCode : ToCodeBase
             }
         }
 
+        // TODO: This is not the way to do it in v2
+
         // we have created fields and constructor calls for our menu
         // now set the menu to an array of all those fields
         this.AddPropertyAssignment(
             args,
-            $"this.{fieldName}.{nameof(MenuBarItem.Children)}",
+            $"this.{fieldName}.{"Children"}",
             new CodeArrayCreateExpression(
                 typeof(MenuItem),
                 children.Select(c =>
@@ -130,7 +134,7 @@ public class MenuBarItemsToCode : ToCodeBase
                     (CodeExpression)new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), c))
                     .ToArray()));
     }
-
+    */
     private string GetUniqueFieldName(CodeDomArgs args, MenuItem item)
     {
         // if user has an explicit name they have set

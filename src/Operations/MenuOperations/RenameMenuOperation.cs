@@ -17,7 +17,7 @@ public class RenameMenuOperation : RenameOperation<MenuBar, MenuBarItem>
     /// <param name="newName">The new name to use.</param>
     public RenameMenuOperation(Design design, MenuBarItem toRename, string? newName)
         : base(
-            v => v.Menus,
+            v => v.SubViews.OfType<MenuBarItem>().ToArray(),
             (v, a) => v.Menus = a,
             s => s.Title.ToString() ?? "blank menu",
             (v, s) => v.Title = s,

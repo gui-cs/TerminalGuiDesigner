@@ -93,7 +93,7 @@ public class BigListBox<T>
         };
         listView.SetSource(new ObservableCollection<string>(ErrorStringArray));
         
-        this.listView.MouseClick += this.ListView_MouseClick;
+        this.listView.MouseEvent += this.ListView_MouseClick;
         
         this.collection = this.BuildList(this.GetInitialSource()).ToList();
 
@@ -206,7 +206,7 @@ public class BigListBox<T>
 
     private void Accept()
     {
-        var selected = this.listView.SelectedItem;
+        var selected = this.listView.SelectedItem ?? -1;
         if (selected < 0 || selected >= this.collection.Count)
         {
             return;

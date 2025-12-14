@@ -19,7 +19,7 @@ public class AddMenuOperation : AddOperation<MenuBar, MenuBarItem>
     /// <exception cref="ArgumentException">Thrown if the <paramref name="design"/> is not wrapping a <see cref="MenuBar"/>.</exception>
     public AddMenuOperation(Design design, string? name)
         : base(
-            (v) => v.Menus,
+            (v) => v.SubViews.OfType<MenuBarItem>().ToArray(),
             (v, a) => v.Menus = a,
             (s) => s.Title.ToString() ?? "blank menu",
             (v, n) => new(n, new MenuItem[] { new() { Title = ViewFactory.DefaultMenuItemText } }),

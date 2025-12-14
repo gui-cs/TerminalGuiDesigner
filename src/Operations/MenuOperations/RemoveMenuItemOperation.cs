@@ -96,7 +96,7 @@ public class RemoveMenuItemOperation : MenuItemOperation
         // side effect of the removal then put them back
         if (this.prunedEmptyTopLevelMenus != null && this.Bar != null)
         {
-            var l = this.Bar.Menus.ToList<MenuBarItem>();
+            var l = this.Bar.SubViews.OfType<MenuBarItem>().ToList<MenuBarItem>();
 
             // for each index they used to be at
             foreach (var kvp in this.prunedEmptyTopLevelMenus.OrderBy(k => k))
@@ -126,7 +126,7 @@ public class RemoveMenuItemOperation : MenuItemOperation
         {
             return false;
         }
-
+        /*
         this.removedAtIdx = Math.Max( 0, Array.IndexOf( Parent.Children, OperateOn ) );
         this.Parent.Children =
         [
@@ -160,7 +160,7 @@ public class RemoveMenuItemOperation : MenuItemOperation
             this.barRemovedFrom = this.Bar.SuperView;
             this.barRemovedFrom.Remove(this.Bar);
         }
-
+        */
         return true;
     }
 }

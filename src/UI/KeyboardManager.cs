@@ -114,7 +114,7 @@ public class KeyboardManager
 
         if (keystroke.ToString( ) == this.keyMap.SetShortcut)
         {
-            menuItem.ShortcutKey = Modals.GetShortcut().KeyCode;
+            menuItem.Key = Modals.GetShortcut().KeyCode;
 
             focusedView.SetNeedsDraw();
             return false;
@@ -167,11 +167,12 @@ public class KeyboardManager
                 if (remove.PrunedTopLevelMenu)
                 {
                     // if we deleted the last menu item
+                    /*
                     if (remove.Bar?.Menus.Length == 0)
                     {
                         remove.Bar.CloseMenu(false);
                         return true;
-                    }
+                    }*/
 
                     // convert keystroke to left,
                     // so we move to the next menu

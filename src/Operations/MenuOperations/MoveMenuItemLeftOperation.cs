@@ -26,7 +26,7 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
         : base(toMove)
     {
         // command is already invalid or user is trying to move a menu item that is not in a sub-menu
-        if (this.IsImpossible || this.Bar == null || this.Bar.Menus.Any(m => m.Children.Contains(toMove)))
+        if (this.IsImpossible || this.Bar == null || this.Bar.SubViews.OfType<MenuBarItem>().Any(m => m.SubViews.Contains(toMove)))
         {
             this.IsImpossible = true;
             return;
@@ -34,7 +34,7 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
 
         if (this.Parent != null)
         {
-            this.pulledFromIndex = Array.IndexOf(this.Parent.Children, this.OperateOn);
+            this.pulledFromIndex = Array.IndexOf(this.Parent.SubViews.OfType<MenuItem>().ToArray(), this.OperateOn);
         }
     }
 

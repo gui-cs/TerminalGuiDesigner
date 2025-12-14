@@ -20,7 +20,7 @@ public class MoveMenuOperation : MoveOperation<MenuBar, MenuBarItem>
     /// <param name="adjustment">Negative to move menu left, positive to move menu right.</param>
     public MoveMenuOperation(Design design, MenuBarItem toMove, int adjustment)
         : base(
-            v => v.Menus,
+            v => v.SubViews.OfType<MenuBarItem>().ToArray(),
             (v, a) => v.Menus = a,
             s => s.Title.ToString() ?? "blank menu",
             design,

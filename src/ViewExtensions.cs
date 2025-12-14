@@ -15,7 +15,7 @@ public static class ViewExtensions
 {
     public static View? FindDeepestView(Point screenPoint)
     {
-        return View.GetViewsAtLocation(Application.Top,screenPoint).LastOrDefault(v=> v!= null);
+        return View.GetViewsAtLocation(Application.Instance.TopRunnableView, screenPoint).LastOrDefault(v=> v!= null);
     }
     /// <summary>
     /// Returns the sub-views of <paramref name="v"/> skipping out any
@@ -219,11 +219,6 @@ public static class ViewExtensions
     /// <returns>True if no visible border and <see cref="ViewExtensions.IsContainerView(View)"/>.</returns>
     public static bool IsBorderlessContainerView(this View v)
     {
-        if (v is Toplevel)
-        {
-            return false;
-        }
-
         if (v is TabView tabView)
         {
             return !tabView.Style.ShowBorder || tabView.Style.TabsOnBottom;

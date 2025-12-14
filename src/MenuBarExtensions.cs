@@ -20,12 +20,12 @@ public static class MenuBarExtensions
     {
         int selected = menuBar.GetNonNullNonPublicFieldValue<int, MenuBar>( "selected" );
 
-        if (selected < 0 || selected >= menuBar.Menus.Length)
+        if (selected < 0 || selected >= menuBar.SubViews.OfType<MenuBarItem>().Count())
         {
             return null;
         }
 
-        return menuBar.Menus[selected];
+        return menuBar.SubViews.OfType<MenuBarItem>().ElementAt(selected);
     }
 
     /// <summary>
@@ -41,7 +41,7 @@ public static class MenuBarExtensions
         const int initialWhitespace = 1;
         const int afterEachItemWhitespace = 2;
 
-        if (menuBar.Menus.Length == 0)
+        if (menuBar.SubViews.OfType<MenuBarItem>().Count() == 0)
         {
             return null;
         }
@@ -58,7 +58,7 @@ public static class MenuBarExtensions
         int distance = initialWhitespace;
         Dictionary<int, MenuBarItem?> menuXLocations = new();
 
-        foreach (var mb in menuBar.Menus)
+        foreach (var mb in menuBar.SubViews.OfType<MenuBarItem>())
         {
             menuXLocations.Add(distance, mb);
             distance += mb.Title.GetColumns() + afterEachItemWhitespace;

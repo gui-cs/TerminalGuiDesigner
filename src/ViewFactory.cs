@@ -33,7 +33,6 @@ public static class ViewFactory
 
     internal static readonly Type[] KnownUnsupportedTypes =
     [
-        typeof( Toplevel ),
         typeof( Dialog ),
         typeof( FileDialog ),
         typeof( SaveDialog ),
@@ -42,9 +41,6 @@ public static class ViewFactory
         // BUG These seem to cause stack overflows in CreateSubControlDesigns (see TestAddView_RoundTrip)
         typeof( Wizard ),
         typeof( WizardStep ),
-        
-        // Ignore menu bar v2 for now
-        typeof(MenuBarv2),
 
         // This is unstable when added directly as a view see https://github.com/gui-cs/Terminal.Gui/issues/3664
         typeof(Shortcut),
@@ -52,10 +48,8 @@ public static class ViewFactory
         typeof(Tab),
         typeof(CharMap),
         typeof(LegendAnnotation),
-        typeof(Menuv2),
         typeof(ScrollBar),
         typeof(ScrollSlider),
-        typeof(TileView),
 
         // Terminal.Gui combo boxes do not really work properly
         typeof(ComboBox),
@@ -176,8 +170,6 @@ public static class ViewFactory
                 break;
             case Line:
             case Slider:
-            case TileView:
-                SetDefaultDimensions( newView, width ?? 4, height ?? 1 );
                 break;
             case TableView tv:
                 var dt = new DataTable( );
@@ -217,7 +209,7 @@ public static class ViewFactory
                 sb.SetShortcuts(new[] { new Shortcut( Key.F1, "F1 - Edit Me", null ) });
                 break;
             case OptionSelector rg:
-                rg.RadioLabels = new string[] { "Option 1", "Option 2" };
+                rg.lab = new string[] { "Option 1", "Option 2" };
                 SetDefaultDimensions( newView, width ?? 10, height ?? 2 );
                 break;
             case GraphView gv:
@@ -235,9 +227,6 @@ public static class ViewFactory
                 break;
             case Window:
                 SetDefaultDimensions( newView, width ?? 10, height ?? 5 );
-                break;
-            case Line:
-                SetDefaultDimensions( newView, width ?? 8, height ?? 1 );
                 break;
             case TreeView:
                 SetDefaultDimensions( newView, width ?? 16, height ?? 5 );
@@ -339,7 +328,6 @@ public static class ViewFactory
             { } t when t == typeof(Label) => Create<Label>(),
             { } t when t == typeof(TextView) => Create<TextView>(),
             { } t when t == typeof(ColorPicker) => Create<ColorPicker>(),
-            { } t when t == typeof( TileView ) => Create<TileView>( ),
             { } t when t.IsAssignableTo( typeof( CheckBox ) ) => Create<CheckBox>( ),
             { } t when t.IsAssignableTo( typeof( TableView ) ) => Create<TableView>( ),
             { } t when t.IsAssignableTo( typeof( TabView ) ) => Create<TabView>( ),

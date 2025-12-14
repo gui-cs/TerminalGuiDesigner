@@ -19,7 +19,7 @@ public class RemoveMenuOperation : RemoveOperation<MenuBar, MenuBarItem>
     /// <exception cref="ArgumentException">Thrown if <paramref name="design"/> does not wrap a <see cref="MenuBar"/>.</exception>
     public RemoveMenuOperation(Design design, MenuBarItem toRemove)
         : base(
-            v => v.Menus,
+            v => v.SubViews.OfType<MenuBarItem>().ToArray(),
             (v, a) => v.Menus = a,
             s => s.Title.ToString() ?? "blank menu",
             design,

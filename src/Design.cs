@@ -41,7 +41,6 @@ public class Design
         typeof(FrameView),
         typeof(TabView),
         typeof(Window),
-        typeof(Toplevel),
         typeof(GraphView),
         typeof(HexView),
         typeof(Line),
@@ -211,20 +210,20 @@ public class Design
         if (subView is TextView txt)
         {
             // prevent control from responding to events
-            txt.MouseClick += (s, e) => this.SuppressNativeClickEvents(s, e);
+            txt.MouseEvent += (s, e) => this.SuppressNativeClickEvents(s, e);
         }
 
         if (subView is TextField tf)
         {
             // prevent control from responding to events
-            tf.MouseClick += (s,e)=>this.SuppressNativeClickEvents(s,e);
+            tf.MouseEvent += (s,e)=>this.SuppressNativeClickEvents(s,e);
         }
 
         if (subView.GetType().IsGenericType(typeof(Slider<>)))
         {
             // TODO: Does not seem to work
             subView.MouseEvent += (s, e) => SuppressNativeClickEvents(s, e,true);
-            subView.MouseClick += (s, e) => SuppressNativeClickEvents(s,e, true);
+            subView.MouseEvent += (s, e) => SuppressNativeClickEvents(s,e, true);
         }
 
         if (subView is TreeView tree)
@@ -252,7 +251,6 @@ public class Design
         // in non designed subcomponents e.g. the bar of a true color picker.
         foreach (var v in subView.GetAllNonDesignableSubviews())
         {
-            v.MouseClick += (s,e)=>this.SuppressNativeClickEvents(s,e,true);
             v.MouseEvent += (s, e) => this.SuppressNativeClickEvents(s, e, true);
         }
         
@@ -588,7 +586,7 @@ public class Design
         // prevent space toggling the checkbox
         // (gives better typing experience e.g. "my lovely checkbox")
         cb.KeyBindings.Remove(Key.Space);
-        cb.MouseClick += (s, e) =>
+        cb.MouseEvent += (s, e) =>
         {
             if (e.Flags.HasFlag(MouseFlags.Button1Clicked))
             {
@@ -794,7 +792,7 @@ public class Design
 
         if (this.View is OptionSelector)
         {
-            yield return this.CreateProperty(nameof(OptionSelector.RadioLabels));
+            yield return this.CreateProperty(nameof(OptionSelector.Labels));
         }
 
         if (viewType.IsGenericType(typeof(NumericUpDown<>)))
