@@ -83,7 +83,7 @@ public class Editor : Runnable, IErrorReporter
         LoadKeyMap();
 
         this.keyboardManager = new KeyboardManager(app, this.keyMap);
-        this.mouseManager = new MouseManager()
+        this.mouseManager = new MouseManager(app)
         {
             ErrorReporter = this
         };
@@ -258,7 +258,7 @@ public class Editor : Runnable, IErrorReporter
                 // right click
                 if (m.Flags.HasFlag(this.keyMap.RightClick))
                 {
-                    var hit = this.viewBeingEdited.View.HitTest(m, out _, out _);
+                    var hit = this.viewBeingEdited.View.HitTest(app, m, out _, out _);
 
                     if (hit != null)
                     {

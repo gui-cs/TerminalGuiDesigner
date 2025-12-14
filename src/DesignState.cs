@@ -13,16 +13,20 @@ namespace TerminalGuiDesigner;
 /// </summary>
 public class DesignState
 {
+    private readonly IApplication? app;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="DesignState"/> class. Registers
     /// events on the <see cref="Design.View"/> that track entering, redrawing etc
     /// as well as capturing initial state e.g. <see cref="OriginalScheme"/>.
     /// </summary>
+    /// <param name="app">The application instance (can be null for non-UI scenarios).</param>
     /// <param name="design">The parent that this class will hold state for.  You
     /// should set it's <see cref="Design.State"/> property to the new instance.
     /// </param>
-    public DesignState(Design design)
+    public DesignState(IApplication? app, Design design)
     {
+        this.app = app;
         this.Design = design;
         this.Design.View.DrawComplete += this.DrawContentComplete;
         this.Design.View.HasFocusChanged += this.Enter;
@@ -72,7 +76,10 @@ public class DesignState
             SelectionManager.Instance.SelectedScheme.Normal :
             this.Design.View.GetScheme().Normal;
 
-        Application.Instance!.Driver.SetAttribute(color);
+        if (app != null)
+        {
+            app.Driver.SetAttribute(color);
+        }
 
         var v = this.Design.View;
 

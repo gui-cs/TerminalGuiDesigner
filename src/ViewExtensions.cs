@@ -13,9 +13,9 @@ namespace TerminalGuiDesigner;
 /// </summary>
 public static class ViewExtensions
 {
-    public static View? FindDeepestView(Point screenPoint)
+    public static View? FindDeepestView(IApplication app, Point screenPoint)
     {
-        return View.GetViewsAtLocation(Application.Instance!.TopRunnableView, screenPoint).LastOrDefault(v=> v!= null);
+        return View.GetViewsAtLocation(app.TopRunnableView, screenPoint).LastOrDefault(v=> v!= null);
     }
     /// <summary>
     /// Returns the sub-views of <paramref name="v"/> skipping out any
@@ -245,17 +245,18 @@ public static class ViewExtensions
     /// <param name="m">Screen coordinates.</param>
     /// <param name="isBorder">True if the click lands on the border of the returned <see cref="View"/>.</param>
     /// <param name="isLowerRight">True if the click lands in the lower right of the returned <see cref="View"/>.</param>
+    /// <param name="app">The application instance.</param>
     /// <param name="ignoring">One or more <see cref="View"/> to ignore (click through) when performing the hit test.</param>
     /// <returns>The <see cref="View"/> at the given screen location or null if none found.</returns>
-    public static View? HitTest(this View w, MouseEventArgs m, out bool isBorder, out bool isLowerRight, params View[] ignoring)
+    public static View? HitTest(this View w, IApplication app, MouseEventArgs m, out bool isBorder, out bool isLowerRight, params View[] ignoring)
     {
         // hide the views while we perform the hit test
         foreach (View v in ignoring)
         {
             v.Visible = false;
         }
-        
-        var hit = ViewExtensions.FindDeepestView(m.Position);
+
+        var hit = ViewExtensions.FindDeepestView(app, m.Position);
 
         hit = UnpackHitView(hit);
 

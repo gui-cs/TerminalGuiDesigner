@@ -12,6 +12,7 @@ namespace TerminalGuiDesigner.UI;
 /// </summary>
 public class MouseManager
 {
+    private readonly IApplication app;
     private DragOperation? dragOperation = null;
     private ResizeOperation? resizeOperation = null;
 
@@ -21,6 +22,11 @@ public class MouseManager
     /// </summary>
     private Point? selectionStart = null;
     private Point? selectionEnd = null;
+
+    public MouseManager(IApplication app)
+    {
+        this.app = app;
+    }
 
     /// <summary>
     /// Gets the container that 'drag a box' selection is occurring in (if any).
@@ -51,7 +57,7 @@ public class MouseManager
         if (m.Flags.HasFlag(MouseFlags.Button1Pressed)
             && this.resizeOperation == null && this.dragOperation == null && this.selectionStart == null)
         {
-            View? drag = viewBeingEdited.View.HitTest(m, out bool isBorder, out bool isLowerRight);
+            View? drag = viewBeingEdited.View.HitTest(app, m, out bool isBorder, out bool isLowerRight);
 
             // if user is ctrl+click
             if (m.Flags.HasFlag(MouseFlags.ButtonCtrl) && drag != null)
@@ -189,7 +195,7 @@ public class MouseManager
             if (this.dragOperation != null)
             {
                 // see if we are dragging into a new container
-                var dropInto = viewBeingEdited.View.HitTest(m, out _, out _, this.dragOperation.BeingDragged.View);
+                var dropInto = viewBeingEdited.View.HitTest(app, m, out _, out _, this.dragOperation.BeingDragged.View);
 
                 // TODO: this is quite hacky workaround for dropping on things like TabView top row.  Need
                 // a better solution to this.
