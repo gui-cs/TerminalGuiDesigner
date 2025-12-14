@@ -219,6 +219,11 @@ public static class ViewExtensions
     /// <returns>True if no visible border and <see cref="ViewExtensions.IsContainerView(View)"/>.</returns>
     public static bool IsBorderlessContainerView(this View v)
     {
+        if (v is Runnable)
+        {
+            return false;
+        }
+
         if (v is TabView tabView)
         {
             return !tabView.Style.ShowBorder || tabView.Style.TabsOnBottom;

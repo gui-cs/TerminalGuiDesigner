@@ -33,6 +33,7 @@ public static class ViewFactory
 
     internal static readonly Type[] KnownUnsupportedTypes =
     [
+        typeof( Runnable ),
         typeof( Dialog ),
         typeof( FileDialog ),
         typeof( SaveDialog ),

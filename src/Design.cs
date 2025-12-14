@@ -51,7 +51,8 @@ public class Design
         typeof(TabView),
         typeof(TreeView),
         typeof(Dialog),
-        typeof(NumericUpDown)
+        typeof(NumericUpDown),
+        typeof(Runnable)
     };
 
     /// <summary>
@@ -658,7 +659,7 @@ public class Design
             yield return this.CreateProperty(nameof(TextView.AllowsReturn));
             yield return this.CreateProperty(nameof(TextView.WordWrap));
         }
-        
+
         // Allow changing the FieldName on anything but root where
         // such an action would break things badly
         if (!this.IsRoot)

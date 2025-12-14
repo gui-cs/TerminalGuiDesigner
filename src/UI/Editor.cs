@@ -1377,7 +1377,7 @@ public class Editor : Runnable, IErrorReporter
 
     private static Type[] GetSupportedRootViews()
     {
-        return new Type[] { typeof(Window), typeof(Dialog), typeof(View) };
+        return new Type[] { typeof(Window), typeof(Dialog), typeof(View), typeof(Runnable) };
     }
 
     private void New(FileInfo toOpen, Type typeToCreate, string? explicitNamespace)
