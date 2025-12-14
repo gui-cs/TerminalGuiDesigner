@@ -1284,11 +1284,11 @@ public class Editor : Runnable, IErrorReporter
             (t, _) =>
             {
                 // no longer loading
-                Application.Invoke(() => app.RequestStop());
+                app.Invoke(() => app.RequestStop());
 
                 if (t.Exception != null)
                 {
-                    Application.Invoke(() =>
+                    app.Invoke(() =>
                         ExceptionViewer.ShowException(app, $"Failed to open '{toOpen.Name}'", t.Exception));
                     return;
                 }
@@ -1422,11 +1422,11 @@ public class Editor : Runnable, IErrorReporter
             (t, _) =>
             {
                 // no longer loading
-                Application.Invoke(() => app.RequestStop());
+                app.Invoke(() => app.RequestStop());
 
                 if (t.Exception != null)
                 {
-                    Application.Invoke(() =>
+                    app.Invoke(() =>
                         ExceptionViewer.ShowException(app, $"Failed to create '{toOpen.Name}'", t.Exception));
                     return;
                 }
@@ -1444,7 +1444,7 @@ public class Editor : Runnable, IErrorReporter
 
     private void ReplaceViewBeingEdited(Design design)
     {
-        Application.Invoke(() =>
+        app.Invoke(() =>
         {
             // remove the old view
             if (this.viewBeingEdited != null)

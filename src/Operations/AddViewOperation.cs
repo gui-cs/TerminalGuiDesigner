@@ -132,7 +132,7 @@ public class AddViewOperation : Operation
         var v = this.GetViewToAddTo();
         v.Add(this.add);
 
-        if (Application.Driver != null)
+        if (App?.Driver != null)
         {
             this.add.SetFocus();
         }

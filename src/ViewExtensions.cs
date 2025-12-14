@@ -15,7 +15,7 @@ public static class ViewExtensions
 {
     public static View? FindDeepestView(Point screenPoint)
     {
-        return View.GetViewsAtLocation(Application.Instance.TopRunnableView, screenPoint).LastOrDefault(v=> v!= null);
+        return View.GetViewsAtLocation(Application.Instance!.TopRunnableView, screenPoint).LastOrDefault(v=> v!= null);
     }
     /// <summary>
     /// Returns the sub-views of <paramref name="v"/> skipping out any

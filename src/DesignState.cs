@@ -72,7 +72,7 @@ public class DesignState
             SelectionManager.Instance.SelectedScheme.Normal :
             this.Design.View.GetScheme().Normal;
 
-        Application.Driver.SetAttribute(color);
+        Application.Instance!.Driver.SetAttribute(color);
 
         var v = this.Design.View;
 

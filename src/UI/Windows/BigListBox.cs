@@ -179,7 +179,7 @@ public class BigListBox<T>
             this.listView.SelectedItem = 0;
         }
 
-        this.callback = Application.AddTimeout(TimeSpan.FromMilliseconds(100), this.Timer);
+        this.callback = app.AddTimeout(TimeSpan.FromMilliseconds(100), this.Timer);
 
         this.listView.FocusDeepest(NavigationDirection.Forward,TabBehavior.TabStop);
     }
@@ -203,7 +203,7 @@ public class BigListBox<T>
     {
         app.Run(this.win);
 
-        Application.RemoveTimeout(this.callback);
+        app.RemoveTimeout(this.callback);
 
         return this.okClicked;
     }
