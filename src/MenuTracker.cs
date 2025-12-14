@@ -74,6 +74,7 @@ public class MenuTracker
     /// or a sub-menu parent (e.g. View=>Windows).</remarks>
     private MenuBarItem? GetParent( MenuItem item, out MenuBar? hostBar )
     {
+        /*
         foreach (var bar in this.bars)
         {
             foreach (var sub in bar.SubViews.OfType<MenuBarItem>())
@@ -87,7 +88,7 @@ public class MenuTracker
                 }
             }
         }
-
+        */
         hostBar = null;
         return null;
     }

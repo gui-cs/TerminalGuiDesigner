@@ -2,10 +2,8 @@ using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using Terminal.Gui;
 using Terminal.Gui.App;
 using Terminal.Gui.Drawing;
 using Terminal.Gui.Drivers;
@@ -28,6 +26,7 @@ namespace TerminalGuiDesigner.UI;
 /// </summary>
 public class Editor : Runnable, IErrorReporter
 {
+    private readonly IApplication app;
     private KeyMap keyMap;
     private readonly KeyboardManager keyboardManager;
     private readonly MouseManager mouseManager;
@@ -69,8 +68,10 @@ public class Editor : Runnable, IErrorReporter
     /// <summary>
     /// Initializes a new instance of the <see cref="Editor"/> class.
     /// </summary>
-    public Editor()
+    /// <param name="app"></param>
+    public Editor(IApplication app)
     {
+        this.app = app;
         // Bug: This will have strange inheritance behavior if Editor is inherited from.
         this.CanFocus = true;
 
@@ -207,12 +208,11 @@ public class Editor : Runnable, IErrorReporter
             catch (Exception ex)
             {
                 MessageBox.ErrorQuery(null, "Error Loading Designer", ex.Message, "Ok");
-                Application.Shutdown();
                 return;
             }
         }
 
-        Application.KeyDown += (_, k) =>
+        app.Keyboard.KeyDown += (_, k) =>
         {
             if (this.editing || this.viewBeingEdited == null)
             {
@@ -232,7 +232,7 @@ public class Editor : Runnable, IErrorReporter
             }
         };
 
-        Application.MouseEvent += (s, m) =>
+        app.Mouse.MouseEvent += (s, m) =>
         {
             // if another window is showing don't respond to mouse
             if (!this.IsCurrentTop)
@@ -276,8 +276,7 @@ public class Editor : Runnable, IErrorReporter
             }
         };
 
-        Application.Run(this, this.ErrorHandler);
-        Application.Shutdown();
+        app.Run(this, this.ErrorHandler);
     }
 
     /// <summary>
@@ -355,8 +354,8 @@ public class Editor : Runnable, IErrorReporter
 
         var bounds = Viewport;
 
-        Application.Driver.SetAttribute(new Attribute(Color.Black));
-        Application.Driver.FillRect(bounds,' ');
+        app.Driver.SetAttribute(new Attribute(Color.Black));
+        app.Driver.FillRect(bounds,' ');
 
         var top = new Rectangle(0, 0, bounds.Width, rootCommandsListView.Frame.Top - 1);
         RenderTitle(top);

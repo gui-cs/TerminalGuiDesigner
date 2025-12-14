@@ -78,7 +78,7 @@ public class AddMenuItemOperation : MenuItemOperation
         int insertAt = Math.Max(0, currentItemIdx + 1);
 
         children.Insert(insertAt, menuItem);
-        this.Parent.Children = children.ToArray();
+       // this.Parent.Children = children.ToArray();
 
         this.Bar?.SetNeedsDraw();
 

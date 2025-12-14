@@ -65,7 +65,7 @@ public class RemoveMenuItemOperation : MenuItemOperation
         {
             return;
         }
-
+        /*
         this.Parent.Children =
         [
             .. Parent.Children[ .. removedAtIdx ],
@@ -117,6 +117,7 @@ public class RemoveMenuItemOperation : MenuItemOperation
             // times
             this.barRemovedFrom = null;
         }
+        */
     }
 
     /// <inheritdoc/>

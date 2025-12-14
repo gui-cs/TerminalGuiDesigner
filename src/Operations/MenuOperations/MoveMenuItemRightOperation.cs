@@ -18,10 +18,13 @@ public class MoveMenuItemRightOperation : MenuItemOperation
     public MoveMenuItemRightOperation(MenuItem toMove)
         : base(toMove)
     {
+        /*
         if (this.Parent?.GetChildrenIndex(toMove) == 0)
         {
             this.IsImpossible = true;
         }
+        */
+        
     }
 
     /// <summary>
@@ -60,7 +63,7 @@ public class MoveMenuItemRightOperation : MenuItemOperation
         {
             return false;
         }
-
+        /*
         // When user hits shift right
         var children = this.Parent.Children.ToList<MenuItem>();
         var currentItemIdx = children.IndexOf(this.OperateOn);
@@ -98,7 +101,7 @@ public class MoveMenuItemRightOperation : MenuItemOperation
         addTo.Children = submenuChildren.ToArray();
 
         this.Bar?.SetNeedsDraw();
-
+        */
         return true;
     }
 

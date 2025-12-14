@@ -23,7 +23,7 @@ public partial class Program
                        Editor.Quiet = o.Quiet;
 
                        using var app = Application.Create().Init(o.Driver);
-                       var editor = new Editor();
+                       var editor = new Editor(app);
                        editor.Run(o);
                    });
     }

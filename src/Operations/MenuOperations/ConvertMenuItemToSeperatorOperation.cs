@@ -35,12 +35,12 @@ public class ConvertMenuItemToSeperatorOperation : MenuItemOperation
         {
             return;
         }
-
+        /*
         var children = this.Parent.Children.ToList<MenuItem>();
 
         children[this.removedAtIdx] = this.OperateOn;
         this.Parent.Children = children.ToArray();
-        this.Bar?.SetNeedsDraw();
+        this.Bar?.SetNeedsDraw();*/
     }
 
     /// <inheritdoc/>
@@ -50,7 +50,7 @@ public class ConvertMenuItemToSeperatorOperation : MenuItemOperation
         {
             return false;
         }
-
+        /*
         var children = this.Parent.Children.ToList<MenuItem?>();
 
         this.removedAtIdx = Math.Max(0, children.IndexOf(this.OperateOn));
@@ -58,7 +58,7 @@ public class ConvertMenuItemToSeperatorOperation : MenuItemOperation
 
         this.Parent.Children = children.ToArray();
         this.Bar?.SetNeedsDraw();
-
+        */
         return true;
     }
 }

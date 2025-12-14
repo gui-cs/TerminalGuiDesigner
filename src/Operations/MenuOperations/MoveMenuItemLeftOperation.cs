@@ -71,7 +71,7 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
         {
             return false;
         }
-
+        /*
         // Figure out where the parent MenuBarItem was in the list because
         // after we remove ourselves from its sublist it might
         // turn into a MenuItem (i.e. we loose the reference).
@@ -99,7 +99,7 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
 
             return true;
         }
-
+        */
         return false;
     }
 }
