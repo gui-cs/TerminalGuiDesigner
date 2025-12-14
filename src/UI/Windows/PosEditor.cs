@@ -61,7 +61,6 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
         btnOk.Accepting += BtnOk_Clicked;
         btnCancel.Accepting += BtnCancel_Clicked;
         Cancelled = true;
-        Modal = true;
 
         _siblings = design.GetSiblings().ToDictionary(
             d=>d.FieldName,

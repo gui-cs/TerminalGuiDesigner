@@ -56,7 +56,6 @@ public partial class DimEditor : Dialog, IValueGetterDialog
         btnOk.Accepting += BtnOk_Clicked;
         btnCancel.Accepting += BtnCancel_Clicked;
         Cancelled = true;
-        Modal = true;
         rgDimType.KeyDown += RgDimType_KeyPress;
         
         if(oldValue.GetDimType(out var type,out var value, out var offset))

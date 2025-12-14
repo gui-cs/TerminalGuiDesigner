@@ -29,7 +29,6 @@ internal class GetTextDialog
             Title = this.args.WindowTitle,
             X = 0,
             Y = 0,
-            Modal = true,
         };
 
         var description = new Label

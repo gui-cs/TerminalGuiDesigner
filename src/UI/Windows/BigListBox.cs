@@ -80,8 +80,7 @@ public class BigListBox<T>
 
             // By using Dim.Fill(), it will automatically resize without manual intervention
             Width = Dim.Fill(),
-            Height = Dim.Fill(),
-            Modal = true,
+            Height = Dim.Fill()
         };
 
         this.listView = new ListView()

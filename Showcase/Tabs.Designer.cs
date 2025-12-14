@@ -485,9 +485,9 @@ namespace Showcase {
                 ".OfType<SetPropertyOperation>();\r\n        var others = operations\r\n            ." +
                 "Except(setProps)\r\n            .GroupBy(k => k.Category, ToMenuItem);\r\n\r\n        " +
                 "var setPropsItems = setProps.Select(ToMenuItem).ToArray();\r\n        bool hasProp" +
-                "sItems = setPropsItems.Any();\r\n\r\n        var all = new List<MenuItemv2>();\r\n\r\n  " +
+                "sItems = setPropsItems.Any();\r\n\r\n        var all = new List<MenuItem>();\r\n\r\n  " +
                 "      // only add the set properties category if there are some\r\n        if (has" +
-                "PropsItems)\r\n        {\r\n            all.Add(new MenuItemv2()\r\n            {\r\n   " +
+                "PropsItems)\r\n        {\r\n            all.Add(new MenuItem()\r\n            {\r\n   " +
                 "             Title = name,\r\n                Action = () =>\r\n                {\r\n " +
                 "                   if (selected.Length == 1 || rightClicked != null)\r\n          " +
                 "          {\r\n                        this.ShowEditProperties(rightClicked ?? sel" +
@@ -499,7 +499,7 @@ namespace Showcase {
                 " in alphabetical order\r\n                all.AddRange(g.OrderBy(mi => mi.Title));" +
                 "\r\n            }\r\n            else\r\n            {\r\n                // Add categor" +
                 "ies first\r\n                all.Insert(\r\n                    hasPropsItems ? 1 : " +
-                "0,\r\n                    new MenuItemv2()\r\n                    {\r\n               " +
+                "0,\r\n                    new MenuItem()\r\n                    {\r\n               " +
                 "         Title = g.Key,\r\n                        SubMenu = new Menuv2(g.ToArray(" +
                 "))\r\n                    });\r\n            }\r\n        }\r\n\r\n        // there\'s noth" +
                 "ing we can do\r\n        if (all.Count == 0)\r\n        {\r\n            return;\r\n    " +
@@ -514,7 +514,7 @@ namespace Showcase {
                 "t its own menu items!?\r\n        menu.MakeVisible(position);\r\n        menu.Accept" +
                 "ed += (_, _) =>\r\n        {\r\n            this.menuOpen = false;\r\n            Sele" +
                 "ctionManager.Instance.LockSelection = false;\r\n        };\r\n    }\r\n\r\n    private s" +
-                "tatic MenuItemv2 ToMenuItem(IOperation operation)\r\n    {\r\n        return new Men" +
+                "tatic MenuItem ToMenuItem(IOperation operation)\r\n    {\r\n        return new Men" +
                 "uItemv2(operation.ToString(), string.Empty, () => Try(() => OperationManager.Ins" +
                 "tance.Do(operation)));\r\n\r\n        static void Try(Action action)\r\n        {\r\n   " +
                 "         try\r\n            {\r\n                // BUG: Thread-safety\r\n            " +

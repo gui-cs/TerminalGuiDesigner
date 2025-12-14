@@ -22,11 +22,11 @@ using ILogger = Microsoft.Extensions.Logging.ILogger;
 namespace TerminalGuiDesigner.UI;
 
 /// <summary>
-/// Root <see cref="Toplevel"/> <see cref="View"/> that is visible on loading the
+/// Root <see cref="View"/> <see cref="View"/> that is visible on loading the
 /// application.  Hooks key and mouse events and mounts as a sub-view whatever file
 /// the user opens.
 /// </summary>
-public class Editor : Toplevel, IErrorReporter
+public class Editor : View, IErrorReporter
 {
     private KeyMap keyMap;
     private readonly KeyboardManager keyboardManager;
@@ -86,7 +86,9 @@ public class Editor : Toplevel, IErrorReporter
         {
             ErrorReporter = this
         };
-        this.Closing += this.Editor_Closing;
+
+        // TODO: save changes
+        //this.Closing += this.Editor_Closing;
 
         this.BuildRootMenu();
     }
@@ -204,7 +206,7 @@ public class Editor : Toplevel, IErrorReporter
             }
             catch (Exception ex)
             {
-                MessageBox.ErrorQuery("Error Loading Designer", ex.Message, "Ok");
+                MessageBox.ErrorQuery(null, "Error Loading Designer", ex.Message, "Ok");
                 Application.Shutdown();
                 return;
             }
@@ -342,9 +344,9 @@ public class Editor : Toplevel, IErrorReporter
     /// <summary>
     /// Draws title screen when no view is currently open
     /// </summary>
-    protected override bool OnDrawingContent()
+    protected override bool OnDrawingContent(DrawContext? context)
     {
-        var r = base.OnDrawingContent();
+        var r = base.OnDrawingContent(context);
 
         if (viewBeingEdited != null)
         {
@@ -902,7 +904,7 @@ public class Editor : Toplevel, IErrorReporter
     }
 
 
-    private void Editor_Closing(object? sender, ToplevelClosingEventArgs obj)
+    private void Editor_Closing(object? sender, CancelEventArgs<bool> obj)
     {
         if (this.viewBeingEdited == null)
         {
@@ -955,12 +957,12 @@ public class Editor : Toplevel, IErrorReporter
         var setPropsItems = setProps.Select(ToMenuItem).ToArray();
         bool hasPropsItems = setPropsItems.Any();
 
-        var all = new List<MenuItemv2>();
+        var all = new List<MenuItem>();
 
         // only add the set properties category if there are some
         if (hasPropsItems)
         {
-            all.Add(new MenuItemv2()
+            all.Add(new MenuItem()
             {
                 Title = name,
                 Action = () =>
@@ -970,7 +972,11 @@ public class Editor : Toplevel, IErrorReporter
                         this.ShowEditProperties(rightClicked ?? selected[0]);
                     }
                 },
-                SubMenu = new Menuv2(setPropsItems)
+                SubMenu = new Menu()
+                {
+                    // TODO: get the menu items back
+                    // Subitems = setPropsItems
+                }
             });
         }
 
@@ -988,10 +994,10 @@ public class Editor : Toplevel, IErrorReporter
                 // Add categories first
                 all.Insert(
                     hasPropsItems ? 1 : 0,
-                    new MenuItemv2()
+                    new MenuItem()
                     {
                         Title = g.Key,
-                        SubMenu = new Menuv2(g.ToArray())
+                        SubMenu = new Menu(g.ToArray())
                     });
             }
         }
@@ -1033,9 +1039,9 @@ public class Editor : Toplevel, IErrorReporter
         };
     }
 
-    private static MenuItemv2 ToMenuItem(IOperation operation)
+    private static MenuItem ToMenuItem(IOperation operation)
     {
-        return new MenuItemv2(operation.ToString(), string.Empty, () => Try(() => OperationManager.Instance.Do(operation)));
+        return new MenuItem(operation.ToString(), string.Empty, () => Try(() => OperationManager.Instance.Do(operation)));
 
         static void Try(Action action)
         {
@@ -1372,7 +1378,7 @@ public class Editor : Toplevel, IErrorReporter
 
     private static Type[] GetSupportedRootViews()
     {
-        return new Type[] { typeof(Window), typeof(Dialog), typeof(View), typeof(Toplevel) };
+        return new Type[] { typeof(Window), typeof(Dialog), typeof(View) };
     }
 
     private void New(FileInfo toOpen, Type typeToCreate, string? explicitNamespace)
@@ -1395,7 +1401,8 @@ public class Editor : Toplevel, IErrorReporter
         // Validate the namespace
         if (string.IsNullOrWhiteSpace(ns) || ns.Contains(' ') || char.IsDigit(ns.First()))
         {
-            MessageBox.ErrorQuery("Invalid Namespace", "Namespace must not contain spaces, be empty or begin with a number", "Ok");
+            // TODO: app should be null?
+            MessageBox.ErrorQuery(null, "Invalid Namespace", "Namespace must not contain spaces, be empty or begin with a number", "Ok");
             return;
         }
 

@@ -63,7 +63,6 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Arrangement = (Terminal.Gui.ViewBase.ViewArrangement.Movable | Terminal.Gui.ViewBase.ViewArrangement.Overlapped);
             this.CanFocus = true;
             this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Transparent;
-            this.Modal = true;
             this.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Title = "Array Editor";
             this.frameView.Width = Dim.Fill(0);
@@ -169,8 +168,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Line.CanFocus = true;
             this.Line.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
             this.Line.Data = "Line";
-            this.Line.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
-            this.Line.LineRune = new System.Text.Rune('─');
+            this.Line.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start; 
             this.Line.Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal;
             this.Add(this.Line);
             this.btnOk.Width = Dim.Auto();

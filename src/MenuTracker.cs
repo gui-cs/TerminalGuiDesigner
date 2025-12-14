@@ -41,10 +41,6 @@ public class MenuTracker
             return;
         }
 
-        mb.MenuAllClosed += this.MenuAllClosed;
-        mb.MenuOpened += this.MenuOpened;
-        mb.MenuClosing += this.MenuClosing;
-
         this.bars.Add(mb);
     }
 
@@ -58,10 +54,6 @@ public class MenuTracker
         {
             return;
         }
-
-        mb.MenuAllClosed -= MenuAllClosed;
-        mb.MenuOpened -= MenuOpened;
-        mb.MenuClosing -= MenuClosing;
     }
 
     /// <summary>
@@ -84,7 +76,7 @@ public class MenuTracker
     {
         foreach (var bar in this.bars)
         {
-            foreach (var sub in bar.Menus)
+            foreach (var sub in bar.SubViews.OfType<MenuBarItem>())
             {
                 var candidate = this.GetParent(item, sub);
 
@@ -144,7 +136,7 @@ public class MenuTracker
         Dictionary<MenuBarItem, MenuItem> dictionary = [];
         foreach (var b in this.bars)
         {
-            foreach (var bi in b.Menus)
+            foreach (var bi in b.SubViews.OfType<MenuBarItem>())
             {
                 foreach ( ( MenuBarItem? convertedMenuBarItem, MenuItem? convertedMenuItem ) in this.ConvertEmptyMenus( dictionary, b, bi ) )
                 {
@@ -172,9 +164,9 @@ public class MenuTracker
     internal static bool ConvertMenuBarItemToRegularItemIfEmpty( MenuBarItem bar, [NotNullWhen( true )] out MenuItem? added )
     {
         added = null;
-
+        /*
         // bar still has more children so don't convert
-        if ( bar.Children.Length != 0 )
+        if ( bar.SubViews.Length != 0 )
         {
             return false;
         }
@@ -198,28 +190,28 @@ public class MenuTracker
             Data = bar.Data,
             Key = bar.Key
         };
-
+        */
         return true;
     }
 
     /// <inheritdoc cref="ConvertEmptyMenus()"/>
     private Dictionary<MenuBarItem, MenuItem> ConvertEmptyMenus(Dictionary<MenuBarItem,MenuItem> dictionary, MenuBar bar, MenuBarItem mbi)
     {
-        foreach (var c in mbi.Children.OfType<MenuBarItem>())
+        foreach (var c in mbi.SubViews.OfType<MenuBarItem>())
         {
             this.ConvertEmptyMenus(dictionary,bar, c);
             if ( ConvertMenuBarItemToRegularItemIfEmpty( c, out MenuItem? added))
             {
                 dictionary.TryAdd( c, added );
-
+                /*
                 bar.CloseMenu(false);
-                bar.OpenMenu();
+                bar.OpenMenu();*/
             }
         }
 
         return dictionary;
     }
-
+    /*
     private void MenuClosing(object? sender, MenuClosingEventArgs obj)
     {
         this.CurrentlyOpenMenuItem = null;
@@ -257,5 +249,5 @@ public class MenuTracker
         }
 
         return null;
-    }
+    }*/
 }

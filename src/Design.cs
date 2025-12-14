@@ -658,12 +658,7 @@ public class Design
             yield return this.CreateProperty(nameof(TextView.AllowsReturn));
             yield return this.CreateProperty(nameof(TextView.WordWrap));
         }
-
-        if (this.View is Toplevel)
-        {
-            yield return this.CreateProperty(nameof(Toplevel.Modal));
-        }
-
+        
         // Allow changing the FieldName on anything but root where
         // such an action would break things badly
         if (!this.IsRoot)
@@ -698,7 +693,6 @@ public class Design
 
         if (this.View is Line)
         {
-            yield return this.CreateProperty(nameof(Line.LineRune));
             yield return this.CreateProperty(nameof(Line.Orientation));
         }
 
