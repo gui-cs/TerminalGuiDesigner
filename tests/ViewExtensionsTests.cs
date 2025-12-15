@@ -29,7 +29,7 @@ internal class ViewExtensionsTests : Tests
     [TestCase(3, 4, true, false, false)]
     public void TestHitTest(int x, int y, bool hit, bool border, bool lowerRight)
     {
-        var v = Get10By10View().View;
+        var v = Get10By10View(App).View;
 
         v.X = 2;
         v.Y = 3;
@@ -37,7 +37,7 @@ internal class ViewExtensionsTests : Tests
         v.Height = 3;
 
         // Hit test does not find things that are not designable
-        v.Data = new Design(new SourceCodeFile("MyView.cs"), "myview", v);
+        v.Data = new Design(App, new SourceCodeFile("MyView.cs"), "myview", v);
 
         Application.Top.Add(v);
         bool isLowerRight;
@@ -100,7 +100,7 @@ internal class ViewExtensionsTests : Tests
         };
 
         // Hit test does not find things that are not designable
-        f.Data = new Design(new SourceCodeFile("MyView.cs"), "myframe", f);
+        f.Data = new Design(App, new SourceCodeFile("MyView.cs"), "myframe", f);
 
         w.Add(f);
         Application.Begin(w);

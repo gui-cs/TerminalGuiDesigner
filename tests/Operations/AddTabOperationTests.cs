@@ -11,8 +11,8 @@ internal class AddTabOperationTests : Tests
     [Test]
     public void TestAddTab_WrongViewType()
     {
-        var d = Get10By10View();
-        var ex = ClassicAssert.Throws<ArgumentException>(() => new AddTabOperation(d, null));
+        var d = Get10By10View(App);
+        var ex = ClassicAssert.Throws<ArgumentException>(() => new AddTabOperation(App, d, null));
         ClassicAssert.AreEqual("Design must wrap a TabView to be used with this operation.", ex?.Message);
     }
 
@@ -22,14 +22,14 @@ internal class AddTabOperationTests : Tests
         string? tab1Name = null;
         string? tab2Name = null;
 
-        var tabIn = RoundTrip<Toplevel, TabView>(
+        var tabIn = RoundTrip<Toplevel, TabView>(App,
             (d, v) =>
             {
                 ClassicAssert.AreEqual(2, v.Tabs.Count, "Expected ViewFactory TabView to have a couple of example tabs when created");
                 tab1Name = v.Tabs.ElementAt(0).DisplayText.ToString();
                 tab2Name = v.Tabs.ElementAt(1).DisplayText.ToString();
 
-                var op = new AddTabOperation(d, "Blarg");
+                var op = new AddTabOperation(App, d, "Blarg");
                 ClassicAssert.AreEqual(2, v.Tabs.Count, "Operation has not been run so why are there new tabs!");
                 ClassicAssert.AreEqual(tab1Name, v.Tabs.ElementAt(0).DisplayText);
                 ClassicAssert.AreEqual(tab2Name, v.Tabs.ElementAt(1).DisplayText);
@@ -50,10 +50,10 @@ internal class AddTabOperationTests : Tests
     [Test]
     public void TestAddTab_BlankName()
     {
-        var tabIn = RoundTrip<Toplevel, TabView>(
+        var tabIn = RoundTrip<Toplevel, TabView>(App,
             (d, v) =>
             {
-                var op = new AddTabOperation(d, "  ");
+                var op = new AddTabOperation(App, d, "  ");
                 op.Do();
                 ClassicAssert.AreEqual("blank", v.Tabs.ElementAt(2).DisplayText);
             }, out _);
@@ -65,12 +65,12 @@ internal class AddTabOperationTests : Tests
     [Test]
     public void TestAddTab_DuplicateNames()
     {
-        var tabIn = RoundTrip<Toplevel, TabView>(
+        var tabIn = RoundTrip<Toplevel, TabView>(App,
             (d, v) =>
             {
-                var op = new AddTabOperation(d, "Blah");
+                var op = new AddTabOperation(App, d, "Blah");
                 op.Do();
-                op = new AddTabOperation(d, "Blah");
+                op = new AddTabOperation(App, d, "Blah");
                 op.Do();
                 ClassicAssert.AreEqual(4, v.Tabs.Count);
                 ClassicAssert.AreEqual("Blah", v.Tabs.ElementAt(2).DisplayText);

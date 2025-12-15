@@ -71,7 +71,7 @@ internal class ListViewTests : Tests
     {
         var file = new FileInfo( "TestIListSourceProperty_Rhs.cs" );
         var lv = new ListView( );
-        var d = new Design( new( file ), "lv", lv );
+        var d = new Design(App, new( file ), "lv", lv );
         var prop = d.GetDesignableProperties( ).Single( p => p.PropertyInfo.Name.Equals( "Source" ) );
 
         Assert.That( lv.Source, Is.Null );

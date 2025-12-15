@@ -13,8 +13,8 @@ internal class AddMenuOperationTests : Tests
     [Test]
     public void TestAddMenu_InvalidViewType()
     {
-        var d = Get10By10View();
-        var ex = ClassicAssert.Throws<ArgumentException>(() => new AddMenuOperation(d, "haha!"));
+        var d = Get10By10View(App);
+        var ex = ClassicAssert.Throws<ArgumentException>(() => new AddMenuOperation(App, d, "haha!"));
         ClassicAssert.AreEqual("Design must wrap a MenuBar to be used with this operation.", ex?.Message);
     }
 
@@ -23,13 +23,13 @@ internal class AddMenuOperationTests : Tests
     {
         const string expectedTopLevelMenuName = "_File (F9)";
 
-        var viewIn = RoundTrip<View, MenuBar>((d, v) =>
+        var viewIn = RoundTrip<View, MenuBar>(App, (d, v) =>
         {
             ClassicAssert.AreEqual(expectedTopLevelMenuName, v.Menus[0].Title.ToString(), "Expected a new MenuBar added in Designer to have a placeholder title");
             ClassicAssert.AreEqual(1, v.Menus.Length, "Expected 1 placeholder example Menu");
             var first = v.Menus[0];
 
-            var add = new AddMenuOperation(d, "Blarg");
+            var add = new AddMenuOperation(App, d, "Blarg");
             ClassicAssert.AreEqual(1, v.Menus.Length, "Expected no changes until we actually run the operation");
 
             add.Do();
@@ -48,10 +48,10 @@ internal class AddMenuOperationTests : Tests
     [Test]
     public void TestAddingMenu_AtRoot_BlankMenuName()
     {
-        var viewIn = RoundTrip<View, MenuBar>((d, v) =>
+        var viewIn = RoundTrip<View, MenuBar>(App, (d, v) =>
         {
             ClassicAssert.AreEqual(1, v.Menus.Length);
-            var add = new AddMenuOperation(d, "   ");
+            var add = new AddMenuOperation(App, d, "   ");
             add.Do();
             ClassicAssert.AreEqual(2, v.Menus.Length);
             ClassicAssert.AreEqual("blank", v.Menus[1].Title);
@@ -65,12 +65,12 @@ internal class AddMenuOperationTests : Tests
     [Test]
     public void TestAddingMenu_AtRoot_Duplicates()
     {
-        var viewIn = RoundTrip<View, MenuBar>((d, v) =>
+        var viewIn = RoundTrip<View, MenuBar>(App, (d, v) =>
         {
             ClassicAssert.AreEqual(1, v.Menus.Length);
-            var add = new AddMenuOperation(d, "Fish");
+            var add = new AddMenuOperation(App, d, "Fish");
             add.Do();
-            add = new AddMenuOperation(d, "Fish");
+            add = new AddMenuOperation(App, d, "Fish");
             add.Do();
             ClassicAssert.AreEqual(3, v.Menus.Length);
             ClassicAssert.AreEqual("Fish", v.Menus[1].Title.ToString());

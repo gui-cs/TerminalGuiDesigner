@@ -23,15 +23,15 @@ internal class DragOperationTests : Tests
     [Test]
     public void TestSimpleDrag_Down3Rows()
     {
-        var d = Get10By10View();
+        var d = Get10By10View(App);
 
         var lbl = new Label { Text = "Hi there buddy" };
-        var lblDesign = new Design(d.SourceCode, "mylabel", lbl);
+        var lblDesign = new Design(App, d.SourceCode, "mylabel", lbl);
         lbl.Data = lblDesign;
         d.View.Add(lbl);
 
         // start drag in center of control
-        var drag = new DragOperation(lblDesign, 2, 0, null);
+        var drag = new DragOperation(App, lblDesign, 2, 0, null);
 
         // drag down 3 lines
         drag.ContinueDrag(new Point(2, 3));
@@ -56,20 +56,20 @@ internal class DragOperationTests : Tests
     [Test]
     public void TestSimpleDrag_Down3Rows_WithMouse()
     {
-        var d = Get10By10View();
+        var d = Get10By10View(App);
 
         var lbl = new Label
         {
             Text = "Hi there buddy"
         };
-        var lblDesign = new Design(d.SourceCode, "mylabel", lbl);
+        var lblDesign = new Design(App, d.SourceCode, "mylabel", lbl);
         lbl.Data = lblDesign;
         d.View.Add(lbl);
 
         Application.Top.Add(d.View);
         Application.Top.LayoutSubViews();
 
-        MouseDrag(d, 2, 0, 2, 3);
+        MouseDrag(App, d, 2, 0, 2, 3);
 
         // finalize the operation
         ClassicAssert.AreEqual(Pos.Absolute(0), lbl.X);
@@ -86,7 +86,7 @@ internal class DragOperationTests : Tests
     [Test]
     public void TestMultiDrag_Down3Rows()
     {
-        var d = Get10By10View();
+        var d = Get10By10View(App);
 
         var lbl1 = new Label{ Text = "Hi there buddy" };
         var lbl2 = new Label{
@@ -95,8 +95,8 @@ internal class DragOperationTests : Tests
             Text = "Hi there buddy"
         };
 
-        var lblDesign1 = new Design(d.SourceCode, "mylabel1", lbl1);
-        var lblDesign2 = new Design(d.SourceCode, "mylabel2", lbl2);
+        var lblDesign1 = new Design(App, d.SourceCode, "mylabel1", lbl1);
+        var lblDesign2 = new Design(App, d.SourceCode, "mylabel2", lbl2);
         lbl1.Data = lblDesign1;
         lbl2.Data = lblDesign2;
 
@@ -149,7 +149,7 @@ internal class DragOperationTests : Tests
             Y=2,
             Text = "Hi there buddy"
         };
-        var lblDesign = new Design(d.SourceCode, "mylabel", lbl);
+        var lblDesign = new Design(App, d.SourceCode, "mylabel", lbl);
         lbl.Data = lblDesign;
         container1.Add(lbl);
 
@@ -177,7 +177,7 @@ internal class DragOperationTests : Tests
     [Test]
     public void TestSimpleDrag_IntoAnotherView()
     {
-        var d = Get10By10View();
+        var d = Get10By10View(App);
 
         // setup 2 large SubViews at diagonals
         // to one another within the main 10x10 view
@@ -188,7 +188,7 @@ internal class DragOperationTests : Tests
             Width = 5,
             Height = 4,
         };
-        container1.Data = new Design(d.SourceCode, "v1", container1);
+        container1.Data = new Design(App, d.SourceCode, "v1", container1);
 
         var container2 = new View
         {
@@ -197,7 +197,7 @@ internal class DragOperationTests : Tests
             Width = 5,
             Height = 4,
         };
-        container2.Data = new Design(d.SourceCode, "v2", container2);
+        container2.Data = new Design(App, d.SourceCode, "v2", container2);
 
         d.View.Add(container1);
         d.View.Add(container2);
@@ -209,7 +209,7 @@ internal class DragOperationTests : Tests
             Text = "Hi there buddy"
         };
 
-        var lblDesign = new Design(d.SourceCode, "mylabel", lbl);
+        var lblDesign = new Design(App, d.SourceCode, "mylabel", lbl);
         lbl.Data = lblDesign;
         container1.Add(lbl);
 
@@ -268,7 +268,7 @@ internal class DragOperationTests : Tests
         ClassicAssert.AreEqual(12, screen.Y);
 
         var lbl = new Label{ X = 1, Y = 2, Text = "Hi there buddy" };
-        var lblDesign = new Design(rootDesign.SourceCode, "mylabel", lbl);
+        var lblDesign = new Design(App, rootDesign.SourceCode, "mylabel", lbl);
         lbl.Data = lblDesign;
         frameView.Add(lbl);
 
@@ -328,7 +328,7 @@ internal class DragOperationTests : Tests
     {
         var d = Get10By10View();
         var lbl = new Label { X = 1, Y = 1, Text = "Hello" };
-        var lblDesign = new Design(d.SourceCode, "lbl", lbl);
+        var lblDesign = new Design(App, d.SourceCode, "lbl", lbl);
         lbl.Data = lblDesign;
         d.View.Add(lbl);
 
@@ -346,7 +346,7 @@ internal class DragOperationTests : Tests
         var d = Get10By10View();
 
         var lbl = new Label { X = 1, Y = 1, Text = "Hello" };
-        var lblDesign = new Design(d.SourceCode, "lbl", lbl);
+        var lblDesign = new Design(App, d.SourceCode, "lbl", lbl);
         lbl.Data = lblDesign;
         d.View.Add(lbl);
 
@@ -368,23 +368,23 @@ internal class DragOperationTests : Tests
 
         // Parent container
         var container1 = new View { Width = 10, Height = 10 };
-        container1.Data = new Design(d.SourceCode, "c1", container1);
+        container1.Data = new Design(App, d.SourceCode, "c1", container1);
         d.View.Add(container1);
 
         // Another container to drop into
         var container2 = new View { Width = 10, Height = 10 };
-        container2.Data = new Design(d.SourceCode, "c2", container2);
+        container2.Data = new Design(App, d.SourceCode, "c2", container2);
         d.View.Add(container2);
 
         // Label inside container1
         var lbl = new Label { X = 1, Y = 1, Text = "Hello" };
-        var lblDesign = new Design(d.SourceCode, "lbl", lbl);
+        var lblDesign = new Design(App, d.SourceCode, "lbl", lbl);
         lbl.Data = lblDesign;
         container1.Add(lbl);
 
         // Another label that depends on lbl for positioning
         var lbl2 = new Label { X = Pos.Right(lbl) + 1, Y = 1, Text = "World" };
-        var lblDesign2 = new Design(d.SourceCode, "lbl2", lbl2);
+        var lblDesign2 = new Design(App, d.SourceCode, "lbl2", lbl2);
         lbl2.Data = lblDesign2;
         container1.Add(lbl2);
 
@@ -403,22 +403,22 @@ internal class DragOperationTests : Tests
         var d = Get10By10View();
 
         var container1 = new View { Width = 10, Height = 10 };
-        container1.Data = new Design(d.SourceCode, "c1", container1);
+        container1.Data = new Design(App, d.SourceCode, "c1", container1);
         d.View.Add(container1);
 
         var container2 = new View { Width = 10, Height = 10 };
-        container2.Data = new Design(d.SourceCode, "c2", container2);
+        container2.Data = new Design(App, d.SourceCode, "c2", container2);
         d.View.Add(container2);
 
         // First label
         var lbl1 = new Label { X = 1, Y = 1, Text = "One" };
-        var lblDesign1 = new Design(d.SourceCode, "lbl1", lbl1);
+        var lblDesign1 = new Design(App, d.SourceCode, "lbl1", lbl1);
         lbl1.Data = lblDesign1;
         container1.Add(lbl1);
 
         // Second label depends on lbl1
         var lbl2 = new Label { X = Pos.Right(lbl1) + 1, Y = 1, Text = "Two" };
-        var lblDesign2 = new Design(d.SourceCode, "lbl2", lbl2);
+        var lblDesign2 = new Design(App, d.SourceCode, "lbl2", lbl2);
         lbl2.Data = lblDesign2;
         container1.Add(lbl2);
 
@@ -440,22 +440,22 @@ internal class DragOperationTests : Tests
         var d = Get10By10View();
 
         var container1 = new View { Width = 10, Height = 10 };
-        container1.Data = new Design(d.SourceCode, "c1", container1);
+        container1.Data = new Design(App, d.SourceCode, "c1", container1);
         d.View.Add(container1);
 
         var container2 = new View { Width = 10, Height = 10 };
-        container2.Data = new Design(d.SourceCode, "c2", container2);
+        container2.Data = new Design(App, d.SourceCode, "c2", container2);
         d.View.Add(container2);
 
         // Label in container1
         var lbl = new Label { X = 1, Y = 2, Text = "Hello" };
-        var lblDesign = new Design(d.SourceCode, "lbl", lbl);
+        var lblDesign = new Design(App, d.SourceCode, "lbl", lbl);
         lbl.Data = lblDesign;
         container1.Add(lbl);
 
         // Another label depending on the first
         var lbl2 = new Label { X = Pos.Right(lbl) + 1, Y = 2, Text = "World" };
-        var lblDesign2 = new Design(d.SourceCode, "lbl2", lbl2);
+        var lblDesign2 = new Design(App, d.SourceCode, "lbl2", lbl2);
         lbl2.Data = lblDesign2;
         container1.Add(lbl2);
 
@@ -470,7 +470,7 @@ internal class DragOperationTests : Tests
         drag.DropInto = container2;
         ClassicAssert.IsTrue(drag.IsImpossible);
 
-        // Call Abandon — should snap lbl back to original
+        // Call Abandon ï¿½ should snap lbl back to original
         drag.Abandon();
 
         ClassicAssert.AreEqual(Pos.Absolute(1), lbl.X);

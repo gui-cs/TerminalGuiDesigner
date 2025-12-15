@@ -15,6 +15,11 @@ public class Tests
     [ThreadStatic]
     private static bool? _init;
 
+    /// <summary>
+    /// Mock IApplication instance for use in tests. Created fresh for each test.
+    /// </summary>
+    protected IApplication App { get; private set; } = null!;
+
     [SetUp]
     public virtual void SetUp()
     {
@@ -34,6 +39,9 @@ public class Tests
             Width = Dim.Fill(),
             Height = Dim.Fill(),
         });
+
+        // Create a fresh mock for each test
+        App = Mock.Of<IApplication>();
     }
 
     [TearDown]
@@ -46,7 +54,7 @@ public class Tests
         SelectionManager.Instance.Clear();
     }
 
-    protected static Design Get10By10View()
+    protected static Design Get10By10View(IApplication app)
     {
         Application.Top.RemoveAll();
 
@@ -59,7 +67,7 @@ public class Tests
             Height = 10,
             CanFocus = true,
         };
-        var d = new Design(new SourceCodeFile(new FileInfo("TenByTen.cs")), Design.RootDesignName, v);
+        var d = new Design(app, new SourceCodeFile(new FileInfo("TenByTen.cs")), Design.RootDesignName, v);
         v.Data = d;
 
         v.BeginInit();
@@ -71,12 +79,12 @@ public class Tests
         return d;
     }
 
-    protected static Design Get100By100<T>([CallerMemberName] string? caller = null)
+    protected static Design Get100By100<T>(IApplication app, [CallerMemberName] string? caller = null)
     {
         // start with blank slate
         OperationManager.Instance.ClearUndoRedo();
 
-        var viewToCode = new ViewToCode();
+        var viewToCode = new ViewToCode(app);
 
         var file = new FileInfo($"{caller}.cs");
         var rootDesign = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window));
@@ -94,12 +102,13 @@ public class Tests
     /// </summary>
     /// <typeparam name="T1">Root designer View type to create (e.g. <see cref="Window"/>)</typeparam>
     /// <typeparam name="T2">Type of subview to create (e.g. <see cref="Label"/>)</typeparam>
+    /// <param name="app">The IApplication instance to use.</param>
     /// <param name="adjust">Mutator for making pre save changes you want to conform can be read in properly</param>
     /// <param name="viewOut">The view created and passed to <paramref name="adjust"/></param>
     /// <param name="caller"></param>
     /// <returns>The read in object state after round trip (generate code file then read that code back in)</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="caller"/> is <see langword="null" />, empty, or whitespace</exception>
-    protected static T2 RoundTrip<T1, T2>(Action<Design, T2> adjust, out T2 viewOut, [CallerMemberName] string? caller = null)
+    protected static T2 RoundTrip<T1, T2>(IApplication app, Action<Design, T2> adjust, out T2 viewOut, [CallerMemberName] string? caller = null)
         where T1 : View, new()
         where T2 : View, new()
     {
@@ -110,19 +119,19 @@ public class Tests
 
         const string fieldName = "myViewOut";
 
-        var viewToCode = new ViewToCode();
+        var viewToCode = new ViewToCode(app);
 
         var file = new FileInfo(caller + ".cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(T1));
 
         viewOut = (T2)ViewFactory.Create(typeof(T2));
 
-        OperationManager.Instance.Do(new AddViewOperation(viewOut, designOut, fieldName));
+        OperationManager.Instance.Do(new AddViewOperation(app, viewOut, designOut, fieldName));
         adjust((Design)viewOut.Data, viewOut);
 
         viewToCode.GenerateDesignerCs(designOut, typeof(T1));
 
-        var codeToView = new CodeToView(designOut.SourceCode);
+        var codeToView = new CodeToView(app, designOut.SourceCode);
         var designBackIn = codeToView.CreateInstance();
 
         return designBackIn.View
@@ -133,14 +142,15 @@ public class Tests
     /// <summary>
     /// Performs a mouse drag from the first coordinates to the second (in screen space)
     /// </summary>
+    /// <param name="app">The IApplication instance to use.</param>
     /// <param name="root">The root Design.  Make sure you have added it to <see cref="Application.Top"/> and run <see cref="View.LayoutSubViews"/></param>
     /// <param name="x1">X coordinate to start drag at</param>
     /// <param name="y1">Y coordinate to start drag at</param>
     /// <param name="x2">X coordinate to end drag at</param>
     /// <param name="y2">Y coordinate to end drag at</param>
-    protected static void MouseDrag(Design root, int x1, int y1, int x2, int y2)
+    protected static void MouseDrag(IApplication app, Design root, int x1, int y1, int x2, int y2)
     {
-        var mm = new MouseManager();
+        var mm = new MouseManager(app);
 
         mm.HandleMouse(
             new MouseEventArgs

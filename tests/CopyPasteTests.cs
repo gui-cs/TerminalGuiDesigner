@@ -21,7 +21,7 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CannotCopyRoot()
     {
-        var d = Get10By10View();
+        var d = Get10By10View(App);
 
         var top = new Toplevel();
         top.Add(d.View);
@@ -35,11 +35,11 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPasteTableView()
     {
-        var d = Get10By10View();
+        var d = Get10By10View(App);
 
         var tv = ViewFactory.Create<TableView>( );
 
-        Assert.That( new AddViewOperation(tv, d, "mytbl").Do() );
+        Assert.That( new AddViewOperation(App, tv, d, "mytbl").Do() );
 
         var tvDesign = (Design)tv.Data;
 
@@ -139,7 +139,7 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPastePosRelative_Simple()
     {
-        var d = Get10By10View();
+        var d = Get10By10View(App);
 
         var lbl = new Label
         {
@@ -151,8 +151,8 @@ internal class CopyPasteTests : Tests
             X = Pos.Right(lbl) + 1,
         };
 
-        new AddViewOperation(lbl, d, "lbl").Do();
-        new AddViewOperation(tb, d, "tb").Do();
+        new AddViewOperation(App, lbl, d, "lbl").Do();
+        new AddViewOperation(App, tb, d, "tb").Do();
 
         var selected = SelectionManager.Instance;
         selected.Clear();
@@ -192,7 +192,7 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPastePosRelative_CopyOnlyDependent()
     {
-        var d = Get10By10View();
+        var d = Get10By10View(App);
 
         var lbl = new Label { Text = "Name:" };
         var tb = new TextField
@@ -201,8 +201,8 @@ internal class CopyPasteTests : Tests
             X = Pos.Right(lbl) + 1,
         };
 
-        new AddViewOperation(lbl, d, "lbl").Do();
-        new AddViewOperation(tb, d, "tb").Do();
+        new AddViewOperation(App, lbl, d, "lbl").Do();
+        new AddViewOperation(App, tb, d, "tb").Do();
 
         var selected = SelectionManager.Instance;
 
@@ -234,13 +234,13 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPasteContainer( [Values] bool alsoSelectSubElements )
     {
-        RoundTrip<Window, FrameView>(
+        RoundTrip<Window, FrameView>(App,
             ( d, v ) =>
             {
                 Label lbl1 = ViewFactory.Create<Label>( );
                 Label lbl2 = ViewFactory.Create<Label>( );
-                Assume.That( ( ) => new AddViewOperation( lbl1, d, "lbl1" ).Do( ), Throws.Nothing );
-                Assume.That( ( ) => new AddViewOperation( lbl2, d, "lbl2" ).Do( ), Throws.Nothing );
+                Assume.That( ( ) => new AddViewOperation(App, lbl1, d, "lbl1" ).Do( ), Throws.Nothing );
+                Assume.That( ( ) => new AddViewOperation(App, lbl2, d, "lbl2" ).Do( ), Throws.Nothing );
 
                 View[] actualSubviews = v.GetActualSubviews( ).ToArray( );
                 Assume.That( actualSubviews, Has.Length.EqualTo( 2 ) );
@@ -297,7 +297,7 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPasteContainer_Empty_View_Into_Root()
     {
-        RoundTrip<Window, View>(
+        RoundTrip<Window, View>(App,
             ( d, v ) =>
             {
                 Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
@@ -341,7 +341,7 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPasteContainer_EmptyView_Into_Itself( )
     {
-        RoundTrip<Window, View>(
+        RoundTrip<Window, View>(App,
             ( d, v ) =>
             {
                 Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
@@ -384,7 +384,7 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPasteContainer_TabView()
     {
-        RoundTrip<Window, TabView>(
+        RoundTrip<Window, TabView>(App,
             ( d, v ) =>
             {
                 Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
@@ -397,8 +397,8 @@ internal class CopyPasteTests : Tests
                 v.SelectedTab = v.Tabs.ElementAt( 0 );
                 Label lbl1 = ViewFactory.Create<Label>( null, null, $"lbl1" );
                 Label lbl2 = ViewFactory.Create<Label>( null, null, $"lbl2" );
-                AddViewOperation lbl1Add = new( lbl1, d, "lbl1" );
-                AddViewOperation lbl2Add = new( lbl2, d, "lbl2" );
+                AddViewOperation lbl1Add = new(App, lbl1, d, "lbl1" );
+                AddViewOperation lbl2Add = new(App, lbl2, d, "lbl2" );
                 Assume.That( lbl1Add.TimesDone, Is.Zero );
                 Assume.That( lbl2Add.TimesDone, Is.Zero );
                 bool lbl1AddSucceeded = false;
@@ -417,8 +417,8 @@ internal class CopyPasteTests : Tests
                 v.SelectedTab = v.Tabs.ElementAt( 1 );
                 Label lbl3 = ViewFactory.Create<Label>( null, null, $"lbl3" );
                 Label lbl4 = ViewFactory.Create<Label>( null, null, $"lbl4" );
-                AddViewOperation lbl3Add = new( lbl3, d, "lbl3" );
-                AddViewOperation lbl4Add = new( lbl4, d, "lbl4" );
+                AddViewOperation lbl3Add = new(App, lbl3, d, "lbl3" );
+                AddViewOperation lbl4Add = new(App, lbl4, d, "lbl4" );
                 Assume.That( lbl3Add.TimesDone, Is.Zero );
                 Assume.That( lbl4Add.TimesDone, Is.Zero );
                 bool lbl3AddSucceeded = false;
@@ -434,7 +434,7 @@ internal class CopyPasteTests : Tests
                 Assume.That( tab1Subviews, Has.One.SameAs( lbl3 ) );
                 Assume.That( tab1Subviews, Has.One.SameAs( lbl4 ) );
 
-                AddTabOperation tabAdd = new( d, "newTab" );
+                AddTabOperation tabAdd = new(App, d, "newTab" );
                 Assume.That( tabAdd.TimesDone, Is.Zero );
                 bool tabAddSucceeded = false;
                 Assume.That( ( ) => tabAddSucceeded = tabAdd.Do( ), Throws.Nothing );
@@ -445,8 +445,8 @@ internal class CopyPasteTests : Tests
                 v.SelectedTab = v.Tabs.ElementAt( 2 );
                 Label lbl5 = ViewFactory.Create<Label>( null, null, $"lbl5" );
                 Label lbl6 = ViewFactory.Create<Label>( null, null, $"lbl6" );
-                AddViewOperation lbl5Add = new( lbl5, d, "lbl5" );
-                AddViewOperation lbl6Add = new( lbl6, d, "lbl6" );
+                AddViewOperation lbl5Add = new(App, lbl5, d, "lbl5" );
+                AddViewOperation lbl6Add = new(App, lbl6, d, "lbl6" );
                 Assume.That( lbl5Add.TimesDone, Is.Zero );
                 Assume.That( lbl6Add.TimesDone, Is.Zero );
                 bool lbl5AddSucceeded = false;

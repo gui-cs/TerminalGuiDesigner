@@ -15,7 +15,7 @@ internal class ResizeOperationTests : Tests
     [TestCase(false)]
     public void TestResizeWhenNotAtOrigin(bool withMouse)
     {
-        RoundTrip<Dialog, View>((d, v) =>
+        RoundTrip<Dialog, View>(App, (d, v) =>
         {
             var root = d.GetRootDesign();
             root.View.Width = Dim.Fill();
@@ -40,7 +40,7 @@ internal class ResizeOperationTests : Tests
                 Width = 5,
                 Height = 5,
             };
-            new AddViewOperation(tab, d, "mytabview").Do();
+            new AddViewOperation(App, tab, d, "mytabview").Do();
             var tabDesign = (Design)tab.Data;
 
             // Diagram of client area of View (v)
@@ -73,7 +73,7 @@ internal class ResizeOperationTests : Tests
                 // we are drag resizing the TabView
                 // Tab view is at 2,1 with width 5 and height 5 so
                 // its lower right is 6,5.  Drag resize to 7,7 (+1,+2)
-                var op = new ResizeOperation(tabDesign, 7, 7);
+                var op = new ResizeOperation(App, tabDesign, 7, 7);
                 op.Do();
             }
             else
@@ -82,7 +82,7 @@ internal class ResizeOperationTests : Tests
                 ClassicAssert.AreSame(tab, hit, "Expected above diagram which already passed asserts to work for HitTest too given the above screen coordinates");
                 ClassicAssert.IsTrue(isLowerRight);
 
-                MouseDrag(root, 10, 11, 11, 13);
+                MouseDrag(App, root, 10, 11, 11, 13);
             }
 
             ClassicAssert.AreEqual((Dim)6, tab.Width); // (5+1)

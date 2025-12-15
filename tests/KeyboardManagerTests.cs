@@ -31,7 +31,7 @@ internal class KeyboardManagerTests : Tests
         Assume.That( keyMap, Is.Not.Null.And.TypeOf<KeyMap>( ) );
 
         KeyboardManager? mgr = null;
-        Assert.That( ( ) => mgr = new(TODO, keyMap! ), Throws.Nothing );
+        Assert.That( ( ) => mgr = new(App, keyMap! ), Throws.Nothing );
         Assert.That( mgr, Is.Not.Null.And.TypeOf<KeyboardManager>( ) );
     }
 
@@ -51,7 +51,7 @@ internal class KeyboardManagerTests : Tests
         Assume.That( sourceCodeFile, Is.Not.Null.And.TypeOf<SourceCodeFile>( ) );
 
         Design? d = null;
-        Assume.That( ( ) => d = new( sourceCodeFile!, "ff", v ), Throws.Nothing );
+        Assume.That( ( ) => d = new(App, sourceCodeFile!, "ff", v ), Throws.Nothing );
         Assume.That( d, Is.Not.Null.And.TypeOf<Design>( ) );
         v.Data = d;
 
@@ -60,7 +60,7 @@ internal class KeyboardManagerTests : Tests
         Assume.That( keyMap, Is.Not.Null.And.TypeOf<KeyMap>( ) );
 
         KeyboardManager? mgr = null;
-        Assert.That( ( ) => mgr = new(TODO, keyMap! ), Throws.Nothing );
+        Assert.That( ( ) => mgr = new(App, keyMap! ), Throws.Nothing );
         Assert.That( mgr, Is.Not.Null.And.TypeOf<KeyboardManager>( ) );
 
         bool keyEventSuppressed = false;
@@ -90,7 +90,7 @@ internal class KeyboardManagerTests : Tests
         Assume.That( sourceCodeFile, Is.Not.Null.And.TypeOf<SourceCodeFile>( ) );
 
         Design? d = null;
-        Assume.That( ( ) => d = new( sourceCodeFile!, "ff", v ), Throws.Nothing );
+        Assume.That( ( ) => d = new(App, sourceCodeFile!, "ff", v ), Throws.Nothing );
         Assume.That( d, Is.Not.Null.And.TypeOf<Design>( ) );
         v.Data = d;
 
@@ -99,7 +99,7 @@ internal class KeyboardManagerTests : Tests
         Assume.That( keyMap, Is.Not.Null.And.TypeOf<KeyMap>( ) );
 
         KeyboardManager? mgr = null;
-        Assert.That( ( ) => mgr = new(TODO, keyMap! ), Throws.Nothing );
+        Assert.That( ( ) => mgr = new(App, keyMap! ), Throws.Nothing );
         Assert.That( mgr, Is.Not.Null.And.TypeOf<KeyboardManager>( ) );
 
         Assert.That( ( ) => mgr!.HandleKey( v, backspace ), Throws.Nothing );

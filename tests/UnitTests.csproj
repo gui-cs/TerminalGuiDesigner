@@ -29,6 +29,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.0" />
+		<PackageReference Include="Moq" Version="4.20.70" />
 		<PackageReference Include="NUnit" Version="4.2.1" />
 		<PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
 		<PackageReference Include="ReportGenerator" Version="5.3.8" />
@@ -60,6 +61,7 @@
     <Using Include="UnitTests.TestSupportTypes" />
 		<Using Include="NUnit.Framework" />
 		<Using Include="NUnit.Framework.Legacy" />
+		<Using Include="Moq" />
   </ItemGroup>
 
 </Project>

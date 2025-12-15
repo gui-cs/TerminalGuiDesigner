@@ -14,7 +14,7 @@ internal class PosTests : Tests
         get
         {
             View v = new( );
-            Design d = new( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            Design d = new(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
             return new[] { -10, -1, 0, 1, 10 }.SelectMany( offset =>
             {
                 string offsetString = offset switch
@@ -135,7 +135,7 @@ internal class PosTests : Tests
         get
         {
             View v = new( );
-            _ = new Design( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            _ = new Design(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -172,7 +172,7 @@ internal class PosTests : Tests
         get
         {
             View v = new( );
-            _ = new Design( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            _ = new Design(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -197,7 +197,7 @@ internal class PosTests : Tests
         get
         {
             View v = new( );
-            _ = new Design( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            _ = new Design(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -222,7 +222,7 @@ internal class PosTests : Tests
         get
         {
             View v = new( );
-            _ = new Design( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            _ = new Design(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -246,7 +246,7 @@ internal class PosTests : Tests
         get
         {
             View v = new( );
-            _ = new Design( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            _ = new Design(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -284,7 +284,7 @@ internal class PosTests : Tests
         get
         {
             View v = new( );
-            _ = new Design( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            _ = new Design(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {

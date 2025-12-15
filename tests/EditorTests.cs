@@ -18,7 +18,7 @@ internal class EditorTests : Tests
     public void TestHasUnsavedChanges( )
     {
         //TODO: This test should be re-factored to test only HasUnsavedChanges
-        Editor e = new Editor( );
+        Editor e = new Editor(App);
         Assume.That( e, Is.Not.Null.And.InstanceOf<Editor>( ) );
 
         Assert.That( e.HasUnsavedChanges, Is.False, "With nothing open there should not be any unsaved changes" );

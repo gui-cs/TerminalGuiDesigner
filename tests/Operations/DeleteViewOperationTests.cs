@@ -14,7 +14,7 @@ internal class DeleteViewOperationTests : Tests
     [Test]
     public void TestDeletingObjectWithDependency_IsImpossible()
     {
-        var viewToCode = new ViewToCode();
+        var viewToCode = new ViewToCode(Mock.Of<IApplication>());
 
         var file = new FileInfo("TestDeletingObjectWithDependency_IsImpossible.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(View));
@@ -23,8 +23,8 @@ internal class DeleteViewOperationTests : Tests
         var lbl2 = ViewFactory.Create<Label>( );
 
         // add 2 labels
-        new AddViewOperation(lbl1, designOut, "lbl1").Do();
-        new AddViewOperation(lbl2, designOut, "lbl2").Do();
+        new AddViewOperation(Mock.Of<IApplication>(), lbl1, designOut, "lbl1").Do();
+        new AddViewOperation(Mock.Of<IApplication>(), lbl2, designOut, "lbl2").Do();
 
         // not impossible, we could totally delete either of these
         ClassicAssert.IsFalse(new DeleteViewOperation((Design)lbl1.Data).IsImpossible);
@@ -39,7 +39,7 @@ internal class DeleteViewOperationTests : Tests
     [Test]
     public void TestDeletingObjectWithDependency_IsAllowedIfDeletingBoth()
     {
-        var viewToCode = new ViewToCode();
+        var viewToCode = new ViewToCode(Mock.Of<IApplication>());
 
         var file = new FileInfo("TestDeletingObjectWithDependency_IsImpossible.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(View));
@@ -48,8 +48,8 @@ internal class DeleteViewOperationTests : Tests
         var lbl2 = ViewFactory.Create<Label>( );
 
         // add 2 labels
-        new AddViewOperation(lbl1, designOut, "lbl1").Do();
-        new AddViewOperation(lbl2, designOut, "lbl2").Do();
+        new AddViewOperation(Mock.Of<IApplication>(), lbl1, designOut, "lbl1").Do();
+        new AddViewOperation(Mock.Of<IApplication>(), lbl2, designOut, "lbl2").Do();
 
         // we now have a dependency of lbl2 on lbl1 so deleting lbl1 will go badly
         lbl2.X = Pos.Right(lbl1) + 5;
@@ -71,14 +71,14 @@ internal class DeleteViewOperationTests : Tests
     [TestCase(false)]
     public void TestDeleting_ClearsSelection(bool lockSelection)
     {
-        var viewToCode = new ViewToCode();
+        var viewToCode = new ViewToCode(Mock.Of<IApplication>());
 
         var file = new FileInfo("TestDeletingObjectWithDependency_IsImpossible.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(View));
 
         var lbl1 = ViewFactory.Create<Label>( );
 
-        new AddViewOperation(lbl1, designOut, "lbl1").Do();
+        new AddViewOperation(Mock.Of<IApplication>(), lbl1, designOut, "lbl1").Do();
 
         var lbl1Design = (Design)lbl1.Data;
 

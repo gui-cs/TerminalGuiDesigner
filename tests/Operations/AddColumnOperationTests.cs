@@ -12,8 +12,8 @@ internal class AddColumnOperationTests : Tests
     [Test]
     public void TestAddColumn_BadViewType()
     {
-        var d = Get10By10View();
-        var ex = ClassicAssert.Throws<ArgumentException>(() => new AddColumnOperation(d, null));
+        var d = Get10By10View(App);
+        var ex = ClassicAssert.Throws<ArgumentException>(() => new AddColumnOperation(App, d, null));
 
         ClassicAssert.AreEqual("Design must wrap a TableView to be used with this operation.", ex?.Message);
     }
@@ -24,14 +24,14 @@ internal class AddColumnOperationTests : Tests
         int colsBefore = 0;
         TableView? vBefore = null;
 
-        RoundTrip<View, TableView>((d, v) =>
+        RoundTrip<View, TableView>(App, (d, v) =>
         {
             var dt = v.GetDataTable();
 
             vBefore = v;
             colsBefore = dt.Columns.Count;
-            
-            var op = new AddColumnOperation(d, "MyCol");
+
+            var op = new AddColumnOperation(App, d, "MyCol");
             op.Do();
 
             ClassicAssert.AreEqual(colsBefore + 1, dt.Columns.Count, "Expected AddColumnOperation to increase column count by 1");
@@ -48,14 +48,14 @@ internal class AddColumnOperationTests : Tests
         int colsBefore = 0;
         TableView? vBefore = null;
 
-        RoundTrip<View, TableView>((d, v) =>
+        RoundTrip<View, TableView>(App, (d, v) =>
         {
             var dt = v.GetDataTable();
 
             vBefore = v;
             colsBefore = dt.Columns.Count;
 
-            var op = new AddColumnOperation(d, "MyCol");
+            var op = new AddColumnOperation(App, d, "MyCol");
             op.Do();
             ClassicAssert.AreEqual(colsBefore + 1, dt.Columns.Count, "Expected AddColumnOperation to increase column count by 1");
 
@@ -74,7 +74,7 @@ internal class AddColumnOperationTests : Tests
         int colsBefore = 0;
         TableView? vBefore = null;
 
-        RoundTrip<View, TableView>((d, v) =>
+        RoundTrip<View, TableView>(App, (d, v) =>
         {
             vBefore = v;
             var dt = v.GetDataTable();

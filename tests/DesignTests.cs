@@ -17,10 +17,10 @@ internal class DesignTests
         where T : View
     {
         var file = new FileInfo( $"FakeFileFor_CanDesignExpectedProperties_{typeof( T ).Name}.cs" );
-        var viewToCode = new ViewToCode( );
+        var viewToCode = new ViewToCode(Mock.Of<IApplication>());
         var designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Window ) );
 
-        var op = new AddViewOperation( viewToTest, designOut, "myLabel" );
+        var op = new AddViewOperation(Mock.Of<IApplication>(), viewToTest, designOut, "myLabel" );
         op.Do( );
 
         Assume.That( designOut, Is.Not.Null.And.InstanceOf<Design>( ) );

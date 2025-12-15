@@ -14,14 +14,14 @@ internal class MouseManagerTests : Tests
     public void DragResizeView<T>( [ValueSource( nameof( DragResizeView_Types ) )] T dummy )
         where T : View, new( )
     {
-        Design d = Get10By10View( );
+        Design d = Get10By10View(App);
         Assume.That( dummy, Is.TypeOf<T>( ) );
 
         using T view = ViewFactory.Create<T>( );
         view.Width = 8;
         view.Height = 1;
 
-        Design design = new( d.SourceCode, "myView", view );
+        Design design = new(App, d.SourceCode, "myView", view );
         view.Data = design;
         d.View.Add( view );
 
@@ -31,7 +31,7 @@ internal class MouseManagerTests : Tests
         }
 
         Assert.That( view.GetContentSize().Width, Is.EqualTo( 8 ) );
-        MouseManager mgr = new( );
+        MouseManager mgr = new(App);
 
         // we haven't done anything yet
         Assert.Multiple( ( ) =>
@@ -93,14 +93,14 @@ internal class MouseManagerTests : Tests
     [Test]
     public void DragResize_ShadowButton()
     {
-        Design d = Get10By10View();
+        Design d = Get10By10View(App);
 
         using Button btn = ViewFactory.Create<Button>();
         btn.Width = 8;
         btn.Height = 2;
         btn.ShadowStyle = ShadowStyle.Opaque;
 
-        Design design = new(d.SourceCode, "myView", btn);
+        Design design = new(App, d.SourceCode, "myView", btn);
         btn.Data = design;
         d.View.Add(btn);
 
@@ -116,7 +116,7 @@ internal class MouseManagerTests : Tests
         Assert.That(btn.GetContentSize().Width, Is.EqualTo(7));
         // View height is 2 but 1 is taken up by the shadow so content height is 1
         Assert.That(btn.GetContentSize().Height, Is.EqualTo(1));
-        MouseManager mgr = new();
+        MouseManager mgr = new(App);
 
         // we haven't done anything yet
         Assert.Multiple(() =>
