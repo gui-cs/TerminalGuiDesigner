@@ -971,11 +971,7 @@ public class Editor : Runnable, IErrorReporter
                         this.ShowEditProperties(rightClicked ?? selected[0]);
                     }
                 },
-                SubMenu = new Menu()
-                {
-                    // TODO: get the menu items back
-                    // Subitems = setPropsItems
-                }
+                SubMenu = new Menu(setPropsItems)
             });
         }
 
@@ -1037,9 +1033,10 @@ public class Editor : Runnable, IErrorReporter
         {
             this.menuOpen = false;
             SelectionManager.Instance.LockSelection = false;
+            app.Popover.DeRegister(menu);
         };
     }
-
+    
     private static MenuItem ToMenuItem(IApplication application, IOperation operation)
     {
         return new MenuItem(operation.ToString(), string.Empty, () => Try(application,() => OperationManager.Instance.Do(operation)));

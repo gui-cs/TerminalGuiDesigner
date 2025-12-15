@@ -33,6 +33,8 @@ public class Design
     private readonly List<Property> designableProperties;
     private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+    public IApplication App { get; }
+
     /// <summary>
     /// View Types for which <see cref="MediaTypeNames.Text"/> does not make sense as a user
     /// configurable field (e.g. there is a Title field instead).
@@ -62,15 +64,16 @@ public class Design
     /// <param name="fieldName">The private instance name to use for <paramref name="view"/> when writing it out
     /// to <paramref name="sourceCode"/> or <see cref="RootDesignName"/> if <paramref name="view"/> <see cref="IsRoot"/>.</param>
     /// <param name="view">The view to wrap.</param>
-    /// <param name="app">Optional application instance. If provided, enables UI features like drawing borders.</param>
-    public Design(SourceCodeFile sourceCode, string fieldName, View view, IApplication? app = null)
+    /// <param name="app">Application instance</param>
+    public Design(IApplication app, SourceCodeFile sourceCode, string fieldName, View view)
     {
+        App = app;
         this.View = view;
         this.SourceCode = sourceCode;
         this.FieldName = fieldName;
 
         this.designableProperties = new List<Property>(this.LoadDesignableProperties());
-        this.State = new DesignState(app, this);
+        this.State = new DesignState(this);
     }
 
     /// <summary>
@@ -257,7 +260,7 @@ public class Design
             v.MouseEvent += (s, e) => this.SuppressNativeClickEvents(s, e, true);
         }
         
-        var d = new Design(this.SourceCode, name, subView);
+        var d = new Design(App, this.SourceCode, name, subView);
         return d;
     }
 
@@ -330,7 +333,7 @@ public class Design
 
         if (this.IsContainerView || this.IsRoot)
         {
-            yield return new AddViewOperation(this);
+            yield return new AddViewOperation(App,this);
             yield return new PasteOperation(this);
         }
         else
@@ -338,7 +341,7 @@ public class Design
             var nearestContainer = this.View.GetNearestContainerDesign();
             if (nearestContainer != null)
             {
-                yield return new AddViewOperation(nearestContainer);
+                yield return new AddViewOperation(App, nearestContainer);
             }
         }
 

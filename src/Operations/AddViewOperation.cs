@@ -28,7 +28,7 @@ public class AddViewOperation : Operation
     /// <param name="fieldName">Field name to assign to <paramref name="add"/> when wrapping it as a
     /// <see cref="Design"/>.  This determines the private field name that it will have in the .Designer.cs
     /// file.</param>
-    public AddViewOperation(View add, Design to, string? fieldName)
+    public AddViewOperation(IApplication app, View add, Design to, string? fieldName) : base(app)
     {
         this.add = add;
         this.fieldName = fieldName == null
@@ -44,19 +44,7 @@ public class AddViewOperation : Operation
     /// <param name="app">The application instance.</param>
     /// <param name="design">A <see cref="Design"/> (which should be <see cref="Design.IsContainerView"/>)
     /// to add any newly created <see cref="View"/> to.</param>
-    public AddViewOperation(IApplication app, Design design)
-    {
-        this.App = app;
-        this.to = design;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AddViewOperation"/> class.
-    /// This overload asks users what view type they want at runtime (See <see cref="Operation.Do"/>).
-    /// </summary>
-    /// <param name="design">A <see cref="Design"/> (which should be <see cref="Design.IsContainerView"/>)
-    /// to add any newly created <see cref="View"/> to.</param>
-    public AddViewOperation(Design design)
+    public AddViewOperation(IApplication app, Design design):base(app)
     {
         this.to = design;
     }

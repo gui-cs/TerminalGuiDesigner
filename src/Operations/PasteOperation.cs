@@ -144,7 +144,7 @@ public class PasteOperation : Operation
     private bool Paste(Design copy, Design into)
     {
         var clone = ViewFactory.Create(copy.View.GetType());
-        var addOperation = new AddViewOperation(clone, into, null);
+        var addOperation = new AddViewOperation(App, clone, into, null);
 
         // couldn't add for some reason
         if (!addOperation.Do())

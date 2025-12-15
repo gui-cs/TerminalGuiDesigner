@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Emit;
 using NLog;
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.ViewBase;
 using TerminalGuiDesigner.ToCode;
 
@@ -28,14 +29,18 @@ namespace TerminalGuiDesigner.FromCode;
 /// </remarks>
 public class CodeToView
 {
+    private readonly IApplication app;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="CodeToView"/> class.  Opens the provided <paramref name="sourceFile"/>
     /// and extracts <see cref="Namespace"/>, <see cref="ClassName"/> etc.
     /// </summary>
+    /// <param name="app"></param>
     /// <param name="sourceFile">Files on disk that will be read by this class (e.g. MyView.cs and MyView.Designer.cs).</param>
     /// <exception cref="Exception">Thrown if file cannot be parsed, does not exist or has multiple class files in it.</exception>
-    public CodeToView(SourceCodeFile sourceFile)
+    public CodeToView(IApplication app, SourceCodeFile sourceFile)
     {
+        this.app = app;
         this.SourceFile = sourceFile;
 
         // Parse .cs file using Roslyn SyntaxTree
@@ -122,7 +127,7 @@ public class CodeToView
             throw new Exception($"Could not create instance of {instances[0].FullName}", ex);
         }
 
-        var toReturn = new Design(this.SourceFile, Design.RootDesignName, view);
+        var toReturn = new Design(app, this.SourceFile, Design.RootDesignName, view);
         toReturn.CreateSubControlDesigns();
 
         // Record the design in Data field so it can be found later by controls

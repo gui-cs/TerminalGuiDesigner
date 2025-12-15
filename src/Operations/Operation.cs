@@ -12,7 +12,7 @@ public abstract class Operation : IOperation
     /// <summary>
     /// The application instance. May be null for operations that don't need to show dialogs.
     /// </summary>
-    protected IApplication? App { get; set; }
+    public IApplication App { get; }
 
     /// <summary>
     /// The number of times the operation has been performed.
@@ -46,6 +46,12 @@ public abstract class Operation : IOperation
     public override string ToString()
     {
         return this.GetOperationName();
+    }
+
+    protected Operation(IApplication app)
+    {
+        App = app;
+
     }
 
     /// <inheritdoc/>
