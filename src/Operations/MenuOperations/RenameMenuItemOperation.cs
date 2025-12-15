@@ -1,4 +1,5 @@
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Views;
 using TerminalGuiDesigner.ToCode;
 using TerminalGuiDesigner.UI.Windows;
@@ -21,9 +22,10 @@ public class RenameMenuItemOperation : MenuItemOperation
     /// Initializes a new instance of the <see cref="RenameMenuItemOperation"/> class.
     /// Note that this operation renames the field name in .Designer.cs not the <see cref="MenuItem.Title"/>.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="toRename">The column to choose a new private field name for.</param>
-    public RenameMenuItemOperation(MenuItem toRename)
-        : base(toRename)
+    public RenameMenuItemOperation(IApplication app, MenuItem toRename)
+        : base(app, toRename)
     {
         this.originalName = toRename.Data as string;
     }

@@ -1,4 +1,5 @@
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner.Operations.MenuOperations;
@@ -12,8 +13,9 @@ public abstract class MenuItemOperation : Operation
     /// <summary>
     /// Initializes a new instance of the <see cref="MenuItemOperation"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="operateOn"><see cref="MenuItem"/> that you will operate on.</param>
-    protected MenuItemOperation(MenuItem operateOn)
+    protected MenuItemOperation(IApplication app, MenuItem operateOn) : base(app)
     {
         // if taking a new line add an extra menu item
         // menuItem.Parent doesn't work for root menu items

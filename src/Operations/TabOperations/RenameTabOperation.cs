@@ -1,4 +1,5 @@
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations.Generics;
 
@@ -14,11 +15,13 @@ public class RenameTabOperation : RenameOperation<TabView, Tab>
     /// Initializes a new instance of the <see cref="RenameTabOperation"/> class.
     /// This command changes the <see cref="Tab.DisplayText"/> on a <see cref="TabView"/>.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="design">Wrapper for a <see cref="TabView"/>.</param>
     /// <param name="toRename">Tab to rename.</param>
     /// <param name="newName">New name to use or null to prompt.</param>
-    public RenameTabOperation(Design design, Tab toRename, string? newName)
+    public RenameTabOperation(IApplication app, Design design, Tab toRename, string? newName)
         : base(
+            app,
             (t) => t.Tabs.ToArray(),
             (v, a) => v.ReOrderTabs(a),
             tab => tab.DisplayText.ToString() ?? "unnamed tab",

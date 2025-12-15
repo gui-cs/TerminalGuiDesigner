@@ -100,7 +100,7 @@ public class MouseManager
 
                 if (isLowerRight)
                 {
-                    this.resizeOperation = new ResizeOperation(design, dest.X, dest.Y);
+                    this.resizeOperation = new ResizeOperation(this.app, design, dest.X, dest.Y);
                 }
                 else
                 {
@@ -112,6 +112,7 @@ public class MouseManager
                     {
                         // drag all the views at once
                         this.dragOperation = new DragOperation(
+                            this.app,
                             design,
                             dest.X,
                             dest.Y,
@@ -120,7 +121,7 @@ public class MouseManager
                     else
                     {
                         // else drag only the non selected one
-                        this.dragOperation = new DragOperation(design, dest.X, dest.Y, new Design[0]);
+                        this.dragOperation = new DragOperation(this.app, design, dest.X, dest.Y, new Design[0]);
                     }
 
                     // don't begin an impossible drag!

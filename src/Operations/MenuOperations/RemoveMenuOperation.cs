@@ -1,4 +1,5 @@
 ﻿using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations.Generics;
 
@@ -14,11 +15,13 @@ public class RemoveMenuOperation : RemoveOperation<MenuBar, MenuBarItem>
     /// <summary>
     /// Initializes a new instance of the <see cref="RemoveMenuOperation"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="design">Wrapper for a <see cref="MenuBar"/> upon which you wish to operate.</param>
     /// <param name="toRemove">The <see cref="MenuBarItem"/> to remove.</param>
     /// <exception cref="ArgumentException">Thrown if <paramref name="design"/> does not wrap a <see cref="MenuBar"/>.</exception>
-    public RemoveMenuOperation(Design design, MenuBarItem toRemove)
+    public RemoveMenuOperation(IApplication app, Design design, MenuBarItem toRemove)
         : base(
+            app,
             v => v.SubViews.OfType<MenuBarItem>().ToArray(),
             (v, a) => v.Menus = a,
             s => s.Title.ToString() ?? "blank menu",

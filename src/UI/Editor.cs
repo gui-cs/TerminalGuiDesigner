@@ -941,6 +941,7 @@ public class Editor : Runnable, IErrorReporter
 
         // BUG: This is an improper exception here and could have unexpected behavior if this method is ever called asynchronously.
         var factory = new OperationFactory(
+                app,
                 (p, v) => ValueFactory.GetNewValue(app, p.Design, p, v, out var newValue) ? newValue : throw new OperationCanceledException() );
 
         var operations = factory
@@ -1108,7 +1109,7 @@ public class Editor : Runnable, IErrorReporter
 
         if (d != null)
         {
-            var paste = new PasteOperation(d);
+            var paste = new PasteOperation(app, d);
 
             if (paste.IsImpossible)
             {
@@ -1121,7 +1122,7 @@ public class Editor : Runnable, IErrorReporter
 
     private void Copy()
     {
-        var copy = new CopyOperation(SelectionManager.Instance.Selected.ToArray());
+        var copy = new CopyOperation(app, SelectionManager.Instance.Selected.ToArray());
         OperationManager.Instance.Do(copy);
     }
 
@@ -1159,7 +1160,7 @@ public class Editor : Runnable, IErrorReporter
 
     private void MoveControl(int deltaX, int deltaY)
     {
-        this.DoForSelectedViews((d) => new MoveViewOperation(d, deltaX, deltaY));
+        this.DoForSelectedViews((d) => new MoveViewOperation(app, d, deltaX, deltaY));
     }
 
     private void Delete()
@@ -1171,7 +1172,7 @@ public class Editor : Runnable, IErrorReporter
 
         if (SelectionManager.Instance.Selected.Any())
         {
-            var cmd = new DeleteViewOperation(SelectionManager.Instance.Selected.ToArray());
+            var cmd = new DeleteViewOperation(app, SelectionManager.Instance.Selected.ToArray());
             
             
             if (cmd.IsImpossible && cmd.PreventDeleting.Any())
@@ -1209,6 +1210,7 @@ public class Editor : Runnable, IErrorReporter
         if (selected.Length > 1)
         {
             var op = new CompositeOperation(
+                app,
                 SelectionManager.Instance.Selected
                 .Select(operationFunc).ToArray());
 
@@ -1277,7 +1279,7 @@ public class Editor : Runnable, IErrorReporter
 
         Task.Run(() =>
         {
-            var decompiler = new CodeToView(new SourceCodeFile(toOpen));
+            var decompiler = new CodeToView(app, new SourceCodeFile(toOpen));
             instance = decompiler.CreateInstance();
         }).ContinueWith(
             (t, _) =>
@@ -1381,7 +1383,7 @@ public class Editor : Runnable, IErrorReporter
 
     private void New(FileInfo toOpen, Type typeToCreate, string? explicitNamespace)
     {
-        var viewToCode = new ViewToCode();
+        var viewToCode = new ViewToCode(app);
         string? ns = explicitNamespace;
 
         // TODO: The following two if statements can be combined and run in a loop until the user either cancels or gets it right
@@ -1471,7 +1473,7 @@ public class Editor : Runnable, IErrorReporter
             return;
         }
 
-        var viewToCode = new ViewToCode();
+        var viewToCode = new ViewToCode(app);
 
         viewToCode.GenerateDesignerCs(
             this.viewBeingEdited,

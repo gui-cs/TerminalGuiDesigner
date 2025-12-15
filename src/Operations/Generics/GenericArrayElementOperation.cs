@@ -1,4 +1,5 @@
 ﻿using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.ViewBase;
 
 namespace TerminalGuiDesigner.Operations.Generics;
@@ -16,6 +17,7 @@ public abstract class GenericArrayElementOperation<T1, T2> : GenericArrayOperati
     /// <summary>
     /// Initializes a new instance of the <see cref="GenericArrayElementOperation{T1, T2}"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="arrayGetter">Method for getting current collection.</param>
     /// <param name="arraySetter">Method for storing new collection.</param>
     /// <param name="stringGetter">Method for turning array element to string.</param>
@@ -24,12 +26,13 @@ public abstract class GenericArrayElementOperation<T1, T2> : GenericArrayOperati
     /// <exception cref="ArgumentException">Thrown if <paramref name="element"/> is not in collection
     /// or <paramref name="design"/> is not wrapping <typeparamref name="T1"/>.</exception>
     public GenericArrayElementOperation(
+        IApplication app,
         ArrayGetterDelegate<T1, T2> arrayGetter,
         ArraySetterDelegate<T1, T2> arraySetter,
         StringGetterDelegate<T2> stringGetter,
         Design design,
         T2 element)
-        : base(arrayGetter, arraySetter, stringGetter, design)
+        : base(app, arrayGetter, arraySetter, stringGetter, design)
     {
         this.OperateOn = element;
 

@@ -102,14 +102,14 @@ public class KeyboardManager
         if (keystroke.ToString( ) == this.keyMap.Rename)
         {
             OperationManager.Instance.Do(
-                    new RenameMenuItemOperation(menuItem));
+                    new RenameMenuItemOperation(this.app, menuItem));
             return true;
         }
 
         if (keystroke == Key.Enter)
         {
             OperationManager.Instance.Do(
-                    new AddMenuItemOperation(menuItem));
+                    new AddMenuItemOperation(this.app, menuItem));
 
             ChangeKeyTo(keystroke, Key.CursorDown);
             return false;
@@ -126,7 +126,7 @@ public class KeyboardManager
         if (keystroke.ToString( ) == this.keyMap.MoveRight)
         {
             OperationManager.Instance.Do(
-                new MoveMenuItemRightOperation(menuItem));
+                new MoveMenuItemRightOperation(this.app, menuItem));
 
             ChangeKeyTo(keystroke, Key.CursorUp);
             return true;
@@ -135,7 +135,7 @@ public class KeyboardManager
         if (keystroke.ToString( ) == this.keyMap.MoveLeft)
         {
             OperationManager.Instance.Do(
-                new MoveMenuItemLeftOperation(menuItem));
+                new MoveMenuItemLeftOperation(this.app, menuItem));
 
             ChangeKeyTo(keystroke, Key.CursorDown);
             return false;
@@ -144,7 +144,7 @@ public class KeyboardManager
         if (keystroke.ToString( ) == this.keyMap.MoveUp)
         {
             OperationManager.Instance.Do(
-                new MoveMenuItemOperation(menuItem, true));
+                new MoveMenuItemOperation(this.app, menuItem, true));
             ChangeKeyTo(keystroke, Key.CursorUp);
             return false;
         }
@@ -152,7 +152,7 @@ public class KeyboardManager
         if (keystroke.ToString( ) == this.keyMap.MoveDown)
         {
             OperationManager.Instance.Do(
-                new MoveMenuItemOperation(menuItem, false));
+                new MoveMenuItemOperation(this.app, menuItem, false));
             ChangeKeyTo(keystroke, Key.CursorDown);
             return false;
         }
@@ -163,7 +163,7 @@ public class KeyboardManager
         {
             // deleting the menu item using backspace to
             // remove all characters in the title or the Del key
-            var remove = new RemoveMenuItemOperation(menuItem);
+            var remove = new RemoveMenuItemOperation(this.app, menuItem);
             if (OperationManager.Instance.Do(remove))
             {
                 // if we are removing the last item
@@ -217,7 +217,7 @@ public class KeyboardManager
             if (newValue.Equals("---"))
             {
                 if (OperationManager.Instance.Do(
-                        new ConvertMenuItemToSeperatorOperation(menuItem)))
+                        new ConvertMenuItemToSeperatorOperation(this.app, menuItem)))
                 {
                     return true;
                 }
@@ -275,7 +275,7 @@ public class KeyboardManager
 
         if (textProp != null)
         {
-            this.currentOperation = new SetPropertyOperation(d, textProp, d.View.Text, d.View.Text);
+            this.currentOperation = new SetPropertyOperation(this.app, d, textProp, d.View.Text, d.View.Text);
         }
     }
 

@@ -1,4 +1,5 @@
 ﻿using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner.Operations.MenuOperations;
@@ -16,9 +17,10 @@ public class ConvertMenuItemToSeperatorOperation : MenuItemOperation
     /// <summary>
     /// Initializes a new instance of the <see cref="ConvertMenuItemToSeperatorOperation"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="toConvert">A <see cref="MenuItem"/> to replace with a separator (null) in it's parent <see cref="MenuBar"/>.</param>
-    public ConvertMenuItemToSeperatorOperation(MenuItem toConvert)
-        : base(toConvert)
+    public ConvertMenuItemToSeperatorOperation(IApplication app, MenuItem toConvert)
+        : base(app, toConvert)
     {
     }
 

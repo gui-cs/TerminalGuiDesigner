@@ -101,7 +101,7 @@ public class EditDialog : Window
         if (ValueFactory.GetNewValue(app, design, p, p.GetValue(), out object? newValue))
         {
             OperationManager.Instance.Do(
-                new SetPropertyOperation(design, p, oldValue, newValue));
+                new SetPropertyOperation(app, design, p, oldValue, newValue));
 
             return true;
         }
@@ -122,7 +122,7 @@ public class EditDialog : Window
                 {
                     // user wants to set this property to null/default
                     OperationManager.Instance.Do(
-                        new SetPropertyOperation(this.design, p, oldValue, null));
+                        new SetPropertyOperation(app, this.design, p, oldValue, null));
                 }
                 else
                 {

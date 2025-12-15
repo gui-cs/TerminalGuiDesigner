@@ -1,4 +1,5 @@
 ﻿using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations.Generics;
 
@@ -12,11 +13,13 @@ public class RenameMenuOperation : RenameOperation<MenuBar, MenuBarItem>
     /// <summary>
     /// Initializes a new instance of the <see cref="RenameMenuOperation"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="design">Wrapper for a <see cref="MenuBar"/> upon which you wish to operate.</param>
     /// <param name="toRename">The <see cref="MenuBarItem"/> to rename.</param>
     /// <param name="newName">The new name to use.</param>
-    public RenameMenuOperation(Design design, MenuBarItem toRename, string? newName)
+    public RenameMenuOperation(IApplication app, Design design, MenuBarItem toRename, string? newName)
         : base(
+            app,
             v => v.SubViews.OfType<MenuBarItem>().ToArray(),
             (v, a) => v.Menus = a,
             s => s.Title.ToString() ?? "blank menu",

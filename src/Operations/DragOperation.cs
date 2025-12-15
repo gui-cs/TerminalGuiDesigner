@@ -1,4 +1,5 @@
 ﻿using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 
@@ -25,13 +26,14 @@ public partial class DragOperation : Operation
     /// Initializes a new instance of the <see cref="DragOperation"/> class.
     /// Begins a drag operation in which <paramref name="beingDragged"/> is moved.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="beingDragged">The primary design being moved.  Cannot be the root design (see <see cref="Design.IsRoot"/>).</param>
     /// <param name="originalX">The client X coordinate position of the mouse when dragging began.  Final location is calculated as an offset from this point.
     /// <remarks>This is not necessarily the X/Y of <paramref name="beingDragged"/> (e.g. if mouse click drag starts in from middle of View area)</remarks></param>
     /// <param name="originalY">The client Y coordinate position of the mouse when dragging began.  Final location is calculated as an offset from this point.
     /// <remarks>This is not necessarily the X/Y of <paramref name="beingDragged"/> (e.g. if mouse click drag starts in from middle of View area)</remarks></param>
     /// <param name="alsoDrag">Other Designs that are also multi selected and should be dragged at the same time.</param>
-    public DragOperation(Design beingDragged, int originalX, int originalY, Design[]? alsoDrag)
+    public DragOperation(IApplication app, Design beingDragged, int originalX, int originalY, Design[]? alsoDrag) : base(app)
     {
         // TODO: how does this respond when alsoDrag has some that are not in
         // same view as beingDragged - write unit test

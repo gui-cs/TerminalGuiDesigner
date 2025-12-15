@@ -53,7 +53,7 @@ public class TabToCode : ToCodeBase
         this.AddPropertyAssignment(args, $"{tabName}.View.CanFocus", new CodeSnippetExpression("true"));
 
         // create code statements for everything in the Tab (recursive)
-        var viewToCode = new ViewToCode();
+        var viewToCode = new ViewToCode(design.App);
         viewToCode.AddSubViewsToDesignerCs(this.tab.View, args, new CodeSnippetExpression($"{tabName}.View"));
 
         // add the constructed tab to the TabView

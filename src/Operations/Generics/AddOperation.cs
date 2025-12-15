@@ -1,4 +1,5 @@
 ﻿using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 using TerminalGuiDesigner.UI.Windows;
@@ -23,6 +24,7 @@ public abstract class AddOperation<T1, T2> : GenericArrayOperation<T1, T2>
     /// <summary>
     /// Initializes a new instance of the <see cref="AddOperation{T1, T2}"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="arrayGetter">Method to get the current collection.</param>
     /// <param name="arraySetter">Method to save the new collection to the <typeparamref name="T1"/>.</param>
     /// <param name="stringGetter">Method to turn an element into a string (e.g. for ToString()).</param>
@@ -30,13 +32,14 @@ public abstract class AddOperation<T1, T2> : GenericArrayOperation<T1, T2>
     /// <param name="design">Wrapper for a <see cref="View"/> of type <typeparamref name="T1"/>.</param>
     /// <param name="name">The name to use for the new object or null to prompt user at runtime.</param>
     public AddOperation(
+        IApplication app,
         ArrayGetterDelegate<T1, T2> arrayGetter,
         ArraySetterDelegate<T1, T2> arraySetter,
         StringGetterDelegate<T2> stringGetter,
         ArrayElementFactory<T1, T2> elementFactory,
         Design design,
         string? name)
-        : base(arrayGetter, arraySetter, stringGetter, design)
+        : base(app, arrayGetter, arraySetter, stringGetter, design)
     {
         this.name = name;
         this.elementFactory = elementFactory;

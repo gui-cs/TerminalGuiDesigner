@@ -1,4 +1,5 @@
 ﻿using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.ViewBase;
 
 namespace TerminalGuiDesigner.Operations.Generics;
@@ -16,16 +17,18 @@ public abstract class GenericArrayOperation<T1, T2> : GenericOperation<T1>
     /// <summary>
     /// Initializes a new instance of the <see cref="GenericArrayOperation{T1, T2}"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="arrayGetter">Method for getting the current collection.</param>
     /// <param name="arraySetter">Method for setting the new collection.</param>
     /// <param name="stringGetter">Method for turning an element into a user readable string (Name, Title etc).</param>
     /// <param name="design">Wrapper for a <see cref="View"/> of Type <typeparamref name="T1"/>.</param>
     public GenericArrayOperation(
+        IApplication app,
         ArrayGetterDelegate<T1, T2> arrayGetter,
         ArraySetterDelegate<T1, T2> arraySetter,
         StringGetterDelegate<T2> stringGetter,
         Design design)
-        : base(design)
+        : base(app, design)
     {
         this.StringGetter = stringGetter;
         this.ArrayGetter = arrayGetter;

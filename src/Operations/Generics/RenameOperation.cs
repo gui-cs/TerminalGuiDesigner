@@ -1,4 +1,5 @@
 ﻿using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 using TerminalGuiDesigner.UI.Windows;
@@ -22,6 +23,7 @@ public abstract class RenameOperation<T1, T2> : GenericArrayElementOperation<T1,
     /// <summary>
     /// Initializes a new instance of the <see cref="RenameOperation{T1, T2}"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="arrayGetter">Method for retrieving the Array that should be modified.</param>
     /// <param name="arraySetter">Method to invoke with the new Array order.</param>
     /// <param name="stringGetter">Method for turning an Array element into a string (e.g. for <see cref="Operation.Category"/>).</param>
@@ -30,6 +32,7 @@ public abstract class RenameOperation<T1, T2> : GenericArrayElementOperation<T1,
     /// <param name="toRename">Element to rename.</param>
     /// <param name="newName">New name to use or null to prompt user for name.</param>
     protected RenameOperation(
+        IApplication app,
         ArrayGetterDelegate<T1, T2> arrayGetter,
         ArraySetterDelegate<T1, T2> arraySetter,
         StringGetterDelegate<T2> stringGetter,
@@ -37,7 +40,7 @@ public abstract class RenameOperation<T1, T2> : GenericArrayElementOperation<T1,
         Design design,
         T2 toRename,
         string? newName)
-        : base(arrayGetter, arraySetter, stringGetter, design, toRename)
+        : base(app, arrayGetter, arraySetter, stringGetter, design, toRename)
     {
         this.stringSetter = stringSetter;
         this.originalName = this.StringGetter(toRename);

@@ -1,5 +1,6 @@
 using System.Data;
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 
@@ -23,10 +24,11 @@ public class PasteOperation : Operation
     /// <summary>
     /// Initializes a new instance of the <see cref="PasteOperation"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="addTo">The container <see cref="Design"/> into which to
     /// add the <see cref="Design"/>.  This allows for copying from one container
     /// (e.g. <see cref="TabView"/>) but pasting into another.</param>
-    public PasteOperation(Design addTo)
+    public PasteOperation(IApplication app, Design addTo) : base(app)
     {
         this.toCopy = CopyOperation.LastCopiedDesign;
         this.toCopy = this.PruneChildViews(this.toCopy);

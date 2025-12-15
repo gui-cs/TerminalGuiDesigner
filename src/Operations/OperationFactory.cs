@@ -1,4 +1,5 @@
 ﻿using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
 using TerminalGuiDesigner.ToCode;
@@ -11,15 +12,18 @@ namespace TerminalGuiDesigner.Operations;
 /// </summary>
 public class OperationFactory
 {
+    private readonly IApplication app;
     private PropertyValueGetterDelegate valueGetter;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="OperationFactory"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="valueGetter">Delegate for getting new <see cref="Property"/> values.  This
     /// will be passed to created operations e.g. <see cref="SetPropertyOperation"/>.</param>
-    public OperationFactory(PropertyValueGetterDelegate valueGetter)
+    public OperationFactory(IApplication app, PropertyValueGetterDelegate valueGetter)
     {
+        this.app = app;
         this.valueGetter = valueGetter;
     }
 
@@ -78,7 +82,7 @@ public class OperationFactory
                 if (all.Count == selected.Length)
                 {
                     // create an operation to change them all at once
-                    props.Add(new SetPropertyOperation(all.Select(v => v.Design).ToArray(), propertyName, this.valueGetter));
+                    props.Add(new SetPropertyOperation(this.app, all.Select(v => v.Design).ToArray(), propertyName, this.valueGetter));
                 }
             }
 
@@ -91,11 +95,11 @@ public class OperationFactory
 
         if (SelectionManager.Instance.Selected.Any())
         {
-            toReturn.Add(new CopyOperation(SelectionManager.Instance.Selected.ToArray()));
+            toReturn.Add(new CopyOperation(this.app, SelectionManager.Instance.Selected.ToArray()));
         }
         else if (rightClicked != null)
         {
-            toReturn.Add(new CopyOperation(rightClicked));
+            toReturn.Add(new CopyOperation(this.app, rightClicked));
         }
 
         return toReturn;
@@ -114,7 +118,7 @@ public class OperationFactory
 
         foreach (var prop in d.GetDesignableProperties().OrderBy(p => p.GetHumanReadableName()))
         {
-            yield return new SetPropertyOperation(d, prop, this.valueGetter);
+            yield return new SetPropertyOperation(this.app, d, prop, this.valueGetter);
         }
     }
 }

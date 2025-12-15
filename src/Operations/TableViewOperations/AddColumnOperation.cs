@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations.Generics;
 using TerminalGuiDesigner.UI.Windows;
@@ -14,11 +15,13 @@ public class AddColumnOperation : AddOperation<TableView, DataColumn>
     /// <summary>
     /// Initializes a new instance of the <see cref="AddColumnOperation"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="design">Wrapper for a <see cref="TableView"/>.</param>
     /// <param name="newColumnName">The name for the new column or null to prompt at runtime with a <see cref="Modals"/> dialog.</param>
     /// <exception cref="ArgumentException">Thrown if <paramref name="design"/> is not wrapping a <see cref="TableView"/>.</exception>
-    public AddColumnOperation(Design design, string? newColumnName)
+    public AddColumnOperation(IApplication app, Design design, string? newColumnName)
         : base(
+            app,
             (v) => v.GetDataTable().Columns.Cast<DataColumn>().ToArray(),
             (v, a) => v.ReOrderColumns(a),
             (c) => c.ColumnName,

@@ -1,4 +1,5 @@
 ﻿using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations.Generics;
 
@@ -15,11 +16,13 @@ public class MoveTabOperation : MoveOperation<TabView, Tab>
     /// Creates an operation that will change the ordering of tabs within
     /// a <see cref="TabView"/>.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="design">Wrapper for a <see cref="TabView"/>.</param>
     /// <param name="toMove">The Tab to move.</param>
     /// <param name="adjustment">Negative to move tab left, positive to move tab right.</param>
-    public MoveTabOperation(Design design, Tab toMove, int adjustment)
+    public MoveTabOperation(IApplication app, Design design, Tab toMove, int adjustment)
         : base(
+            app,
             (t) => t.Tabs.ToArray(),
             (v, a) => v.ReOrderTabs(a),
             tab => tab.Text.ToString() ?? "unnamed tab",

@@ -1,4 +1,5 @@
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 
@@ -38,9 +39,10 @@ public class RemoveMenuItemOperation : MenuItemOperation
     /// <summary>
     /// Initializes a new instance of the <see cref="RemoveMenuItemOperation"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="toRemove">The <see cref="MenuItem"/> that should be removed (deleted).</param>
-    public RemoveMenuItemOperation(MenuItem toRemove)
-        : base(toRemove)
+    public RemoveMenuItemOperation(IApplication app, MenuItem toRemove)
+        : base(app, toRemove)
     {
     }
 

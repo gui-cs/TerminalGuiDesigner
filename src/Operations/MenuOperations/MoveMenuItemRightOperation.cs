@@ -1,4 +1,5 @@
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner.Operations.MenuOperations;
@@ -14,9 +15,10 @@ public class MoveMenuItemRightOperation : MenuItemOperation
     /// <summary>
     /// Initializes a new instance of the <see cref="MoveMenuItemRightOperation"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="toMove">Moves the <paramref name="toMove"/> to the sub-menu of the <see cref="MenuItem"/> above it.</param>
-    public MoveMenuItemRightOperation(MenuItem toMove)
-        : base(toMove)
+    public MoveMenuItemRightOperation(IApplication app, MenuItem toMove)
+        : base(app, toMove)
     {
         /*
         if (this.Parent?.GetChildrenIndex(toMove) == 0)
@@ -42,7 +44,7 @@ public class MoveMenuItemRightOperation : MenuItemOperation
             return;
         }
 
-        new MoveMenuItemRightOperation(this.OperateOn).Do();
+        new MoveMenuItemRightOperation(App, this.OperateOn).Do();
     }
 
     /// <inheritdoc/>
@@ -53,7 +55,7 @@ public class MoveMenuItemRightOperation : MenuItemOperation
             return;
         }
 
-        new MoveMenuItemLeftOperation(this.OperateOn).Do();
+        new MoveMenuItemLeftOperation(App, this.OperateOn).Do();
     }
 
     /// <inheritdoc/>

@@ -2,6 +2,7 @@
 using System.CodeDom.Compiler;
 using Microsoft.CSharp;
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 using TerminalGuiDesigner.FromCode;
@@ -13,6 +14,16 @@ namespace TerminalGuiDesigner.ToCode;
 /// </summary>
 public class ViewToCode
 {
+    private readonly IApplication app;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ViewToCode"/> class.
+    /// </summary>
+    /// <param name="app">The application instance.</param>
+    public ViewToCode(IApplication app)
+    {
+        this.app = app;
+    }
     /// <summary>
     /// Returns the code that would be added to the MyWindow.cs file of a new window
     /// so that it is ready for use with the MyWindow.Designer.cs file (in which
@@ -91,7 +102,7 @@ public class ViewToCode
         FixDimensionsForNewRootView(prototype, viewType);
 
         // use the prototype to create a designer cs file
-        var design = new Design(sourceFile, Design.RootDesignName, prototype);
+        var design = new Design(app, sourceFile, Design.RootDesignName, prototype);
         design.CreateSubControlDesigns();
 
         this.GenerateDesignerCs(design, viewType);
@@ -100,7 +111,7 @@ public class ViewToCode
          *  NOTE: prototype is not the same instance that is returned;
          */
 
-        var decompiler = new CodeToView(sourceFile);
+        var decompiler = new CodeToView(app, sourceFile);
         return decompiler.CreateInstance();
     }
 
@@ -135,7 +146,7 @@ public class ViewToCode
     public void GenerateDesignerCs(Design rootDesign, Type viewType)
     {
         var file = rootDesign.SourceCode;
-        var rosylyn = new CodeToView(file);
+        var rosylyn = new CodeToView(app, file);
 
         var ns = new CodeNamespace(rosylyn.Namespace);
         ns.Imports.Add(new CodeNamespaceImport("System"));

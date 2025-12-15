@@ -1,4 +1,5 @@
 ﻿using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 
@@ -24,6 +25,7 @@ public abstract class MoveOperation<T1, T2> : GenericArrayElementOperation<T1, T
     /// <summary>
     /// Initializes a new instance of the <see cref="MoveOperation{T1, T2}"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="arrayGetter">Method for retrieving the Array that should be modified.</param>
     /// <param name="arraySetter">Method to invoke with the new Array order.</param>
     /// <param name="stringGetter">Method for turning an Array element into a string (e.g. for <see cref="Operation.Category"/>).</param>
@@ -31,13 +33,14 @@ public abstract class MoveOperation<T1, T2> : GenericArrayElementOperation<T1, T
     /// <param name="toMove">The Array element to move.</param>
     /// <param name="adjustment">Negative to move left, positive to move right.</param>
     protected MoveOperation(
+        IApplication app,
         ArrayGetterDelegate<T1, T2> arrayGetter,
         ArraySetterDelegate<T1, T2> arraySetter,
         StringGetterDelegate<T2> stringGetter,
         Design design,
         T2 toMove,
         int adjustment)
-        : base(arrayGetter, arraySetter, stringGetter, design, toMove)
+        : base(app, arrayGetter, arraySetter, stringGetter, design, toMove)
     {
         var array = arrayGetter(this.View);
 

@@ -319,22 +319,22 @@ public class Design
                 col = dt.Columns[tv.SelectedColumn];
             }
 
-            yield return new AddColumnOperation(this, null);
+            yield return new AddColumnOperation(App, this, null);
 
             // no columns are selected so don't offer removal.
             if (col != null)
             {
-                yield return new RemoveColumnOperation(this, col);
-                yield return new RenameColumnOperation(this, col, null);
-                yield return new MoveColumnOperation(this, col, -1);
-                yield return new MoveColumnOperation(this, col, 1);
+                yield return new RemoveColumnOperation(App, this, col);
+                yield return new RenameColumnOperation(App, this, col, null);
+                yield return new MoveColumnOperation(App, this, col, -1);
+                yield return new MoveColumnOperation(App, this, col, 1);
             }
         }
 
         if (this.IsContainerView || this.IsRoot)
         {
             yield return new AddViewOperation(App,this);
-            yield return new PasteOperation(this);
+            yield return new PasteOperation(App, this);
         }
         else
         {
@@ -345,53 +345,53 @@ public class Design
             }
         }
 
-        yield return new DeleteViewOperation(this);
+        yield return new DeleteViewOperation(App, this);
 
         switch ( this.View )
         {
             case TabView tabView:
             {
-                yield return new AddTabOperation(this, null);
+                yield return new AddTabOperation(App, this, null);
 
                 if (tabView.SelectedTab != null)
                 {
-                    yield return new RemoveTabOperation(this, tabView.SelectedTab);
-                    yield return new RenameTabOperation(this, tabView.SelectedTab, null);
-                    yield return new MoveTabOperation(this, tabView.SelectedTab, -1);
-                    yield return new MoveTabOperation(this, tabView.SelectedTab, 1);
+                    yield return new RemoveTabOperation(App, this, tabView.SelectedTab);
+                    yield return new RenameTabOperation(App, this, tabView.SelectedTab, null);
+                    yield return new MoveTabOperation(App, this, tabView.SelectedTab, -1);
+                    yield return new MoveTabOperation(App, this, tabView.SelectedTab, 1);
                 }
 
                 break;
             }
             case MenuBar mb:
             {
-                yield return new AddMenuOperation(this, null);
+                yield return new AddMenuOperation(App, this, null);
 
                 var menu = pos.IsEmpty ? mb.GetSelectedMenuItem() : mb.ScreenToMenuBarItem(pos.X);
 
                 if (menu != null)
                 {
-                    yield return new RemoveMenuOperation(this, menu);
-                    yield return new RenameMenuOperation(this, menu, null);
-                    yield return new MoveMenuOperation(this, menu, -1);
-                    yield return new MoveMenuOperation(this, menu, 1);
+                    yield return new RemoveMenuOperation(App, this, menu);
+                    yield return new RenameMenuOperation(App, this, menu, null);
+                    yield return new MoveMenuOperation(App, this, menu, -1);
+                    yield return new MoveMenuOperation(App, this, menu, 1);
                 }
 
                 break;
             }
             case StatusBar sb:
             {
-                yield return new AddStatusItemOperation(this, null);
+                yield return new AddStatusItemOperation(App, this, null);
 
                 var item = sb.ScreenToMenuBarItem(pos.X);
 
                 if (item != null)
                 {
-                    yield return new RemoveStatusItemOperation(this, item);
-                    yield return new RenameStatusItemOperation(this, item, null);
-                    yield return new SetShortcutOperation(this, item, null);
-                    yield return new MoveStatusItemOperation(this, item, -1);
-                    yield return new MoveStatusItemOperation(this, item, 1);
+                    yield return new RemoveStatusItemOperation(App, this, item);
+                    yield return new RenameStatusItemOperation(App, this, item, null);
+                    yield return new SetShortcutOperation(App, this, item, null);
+                    yield return new MoveStatusItemOperation(App, this, item, -1);
+                    yield return new MoveStatusItemOperation(App, this, item, 1);
                 }
 
                 break;

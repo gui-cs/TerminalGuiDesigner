@@ -1,4 +1,5 @@
 ﻿using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations.Generics;
 using TerminalGuiDesigner.UI.Windows;
@@ -13,10 +14,12 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoveStatusItemOperation"/> class.
         /// </summary>
+        /// <param name="app">The application instance.</param>
         /// <param name="design">Wrapper for a <see cref="StatusBar"/>.</param>
         /// <param name="toRemove">A <see cref="Shortcut"/> to remove from bar.</param>
-        public RemoveStatusItemOperation(Design design, Shortcut toRemove)
+        public RemoveStatusItemOperation(IApplication app, Design design, Shortcut toRemove)
             : base(
+                  app,
                   (v) => v.GetShortcuts(),
                   (v, a) => v.SetShortcuts(a),
                   (e) => e.Title?.ToString() ?? Operation.Unnamed,

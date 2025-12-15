@@ -1,4 +1,5 @@
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner.Operations.MenuOperations;
@@ -21,9 +22,10 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
     /// Initializes a new instance of the <see cref="MoveMenuItemLeftOperation"/> class.
     /// This operation pulls a <see cref="MenuItem"/> out of a sub-menu onto the level above.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="toMove">The <see cref="MenuItem"/> to move to parent containing menu.</param>
-    public MoveMenuItemLeftOperation(MenuItem toMove)
-        : base(toMove)
+    public MoveMenuItemLeftOperation(IApplication app, MenuItem toMove)
+        : base(app, toMove)
     {
         // command is already invalid or user is trying to move a menu item that is not in a sub-menu
         if (this.IsImpossible || this.Bar == null || this.Bar.SubViews.OfType<MenuBarItem>().Any(m => m.SubViews.Contains(toMove)))
@@ -52,7 +54,7 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
             return;
         }
 
-        new MoveMenuItemRightOperation(this.OperateOn)
+        new MoveMenuItemRightOperation(App, this.OperateOn)
         {
             InsertionIndex = this.pulledFromIndex,
         }
@@ -79,7 +81,7 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
         var parentsIdx = children.IndexOf(this.Parent);
 
         // remove us
-        if (new RemoveMenuItemOperation(this.OperateOn).Do())
+        if (new RemoveMenuItemOperation(App, this.OperateOn).Do())
         {
             // We are the parent but parents children don't contain
             // us.  That's bad. TODO: log this

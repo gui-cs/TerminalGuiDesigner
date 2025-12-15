@@ -1,4 +1,5 @@
 ﻿using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations.Generics;
 
@@ -15,11 +16,13 @@ public class MoveMenuOperation : MoveOperation<MenuBar, MenuBarItem>
     /// Creates an operation that will change the ordering of top level menus within
     /// a <see cref="MenuBar"/>.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="design">Wrapper for a <see cref="MenuBar"/>.</param>
     /// <param name="toMove">The top level menu to move.</param>
     /// <param name="adjustment">Negative to move menu left, positive to move menu right.</param>
-    public MoveMenuOperation(Design design, MenuBarItem toMove, int adjustment)
+    public MoveMenuOperation(IApplication app, Design design, MenuBarItem toMove, int adjustment)
         : base(
+            app,
             v => v.SubViews.OfType<MenuBarItem>().ToArray(),
             (v, a) => v.Menus = a,
             s => s.Title.ToString() ?? "blank menu",
