@@ -1028,8 +1028,10 @@ public class Editor : Runnable, IErrorReporter
             m.Handled = true;
         }
 
-        
-        // TODO: rly? you have to pass it its own menu items!?
+        // This internal method call shouldn't be required
+        menu.App = app;
+        app.Popover!.Register(menu);
+
         menu.MakeVisible(position);
         menu.Accepted += (_, _) =>
         {
