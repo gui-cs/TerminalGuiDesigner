@@ -18,7 +18,7 @@ public class NumericUpDownTests<T> : Tests
     public void NumericUpDownPreserveValue()
     {
         T testValue = (T)Convert.ChangeType(1.25, typeof(T));
-        using var backIn = RoundTrip<View, NumericUpDown<T>>( (d, v) =>
+        using var backIn = RoundTrip<View, NumericUpDown<T>>(App, (d, v) =>
         {
 
             // Expected designable properties

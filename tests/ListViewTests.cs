@@ -24,7 +24,7 @@ internal class ListViewTests : Tests
     [Test]
     public void RoundTrip_PreservesList( [ValueSource( nameof( RoundTrip_PreservesList_Cases ) )] List<string> listViewContents )
     {
-        var viewToCode = new ViewToCode( );
+        var viewToCode = new ViewToCode(App);
 
         var file = new FileInfo( "TestRoundTrip_PreserveList.cs" );
         var designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Window ) );
@@ -41,14 +41,14 @@ internal class ListViewTests : Tests
         Assume.That( initialListViewSource, Is.Not.Null.And.Not.Empty );
         Assume.That( initialListViewSource, Is.EquivalentTo( listViewContents ) );
 
-        OperationManager.Instance.Do( new AddViewOperation( initialListView, designOut, "myList" ) );
+        OperationManager.Instance.Do( new AddViewOperation(App, initialListView, designOut, "myList" ) );
 
         viewToCode.GenerateDesignerCs( designOut, typeof( Window ) );
 
         ListView? listViewFromDesigner = designOut.View.GetActualSubviews( ).OfType<ListView>( ).SingleOrDefault( );
         Assert.That( listViewFromDesigner, Is.Not.Null.And.InstanceOf<ListView>( ) );
 
-        var codeToView = new CodeToView( designOut.SourceCode );
+        var codeToView = new CodeToView(App, designOut.SourceCode );
         var designBackIn = codeToView.CreateInstance( );
 
         var listViewFromGeneratedCode = designBackIn.View.GetActualSubviews( ).OfType<ListView>( ).SingleOrDefault( );

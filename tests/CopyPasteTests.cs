@@ -27,7 +27,7 @@ internal class CopyPasteTests : Tests
         top.Add(d.View);
 
         Assert.That(d.IsRoot);
-        var copy = new CopyOperation(d);
+        var copy = new CopyOperation(App, d);
 
         Assert.That(copy.IsImpossible);
     }
@@ -75,7 +75,7 @@ internal class CopyPasteTests : Tests
 
         var selectionManager = SelectionManager.Instance;
 
-        var copy = new CopyOperation(tvDesign);
+        var copy = new CopyOperation(App, tvDesign);
         OperationManager.Instance.Do(copy);
 
         // TODO: Remove this comment once addressed
@@ -91,7 +91,7 @@ internal class CopyPasteTests : Tests
 
         Assert.That( selectionManager.Selected, Is.Null.Or.Empty );
 
-        var paste = new PasteOperation(d);
+        var paste = new PasteOperation(App, d);
         OperationManager.Instance.Do(paste);
 
         Assert.Multiple( ( ) =>
@@ -158,8 +158,8 @@ internal class CopyPasteTests : Tests
         selected.Clear();
         selected.SetSelection((Design)lbl.Data, (Design)tb.Data);
 
-        new CopyOperation(SelectionManager.Instance.Selected.ToArray()).Do();
-        var cmd = new PasteOperation(d);
+        new CopyOperation(App, SelectionManager.Instance.Selected.ToArray()).Do();
+        var cmd = new PasteOperation(App, d);
 
         Assert.That( cmd.IsImpossible, Is.False );
         OperationManager.Instance.Do(cmd);
@@ -207,9 +207,9 @@ internal class CopyPasteTests : Tests
         var selected = SelectionManager.Instance;
 
         // Copy only the TextField and not the View it's Pos points to
-        new CopyOperation((Design)tb.Data).Do();
+        new CopyOperation(App, (Design)tb.Data).Do();
 
-        var cmd = new PasteOperation(d);
+        var cmd = new PasteOperation(App, d);
 
         Assert.That( cmd.IsImpossible, Is.False );
         OperationManager.Instance.Do(cmd);
@@ -262,7 +262,7 @@ internal class CopyPasteTests : Tests
                     toCopy = new[] { d };
                 }
 
-                CopyOperation copyOperation = new( toCopy );
+                CopyOperation copyOperation = new(App, toCopy );
                 Assume.That( copyOperation, Is.Not.Null.And.InstanceOf<CopyOperation>( ) );
                 Assume.That( copyOperation.SupportsUndo, Is.False );
                 Assume.That( copyOperation.IsImpossible, Is.False );
@@ -275,7 +275,7 @@ internal class CopyPasteTests : Tests
 
                 var rootDesign = d.GetRootDesign( );
 
-                PasteOperation pasteOperation = new( rootDesign );
+                PasteOperation pasteOperation = new(App, rootDesign );
                 Assume.That( pasteOperation, Is.Not.Null.And.InstanceOf<PasteOperation>( ) );
                 Assume.That( pasteOperation.SupportsUndo );
                 Assume.That( pasteOperation.IsImpossible, Is.False );
@@ -305,7 +305,7 @@ internal class CopyPasteTests : Tests
                 Assume.That( v.GetActualSubviews( ), Is.Empty );
 
                 // copy the ScrollView
-                CopyOperation copyOperation = new( d );
+                CopyOperation copyOperation = new(App, d );
                 Assume.That( copyOperation, Is.Not.Null.And.InstanceOf<CopyOperation>( ) );
                 Assume.That( copyOperation.SupportsUndo, Is.False );
                 Assume.That( copyOperation.IsImpossible, Is.False );
@@ -319,7 +319,7 @@ internal class CopyPasteTests : Tests
                 var rootDesign = d.GetRootDesign( );
 
                 // Paste into the root
-                PasteOperation pasteOperation = new( rootDesign );
+                PasteOperation pasteOperation = new(App, rootDesign );
                 Assume.That( pasteOperation, Is.Not.Null.And.InstanceOf<PasteOperation>( ) );
                 Assume.That( pasteOperation.SupportsUndo );
                 Assume.That( pasteOperation.IsImpossible, Is.False );
@@ -348,7 +348,7 @@ internal class CopyPasteTests : Tests
                 Assume.That( v, Is.Not.Null.And.InstanceOf<View>( ) );
                 Assume.That( v.GetActualSubviews( ), Is.Empty );
 
-                CopyOperation copyOperation = new( d );
+                CopyOperation copyOperation = new(App, d );
                 Assume.That( copyOperation, Is.Not.Null.And.InstanceOf<CopyOperation>( ) );
                 Assume.That( copyOperation.SupportsUndo, Is.False );
                 Assume.That( copyOperation.IsImpossible, Is.False );
@@ -362,7 +362,7 @@ internal class CopyPasteTests : Tests
                 var rootDesign = d.GetRootDesign( );
 
                 // Paste into itself
-                PasteOperation pasteOperation = new( d );
+                PasteOperation pasteOperation = new(App, d );
                 Assume.That( pasteOperation, Is.Not.Null.And.InstanceOf<PasteOperation>( ) );
                 Assume.That( pasteOperation.SupportsUndo );
                 Assume.That( pasteOperation.IsImpossible, Is.False );
@@ -463,7 +463,7 @@ internal class CopyPasteTests : Tests
                 Assume.That( tab2Subviews, Has.One.SameAs( lbl6 ) );
 
                 // copy the TabView
-                CopyOperation copyOperation = new( d );
+                CopyOperation copyOperation = new(App, d );
                 Assume.That( copyOperation, Is.Not.Null.And.InstanceOf<CopyOperation>( ) );
                 Assume.That( copyOperation.SupportsUndo, Is.False );
                 Assume.That( copyOperation.IsImpossible, Is.False );
@@ -476,7 +476,7 @@ internal class CopyPasteTests : Tests
 
                 var rootDesign = d.GetRootDesign( );
 
-                PasteOperation pasteOperation = new( rootDesign );
+                PasteOperation pasteOperation = new(App, rootDesign );
                 Assume.That( pasteOperation, Is.Not.Null.And.InstanceOf<PasteOperation>( ) );
                 Assume.That( pasteOperation.SupportsUndo );
                 Assume.That( pasteOperation.IsImpossible, Is.False );

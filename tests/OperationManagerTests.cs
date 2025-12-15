@@ -1,4 +1,5 @@
-﻿using Terminal.Gui.ViewBase;
+﻿using Terminal.Gui.App;
+using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 
 namespace UnitTests;
@@ -15,10 +16,10 @@ internal class OperationManagerTests
     public void ChangingLabelProperty( [Values( "X" )] string propertyName )
     {
         var file = new FileInfo( "Test_ChangingLabelX.cs" );
-        var viewToCode = new ViewToCode( );
+        var viewToCode = new ViewToCode(Mock.Of<IApplication>());
         var designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Window ) );
 
-        var op = new AddViewOperation( new Label() { Text = "Hello World" }, designOut, "myLabel" );
+        var op = new AddViewOperation(Mock.Of<IApplication>(), new Label() { Text = "Hello World" }, designOut, "myLabel" );
         op.Do( );
 
         Assume.That( designOut, Is.Not.Null.And.InstanceOf<Design>( ) );
@@ -36,19 +37,19 @@ internal class OperationManagerTests
         Assume.That( OperationManager.Instance.UndoStackSize, Is.Zero );
         Assume.That( OperationManager.Instance.RedoStackSize, Is.Zero );
 
-        OperationManager.Instance.Do( new SetPropertyOperation( lblDesign, propertyBeingChanged, propertyBeingChanged.GetValue( ), Pos.Absolute( 10 ) ) );
+        OperationManager.Instance.Do( new SetPropertyOperation(Mock.Of<IApplication>(), lblDesign, propertyBeingChanged, propertyBeingChanged.GetValue( ), Pos.Absolute( 10 ) ) );
         Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
         Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
 
-        OperationManager.Instance.Do( new SetPropertyOperation( lblDesign, propertyBeingChanged, propertyBeingChanged.GetValue( ), Pos.Percent( 50 ) ) );
+        OperationManager.Instance.Do( new SetPropertyOperation(Mock.Of<IApplication>(), lblDesign, propertyBeingChanged, propertyBeingChanged.GetValue( ), Pos.Percent( 50 ) ) );
         Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 2 ) );
         Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
 
-        OperationManager.Instance.Do( new SetPropertyOperation( lblDesign, propertyBeingChanged, propertyBeingChanged.GetValue( ), Pos.Absolute( 10 ) ) );
+        OperationManager.Instance.Do( new SetPropertyOperation(Mock.Of<IApplication>(), lblDesign, propertyBeingChanged, propertyBeingChanged.GetValue( ), Pos.Absolute( 10 ) ) );
         Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 3 ) );
         Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
 
-        OperationManager.Instance.Do( new SetPropertyOperation( lblDesign, propertyBeingChanged, propertyBeingChanged.GetValue( ), Pos.Percent( 50 ) ) );
+        OperationManager.Instance.Do( new SetPropertyOperation(Mock.Of<IApplication>(), lblDesign, propertyBeingChanged, propertyBeingChanged.GetValue( ), Pos.Percent( 50 ) ) );
         Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 4 ) );
         Assert.That( OperationManager.Instance.RedoStackSize, Is.Zero );
 

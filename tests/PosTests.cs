@@ -1,3 +1,4 @@
+using Terminal.Gui.App;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 
@@ -45,7 +46,7 @@ internal class PosTests : Tests
         get
         {
             View v = new( );
-            Design d = new( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            Design d = new(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {

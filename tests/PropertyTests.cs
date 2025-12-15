@@ -15,9 +15,9 @@ internal class PropertyTests : Tests
     [Test]
     public void Changing_LineOrientation( )
     {
-        Design v = Get10By10View( );
+        Design v = Get10By10View(App);
         using Line lv = ViewFactory.Create<Line>( );
-        Design d = new( v.SourceCode, "lv", lv );
+        Design d = new(App, v.SourceCode, "lv", lv );
 
         v.View.Add( lv );
         lv.IsInitialized = true;
@@ -53,7 +53,7 @@ internal class PropertyTests : Tests
     public string PropertyOfType_Attribute( )
     {
         using GraphView graphView = new( );
-        Design d = new( new( $"{nameof( PropertyOfType_Attribute )}.cs" ), "FFF", graphView );
+        Design d = new(App, new( $"{nameof( PropertyOfType_Attribute )}.cs" ), "FFF", graphView );
         Property colorProp = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof( GraphView.GraphColor ) ) );
 
         colorProp.SetValue( null );
@@ -72,7 +72,7 @@ internal class PropertyTests : Tests
     public void PropertyOfType_PointF( [Values( 4.5f, 10.1f )] float x, [Values( 4.5f, 10.1f )] float y )
     {
         using GraphView graphView = new( );
-        Design d = new( new( $"{nameof( PropertyOfType_PointF )}.cs" ), "FFF", graphView );
+        Design d = new(App, new( $"{nameof( PropertyOfType_PointF )}.cs" ), "FFF", graphView );
         Property pointProp = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof( GraphView.ScrollOffset ) ) );
 
         PointF pointF = new( x, y );
@@ -91,7 +91,7 @@ internal class PropertyTests : Tests
     public string PropertyOfType_Pos( )
     {
         using Label label = new( );
-        Design d = new( new( $"{nameof( PropertyOfType_Pos )}.cs" ), "FFF", label );
+        Design d = new(App, new( $"{nameof( PropertyOfType_Pos )}.cs" ), "FFF", label );
         Property xProp = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof( View.X ) ) );
 
         xProp.SetValue( Pos.Center( ) );
@@ -104,7 +104,7 @@ internal class PropertyTests : Tests
     {
         FileInfo file = new( $"{nameof( PropertyOfType_Rune )}_{runeCharacter}.cs" );
         using Line lv = new( );
-        Design d = new( new( file ), "lv", lv );
+        Design d = new(App, new( file ), "lv", lv );
         Property prop = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( "LineRune" ) );
 
         prop.SetValue( runeCharacter );
@@ -121,7 +121,7 @@ internal class PropertyTests : Tests
     public string PropertyOfType_Size( )
     {
         using View view = new( );
-        Design d = new( new( $"{nameof( PropertyOfType_Size )}.cs" ), "FFF", view );
+        Design d = new(App, new( $"{nameof( PropertyOfType_Size )}.cs" ), "FFF", view );
         Property xProp = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof( View.X ) ) );
 
         xProp.SetValue( Pos.Center( ) );

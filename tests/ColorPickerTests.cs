@@ -24,7 +24,7 @@ internal class ColorPickerTests : Tests
     [Category("Code Generation")]
     public void ColorPickerCanSerializeStyle()
     {
-        using var backIn = RoundTrip<View, ColorPicker>(static (d, v) =>
+        using var backIn = RoundTrip<View, ColorPicker>(App, static (d, v) =>
         {
             Assume.That(v.Style.ColorModel,Is.Not.EqualTo(ColorModel.RGB));
 

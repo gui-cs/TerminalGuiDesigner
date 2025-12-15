@@ -29,7 +29,7 @@ internal class MenuBarExtensionsTests : Tests
         [Values( 0, 1 )] int yOffset,
         [Values(0)]int expectedMenuItem)
     {
-        RoundTrip<View, MenuBar>( ( d, v ) =>
+        RoundTrip<View, MenuBar>(App, ( d, v ) =>
         {
             Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
             Assume.That( v, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
@@ -39,13 +39,13 @@ internal class MenuBarExtensionsTests : Tests
 
             v.SuperView!.LayoutSubViews();
 
-            // Expect a MenuBar to be rendered that is 
+            // Expect a MenuBar to be rendered that is
             // ".test..next..more.." (with 1 unit of preceding whitespace and 1 after each)
             // Note that this test is brittle and subject to changes in Terminal.Gui e.g. pushing menus closer together.
             v.Menus[ 0 ].Title = "test";
 
-            Assume.That( ( ) => new AddMenuOperation( d, "next" ).Do( ), Throws.Nothing );
-            Assume.That( ( ) => new AddMenuOperation( d, "more" ).Do( ), Throws.Nothing );
+            Assume.That( ( ) => new AddMenuOperation(App, d, "next" ).Do( ), Throws.Nothing );
+            Assume.That( ( ) => new AddMenuOperation(App, d, "more" ).Do( ), Throws.Nothing );
 
             Assume.That( v.Menus, Has.Exactly( 3 ).InstanceOf<MenuBarItem>( ) );
 
@@ -62,7 +62,7 @@ internal class MenuBarExtensionsTests : Tests
         [Values( 0, 5 )] int xOffset,
         [Values( 0, 1 )] int yOffset )
     {
-        RoundTrip<View, MenuBar>( ( d, v ) =>
+        RoundTrip<View, MenuBar>(App, ( d, v ) =>
         {
             Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
             Assume.That( v, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
@@ -72,13 +72,13 @@ internal class MenuBarExtensionsTests : Tests
 
             v.SuperView!.LayoutSubViews();
 
-            // Expect a MenuBar to be rendered that is 
+            // Expect a MenuBar to be rendered that is
             // ".test..next..more.." (with 1 unit of preceding whitespace and 2 after each)
             // Note that this test is brittle and subject to changes in Terminal.Gui e.g. pushing menus closer together.
             v.Menus[ 0 ].Title = "test";
 
-            Assume.That( ( ) => new AddMenuOperation( d, "next" ).Do( ), Throws.Nothing );
-            Assume.That( ( ) => new AddMenuOperation( d, "more" ).Do( ), Throws.Nothing );
+            Assume.That( ( ) => new AddMenuOperation(App, d, "next" ).Do( ), Throws.Nothing );
+            Assume.That( ( ) => new AddMenuOperation(App, d, "more" ).Do( ), Throws.Nothing );
 
             Assume.That( v.Menus, Has.Exactly( 3 ).InstanceOf<MenuBarItem>( ) );
 
@@ -93,7 +93,7 @@ internal class MenuBarExtensionsTests : Tests
         [Values( 0, 5 )] int xOffset,
         [Values( 0, 1 )] int yOffset )
     {
-        RoundTrip<View, MenuBar>( ( d, v ) =>
+        RoundTrip<View, MenuBar>(App, ( d, v ) =>
         {
             Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
             Assume.That( v, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
@@ -120,7 +120,7 @@ internal class MenuBarExtensionsTests : Tests
         [Values( 0, 5 )] int xOffset,
         [Values( 0, 1 )] int yOffset )
     {
-        RoundTrip<View, MenuBar>( ( d, v ) =>
+        RoundTrip<View, MenuBar>(App, ( d, v ) =>
         {
             Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
             Assume.That( v, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
@@ -147,7 +147,7 @@ internal class MenuBarExtensionsTests : Tests
         [Values( 0, 5 )] int xOffset,
         [Values( 0, 1 )] int yOffset )
     {
-        RoundTrip<View, MenuBar>( ( d, v ) =>
+        RoundTrip<View, MenuBar>(App, ( d, v ) =>
         {
             Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
             Assume.That( v, Is.Not.Null.And.InstanceOf<MenuBar>( ) );

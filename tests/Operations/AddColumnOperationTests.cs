@@ -83,7 +83,7 @@ internal class AddColumnOperationTests : Tests
 
             // TableView comes with some free columns.  Try using that column name again
             dt.Columns[0].ColumnName = "Test";
-            var op = new AddColumnOperation(d, "Test");
+            var op = new AddColumnOperation(App, d, "Test");
             op.Do();
 
             ClassicAssert.AreEqual("Test2", dt.Columns[colsBefore].ColumnName);

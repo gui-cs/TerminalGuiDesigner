@@ -12,7 +12,7 @@ internal class OptionSelectorTests : Tests
     [Test]
     public void RoundTrip_PreserveOptionSelectors( )
     {
-        var rgIn = RoundTrip<Window, OptionSelector>( static ( _, _ ) => { }, out _ );
+        var rgIn = RoundTrip<Window, OptionSelector>(App, static ( _, _ ) => { }, out _ );
 
         Assert.That( rgIn.RadioLabels, Has.Length.EqualTo( 2 ) );
 
@@ -26,7 +26,7 @@ internal class OptionSelectorTests : Tests
     [Test]
     public void RoundTrip_PreserveOptionSelectors_Custom( )
     {
-        var rgIn = RoundTrip<Window, OptionSelector>( static ( _, r ) => { r.RadioLabels = ["Fish", "Cat", "Balloon"]; }, out _ );
+        var rgIn = RoundTrip<Window, OptionSelector>(App, static ( _, r ) => { r.RadioLabels = ["Fish", "Cat", "Balloon"]; }, out _ );
 
         Assert.That( rgIn.RadioLabels, Has.Length.EqualTo( 3 ) );
 
@@ -41,7 +41,7 @@ internal class OptionSelectorTests : Tests
     [Test]
     public void RoundTrip_PreserveOptionSelectors_Empty( )
     {
-        var rgIn = RoundTrip<Window, OptionSelector>( static ( _, r ) => { r.RadioLabels = []; }, out _ );
+        var rgIn = RoundTrip<Window, OptionSelector>(App, static ( _, r ) => { r.RadioLabels = []; }, out _ );
 
         Assert.That( rgIn.RadioLabels, Is.Empty );
     }

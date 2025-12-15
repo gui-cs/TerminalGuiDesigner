@@ -65,7 +65,11 @@ internal class EditorTests : Tests
     }
 
     private class DummyOperation : Operation
-    { 
+    {
+        public DummyOperation() : base(Mock.Of<IApplication>())
+        {
+        }
+
         protected override bool DoImpl()
         {
             return true;
