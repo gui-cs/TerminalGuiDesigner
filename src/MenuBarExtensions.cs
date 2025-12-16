@@ -77,4 +77,100 @@ public static class MenuBarExtensions
         // Return the last menu item that begins rendering before this X point
         return menuXLocations.Last(m => m.Key <= clientPoint.X).Value;
     }
+
+    /// <summary>
+    /// Gets the Menu that contains the child items for this MenuItem.
+    /// For MenuBarItem, this is PopoverMenu.Root. For MenuItem, this is SubMenu.
+    /// </summary>
+    /// <param name="menuItem">The MenuItem to get the menu from.</param>
+    /// <returns>The Menu containing child items, or null if none exists.</returns>
+    public static Menu? GetChildMenu(this MenuItem menuItem)
+    {
+        if (menuItem is MenuBarItem mbi)
+        {
+            return mbi.PopoverMenu?.Root;
+        }
+
+        return menuItem.SubMenu;
+    }
+
+    /// <summary>
+    /// Gets all MenuItem children from this MenuItem's menu.
+    /// </summary>
+    /// <param name="menuItem">The MenuItem to get children from.</param>
+    /// <returns>List of MenuItem children, or empty list if no menu exists.</returns>
+    public static List<MenuItem> GetMenuItems(this MenuItem menuItem)
+    {
+        var menu = menuItem.GetChildMenu();
+        return menu?.SubViews.OfType<MenuItem>().ToList() ?? new List<MenuItem>();
+    }
+
+    /// <summary>
+    /// Replaces all MenuItem children in this MenuItem's menu with the specified items.
+    /// This handles the complexity of removing and re-adding items in the correct order.
+    /// </summary>
+    /// <param name="menuItem">The MenuItem whose children should be replaced.</param>
+    /// <param name="newItems">The new list of MenuItems in the desired order.</param>
+    public static void SetMenuItems(this MenuItem menuItem, List<MenuItem> newItems)
+    {
+        var menu = menuItem.GetChildMenu();
+        if (menu == null)
+        {
+            return;
+        }
+
+        // Get all current views and separate MenuItems from non-MenuItems (like Lines)
+        var allViews = menu.SubViews.ToList();
+        var nonMenuItems = allViews.Where(v => v is not MenuItem).ToList();
+
+        // Remove all MenuItems
+        foreach (var item in allViews.OfType<MenuItem>().ToList())
+        {
+            menu.Remove(item);
+        }
+
+        // Add new MenuItems in order
+        foreach (var item in newItems)
+        {
+            menu.Add(item);
+        }
+
+        // Re-add non-MenuItem views (like separators)
+        foreach (var item in nonMenuItems)
+        {
+            menu.Add(item);
+        }
+    }
+
+    /// <summary>
+    /// Inserts a MenuItem at the specified index among other MenuItems.
+    /// This handles finding the correct position among all SubViews.
+    /// </summary>
+    /// <param name="menuItem">The parent MenuItem to insert into.</param>
+    /// <param name="index">The index among MenuItems (not SubViews) to insert at.</param>
+    /// <param name="itemToInsert">The MenuItem to insert.</param>
+    public static void InsertMenuItem(this MenuItem menuItem, int index, MenuItem itemToInsert)
+    {
+        var items = menuItem.GetMenuItems();
+        items.Insert(Math.Min(index, items.Count), itemToInsert);
+        menuItem.SetMenuItems(items);
+    }
+
+    /// <summary>
+    /// Removes a MenuItem from this MenuItem's menu.
+    /// </summary>
+    /// <param name="menuItem">The parent MenuItem to remove from.</param>
+    /// <param name="itemToRemove">The MenuItem to remove.</param>
+    /// <returns>True if the item was found and removed.</returns>
+    public static bool RemoveMenuItem(this MenuItem menuItem, MenuItem itemToRemove)
+    {
+        var menu = menuItem.GetChildMenu();
+        if (menu == null)
+        {
+            return false;
+        }
+
+        menu.Remove(itemToRemove);
+        return true;
+    }
 }

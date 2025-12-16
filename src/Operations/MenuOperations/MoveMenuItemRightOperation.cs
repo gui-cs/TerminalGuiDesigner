@@ -20,13 +20,20 @@ public class MoveMenuItemRightOperation : MenuItemOperation
     public MoveMenuItemRightOperation(IApplication app, MenuItem toMove)
         : base(app, toMove)
     {
-        /*
-        if (this.Parent?.GetChildrenIndex(toMove) == 0)
+        if (this.Parent == null || this.OperateOn == null)
+        {
+            this.IsImpossible = true;
+            return;
+        }
+
+        var items = this.Parent.GetMenuItems();
+        int idx = items.IndexOf(toMove);
+
+        // Can't move right if we're the first item (no item above to become parent)
+        if (idx <= 0)
         {
             this.IsImpossible = true;
         }
-        */
-        
     }
 
     /// <summary>
@@ -65,9 +72,9 @@ public class MoveMenuItemRightOperation : MenuItemOperation
         {
             return false;
         }
-        /*
+
         // When user hits shift right
-        var children = this.Parent.Children.ToList<MenuItem>();
+        var children = this.Parent.GetMenuItems();
         var currentItemIdx = children.IndexOf(this.OperateOn);
         var aboveIdx = currentItemIdx - 1;
 
@@ -77,33 +84,28 @@ public class MoveMenuItemRightOperation : MenuItemOperation
             return false;
         }
 
-        var addTo = this.ConvertToMenuBarItem(children, aboveIdx);
+        // Get or create a submenu on the item above
+        var itemAbove = children[aboveIdx];
+        if (itemAbove.SubMenu == null)
+        {
+            itemAbove.SubMenu = new Menu();
+        }
 
-        // pull us out
-        children.Remove(this.OperateOn);
+        // Remove us from current menu
+        this.Parent.RemoveMenuItem(this.OperateOn);
 
-        // add us to the sub-menu
-        var submenuChildren = addTo.Children.ToList<MenuItem>();
-
+        // Add us to the submenu of the item above
         if (this.InsertionIndex != null)
         {
-            submenuChildren.Insert(
-                Math.Min(this.InsertionIndex.Value, submenuChildren.Count),
-                this.OperateOn);
+            itemAbove.InsertMenuItem(this.InsertionIndex.Value, this.OperateOn);
         }
         else
         {
-            submenuChildren.Add(this.OperateOn);
+            itemAbove.SubMenu.Add(this.OperateOn);
         }
 
-        // update the main menu
-        this.Parent.Children = children.ToArray();
-
-        // update the sub-menu
-        addTo.Children = submenuChildren.ToArray();
-
         this.Bar?.SetNeedsDraw();
-        */
+
         return true;
     }
 

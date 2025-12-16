@@ -188,3 +188,25 @@ public class Tests
         return type;
     }
 }
+
+/// <summary>
+/// Test helper extensions for working with the new Terminal.Gui menu API
+/// </summary>
+public static class TestMenuExtensions
+{
+    /// <summary>
+    /// Gets the Menus array from a MenuBar (replacement for the now write-only Menus property)
+    /// </summary>
+    public static MenuBarItem[] GetMenus(this MenuBar menuBar)
+    {
+        return menuBar.SubViews.OfType<MenuBarItem>().ToArray();
+    }
+
+    /// <summary>
+    /// Gets the children MenuItems from a MenuBarItem (replacement for the removed Children property)
+    /// </summary>
+    public static MenuItem[] GetChildren(this MenuBarItem menuBarItem)
+    {
+        return menuBarItem.GetMenuItems().ToArray();
+    }
+}

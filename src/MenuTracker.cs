@@ -42,6 +42,51 @@ public class MenuTracker
         }
 
         this.bars.Add(mb);
+
+        // Subscribe to menu open/close events for all MenuBarItems
+        foreach (var menuBarItem in mb.SubViews.OfType<MenuBarItem>())
+        {
+            SubscribeToMenuBarItem(menuBarItem);
+        }
+    }
+
+    private void SubscribeToMenuBarItem(MenuBarItem menuBarItem)
+    {
+        if (menuBarItem.PopoverMenu != null)
+        {
+            menuBarItem.PopoverMenuOpenChanged += OnPopoverMenuOpenChanged;
+        }
+    }
+
+    private void UnsubscribeFromMenuBarItem(MenuBarItem menuBarItem)
+    {
+        if (menuBarItem.PopoverMenu != null)
+        {
+            menuBarItem.PopoverMenuOpenChanged -= OnPopoverMenuOpenChanged;
+        }
+    }
+
+    private void OnPopoverMenuOpenChanged(object? sender, Terminal.Gui.App.EventArgs<bool> e)
+    {
+        if (sender is MenuBarItem menuBarItem)
+        {
+            if (e.Value) // Menu opened
+            {
+                // Set the currently open menu item to the MenuBarItem itself
+                // The KeyboardManager will use this to enable renaming
+                this.CurrentlyOpenMenuItem = menuBarItem;
+            }
+            else // Menu closed
+            {
+                this.CurrentlyOpenMenuItem = null;
+            }
+
+            // Convert empty menus when closing
+            if (!e.Value)
+            {
+                this.ConvertEmptyMenus();
+            }
+        }
     }
 
     /// <summary>
@@ -50,9 +95,15 @@ public class MenuTracker
     /// <param name="mb"><see cref="MenuBar"/> to stop tracking.</param>
     public void UnregisterMenuBar( MenuBar? mb )
     {
-        if ( !bars.TryTake( out mb ) )
+        if (mb == null || !bars.TryTake(out mb))
         {
             return;
+        }
+
+        // Unsubscribe from all MenuBarItems
+        foreach (var menuBarItem in mb.SubViews.OfType<MenuBarItem>())
+        {
+            UnsubscribeFromMenuBarItem(menuBarItem);
         }
     }
 
@@ -69,17 +120,16 @@ public class MenuTracker
     /// <param name="item">The item whose parent you want to find.</param>
     /// <param name="hostBar">The <see cref="MenuBar"/> that owns <paramref name="item"/> or.
     /// null if not found or parent not registered (see <see cref="Register(MenuBar)"/>).</param>
-    /// <returns>The immediate parent of <paramref name="item"/>.</returns>
+    /// <returns>The immediate parent of <paramref name="item"/>. Can be MenuBarItem or MenuItem.</returns>
     /// <remarks>Result may be a top level menu (e.g. File, View)
     /// or a sub-menu parent (e.g. View=>Windows).</remarks>
-    private MenuBarItem? GetParent( MenuItem item, out MenuBar? hostBar )
+    private MenuItem? GetParent( MenuItem item, out MenuBar? hostBar )
     {
-        /*
         foreach (var bar in this.bars)
         {
             foreach (var sub in bar.SubViews.OfType<MenuBarItem>())
             {
-                var candidate = this.GetParent(item, sub);
+                var candidate = this.FindParentRecursive(item, sub);
 
                 if (candidate != null)
                 {
@@ -88,7 +138,7 @@ public class MenuTracker
                 }
             }
         }
-        */
+
         hostBar = null;
         return null;
     }
@@ -103,13 +153,13 @@ public class MenuTracker
     /// </param>
     /// <param name="parentItem">
     ///   When this method returns <see langword="true" />, the immediate parent of <paramref name="item" />.<br /> Otherwise,
-    ///   <see langword="null" />
+    ///   <see langword="null" />. Can be either a MenuBarItem or a MenuItem with a SubMenu.
     /// </param>
     /// <remarks>
     ///   Search is recursive and dips into sub-menus.<br /> For sub-menus it is the immediate parent that is returned.
     /// </remarks>
     /// <returns>A <see langword="bool" /> indicating if the search was successful or not.</returns>
-    public bool TryGetParent( MenuItem item, [NotNullWhen( true )] out MenuBar? hostBar, [NotNullWhen( true )] out MenuBarItem? parentItem )
+    public bool TryGetParent( MenuItem item, [NotNullWhen( true )] out MenuBar? hostBar, [NotNullWhen( true )] out MenuItem? parentItem )
     {
         var parentCandidate = GetParent( item, out hostBar );
         if ( parentCandidate is null )
@@ -165,90 +215,96 @@ public class MenuTracker
     internal static bool ConvertMenuBarItemToRegularItemIfEmpty( MenuBarItem bar, [NotNullWhen( true )] out MenuItem? added )
     {
         added = null;
-        /*
-        // bar still has more children so don't convert
-        if ( bar.SubViews.Length != 0 )
+
+        // In the new API, MenuBarItem can only exist at the top level of a MenuBar
+        // So this conversion doesn't apply the same way
+        // However, we can check if a MenuItem with a SubMenu has become empty
+        // and should have its SubMenu removed
+
+        // Check if the bar is actually a top-level MenuBarItem (which should keep its structure)
+        // or if it's being used in a submenu context (which shouldn't happen in the new API)
+
+        // For now, we'll check if it has any menu items in its PopoverMenu
+        if (bar.PopoverMenu?.Root?.SubViews.OfType<MenuItem>().Any() == true)
         {
+            // bar still has children so don't convert
             return false;
         }
 
-        if ( !Instance.TryGetParent( bar, out _, out MenuBarItem? parent ) )
-        {
-            return false;
-        }
-
-        int idx = Array.IndexOf( parent.Children, bar );
-
-        if (idx < 0)
-        {
-            return false;
-        }
-
-        // bar has no children so convert to MenuItem
-        parent.Children[ idx ] = added = new( )
-        {
-            Title = bar.Title,
-            Data = bar.Data,
-            Key = bar.Key
-        };
-        */
-        return true;
+        // In the new API, we don't convert MenuBarItems to MenuItems
+        // MenuBarItems stay as MenuBarItems even if empty (they're top-level)
+        // This method is less relevant in the new structure
+        return false;
     }
 
     /// <inheritdoc cref="ConvertEmptyMenus()"/>
     private Dictionary<MenuBarItem, MenuItem> ConvertEmptyMenus(Dictionary<MenuBarItem,MenuItem> dictionary, MenuBar bar, MenuBarItem mbi)
     {
-        foreach (var c in mbi.SubViews.OfType<MenuBarItem>())
+        // In the new API, we need to look for MenuItems with empty SubMenus
+        // and potentially remove those SubMenus
+        if (mbi.PopoverMenu?.Root != null)
         {
-            this.ConvertEmptyMenus(dictionary,bar, c);
-            if ( ConvertMenuBarItemToRegularItemIfEmpty( c, out MenuItem? added))
+            foreach (var menuItem in mbi.PopoverMenu.Root.SubViews.OfType<MenuItem>())
             {
-                dictionary.TryAdd( c, added );
-                /*
-                bar.CloseMenu(false);
-                bar.OpenMenu();*/
+                // Recursively check for empty submenus
+                ConvertEmptySubMenus(menuItem);
             }
         }
 
         return dictionary;
     }
-    /*
-    private void MenuClosing(object? sender, MenuClosingEventArgs obj)
-    {
-        this.CurrentlyOpenMenuItem = null;
-    }
 
-    private void MenuOpened(object? sender, MenuOpenedEventArgs obj)
+    /// <summary>
+    /// Helper method to recursively convert empty submenus
+    /// In the new API, this removes empty SubMenus from MenuItems
+    /// </summary>
+    private void ConvertEmptySubMenus(MenuItem menuItem)
     {
-        this.CurrentlyOpenMenuItem = obj.MenuItem;
-        this.ConvertEmptyMenus( );
-    }
-
-    private void MenuAllClosed(object? sender, EventArgs e)
-    {
-        this.CurrentlyOpenMenuItem = null;
-    }
-
-    private MenuBarItem? GetParent(MenuItem item, MenuBarItem sub)
-    {
-        // if we have a reference to the item then
-        // it means that we are the parent (we contain it)
-        if (sub.Children.Contains(item))
+        if (menuItem.SubMenu != null)
         {
-            return sub;
+            // First recursively process children
+            foreach (var child in menuItem.SubMenu.SubViews.OfType<MenuItem>())
+            {
+                ConvertEmptySubMenus(child);
+            }
+
+            // If the submenu is now empty, remove it
+            if (menuItem.SubMenu.SubViews.OfType<MenuItem>().Any() == false)
+            {
+                menuItem.SubMenu = null;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Recursively searches for the immediate parent of a MenuItem within a MenuItem hierarchy.
+    /// Uses the extension methods to simplify the logic.
+    /// </summary>
+    /// <param name="item">The MenuItem to find the parent of</param>
+    /// <param name="potentialParent">The MenuItem to search within (could be MenuBarItem or MenuItem)</param>
+    /// <returns>The immediate parent MenuItem, or null if not found in this branch</returns>
+    private MenuItem? FindParentRecursive(MenuItem item, MenuItem potentialParent)
+    {
+        // Check if the item is directly in this MenuItem's children
+        var children = potentialParent.GetMenuItems();
+        if (children.Contains(item))
+        {
+            return potentialParent;
         }
 
-        // recursively check dropdowns
-        foreach (var dropdown in sub.Children.OfType<MenuBarItem>())
+        // Recursively check each child's submenu
+        foreach (var child in children)
         {
-            var candidate = this.GetParent(item, dropdown);
-
-            if (candidate != null)
+            if (child.SubMenu != null)
             {
-                return candidate;
+                var result = FindParentRecursive(item, child);
+                if (result != null)
+                {
+                    return result;
+                }
             }
         }
 
         return null;
-    }*/
+    }
 }

@@ -67,13 +67,9 @@ public class RemoveMenuItemOperation : MenuItemOperation
         {
             return;
         }
-        /*
-        this.Parent.Children =
-        [
-            .. Parent.Children[ .. removedAtIdx ],
-            this.OperateOn,
-            .. Parent.Children[ removedAtIdx .. ]
-        ];
+
+        // Re-insert the item at its original position
+        this.Parent.InsertMenuItem(this.removedAtIdx, this.OperateOn);
         this.Bar?.SetNeedsDraw();
 
         // if any MenuBarItem were converted to vanilla MenuItem
@@ -83,12 +79,18 @@ public class RemoveMenuItemOperation : MenuItemOperation
         {
             foreach (var converted in this.convertedMenuBars)
             {
-                if(MenuTracker.Instance.TryGetParent(converted.Value,out _, out MenuBarItem? grandparent))
+                if(MenuTracker.Instance.TryGetParent(converted.Value, out _, out MenuItem? grandparent))
                 {
-                    int replacementIndex = Array.IndexOf(grandparent.Children, converted.Value);
-                    if(replacementIndex >=0 && replacementIndex < grandparent.Children.Length)
+                    if (grandparent != null)
                     {
-                        grandparent.Children[ replacementIndex ] = converted.Key;
+                        var grandparentItems = grandparent.GetMenuItems();
+                        int replacementIndex = grandparentItems.IndexOf(converted.Value);
+                        if(replacementIndex >= 0 && replacementIndex < grandparentItems.Count)
+                        {
+                            // Replace the converted MenuItem with the MenuBarItem
+                            grandparentItems[replacementIndex] = converted.Key;
+                            grandparent.SetMenuItems(grandparentItems);
+                        }
                     }
                 }
             }
@@ -98,28 +100,35 @@ public class RemoveMenuItemOperation : MenuItemOperation
         // side effect of the removal then put them back
         if (this.prunedEmptyTopLevelMenus != null && this.Bar != null)
         {
-            var l = this.Bar.SubViews.OfType<MenuBarItem>().ToList<MenuBarItem>();
+            var currentMenus = this.Bar.SubViews.OfType<MenuBarItem>().ToList();
 
-            // for each index they used to be at
-            foreach (var kvp in this.prunedEmptyTopLevelMenus.OrderBy(k => k))
+            // for each index they used to be at, add them back
+            foreach (var kvp in this.prunedEmptyTopLevelMenus.OrderBy(k => k.Key))
             {
-                // put them back
-                l.Insert(kvp.Key, kvp.Value);
+                currentMenus.Insert(Math.Min(kvp.Key, currentMenus.Count), kvp.Value);
             }
 
-            this.Bar.Menus = l.ToArray();
+            // Rebuild the MenuBar with all menus in order
+            foreach (var menuBarItem in this.Bar.SubViews.OfType<MenuBarItem>().ToList())
+            {
+                this.Bar.Remove(menuBarItem);
+            }
+
+            foreach (var menuBarItem in currentMenus)
+            {
+                this.Bar.Add(menuBarItem);
+            }
         }
 
         if (this.Bar != null && this.barRemovedFrom != null)
         {
             this.barRemovedFrom.Add(this.Bar);
 
-            // lets clear this in case the user some
+            // lets clear this in case the user somehow
             // manages to undo this command multiple
             // times
             this.barRemovedFrom = null;
         }
-        */
     }
 
     /// <inheritdoc/>
@@ -129,13 +138,11 @@ public class RemoveMenuItemOperation : MenuItemOperation
         {
             return false;
         }
-        /*
-        this.removedAtIdx = Math.Max( 0, Array.IndexOf( Parent.Children, OperateOn ) );
-        this.Parent.Children =
-        [
-            .. Parent.Children[ ..removedAtIdx ],
-            .. Parent.Children[ ( removedAtIdx + 1 ).. ]
-        ];
+
+        var items = this.Parent.GetMenuItems();
+        this.removedAtIdx = Math.Max(0, items.IndexOf(this.OperateOn));
+
+        this.Parent.RemoveMenuItem(this.OperateOn);
         this.Bar?.SetNeedsDraw();
 
         if (this.Bar != null)
@@ -144,26 +151,29 @@ public class RemoveMenuItemOperation : MenuItemOperation
         }
 
         // if a top level menu now has no children
-        var empty = this.Bar?.Menus.Where(bi => bi.Children.Length == 0).ToArray();
-        if (empty?.Any() == true)
+        var allMenus = this.Bar?.SubViews.OfType<MenuBarItem>().ToArray();
+        var empty = allMenus?.Where(bi => bi.PopoverMenu?.Root?.SubViews.OfType<MenuItem>().Any() != true).ToArray();
+        if (empty?.Any() == true && allMenus != null)
         {
             // remember where they were
-            this.prunedEmptyTopLevelMenus = empty.ToDictionary(e => Array.IndexOf(this.Bar.Menus, e), v => v);
+            this.prunedEmptyTopLevelMenus = empty.ToDictionary(e => Array.IndexOf(allMenus, e), v => v);
 
-            // and remove them
-            this.Bar.Menus = this.Bar.Menus.Except(this.prunedEmptyTopLevelMenus.Values).ToArray();
+            // and remove them from the MenuBar
+            foreach (var emptyMenu in empty)
+            {
+                this.Bar!.Remove(emptyMenu);
+            }
         }
 
         // if we just removed the last menu header
         // leaving a completely blank menu bar
-        if (this.Bar?.Menus.Length == 0 && this.Bar.SuperView != null)
+        if (this.Bar?.SubViews.OfType<MenuBarItem>().Any() != true && this.Bar?.SuperView != null)
         {
             // remove the bar completely
-            this.Bar.CloseMenu(false);
             this.barRemovedFrom = this.Bar.SuperView;
             this.barRemovedFrom.Remove(this.Bar);
         }
-        */
+
         return true;
     }
 }

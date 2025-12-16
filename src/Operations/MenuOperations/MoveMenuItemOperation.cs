@@ -33,8 +33,8 @@ public class MoveMenuItemOperation : MenuItemOperation
             this.IsImpossible = true;
             return;
         }
-        /*
-        this.siblings = this.Parent.Children.ToList<MenuItem>();
+
+        this.siblings = this.Parent.GetMenuItems();
         this.currentItemIdx = this.siblings.IndexOf(this.OperateOn);
 
         if (this.currentItemIdx < 0)
@@ -45,7 +45,6 @@ public class MoveMenuItemOperation : MenuItemOperation
         {
             this.IsImpossible = up ? this.currentItemIdx == 0 : this.currentItemIdx == this.siblings.Count - 1;
         }
-        */
     }
 
     /// <inheritdoc/>
@@ -72,7 +71,7 @@ public class MoveMenuItemOperation : MenuItemOperation
         {
             return false;
         }
-        /*
+
         int moveTo = Math.Max(0, amount + this.currentItemIdx);
 
         // pull it out from wherever it is
@@ -82,10 +81,12 @@ public class MoveMenuItemOperation : MenuItemOperation
 
         // push it in at the destination
         this.siblings.Insert(moveTo, this.OperateOn);
-        this.Parent.Children = this.siblings.ToArray();
+
+        // Update the menu with the new order
+        this.Parent.SetMenuItems(this.siblings);
 
         this.Bar?.SetNeedsDraw();
-        */
+
         return true;
     }
 }

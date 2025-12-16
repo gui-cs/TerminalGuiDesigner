@@ -27,8 +27,15 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
     public MoveMenuItemLeftOperation(IApplication app, MenuItem toMove)
         : base(app, toMove)
     {
-        // command is already invalid or user is trying to move a menu item that is not in a sub-menu
-        if (this.IsImpossible || this.Bar == null || this.Bar.SubViews.OfType<MenuBarItem>().Any(m => m.SubViews.Contains(toMove)))
+        // command is already invalid
+        if (this.IsImpossible || this.Bar == null)
+        {
+            this.IsImpossible = true;
+            return;
+        }
+
+        // Check if the item is in a top-level PopoverMenu (can't move left from there)
+        if (this.Bar.SubViews.OfType<MenuBarItem>().Any(m => m.PopoverMenu?.Root?.SubViews.Contains(toMove) == true))
         {
             this.IsImpossible = true;
             return;
@@ -36,7 +43,8 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
 
         if (this.Parent != null)
         {
-            this.pulledFromIndex = Array.IndexOf(this.Parent.SubViews.OfType<MenuItem>().ToArray(), this.OperateOn);
+            var items = this.Parent.GetMenuItems();
+            this.pulledFromIndex = items.IndexOf(this.OperateOn);
         }
     }
 
@@ -69,22 +77,19 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
             return false;
         }
 
-        if ( !MenuTracker.Instance.TryGetParent( Parent, out _, out MenuBarItem? parentsParent ) )
+        if (!MenuTracker.Instance.TryGetParent(Parent, out _, out MenuItem? parentsParent))
         {
             return false;
         }
-        /*
-        // Figure out where the parent MenuBarItem was in the list because
-        // after we remove ourselves from its sublist it might
-        // turn into a MenuItem (i.e. we loose the reference).
-        var children = parentsParent.Children.ToList<MenuItem>();
-        var parentsIdx = children.IndexOf(this.Parent);
 
-        // remove us
+        // Figure out where the parent is in the list
+        var parentsParentItems = parentsParent.GetMenuItems();
+        var parentsIdx = parentsParentItems.IndexOf(this.Parent);
+
+        // remove us from our current location
         if (new RemoveMenuItemOperation(App, this.OperateOn).Do())
         {
-            // We are the parent but parents children don't contain
-            // us.  That's bad. TODO: log this
+            // We are the parent but parents children don't contain us.  That's bad. TODO: log this
             if (parentsIdx == -1)
             {
                 return false;
@@ -92,8 +97,8 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
 
             int insertAt = Math.Max(0, parentsIdx + 1);
 
-            children.Insert(insertAt, this.OperateOn);
-            parentsParent.Children = children.ToArray();
+            // Insert into the parent's parent menu
+            parentsParent.InsertMenuItem(insertAt, this.OperateOn);
 
             MenuTracker.Instance.ConvertEmptyMenus();
 
@@ -101,7 +106,7 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
 
             return true;
         }
-        */
+
         return false;
     }
 }

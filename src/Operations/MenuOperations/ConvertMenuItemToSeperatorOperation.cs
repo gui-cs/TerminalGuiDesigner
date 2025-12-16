@@ -7,18 +7,19 @@ namespace TerminalGuiDesigner.Operations.MenuOperations;
 /// <summary>
 /// <para>
 /// Converts a <see cref="MenuItem"/> into a Separator (horizontal line in menu).
-/// In Terminal.Gui this is represented as a null in the <see cref="MenuBar"/>.
+/// In the new Terminal.Gui API this is represented as a Line view.
 /// </para>
 /// </summary>
 public class ConvertMenuItemToSeperatorOperation : MenuItemOperation
 {
     private int removedAtIdx;
+    private Line? addedLine;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ConvertMenuItemToSeperatorOperation"/> class.
     /// </summary>
     /// <param name="app">The application instance.</param>
-    /// <param name="toConvert">A <see cref="MenuItem"/> to replace with a separator (null) in it's parent <see cref="MenuBar"/>.</param>
+    /// <param name="toConvert">A <see cref="MenuItem"/> to replace with a separator (Line) in it's parent menu.</param>
     public ConvertMenuItemToSeperatorOperation(IApplication app, MenuItem toConvert)
         : base(app, toConvert)
     {
@@ -33,16 +34,43 @@ public class ConvertMenuItemToSeperatorOperation : MenuItemOperation
     /// <inheritdoc/>
     protected override void UndoImpl()
     {
-        if (this.Parent == null || this.OperateOn == null)
+        if (this.Parent == null || this.OperateOn == null || this.addedLine == null)
         {
             return;
         }
-        /*
-        var children = this.Parent.Children.ToList<MenuItem>();
 
-        children[this.removedAtIdx] = this.OperateOn;
-        this.Parent.Children = children.ToArray();
-        this.Bar?.SetNeedsDraw();*/
+        var menu = this.Parent.GetChildMenu();
+        if (menu == null)
+        {
+            return;
+        }
+
+        // Find the index of the separator line and restore MenuItem at that position
+        var allViews = menu.SubViews.ToList();
+        int lineIdx = allViews.IndexOf(this.addedLine);
+
+        if (lineIdx >= 0)
+        {
+            // Remove the separator
+            menu.Remove(this.addedLine);
+
+            // Rebuild views with MenuItem at the correct position
+            var nonLineViews = allViews.Where(v => v != this.addedLine).ToList();
+            nonLineViews.Insert(Math.Min(lineIdx, nonLineViews.Count), this.OperateOn);
+
+            // Clear and re-add all views in order
+            foreach (var v in allViews.Where(v => v != this.addedLine).ToList())
+            {
+                menu.Remove(v);
+            }
+
+            foreach (var v in nonLineViews)
+            {
+                menu.Add(v);
+            }
+        }
+
+        this.Bar?.SetNeedsDraw();
     }
 
     /// <inheritdoc/>
@@ -52,15 +80,46 @@ public class ConvertMenuItemToSeperatorOperation : MenuItemOperation
         {
             return false;
         }
-        /*
-        var children = this.Parent.Children.ToList<MenuItem?>();
 
-        this.removedAtIdx = Math.Max(0, children.IndexOf(this.OperateOn));
-        children[this.removedAtIdx] = null;
+        var menu = this.Parent.GetChildMenu();
+        if (menu == null)
+        {
+            return false;
+        }
 
-        this.Parent.Children = children.ToArray();
+        var items = this.Parent.GetMenuItems();
+        this.removedAtIdx = Math.Max(0, items.IndexOf(this.OperateOn));
+
+        // Find the actual index in SubViews
+        var allViews = menu.SubViews.ToList();
+        int actualIdx = allViews.IndexOf(this.OperateOn);
+
+        if (actualIdx < 0)
+        {
+            return false;
+        }
+
+        // Remove the MenuItem
+        menu.Remove(this.OperateOn);
+
+        // Create Line separator and rebuild views with it at the correct position
+        this.addedLine = new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal };
+        var newViews = allViews.Where(v => v != this.OperateOn).ToList();
+        newViews.Insert(Math.Min(actualIdx, newViews.Count), this.addedLine);
+
+        // Clear and re-add all views in order
+        foreach (var v in allViews.Where(v => v != this.OperateOn).ToList())
+        {
+            menu.Remove(v);
+        }
+
+        foreach (var v in newViews)
+        {
+            menu.Add(v);
+        }
+
         this.Bar?.SetNeedsDraw();
-        */
+
         return true;
     }
 }

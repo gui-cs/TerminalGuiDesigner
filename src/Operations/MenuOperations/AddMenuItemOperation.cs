@@ -67,20 +67,17 @@ public class AddMenuItemOperation : MenuItemOperation
             return false;
         }
 
-        var children = this.Parent.SubViews.OfType<MenuItem>().ToList();
+        var children = this.Parent.GetMenuItems();
         var currentItemIdx = children.IndexOf(this.OperateOn);
 
-        // We are the parent but parents children don't contain
-        // us.  Thats bad. TODO: log this
+        // We are the parent but parents children don't contain us.  That's bad. TODO: log this
         if (currentItemIdx == -1)
         {
             return false;
         }
 
         int insertAt = Math.Max(0, currentItemIdx + 1);
-
-        children.Insert(insertAt, menuItem);
-       // this.Parent.Children = children.ToArray();
+        this.Parent.InsertMenuItem(insertAt, menuItem);
 
         this.Bar?.SetNeedsDraw();
 
