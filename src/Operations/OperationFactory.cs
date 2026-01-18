@@ -107,7 +107,7 @@ public class OperationFactory
 
     private IEnumerable<IOperation> CreateOperations(Mouse? m, Design d)
     {
-        var ops = m == null && m.Position.HasValue?
+        var ops = m == null || !m.Position.HasValue?
             d.GetExtraOperations() :
             d.GetExtraOperations(d.View.ScreenToContent(m.Position.Value));
 
