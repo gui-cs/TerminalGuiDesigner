@@ -123,13 +123,16 @@ namespace Showcase {
             this.spellCheckerConfigurationForSelectedItemMenuItem = new Terminal.Gui.Views.MenuItem();
             this.spellCheckerConfigurationForSelectedItemMenuItem.Title = "Spell Checker Configuration for Selected Item";
             this.spellCheckerConfigurationForSelectedItemMenuItem.Data = "spellCheckerConfigurationForSelectedItemMenuItem";
-            this.newMenu.Children = new Terminal.Gui.Views.MenuItem[] {
+            foreach(var m in new Terminal.Gui.ViewBase.View[] {
                     this.projectMenuItem,
                     this.repositoryMenuItem,
                     this.fileMenuItem,
                     this.projectFromExistingCodeMenuItem,
-                    null,
-                    this.spellCheckerConfigurationForSelectedItemMenuItem};
+                    new Line(),
+                    this.spellCheckerConfigurationForSelectedItemMenuItem})
+            {
+                this.newMenu.Add(m);
+            }
             this.openMenu = new Terminal.Gui.Views.MenuBarItem();
             this.openMenu.Title = "Open";
             this.projectSolutionMenuItem = new Terminal.Gui.Views.MenuItem();
