@@ -97,7 +97,7 @@ public static class ViewFactory
                         && filteredType != typeof(FlagSelector<>))
                     .Except(KnownUnsupportedTypes)
                     // Slider is an alias of Slider<object> so don't offer that
-                    .Where(vt => vt != typeof(Slider));
+                    .Where(vt => vt != typeof(LinearRange));
 
     private static bool IsSupportedType( this Type t )
     {
@@ -170,7 +170,7 @@ public static class ViewFactory
                 SetDefaultDimensions(newView, width ?? 10, height ?? 4);
                 break;
             case Line:
-            case Slider:
+            case LinearRange:
                 break;
             case TableView tv:
                 var dt = new DataTable( );
@@ -325,7 +325,7 @@ public static class ViewFactory
             { } t when t == typeof( Button ) => Create<Button>( ),
             { } t when t == typeof( ComboBox ) => Create<ComboBox>( ),
             { } t when t == typeof( Line ) => Create<Line>( ),
-            { } t when t == typeof( Slider ) => Create<Slider>( ),
+            { } t when t == typeof( LinearRange ) => Create<LinearRange>( ),
             { } t when t == typeof(Label) => Create<Label>(),
             { } t when t == typeof(TextView) => Create<TextView>(),
             { } t when t == typeof(ColorPicker) => Create<ColorPicker>(),

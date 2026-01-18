@@ -51,7 +51,7 @@ namespace TerminalGuiDesigner.UI
         {
             newValue = null;
 
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(SliderOption<>))
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(LinearRangeOption<>))
             {
                 return RunEditor(app, new SliderOptionEditor(app, type.GetGenericArguments()[0], oldValue), out newValue);
             }

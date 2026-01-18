@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net8.0</TargetFrameworks>
+		<TargetFrameworks>net10.0</TargetFrameworks>
 		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <LangVersion>12</LangVersion>
+    <LangVersion>13</LangVersion>
 	</PropertyGroup>
 	<ItemGroup>
 		<AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />

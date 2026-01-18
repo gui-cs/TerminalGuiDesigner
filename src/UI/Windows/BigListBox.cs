@@ -221,9 +221,9 @@ public class BigListBox<T>
         this.Selected = this.collection[selected].Object;
     }
 
-    private void ListView_MouseClick(object? sender, MouseEventArgs obj)
+    private void ListView_MouseClick(object? sender, Mouse obj)
     {
-        if (obj.Flags.HasFlag(MouseFlags.Button1DoubleClicked))
+        if (obj.Flags.HasFlag(MouseFlags.LeftButtonDoubleClicked))
         {
             obj.Handled = true;
             this.Accept();

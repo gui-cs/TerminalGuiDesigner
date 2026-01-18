@@ -37,7 +37,7 @@ public class OperationFactory
     /// the <see cref="View"/> that the mouse was over at the time it was clicked (see <see cref="ViewExtensions.HitTest(View, MouseEventArgs, out bool, out bool, View[])"/>.</param>
     /// <param name="name">String that represents what the returned <see cref="IOperation"/> act upon e.g. "myLabel" or "8 objects".</param>
     /// <returns>Collection of all <see cref="IOperation"/> that can be offered to user as runnable given the current selection.</returns>
-    public IEnumerable<IOperation> CreateOperations(Design[] selected, MouseEventArgs? m, Design? rightClicked, out string name)
+    public IEnumerable<IOperation> CreateOperations(Design[] selected, Mouse? m, Design? rightClicked, out string name)
     {
         List<IOperation> toReturn = new();
 
@@ -105,11 +105,11 @@ public class OperationFactory
         return toReturn;
     }
 
-    private IEnumerable<IOperation> CreateOperations(MouseEventArgs? m, Design d)
+    private IEnumerable<IOperation> CreateOperations(Mouse? m, Design d)
     {
-        var ops = m == null ?
+        var ops = m == null && m.Position.HasValue?
             d.GetExtraOperations() :
-            d.GetExtraOperations(d.View.ScreenToContent(m.Position));
+            d.GetExtraOperations(d.View.ScreenToContent(m.Position.Value));
 
         foreach (var extra in ops.Where(c => !c.IsImpossible))
         {

@@ -41,7 +41,7 @@ namespace TerminalGuiDesigner
         /// <returns></returns>
         public static IEnumerable<Type> GetSupportedTTypesForGenericViewOfType(Type viewType)
         {
-            if (viewType == typeof(Slider<>))
+            if (viewType == typeof(LinearRange<>))
             {
                 return new[] { typeof(int), typeof(string), typeof(int), typeof(double), typeof(bool) };
             }

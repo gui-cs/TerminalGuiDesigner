@@ -225,7 +225,7 @@ public class Design
             tf.MouseEvent += (s,e)=>this.SuppressNativeClickEvents(s,e);
         }
 
-        if (subView.GetType().IsGenericType(typeof(Slider<>)))
+        if (subView.GetType().IsGenericType(typeof(LinearRange<>)))
         {
             // TODO: Does not seem to work
             subView.MouseEvent += (s, e) => SuppressNativeClickEvents(s, e,true);
@@ -573,7 +573,7 @@ public class Design
         }
     }
 
-    private void SuppressNativeClickEvents(object? sender, MouseEventArgs obj, bool alsoSuppressClick = false)
+    private void SuppressNativeClickEvents(object? sender, Mouse obj, bool alsoSuppressClick = false)
     {
         if (alsoSuppressClick)
         {
@@ -582,7 +582,7 @@ public class Design
         else
         {
             // Suppress everything except single click (selection)
-            obj.Handled = obj.Flags != MouseFlags.Button1Clicked;
+            obj.Handled = obj.Flags != MouseFlags.LeftButtonClicked;
         }
     }
 
@@ -594,7 +594,7 @@ public class Design
         cb.KeyBindings.Remove(Key.Space);
         cb.MouseEvent += (s, e) =>
         {
-            if (e.Flags.HasFlag(MouseFlags.Button1Clicked))
+            if (e.Flags.HasFlag(MouseFlags.LeftButtonClicked))
             {
                 e.Handled = true;
                 cb.SetFocus();
@@ -632,17 +632,17 @@ public class Design
             yield return this.CreateProperty(nameof(TextField.Secret));
         }
 
-        if (isGenericType && viewType.GetGenericTypeDefinition() == typeof(Slider<>))
+        if (isGenericType && viewType.GetGenericTypeDefinition() == typeof(LinearRange<>))
         {
-            yield return this.CreateProperty(nameof(Slider.Options));
-            yield return this.CreateProperty(nameof(Slider.Orientation));
-            yield return this.CreateProperty(nameof(Slider.RangeAllowSingle));
-            yield return this.CreateProperty(nameof(Slider.AllowEmpty));
-            yield return this.CreateProperty(nameof(Slider.MinimumInnerSpacing));
-            yield return this.CreateProperty(nameof(Slider.LegendsOrientation));
-            yield return this.CreateProperty(nameof(Slider.ShowLegends));
-            yield return this.CreateProperty(nameof(Slider.ShowEndSpacing));
-            yield return this.CreateProperty(nameof(Slider.Type));
+            yield return this.CreateProperty(nameof(LinearRange.Options));
+            yield return this.CreateProperty(nameof(LinearRange.Orientation));
+            yield return this.CreateProperty(nameof(LinearRange.RangeAllowSingle));
+            yield return this.CreateProperty(nameof(LinearRange.AllowEmpty));
+            yield return this.CreateProperty(nameof(LinearRange.MinimumInnerSpacing));
+            yield return this.CreateProperty(nameof(LinearRange.LegendsOrientation));
+            yield return this.CreateProperty(nameof(LinearRange.ShowLegends));
+            yield return this.CreateProperty(nameof(LinearRange.ShowEndSpacing));
+            yield return this.CreateProperty(nameof(LinearRange.Type));
         }
 
         if (this.View is SpinnerView)
@@ -658,8 +658,8 @@ public class Design
         {
             // Do not allow tab at design time so that we don't get stuck in the View (adding more tabs each time!)
             // But let user edit if they want
-            yield return this.CreateSuppressedProperty(nameof(TextView.AllowsTab), false);
-            yield return this.CreateProperty(nameof(TextView.AllowsReturn));
+            yield return this.CreateSuppressedProperty(nameof(TextView.TabKeyAddsTab), false);
+            yield return this.CreateProperty(nameof(TextView.EnterKeyAddsLine));
             yield return this.CreateProperty(nameof(TextView.WordWrap));
         }
 
@@ -837,8 +837,8 @@ public class Design
             return false;
         }
 
-        // Do not let Text be set on Slider or Slider<> implementations as weird stuff happens
-        if(this.View.GetType().Name.StartsWith("Slider") || View is OptionSelector || View.GetType().IsGenericType(typeof(NumericUpDown<>)))
+        // Do not let Text be set on LinearRange or LinearRange<> implementations as weird stuff happens
+        if(this.View.GetType().Name.StartsWith("LinearRange") || View is OptionSelector || View.GetType().IsGenericType(typeof(NumericUpDown<>)))
         {
             return false;
         }

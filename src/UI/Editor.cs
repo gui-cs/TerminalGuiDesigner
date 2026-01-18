@@ -241,7 +241,7 @@ public class Editor : Runnable, IErrorReporter
             }
 
             // If disabling drag we suppress all but right click (button 3)
-            if (!m.Flags.HasFlag(MouseFlags.Button3Clicked) && !this.enableDrag)
+            if (!m.Flags.HasFlag(MouseFlags.MiddleButtonClicked) && !this.enableDrag)
             {
                 return;
             }
@@ -930,7 +930,7 @@ public class Editor : Runnable, IErrorReporter
         }
     }
 
-    private void CreateAndShowContextMenu(MouseEventArgs? m, Design? rightClicked)
+    private void CreateAndShowContextMenu(Mouse? m, Design? rightClicked)
     {
         if (this.viewBeingEdited == null)
         {
@@ -1006,9 +1006,9 @@ public class Editor : Runnable, IErrorReporter
 
         var menu = new PopoverMenu(all.ToArray());
         Point position;
-        if (m != null)
+        if (m != null && m.Position.HasValue)
         {
-            position = m.Position;
+            position = m.Position.Value;
         }
         else
         {

@@ -55,30 +55,30 @@ internal class MoveMenuItemRightOperationTests : Tests
             var toMove = v.Menus[0].Children[1];
             
             v.Menus[0].Children[0].Data = "yarg";
-            v.Menus[0].Children[0].ShortcutKey = Key.Y.WithCtrl;
+            v.Menus[0].Children[0].Key = Key.Y.WithCtrl;
             v.Menus[0].Children[1].Data = "blarg";
-            v.Menus[0].Children[1].ShortcutKey = Key.B.WithCtrl;
+            v.Menus[0].Children[1].Key = Key.B.WithCtrl;
 
             // Move blarg to sub-menu of yarg
             var op = new MoveMenuItemRightOperation(toMove);
             op.Do();
 
             ClassicAssert.AreEqual("yarg", v.Menus[0].Children[0].Data);
-            ClassicAssert.AreEqual(Key.Y.WithCtrl, v.Menus[0].Children[0].ShortcutKey);
+            ClassicAssert.AreEqual(Key.Y.WithCtrl, v.Menus[0].Children[0].Key);
             ClassicAssert.AreEqual("blarg", ((MenuBarItem)v.Menus[0].Children[0]).Children[0].Data);
-            ClassicAssert.AreEqual(Key.B.WithCtrl, ((MenuBarItem)v.Menus[0].Children[0]).Children[0].ShortcutKey);
+            ClassicAssert.AreEqual(Key.B.WithCtrl, ((MenuBarItem)v.Menus[0].Children[0]).Children[0].Key);
 
             op.Undo();
             ClassicAssert.AreEqual("yarg", v.Menus[0].Children[0].Data);
-            ClassicAssert.AreEqual(Key.Y.WithCtrl, v.Menus[0].Children[0].ShortcutKey);
+            ClassicAssert.AreEqual(Key.Y.WithCtrl, v.Menus[0].Children[0].Key);
             ClassicAssert.AreEqual("blarg", v.Menus[0].Children[1].Data);
-            ClassicAssert.AreEqual(Key.B.WithCtrl, v.Menus[0].Children[1].ShortcutKey);
+            ClassicAssert.AreEqual(Key.B.WithCtrl, v.Menus[0].Children[1].Key);
 
             op.Redo();
             ClassicAssert.AreEqual("yarg", v.Menus[0].Children[0].Data);
-            ClassicAssert.AreEqual(Key.Y.WithCtrl, v.Menus[0].Children[0].ShortcutKey);
+            ClassicAssert.AreEqual(Key.Y.WithCtrl, v.Menus[0].Children[0].Key);
             ClassicAssert.AreEqual("blarg", ((MenuBarItem)v.Menus[0].Children[0]).Children[0].Data);
-            ClassicAssert.AreEqual(Key.B.WithCtrl, ((MenuBarItem)v.Menus[0].Children[0]).Children[0].ShortcutKey);
+            ClassicAssert.AreEqual(Key.B.WithCtrl, ((MenuBarItem)v.Menus[0].Children[0]).Children[0].Key);
 
         }, out _);
     }

@@ -81,12 +81,12 @@ public partial class PointEditor : IValueGetterDialog {
             }
             else
             {
-                MessageBox.ErrorQuery(app, 20,5,"Could no parse",$"Could not parse '{tbY.Text}'","Ok");
+                MessageBox.ErrorQuery(app, "Could no parse",$"Could not parse '{tbY.Text}'","Ok");
             }
         }
         else
         {
-                MessageBox.ErrorQuery(app,20,5,"Could no parse",$"Could not parse '{tbX.Text}'","Ok");
+                MessageBox.ErrorQuery(app,"Could no parse",$"Could not parse '{tbX.Text}'","Ok");
         }
     }
 }

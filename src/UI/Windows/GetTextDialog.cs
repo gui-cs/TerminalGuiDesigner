@@ -56,7 +56,7 @@ internal class GetTextDialog
             Height = Dim.Fill(2),
             Width = Dim.Fill(2),
             Text = this.initialValue ?? string.Empty,
-            AllowsTab = false,
+            TabKeyAddsTab = false,
         };
         this.textView.KeyDown += this.TextViewKeyPress;
 
@@ -73,7 +73,8 @@ internal class GetTextDialog
             SetupMultiLineOptional();
         }
 
-        this.textView.CursorPosition = new(0, 0);
+        // No longer supported? 
+        // this.textView.CursorPosition = new(0, 0);
 
         // make it easier for user to replace this text with something else
         // by directly selecting it all so next keypress replaces text
@@ -161,7 +162,7 @@ internal class GetTextDialog
     private void SetEnableNewlines(CheckState newValue)
     {
         lastKnownEnableNewlines = newValue;
-        multiLineChecked = textView.AllowsReturn = newValue == CheckState.Checked;
+        multiLineChecked = textView.EnterKeyAddsLine = newValue == CheckState.Checked;
     }
 
     public string? ResultText { get; set; }

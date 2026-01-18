@@ -44,7 +44,7 @@ namespace TerminalGuiDesigner.UI.Windows {
 
             this.app = app;
             this.genericTypeArgument = genericTypeArgument;
-            this.sliderOptionType = typeof(SliderOption<>).MakeGenericType(this.genericTypeArgument);
+            this.sliderOptionType = typeof(LinearRangeOption<>).MakeGenericType(this.genericTypeArgument);
 
             btnOk.Accepting += BtnOk_Clicked;
             btnCancel.Accepting += BtnCancel_Clicked;

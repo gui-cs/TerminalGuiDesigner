@@ -253,7 +253,7 @@ public static class ViewExtensions
     /// <param name="app">The application instance.</param>
     /// <param name="ignoring">One or more <see cref="View"/> to ignore (click through) when performing the hit test.</param>
     /// <returns>The <see cref="View"/> at the given screen location or null if none found.</returns>
-    public static View? HitTest(this View w, IApplication app, MouseEventArgs m, out bool isBorder, out bool isLowerRight, params View[] ignoring)
+    public static View? HitTest(this View w, IApplication app, Mouse m, out bool isBorder, out bool isLowerRight, params View[] ignoring)
     {
         // hide the views while we perform the hit test
         foreach (View v in ignoring)
@@ -261,20 +261,20 @@ public static class ViewExtensions
             v.Visible = false;
         }
 
-        var hit = ViewExtensions.FindDeepestView(app, m.Position);
+        var hit = ViewExtensions.FindDeepestView(app, m.Position ?? Point.Empty);
 
         hit = UnpackHitView(hit);
 
         int resizeBoxArea = 2;
 
-        if (hit != null)
+        if (hit != null && m.Position.HasValue)
         {
             var screenFrame = hit.FrameToScreen();
 
             if (m.Position != new Point(screenFrame.X, screenFrame.Y))
             {
-                isLowerRight = Math.Abs(screenFrame.X + screenFrame.Width - m.Position.X) <= resizeBoxArea
-                && Math.Abs(screenFrame.Y + screenFrame.Height - m.Position.Y) <= resizeBoxArea;
+                isLowerRight = Math.Abs(screenFrame.X + screenFrame.Width - m.Position.Value.X) <= resizeBoxArea
+                && Math.Abs(screenFrame.Y + screenFrame.Height - m.Position.Value.Y) <= resizeBoxArea;
             }
             else
             {
@@ -282,10 +282,10 @@ public static class ViewExtensions
             }
 
             isBorder =
-                m.Position.X == screenFrame.X + screenFrame.Width - 1 ||
-                m.Position.X == screenFrame.X ||
-                m.Position.Y == screenFrame.Y + screenFrame.Height - 1 ||
-                m.Position.Y == screenFrame.Y;
+                m.Position.Value.X == screenFrame.X + screenFrame.Width - 1 ||
+                m.Position.Value.X == screenFrame.X ||
+                m.Position.Value.Y == screenFrame.Y + screenFrame.Height - 1 ||
+                m.Position.Value.Y == screenFrame.Y;
         }
         else
         {

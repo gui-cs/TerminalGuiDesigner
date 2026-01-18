@@ -31,7 +31,7 @@ public class ExceptionViewer
             Width = Dim.Fill(),
             Height = Dim.Fill() - 2,
             ReadOnly = true,
-            AllowsTab = false,
+            TabKeyAddsTab = false,
         };
 
         bool toggleStack = true;

@@ -110,7 +110,7 @@ namespace Showcase {
             this.projectMenuItem = new Terminal.Gui.Views.MenuItem();
             this.projectMenuItem.Title = "Project...";
             this.projectMenuItem.Data = "projectMenuItem";
-            this.projectMenuItem.ShortcutKey = ((Terminal.Gui.Drivers.KeyCode)(1073741902u));
+            this.projectMenuItem.Key = ((Terminal.Gui.Drivers.KeyCode)(1073741902u));
             this.repositoryMenuItem = new Terminal.Gui.Views.MenuItem();
             this.repositoryMenuItem.Title = "Repository...";
             this.repositoryMenuItem.Data = "repositoryMenuItem";
@@ -135,7 +135,7 @@ namespace Showcase {
             this.projectSolutionMenuItem = new Terminal.Gui.Views.MenuItem();
             this.projectSolutionMenuItem.Title = "Project/Solution";
             this.projectSolutionMenuItem.Data = "projectSolutionMenuItem";
-            this.projectSolutionMenuItem.ShortcutKey = ((Terminal.Gui.Drivers.KeyCode)(1342177359u));
+            this.projectSolutionMenuItem.Key = ((Terminal.Gui.Drivers.KeyCode)(1342177359u));
             this.folderMenuItem = new Terminal.Gui.Views.MenuItem();
             this.folderMenuItem.Title = "Folder...";
             this.folderMenuItem.Data = "folderMenuItem";
@@ -148,7 +148,7 @@ namespace Showcase {
             this.fileMenuItem2 = new Terminal.Gui.Views.MenuItem();
             this.fileMenuItem2.Title = "File...";
             this.fileMenuItem2.Data = "fileMenuItem2";
-            this.fileMenuItem2.ShortcutKey = ((Terminal.Gui.Drivers.KeyCode)(1073741903u));
+            this.fileMenuItem2.Key = ((Terminal.Gui.Drivers.KeyCode)(1073741903u));
             this.openMenu.Children = new Terminal.Gui.Views.MenuItem[] {
                     this.projectSolutionMenuItem,
                     this.folderMenuItem,
@@ -166,11 +166,11 @@ namespace Showcase {
             this.goToLineMenuItem = new Terminal.Gui.Views.MenuItem();
             this.goToLineMenuItem.Title = "Go To Line...";
             this.goToLineMenuItem.Data = "goToLineMenuItem";
-            this.goToLineMenuItem.ShortcutKey = ((Terminal.Gui.Drivers.KeyCode)(1073741895u));
+            this.goToLineMenuItem.Key = ((Terminal.Gui.Drivers.KeyCode)(1073741895u));
             this.goToTextMenuItem = new Terminal.Gui.Views.MenuItem();
             this.goToTextMenuItem.Title = "Go To Text...";
             this.goToTextMenuItem.Data = "goToTextMenuItem";
-            this.goToTextMenuItem.ShortcutKey = ((Terminal.Gui.Drivers.KeyCode)(2415919174u));
+            this.goToTextMenuItem.Key = ((Terminal.Gui.Drivers.KeyCode)(2415919174u));
             this.goToAllMenuItem = new Terminal.Gui.Views.MenuItem();
             this.goToAllMenuItem.Title = "Go To All...";
             this.goToAllMenuItem.Data = "goToAllMenuItem";

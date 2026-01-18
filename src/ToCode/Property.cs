@@ -307,12 +307,12 @@ public class Property : ToCodeBase
         var type = val.GetType();
 
         // TODO: Could move lots of logic in GetRHS into here
-        if (type.GetGenericTypeDefinition() == typeof(SliderOption<>))
+        if (type.GetGenericTypeDefinition() == typeof(LinearRangeOption<>))
         {
             // TODO: this feels very brittle!
-            var a1 = type.GetPropertyOrThrow(nameof(SliderOption<object>.Legend)).GetValue(val);
-            var a2 = (Rune)type.GetPropertyOrThrow(nameof(SliderOption<object>.LegendAbbr)).GetValue(val)!;
-            var a3 = type.GetPropertyOrThrow(nameof(SliderOption<object>.Data)).GetValue(val);
+            var a1 = type.GetPropertyOrThrow(nameof(LinearRangeOption<object>.Legend)).GetValue(val);
+            var a2 = (Rune)type.GetPropertyOrThrow(nameof(LinearRangeOption<object>.LegendAbbr)).GetValue(val)!;
+            var a3 = type.GetPropertyOrThrow(nameof(LinearRangeOption<object>.Data)).GetValue(val);
             
 
             return new CodeObjectCreateExpression(

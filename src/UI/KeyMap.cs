@@ -60,7 +60,7 @@ public sealed record KeyMap(
             Key.F2.ToString( ),
             Key.L.WithCtrl.ToString( ),
             Key.B.WithCtrl.ToString( ),
-            MouseFlags.Button3Clicked,
+            MouseFlags.MiddleButtonClicked,
             Key.C.WithCtrl.ToString( ),
             Key.V.WithCtrl.ToString( ),
             Key.R.WithCtrl.ToString( ),
@@ -128,7 +128,7 @@ public sealed record KeyMap(
     public string Rename { get; init; } = Rename;
 
     /// <summary>
-    ///   Gets the mouse button that opens the right click context menu. Defaults to <see cref="MouseFlags.Button3Clicked" /> which is
+    ///   Gets the mouse button that opens the right click context menu. Defaults to <see cref="MouseFlags.MiddleButtonClicked" /> which is
     ///   the right mouse button.
     /// </summary>
     [JsonConverter( typeof( JsonStringEnumConverter<MouseFlags> ) )]

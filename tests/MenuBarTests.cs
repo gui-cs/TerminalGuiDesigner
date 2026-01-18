@@ -201,9 +201,9 @@ internal class MenuBarTests : Tests
         Assert.Multiple( ( ) =>
         {
             Assert.That( menu0Child1Leaf0.Title, Is.EqualTo( "Child1" ) );
-            Assert.That( menu0Child1Leaf0.ShortcutKey, Is.EqualTo( Key.J.WithCtrl ) );
+            Assert.That( menu0Child1Leaf0.Key, Is.EqualTo( Key.J.WithCtrl ) );
             Assert.That( menu0Child1Leaf1.Title, Is.EqualTo( "Child2" ) );
-            Assert.That( menu0Child1Leaf1.ShortcutKey, Is.EqualTo( Key.F.WithCtrl ) );
+            Assert.That( menu0Child1Leaf1.Key, Is.EqualTo( Key.F.WithCtrl ) );
         } );
 
         // Third item
@@ -269,7 +269,7 @@ internal class MenuBarTests : Tests
 
         MenuItem? mi = bar.Menus[ 0 ].Children[ 0 ];
         mi.Data = "yarg";
-        mi.ShortcutKey = Key.Y.WithCtrl;
+        mi.Key = Key.Y.WithCtrl;
 
         AddMenuItemOperation addAnother = new( mi );
         Assert.That( addAnother.IsImpossible, Is.False );
@@ -345,7 +345,7 @@ internal class MenuBarTests : Tests
             // But the values need to be preserved
             Assert.That( firstChildAfterUndo.Title, Is.EqualTo( mi.Title ) );
             Assert.That( firstChildAfterUndo.Data, Is.EqualTo( mi.Data ) );
-            Assert.That( firstChildAfterUndo.ShortcutKey, Is.EqualTo( mi.ShortcutKey) );
+            Assert.That( firstChildAfterUndo.Key, Is.EqualTo( mi.Key) );
         } );
     }
 
@@ -797,7 +797,7 @@ internal class MenuBarTests : Tests
                 return new( "Child1", null, static ( ) => { } )
                 {
                     Data = "Child1",
-                    ShortcutKey = Key.J.WithCtrl,
+                    Key = Key.J.WithCtrl,
                 };
             }
 
@@ -806,7 +806,7 @@ internal class MenuBarTests : Tests
                 return new( "Child2", null, static ( ) => { } )
                 {
                     Data = "Child2",
-                    ShortcutKey = Key.F.WithCtrl,
+                    Key = Key.F.WithCtrl,
                 };
             }
         }
