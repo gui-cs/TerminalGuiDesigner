@@ -60,7 +60,7 @@ public sealed record KeyMap(
             Key.F2.ToString( ),
             Key.L.WithCtrl.ToString( ),
             Key.B.WithCtrl.ToString( ),
-            MouseFlags.MiddleButtonClicked,
+            MouseFlags.RightButtonClicked,
             Key.C.WithCtrl.ToString( ),
             Key.V.WithCtrl.ToString( ),
             Key.R.WithCtrl.ToString( ),
