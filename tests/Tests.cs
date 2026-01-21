@@ -78,6 +78,13 @@ public class Tests
         OperationManager.Instance.ClearUndoRedo();
 
         mm = new MouseManager(App);
+
+        var w = new Runnable()
+        {
+            Width = 80,
+            Height = 25,
+        };
+        App.Begin(w);
     }
 
     [TearDown]
