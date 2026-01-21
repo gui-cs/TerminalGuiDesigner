@@ -7,7 +7,7 @@ namespace UnitTests.Operations
         [Test]
         public void TestMoveAbsolutePosition_XYChanges()
         {
-            var viewToCode = new ViewToCode(Mock.Of<IApplication>());
+            var viewToCode = new ViewToCode(App);
             var file = new FileInfo("TestMoveAbsolutePosition_XYChanges.cs");
             var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(View));
 
@@ -18,10 +18,10 @@ namespace UnitTests.Operations
             lbl.X = 1;
             lbl.Y = 2;
 
-            new AddViewOperation(Mock.Of<IApplication>(), lbl, designOut, "lbl").Do();
+            new AddViewOperation(App, lbl, designOut, "lbl").Do();
             var lblDesign = (Design)lbl.Data;
 
-            var move = new MoveViewOperation(Mock.Of<IApplication>(), lblDesign, 3, 4);
+            var move = new MoveViewOperation(App, lblDesign, 3, 4);
             
 
             ClassicAssert.IsFalse(move.IsImpossible, "Should be possible to move an absolute position");
@@ -46,7 +46,7 @@ namespace UnitTests.Operations
         [Test]
         public void TestMoveRelativePosition_IsImpossible()
         {
-            var viewToCode = new ViewToCode(Mock.Of<IApplication>());
+            var viewToCode = new ViewToCode(App);
             var file = new FileInfo("TestMoveRelativePosition_IsImpossible.cs");
             var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(View));
 
@@ -54,10 +54,10 @@ namespace UnitTests.Operations
             lbl.X = Pos.Center();
             lbl.Y = Pos.Center();
 
-            new AddViewOperation(Mock.Of<IApplication>(), lbl, designOut, "lbl").Do();
+            new AddViewOperation(App, lbl, designOut, "lbl").Do();
             var lblDesign = (Design)lbl.Data;
 
-            var move = new MoveViewOperation(Mock.Of<IApplication>(), lblDesign, 5, 5);
+            var move = new MoveViewOperation(App, lblDesign, 5, 5);
 
             ClassicAssert.IsTrue(move.IsImpossible, "Relative positions should not be moved");
             ClassicAssert.AreEqual(lbl.X, move.OriginX);
@@ -72,7 +72,7 @@ namespace UnitTests.Operations
         [Test]
         public void TestMoveBeyondBounds_ClampedToParent()
         {
-            var viewToCode = new ViewToCode(Mock.Of<IApplication>());
+            var viewToCode = new ViewToCode(App);
             var file = new FileInfo("TestMoveBeyondBounds_ClampedToParent.cs");
             var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window));
 
@@ -85,13 +85,13 @@ namespace UnitTests.Operations
             designOut.View.Height = 10;
 
 
-            new AddViewOperation(Mock.Of<IApplication>(), lbl, designOut, "lbl").Do();
+            new AddViewOperation(App, lbl, designOut, "lbl").Do();
             var lblDesign = (Design)lbl.Data;
 
             var parentSize = designOut.View.GetContentSize();
 
             // Try to move far outside the parent
-            var move = new MoveViewOperation(lblDesign, parentSize.Width + 100, parentSize.Height + 100);
+            var move = new MoveViewOperation(App, lblDesign, parentSize.Width + 100, parentSize.Height + 100);
             move.Do();
 
             ClassicAssert.IsFalse(move.IsImpossible, "Operation should still be valid but clamped");

@@ -61,7 +61,7 @@ internal class DragOperationTests : Tests
         App.TopRunnableView.Add(d.View);
         App.TopRunnableView.LayoutSubViews();
 
-        MouseDrag(App, d, 2, 0, 2, 3);
+        MouseDrag(d, 2, 0, 2, 3);
 
         // finalize the operation
         ClassicAssert.AreEqual(Pos.Absolute(0), lbl.X);
@@ -98,7 +98,7 @@ internal class DragOperationTests : Tests
         // start drag in center of first control
         // while both are selected, this multi drags
         // both control down
-        var drag = new DragOperation(lblDesign1, 2, 0, new[] { lblDesign2 });
+        var drag = new DragOperation(App, lblDesign1, 2, 0, new[] { lblDesign2 });
 
         // drag down 3 lines
         drag.ContinueDrag(new Point(2, 3));
@@ -148,7 +148,7 @@ internal class DragOperationTests : Tests
         // Label is at 3,4 on the screen
 
         // user clicks mouse down at top left of the label
-        var drag = new DragOperation(lblDesign, 1, 2, null);
+        var drag = new DragOperation(App, lblDesign, 1, 2, null);
         drag.Do();
 
         // In client coordinate system of container1 we have not moved the mouse
@@ -206,7 +206,7 @@ internal class DragOperationTests : Tests
         container1.Add(lbl);
 
         // start drag in center of control
-        var drag = new DragOperation(lblDesign, 3, 2, null);
+        var drag = new DragOperation(App, lblDesign, 3, 2, null);
 
         // drag down to 1,1 of the other box
         drag.ContinueDrag(new Point(6, 7));
@@ -247,7 +247,7 @@ internal class DragOperationTests : Tests
         var frameView = ViewFactory.Create(typeof(FrameView));
         frameView.X = 10;
         frameView.Y = 10;
-        var op = new AddViewOperation(frameView, rootDesign, "frame");
+        var op = new AddViewOperation(App, frameView, rootDesign, "frame");
         op.Do();
 
         // Window has an invisible sub-view that forces everything in by 1 to make border
@@ -273,7 +273,7 @@ internal class DragOperationTests : Tests
         ClassicAssert.AreEqual(14, screen.Y, "Expected label Y screen to be at its parents 0,0 (11,11) + 2");
 
         // press down at 0,0 of the label
-        ClassicAssert.AreEqual(lbl, rootDesign.View.HitTest(new Mouse { Position = new Point(13, 14) }, out _, out _)
+        ClassicAssert.AreEqual(lbl, rootDesign.View.HitTest(App, new Mouse { Position = new Point(13, 14) }, out _, out _)
             , "We just asked ViewToScreen for these same coordinates, how can they fail HitTest now?");
 
         // Drag up 4 so it is no longer in its parents container.
@@ -297,7 +297,7 @@ internal class DragOperationTests : Tests
             v.Y = 2;
 
             // add a Button
-            var op = new AddViewOperation(new Button() { Text = "Hello" }, d.GetRootDesign(), "mybtn");
+            var op = new AddViewOperation(App, new Button() { Text = "Hello" }, d.GetRootDesign(), "mybtn");
             op.Do();
 
             App.TopRunnableView.Add(d.GetRootDesign().View);
@@ -324,7 +324,7 @@ internal class DragOperationTests : Tests
         lbl.Data = lblDesign;
         d.View.Add(lbl);
 
-        var drag = new DragOperation(lblDesign, 1, 1, null);
+        var drag = new DragOperation(App, lblDesign, 1, 1, null);
 
         // Try to set DropInto to itself
         drag.DropInto = lbl;
@@ -345,7 +345,7 @@ internal class DragOperationTests : Tests
         var btn = new Button { Text = "Not a container" };
         d.View.Add(btn);
 
-        var drag = new DragOperation(lblDesign, 1, 1, null);
+        var drag = new DragOperation(App, lblDesign, 1, 1, null);
 
         // Try to drop into a non-container view
         drag.DropInto = btn;
@@ -380,7 +380,7 @@ internal class DragOperationTests : Tests
         lbl2.Data = lblDesign2;
         container1.Add(lbl2);
 
-        var drag = new DragOperation(lblDesign, 1, 1, null);
+        var drag = new DragOperation(App, lblDesign, 1, 1, null);
 
         // Try to move lbl into container2
         drag.DropInto = container2;
@@ -415,7 +415,7 @@ internal class DragOperationTests : Tests
         container1.Add(lbl2);
 
         // Drag lbl1 and lbl2 together
-        var drag = new DragOperation(lblDesign1, 1, 1, new[] { lblDesign2 });
+        var drag = new DragOperation(App, lblDesign1, 1, 1, new[] { lblDesign2 });
 
         // Try to drop into container2
         drag.DropInto = container2;
@@ -451,7 +451,7 @@ internal class DragOperationTests : Tests
         lbl2.Data = lblDesign2;
         container1.Add(lbl2);
 
-        var drag = new DragOperation(lblDesign, 1, 2, null);
+        var drag = new DragOperation(App, lblDesign, 1, 2, null);
 
         // Move to a legal new position
         drag.ContinueDrag(new Point(3, 4));

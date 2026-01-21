@@ -11,14 +11,15 @@ internal class SpinnerViewTests : Tests
     {
         Assume.That( ViewFactory.SupportedViewTypes, Does.Contain( typeof( SpinnerView ) ) );
 
-        Assume.That( Application.MainLoop.TimedEvents.Timeouts, Is.Empty );
+        
+        Assume.That( App.TimedEvents.Timeouts, Is.Empty );
 
         using ( SpinnerView s = ViewFactory.Create<SpinnerView>( ) )
         {
-            Assert.That( Application.MainLoop.TimedEvents.Timeouts, Is.Not.Empty );
+            Assert.That( App.TimedEvents.Timeouts, Is.Not.Empty );
         }
 
-        Assert.That( Application.MainLoop.TimedEvents.Timeouts, Is.Empty );
+        Assert.That( App.TimedEvents.Timeouts, Is.Empty );
     }
 
     [Test]
@@ -27,7 +28,7 @@ internal class SpinnerViewTests : Tests
     {
         Assume.That( ViewFactory.SupportedViewTypes.ToArray(), Does.Contain( typeof(SpinnerView) ) );
 
-        Assume.That( Application.MainLoop.TimedEvents.Timeouts, Is.Empty );
+        Assume.That( App.TimedEvents.Timeouts, Is.Empty );
 
         using SpinnerView s = RoundTrip<View, SpinnerView>( static (_,_) =>
         {
@@ -35,7 +36,7 @@ internal class SpinnerViewTests : Tests
         },out _);
 
         // Auto-spin original and the one that is read back in
-        Assert.That( Application.MainLoop.TimedEvents.Timeouts, Has.Count.EqualTo( 2 ) );
+        Assert.That( App.TimedEvents.Timeouts, Has.Count.EqualTo( 2 ) );
     }
 
     [Test]

@@ -11,7 +11,7 @@ internal class TextViewTests : Tests
         tv.Data = d;
         tv.Text = "fff";
 
-        var op = new SetPropertyOperation(
+        var op = new SetPropertyOperation(App,
             d,
             d.GetDesignableProperty("Text") ?? throw new System.Exception("Did not find expected designable property"),
             tv.Text, null);

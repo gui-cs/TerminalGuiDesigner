@@ -20,7 +20,7 @@ internal class AddColumnOperationTests : Tests
         int colsBefore = 0;
         TableView? vBefore = null;
 
-        RoundTrip<View, TableView>(App, (d, v) =>
+        RoundTrip<View, TableView>((d, v) =>
         {
             var dt = v.GetDataTable();
 
@@ -44,7 +44,7 @@ internal class AddColumnOperationTests : Tests
         int colsBefore = 0;
         TableView? vBefore = null;
 
-        RoundTrip<View, TableView>(App, (d, v) =>
+        RoundTrip<View, TableView>((d, v) =>
         {
             var dt = v.GetDataTable();
 
@@ -70,7 +70,7 @@ internal class AddColumnOperationTests : Tests
         int colsBefore = 0;
         TableView? vBefore = null;
 
-        RoundTrip<View, TableView>(App, (d, v) =>
+        RoundTrip<View, TableView>((d, v) =>
         {
             vBefore = v;
             var dt = v.GetDataTable();

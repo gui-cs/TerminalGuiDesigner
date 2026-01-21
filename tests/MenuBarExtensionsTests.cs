@@ -26,7 +26,7 @@ internal class MenuBarExtensionsTests : Tests
         [Values( 0, 1 )] int yOffset,
         [Values(0)]int expectedMenuItem)
     {
-        RoundTrip<View, MenuBar>(App, ( d, v ) =>
+        RoundTrip<View, MenuBar>(( d, v ) =>
         {
             Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
             Assume.That( v, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
@@ -59,7 +59,7 @@ internal class MenuBarExtensionsTests : Tests
         [Values( 0, 5 )] int xOffset,
         [Values( 0, 1 )] int yOffset )
     {
-        RoundTrip<View, MenuBar>(App, ( d, v ) =>
+        RoundTrip<View, MenuBar>(( d, v ) =>
         {
             Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
             Assume.That( v, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
@@ -90,7 +90,7 @@ internal class MenuBarExtensionsTests : Tests
         [Values( 0, 5 )] int xOffset,
         [Values( 0, 1 )] int yOffset )
     {
-        RoundTrip<View, MenuBar>(App, ( d, v ) =>
+        RoundTrip<View, MenuBar>(( d, v ) =>
         {
             Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
             Assume.That( v, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
@@ -117,7 +117,7 @@ internal class MenuBarExtensionsTests : Tests
         [Values( 0, 5 )] int xOffset,
         [Values( 0, 1 )] int yOffset )
     {
-        RoundTrip<View, MenuBar>(App, ( d, v ) =>
+        RoundTrip<View, MenuBar>(( d, v ) =>
         {
             Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
             Assume.That( v, Is.Not.Null.And.InstanceOf<MenuBar>( ) );
@@ -144,7 +144,7 @@ internal class MenuBarExtensionsTests : Tests
         [Values( 0, 5 )] int xOffset,
         [Values( 0, 1 )] int yOffset )
     {
-        RoundTrip<View, MenuBar>(App, ( d, v ) =>
+        RoundTrip<View, MenuBar>(( d, v ) =>
         {
             Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
             Assume.That( v, Is.Not.Null.And.InstanceOf<MenuBar>( ) );

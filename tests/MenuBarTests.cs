@@ -751,7 +751,7 @@ internal class MenuBarTests : Tests
         root = Get10By10View( );
 
         var bar = ViewFactory.Create<MenuBar>( );
-        var addBarCmd = new AddViewOperation( bar, root, "mb" );
+        var addBarCmd = new AddViewOperation( App, bar, root, "mb" );
         addBarCmd.Do( );
 
         return bar;

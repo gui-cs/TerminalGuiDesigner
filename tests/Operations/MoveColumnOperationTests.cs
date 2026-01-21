@@ -10,7 +10,7 @@ internal class MoveColumnOperationTests : Tests
         // Label is not a TableView so should get Exception
         RoundTrip<Window, Label>((d, v) =>
         {
-            ClassicAssert.Throws<ArgumentException>(()=>new MoveColumnOperation(d,new System.Data.DataColumn(), 1));
+            ClassicAssert.Throws<ArgumentException>(()=>new MoveColumnOperation(App, d,new System.Data.DataColumn(), 1));
         }, out _);
     }
 
@@ -22,7 +22,7 @@ internal class MoveColumnOperationTests : Tests
         {
             // DataColumn is new and not in v.Table
             ClassicAssert.Throws<ArgumentException>(() =>
-                new MoveColumnOperation(d, new System.Data.DataColumn(), 1));
+                new MoveColumnOperation(App, d, new System.Data.DataColumn(), 1));
         }, out _);
     }
 
@@ -40,7 +40,7 @@ internal class MoveColumnOperationTests : Tests
             dt.Columns.RemoveAt(1);
             ClassicAssert.AreEqual(1, v.Table.Columns);
 
-            ClassicAssert.IsTrue(new MoveColumnOperation(d, dt.Columns[0],1).IsImpossible,"Should be impossible to move Column when there is only one of them");
+            ClassicAssert.IsTrue(new MoveColumnOperation(App, d, dt.Columns[0],1).IsImpossible,"Should be impossible to move Column when there is only one of them");
         }, out _);
     }
 
@@ -60,7 +60,7 @@ internal class MoveColumnOperationTests : Tests
             var toMove = dt.Columns[idxToMove];
             var originalIndex = toMove.Ordinal;
 
-            var op = new MoveColumnOperation(d, toMove, adjustment);
+            var op = new MoveColumnOperation(App, d, toMove, adjustment);
 
             if(expectPossible)
             {

@@ -10,7 +10,7 @@ internal class MoveTabOperationTests : Tests
         // Label is not a TabView so should get Exception
         RoundTrip<Window, Label>((d, v) =>
         {
-            ClassicAssert.Throws<ArgumentException>(()=>new MoveTabOperation(d,new Tab(), 1));
+            ClassicAssert.Throws<ArgumentException>(()=>new MoveTabOperation(App, d,new Tab(), 1));
         }, out _);
     }
 
@@ -23,7 +23,7 @@ internal class MoveTabOperationTests : Tests
             v.RemoveTab(v.Tabs.ElementAt(1));
             ClassicAssert.AreEqual(1, v.Tabs.Count);
 
-            ClassicAssert.IsTrue(new MoveTabOperation(d, v.SelectedTab, 1).IsImpossible,"Should be impossible to move tab when there is only one of them");
+            ClassicAssert.IsTrue(new MoveTabOperation(App, d, v.SelectedTab, 1).IsImpossible,"Should be impossible to move tab when there is only one of them");
         }, out _);
     }
 
@@ -38,16 +38,16 @@ internal class MoveTabOperationTests : Tests
     {
         RoundTrip<Window, TabView>((d, v) =>
         {
-            new AddTabOperation(d, "NewTab").Do();
-            new AddTabOperation(d, "NewTab").Do();
-            new AddTabOperation(d, "NewTab").Do();
-            new AddTabOperation(d, "NewTab").Do();
+            new AddTabOperation(App, d, "NewTab").Do();
+            new AddTabOperation(App, d, "NewTab").Do();
+            new AddTabOperation(App, d, "NewTab").Do();
+            new AddTabOperation(App, d, "NewTab").Do();
 
             var toMove = v.Tabs.ElementAt(idxToMove);
             var originalIndex = v.Tabs.IndexOf(toMove);
 
             v.SelectedTab = toMove;
-            var op = new MoveTabOperation(d, toMove, adjustment);
+            var op = new MoveTabOperation(App, d, toMove, adjustment);
 
             if(expectPossible)
             {

@@ -75,8 +75,7 @@ internal class AddViewTests : Tests
     [Test]
     public void Test60Percent_RoundTrip([Values]bool? offset)
     {
-        var lblIn = RoundTrip<Dialog, Label>(App,
-            (d, lbl) =>
+        var lblIn = RoundTrip<Dialog, Label>((d, lbl) =>
         {
             lbl.Width = offset == null ? Dim.Percent(60) : offset.Value ? Dim.Percent(60) + 1 : Dim.Percent(60) - 1;
             lbl.X = offset == null ? Pos.Percent(60) : offset.Value ? Pos.Percent(60) + 1 : Pos.Percent(60) - 1;

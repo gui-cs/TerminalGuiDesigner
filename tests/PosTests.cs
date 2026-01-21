@@ -8,12 +8,12 @@ namespace UnitTests;
 [Category( "Terminal.Gui Extensions" )]
 internal class PosTests : Tests
 {
-    private static IEnumerable<TestCaseData> GetCode_Cases
+    private IEnumerable<TestCaseData> GetCode_Cases
     {
         get
         {
             View v = new( );
-            Design d = new(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            Design d = new(App, new( new FileInfo( "yarg.cs" ) ), "myView", v );
             return new[] { -10, -1, 0, 1, 10 }.SelectMany( offset =>
             {
                 string offsetString = offset switch
@@ -39,12 +39,12 @@ internal class PosTests : Tests
         }
     }
 
-    private static IEnumerable<TestCaseData> GetPosType_OutputsCorrectOffset_Cases
+    private IEnumerable<TestCaseData> GetPosType_OutputsCorrectOffset_Cases
     {
         get
         {
             View v = new( );
-            Design d = new(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            Design d = new(App, new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -83,12 +83,12 @@ internal class PosTests : Tests
         }
     }
 
-    private static IEnumerable<TestCaseData> GetPosType_OutputsCorrectType_Cases
+    private IEnumerable<TestCaseData> GetPosType_OutputsCorrectType_Cases
     {
         get
         {
             View v = new( );
-            Design d = new( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            Design d = new(App, new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -106,12 +106,12 @@ internal class PosTests : Tests
         }
     }
 
-    private static IEnumerable<TestCaseData> GetPosType_OutputsCorrectValue_Cases
+    private IEnumerable<TestCaseData> GetPosType_OutputsCorrectValue_Cases
     {
         get
         {
             View v = new( );
-            Design d = new( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            Design d = new( App, new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -129,12 +129,12 @@ internal class PosTests : Tests
         }
     }
 
-    private static IEnumerable<TestCaseData> IsAbsolute_Cases
+    private IEnumerable<TestCaseData> IsAbsolute_Cases
     {
         get
         {
             View v = new( );
-            _ = new Design(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            _ = new Design(App, new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -166,12 +166,12 @@ internal class PosTests : Tests
         }
     }
 
-    private static IEnumerable<TestCaseData> IsAnchorEnd_Cases
+    private IEnumerable<TestCaseData> IsAnchorEnd_Cases
     {
         get
         {
             View v = new( );
-            _ = new Design(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            _ = new Design(App, new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -191,12 +191,12 @@ internal class PosTests : Tests
         }
     }
 
-    private static IEnumerable<TestCaseData> IsCenter_Cases
+    private IEnumerable<TestCaseData> IsCenter_Cases
     {
         get
         {
             View v = new( );
-            _ = new Design(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            _ = new Design(App, new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -216,12 +216,12 @@ internal class PosTests : Tests
         }
     }
 
-    private static IEnumerable<TestCaseData> IsAnchorEnd_WithOutParam_Cases
+    private IEnumerable<TestCaseData> IsAnchorEnd_WithOutParam_Cases
     {
         get
         {
             View v = new( );
-            _ = new Design(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            _ = new Design(App, new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -240,12 +240,12 @@ internal class PosTests : Tests
         }
     }
 
-    private static IEnumerable<TestCaseData> IsPercent_Cases
+    private IEnumerable<TestCaseData> IsPercent_Cases
     {
         get
         {
             View v = new( );
-            _ = new Design(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            _ = new Design(App, new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -278,12 +278,12 @@ internal class PosTests : Tests
         }
     }
 
-    private static IEnumerable<TestCaseData> IsRelative_Cases
+    private IEnumerable<TestCaseData> IsRelative_Cases
     {
         get
         {
             View v = new( );
-            _ = new Design(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            _ = new Design(App, new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -302,12 +302,12 @@ internal class PosTests : Tests
         }
     }
 
-    private static IEnumerable<TestCaseData> IsRelative_WithOutParams_Cases
+    private IEnumerable<TestCaseData> IsRelative_WithOutParams_Cases
     {
         get
         {
             View v = new( );
-            Design d = new( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            Design d = new(App, new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -484,7 +484,7 @@ internal class PosTests : Tests
     public void CreatePosRelative( [Values] Side side, [Values( -10, -5, 0, 5, 10 )] int offset )
     {
         View v = new( );
-        Design d = new( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+        Design d = new(App, new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
         Pos p = d.CreatePosRelative( side, offset );
         if ( offset != 0 )
@@ -522,7 +522,7 @@ internal class PosTests : Tests
     [Test]
     public void TestRoundTrip_PosRelative( [Values] Side side, [Values( -2, 1, 5 )] int offset, [Values( "X", "Y" )] string property )
     {
-        ViewToCode viewToCode = new( );
+        ViewToCode viewToCode = new( App);
 
         FileInfo file = new( $"{nameof( TestRoundTrip_PosRelative )}.cs" );
         Design designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Window ) );
@@ -536,8 +536,8 @@ internal class PosTests : Tests
 
         using Button btn = ViewFactory.Create<Button>( );
 
-        Assert.That( ( ) => new AddViewOperation( lbl, designOut, "label1" ).Do( ), Throws.Nothing );
-        Assert.That( ( ) => new AddViewOperation( btn, designOut, "btn" ).Do( ), Throws.Nothing );
+        Assert.That( ( ) => new AddViewOperation( App, lbl, designOut, "label1" ).Do( ), Throws.Nothing );
+        Assert.That( ( ) => new AddViewOperation( App, btn, designOut, "btn" ).Do( ), Throws.Nothing );
 
         switch ( property )
         {
@@ -553,7 +553,7 @@ internal class PosTests : Tests
 
         viewToCode.GenerateDesignerCs( designOut, typeof( Window ) );
 
-        CodeToView codeToView = new( designOut.SourceCode );
+        CodeToView codeToView = new(App, designOut.SourceCode );
         Design designBackIn = codeToView.CreateInstance( );
 
         using Button btnIn = designBackIn.View.GetActualSubviews( ).OfType<Button>( ).Single( );

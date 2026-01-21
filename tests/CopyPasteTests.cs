@@ -225,7 +225,7 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPasteContainer( [Values] bool alsoSelectSubElements )
     {
-        RoundTrip<Window, FrameView>(App,
+        RoundTrip<Window, FrameView>(
             ( d, v ) =>
             {
                 Label lbl1 = ViewFactory.Create<Label>( );
@@ -288,7 +288,7 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPasteContainer_Empty_View_Into_Root()
     {
-        RoundTrip<Window, View>(App,
+        RoundTrip<Window, View>(
             ( d, v ) =>
             {
                 Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
@@ -332,7 +332,7 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPasteContainer_EmptyView_Into_Itself( )
     {
-        RoundTrip<Window, View>(App,
+        RoundTrip<Window, View>(
             ( d, v ) =>
             {
                 Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );
@@ -375,7 +375,7 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPasteContainer_TabView()
     {
-        RoundTrip<Window, TabView>(App,
+        RoundTrip<Window, TabView>(
             ( d, v ) =>
             {
                 Assume.That( d, Is.Not.Null.And.InstanceOf<Design>( ) );

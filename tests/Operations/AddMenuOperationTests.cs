@@ -18,7 +18,7 @@ internal class AddMenuOperationTests : Tests
     {
         const string expectedRunnableMenuName = "_File (F9)";
 
-        var viewIn = RoundTrip<View, MenuBar>(App, (d, v) =>
+        var viewIn = RoundTrip<View, MenuBar>((d, v) =>
         {
             ClassicAssert.AreEqual(expectedRunnableMenuName, v.Menus[0].Title.ToString(), "Expected a new MenuBar added in Designer to have a placeholder title");
             ClassicAssert.AreEqual(1, v.Menus.Length, "Expected 1 placeholder example Menu");
@@ -43,7 +43,7 @@ internal class AddMenuOperationTests : Tests
     [Test]
     public void TestAddingMenu_AtRoot_BlankMenuName()
     {
-        var viewIn = RoundTrip<View, MenuBar>(App, (d, v) =>
+        var viewIn = RoundTrip<View, MenuBar>((d, v) =>
         {
             ClassicAssert.AreEqual(1, v.Menus.Length);
             var add = new AddMenuOperation(App, d, "   ");
@@ -60,7 +60,7 @@ internal class AddMenuOperationTests : Tests
     [Test]
     public void TestAddingMenu_AtRoot_Duplicates()
     {
-        var viewIn = RoundTrip<View, MenuBar>(App, (d, v) =>
+        var viewIn = RoundTrip<View, MenuBar>((d, v) =>
         {
             ClassicAssert.AreEqual(1, v.Menus.Length);
             var add = new AddMenuOperation(App, d, "Fish");
@@ -103,7 +103,7 @@ internal class AddMenuOperationTests : Tests
             ClassicAssert.AreEqual(1, v.Menus.Length, "Expected 1 placeholder example Menu");
             var first = v.Menus[0];
 
-            var add = new AddMenuOperation(d, "Blarg");
+            var add = new AddMenuOperation(App, d, "Blarg");
             ClassicAssert.AreEqual(1, v.Menus.Length, "Expected no changes until we actually run the operation");
 
             add.Do();

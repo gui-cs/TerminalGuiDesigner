@@ -16,7 +16,7 @@ internal class EditorTests : Tests
 
         Assert.That( e.HasUnsavedChanges, Is.False, "With nothing open there should not be any unsaved changes" );
 
-        DummyOperation dummyOperation1 = new( );
+        DummyOperation dummyOperation1 = new(App );
         Assume.That( dummyOperation1, Is.Not.Null.And.InstanceOf<DummyOperation>( ) );
         Assume.That( dummyOperation1.IsImpossible, Is.False );
 
@@ -37,7 +37,7 @@ internal class EditorTests : Tests
         e.LastSavedOperation = saveMock!.UniqueIdentifier;
         Assert.That( e.HasUnsavedChanges, Is.False, "Now that we have saved there should be no unsaved changes" );
 
-        DummyOperation dummyOperation2 = new( );
+        DummyOperation dummyOperation2 = new( App);
         Assume.That( dummyOperation2, Is.Not.Null.And.InstanceOf<DummyOperation>( ) );
         Assume.That( dummyOperation2.IsImpossible, Is.False );
 
@@ -59,7 +59,7 @@ internal class EditorTests : Tests
 
     private class DummyOperation : Operation
     {
-        public DummyOperation() : base(Mock.Of<IApplication>())
+        public DummyOperation(IApplication app) : base(app)
         {
         }
 

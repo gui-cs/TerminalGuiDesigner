@@ -185,13 +185,13 @@ internal class MouseManagerTests : Tests
         view.Width = 1;
         view.Height = 1;
 
-        Design design = new( d.SourceCode, "myView", view );
+        Design design = new(App, d.SourceCode, "myView", view );
         view.Data = design;
         d.View.Add( view );
 
         d.View.LayoutSubViews( );
 
-        MouseManager mgr = new( );
+        MouseManager mgr = new(App);
 
         // we haven't done anything yet
         Assert.Multiple( ( ) =>
@@ -210,7 +210,7 @@ internal class MouseManagerTests : Tests
             Flags = MouseFlags.LeftButtonPressed
         };
 
-        View? hit = view.HitTest( e, out bool isBorder, out bool isLowerRight );
+        View? hit = view.HitTest( App, e, out bool isBorder, out bool isLowerRight );
         Assert.Multiple( ( ) =>
         {
             Assert.That( hit, Is.SameAs( view ) );
@@ -255,11 +255,11 @@ internal class MouseManagerTests : Tests
         view.Width = Dim.Fill( );
         view.Height = 1;
 
-        Design design = new( d.SourceCode, "myView", view );
+        Design design = new(App, d.SourceCode, "myView", view );
         view.Data = design;
         d.View.Add( view );
 
-        MouseManager mgr = new( );
+        MouseManager mgr = new( App);
 
         // we haven't done anything yet
         Assert.Multiple( ( ) =>
@@ -368,9 +368,9 @@ internal class MouseManagerTests : Tests
 
         Design[] labels =
         [
-            new( d.SourceCode, "lbl1", lbl1 ),
-            new( d.SourceCode, "lbl2", lbl2 ),
-            new( d.SourceCode, "lbl3", lbl3 )
+            new(App, d.SourceCode, "lbl1", lbl1 ),
+            new(App, d.SourceCode, "lbl2", lbl2 ),
+            new(App, d.SourceCode, "lbl3", lbl3 )
         ];
 
         lbl1.Data = labels[ 0 ];
@@ -383,7 +383,7 @@ internal class MouseManagerTests : Tests
 
         SelectionManager selection = SelectionManager.Instance;
         selection.Clear( );
-        MouseManager mgr = new( );
+        MouseManager mgr = new(App);
 
         // user presses down
         Mouse e = new( )
@@ -436,11 +436,11 @@ internal class MouseManagerTests : Tests
         Assume.That( dummy.GetType( ), Is.EqualTo( typeof( T ) ) );
         Design d = Get10By10View( );
         using T view = ViewFactory.Create<T>( null, null, "Hi there buddy" );
-        Design viewDesign = new( d.SourceCode, $"my{typeof( T ).Name}", view );
+        Design viewDesign = new(App, d.SourceCode, $"my{typeof( T ).Name}", view );
         view.Data = viewDesign;
         d.View.Add( view );
 
-        MouseManager mgr = new( );
+        MouseManager mgr = new(App );
 
         // we haven't done anything yet
         Assume.That( OperationManager.Instance.UndoStackSize, Is.Zero );

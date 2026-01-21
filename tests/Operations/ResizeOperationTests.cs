@@ -9,7 +9,7 @@ internal class ResizeOperationTests : Tests
     [TestCase(false)]
     public void TestResizeWhenNotAtOrigin(bool withMouse)
     {
-        RoundTrip<Dialog, View>(App, (d, v) =>
+        RoundTrip<Dialog, View>((d, v) =>
         {
             var root = d.GetRootDesign();
             root.View.Width = Dim.Fill();
@@ -76,7 +76,7 @@ internal class ResizeOperationTests : Tests
                 ClassicAssert.AreSame(tab, hit, "Expected above diagram which already passed asserts to work for HitTest too given the above screen coordinates");
                 ClassicAssert.IsTrue(isLowerRight);
 
-                MouseDrag(App, root, 10, 11, 11, 13);
+                MouseDrag(root, 10, 11, 11, 13);
             }
 
             ClassicAssert.AreEqual((Dim)6, tab.Width); // (5+1)

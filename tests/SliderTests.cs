@@ -20,10 +20,10 @@ namespace UnitTests
         [Test]
         public void TestRoundTrip_Slider_PreserveStringOptions()
         {
-            var sliderIn = RoundTrip<Dialog, Slider<string>>((d, v) =>
+            var sliderIn = RoundTrip<Dialog, LinearRange<string>>((d, v) =>
             {
-                v.Options.Add(new SliderOption<string>("l1", new Rune('1'), "Fun1"));
-                v.Options.Add(new SliderOption<string> { Legend = "l2", LegendAbbr = new Rune('2'), Data = "Fun2" });
+                v.Options.Add(new LinearRangeOption<string>("l1", new Rune('1'), "Fun1"));
+                v.Options.Add(new LinearRangeOption<string> { Legend = "l2", LegendAbbr = new Rune('2'), Data = "Fun2" });
 
                 Assert.That(v.Options.Count, Is.EqualTo(2));
             }, out _);
@@ -43,7 +43,7 @@ namespace UnitTests
         [TestCaseSource(nameof(Orientation_Cases))]
         public void TestRoundTrip_Slider_PreserveOrientation(Orientation o)
         {
-            var sliderIn = RoundTrip<Dialog, Slider<string>>((d, v) =>
+            var sliderIn = RoundTrip<Dialog, LinearRange<string>>((d, v) =>
             {
                 d.GetDesignableProperty("Orientation")?.SetValue(o);
                 Assert.That(v.Orientation, Is.EqualTo(o));

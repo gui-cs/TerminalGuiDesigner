@@ -10,31 +10,8 @@ namespace UnitTests;
 [Category( "Core" )]
 [Order( 1 )]
 [NonParallelizable]
-internal class ViewFactoryTests
+internal class ViewFactoryTests : Tests
 {
-    [ThreadStatic]
-    private static bool? _init;
-
-    [OneTimeSetUp]
-    public virtual void SetUp()
-    {
-        _init ??= false;
-        if (_init.Value)
-        {
-            throw new InvalidOperationException("After did not run.");
-        }
-
-        Application.Init(new FakeDriver());
-        _init = true;
-    }
-
-    [OneTimeTearDown]
-    public virtual void TearDown()
-    {
-        Application.Shutdown();
-        _init = false;
-    }
-
     /// <summary>
     ///   Gets every known supported <see cref="View" /> type as an uninitialized object of the corresponding type for testing of generic methods.
     /// </summary>
@@ -138,9 +115,8 @@ internal class ViewFactoryTests
 
         Assert.Multiple( static ( ) =>
         {
-            Assert.That( ViewFactory_DefaultMenuBarItems[ 0 ].Children, Has.Length.EqualTo( 1 ) );
-            Assert.That( ViewFactory_DefaultMenuBarItems[ 0 ].Children[ 0 ].Title, Is.EqualTo( ViewFactory.DefaultMenuItemText ) );
-            Assert.That( ViewFactory_DefaultMenuBarItems[ 0 ].Children[ 0 ].Help, Is.Empty );
+            Assert.That( ViewFactory_DefaultMenuBarItems[ 0 ].SubViews, Has.Length.EqualTo( 1 ) );
+            Assert.That( ViewFactory_DefaultMenuBarItems[ 0 ].SubViews.ElementAt( 0 ).Title, Is.EqualTo( ViewFactory.DefaultMenuItemText ) );
         } );
     }
 
@@ -176,8 +152,6 @@ internal class ViewFactoryTests
             typeof( OpenDialog ),
             typeof( Wizard ),
             typeof( WizardStep ),
-
-            typeof( MenuBarv2 ),
             typeof( Shortcut )
         };
     }

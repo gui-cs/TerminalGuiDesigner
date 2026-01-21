@@ -2,13 +2,13 @@
 
 namespace UnitTests;
 
-public class SuppressedPropertyTests
+public class SuppressedPropertyTests : Tests
 {
     [Test]
     public void TestCanFocusCorrect()
     {
         var lbl = ViewFactory.Create<Label>();
-        var d = new Design(Mock.Of<IApplication>(), new SourceCodeFile(new FileInfo("yarg.cs")),"myLabel", lbl);
+        var d = new Design(App, new SourceCodeFile(new FileInfo("yarg.cs")),"myLabel", lbl);
         
         Assert.That(lbl.CanFocus,Is.True);
         var p = d.GetDesignableProperty(nameof(View.CanFocus));
@@ -22,7 +22,7 @@ public class SuppressedPropertyTests
         var w = ViewFactory.Create<Window>();
         var lbl = ViewFactory.Create<Label>();
         lbl.Data = "mylbl";
-        var d = new Design(Mock.Of<IApplication>(), new SourceCodeFile(new FileInfo("yarg.cs")), "mywin", w);
+        var d = new Design(App, new SourceCodeFile(new FileInfo("yarg.cs")), "mywin", w);
         w.Add(lbl);
         
         d.CreateSubControlDesigns();

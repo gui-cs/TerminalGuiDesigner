@@ -136,7 +136,7 @@ public class Tests
     /// <param name="caller"></param>
     /// <returns>The read in object state after round trip (generate code file then read that code back in)</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="caller"/> is <see langword="null" />, empty, or whitespace</exception>
-    protected T2 RoundTrip<T1, T2>(IApplication app, Action<Design, T2> adjust, out T2 viewOut, [CallerMemberName] string? caller = null)
+    protected T2 RoundTrip<T1, T2>(Action<Design, T2> adjust, out T2 viewOut, [CallerMemberName] string? caller = null)
         where T1 : View, new()
         where T2 : View, new()
     {
@@ -147,19 +147,19 @@ public class Tests
 
         const string fieldName = "myViewOut";
 
-        var viewToCode = new ViewToCode(app);
+        var viewToCode = new ViewToCode(App);
 
         var file = new FileInfo(caller + ".cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(T1));
 
         viewOut = (T2)ViewFactory.Create(typeof(T2));
 
-        OperationManager.Instance.Do(new AddViewOperation(app, viewOut, designOut, fieldName));
+        OperationManager.Instance.Do(new AddViewOperation(App, viewOut, designOut, fieldName));
         adjust((Design)viewOut.Data, viewOut);
 
         viewToCode.GenerateDesignerCs(designOut, typeof(T1));
 
-        var codeToView = new CodeToView(app, designOut.SourceCode);
+        var codeToView = new CodeToView(App, designOut.SourceCode);
         var designBackIn = codeToView.CreateInstance();
 
         return designBackIn.View
@@ -203,7 +203,7 @@ public class Tests
             }, root);
     }
 
-    public Type PickFirstTTypeForGenerics(Type type)
+    public static Type PickFirstTTypeForGenerics(Type type)
     {
         if (type.IsGenericTypeDefinition)
         {

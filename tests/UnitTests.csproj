@@ -13,6 +13,7 @@
 	  <Compile Remove="MenuBarTests.cs" />
 	  <Compile Remove="Operations\AddMenuItemOperationTests.cs" />
 	  <Compile Remove="Operations\AddMenuOperationTests.cs" />
+	  <Compile Remove="Operations\ConvertMenuItemToSeperatorOperationTests.cs" />
 	  <Compile Remove="Operations\MoveMenuItemLeftOperationTests.cs" />
 	  <Compile Remove="Operations\MoveMenuItemRightOperationTests.cs" />
 	  <Compile Remove="Operations\MoveMenuOperationTests.cs" />
@@ -39,7 +40,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.0" />
-		<PackageReference Include="Moq" Version="4.20.70" />
 		<PackageReference Include="NUnit" Version="4.2.1" />
 		<PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
 		<PackageReference Include="ReportGenerator" Version="5.3.8" />

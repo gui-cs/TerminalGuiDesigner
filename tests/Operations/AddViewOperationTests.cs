@@ -77,7 +77,7 @@ internal class AddViewOperationTests : Tests
     [Test]
     public void TestAddView_RoundTrip( [ValueSource( nameof( SupportedViewTypes ) )] Type type )
     {
-        using var windowIn = RoundTrip<Runnable, Window>(App, ( d, v ) =>
+        using var windowIn = RoundTrip<Runnable, Window>(( d, v ) =>
         {
             var instance = ViewFactory.Create( type );
             var op = new AddViewOperation(App, instance, d, "blah" );

@@ -43,11 +43,11 @@ internal class MoveMenuOperationTests : Tests
     {
         RoundTrip<Window, MenuBar>((d, v) =>
         {
-            new AddMenuOperation(d, "NewMenu").Do();
-            new AddMenuOperation(d, "NewMenu").Do();
-            new AddMenuOperation(d, "NewMenu").Do();
-            new AddMenuOperation(d, "NewMenu").Do();
-            new AddMenuOperation(d, "NewMenu").Do();
+            new AddMenuOperation(App, d, "NewMenu").Do();
+            new AddMenuOperation(App, d, "NewMenu").Do();
+            new AddMenuOperation(App, d, "NewMenu").Do();
+            new AddMenuOperation(App, d, "NewMenu").Do();
+            new AddMenuOperation(App, d, "NewMenu").Do();
 
             var toMove = v.Menus.ElementAt(idxToMove);
             var originalIndex = v.Menus.IndexOf(toMove);

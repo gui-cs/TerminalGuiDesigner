@@ -18,14 +18,14 @@ internal class TabViewTests : Tests
     public void AddingSubControlToTab<T>(T _ )
         where T : View, new( )
     {
-        ViewToCode viewToCode = new( );
+        ViewToCode viewToCode = new(App);
 
         FileInfo file = new( $"{nameof( AddingSubControlToTab )}.cs" );
         Design designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Dialog ) );
 
         using TabView tvOut = ViewFactory.Create<TabView>( );
 
-        AddViewOperation addOperation = new( tvOut, designOut, "myTabview" );
+        AddViewOperation addOperation = new(App, tvOut, designOut, "myTabview" );
         Assume.That( addOperation.IsImpossible, Is.False );
         bool addOperationSucceeded = false;
         Assume.That( ( ) => addOperationSucceeded = OperationManager.Instance.Do( addOperation ), Throws.Nothing );
@@ -33,7 +33,7 @@ internal class TabViewTests : Tests
 
         using T subview = ViewFactory.Create<T>( );
 
-        AddViewOperation addSubviewOperation = new( subview, (Design)tvOut.Data, $"my{typeof( T ).Name}" );
+        AddViewOperation addSubviewOperation = new(App, subview, (Design)tvOut.Data, $"my{typeof( T ).Name}" );
         Assert.That( addSubviewOperation.IsImpossible, Is.False );
         bool addSubviewOperationSucceeded = false;
         Assert.That( ( ) => addSubviewOperationSucceeded = OperationManager.Instance.Do( addSubviewOperation ), Throws.Nothing );
@@ -42,7 +42,7 @@ internal class TabViewTests : Tests
 
         viewToCode.GenerateDesignerCs( designOut, typeof( Dialog ) );
 
-        CodeToView codeToView = new( designOut.SourceCode );
+        CodeToView codeToView = new(App, designOut.SourceCode );
         Design designBackIn = codeToView.CreateInstance( );
 
         using TabView tabIn = designBackIn.View.GetActualSubviews( ).OfType<TabView>( ).Single( );
@@ -69,7 +69,7 @@ internal class TabViewTests : Tests
         tv.SelectedTab = tv.Tabs.First( );
 
         // try to move tab 1 left
-        MoveTabOperation cmd = new( d, tv.SelectedTab, -1 );
+        MoveTabOperation cmd = new(App, d, tv.SelectedTab, -1 );
         Assert.That( cmd.IsImpossible );
         Assert.That( cmd.SupportsUndo );
         bool cmdSucceeded = false;
@@ -87,7 +87,7 @@ internal class TabViewTests : Tests
         Assert.That( tv.SelectedTab.DisplayText, Is.EqualTo( "Tab2" ), "Tab2 should be selected before operation is applied" );
 
         // try to move tab 2 left
-        MoveTabOperation cmd2 = new( d, tv.SelectedTab, -1 );
+        MoveTabOperation cmd2 = new(App, d, tv.SelectedTab, -1 );
         Assert.Multiple( ( ) =>
         {
             Assert.That( cmd2.IsImpossible, Is.False );
@@ -155,11 +155,11 @@ internal class TabViewTests : Tests
         SourceCodeFile source = new( new FileInfo( $"{nameof( GetAllDesigns_TabView )}.cs" ) );
 
         using T subview1 = ViewFactory.Create<T>( null, null, "fff" );
-        Design subview1Design = new( source, "subview1", subview1 );
+        Design subview1Design = new( App, source, "subview1", subview1 );
         subview1Design.View.Data = subview1Design;
 
         using T subview2 = ViewFactory.Create<T>( null, null, "ddd" );
-        Design subview2Design = new( source, "subview2", subview2 );
+        Design subview2Design = new( App, source, "subview2", subview2 );
         subview2Design.View.Data = subview2Design;
 
         tv.AddTab( new Tab
@@ -174,7 +174,7 @@ internal class TabViewTests : Tests
             View = subview2Design.View
         }, false );
 
-        Design tvDesign = new( source, "tv", tv );
+        Design tvDesign = new( App, source, "tv", tv );
 
         Design[] designs = tvDesign.GetAllDesigns( ).ToArray( );
         Assert.That( designs, Is.EquivalentTo( (Design[]) [tvDesign, subview1Design, subview2Design] ) );
@@ -202,7 +202,7 @@ internal class TabViewTests : Tests
         tv.SelectedTab = tv.Tabs.First( );
 
         // try to remove the first tab
-        RemoveTabOperation removeTab1 = new( d, tv.SelectedTab );
+        RemoveTabOperation removeTab1 = new(App, d, tv.SelectedTab );
         Assert.That( removeTab1.IsImpossible, Is.False );
         Assert.That( removeTab1.SupportsUndo );
         bool removeTab1Succeeded = false;
@@ -224,7 +224,7 @@ internal class TabViewTests : Tests
         } );
 
         // remove the last tab (tab2)
-        RemoveTabOperation removeTab2 = new( d, tv.SelectedTab );
+        RemoveTabOperation removeTab2 = new(App, d, tv.SelectedTab );
         bool removeTab2Succeeded = false;
         Assert.That( ( ) => removeTab2Succeeded = OperationManager.Instance.Do( removeTab2 ), Throws.Nothing );
         Assert.Multiple( ( ) =>
@@ -287,14 +287,14 @@ internal class TabViewTests : Tests
     {
         // TODO: I'm not sure this test is really necessary.
         // Why would the title text be any different from any other property?
-        ViewToCode viewToCode = new( );
+        ViewToCode viewToCode = new(App );
 
         FileInfo file = new( $"{nameof( RoundTrip_DuplicateTabTitles )}.cs" );
         Design designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Dialog ) );
 
         using TabView tvOut = ViewFactory.Create<TabView>( );
 
-        AddViewOperation addOperation = new( tvOut, designOut, "myTabview" );
+        AddViewOperation addOperation = new(App, tvOut, designOut, "myTabview" );
         Assume.That( addOperation.IsImpossible, Is.False );
         bool addOperationSucceeded = false;
         Assume.That( ( ) => addOperationSucceeded = OperationManager.Instance.Do( addOperation ), Throws.Nothing );
@@ -308,7 +308,7 @@ internal class TabViewTests : Tests
 
         Assume.That( designOut.View.GetActualSubviews( ).OfType<TabView>( ).Single( ), Is.SameAs( tvOut ) );
 
-        CodeToView codeToView = new( designOut.SourceCode );
+        CodeToView codeToView = new(App, designOut.SourceCode );
         Design? designBackIn = null;
         Assert.That( ( ) => designBackIn = codeToView.CreateInstance( ), Throws.Nothing );
         Assert.That( designBackIn, Is.Not.Null.And.InstanceOf<Design>( ) );
@@ -396,16 +396,16 @@ internal class TabViewTests : Tests
     ///   Creates a Dialog with a <see cref="TabView" /> in it.  Returns the <see cref="Design" />
     /// </summary>
     /// <returns></returns>
-    private static Design GetTabView( )
+    private Design GetTabView( )
     {
-        var viewToCode = new ViewToCode( );
+        var viewToCode = new ViewToCode(App);
 
         var file = new FileInfo( "TestGetTabView.cs" );
         var designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Dialog ) );
 
         using TabView tvOut = ViewFactory.Create<TabView>( );
 
-        AddViewOperation addViewOperation = new( tvOut, designOut, "myTabview" );
+        AddViewOperation addViewOperation = new(App, tvOut, designOut, "myTabview" );
         Assume.That( addViewOperation, Is.Not.Null.And.InstanceOf<AddViewOperation>( ) );
         Assume.That( addViewOperation.IsImpossible, Is.False );
         Assume.That( addViewOperation.SupportsUndo );

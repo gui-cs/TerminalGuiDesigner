@@ -8,7 +8,7 @@ namespace UnitTests
         [Test]
         public void TestSettingVisible_False()
         {
-            var result = RoundTrip<Window, Label>(App, (d, v) =>
+            var result = RoundTrip<Window, Label>((d, v) =>
             {
                 // In Designer
 

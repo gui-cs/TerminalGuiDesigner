@@ -18,7 +18,7 @@ internal class AddTabOperationTests : Tests
         string? tab1Name = null;
         string? tab2Name = null;
 
-        var tabIn = RoundTrip<Runnable, TabView>(App,
+        var tabIn = RoundTrip<Runnable, TabView>(
             (d, v) =>
             {
                 ClassicAssert.AreEqual(2, v.Tabs.Count, "Expected ViewFactory TabView to have a couple of example tabs when created");
@@ -46,7 +46,7 @@ internal class AddTabOperationTests : Tests
     [Test]
     public void TestAddTab_BlankName()
     {
-        var tabIn = RoundTrip<Runnable, TabView>(App,
+        var tabIn = RoundTrip<Runnable, TabView>(
             (d, v) =>
             {
                 var op = new AddTabOperation(App, d, "  ");
@@ -61,7 +61,7 @@ internal class AddTabOperationTests : Tests
     [Test]
     public void TestAddTab_DuplicateNames()
     {
-        var tabIn = RoundTrip<Runnable, TabView>(App,
+        var tabIn = RoundTrip<Runnable, TabView>(
             (d, v) =>
             {
                 var op = new AddTabOperation(App, d, "Blah");
@@ -91,7 +91,7 @@ internal class AddTabOperationTests : Tests
                 tab1Name = v.Tabs.ElementAt(0).DisplayText.ToString();
                 tab2Name = v.Tabs.ElementAt(1).DisplayText.ToString();
 
-                var op = new AddTabOperation(d, "Blarg");
+                var op = new AddTabOperation(App, d, "Blarg");
                 ClassicAssert.AreEqual(2, v.Tabs.Count, "Operation has not been run so why are there new tabs!");
                 ClassicAssert.AreEqual(tab1Name, v.Tabs.ElementAt(0).DisplayText);
                 ClassicAssert.AreEqual(tab2Name, v.Tabs.ElementAt(1).DisplayText);
