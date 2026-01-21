@@ -1,6 +1,4 @@
-﻿using Terminal.Gui;
-using Terminal.Gui.Views;
-using TerminalGuiDesigner.Operations.MenuOperations;
+﻿using TerminalGuiDesigner.Operations.MenuOperations;
 
 namespace UnitTests.Operations;
 
@@ -9,7 +7,7 @@ internal class ConvertMenuItemToSeperatorOperationTests : Tests
     [Test]
     public void TestConvertToSeperator_RoundTrip_Do()
     {
-        var mbIn = RoundTrip<Toplevel, MenuBar>((d, v) =>
+        var mbIn = RoundTrip<Runnable, MenuBar>((d, v) =>
         {
             ClassicAssert.AreEqual(1, v.Menus[0].Children.Length);
             ClassicAssert.IsNotNull(v.Menus[0].Children[0]);
@@ -33,7 +31,7 @@ internal class ConvertMenuItemToSeperatorOperationTests : Tests
     [Test]
     public void TestConvertToSeperator_RoundTrip_UnDo()
     {
-        var mbIn = RoundTrip<Toplevel, MenuBar>((d, v) =>
+        var mbIn = RoundTrip<Runnable, MenuBar>((d, v) =>
         {
             var orig = v.Menus[0].Children[0];
             var op = new ConvertMenuItemToSeperatorOperation(orig);

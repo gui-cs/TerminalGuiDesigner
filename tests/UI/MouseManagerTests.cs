@@ -1,7 +1,6 @@
 using System.Runtime.CompilerServices;
 using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
-using Terminal.Gui.Views;
 
 namespace UnitTests.UI;
 
@@ -14,7 +13,7 @@ internal class MouseManagerTests : Tests
     public void DragResizeView<T>( [ValueSource( nameof( DragResizeView_Types ) )] T dummy )
         where T : View, new( )
     {
-        Design d = Get10By10View(App);
+        Design d = Get10By10View();
         Assume.That( dummy, Is.TypeOf<T>( ) );
 
         using T view = ViewFactory.Create<T>( );
@@ -42,10 +41,10 @@ internal class MouseManagerTests : Tests
         } );
 
         // user presses down in the lower right of control
-        MouseEventArgs e = new( )
+        Mouse e = new( )
         {
             Position = new Point( 6, 0),
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.LeftButtonPressed
         };
 
         mgr.HandleMouse( e, d );
@@ -60,7 +59,7 @@ internal class MouseManagerTests : Tests
         e = new( )
         {
             Position = new System.Drawing.Point(9,0),
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.LeftButtonPressed
         };
         mgr.HandleMouse( e, d );
 
@@ -93,7 +92,7 @@ internal class MouseManagerTests : Tests
     [Test]
     public void DragResize_ShadowButton()
     {
-        Design d = Get10By10View(App);
+        Design d = Get10By10View();
 
         using Button btn = ViewFactory.Create<Button>();
         btn.Width = 8;
@@ -127,10 +126,10 @@ internal class MouseManagerTests : Tests
         });
 
         // user presses down in the lower right of control
-        MouseEventArgs e = new()
+        Mouse e = new()
         {
             Position = new Point(7, 1),
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.LeftButtonPressed
         };
         
         mgr.HandleMouse(e, d);
@@ -145,7 +144,7 @@ internal class MouseManagerTests : Tests
         e = new()
         {
             Position = new System.Drawing.Point(8, 2),
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.LeftButtonPressed
         };
         mgr.HandleMouse(e, d);
 
@@ -205,10 +204,10 @@ internal class MouseManagerTests : Tests
         } );
 
         // user presses down in the lower right of control
-        MouseEventArgs e = new( )
+        Mouse e = new( )
         {
             Position = new Point(locationOfViewX,locationOfViewY),
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.LeftButtonPressed
         };
 
         View? hit = view.HitTest( e, out bool isBorder, out bool isLowerRight );
@@ -233,7 +232,7 @@ internal class MouseManagerTests : Tests
         e = new( )
         {
             Position = new Point(6,3),
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.LeftButtonPressed
         };
         mgr.HandleMouse( e, d );
 
@@ -271,10 +270,10 @@ internal class MouseManagerTests : Tests
         } );
 
         // user presses down in the lower right of control
-        MouseEventArgs e = new( )
+        Mouse e = new( )
         {
             Position = new Point(9,0),
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.LeftButtonPressed
         };
 
         mgr.HandleMouse( e, d );
@@ -289,7 +288,7 @@ internal class MouseManagerTests : Tests
         e = new( )
         {
             Position = new Point(6,3),
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.LeftButtonPressed
         };
         mgr.HandleMouse( e, d );
         
@@ -387,10 +386,10 @@ internal class MouseManagerTests : Tests
         MouseManager mgr = new( );
 
         // user presses down
-        MouseEventArgs e = new( )
+        Mouse e = new( )
         {
             Position = new Point(xStart,yStart),
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.LeftButtonPressed
         };
 
         mgr.HandleMouse( e, d );
@@ -399,7 +398,7 @@ internal class MouseManagerTests : Tests
         e = new( )
         {
             Position = new Point(xEnd,yEnd),
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.LeftButtonPressed
         };
         mgr.HandleMouse( e, d );
 
@@ -450,10 +449,10 @@ internal class MouseManagerTests : Tests
         Assume.That( view.Y, Is.EqualTo( (Pos)initialViewYPos ) );
 
         // user presses down over the control
-        MouseEventArgs firstClick = new( )
+        Mouse firstClick = new( )
         {
             Position = new Point(startDragX,startDragY),
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.LeftButtonPressed
         };
 
         mgr.HandleMouse( firstClick, d );
@@ -468,12 +467,12 @@ internal class MouseManagerTests : Tests
         } );
 
         // user moved view but still has mouse down
-        MouseEventArgs dragWithMouseButton1Down = new( )
+        Mouse dragWithMouseButton1Down = new( )
         {
             Position = new Point(
                 startDragX + deltaX,
                 startDragY + deltaY),
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.LeftButtonPressed
         };
         mgr.HandleMouse( dragWithMouseButton1Down, d );
 
@@ -487,7 +486,7 @@ internal class MouseManagerTests : Tests
         } );
 
         // user releases mouse
-        MouseEventArgs releaseMouseButton1AtNewCoordinates = new( )
+        Mouse releaseMouseButton1AtNewCoordinates = new( )
         {
             Position = new Point(
                 startDragX + deltaX,

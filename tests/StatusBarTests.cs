@@ -1,6 +1,5 @@
 ﻿using Terminal.Gui.Drivers;
 using Terminal.Gui.Input;
-using Terminal.Gui.Views;
 
 namespace UnitTests;
 
@@ -14,7 +13,7 @@ internal class StatusBarTests : Tests
     {
         Key shortcutBefore = KeyCode.Null;
 
-        using StatusBar statusBarIn = RoundTrip<Toplevel, StatusBar>( ( _, v ) =>
+        using StatusBar statusBarIn = RoundTrip<Runnable, StatusBar>( ( _, v ) =>
         {
             Assert.That( v.GetShortcuts(), Has.Length.EqualTo( 1 ), $"Expected {nameof( ViewFactory )} to create a placeholder status item in new StatusBars it creates" );
             shortcutBefore = v.GetShortcuts()[ 0 ].Key;

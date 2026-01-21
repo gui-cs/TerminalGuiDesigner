@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using TerminalGuiDesigner.ToCode;
-
 namespace UnitTests.ToCode;
 
 [TestFixture]

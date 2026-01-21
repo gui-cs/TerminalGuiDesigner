@@ -1,19 +1,67 @@
 
 
 using System.Runtime.CompilerServices;
-using Terminal.Gui.App;
-using Terminal.Gui.Drivers;
-using Terminal.Gui.Input;
-using Terminal.Gui.ViewBase;
-using Terminal.Gui.Views;
+using System.Threading;
 
 namespace UnitTests;
+
+
+/// <summary>
+///     Provides methods to create and manage a fake application for testing purposes.
+/// </summary>
+public class FakeApplicationFactory
+{
+    /// <summary>
+    ///     Creates an initialized fake application which will be cleaned up when result object
+    ///     is disposed.
+    /// </summary>
+    /// <returns></returns>
+    public IDisposable SetupFakeApplication(out IApplication application)
+    {
+        CancellationTokenSource hardStopTokenSource = new CancellationTokenSource();
+        AnsiInput ansiInput = new AnsiInput();
+        ansiInput.ExternalCancellationTokenSource = hardStopTokenSource;
+        AnsiOutput output = new();
+        output.SetSize(80, 25);
+
+        SizeMonitorImpl sizeMonitor = new(output);
+
+        ApplicationImpl impl = new(new AnsiComponentFactory(ansiInput, output, sizeMonitor));
+        ApplicationImpl.SetInstance(impl);
+
+        // Initialize with a ANSI driver
+        impl.Init(DriverRegistry.Names.ANSI);
+        impl.Driver!.Clipboard = new FakeClipboard();
+
+        application = impl;
+
+        return new FakeApplicationLifecycle(impl, hardStopTokenSource);
+    }
+}
+#nullable enable
+
+/// <summary>
+///     Implements a fake application lifecycle for testing purposes. Cleans up the application on dispose by cancelling
+///     the provided <see cref="CancellationTokenSource"/> and shutting down the application.
+/// </summary>
+/// <param name="hardStop"></param>
+internal class FakeApplicationLifecycle(IApplication? app, CancellationTokenSource? hardStop) : IDisposable
+{
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+        hardStop?.Cancel();
+
+        app?.TopRunnableView?.Dispose();
+        app?.Dispose();
+    }
+}
+
 
 [RequiresThread]
 public class Tests
 {
-    [ThreadStatic]
-    private static bool? _init;
+    private MouseManager mm;
 
     /// <summary>
     /// Mock IApplication instance for use in tests. Created fresh for each test.
@@ -23,68 +71,48 @@ public class Tests
     [SetUp]
     public virtual void SetUp()
     {
-        _init ??= false;
-        if (_init.Value)
-        {
-            throw new InvalidOperationException("After did not run.");
-        }
-
-        Application.Init(new FakeDriver());
-        _init = true;
+        var appFactory = new FakeApplicationFactory();
+        appFactory.SetupFakeApplication(out var a);
+        App = a;
 
         OperationManager.Instance.ClearUndoRedo();
 
-        Application.Begin(new Toplevel
-        {
-            Width = Dim.Fill(),
-            Height = Dim.Fill(),
-        });
-
-        // Create a fresh mock for each test
-        App = Mock.Of<IApplication>();
+        mm = new MouseManager(App);
     }
 
     [TearDown]
     public virtual void TearDown()
     {
-        Application.Shutdown();
-        _init = false;
-
         SelectionManager.Instance.LockSelection = false;
         SelectionManager.Instance.Clear();
     }
 
-    protected static Design Get10By10View(IApplication app)
+    protected Design Get10By10View()
     {
-        Application.Top.RemoveAll();
-
-        // start with blank slate
-        OperationManager.Instance.ClearUndoRedo();
-
         var v = new View()
         {
             Width = 10,
             Height = 10,
             CanFocus = true,
         };
-        var d = new Design(app, new SourceCodeFile(new FileInfo("TenByTen.cs")), Design.RootDesignName, v);
+        var d = new Design(App, new SourceCodeFile(new FileInfo("TenByTen.cs")), Design.RootDesignName, v);
         v.Data = d;
 
         v.BeginInit();
         v.EndInit();
 
-        Application.Top.Add(v);
-        Application.Top.LayoutSubViews();
+        App.TopRunnableView.Add(v);
+        App.TopRunnableView.LayoutSubViews();
 
         return d;
     }
 
-    protected static Design Get100By100<T>(IApplication app, [CallerMemberName] string? caller = null)
+    protected Design Get100By100<T>([CallerMemberName] string? caller = null)
     {
         // start with blank slate
         OperationManager.Instance.ClearUndoRedo();
 
-        var viewToCode = new ViewToCode(app);
+        var viewToCode = new ViewToCode(App);
 
         var file = new FileInfo($"{caller}.cs");
         var rootDesign = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Window));
@@ -108,7 +136,7 @@ public class Tests
     /// <param name="caller"></param>
     /// <returns>The read in object state after round trip (generate code file then read that code back in)</returns>
     /// <exception cref="ArgumentNullException">If <paramref name="caller"/> is <see langword="null" />, empty, or whitespace</exception>
-    protected static T2 RoundTrip<T1, T2>(IApplication app, Action<Design, T2> adjust, out T2 viewOut, [CallerMemberName] string? caller = null)
+    protected T2 RoundTrip<T1, T2>(IApplication app, Action<Design, T2> adjust, out T2 viewOut, [CallerMemberName] string? caller = null)
         where T1 : View, new()
         where T2 : View, new()
     {
@@ -143,41 +171,39 @@ public class Tests
     /// Performs a mouse drag from the first coordinates to the second (in screen space)
     /// </summary>
     /// <param name="app">The IApplication instance to use.</param>
-    /// <param name="root">The root Design.  Make sure you have added it to <see cref="Application.Top"/> and run <see cref="View.LayoutSubViews"/></param>
+    /// <param name="root">The root Design.  Make sure you have added it to <see cref="App.TopRunnableView"/> and run <see cref="View.LayoutSubViews"/></param>
     /// <param name="x1">X coordinate to start drag at</param>
     /// <param name="y1">Y coordinate to start drag at</param>
     /// <param name="x2">X coordinate to end drag at</param>
     /// <param name="y2">Y coordinate to end drag at</param>
-    protected static void MouseDrag(IApplication app, Design root, int x1, int y1, int x2, int y2)
+    protected void MouseDrag(Design root, int x1, int y1, int x2, int y2)
     {
-        var mm = new MouseManager(app);
-
         mm.HandleMouse(
-            new MouseEventArgs
+            new Mouse
             {
                 Position = new Point(x1, y1),
-                Flags = MouseFlags.Button1Pressed,
+                Flags = MouseFlags.LeftButtonPressed,
             }, root);
 
         // press down at 0,0 of the label
         mm.HandleMouse(
-            new MouseEventArgs
+            new Mouse
             {
                 Position = new Point(x2, y2),
-                Flags = MouseFlags.Button1Pressed,
+                Flags = MouseFlags.LeftButtonPressed,
             }, root);
 
 
         // release in parent
         mm.HandleMouse(
-            new MouseEventArgs
+            new Mouse
             {
                 Position = new Point(x2,y2),
-                Flags = MouseFlags.Button1Released,
+                Flags = MouseFlags.LeftButtonReleased,
             }, root);
     }
 
-    public static Type PickFirstTTypeForGenerics(Type type)
+    public Type PickFirstTTypeForGenerics(Type type)
     {
         if (type.IsGenericTypeDefinition)
         {
@@ -186,27 +212,5 @@ public class Tests
         }
 
         return type;
-    }
-}
-
-/// <summary>
-/// Test helper extensions for working with the new Terminal.Gui menu API
-/// </summary>
-public static class TestMenuExtensions
-{
-    /// <summary>
-    /// Gets the Menus array from a MenuBar (replacement for the now write-only Menus property)
-    /// </summary>
-    public static MenuBarItem[] GetMenus(this MenuBar menuBar)
-    {
-        return menuBar.SubViews.OfType<MenuBarItem>().ToArray();
-    }
-
-    /// <summary>
-    /// Gets the children MenuItems from a MenuBarItem (replacement for the removed Children property)
-    /// </summary>
-    public static MenuItem[] GetChildren(this MenuBarItem menuBarItem)
-    {
-        return menuBarItem.GetMenuItems().ToArray();
     }
 }

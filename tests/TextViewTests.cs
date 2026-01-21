@@ -1,9 +1,4 @@
-﻿using Terminal.Gui;
-using Terminal.Gui.Views;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.Operations;
-
-namespace UnitTests;
+﻿namespace UnitTests;
 
 internal class TextViewTests : Tests
 {

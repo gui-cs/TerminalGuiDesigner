@@ -1,6 +1,4 @@
-﻿using Terminal.Gui.Views;
-
-namespace UnitTests
+﻿namespace UnitTests
 {
     internal class TreeViewTests : Tests
     {

@@ -1,5 +1,4 @@
 using Terminal.Gui.ViewBase;
-using TerminalGuiDesigner;
 
 namespace UnitTests;
 

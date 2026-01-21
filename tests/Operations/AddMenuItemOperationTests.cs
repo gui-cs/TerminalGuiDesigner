@@ -1,6 +1,4 @@
-﻿using Terminal.Gui;
-using Terminal.Gui.ViewBase;
-using Terminal.Gui.Views;
+﻿using Terminal.Gui.ViewBase;
 using TerminalGuiDesigner.Operations.MenuOperations;
 
 namespace UnitTests.Operations;

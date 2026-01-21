@@ -1,6 +1,4 @@
-﻿using Terminal.Gui;
-using Terminal.Gui.Input;
-using Terminal.Gui.Views;
+﻿using Terminal.Gui.Input;
 using TerminalGuiDesigner.Operations.MenuOperations;
 
 namespace UnitTests.Operations;
@@ -10,7 +8,7 @@ internal class MoveMenuItemRightOperationTests : Tests
     [Test]
     public void TestMoveMenuItemRightOperation_ImpossibleIfSolo()
     {
-        RoundTrip<Toplevel, MenuBar>((d, v) =>
+        RoundTrip<Runnable, MenuBar>((d, v) =>
         {
             var op = new MoveMenuItemRightOperation(v.Menus[0].Children[0]);
             ClassicAssert.True(op.IsImpossible, "Expected it to be impossible to move first menu item to submenu when there is nothing above it");
@@ -21,7 +19,7 @@ internal class MoveMenuItemRightOperationTests : Tests
     [Test]
     public void TestMoveMenuItemRightOperation_MoveToSubmenu()
     {
-        RoundTrip<Toplevel, MenuBar>((d, v) =>
+        RoundTrip<Runnable, MenuBar>((d, v) =>
         {
             new AddMenuItemOperation(v.Menus[0].Children[0]).Do();
 
@@ -49,7 +47,7 @@ internal class MoveMenuItemRightOperationTests : Tests
     [Test]
     public void TestMoveMenuItemRightOperation_UndoRedo_RememberShortcut()
     {
-        RoundTrip<Toplevel, MenuBar>((d, v) =>
+        RoundTrip<Runnable, MenuBar>((d, v) =>
         {
             new AddMenuItemOperation(v.Menus[0].Children[0]).Do();
             var toMove = v.Menus[0].Children[1];

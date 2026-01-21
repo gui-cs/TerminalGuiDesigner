@@ -2,7 +2,6 @@ using System.CodeDom;
 using System.Text;
 using Terminal.Gui.Drawing;
 using Terminal.Gui.ViewBase;
-using Terminal.Gui.Views;
 using TerminalGuiAttribute = Terminal.Gui.Drawing.Attribute;
 
 namespace UnitTests;
@@ -15,7 +14,7 @@ internal class PropertyTests : Tests
     [Test]
     public void Changing_LineOrientation( )
     {
-        Design v = Get10By10View(App);
+        Design v = Get10By10View();
         using Line lv = ViewFactory.Create<Line>( );
         Design d = new(App, v.SourceCode, "lv", lv );
 

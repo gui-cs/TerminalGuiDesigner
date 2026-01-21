@@ -1,10 +1,4 @@
-﻿using Terminal.Gui;
-using Terminal.Gui.App;
-using Terminal.Gui.Input;
-using Terminal.Gui.ViewBase;
-using Terminal.Gui.Views;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.Operations;
+﻿using Terminal.Gui.ViewBase;
 
 namespace UnitTests.Operations;
 
@@ -78,7 +72,7 @@ internal class ResizeOperationTests : Tests
             }
             else
             {
-                var hit = root.View.HitTest(App, new MouseEventArgs {Position = new Point(13, 11) },out _, out var isLowerRight);
+                var hit = root.View.HitTest(App, new Mouse {Position = new Point(13, 11) },out _, out var isLowerRight);
                 ClassicAssert.AreSame(tab, hit, "Expected above diagram which already passed asserts to work for HitTest too given the above screen coordinates");
                 ClassicAssert.IsTrue(isLowerRight);
 

@@ -1,12 +1,4 @@
-using System.Linq;
-using Terminal.Gui;
-using Terminal.Gui.App;
-using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
-using Terminal.Gui.Views;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.Operations;
-using TerminalGuiDesigner.UI;
 
 namespace UnitTests.Operations;
 
@@ -23,7 +15,7 @@ internal class DragOperationTests : Tests
     [Test]
     public void TestSimpleDrag_Down3Rows()
     {
-        var d = Get10By10View(App);
+        var d = Get10By10View();
 
         var lbl = new Label { Text = "Hi there buddy" };
         var lblDesign = new Design(App, d.SourceCode, "mylabel", lbl);
@@ -56,7 +48,7 @@ internal class DragOperationTests : Tests
     [Test]
     public void TestSimpleDrag_Down3Rows_WithMouse()
     {
-        var d = Get10By10View(App);
+        var d = Get10By10View();
 
         var lbl = new Label
         {
@@ -66,8 +58,8 @@ internal class DragOperationTests : Tests
         lbl.Data = lblDesign;
         d.View.Add(lbl);
 
-        Application.Top.Add(d.View);
-        Application.Top.LayoutSubViews();
+        App.TopRunnableView.Add(d.View);
+        App.TopRunnableView.LayoutSubViews();
 
         MouseDrag(App, d, 2, 0, 2, 3);
 
@@ -86,7 +78,7 @@ internal class DragOperationTests : Tests
     [Test]
     public void TestMultiDrag_Down3Rows()
     {
-        var d = Get10By10View(App);
+        var d = Get10By10View();
 
         var lbl1 = new Label{ Text = "Hi there buddy" };
         var lbl2 = new Label{
@@ -177,7 +169,7 @@ internal class DragOperationTests : Tests
     [Test]
     public void TestSimpleDrag_IntoAnotherView()
     {
-        var d = Get10By10View(App);
+        var d = Get10By10View();
 
         // setup 2 large SubViews at diagonals
         // to one another within the main 10x10 view
@@ -272,8 +264,8 @@ internal class DragOperationTests : Tests
         lbl.Data = lblDesign;
         frameView.Add(lbl);
 
-        Application.Top.Add(rootDesign.View);
-        Application.Top.LayoutSubViews();
+        App.TopRunnableView.Add(rootDesign.View);
+        App.TopRunnableView.LayoutSubViews();
 
         // check screen coordinates are as expected
         screen = lblDesign.View.ContentToScreen(new System.Drawing.Point(0, 0));
@@ -281,7 +273,7 @@ internal class DragOperationTests : Tests
         ClassicAssert.AreEqual(14, screen.Y, "Expected label Y screen to be at its parents 0,0 (11,11) + 2");
 
         // press down at 0,0 of the label
-        ClassicAssert.AreEqual(lbl, rootDesign.View.HitTest(new MouseEventArgs { Position = new Point(13, 14) }, out _, out _)
+        ClassicAssert.AreEqual(lbl, rootDesign.View.HitTest(new Mouse { Position = new Point(13, 14) }, out _, out _)
             , "We just asked ViewToScreen for these same coordinates, how can they fail HitTest now?");
 
         // Drag up 4 so it is no longer in its parents container.
@@ -308,8 +300,8 @@ internal class DragOperationTests : Tests
             var op = new AddViewOperation(new Button() { Text = "Hello" }, d.GetRootDesign(), "mybtn");
             op.Do();
 
-            Application.Top.Add(d.GetRootDesign().View);
-            Application.Top.LayoutSubViews();
+            App.TopRunnableView.Add(d.GetRootDesign().View);
+            App.TopRunnableView.LayoutSubViews();
 
 
             ClassicAssert.AreEqual(0, v.Tabs.ElementAt(0).View.GetActualSubviews().Count, "Expected TabView Tab1 to start off empty");

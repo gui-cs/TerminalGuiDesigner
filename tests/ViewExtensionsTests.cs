@@ -1,10 +1,4 @@
-using System;
-using Terminal.Gui;
-using Terminal.Gui.App;
-using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
-using Terminal.Gui.Views;
-using TerminalGuiDesigner;
 
 namespace UnitTests;
 
@@ -29,7 +23,7 @@ internal class ViewExtensionsTests : Tests
     [TestCase(3, 4, true, false, false)]
     public void TestHitTest(int x, int y, bool hit, bool border, bool lowerRight)
     {
-        var v = Get10By10View(App).View;
+        var v = Get10By10View().View;
 
         v.X = 2;
         v.Y = 3;
@@ -39,12 +33,12 @@ internal class ViewExtensionsTests : Tests
         // Hit test does not find things that are not designable
         v.Data = new Design(App, new SourceCodeFile("MyView.cs"), "myview", v);
 
-        Application.Top.Add(v);
+        App.TopRunnableView.Add(v);
         bool isLowerRight;
         bool isBorder;
 
         var result = v.HitTest(
-            new MouseEventArgs
+            new Mouse
         {
                 Position = new Point(x, y),
         }, out isBorder, out isLowerRight);
@@ -56,7 +50,7 @@ internal class ViewExtensionsTests : Tests
         }
         else
         {
-            ClassicAssert.AreSame(Application.Top,result);
+            ClassicAssert.AreSame(App.TopRunnableView,result);
         }
 
         ClassicAssert.AreEqual(lowerRight, isLowerRight);
@@ -106,12 +100,12 @@ internal class ViewExtensionsTests : Tests
         Application.Begin(w);
         w.LayoutSubViews();
 
-        ClassicAssert.AreSame(w, w.HitTest(new MouseEventArgs {Position = new Point(13, 0) }, out var isBorder, out _),
+        ClassicAssert.AreSame(w, w.HitTest(new Mouse {Position = new Point(13, 0) }, out var isBorder, out _),
             "Expected 0,0 to be the window border (its client area should start at 1,1)");
         ClassicAssert.IsTrue(isBorder);
 
         // 1,1
-        ClassicAssert.AreSame(f, w.HitTest(new MouseEventArgs {Position = new Point(1, 1) }, out isBorder, out _),
+        ClassicAssert.AreSame(f, w.HitTest(new Mouse {Position = new Point(1, 1) }, out isBorder, out _),
             "Expected 1,1 to be the Frame border (its client area should start at 1,1)");
         ClassicAssert.IsTrue(isBorder);
     }

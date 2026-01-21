@@ -1,8 +1,4 @@
-﻿using System;
-using Terminal.Gui;
-using Terminal.Gui.ViewBase;
-using Terminal.Gui.Views;
-using TerminalGuiDesigner;
+﻿using Terminal.Gui.ViewBase;
 using TerminalGuiDesigner.Operations.TableViewOperations;
 
 namespace UnitTests.Operations;
@@ -12,7 +8,7 @@ internal class AddColumnOperationTests : Tests
     [Test]
     public void TestAddColumn_BadViewType()
     {
-        var d = Get10By10View(App);
+        var d = Get10By10View();
         var ex = ClassicAssert.Throws<ArgumentException>(() => new AddColumnOperation(App, d, null));
 
         ClassicAssert.AreEqual("Design must wrap a TableView to be used with this operation.", ex?.Message);

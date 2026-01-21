@@ -1,5 +1,3 @@
-using Terminal.Gui.Views;
-
 namespace UnitTests;
 
 [TestFixture]

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using Terminal.Gui;
-using Terminal.Gui.Views;
-using TerminalGuiDesigner.Operations.TabOperations;
+﻿using TerminalGuiDesigner.Operations.TabOperations;
 
 namespace UnitTests.Operations;
 
@@ -11,7 +7,7 @@ internal class AddTabOperationTests : Tests
     [Test]
     public void TestAddTab_WrongViewType()
     {
-        var d = Get10By10View(App);
+        var d = Get10By10View();
         var ex = ClassicAssert.Throws<ArgumentException>(() => new AddTabOperation(App, d, null));
         ClassicAssert.AreEqual("Design must wrap a TabView to be used with this operation.", ex?.Message);
     }
@@ -22,7 +18,7 @@ internal class AddTabOperationTests : Tests
         string? tab1Name = null;
         string? tab2Name = null;
 
-        var tabIn = RoundTrip<Toplevel, TabView>(App,
+        var tabIn = RoundTrip<Runnable, TabView>(App,
             (d, v) =>
             {
                 ClassicAssert.AreEqual(2, v.Tabs.Count, "Expected ViewFactory TabView to have a couple of example tabs when created");
@@ -50,7 +46,7 @@ internal class AddTabOperationTests : Tests
     [Test]
     public void TestAddTab_BlankName()
     {
-        var tabIn = RoundTrip<Toplevel, TabView>(App,
+        var tabIn = RoundTrip<Runnable, TabView>(App,
             (d, v) =>
             {
                 var op = new AddTabOperation(App, d, "  ");
@@ -65,7 +61,7 @@ internal class AddTabOperationTests : Tests
     [Test]
     public void TestAddTab_DuplicateNames()
     {
-        var tabIn = RoundTrip<Toplevel, TabView>(App,
+        var tabIn = RoundTrip<Runnable, TabView>(App,
             (d, v) =>
             {
                 var op = new AddTabOperation(App, d, "Blah");
@@ -88,7 +84,7 @@ internal class AddTabOperationTests : Tests
         string? tab1Name = null;
         string? tab2Name = null;
 
-        var tabIn = RoundTrip<Toplevel, TabView>(
+        var tabIn = RoundTrip<Runnable, TabView>(
             (d, v) =>
             {
                 ClassicAssert.AreEqual(2, v.Tabs.Count, "Expected ViewFactory TabView to have a couple of example tabs when created");

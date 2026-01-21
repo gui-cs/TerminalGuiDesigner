@@ -1,12 +1,3 @@
-using System.IO;
-using System.Linq;
-using Terminal.Gui;
-using Terminal.Gui.Views;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.FromCode;
-using TerminalGuiDesigner.Operations;
-using TerminalGuiDesigner.ToCode;
-
 namespace UnitTests;
 
 class TextValidateFieldTests : Tests

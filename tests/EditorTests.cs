@@ -1,11 +1,4 @@
-﻿using System;
-using System.Reflection;
-using Terminal.Gui;
-using Terminal.Gui.Views;
-using TerminalGuiDesigner.Operations;
-using TerminalGuiDesigner.UI;
-
-namespace UnitTests;
+﻿namespace UnitTests;
 
 [TestFixture]
 [TestOf(typeof(Editor))]

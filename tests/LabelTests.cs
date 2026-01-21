@@ -1,5 +1,4 @@
 ﻿using Terminal.Gui.ViewBase;
-using Terminal.Gui.Views;
 
 namespace UnitTests;
 

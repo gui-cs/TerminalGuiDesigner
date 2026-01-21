@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Terminal.Gui;
 using Terminal.Gui.ViewBase;
-using Terminal.Gui.Views;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.Operations;
 
 namespace UnitTests.Operations;
 
@@ -31,7 +24,7 @@ internal class AddViewOperationTests : Tests
     [Test( Description = "Tests AddViewOperation against all SupportedViewTypes" )]
     public void Do_AddsExpectedSubview( [ValueSource( nameof( SupportedViewTypes ) )] Type candidateType )
     {
-        var d = Get10By10View(App);
+        var d = Get10By10View();
 
         var instance = ViewFactory.Create( candidateType );
         const string instanceFieldName = "blah";
@@ -54,7 +47,7 @@ internal class AddViewOperationTests : Tests
     [TestCase( 10, "multiple" )]
     public void Do_SubviewNamesProperlyDeDuplicated( int numberOfViews, string baseName )
     {
-        var d = Get10By10View(App);
+        var d = Get10By10View();
 
         for ( int operationNumber = 1; operationNumber <= numberOfViews; operationNumber++ )
         {
@@ -84,7 +77,7 @@ internal class AddViewOperationTests : Tests
     [Test]
     public void TestAddView_RoundTrip( [ValueSource( nameof( SupportedViewTypes ) )] Type type )
     {
-        using var windowIn = RoundTrip<Toplevel, Window>(App, ( d, v ) =>
+        using var windowIn = RoundTrip<Runnable, Window>(App, ( d, v ) =>
         {
             var instance = ViewFactory.Create( type );
             var op = new AddViewOperation(App, instance, d, "blah" );
@@ -100,7 +93,7 @@ internal class AddViewOperationTests : Tests
     [Test]
     public void UnDo_RemovesExpectedViews()
     {
-        var d = Get10By10View(App);
+        var d = Get10By10View();
 
         int stackSize = 0;
 

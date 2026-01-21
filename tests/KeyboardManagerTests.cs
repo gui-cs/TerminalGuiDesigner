@@ -1,13 +1,5 @@
-using System.Collections.Generic;
-using System.IO;
-using Terminal.Gui;
-using Terminal.Gui.App;
 using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
-using Terminal.Gui.Views;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.Operations;
-using TerminalGuiDesigner.UI;
 
 namespace UnitTests;
 
@@ -66,12 +58,6 @@ internal class KeyboardManagerTests : Tests
         bool keyEventSuppressed = false;
         Assert.That( ( ) => keyEventSuppressed = mgr!.HandleKey( v, backspace ), Throws.Nothing );
         Assert.That( keyEventSuppressed, Is.False );
-
-        //TODO: What is this stuff doing and why?
-        Application.Top.Add( v );
-        v.Width = 6;
-        v.Height = 1;
-        v.Draw( );
     }
 
     [Test]
@@ -136,7 +122,7 @@ internal class KeyboardManagerTests : Tests
         Assume.That( keyMap, Is.Not.Null.And.TypeOf<KeyMap>() );
 
         KeyboardManager? mgr = null;
-        Assert.That( () => mgr = new(TODO, keyMap! ), Throws.Nothing );
+        Assert.That( () => mgr = new(App, keyMap! ), Throws.Nothing );
         Assert.That( mgr, Is.Not.Null.And.TypeOf<KeyboardManager>() );
 
         Assume.That( testView, Is.Not.Null.And.InstanceOf<T>() );
@@ -144,7 +130,7 @@ internal class KeyboardManagerTests : Tests
         Assume.That( mgr, Is.Not.Null.And.InstanceOf<KeyboardManager>() );
 
         Design d = Get10By10View();
-        Assume.That( new AddViewOperation( testView, d, "testView" ).Do() );
+        Assume.That( new AddViewOperation(App, testView, d, "testView" ).Do() );
         testView.SetFocus();
 
         Assert.That( Key.TryParse( keyChar.ToString(), out Key k ) );

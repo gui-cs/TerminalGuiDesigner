@@ -1,14 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Terminal.Gui;
-using Terminal.Gui.Drawing;
 using Terminal.Gui.ViewBase;
-using Terminal.Gui.Views;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.Operations.TabOperations;
-using TerminalGuiDesigner.ToCode;
 
 namespace UnitTests;
 
@@ -21,9 +12,9 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CannotCopyRoot()
     {
-        var d = Get10By10View(App);
+        var d = Get10By10View();
 
-        var top = new Toplevel();
+        var top = new Runnable();
         top.Add(d.View);
 
         Assert.That(d.IsRoot);
@@ -35,7 +26,7 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPasteTableView()
     {
-        var d = Get10By10View(App);
+        var d = Get10By10View();
 
         var tv = ViewFactory.Create<TableView>( );
 
@@ -139,7 +130,7 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPastePosRelative_Simple()
     {
-        var d = Get10By10View(App);
+        var d = Get10By10View();
 
         var lbl = new Label
         {
@@ -192,7 +183,7 @@ internal class CopyPasteTests : Tests
     [Test]
     public void CopyPastePosRelative_CopyOnlyDependent()
     {
-        var d = Get10By10View(App);
+        var d = Get10By10View();
 
         var lbl = new Label { Text = "Name:" };
         var tb = new TextField

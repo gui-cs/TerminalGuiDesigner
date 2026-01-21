@@ -1,9 +1,4 @@
-﻿using System;
-using System.IO;
-using Terminal.Gui;
-using Terminal.Gui.ViewBase;
-using Terminal.Gui.Views;
-using TerminalGuiDesigner;
+﻿using Terminal.Gui.ViewBase;
 using TerminalGuiDesigner.Operations.MenuOperations;
 
 namespace UnitTests.Operations;
@@ -13,7 +8,7 @@ internal class AddMenuOperationTests : Tests
     [Test]
     public void TestAddMenu_InvalidViewType()
     {
-        var d = Get10By10View(App);
+        var d = Get10By10View();
         var ex = ClassicAssert.Throws<ArgumentException>(() => new AddMenuOperation(App, d, "haha!"));
         ClassicAssert.AreEqual("Design must wrap a MenuBar to be used with this operation.", ex?.Message);
     }
@@ -21,11 +16,11 @@ internal class AddMenuOperationTests : Tests
     [Test]
     public void TestAddingMenu_AtRoot_Do()
     {
-        const string expectedTopLevelMenuName = "_File (F9)";
+        const string expectedRunnableMenuName = "_File (F9)";
 
         var viewIn = RoundTrip<View, MenuBar>(App, (d, v) =>
         {
-            ClassicAssert.AreEqual(expectedTopLevelMenuName, v.Menus[0].Title.ToString(), "Expected a new MenuBar added in Designer to have a placeholder title");
+            ClassicAssert.AreEqual(expectedRunnableMenuName, v.Menus[0].Title.ToString(), "Expected a new MenuBar added in Designer to have a placeholder title");
             ClassicAssert.AreEqual(1, v.Menus.Length, "Expected 1 placeholder example Menu");
             var first = v.Menus[0];
 
@@ -41,7 +36,7 @@ internal class AddMenuOperationTests : Tests
         }, out _);
 
         ClassicAssert.AreEqual(2, viewIn.Menus.Length);
-        ClassicAssert.AreEqual(expectedTopLevelMenuName, viewIn.Menus[0].Title);
+        ClassicAssert.AreEqual(expectedRunnableMenuName, viewIn.Menus[0].Title);
         ClassicAssert.AreEqual("Blarg", viewIn.Menus[1].Title);
     }
 
@@ -100,11 +95,11 @@ internal class AddMenuOperationTests : Tests
     [Test]
     public void TestAddingMenu_AtRoot_UnDo()
     {
-        const string expectedTopLevelMenuName = "_File (F9)";
+        const string expectedRunnableMenuName = "_File (F9)";
 
         var viewIn = RoundTrip<View, MenuBar>((d, v) =>
         {
-            ClassicAssert.AreEqual(expectedTopLevelMenuName, v.Menus[0].Title.ToString(), "Expected a new MenuBar added in Designer to have a placeholder title");
+            ClassicAssert.AreEqual(expectedRunnableMenuName, v.Menus[0].Title.ToString(), "Expected a new MenuBar added in Designer to have a placeholder title");
             ClassicAssert.AreEqual(1, v.Menus.Length, "Expected 1 placeholder example Menu");
             var first = v.Menus[0];
 
@@ -117,7 +112,7 @@ internal class AddMenuOperationTests : Tests
             ClassicAssert.AreEqual("Blarg", v.Menus[1].Title.ToString());
 
             add.Undo();
-            ClassicAssert.AreEqual(expectedTopLevelMenuName, v.Menus[0].Title.ToString());
+            ClassicAssert.AreEqual(expectedRunnableMenuName, v.Menus[0].Title.ToString());
             ClassicAssert.AreEqual(1, v.Menus.Length);
 
             add.Redo();
@@ -129,12 +124,12 @@ internal class AddMenuOperationTests : Tests
             add.Undo();
             add.Undo();
             add.Undo();
-            ClassicAssert.AreEqual(expectedTopLevelMenuName, v.Menus[0].Title.ToString());
+            ClassicAssert.AreEqual(expectedRunnableMenuName, v.Menus[0].Title.ToString());
             ClassicAssert.AreEqual(1, v.Menus.Length);
 
         }, out _);
 
         ClassicAssert.AreEqual(1, viewIn.Menus.Length);
-        ClassicAssert.AreEqual(expectedTopLevelMenuName, viewIn.Menus[0].Title);
+        ClassicAssert.AreEqual(expectedRunnableMenuName, viewIn.Menus[0].Title);
     }
 }

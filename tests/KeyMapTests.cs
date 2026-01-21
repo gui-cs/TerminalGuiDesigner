@@ -1,5 +1,4 @@
 using Terminal.Gui.Input;
-using TerminalGuiDesigner.UI;
 
 namespace UnitTests;
 
@@ -125,7 +124,7 @@ internal class KeyMapTests
             Key.F2.ToString( ),
             Key.L.WithCtrl.ToString( ),
             Key.B.WithCtrl.ToString( ),
-            MouseFlags.Button3Clicked,
+            MouseFlags.RightButtonClicked,
             Key.C.WithCtrl.ToString( ),
             Key.V.WithCtrl.ToString( ),
             Key.R.WithCtrl.ToString( ),

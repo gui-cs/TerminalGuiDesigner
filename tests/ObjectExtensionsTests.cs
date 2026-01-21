@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Terminal.Gui;
-using Terminal.Gui.ViewBase;
-using TerminalGuiDesigner;
+﻿using Terminal.Gui.ViewBase;
 
 namespace UnitTests;
 
