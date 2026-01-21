@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net10.0</TargetFrameworks>
@@ -57,6 +57,11 @@
     <Using Include="System.Collections" />
     <Using Include="System.Collections.Generic" />
     <Using Include="Terminal.Gui" />
+    <Using Include="Terminal.Gui.App" />
+    <Using Include="Terminal.Gui.Views" />
+    <Using Include="Terminal.Gui.Drivers" />
+    <Using Include="Terminal.Gui.Input" />
+    <Using Include="Terminal.Gui.ViewBase" />
     <Using Include="TerminalGuiDesigner" />
     <Using Include="TerminalGuiDesigner.FromCode" />
     <Using Include="TerminalGuiDesigner.Operations" />
@@ -71,7 +76,6 @@
     <Using Include="UnitTests.TestSupportTypes" />
 		<Using Include="NUnit.Framework" />
 		<Using Include="NUnit.Framework.Legacy" />
-		<Using Include="Moq" />
   </ItemGroup>
 
 </Project>
