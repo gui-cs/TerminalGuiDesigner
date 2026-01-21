@@ -54,7 +54,14 @@ public static class ViewFactory
 
         // Terminal.Gui combo boxes do not really work properly
         typeof(ComboBox),
-        typeof(FlagSelector<>)
+        typeof(FlagSelector<>),
+        typeof(Dialog<>),
+        typeof(Prompt<,>),
+        typeof(FlagSelector<>),
+        typeof(Runnable<>),
+
+        // Could proably support later on
+        typeof(OptionSelector<>)
     ];
 
     /// <summary>
@@ -92,9 +99,7 @@ public static class ViewFactory
                         IsValueType: false
                     })
                     .Where(filteredType => filteredType == typeof(View) || filteredType.IsSubclassOf(typeof(View))
-                        && filteredType != typeof(Adornment)
-                        && filteredType != typeof(FlagSelector<>)
-                        && filteredType != typeof(FlagSelector<>))
+                        && filteredType != typeof(Adornment))
                     .Except(KnownUnsupportedTypes)
                     // Slider is an alias of Slider<object> so don't offer that
                     .Where(vt => vt != typeof(LinearRange));
