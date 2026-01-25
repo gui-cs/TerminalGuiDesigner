@@ -232,7 +232,7 @@ namespace TerminalGuiDesigner.UI
                 return false;
             }
 
-            result = editor.Result;
+            result = editor.ActualResult;
             return true;
         }
 

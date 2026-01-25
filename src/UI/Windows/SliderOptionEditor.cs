@@ -31,7 +31,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         /// <summary>
         /// The resulting value as configured by the user
         /// </summary>
-        public object Result { get; internal set; }
+        public object ActualResult { get; internal set; }
 
         /// <summary>
         /// Creates a new instance of the Designer to create an instance of <see cref="SliderOption{T}"/>
@@ -98,23 +98,23 @@ namespace TerminalGuiDesigner.UI.Windows {
 
         private void BuildResult()
         {
-            Result = Activator.CreateInstance(sliderOptionType);
+            ActualResult = Activator.CreateInstance(sliderOptionType);
 
             var p = sliderOptionType.GetProperty("Legend");
-            p.SetValue(Result, tfLegend.Text);
+            p.SetValue(ActualResult, tfLegend.Text);
 
             p = sliderOptionType.GetProperty("LegendAbbr");
-            p.SetValue(Result, new Rune(tfLegendAbbr.Text[0]));
+            p.SetValue(ActualResult, new Rune(tfLegendAbbr.Text[0]));
 
             p = sliderOptionType.GetProperty("Data");
 
             if(this.genericTypeArgument == typeof(string))
             {
-                p.SetValue(Result, tfData.Text);
+                p.SetValue(ActualResult, tfData.Text);
             }
             else
             {
-                p.SetValue(Result, Convert.ChangeType(tfData.Text, this.genericTypeArgument));
+                p.SetValue(ActualResult, Convert.ChangeType(tfData.Text, this.genericTypeArgument));
             }
 
         }

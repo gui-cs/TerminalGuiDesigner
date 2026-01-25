@@ -25,7 +25,7 @@ public partial class SizeEditor : IValueGetterDialog
     /// <summary>
     /// The users edited <see cref="Size"/>
     /// </summary>
-    public object? Result { get; private set; }
+    public object? ActualResult { get; private set; }
 
     /// <summary>
     /// True if user cancelled the dialog instead of hitting "Ok".
@@ -41,7 +41,7 @@ public partial class SizeEditor : IValueGetterDialog
     {
         this.app = app;
         InitializeComponent();
-        Result = s;
+        ActualResult = s;
 
         tfWidth.Text = s.Width.ToString();
         tfHeight.Text = s.Height.ToString();
@@ -51,7 +51,7 @@ public partial class SizeEditor : IValueGetterDialog
             e.Handled = true;
             try
             {
-                Result = new Size(int.Parse(tfWidth.Text.ToString()), int.Parse(tfHeight.Text.ToString()));
+                ActualResult = new Size(int.Parse(tfWidth.Text.ToString()), int.Parse(tfHeight.Text.ToString()));
             }
             catch (Exception ex)
             {

@@ -29,7 +29,7 @@ public partial class ChoicesDialog
     /// <summary>
     /// The index of the button user clicked (starting at 0).
     /// </summary>
-    public int Result { get; private set; }
+    public int ActualResult { get; private set; }
 
     private string _title;
 
@@ -66,7 +66,7 @@ public partial class ChoicesDialog
             var i2 = i;
 
             buttons[i].Accepting += (s,e) => {
-                Result = i2;
+                ActualResult = i2;
                 e.Handled = true;
                 app.RequestStop();
 
@@ -112,12 +112,12 @@ public partial class ChoicesDialog
     {
         var dlg = new ChoicesDialog(app, title, message, options);
         app.Run(dlg);
-        return dlg.Result;
+        return dlg.ActualResult;
     }
     internal static bool Confirm(IApplication app, string title, string message, string okText = "Yes", string cancelText = "No")
     {
         var dlg = new ChoicesDialog(app, title, message, okText, cancelText);
         app.Run(dlg);
-        return dlg.Result == 0;
+        return dlg.ActualResult == 0;
     }
 }

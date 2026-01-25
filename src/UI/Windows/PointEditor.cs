@@ -40,7 +40,7 @@ public partial class PointEditor : IValueGetterDialog {
     /// </summary>
     public float ResultY {get;private set;}
 
-    [CanBeNull] public object Result => new PointF(ResultX, ResultY);
+    [CanBeNull] public object ActualResult => new PointF(ResultX, ResultY);
 
     /// <summary>
     /// Creates a new instance of the <see cref="PointEditor"/> class.

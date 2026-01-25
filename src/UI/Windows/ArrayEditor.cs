@@ -35,7 +35,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         /// <summary>
         /// The new array 
         /// </summary>
-        public object Result => ResultAsList;
+        public object ActualResult => ResultAsList;
 
         /// <summary>
         /// Returns the <see cref="Array"/> being designed as an <see cref="IList"/>

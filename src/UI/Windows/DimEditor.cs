@@ -33,7 +33,7 @@ public partial class DimEditor : Dialog, IValueGetterDialog
     /// radio buttons and text box values.
     /// </summary>
     [CanBeNull]
-    public object Result { get; private set; }
+    public object ActualResult { get; private set; }
 
     /// <summary>
     /// True if dialog was canceled.
@@ -161,7 +161,7 @@ public partial class DimEditor : Dialog, IValueGetterDialog
     {
         e.Handled = true;
         Cancelled = false;
-        Result = BuildResult();
+        ActualResult = BuildResult();
         app.RequestStop();
     }
 

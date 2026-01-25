@@ -36,7 +36,7 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
     /// selected and text values entered - offset etc).
     /// </summary>
     [CanBeNull]
-    public object Result { get; private set; }
+    public object ActualResult { get; private set; }
 
     /// <summary>
     /// True if user cancelled the dialog instead of hitting Ok.
@@ -227,7 +227,7 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
         }
 
         Cancelled = !BuildPos(out var result);
-        Result = result;
+        ActualResult = result;
         app.RequestStop();
     }
 
