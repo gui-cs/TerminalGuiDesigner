@@ -26,7 +26,7 @@ internal class KeyMapTests
         AddView: F2
         ToggleShowFocused: Ctrl+L
         ToggleShowBorders: Ctrl+B
-        RightClick: Button3Clicked
+        RightClick: RightButtonClicked
         Copy: Ctrl+C
         Paste: Ctrl+V
         Rename: Ctrl+R
