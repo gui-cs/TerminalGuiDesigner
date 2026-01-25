@@ -709,9 +709,10 @@ public class Design
             yield return this.CreateProperty(nameof(ProgressBar.SegmentCharacter));
         }
 
+
         if (this.View is CheckBox)
         {
-            yield return this.CreateProperty(nameof(CheckBox.CheckedState));
+            yield return this.CreateProperty(nameof(CheckBox.Value));
         }
         if (this.View is ColorPicker cp)
         {
@@ -723,8 +724,6 @@ public class Design
         if (this.View is ListView lv)
         {
             yield return this.CreateProperty(nameof(ListView.Source));
-            yield return this.CreateProperty(nameof(ListView.AllowsMarking));
-            yield return this.CreateProperty(nameof(ListView.AllowsMultipleSelection));
         }
 
         if (this.View is GraphView gv)

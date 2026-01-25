@@ -197,7 +197,7 @@ public static class ViewFactory
                 SetDefaultDimensions( newView, width ?? 5, height ?? 1 );
                 break;
             case DateField df:
-                df.Date = DateTime.Today;
+                df.Value = DateTime.Today;
                 SetDefaultDimensions( newView, width ?? 20, height ?? 1 );
                 break;
             case TextField tf:

@@ -121,7 +121,7 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
         }            
     }
 
-    private void DdType_SelectedItemChanged(object sender, EventArgs<int?> e)
+    private void DdType_SelectedItemChanged(object sender, ValueChangedEventArgs<int?> e)
     {
         SetupForCurrentPosType();            
     }

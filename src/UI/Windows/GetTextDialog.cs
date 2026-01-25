@@ -130,7 +130,7 @@ internal class GetTextDialog
         {
             Text = "Enable Newlines",
             X = Pos.AnchorEnd(),
-            CheckedState = CheckState.Checked,
+            Value = CheckState.Checked,
             Enabled = false
         };
         win.Add(cbMultiLine);
@@ -145,11 +145,11 @@ internal class GetTextDialog
         {
             Text = "Enable Newlines",
             X = Pos.AnchorEnd(),
-            CheckedState = lastKnownEnableNewlines
+            Value = lastKnownEnableNewlines
         };
-        cbMultiLine.CheckedStateChanging += (s, e) =>
+        cbMultiLine.ValueChanged += (s, e) =>
         {
-            SetEnableNewlines(e.Result);
+            SetEnableNewlines(e.NewValue);
         };
         win.Add(cbMultiLine);
     }

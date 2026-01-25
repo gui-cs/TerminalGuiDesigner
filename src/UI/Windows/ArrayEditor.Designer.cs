@@ -91,8 +91,6 @@ namespace TerminalGuiDesigner.UI.Windows {
                             "Item1",
                             "Item2",
                             "Item3"}));
-            this.lvElements.AllowsMarking = false;
-            this.lvElements.AllowsMultipleSelection = true;
             this.frameView.Add(this.lvElements);
             this.btnAddElement.Width = Dim.Auto();
             this.btnAddElement.Height = Dim.Auto();
