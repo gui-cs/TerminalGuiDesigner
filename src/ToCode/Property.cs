@@ -223,10 +223,14 @@ public class Property : ToCodeBase
         if (type.IsGenericType(typeof(IReadOnlyList<>)))
         {
             var elementType = type.GetGenericArguments()[0];
-            var values = ((IEnumerable)val).Cast<object>().ToList();
-            return new CodeArrayCreateExpression(
-                elementType ?? throw new Exception($"Type {type} was an IReadOnlyList<> but {nameof(Type.GetGenericArguments)} returned null"),
-                values.Select(v => v.ToCodePrimitiveExpression()).ToArray());
+
+            if(elementType.IsPrimitive)
+            {
+                var values = ((IEnumerable)val).Cast<object>().ToList();
+                return new CodeArrayCreateExpression(
+                    elementType ?? throw new Exception($"Type {type} was an IReadOnlyList<> but {nameof(Type.GetGenericArguments)} returned null"),
+                    values.Select(v => v.ToCodePrimitiveExpression()).ToArray());
+            }            
         }
 
         if (val is IList valList)
