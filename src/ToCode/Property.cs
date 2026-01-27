@@ -208,6 +208,7 @@ public class Property : ToCodeBase
 
         var type = val.GetType();
 
+        // But less specific
         if (type.IsArray)
         {
             var elementType = type.GetElementType();
@@ -215,6 +216,16 @@ public class Property : ToCodeBase
             var values = ((Array)val).ToList();
             return new CodeArrayCreateExpression(
                 elementType ?? throw new Exception($"Type {type} was an Array but {nameof(Type.GetElementType)} returned null"),
+                values.Select(v => v.ToCodePrimitiveExpression()).ToArray());
+        }
+
+        
+        if (type.IsGenericType(typeof(IReadOnlyList<>)))
+        {
+            var elementType = type.GetGenericArguments()[0];
+            var values = ((IEnumerable)val).Cast<object>().ToList();
+            return new CodeArrayCreateExpression(
+                elementType ?? throw new Exception($"Type {type} was an IReadOnlyList<> but {nameof(Type.GetGenericArguments)} returned null"),
                 values.Select(v => v.ToCodePrimitiveExpression()).ToArray());
         }
 
@@ -286,8 +297,13 @@ public class Property : ToCodeBase
 
         var type = val.GetType();
 
+        if( type.IsValueType || type == typeof(string))
+        {
+            return new CodePrimitiveExpression(val);
+        }
+
         // TODO: Could move lots of logic in GetRHS into here
-        if (type.GetGenericTypeDefinition() == typeof(LinearRangeOption<>))
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(LinearRangeOption<>))
         {
             // TODO: this feels very brittle!
             var a1 = type.GetPropertyOrThrow(nameof(LinearRangeOption<object>.Legend)).GetValue(val);

@@ -47,7 +47,29 @@ namespace TerminalGuiDesigner
         /// <returns></returns>
         public static bool IsGenericType(this Type type, Type genericParentHypothesis)
         {
-            return type.IsGenericType && type.GetGenericTypeDefinition() == genericParentHypothesis;
+            if (!genericParentHypothesis.IsGenericTypeDefinition)
+                return false;
+
+            // Interfaces (e.g. IReadOnlyList<T>)
+            if (genericParentHypothesis.IsInterface &&
+                type.GetInterfaces().Any(i =>
+                    i.IsGenericType &&
+                    i.GetGenericTypeDefinition() == genericParentHypothesis))
+            {
+                return true;
+            }
+
+            // Base types + self (e.g. List<T> : Collection<T>)
+            for (var t = type; t != null; t = t.BaseType)
+            {
+                if (t.IsGenericType &&
+                    t.GetGenericTypeDefinition() == genericParentHypothesis)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
