@@ -18,25 +18,28 @@ namespace TerminalGuiDesigner
         public static Type? GetElementTypeEx(this Type type)
         {
             var elementType = type.GetElementType();
-
             if (elementType != null)
-            {
                 return elementType;
-            }
 
             if (type.IsAssignableTo(typeof(IList)) && type.IsGenericType)
             {
-                return type.GetGenericArguments().Single();
-            }
-            
-            if (type.IsGenericType(typeof(IEnumerable<>)))
-            {
-                return type.GetGenericArguments().Single();
+                var args = type.GetGenericArguments();
+                if (args.Length != 1)
+                    throw new InvalidOperationException($"Expected exactly one generic argument for IList type {type}, but found {args.Length}.");
+                return args[0];
             }
 
+            if (type.IsGenericType(typeof(IEnumerable<>)))
+            {
+                var args = type.GetGenericArguments();
+                if (args.Length != 1)
+                    throw new InvalidOperationException($"Expected exactly one generic argument for IEnumerable type {type}, but found {args.Length}.");
+                return args[0];
+            }
 
             return null;
         }
+
 
         /// <summary>
         /// Returns true if <paramref name="type"/> is an implementation of a generic parent
