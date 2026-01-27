@@ -33,9 +33,14 @@ internal class PropertyTests : Tests
         prop?.SetValue( Orientation.Vertical );
         //Assert.That( lv.LineRune, Is.EqualTo( Glyphs.VLine ) );
 
-        // now try with a dim fill
-        lv.Height = Dim.Fill( );
-        lv.Width = 1;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(lv.Orientation, Is.EqualTo(Orientation.Vertical));
+            //Assert.That( lv.LineRune, Is.EqualTo( Glyphs.HLine ) );
+            Assert.That(lv.Width, Is.EqualTo(Dim.Absolute(1)));
+            Assert.That(lv.Height, Is.EqualTo(Dim.Fill()));
+        });
 
         prop?.SetValue( Orientation.Horizontal );
 
