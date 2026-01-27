@@ -100,26 +100,6 @@ public class Property : ToCodeBase
     {
         value = AdjustValueBeingSet(value);
 
-        // if a Line and changing Orientation then also flip
-        // the Height/Width and set appropriate new rune
-        if (this.PropertyInfo.Name == nameof(Line.Orientation)
-            && this.Design.View is Line v && value is Orientation newOrientation)
-        {
-            switch (newOrientation)
-            {
-                case Orientation.Horizontal:
-                    v.Width = v.Height;
-                    v.Height = 1;
-
-                    break;
-                case Orientation.Vertical:
-                    v.Height = v.Width;
-                    v.Width = 1;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown Orientation {newOrientation}");
-            }
-        }
 
         this.PropertyInfo.SetValue(this.DeclaringObject, value);
 
