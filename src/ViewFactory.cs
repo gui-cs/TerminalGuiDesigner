@@ -79,7 +79,7 @@ public static class ViewFactory
         {
             return
             [
-                new( "_File (F9)",
+                new MenuBarItem( "_File (F9)",
                      [ new MenuItem( DefaultMenuItemText, string.Empty, static ( ) => { } ) ] )
             ];
         }

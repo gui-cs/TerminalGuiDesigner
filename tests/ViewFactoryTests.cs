@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Terminal.Gui.ViewBase;
+using Terminal.Gui.Views;
 
 namespace UnitTests;
 
@@ -107,17 +108,15 @@ internal class ViewFactoryTests : Tests
     [Category( "Change Control" )]
     public void DefaultMenuBarItems_IsExactlyAsExpected( )
     {
-        Assert.Multiple( static ( ) =>
-        {
-            Assert.That( ViewFactory_DefaultMenuBarItems, Has.Length.EqualTo( 1 ) );
-            Assert.That( ViewFactory_DefaultMenuBarItems[ 0 ].Title, Is.EqualTo( "_File (F9)" ) );
-        } );
 
-        Assert.Multiple( static ( ) =>
-        {
-            Assert.That( ViewFactory_DefaultMenuBarItems[ 0 ].SubViews, Has.Length.EqualTo( 1 ) );
-            Assert.That( ViewFactory_DefaultMenuBarItems[ 0 ].SubViews.ElementAt( 0 ).Title, Is.EqualTo( ViewFactory.DefaultMenuItemText ) );
-        } );
+        // Confirm creates a single menu 
+        Assert.That( ViewFactory_DefaultMenuBarItems.Count, Is.EqualTo(1));
+        Assert.That( ViewFactory_DefaultMenuBarItems[ 0 ].SubViews.ElementAt(0).Text, Is.EqualTo( "_File (F9)" ) );
+
+        // With single item under it "Edit Me"
+        Assert.That( ViewFactory_DefaultMenuBarItems [ 0 ].PopoverMenu, Is.Not.Null);
+        Assert.That( ViewFactory_DefaultMenuBarItems[ 0 ].PopoverMenu!.Root!.SubViews.Count, Is.EqualTo( 1 ) );
+        Assert.That(ViewFactory_DefaultMenuBarItems[0].PopoverMenu!.Root!.SubViews.ElementAt(0).Title, Is.EqualTo("Edit Me"));
     }
 
     [Test]
