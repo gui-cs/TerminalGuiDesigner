@@ -224,7 +224,7 @@ public class Property : ToCodeBase
         {
             var elementType = type.GetGenericArguments()[0];
 
-            if(elementType.IsPrimitive)
+            if(elementType.IsPrimitive || elementType == typeof(string))
             {
                 var values = ((IEnumerable)val).Cast<object>().ToList();
                 return new CodeArrayCreateExpression(
