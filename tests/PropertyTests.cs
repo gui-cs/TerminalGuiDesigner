@@ -107,9 +107,9 @@ internal class PropertyTests : Tests
     public void PropertyOfType_Rune( [Values( 'a', 'A', 'f', 'F' )] char runeCharacter )
     {
         FileInfo file = new( $"{nameof( PropertyOfType_Rune )}_{runeCharacter}.cs" );
-        using Line lv = new( );
-        Design d = new(App, new( file ), "lv", lv );
-        Property prop = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( "LineRune" ) );
+        using ProgressBar pb = new( );
+        Design d = new(App, new( file ), "lv", pb );
+        Property prop = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof(ProgressBar.SegmentCharacter) ) );
 
         prop.SetValue( runeCharacter );
 
