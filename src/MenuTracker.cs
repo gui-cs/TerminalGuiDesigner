@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner;
@@ -66,11 +67,11 @@ public class MenuTracker
         }
     }
 
-    private void OnPopoverMenuOpenChanged(object? sender, Terminal.Gui.App.EventArgs<bool> e)
+    private void OnPopoverMenuOpenChanged(object? sender, ValueChangedEventArgs<bool> e)
     {
         if (sender is MenuBarItem menuBarItem)
         {
-            if (e.Value) // Menu opened
+            if (e.NewValue) // Menu opened
             {
                 // Set the currently open menu item to the MenuBarItem itself
                 // The KeyboardManager will use this to enable renaming
@@ -82,7 +83,7 @@ public class MenuTracker
             }
 
             // Convert empty menus when closing
-            if (!e.Value)
+            if (!e.NewValue)
             {
                 this.ConvertEmptyMenus();
             }

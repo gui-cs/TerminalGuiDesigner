@@ -3,7 +3,7 @@ using Terminal.Gui.ViewBase;
 namespace UnitTests;
 
 [TestFixture]
-[TestOf( typeof( ViewExtensions ) )]
+[TestOf( typeof( TerminalGuiDesigner.ViewExtensions ) )]
 [Category( "Core" )]
 [Category( "UI" )]
 internal class ViewExtensionsTests : Tests

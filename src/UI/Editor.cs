@@ -1027,14 +1027,14 @@ public class Editor : Runnable, IErrorReporter
 
         // This internal method call shouldn't be required
         menu.App = app;
-        app.Popover!.Register(menu);
+        app.Popovers!.Register(menu);
 
         menu.MakeVisible(position);
         menu.Accepted += (_, _) =>
         {
             this.menuOpen = false;
             SelectionManager.Instance.LockSelection = false;
-            app.Popover.DeRegister(menu);
+            app.Popovers.DeRegister(menu);
         };
     }
     
