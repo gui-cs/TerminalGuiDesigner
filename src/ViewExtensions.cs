@@ -298,8 +298,8 @@ public static class ViewExtensions
         {
             v.Visible = true;
         }
-
-        return hit is Adornment a ? a.Parent : hit;
+        
+        return hit is AdornmentView a ? a.SuperView : hit;
     }
 
 
@@ -322,9 +322,9 @@ public static class ViewExtensions
         }
 
         // Translate clicks in the border as the real View being clicked
-        if (hit is Border b)
+        if (hit is BorderView b)
         {
-            hit = b.Parent;
+            hit = b.SuperView;
 
         }
 
@@ -455,7 +455,7 @@ public static class ViewExtensions
     /// <returns></returns>
     public static bool IsAdornment(this View v)
     {
-        return v is Adornment || v.AnySuperViewIs<Adornment>();
+        return v is AdornmentView || v.AnySuperViewIs<AdornmentView>();
     }
 
     /// <summary>
@@ -493,11 +493,12 @@ public static class ViewExtensions
     {
         while (v != null)
         {
-            if (v is Adornment a)
+            if (v is AdornmentView a)
             {
-                return a.Parent;
+                return a.SuperView;
             }
 
+            // 
             v = v.SuperView;
         }
 

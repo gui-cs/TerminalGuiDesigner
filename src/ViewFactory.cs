@@ -52,8 +52,7 @@ public static class ViewFactory
         typeof(ScrollBar),
         typeof(ScrollSlider),
 
-        // Terminal.Gui combo boxes do not really work properly
-        typeof(ComboBox),
+
         typeof(FlagSelector<>),
         typeof(Dialog<>),
         typeof(Prompt<,>),
@@ -99,7 +98,7 @@ public static class ViewFactory
                         IsValueType: false
                     })
                     .Where(filteredType => filteredType == typeof(View) || filteredType.IsSubclassOf(typeof(View))
-                        && filteredType != typeof(Adornment))
+                        && filteredType != typeof(AdornmentView))
                     .Except(KnownUnsupportedTypes)
                     // Slider is an alias of Slider<object> so don't offer that
                     .Where(vt => vt != typeof(LinearRange));
@@ -148,12 +147,8 @@ public static class ViewFactory
 
         switch ( newView )
         {
-            case TimeField:
-                SetDefaultDimensions(newView, width ?? 9, height ?? 1);
-                break;
             case Button:
             case CheckBox:
-            case ComboBox:
             case Label:
                 newView.SetActualText(text ?? "Heya");
                 SetDefaultDimensionsDimAuto(newView);
@@ -195,10 +190,6 @@ public static class ViewFactory
                 tvf.Provider = new TextRegexProvider( ".*" );
                 tvf.Text = text ?? "Heya";
                 SetDefaultDimensions( newView, width ?? 5, height ?? 1 );
-                break;
-            case DateField df:
-                df.Value = DateTime.Today;
-                SetDefaultDimensions( newView, width ?? 20, height ?? 1 );
                 break;
             case TextField tf:
                 tf.Text = text ?? "Heya";
@@ -325,10 +316,7 @@ public static class ViewFactory
         return requestedType switch
         {
             null => throw new ArgumentNullException( nameof( requestedType ) ),
-            { } t when t == typeof(TimeField) => Create<TimeField>(),
-            { } t when t == typeof( DateField ) => Create<DateField>( ),
             { } t when t == typeof( Button ) => Create<Button>( ),
-            { } t when t == typeof( ComboBox ) => Create<ComboBox>( ),
             { } t when t == typeof( Line ) => Create<Line>( ),
             { } t when t == typeof( LinearRange ) => Create<LinearRange>( ),
             { } t when t == typeof(Label) => Create<Label>(),

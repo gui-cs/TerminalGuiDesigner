@@ -266,7 +266,7 @@ public class KeyboardManager
     private void StartOperation(Design d)
     {
         // these can already handle editing themselves
-        if (d.View is DateField || d.View is TextField || d.View is TextView)
+        if (d.View is TextField || d.View is TextView)
         {
             return;
         }

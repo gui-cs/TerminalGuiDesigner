@@ -54,7 +54,7 @@ public partial class DimEditor : Dialog, IValueGetterDialog
 
 
         Title = "Dim Designer";
-        Border.BorderStyle = LineStyle.Double;
+        Border.LineStyle = LineStyle.Double;
 
         btnOk.Accepting += BtnOk_Clicked;
         btnCancel.Accepting += BtnCancel_Clicked;

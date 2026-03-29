@@ -57,7 +57,7 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
         this.design = design;
 
         Title = "Pos Designer";
-        Border.BorderStyle = LineStyle.Double;
+        Border.LineStyle = LineStyle.Double;
 
         rgPosType.KeyDown += RgPosType_KeyPress;
 

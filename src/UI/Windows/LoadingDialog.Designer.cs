@@ -35,7 +35,7 @@ namespace TerminalGuiDesigner {
             this.Visible = true;
             this.Arrangement = (Terminal.Gui.ViewBase.ViewArrangement.Movable | Terminal.Gui.ViewBase.ViewArrangement.Overlapped);
             this.CanFocus = true;
-            this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Transparent;
+            this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Transparent;
             this.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Title = "Loading...";
             this.lblLoading.Width = 36;
@@ -45,7 +45,7 @@ namespace TerminalGuiDesigner {
             this.lblLoading.Visible = true;
             this.lblLoading.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.lblLoading.CanFocus = false;
-            this.lblLoading.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
+            this.lblLoading.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.None;
             this.lblLoading.Data = "lblLoading";
             this.lblLoading.Text = "Please wait ...";
             this.lblLoading.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
