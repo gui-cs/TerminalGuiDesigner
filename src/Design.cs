@@ -225,6 +225,13 @@ public class Design
             tf.MouseEvent += (s,e)=>this.SuppressNativeClickEvents(s,e);
         }
 
+        if (subView is Button btn)
+        {
+            // prevent control from responding to events
+            btn.MouseEvent += (s, e) => this.SuppressNativeClickEvents(s, e, true);
+            btn.MouseEnter += (s, e) => e.Cancel = true;
+        }
+
         if (subView.GetType().IsGenericType(typeof(LinearRange<>)))
         {
             // TODO: Does not seem to work
@@ -578,6 +585,10 @@ public class Design
         if (alsoSuppressClick)
         {
             obj.Handled = true;
+            if(sender is View v && obj.Flags == MouseFlags.LeftButtonClicked)
+            {
+                v.SetFocus();
+            }
         }
         else
         {
