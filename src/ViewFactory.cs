@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Data;
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Drawing;
 using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
@@ -60,7 +61,9 @@ public static class ViewFactory
         typeof(Runnable<>),
 
         // Could proably support later on
-        typeof(OptionSelector<>)
+        typeof(OptionSelector<>),
+        typeof(DropDownList<>),
+        typeof(Popover<,>)
     ];
 
     /// <summary>

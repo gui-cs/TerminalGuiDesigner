@@ -31,8 +31,8 @@ internal class KeyboardManagerTests : Tests
     [Test]
     public void Backspace_WithDateFieldSelected( )
     {
-        DateField v = ViewFactory.Create<DateField>( );
-        Assume.That( v, Is.Not.Null.And.TypeOf<DateField>( ) );
+        DateEditor v = ViewFactory.Create<DateEditor>( );
+        Assume.That( v, Is.Not.Null.And.TypeOf<DateEditor>( ) );
 
         FileInfo? file = null;
         Assume.That( ( ) => file = new( "ff.cs" ), Throws.Nothing );

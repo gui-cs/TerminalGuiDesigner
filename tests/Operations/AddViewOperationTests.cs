@@ -17,8 +17,8 @@ internal class AddViewOperationTests : Tests
     {
         typeof(TextField),
         typeof(TextView),
-        typeof(DateField),
-        typeof(TimeField),
+        typeof(DateEditor),
+        typeof(TimeEditor),
     };
 
     [Test( Description = "Tests AddViewOperation against all SupportedViewTypes" )]

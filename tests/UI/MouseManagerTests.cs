@@ -26,7 +26,7 @@ internal class MouseManagerTests : Tests
 
         if (view is Button btn)
         {
-            btn.ShadowStyle = ShadowStyle.None;
+            btn.ShadowStyle = ShadowStyles.None;
         }
 
         Assert.That( view.GetContentSize().Width, Is.EqualTo( 8 ) );
@@ -97,15 +97,14 @@ internal class MouseManagerTests : Tests
         using Button btn = ViewFactory.Create<Button>();
         btn.Width = 8;
         btn.Height = 2;
-        btn.ShadowStyle = ShadowStyle.Opaque;
+        btn.ShadowStyle = ShadowStyles.Opaque;
 
         Design design = new(App, d.SourceCode, "myView", btn);
         btn.Data = design;
         d.View.Add(btn);
 
         Assert.That(btn.Margin, Is.Not.Null);
-        Assert.That(btn.Margin!.IsAdornment(), Is.True);
-        var shadow = btn.Margin!.SubViews.ElementAt(0);
+        var shadow = btn.Margin.View!.SubViews.ElementAt(0);
         Assert.That(shadow,Is.InstanceOf<ShadowView>());
         Assert.That(shadow.IsAdornment,Is.True);
         Assert.That(shadow.GetAdornmentParent(),Is.SameAs(btn));
