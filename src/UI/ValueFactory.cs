@@ -50,7 +50,6 @@ namespace TerminalGuiDesigner.UI
         internal static bool GetNewValue(IApplication app, string propertyName, Design design, Type type, object? oldValue, out object? newValue, bool allowMultiLine)
         {
             newValue = null;
-
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(LinearRangeOption<>))
             {
                 return RunEditor(app, new SliderOptionEditor(app, type.GetGenericArguments()[0], oldValue), out newValue);
@@ -155,9 +154,9 @@ namespace TerminalGuiDesigner.UI
                 }
             }
             else
-            if (type.IsEnum)
+            if (IsEnumOrNullableEnum(type, oldValue, out var enumValue))
             {
-                if (Modals.GetEnum(app, propertyName, "New Enum Value", type, (Enum?)oldValue, out var resultEnum))
+                if (Modals.GetEnum(app, propertyName, "New Enum Value", type, enumValue, out var resultEnum))
                 {
                     newValue = resultEnum;
                     return true;
@@ -220,6 +219,23 @@ namespace TerminalGuiDesigner.UI
             }
 
             newValue = null;
+            return false;
+        }
+
+        private static bool IsEnumOrNullableEnum(Type type, object? oldValue, out Enum? enumValue)
+        {
+            if(type.IsEnum)
+            {
+                enumValue = (Enum?)oldValue;
+            }
+
+            if(Nullable.GetUnderlyingType(type) is Type underlying && underlying.IsEnum)
+            {
+                enumValue = (Enum?)oldValue;
+                return true;
+            }
+
+            enumValue = null;
             return false;
         }
 

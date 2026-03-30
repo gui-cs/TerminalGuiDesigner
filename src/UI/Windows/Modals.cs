@@ -159,6 +159,11 @@ public class Modals
 
     internal static bool GetEnum(IApplication app, string prompt, string okText, Type enumType, Enum? currentValue, out Enum? result)
     {
+        if(Nullable.GetUnderlyingType(enumType) is Type underlyingEnumType)
+        {
+            enumType = underlyingEnumType;
+        }
+
         return Get(app, prompt, okText, true, Enum.GetValues(enumType).Cast<Enum>().ToArray(), o => o?.ToString() ?? "Null", false, currentValue, out result);
     }
 
