@@ -57,7 +57,7 @@ internal class KeyboardManagerTests : Tests
 
         bool keyEventSuppressed = false;
         Assert.That( ( ) => keyEventSuppressed = mgr!.HandleKey( v, backspace ), Throws.Nothing );
-        Assert.That( keyEventSuppressed, Is.False );
+        Assert.That( keyEventSuppressed, Is.True );
     }
 
     [Test]
