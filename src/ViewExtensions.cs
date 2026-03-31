@@ -448,8 +448,7 @@ public static class ViewExtensions
 
     /// <summary>
     /// Returns <see langword="true"/> if <paramref name="v"/> is part of
-    /// a <see cref="Adornment"/> (either directly or embedded sub view of
-    /// one - e.g. <see cref="ShadowView"/>).
+    /// an Adornment (either directly or embedded sub view of one - e.g. <see cref="ShadowView"/>).
     /// </summary>
     /// <param name="v"></param>
     /// <returns></returns>
@@ -482,8 +481,8 @@ public static class ViewExtensions
     }
 
     /// <summary>
-    /// Returns the <see cref="Adornment.Parent"/> of <paramref name="v"/>
-    /// if it is an <see cref="Adornment"/>. Or if <paramref name="v"/> is not
+    /// Returns the <see cref="IAdornment.Parent"/> of <paramref name="v"/>
+    /// if it is an <see cref="AdornmentView"/>. Or if <paramref name="v"/> is not
     /// directly an adornment but <see cref="AnySuperViewIs{T}"/> then the method
     /// will traverse up <see cref="View.SuperView"/> hierarchy until parent is found.
     /// </summary>
@@ -493,12 +492,11 @@ public static class ViewExtensions
     {
         while (v != null)
         {
-            if (v is AdornmentView a)
+            if(v is AdornmentView av)
             {
-                return a.SuperView;
+                return av.Adornment?.Parent;
             }
 
-            // 
             v = v.SuperView;
         }
 
