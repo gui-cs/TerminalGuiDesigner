@@ -22,8 +22,10 @@ internal class ViewFactoryTests : Tests
                 .Select(Tests.PickFirstTTypeForGenerics)
                 .Select(
             static t => new TestCaseData( 
-                RuntimeHelpers.GetUninitializedObject( t ) 
-                ) ); }
+                RuntimeHelpers.GetUninitializedObject( t )
+                )
+            .SetName($"Create_And_CreateT_ReturnExpectedType<{t.Name}>")
+                ); }
     }
 
     private static MenuBarItem[] ViewFactory_DefaultMenuBarItems => ViewFactory.DefaultMenuBarItems;

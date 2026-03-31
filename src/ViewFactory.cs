@@ -189,6 +189,12 @@ public static class ViewFactory
                 tv.AddEmptyTab( "Tab2" );
                 SetDefaultDimensions( newView, width ?? 50, height ?? 5 );
                 break;
+            case TimeEditor te:
+                SetDefaultDimensions(newView, width ?? 10, height ?? 1);
+                break;
+            case DateEditor de:
+                SetDefaultDimensions(newView, width ?? 10, height ?? 1);
+                break;
             case TextValidateField tvf:
                 tvf.Provider = new TextRegexProvider( ".*" );
                 tvf.Text = text ?? "Heya";
