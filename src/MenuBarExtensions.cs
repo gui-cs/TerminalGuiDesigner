@@ -154,6 +154,8 @@ public static class MenuBarExtensions
         var items = menuItem.GetMenuItems();
         items.Insert(Math.Min(index, items.Count), itemToInsert);
         menuItem.SetMenuItems(items);
+
+        itemToInsert.SetFocus();
     }
 
     /// <summary>

@@ -111,8 +111,7 @@ public class KeyboardManager
             OperationManager.Instance.Do(
                     new AddMenuItemOperation(this.app, menuItem));
 
-            ChangeKeyTo(keystroke, Key.CursorDown);
-            return false;
+            return true;
         }
 
         if (keystroke.ToString( ) == this.keyMap.SetShortcut)

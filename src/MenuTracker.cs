@@ -23,12 +23,6 @@ public class MenuTracker
     /// </summary>
     public static MenuTracker Instance { get; } = new();
 
-    /// <summary>
-    /// Gets the currently selected <see cref="MenuItem"/> if any.  To work
-    /// you must subscribe all <see cref="MenuBar"/> to this class so that
-    /// it can watch <see cref="MenuBar.MenuOpened"/> etc.
-    /// </summary>
-    public MenuItem? CurrentlyOpenMenuItem { get; private set; }
 
     /// <summary>
     /// Registers listeners for <paramref name="mb"/> to track open/close.
@@ -71,17 +65,6 @@ public class MenuTracker
     {
         if (sender is MenuBarItem menuBarItem)
         {
-            if (e.NewValue) // Menu opened
-            {
-                // Set the currently open menu item to the MenuBarItem itself
-                // The KeyboardManager will use this to enable renaming
-                this.CurrentlyOpenMenuItem = menuBarItem;
-            }
-            else // Menu closed
-            {
-                this.CurrentlyOpenMenuItem = null;
-            }
-
             // Convert empty menus when closing
             if (!e.NewValue)
             {
