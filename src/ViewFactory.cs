@@ -81,8 +81,11 @@ public static class ViewFactory
         {
             return
             [
-                new MenuBarItem( "_File (F9)",
-                     [ new MenuItem( DefaultMenuItemText, string.Empty, static ( ) => { } ) ] )
+                new MenuBarItem( "_File",
+                     [ new MenuItem( DefaultMenuItemText, string.Empty, static ( ) => { } ), 
+                        new MenuItem(DefaultMenuItemText, string.Empty, static () => { })] ){
+                    Key = Key.F9
+                }
             ];
         }
     }

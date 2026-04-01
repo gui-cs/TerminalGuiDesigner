@@ -42,7 +42,7 @@ public class KeyboardManager
     /// <returns><see langword="true"/> if <paramref name="keystroke"/> should be suppressed.</returns>
     public bool HandleKey(View focusedView, Key keystroke)
     {
-        var menuItem = MenuTracker.Instance.CurrentlyOpenMenuItem;
+        var menuItem = MenuTracker.GetFocusedMenuItemIfAny(app);
 
         // if we are in a menu
         if (menuItem != null)

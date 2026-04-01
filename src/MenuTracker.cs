@@ -308,4 +308,19 @@ public class MenuTracker
 
         return null;
     }
+
+    internal static MenuItem? GetFocusedMenuItemIfAny(IApplication app)
+    {
+        var m = app.Popovers?.Popovers?.FirstOrDefault(p => p.Visible) as PopoverMenu;
+
+        var focused = m?.Focused;
+
+        int maxIterations = 10;
+        while(focused != null && focused is Menu menu && maxIterations-- > 0)
+        {
+            focused = menu.Focused;
+        }
+
+        return focused as MenuItem;
+    }
 }
