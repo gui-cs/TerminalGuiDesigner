@@ -91,8 +91,9 @@ namespace TerminalGuiDesigner.UI
             }
 
             if (
-                type.IsGenericType(typeof(IEnumerable<>)) ||
-                type.IsAssignableTo(typeof(IList))
+                type != typeof(string) &&
+                (type.IsGenericType(typeof(IEnumerable<>)) ||
+                type.IsAssignableTo(typeof(IList)))
                 )
             {
                 var elementType = type.GetElementTypeEx()
@@ -227,6 +228,7 @@ namespace TerminalGuiDesigner.UI
             if(type.IsEnum)
             {
                 enumValue = (Enum?)oldValue;
+                return true;
             }
 
             if(Nullable.GetUnderlyingType(type) is Type underlying && underlying.IsEnum)

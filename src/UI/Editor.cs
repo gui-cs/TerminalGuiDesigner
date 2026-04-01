@@ -954,7 +954,7 @@ public class Editor : Runnable, IErrorReporter
             .Except(setProps)
             .GroupBy(k => k.Category, p=>ToMenuItem(app,p));
 
-        var setPropsItems = setProps.Select(p=>ToMenuItem(app,p)).ToArray();
+        var setPropsItems = setProps.Select(p=>ToMenuItem(app,p)).ToList();
         bool hasPropsItems = setPropsItems.Any();
 
         var all = new List<MenuItem>();
@@ -962,17 +962,34 @@ public class Editor : Runnable, IErrorReporter
         // only add the set properties category if there are some
         if (hasPropsItems)
         {
+            // Also add to the submenu an 'All' version
+            // Workaround for https://github.com/gui-cs/Terminal.Gui/issues/4876 
+            // Previously user could do it by selecting the root 'Properties' expandable
+            // menu
+            setPropsItems.Insert(0, new MenuItem() { 
+                Title="(All)",
+                Action = () =>
+                    {
+                        if (selected.Length == 1 || rightClicked != null)
+                        {
+                            this.ShowEditProperties(rightClicked ?? selected[0]);
+                        }
+                    },
+                });
+
             all.Add(new MenuItem()
             {
                 Title = name,
-                Action = () =>
+                SubMenu = new Menu(setPropsItems)
+                /*
+                 * No longer supported, see https://github.com/gui-cs/Terminal.Gui/issues/4876
+                 * ,Action = () =>
                 {
                     if (selected.Length == 1 || rightClicked != null)
                     {
                         this.ShowEditProperties(rightClicked ?? selected[0]);
                     }
-                },
-                SubMenu = new Menu(setPropsItems)
+                },*/
             });
         }
 
