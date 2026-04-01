@@ -1089,9 +1089,10 @@ public class Editor : Runnable, IErrorReporter
             return m;
         }
 
-        if (MenuTracker.Instance.CurrentlyOpenMenuItem != null)
+        var selectedMenuItem = MenuTracker.GetFocusedMenuItemIfAny(app);
+        if (selectedMenuItem != null)
         {
-            return $"Selected: {MenuTracker.Instance.CurrentlyOpenMenuItem.Title}";
+            return $"Selected: {selectedMenuItem.Title}";
         }
 
         var selected = SelectionManager.Instance.Selected.ToArray();
@@ -1164,7 +1165,7 @@ public class Editor : Runnable, IErrorReporter
         {
             return;
         }
-        var menuItem = MenuTracker.Instance.CurrentlyOpenMenuItem;
+        var menuItem = MenuTracker.GetFocusedMenuItemIfAny(app);
 
         // if we are in a menu
         if (menuItem != null)
