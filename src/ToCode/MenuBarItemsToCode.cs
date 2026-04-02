@@ -47,13 +47,12 @@ public class MenuBarItemsToCode : ToCodeBase
         MenuBarItem m1 = new MenuBarItem();
         m1.Children = new []{m1_1};
 
-        mb.Menus = new []{m1};
-        */
-
-        /*
+        mb.Menus = new []{m1};*/
+        
         // TODO: Let user name these
         List<string> menus = new();
-        foreach (var child in this.menuBar.Menus)
+
+        foreach (var child in this.menuBar.SubViews.OfType<MenuBarItem>())
         {
             this.ToCode(args, child, out string fieldName);
             menus.Add(fieldName);
@@ -67,9 +66,9 @@ public class MenuBarItemsToCode : ToCodeBase
                 menus.Select(c =>
                     new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), c))
                     .ToArray()));
-        */
+        
     }
-    /*
+    
     private void ToCode(CodeDomArgs args, MenuBarItem child, out string fieldName)
     {
         fieldName = this.GetUniqueFieldName(args, child);
@@ -77,11 +76,13 @@ public class MenuBarItemsToCode : ToCodeBase
         this.AddConstructorCall(args, $"this.{fieldName}", child.GetType());
         this.AddPropertyAssignment(args, $"this.{fieldName}.{nameof(MenuItem.Title)}", child.Title);
 
+        
+
         List<string?> children = new();
 
         // TODO: Make recursive for more children
         // plus again let user name these
-        foreach (var sub in child.Children)
+        foreach (var sub in child.GetMenuItems())
         {
             if (sub is MenuBarItem bar)
             {
@@ -94,47 +95,46 @@ public class MenuBarItemsToCode : ToCodeBase
                 // its a menu separator (in Terminal.Gui separators are indicated by having a null element).
                 children.Add(null);
             }
-            else
+            else if(sub is MenuItem mi)
             {
-                string subFieldName = this.GetUniqueFieldName(args, sub);
+                string subFieldName = this.GetUniqueFieldName(args, mi);
                 this.AddFieldToClass(args, sub.GetType(), subFieldName);
                 this.AddConstructorCall(args, $"this.{subFieldName}", sub.GetType());
                 this.AddPropertyAssignment(args, $"this.{subFieldName}.{nameof(MenuItem.Title)}", sub.Title);
                 this.AddPropertyAssignment(args, $"this.{subFieldName}.{nameof(MenuItem.Data)}", subFieldName);
 
-                if (sub.Key != KeyCode.Null)
+                if (mi.Key != KeyCode.Null)
                 {
                     this.AddPropertyAssignment(
                     args,
                     $"this.{subFieldName}.{nameof(MenuItem.Key)}",
                     new CodeCastExpression(
                         new CodeTypeReference(typeof(KeyCode)),
-                        new CodePrimitiveExpression((uint)sub.Key)));
+                        new CodePrimitiveExpression((uint)mi.Key)));
                 }
 
                 children.Add(subFieldName);
             }
         }
 
-        // TODO: This is not the way to do it in v2
+        /*
+        Creates code like:
+        this.fileMenu.SetMenuItems([this.editMeMenuItem, this.editMeToo]);
+        */
+
 
         // we have created fields and constructor calls for our menu
         // now set the menu to an array of all those fields
-        this.AddPropertyAssignment(
-            args,
-            $"this.{fieldName}.{"Children"}",
-            new CodeArrayCreateExpression(
-                typeof(MenuItem),
-                children.Select(c =>
+        this.AddMethodCall(args,
 
-                    // the array elements have null for separator
-                    c is null ? new CodePrimitiveExpression() :
+            new CodeFieldReferenceExpression(
+                new CodeThisReferenceExpression(), fieldName),
+            "SetMenuItems",
+            new CodeSnippetExpression($"[{string.Join(",", children.Select(c=>"this." + c))}]")
+        );
 
-                    // or the name of the field for each menu item
-                    (CodeExpression)new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), c))
-                    .ToArray()));
     }
-    */
+    
     private string GetUniqueFieldName(CodeDomArgs args, MenuItem item)
     {
         // if user has an explicit name they have set
