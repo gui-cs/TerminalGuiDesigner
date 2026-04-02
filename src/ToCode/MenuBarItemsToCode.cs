@@ -56,17 +56,15 @@ public class MenuBarItemsToCode : ToCodeBase
         {
             this.ToCode(args, child, out string fieldName);
             menus.Add(fieldName);
-        }
 
-        this.AddPropertyAssignment(
-            args,
-            $"this.{this.design.FieldName}.{nameof(this.menuBar.Menus)}",
-            new CodeArrayCreateExpression(
-                typeof(MenuBarItem),
-                menus.Select(c =>
-                    new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), c))
-                    .ToArray()));
-        
+            this.AddMethodCall(args,
+                new CodeFieldReferenceExpression(
+                    new CodeThisReferenceExpression(), this.design.FieldName),
+                "Add",
+                        // or the name of the field for each menu item
+                        new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), fieldName)
+            );
+        }
     }
     
     private void ToCode(CodeDomArgs args, MenuBarItem child, out string fieldName)
@@ -119,11 +117,7 @@ public class MenuBarItemsToCode : ToCodeBase
 
         foreach(var c in children)
         {
-
-            // we have created fields and constructor calls for our menu
-            // now set the menu to an array of all those fields
             this.AddMethodCall(args,
-
                 new CodeFieldReferenceExpression(
                     new CodeThisReferenceExpression(), fieldName),
                 "Add",
