@@ -117,22 +117,20 @@ public class MenuBarItemsToCode : ToCodeBase
             }
         }
 
-        /*
-        Creates code like:
-        this.fileMenu.SetMenuItems([this.editMeMenuItem, this.editMeToo]);
-        */
+        foreach(var c in children)
+        {
 
+            // we have created fields and constructor calls for our menu
+            // now set the menu to an array of all those fields
+            this.AddMethodCall(args,
 
-        // we have created fields and constructor calls for our menu
-        // now set the menu to an array of all those fields
-        this.AddMethodCall(args,
-
-            new CodeFieldReferenceExpression(
-                new CodeThisReferenceExpression(), fieldName),
-            "SetMenuItems",
-            new CodeSnippetExpression($"[{string.Join(",", children.Select(c=>"this." + c))}]")
-        );
-
+                new CodeFieldReferenceExpression(
+                    new CodeThisReferenceExpression(), fieldName),
+                "Add",
+                        // or the name of the field for each menu item
+                        new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), c)
+            );
+        }
     }
     
     private string GetUniqueFieldName(CodeDomArgs args, MenuItem item)
