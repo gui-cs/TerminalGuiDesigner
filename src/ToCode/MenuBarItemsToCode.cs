@@ -57,6 +57,7 @@ public class MenuBarItemsToCode : ToCodeBase
             this.ToCode(args, child, out string fieldName);
             menus.Add(fieldName);
 
+
             this.AddMethodCall(args,
                 new CodeFieldReferenceExpression(
                     new CodeThisReferenceExpression(), this.design.FieldName),
@@ -69,12 +70,25 @@ public class MenuBarItemsToCode : ToCodeBase
     
     private void ToCode(CodeDomArgs args, MenuBarItem child, out string fieldName)
     {
+        // ------------ Class Fields -------------
+
+        // private Terminal.Gui.Views.MenuBarItem fileMenu;
         fieldName = this.GetUniqueFieldName(args, child);
         this.AddFieldToClass(args, child.GetType(), fieldName);
-        this.AddConstructorCall(args, $"this.{fieldName}", child.GetType());
-        this.AddPropertyAssignment(args, $"this.{fieldName}.{nameof(MenuItem.Title)}", child.Title);
 
+        // --------- InitializeComponent() ---------
+
+        // this.fileMenu = new Terminal.Gui.Views.MenuBarItem();
+        this.AddConstructorCall(args, $"this.{fieldName}", child.GetType());
+
+        // this.fileMenu.Title = "_File";
+        this.AddPropertyAssignment(args, $"this.{fieldName}.{nameof(MenuItem.Title)}", child.Title);
         
+        // TODO: Verify that all ToString exactly match the static property
+        // this.fileMenu.Key = Key.F9;
+        this.AddPropertyAssignment(args, $"this.{fieldName}.{nameof(MenuItem.Key)}", 
+            new CodeSnippetExpression($"Key.{child.Key}"));
+
 
         List<string?> children = new();
 
@@ -115,16 +129,9 @@ public class MenuBarItemsToCode : ToCodeBase
             }
         }
 
-        foreach(var c in children)
-        {
-            this.AddMethodCall(args,
-                new CodeFieldReferenceExpression(
-                    new CodeThisReferenceExpression(), fieldName),
-                "Add",
-                        // or the name of the field for each menu item
-                        new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), c)
-            );
-        }
+        // this.fileMenu.PopoverMenu = new PopoverMenu([editMeMenuItem]);
+        this.AddPropertyAssignment(args, $"this.{fieldName}.{nameof(MenuBarItem.PopoverMenu)}",
+             new CodeSnippetExpression($"new PopoverMenu([{string.Join(",",children)}])"));
     }
     
     private string GetUniqueFieldName(CodeDomArgs args, MenuItem item)

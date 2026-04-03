@@ -8,7 +8,8 @@
 //      the code is regenerated.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
-namespace Showcase {
+namespace Showcase
+{
     using System;
     using Terminal.Gui;
     using Terminal.Gui.App;
@@ -20,214 +21,47 @@ namespace Showcase {
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Drawing;
-    
-    
-    public partial class Menus : Terminal.Gui.ViewBase.View {
-        
+
+
+    public partial class Menus : Terminal.Gui.Views.Dialog
+    {
+
         private Terminal.Gui.Views.MenuBar menuBar;
-        
-        private Terminal.Gui.Views.MenuBarItem fileF9Menu;
-        
-        private Terminal.Gui.Views.MenuBarItem newMenu;
-        
-        private Terminal.Gui.Views.MenuItem projectMenuItem;
-        
-        private Terminal.Gui.Views.MenuItem repositoryMenuItem;
-        
-        private Terminal.Gui.Views.MenuItem fileMenuItem;
-        
-        private Terminal.Gui.Views.MenuItem projectFromExistingCodeMenuItem;
-        
-        private Terminal.Gui.Views.MenuItem spellCheckerConfigurationForSelectedItemMenuItem;
-        
-        private Terminal.Gui.Views.MenuBarItem openMenu;
-        
-        private Terminal.Gui.Views.MenuItem projectSolutionMenuItem;
-        
-        private Terminal.Gui.Views.MenuItem folderMenuItem;
-        
-        private Terminal.Gui.Views.MenuItem workspaceMenuItem;
-        
-        private Terminal.Gui.Views.MenuItem cMakeMenuItem;
-        
-        private Terminal.Gui.Views.MenuItem fileMenuItem2;
-        
-        private Terminal.Gui.Views.MenuBarItem editMenu;
-        
-        private Terminal.Gui.Views.MenuBarItem goToMenu;
-        
-        private Terminal.Gui.Views.MenuItem goToLineMenuItem;
-        
-        private Terminal.Gui.Views.MenuItem goToTextMenuItem;
-        
-        private Terminal.Gui.Views.MenuItem goToAllMenuItem;
-        
-        private Terminal.Gui.Views.MenuItem findAndReplaceMenuItem;
-        
-        private Terminal.Gui.Views.MenuItem goToBaseMenuItem;
-        
-        private Terminal.Gui.Views.MenuItem undoMenuItem;
-        
-        private Terminal.Gui.Views.MenuItem redoMenuItem;
-        
-        private Terminal.Gui.Views.MenuItem undoLastGlobalActionMenuItem;
-        
-        private Terminal.Gui.Views.MenuItem redoLastGlobalActionMenuItem;
-        
-        private Terminal.Gui.Views.MenuItem cutMenuItem;
-        
-        private Terminal.Gui.Views.MenuItem copyMenuItem;
-        
-        private Terminal.Gui.Views.MenuItem pasteMenuItem;
-        
-        private Terminal.Gui.Views.MenuItem showClipboardHistoryMenuItem;
-        
-        private void InitializeComponent() {
+
+        private Terminal.Gui.Views.MenuBarItem fileMenu;
+
+        private Terminal.Gui.Views.MenuItem editMeMenuItem;
+
+        private void InitializeComponent()
+        {
             this.menuBar = new Terminal.Gui.Views.MenuBar();
-            this.Width = Dim.Fill(0);
-            this.Height = Dim.Fill(0);
-            this.X = 0;
-            this.Y = 0;
+            this.Width = Dim.Percent(90);
+            this.Height = Dim.Percent(80);
+            this.X = Pos.Center();
+            this.Y = Pos.Center();
             this.Visible = true;
-            this.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-            this.CanFocus = false;
-            this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
+            this.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Overlapped;
+            this.CanFocus = true;
+            this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Transparent;
             this.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.menuBar.Width = Dim.Fill(0);
-            this.menuBar.Height = 1;
+            this.menuBar.Height = Dim.Auto();
             this.menuBar.X = 0;
             this.menuBar.Y = 0;
             this.menuBar.Visible = true;
             this.menuBar.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.menuBar.CanFocus = false;
-            this.menuBar.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
+            this.menuBar.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Transparent;
             this.menuBar.Data = "menuBar";
             this.menuBar.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
-            this.fileF9Menu = new Terminal.Gui.Views.MenuBarItem();
-            this.fileF9Menu.Title = "_File (F9)";
-            this.newMenu = new Terminal.Gui.Views.MenuBarItem();
-            this.newMenu.Title = "New";
-            this.projectMenuItem = new Terminal.Gui.Views.MenuItem();
-            this.projectMenuItem.Title = "Project...";
-            this.projectMenuItem.Data = "projectMenuItem";
-            this.projectMenuItem.Key = ((Terminal.Gui.Drivers.KeyCode)(1073741902u));
-            this.repositoryMenuItem = new Terminal.Gui.Views.MenuItem();
-            this.repositoryMenuItem.Title = "Repository...";
-            this.repositoryMenuItem.Data = "repositoryMenuItem";
-            this.fileMenuItem = new Terminal.Gui.Views.MenuItem();
-            this.fileMenuItem.Title = "File...";
-            this.fileMenuItem.Data = "fileMenuItem";
-            this.projectFromExistingCodeMenuItem = new Terminal.Gui.Views.MenuItem();
-            this.projectFromExistingCodeMenuItem.Title = "Project From Existing Code...";
-            this.projectFromExistingCodeMenuItem.Data = "projectFromExistingCodeMenuItem";
-            this.spellCheckerConfigurationForSelectedItemMenuItem = new Terminal.Gui.Views.MenuItem();
-            this.spellCheckerConfigurationForSelectedItemMenuItem.Title = "Spell Checker Configuration for Selected Item";
-            this.spellCheckerConfigurationForSelectedItemMenuItem.Data = "spellCheckerConfigurationForSelectedItemMenuItem";
-            foreach(var m in new Terminal.Gui.ViewBase.View[] {
-                    this.projectMenuItem,
-                    this.repositoryMenuItem,
-                    this.fileMenuItem,
-                    this.projectFromExistingCodeMenuItem,
-                    new Line(),
-                    this.spellCheckerConfigurationForSelectedItemMenuItem})
-            {
-                this.newMenu.Add(m);
-            }
-            this.openMenu = new Terminal.Gui.Views.MenuBarItem();
-            this.openMenu.Title = "Open";
-            this.projectSolutionMenuItem = new Terminal.Gui.Views.MenuItem();
-            this.projectSolutionMenuItem.Title = "Project/Solution";
-            this.projectSolutionMenuItem.Data = "projectSolutionMenuItem";
-            this.projectSolutionMenuItem.Key = ((Terminal.Gui.Drivers.KeyCode)(1342177359u));
-            this.folderMenuItem = new Terminal.Gui.Views.MenuItem();
-            this.folderMenuItem.Title = "Folder...";
-            this.folderMenuItem.Data = "folderMenuItem";
-            this.workspaceMenuItem = new Terminal.Gui.Views.MenuItem();
-            this.workspaceMenuItem.Title = "Workspace...";
-            this.workspaceMenuItem.Data = "workspaceMenuItem";
-            this.cMakeMenuItem = new Terminal.Gui.Views.MenuItem();
-            this.cMakeMenuItem.Title = "CMake...";
-            this.cMakeMenuItem.Data = "cMakeMenuItem";
-            this.fileMenuItem2 = new Terminal.Gui.Views.MenuItem();
-            this.fileMenuItem2.Title = "File...";
-            this.fileMenuItem2.Data = "fileMenuItem2";
-            this.fileMenuItem2.Key = ((Terminal.Gui.Drivers.KeyCode)(1073741903u));
-            this.openMenu.Children = new Terminal.Gui.Views.MenuItem[] {
-                    this.projectSolutionMenuItem,
-                    this.folderMenuItem,
-                    this.workspaceMenuItem,
-                    this.cMakeMenuItem,
-                    null,
-                    this.fileMenuItem2};
-            this.fileF9Menu.Children = new Terminal.Gui.Views.MenuItem[] {
-                    this.newMenu,
-                    this.openMenu};
-            this.editMenu = new Terminal.Gui.Views.MenuBarItem();
-            this.editMenu.Title = "Edit";
-            this.goToMenu = new Terminal.Gui.Views.MenuBarItem();
-            this.goToMenu.Title = "Go To";
-            this.goToLineMenuItem = new Terminal.Gui.Views.MenuItem();
-            this.goToLineMenuItem.Title = "Go To Line...";
-            this.goToLineMenuItem.Data = "goToLineMenuItem";
-            this.goToLineMenuItem.Key = ((Terminal.Gui.Drivers.KeyCode)(1073741895u));
-            this.goToTextMenuItem = new Terminal.Gui.Views.MenuItem();
-            this.goToTextMenuItem.Title = "Go To Text...";
-            this.goToTextMenuItem.Data = "goToTextMenuItem";
-            this.goToTextMenuItem.Key = ((Terminal.Gui.Drivers.KeyCode)(2415919174u));
-            this.goToAllMenuItem = new Terminal.Gui.Views.MenuItem();
-            this.goToAllMenuItem.Title = "Go To All...";
-            this.goToAllMenuItem.Data = "goToAllMenuItem";
-            this.goToMenu.Children = new Terminal.Gui.Views.MenuItem[] {
-                    this.goToLineMenuItem,
-                    this.goToTextMenuItem,
-                    this.goToAllMenuItem};
-            this.findAndReplaceMenuItem = new Terminal.Gui.Views.MenuItem();
-            this.findAndReplaceMenuItem.Title = "Find and Replace";
-            this.findAndReplaceMenuItem.Data = "findAndReplaceMenuItem";
-            this.goToBaseMenuItem = new Terminal.Gui.Views.MenuItem();
-            this.goToBaseMenuItem.Title = "Go To Base";
-            this.goToBaseMenuItem.Data = "goToBaseMenuItem";
-            this.undoMenuItem = new Terminal.Gui.Views.MenuItem();
-            this.undoMenuItem.Title = "Undo";
-            this.undoMenuItem.Data = "undoMenuItem";
-            this.redoMenuItem = new Terminal.Gui.Views.MenuItem();
-            this.redoMenuItem.Title = "Redo";
-            this.redoMenuItem.Data = "redoMenuItem";
-            this.undoLastGlobalActionMenuItem = new Terminal.Gui.Views.MenuItem();
-            this.undoLastGlobalActionMenuItem.Title = "Undo Last Global Action";
-            this.undoLastGlobalActionMenuItem.Data = "undoLastGlobalActionMenuItem";
-            this.redoLastGlobalActionMenuItem = new Terminal.Gui.Views.MenuItem();
-            this.redoLastGlobalActionMenuItem.Title = "Redo Last Global Action";
-            this.redoLastGlobalActionMenuItem.Data = "redoLastGlobalActionMenuItem";
-            this.cutMenuItem = new Terminal.Gui.Views.MenuItem();
-            this.cutMenuItem.Title = "Cut";
-            this.cutMenuItem.Data = "cutMenuItem";
-            this.copyMenuItem = new Terminal.Gui.Views.MenuItem();
-            this.copyMenuItem.Title = "Copy";
-            this.copyMenuItem.Data = "copyMenuItem";
-            this.pasteMenuItem = new Terminal.Gui.Views.MenuItem();
-            this.pasteMenuItem.Title = "Paste";
-            this.pasteMenuItem.Data = "pasteMenuItem";
-            this.showClipboardHistoryMenuItem = new Terminal.Gui.Views.MenuItem();
-            this.showClipboardHistoryMenuItem.Title = "Show Clipboard History";
-            this.showClipboardHistoryMenuItem.Data = "showClipboardHistoryMenuItem";
-            this.editMenu.Children = new Terminal.Gui.Views.MenuItem[] {
-                    this.goToMenu,
-                    this.findAndReplaceMenuItem,
-                    this.goToBaseMenuItem,
-                    null,
-                    this.undoMenuItem,
-                    this.redoMenuItem,
-                    this.undoLastGlobalActionMenuItem,
-                    this.redoLastGlobalActionMenuItem,
-                    null,
-                    this.cutMenuItem,
-                    this.copyMenuItem,
-                    this.pasteMenuItem,
-                    this.showClipboardHistoryMenuItem};
-            this.menuBar.Menus = new Terminal.Gui.Views.MenuBarItem[] {
-                    this.fileF9Menu,
-                    this.editMenu};
+            this.fileMenu = new Terminal.Gui.Views.MenuBarItem();
+            this.fileMenu.Title = "_File";
+            this.fileMenu.Key = Key.A;
+            this.editMeMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.editMeMenuItem.Title = "Edit Me";
+            this.editMeMenuItem.Data = "editMeMenuItem";
+            this.fileMenu.PopoverMenu = new PopoverMenu([editMeMenuItem]);
+            this.menuBar.Add(this.fileMenu);
             this.Add(this.menuBar);
         }
     }
