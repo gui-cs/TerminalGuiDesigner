@@ -26,7 +26,7 @@ public class MoveMenuItemRightOperation : MenuItemOperation
             return;
         }
 
-        var items = this.Parent.GetMenuItems();
+        var items = this.Parent.GetMenuItems(out _);
         int idx = items.IndexOf(toMove);
 
         // Can't move right if we're the first item (no item above to become parent)
@@ -74,7 +74,7 @@ public class MoveMenuItemRightOperation : MenuItemOperation
         }
 
         // When user hits shift right
-        var children = this.Parent.GetMenuItems();
+        var children = this.Parent.GetMenuItems(out _);
         var currentItemIdx = children.IndexOf(this.OperateOn);
         var aboveIdx = currentItemIdx - 1;
 

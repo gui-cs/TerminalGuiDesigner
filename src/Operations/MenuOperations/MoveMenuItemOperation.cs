@@ -34,7 +34,7 @@ public class MoveMenuItemOperation : MenuItemOperation
             return;
         }
 
-        this.siblings = this.Parent.GetMenuItems();
+        this.siblings = this.Parent.GetMenuItems(out _);
         this.currentItemIdx = this.siblings.IndexOf(this.OperateOn);
 
         if (this.currentItemIdx < 0)

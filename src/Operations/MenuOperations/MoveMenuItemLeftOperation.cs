@@ -43,7 +43,7 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
 
         if (this.Parent != null)
         {
-            var items = this.Parent.GetMenuItems();
+            var items = this.Parent.GetMenuItems(out _);
             this.pulledFromIndex = items.IndexOf(this.OperateOn);
         }
     }
@@ -83,7 +83,7 @@ public class MoveMenuItemLeftOperation : MenuItemOperation
         }
 
         // Figure out where the parent is in the list
-        var parentsParentItems = parentsParent.GetMenuItems();
+        var parentsParentItems = parentsParent.GetMenuItems(out _);
         var parentsIdx = parentsParentItems.IndexOf(this.Parent);
 
         // remove us from our current location

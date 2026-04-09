@@ -83,7 +83,7 @@ public class RemoveMenuItemOperation : MenuItemOperation
                 {
                     if (grandparent != null)
                     {
-                        var grandparentItems = grandparent.GetMenuItems();
+                        var grandparentItems = grandparent.GetMenuItems(out _);
                         int replacementIndex = grandparentItems.IndexOf(converted.Value);
                         if(replacementIndex >= 0 && replacementIndex < grandparentItems.Count)
                         {
@@ -139,7 +139,7 @@ public class RemoveMenuItemOperation : MenuItemOperation
             return false;
         }
 
-        var items = this.Parent.GetMenuItems();
+        var items = this.Parent.GetMenuItems(out _);
         this.removedAtIdx = Math.Max(0, items.IndexOf(this.OperateOn));
 
         this.Parent.RemoveMenuItem(this.OperateOn);

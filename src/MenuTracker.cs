@@ -270,7 +270,7 @@ public class MenuTracker
     private MenuItem? FindParentRecursive(MenuItem item, MenuItem potentialParent)
     {
         // Check if the item is directly in this MenuItem's children
-        var children = potentialParent.GetMenuItems();
+        var children = potentialParent.GetMenuItems(out _);
         if (children.Contains(item))
         {
             return potentialParent;

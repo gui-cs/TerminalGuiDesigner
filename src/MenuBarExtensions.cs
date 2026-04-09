@@ -79,18 +79,27 @@ public static class MenuBarExtensions
     }
 
     /// <summary>
-    /// Gets the Menu that contains the child items for this MenuItem.
-    /// For MenuBarItem, this is PopoverMenu.Root. For MenuItem, this is SubMenu.
-    /// </summary>
+    /// <para>
+    /// A MenuItem can have 2 kinds of submenu.  If the MenuItem is an element on a
+    /// is on a MenuBar (i.e. a top level menu item like File, Edit, View etc) then it will
+    /// have a PopoverMenu.
+    /// </para>
+    /// <para>
+    /// Otherwise if it is a regular MenuItem entry e.g. File->New then it may have an SubMenu
+    /// ordinary SubMenu i.e. not a popover.
+    /// </para>
     /// <param name="menuItem">The MenuItem to get the menu from.</param>
+    /// 
     /// <returns>The Menu containing child items, or null if none exists.</returns>
-    public static Menu? GetChildMenu(this MenuItem menuItem)
+    public static Menu? GetChildMenu(this MenuItem menuItem, out bool wasPopover)
     {
         if (menuItem is MenuBarItem mbi)
         {
+            wasPopover = true;
             return mbi.PopoverMenu?.Root;
         }
 
+        wasPopover = false;
         return menuItem.SubMenu;
     }
 
@@ -98,10 +107,11 @@ public static class MenuBarExtensions
     /// Gets all MenuItem children from this MenuItem's menu.
     /// </summary>
     /// <param name="menuItem">The MenuItem to get children from.</param>
+    /// <param name="wasPopover"></param>
     /// <returns>List of MenuItem children, or empty list if no menu exists.</returns>
-    public static List<MenuItem> GetMenuItems(this MenuItem menuItem)
+    public static List<MenuItem> GetMenuItems(this MenuItem menuItem, out bool wasPopover)
     {
-        var menu = menuItem.GetChildMenu();
+        var menu = menuItem.GetChildMenu(out wasPopover);
         return menu?.SubViews.OfType<MenuItem>().ToList() ?? new List<MenuItem>();
     }
 
@@ -113,7 +123,7 @@ public static class MenuBarExtensions
     /// <param name="newItems">The new list of MenuItems in the desired order.</param>
     public static void SetMenuItems(this MenuItem menuItem, List<MenuItem> newItems)
     {
-        var menu = menuItem.GetChildMenu();
+        var menu = menuItem.GetChildMenu(out _);
         if (menu == null)
         {
             return;
@@ -151,7 +161,7 @@ public static class MenuBarExtensions
     /// <param name="itemToInsert">The MenuItem to insert.</param>
     public static void InsertMenuItem(this MenuItem menuItem, int index, MenuItem itemToInsert)
     {
-        var items = menuItem.GetMenuItems();
+        var items = menuItem.GetMenuItems(out _);
         items.Insert(Math.Min(index, items.Count), itemToInsert);
         menuItem.SetMenuItems(items);
 
@@ -166,7 +176,7 @@ public static class MenuBarExtensions
     /// <returns>True if the item was found and removed.</returns>
     public static bool RemoveMenuItem(this MenuItem menuItem, MenuItem itemToRemove)
     {
-        var menu = menuItem.GetChildMenu();
+        var menu = menuItem.GetChildMenu(out _);
         if (menu == null)
         {
             return false;

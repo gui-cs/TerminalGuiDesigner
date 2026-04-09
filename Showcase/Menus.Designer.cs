@@ -30,7 +30,11 @@ namespace Showcase
 
         private Terminal.Gui.Views.MenuBarItem fileMenu;
 
-        private Terminal.Gui.Views.MenuItem editMeMenuItem;
+        private Terminal.Gui.Views.MenuItem newMenuItem;
+
+        private Terminal.Gui.Views.MenuItem carMenuItem;
+
+        private Terminal.Gui.Views.MenuItem exitMenuItem;
 
         private void InitializeComponent()
         {
@@ -56,11 +60,21 @@ namespace Showcase
             this.menuBar.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.fileMenu = new Terminal.Gui.Views.MenuBarItem();
             this.fileMenu.Title = "_File";
-            this.fileMenu.Key = Key.A;
-            this.editMeMenuItem = new Terminal.Gui.Views.MenuItem();
-            this.editMeMenuItem.Title = "Edit Me";
-            this.editMeMenuItem.Data = "editMeMenuItem";
-            this.fileMenu.PopoverMenu = new PopoverMenu([editMeMenuItem]);
+            this.fileMenu.Key = Key.F9;
+            this.newMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.newMenuItem.Title = "New";
+            this.newMenuItem.Data = "newMenuItem";
+
+
+            this.carMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.carMenuItem.Title = "Car";
+            this.carMenuItem.Data = "carMenuItem";
+            this.newMenuItem.SubMenu = new Menu([carMenuItem]);
+
+            this.exitMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.exitMenuItem.Title = "Exit";
+            this.exitMenuItem.Data = "exitMenuItem";
+            this.fileMenu.PopoverMenu = new PopoverMenu([newMenuItem, exitMenuItem]);
             this.menuBar.Add(this.fileMenu);
             this.Add(this.menuBar);
         }

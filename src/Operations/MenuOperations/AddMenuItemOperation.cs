@@ -67,7 +67,7 @@ public class AddMenuItemOperation : MenuItemOperation
             return false;
         }
 
-        var children = this.Parent.GetMenuItems();
+        var children = this.Parent.GetMenuItems(out _);
         var currentItemIdx = children.IndexOf(this.OperateOn);
 
         // We are the parent but parents children don't contain us.  That's bad. TODO: log this

@@ -39,7 +39,7 @@ public class ConvertMenuItemToSeperatorOperation : MenuItemOperation
             return;
         }
 
-        var menu = this.Parent.GetChildMenu();
+        var menu = this.Parent.GetChildMenu(out _);
         if (menu == null)
         {
             return;
@@ -81,13 +81,13 @@ public class ConvertMenuItemToSeperatorOperation : MenuItemOperation
             return false;
         }
 
-        var menu = this.Parent.GetChildMenu();
+        var menu = this.Parent.GetChildMenu(out _);
         if (menu == null)
         {
             return false;
         }
 
-        var items = this.Parent.GetMenuItems();
+        var items = this.Parent.GetMenuItems(out _);
         this.removedAtIdx = Math.Max(0, items.IndexOf(this.OperateOn));
 
         // Find the actual index in SubViews
