@@ -68,7 +68,7 @@ public class MenuBarItemsToCode : ToCodeBase
         }
     }
     
-    private void ToCode(CodeDomArgs args, MenuBarItem child, out string fieldName)
+    private void ToCode(CodeDomArgs args, MenuItem child, out string fieldName)
     {
         // ------------ Class Fields -------------
 
@@ -94,46 +94,40 @@ public class MenuBarItemsToCode : ToCodeBase
 
         // TODO: Make recursive for more children
         // plus again let user name these
-        foreach (var sub in child.GetMenuItems())
+        foreach (var mi in child.GetMenuItems())
         {
-            if (sub is MenuBarItem bar)
-            {
-                this.ToCode(args, bar, out string f);
-                children.Add(f);
-            }
-            else
-            if (sub == null)
-            {
-                // its a menu separator (in Terminal.Gui separators are indicated by having a null element).
-                children.Add(null);
-            }
-            else if(sub is MenuItem mi)
-            {
-                string subFieldName = this.GetUniqueFieldName(args, mi);
-                this.AddFieldToClass(args, sub.GetType(), subFieldName);
-                this.AddConstructorCall(args, $"this.{subFieldName}", sub.GetType());
-                this.AddPropertyAssignment(args, $"this.{subFieldName}.{nameof(MenuItem.Title)}", sub.Title);
-                this.AddPropertyAssignment(args, $"this.{subFieldName}.{nameof(MenuItem.Data)}", subFieldName);
+            string subFieldName = this.GetUniqueFieldName(args, mi);
+            this.AddFieldToClass(args, mi.GetType(), subFieldName);
+            this.AddConstructorCall(args, $"this.{subFieldName}", mi.GetType());
+            this.AddPropertyAssignment(args, $"this.{subFieldName}.{nameof(MenuItem.Title)}", mi.Title);
+            this.AddPropertyAssignment(args, $"this.{subFieldName}.{nameof(MenuItem.Data)}", subFieldName);
 
-                if (mi.Key != KeyCode.Null)
-                {
-                    this.AddPropertyAssignment(
-                    args,
-                    $"this.{subFieldName}.{nameof(MenuItem.Key)}",
-                    new CodeCastExpression(
-                        new CodeTypeReference(typeof(KeyCode)),
-                        new CodePrimitiveExpression((uint)mi.Key)));
-                }
-
-                children.Add(subFieldName);
+            if (mi.Key != KeyCode.Null)
+            {
+                this.AddPropertyAssignment(
+                args,
+                $"this.{subFieldName}.{nameof(MenuItem.Key)}",
+                new CodeCastExpression(
+                    new CodeTypeReference(typeof(KeyCode)),
+                    new CodePrimitiveExpression((uint)mi.Key)));
             }
+                
+            // If it has its own children e.g.
+            // File->New->Project
+            if (mi.SubMenu != null)
+            {
+                //ToCode(args, mi, out string subFieldName2);
+            }
+
+            children.Add(subFieldName);
+            
         }
 
         // this.fileMenu.PopoverMenu = new PopoverMenu([editMeMenuItem]);
         this.AddPropertyAssignment(args, $"this.{fieldName}.{nameof(MenuBarItem.PopoverMenu)}",
              new CodeSnippetExpression($"new PopoverMenu([{string.Join(",",children)}])"));
     }
-    
+
     private string GetUniqueFieldName(CodeDomArgs args, MenuItem item)
     {
         // if user has an explicit name they have set
