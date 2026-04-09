@@ -66,6 +66,11 @@ public class Editor : Runnable, IErrorReporter
     public const string Error = "Error";
 
     /// <summary>
+    /// String to assign to popover data field so that we don't accidentally edit our own context menus!
+    /// </summary>
+    public const string? DesignerCorePopoverName = "CoreDesignerPopupMenu";
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="Editor"/> class.
     /// </summary>
     /// <param name="app"></param>
@@ -1022,6 +1027,8 @@ public class Editor : Runnable, IErrorReporter
         }
 
         var menu = new PopoverMenu(all.ToArray());
+        menu.Data = DesignerCorePopoverName;
+
         Point position;
         if (m != null && m.Position.HasValue)
         {

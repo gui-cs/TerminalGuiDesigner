@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using Terminal.Gui;
 using Terminal.Gui.App;
 using Terminal.Gui.Views;
+using TerminalGuiDesigner.UI;
 
 namespace TerminalGuiDesigner;
 
@@ -295,6 +296,13 @@ public class MenuTracker
     internal static MenuItem? GetFocusedMenuItemIfAny(IApplication app)
     {
         var m = app.Popovers?.Popovers?.FirstOrDefault(p => p.Visible) as PopoverMenu;
+        
+        // Don't let user edit the literal popup context menu in main app (that appears
+        // when right clicking in empty space).
+        if(m?.Data is string s && s == Editor.DesignerCorePopoverName)
+        {
+            return null;
+        }
 
         var focused = m?.Focused;
 
