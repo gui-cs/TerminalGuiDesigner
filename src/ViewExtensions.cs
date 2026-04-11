@@ -322,12 +322,6 @@ public static class ViewExtensions
         }
 
         // Translate clicks in the border as the real View being clicked
-        if (hit is BorderView b)
-        {
-            hit = b.SuperView;
-
-        }
-
         if (hit?.IsAdornment() ?? false)
         {
             hit = hit.GetAdornmentParent();
