@@ -63,7 +63,8 @@ public static class ViewFactory
         // Could proably support later on
         typeof(OptionSelector<>),
         typeof(DropDownList<>),
-        typeof(Popover<,>)
+        typeof(Popover<,>),
+        typeof(MarginView)
     ];
 
     /// <summary>

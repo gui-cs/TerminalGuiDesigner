@@ -631,9 +631,10 @@ public class Design
         yield return this.CreateSuppressedProperty(nameof(View.CanFocus), true);
         yield return this.CreateProperty(nameof(this.View.ShadowStyle));
 
+        
         // its important that this comes before Text because
         // changing the validator clears the text
-        if (this.View is TextValidateField)
+        if (this.View.GetType() == typeof(TextValidateField)) // Use == because subclasses TimeEditor and DateEditor don't support setting custom Provider
         {
             yield return this.CreateProperty(nameof(TextValidateField.Provider));
         }

@@ -113,7 +113,7 @@ internal class ViewFactoryTests : Tests
 
         // Confirm creates a single menu 
         Assert.That( ViewFactory_DefaultMenuBarItems.Count, Is.EqualTo(1));
-        Assert.That( ViewFactory_DefaultMenuBarItems[ 0 ].SubViews.ElementAt(0).Text, Is.EqualTo( "_File (F9)" ) );
+        Assert.That( ViewFactory_DefaultMenuBarItems[ 0 ].SubViews.ElementAt(0).Text, Is.EqualTo( "_File" ) );
 
         // With single item under it "Edit Me"
         Assert.That( ViewFactory_DefaultMenuBarItems [ 0 ].PopoverMenu, Is.Not.Null);

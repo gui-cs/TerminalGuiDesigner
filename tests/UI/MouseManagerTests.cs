@@ -17,27 +17,34 @@ internal class MouseManagerTests : Tests
         Assume.That( dummy, Is.TypeOf<T>( ) );
 
         using T view = ViewFactory.Create<T>( );
+        
+        if (view is Button btn)
+        {
+            btn.ShadowStyle = null;
+        }
+
         view.Width = 8;
         view.Height = 1;
+        
+        Assert.That(view.Viewport.Height, Is.EqualTo(1));
+        Assert.That(view.Viewport.Width, Is.EqualTo(8));
 
         Design design = new(App, d.SourceCode, "myView", view );
         view.Data = design;
         d.View.Add( view );
 
-        if (view is Button btn)
-        {
-            btn.ShadowStyle = ShadowStyles.None;
-        }
+        Assert.That(view.Viewport.Width, Is.EqualTo(8));
 
-        Assert.That( view.GetContentSize().Width, Is.EqualTo( 8 ) );
+
+        Assert.That( view.Viewport.Width, Is.EqualTo( 8 ) );
         MouseManager mgr = new(App);
 
         // we haven't done anything yet
         Assert.Multiple( ( ) =>
         {
             Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
-            Assert.That( view.GetContentSize().Width, Is.EqualTo( 8 ) );
-            Assert.That( view.GetContentSize().Height, Is.EqualTo( 1 ) );
+            Assert.That( view.Viewport.Width, Is.EqualTo( 8 ) );
+            Assert.That( view.Viewport.Height, Is.EqualTo( 1 ) );
         } );
 
         // user presses down in the lower right of control
@@ -66,8 +73,8 @@ internal class MouseManagerTests : Tests
         // we still haven't committed to anything
         Assert.Multiple( ( ) =>
         {
-            Assert.That( view.GetContentSize().Width, Is.EqualTo( 10 ), "Expected resize to increase Width when dragging" );
-            Assert.That( view.GetContentSize().Height, Is.EqualTo( 1 ), "Expected resize of button to ignore Y component" );
+            Assert.That( view.Viewport.Width, Is.EqualTo( 10 ), "Expected resize to increase Width when dragging" );
+            Assert.That( view.Viewport.Height, Is.EqualTo( 1 ), "Expected resize of button to ignore Y component" );
             Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
         } );
 
@@ -80,8 +87,8 @@ internal class MouseManagerTests : Tests
 
         Assert.Multiple( ( ) =>
         {
-            Assert.That( view.GetContentSize().Width, Is.EqualTo( 10 ), "Expected resize to increase Width when dragging" );
-            Assert.That( view.GetContentSize().Height, Is.EqualTo( 1 ) );
+            Assert.That( view.Viewport.Width, Is.EqualTo( 10 ), "Expected resize to increase Width when dragging" );
+            Assert.That( view.Viewport.Height, Is.EqualTo( 1 ) );
 
             // we have now committed the drag so could undo
             Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
