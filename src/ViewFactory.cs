@@ -64,6 +64,8 @@ public static class ViewFactory
         typeof(OptionSelector<>),
         typeof(DropDownList<>),
         typeof(Popover<,>),
+        typeof(ListView<>),
+        typeof(ToolTipHost<>),
         typeof(MarginView)
     ];
 

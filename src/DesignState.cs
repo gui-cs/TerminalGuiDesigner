@@ -61,6 +61,12 @@ public class DesignState
         if (this.Design.View.IsBorderlessContainerView() && Editor.ShowBorders)
         {
             this.DrawBorderlessViewFrame(r.NewViewport);
+
+            foreach(var child in this.Design.View.SubViews)
+            {
+                child.SetNeedsDraw();
+                child.Draw(r.DrawContext);
+            }
         }
     }
 

@@ -63,6 +63,7 @@ namespace TerminalGuiDesigner
                 return new[] { typeof(object), typeof(FileSystemInfo) };
             }
 
+
             throw new NotSupportedException($"Generic View {viewType} is not yet supported");
         }
 
