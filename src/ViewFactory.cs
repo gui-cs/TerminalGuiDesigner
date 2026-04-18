@@ -309,6 +309,8 @@ public static class ViewFactory
             case null:
                 throw new InvalidOperationException( $"Unexpected null result from type {typeof( T ).Name} constructor." );
         }
+
+        SetupLinearRangeOptions(newView);
          
         return newView;
 
@@ -325,6 +327,48 @@ public static class ViewFactory
         }
     }
 
+    private static void SetupLinearRangeOptions<T>(T newView) where T : View, new()
+    {
+        if (newView is LinearRange<bool> lrb)
+        {
+            lrb.Options = new List<LinearRangeOption<bool>>([
+                new LinearRangeOption<bool>("True", new System.Text.Rune('T'), true),
+                new LinearRangeOption<bool>("False", new System.Text.Rune('F'), false),
+            ]);
+            lrb.Width = 10;
+            lrb.Height = 2;
+        }
+        else if (newView is LinearRange<int> lri)
+        {
+            lri.Options = new List<LinearRangeOption<int>>([
+                new LinearRangeOption<int>("One", new System.Text.Rune('1'), 1),
+                new LinearRangeOption<int>("Two", new System.Text.Rune('2'), 2),
+                new LinearRangeOption<int>("Three", new System.Text.Rune('3'), 3),
+            ]);
+            lri.Width = 10;
+            lri.Height = 2;
+        }
+        else if (newView is LinearRange<double> lrd)
+        {
+            lrd.Options = new List<LinearRangeOption<double>>([
+                new LinearRangeOption<double>("Low", new System.Text.Rune('L'), 0.0),
+                new LinearRangeOption<double>("Mid", new System.Text.Rune('M'), 0.5),
+                new LinearRangeOption<double>("High", new System.Text.Rune('H'), 1.0),
+            ]);
+            lrd.Width = 18;
+            lrd.Height = 2;
+        }
+        else if (newView is LinearRange<string> lrs)
+        {
+            lrs.Options = new List<LinearRangeOption<string>>([
+                new LinearRangeOption<string>("Option 1", new System.Text.Rune('1'), "Option 1"),
+                new LinearRangeOption<string>("Option 2", new System.Text.Rune('2'), "Option 2"),
+                new LinearRangeOption<string>("Option 3", new System.Text.Rune('3'), "Option 3"),
+            ]);
+            lrs.Width = 25;
+            lrs.Height = 2;
+        }
+    }
 
     /// <summary>
     ///   Creates a new instance of <see cref="View" /> of <see cref="Type" /> <paramref name="requestedType" /> with

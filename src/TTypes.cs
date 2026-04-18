@@ -43,7 +43,7 @@ namespace TerminalGuiDesigner
         {
             if (viewType == typeof(LinearRange<>))
             {
-                return new[] { typeof(int), typeof(string), typeof(int), typeof(double), typeof(bool) };
+                return new[] { typeof(int), typeof(string),typeof(double), typeof(bool) };
             }
 
             if (viewType == typeof(NumericUpDown<>))
