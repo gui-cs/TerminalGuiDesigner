@@ -143,11 +143,6 @@ public class AddViewOperation : Operation
 
     private View GetViewToAddTo()
     {
-        if (this.to.View is TabView tabView)
-        {
-            return tabView.SelectedTab.View;
-        }
-
         return this.to.View;
     }
 }

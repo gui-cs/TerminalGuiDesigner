@@ -15,7 +15,6 @@ using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.Operations.MenuOperations;
 using TerminalGuiDesigner.Operations.StatusBarOperations;
 using TerminalGuiDesigner.Operations.TableViewOperations;
-using TerminalGuiDesigner.Operations.TabOperations;
 using TerminalGuiDesigner.ToCode;
 
 namespace TerminalGuiDesigner;
@@ -42,7 +41,6 @@ public class Design
     private readonly HashSet<Type> excludeTextPropertyFor = new()
     {
         typeof(FrameView),
-        typeof(TabView),
         typeof(Window),
         typeof(GraphView),
         typeof(HexView),
@@ -50,7 +48,6 @@ public class Design
         typeof(ListView),
         typeof(MenuBar),
         typeof(TableView),
-        typeof(TabView),
         typeof(TreeView),
         typeof(Dialog),
         typeof(NumericUpDown),
@@ -356,20 +353,6 @@ public class Design
 
         switch ( this.View )
         {
-            case TabView tabView:
-            {
-                yield return new AddTabOperation(App, this, null);
-
-                if (tabView.SelectedTab != null)
-                {
-                    yield return new RemoveTabOperation(App, this, tabView.SelectedTab);
-                    yield return new RenameTabOperation(App, this, tabView.SelectedTab, null);
-                    yield return new MoveTabOperation(App, this, tabView.SelectedTab, -1);
-                    yield return new MoveTabOperation(App, this, tabView.SelectedTab, 1);
-                }
-
-                break;
-            }
             case MenuBar mb:
             {
                 yield return new AddMenuOperation(App, this, null);
@@ -796,15 +779,6 @@ public class Design
             yield return this.CreateSubProperty(nameof(TableStyle.ShowHorizontalHeaderUnderline), nameof(TableView.Style), tv.Style);
             yield return this.CreateSubProperty(nameof(TableStyle.ShowVerticalCellLines), nameof(TableView.Style), tv.Style);
             yield return this.CreateSubProperty(nameof(TableStyle.ShowVerticalHeaderLines), nameof(TableView.Style), tv.Style);
-        }
-
-        if (this.View is TabView tabView)
-        {
-            yield return this.CreateProperty(nameof(TabView.MaxTabTextWidth));
-
-            yield return this.CreateSubProperty(nameof(TabStyle.ShowBorder), nameof(TabView.Style), tabView.Style);
-            yield return this.CreateSubProperty(nameof(TabStyle.ShowTopLine), nameof(TabView.Style), tabView.Style);
-            yield return this.CreateSubProperty(nameof(TabStyle.TabsOnBottom), nameof(TabView.Style), tabView.Style);
         }
 
         if (this.View is OptionSelector)

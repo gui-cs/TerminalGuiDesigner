@@ -30,11 +30,6 @@ public static class ViewExtensions
     /// any Terminal.Gui artifacts (e.g. ContentView).</returns>
     public static IReadOnlyCollection<View> GetActualSubviews(this View v)
     {
-        if (v is TabView t)
-        {
-            return t.Tabs.Select(tab => tab.View).Where(v => v != null).ToList();
-        }
-
         return v.SubViews;
     }
 
@@ -205,7 +200,6 @@ public static class ViewExtensions
 
         // TODO: are there any others?
         return
-            v is TabView ||
             v is FrameView ||
             v is Window ||
             type == typeof(View) || type.Name.Equals("ContentView");
@@ -222,11 +216,6 @@ public static class ViewExtensions
         if (v is Runnable)
         {
             return false;
-        }
-
-        if (v is TabView tabView)
-        {
-            return !tabView.Style.ShowBorder || tabView.Style.TabsOnBottom;
         }
 
         if (v.IsContainerView() && v.HasNoBorderProperty())
@@ -325,17 +314,6 @@ public static class ViewExtensions
         if (hit?.IsAdornment() ?? false)
         {
             hit = hit.GetAdornmentParent();
-        }
-
-        // TabView nesting of 'fake' views goes:
-        // TabView
-        //   - TabViewRow
-        //   - View (pane)
-        //     - Border (note you need Parent not SuperView to find Border parent)
-
-        if (hit?.SuperView is TabView tv)
-        {
-            hit = tv;
         }
 
         return hit;

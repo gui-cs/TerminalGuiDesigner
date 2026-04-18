@@ -47,7 +47,6 @@ public static class ViewFactory
         // This is unstable when added directly as a view see https://github.com/gui-cs/Terminal.Gui/issues/3664
         typeof(Shortcut),
 
-        typeof(Tab),
         typeof(CharMap),
         typeof(LegendAnnotation),
         typeof(ScrollBar),
@@ -66,6 +65,7 @@ public static class ViewFactory
         typeof(Popover<,>),
         typeof(ListView<>),
         typeof(ToolTipHost<>),
+        typeof(RunnableWrapper<,>),
         typeof(MarginView)
     ];
 
@@ -188,11 +188,6 @@ public static class ViewFactory
                 dt.Columns.Add( "Column 3" );
                 SetDefaultDimensions( newView, width ?? 50, height ?? 5 );
                 tv.Table = new DataTableSource( dt );
-                break;
-            case TabView tv:
-                tv.AddEmptyTab( "Tab1" );
-                tv.AddEmptyTab( "Tab2" );
-                SetDefaultDimensions( newView, width ?? 50, height ?? 5 );
                 break;
             case TimeEditor te:
                 SetDefaultDimensions(newView, width ?? 10, height ?? 1);
@@ -338,8 +333,7 @@ public static class ViewFactory
             { } t when t == typeof(ColorPicker) => Create<ColorPicker>(),
             { } t when t.IsAssignableTo( typeof( CheckBox ) ) => Create<CheckBox>( ),
             { } t when t.IsAssignableTo( typeof( TableView ) ) => Create<TableView>( ),
-            { } t when t.IsAssignableTo( typeof( TabView ) ) => Create<TabView>( ),
-            { } t when t.IsAssignableTo( typeof( OptionSelector ) ) => Create<OptionSelector>( ),
+{ } t when t.IsAssignableTo( typeof( OptionSelector ) ) => Create<OptionSelector>( ),
             { } t when t.IsAssignableTo( typeof( MenuBar ) ) => Create<MenuBar>( ),
             { } t when t.IsAssignableTo( typeof( StatusBar ) ) => Create<StatusBar>( ),
             { } t when t == typeof( TextValidateField ) => Create<TextValidateField>( ),
@@ -356,8 +350,7 @@ public static class ViewFactory
             { } t when t.IsAssignableTo( typeof( SpinnerView ) ) => Create<SpinnerView>( ),
             { } t when t.IsAssignableTo( typeof( FrameView ) ) => Create<FrameView>( ),
             { } t when t.IsAssignableTo( typeof( HexView ) ) => Create<HexView>( ),
-            { } t when t.IsAssignableTo( typeof( Tab ) ) => Create<Tab>( ),
-            { } t when t.IsAssignableTo( typeof( LegendAnnotation ) ) => Create<LegendAnnotation>( ),
+{ } t when t.IsAssignableTo( typeof( LegendAnnotation ) ) => Create<LegendAnnotation>( ),
             { } t when t.IsAssignableTo( typeof( DatePicker ) ) => Create<DatePicker>( ),
             _ => ReflectionHelpers.GetDefaultViewInstance( requestedType )
         };

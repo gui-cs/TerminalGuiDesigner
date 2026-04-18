@@ -160,11 +160,6 @@ public class PasteOperation : Operation
 
         this.CopyProperties(copy, cloneDesign);
 
-        if (clone is TabView tabView)
-        {
-            this.CloneTabView((TabView)copy.View, tabView);
-        }
-        else
         if (copy.IsContainerView)
         {
             foreach (var content in copy.View.GetActualSubviews())
@@ -223,30 +218,6 @@ public class PasteOperation : Operation
 
         pasted.Table = new DataTableSource(pastedDt);
         pasted.Update();
-    }
-
-    private void CloneTabView(TabView copy, TabView pasted)
-    {
-        // clear tabs in the pasted view as they will just come from ViewFactory
-        foreach (var tab in pasted.Tabs.ToArray())
-        {
-            pasted.RemoveTab(tab);
-        }
-
-        // add a new Tab for each one in the source
-        foreach (var copyTab in copy.Tabs)
-        {
-            var tab = pasted.AddEmptyTab(copyTab.DisplayText?.ToString() ?? Operation.Unnamed);
-
-            // copy the tab contents
-            copy.SelectedTab = copyTab;
-            pasted.SelectedTab = tab;
-
-            foreach (var copySub in copyTab.View.GetActualSubviews())
-            {
-                this.Paste(copySub, (Design)pasted.Data);
-            }
-        }
     }
 
     private void MigratePosRelatives()

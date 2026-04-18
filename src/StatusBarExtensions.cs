@@ -28,7 +28,7 @@ public static class StatusBarExtensions
             return null;
         }
 
-        var clientPoint = statusBar.ScreenToContent(new Point(screenX, 0));
+        var clientPoint = statusBar.ScreenToViewport(new Point(screenX, 0));
 
         // if click is not in our client area
         if (clientPoint.X < initialWhitespace)

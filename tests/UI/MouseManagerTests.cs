@@ -561,7 +561,6 @@ internal class MouseManagerTests : Tests
     {
         yield return (Label)RuntimeHelpers.GetUninitializedObject( typeof( Label ) );
         yield return (Button)RuntimeHelpers.GetUninitializedObject( typeof( Button ) );
-        yield return (TabView)RuntimeHelpers.GetUninitializedObject( typeof( TabView ) );
         yield return (TableView)RuntimeHelpers.GetUninitializedObject( typeof( TableView ) );
         yield return (View)RuntimeHelpers.GetUninitializedObject( typeof( View ) );
     }

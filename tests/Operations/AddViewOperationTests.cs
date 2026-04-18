@@ -16,7 +16,10 @@ internal class AddViewOperationTests : Tests
     public static HashSet<Type> PopoverTypes = new HashSet<Type>
     {
         typeof(DropDownList),
-        typeof(TextField)
+        typeof(TextField),
+
+        // Has popover
+        typeof(TextView)
     };
 
     [Test( Description = "Tests AddViewOperation against all SupportedViewTypes" )]

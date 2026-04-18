@@ -288,34 +288,6 @@ internal class DragOperationTests : Tests
     }
 
     [Test]
-    public void TestSimpleDrag_IntoTabView()
-    {
-        RoundTrip<View, TabView>((d, v) =>
-        {
-            // move TabView down a bit
-            v.X = 2;
-            v.Y = 2;
-
-            // add a Button
-            var op = new AddViewOperation(App, new Button() { Text = "Hello" }, d.GetRootDesign(), "mybtn");
-            op.Do();
-
-            App.TopRunnableView.Add(d.GetRootDesign().View);
-            App.TopRunnableView.LayoutSubViews();
-
-
-            ClassicAssert.AreEqual(0, v.Tabs.ElementAt(0).View.GetActualSubviews().Count, "Expected TabView Tab1 to start off empty");
-
-            // Drag the Button into the TabView
-            MouseDrag(d.GetRootDesign(), 0, 0, 3, 3);
-
-            ClassicAssert.AreEqual(1, v.Tabs.ElementAt(0).View.GetActualSubviews().Count, "Expected TabView Tab1 to now contain Button");
-            ClassicAssert.IsInstanceOf<Button>(v.Tabs.ElementAt(0).View.GetActualSubviews().Single());
-
-        }, out _);
-    }
-
-    [Test]
     public void TestDropInto_SelfIgnored()
     {
         var d = Get10By10View();

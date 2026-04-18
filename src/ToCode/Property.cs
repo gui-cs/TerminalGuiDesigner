@@ -462,11 +462,6 @@ public class Property : ToCodeBase
     /// </summary>
     private void CallRefreshMethodsIfAny()
     {
-        if (this.Design.View is TabView tv)
-        {
-            tv.ApplyStyleChanges();
-        }
-
         if (this.Design.View is TableView t)
         {
             t.Update();

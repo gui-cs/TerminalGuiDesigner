@@ -46,7 +46,7 @@ public static class MenuBarExtensions
             return null;
         }
 
-        var clientPoint = menuBar.ScreenToContent(new Point(screenX, 0));
+        var clientPoint = menuBar.ScreenToViewport(new Point(screenX, 0));
 
         // if click is not in our client area
         if (clientPoint.X < initialWhitespace)

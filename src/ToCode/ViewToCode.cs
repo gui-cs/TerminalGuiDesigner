@@ -252,12 +252,6 @@ public class ViewToCode
                 // weird loop
                 args.OutputAlready.Add(d);
 
-                // TabToCode handles children so don't handle them
-                // here too otherwise we end up adding each view twice!
-                if (sub is TabView)
-                {
-                    continue;
-                }
             }
 
             // now recurse down the view hierarchy

@@ -59,7 +59,6 @@ internal class ViewExtensionsTests : Tests
 
     [TestCase(typeof(Label), false)]
     [TestCase(typeof(TableView), false)]
-    [TestCase(typeof(TabView), true)]
     [TestCase(typeof(View), true)]
     [TestCase(typeof(Window), true)]
     public void TestIsContainerView(Type viewType, bool expectIsContainerView)
@@ -72,7 +71,6 @@ internal class ViewExtensionsTests : Tests
 
     [TestCase(typeof(Label), false)]
     [TestCase(typeof(TableView), false)]
-    [TestCase(typeof(TabView), false)]
     [TestCase(typeof(Window), false)]
     [TestCase(typeof(View), true)]
     public void TestOutOfBox_IsBorderlessContainerView(Type viewType, bool expectResult)
