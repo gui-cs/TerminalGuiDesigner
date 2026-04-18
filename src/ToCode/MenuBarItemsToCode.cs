@@ -1,6 +1,7 @@
 ﻿using System.CodeDom;
 using Terminal.Gui;
 using Terminal.Gui.Drivers;
+using Terminal.Gui.Input;
 using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner.ToCode;
@@ -140,9 +141,10 @@ public class MenuBarItemsToCode : ToCodeBase
         if (child.Key != KeyCode.Null)
         {
             this.AddPropertyAssignment(args, $"this.{fieldName}.{nameof(MenuItem.Key)}",
-            new CodeSnippetExpression($"Key.{child.Key}"));
+                GetKeyCodeExpression(child.Key));
         }
     }
+
 
     private string GetUniqueFieldName(CodeDomArgs args, MenuItem item)
     {
