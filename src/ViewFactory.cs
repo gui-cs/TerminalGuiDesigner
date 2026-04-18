@@ -53,6 +53,7 @@ public static class ViewFactory
         typeof(ScrollSlider),
 
 
+        typeof(FlagSelector),
         typeof(FlagSelector<>),
         typeof(Dialog<>),
         typeof(Prompt<,>),
@@ -66,7 +67,32 @@ public static class ViewFactory
         typeof(ListView<>),
         typeof(ToolTipHost<>),
         typeof(RunnableWrapper<,>),
-        typeof(MarginView)
+        typeof(MarginView),
+        typeof(AttributePicker),
+
+
+        typeof(BorderView),
+        typeof(Bar),
+        
+        // Not looked at these yet
+        typeof(Markdown),
+        typeof(MarkdownCodeBlock),
+        typeof(MarkdownTable),
+
+        // All are MenuBar subcomponents
+        typeof(Menu),
+        typeof(MenuBarItem),
+        typeof(MenuItem),
+        typeof(MenuItem),
+        typeof(PopoverMenu),
+
+
+        typeof(PaddingView),
+
+        typeof(ScrollButton),
+        typeof(StatusBar),
+        typeof(Tabs),
+        typeof(TitleView),
     ];
 
     /// <summary>

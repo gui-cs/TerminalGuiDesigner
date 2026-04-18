@@ -640,6 +640,11 @@ public class Design
             yield return this.CreateProperty(nameof(LinearRange.Type));
         }
 
+        if(this.View is Link)
+        {
+            yield return this.CreateProperty(nameof(Link.Url));
+        }
+
         if (this.View is SpinnerView)
         {
             yield return this.CreateProperty(nameof(SpinnerView.AutoSpin));
