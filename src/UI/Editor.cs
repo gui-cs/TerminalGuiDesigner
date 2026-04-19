@@ -1060,6 +1060,16 @@ public class Editor : Runnable, IErrorReporter
             SelectionManager.Instance.LockSelection = false;
             app.Popovers.DeRegister(menu);
         };
+        menu.VisibleChanged += (_, e) =>
+        {
+            // Its closing probably
+            if(menu.Visible == false)
+            {
+                this.menuOpen = false;
+                SelectionManager.Instance.LockSelection = false;
+            app.Popovers.DeRegister(menu);
+            }
+        };
     }
     
     private static MenuItem ToMenuItem(IApplication application, IOperation operation)
