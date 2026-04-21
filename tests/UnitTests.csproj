@@ -9,7 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-
+	  <Compile Remove="MenuBarExtensionsTests.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
