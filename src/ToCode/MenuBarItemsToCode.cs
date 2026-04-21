@@ -82,7 +82,7 @@ public class MenuBarItemsToCode : ToCodeBase
         foreach (var mi in child.GetMenuItems(out wasPopover))
         {
             // Separators are stored as MenuItem("---") in the designer but emitted as Line in code
-            if (mi.Title?.ToString() == Operations.MenuOperations.ConvertMenuItemToSeperatorOperation.SeparatorTitle)
+            if (mi.Title?.ToString() == MenuBarExtensions.SeparatorTitle)
             {
                 children.Add("new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal }");
                 continue;

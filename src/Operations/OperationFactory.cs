@@ -109,7 +109,7 @@ public class OperationFactory
     {
         var ops = m == null || !m.Position.HasValue?
             d.GetExtraOperations() :
-            d.GetExtraOperations(d.View.ScreenToViewport(m.Position.Value));
+            d.GetExtraOperations(m);
 
         foreach (var extra in ops.Where(c => !c.IsImpossible))
         {

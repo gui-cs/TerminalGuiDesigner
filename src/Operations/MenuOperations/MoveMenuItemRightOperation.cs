@@ -73,39 +73,51 @@ public class MoveMenuItemRightOperation : MenuItemOperation
             return false;
         }
 
-        // When user hits shift right
         var children = this.Parent.GetMenuItems(out _);
         var currentItemIdx = children.IndexOf(this.OperateOn);
         var aboveIdx = currentItemIdx - 1;
 
-        // and there is an item above
         if (aboveIdx < 0)
         {
             return false;
         }
 
-        // Get or create a submenu on the item above
         var itemAbove = children[aboveIdx];
-        if (itemAbove.SubMenu == null)
-        {
-            itemAbove.SubMenu = new Menu();
-        }
 
-        // Remove us from current menu
+        // Remove us from current menu first
         this.Parent.RemoveMenuItem(this.OperateOn);
 
-        // Add us to the submenu of the item above
-        if (this.InsertionIndex != null)
+        if (itemAbove is MenuBarItem existingMbi)
         {
-            itemAbove.InsertMenuItem(this.InsertionIndex.Value, this.OperateOn);
+            // Item above already has a sub-menu — add to it
+            if (this.InsertionIndex != null)
+            {
+                existingMbi.InsertMenuItem(this.InsertionIndex.Value, this.OperateOn);
+            }
+            else
+            {
+                var subItems = existingMbi.GetMenuItems(out _);
+                subItems.Add(this.OperateOn);
+                existingMbi.SetMenuItems(subItems);
+            }
         }
         else
         {
-            itemAbove.SubMenu.Add(this.OperateOn);
+            // Convert plain MenuItem to MenuBarItem with OperateOn as first child.
+            // Re-read children since RemoveMenuItem may have shifted indexes.
+            children = this.Parent.GetMenuItems(out _);
+            var newAboveIdx = children.IndexOf(itemAbove);
+
+            var newMbi = new MenuBarItem(itemAbove.Title, new MenuItem[] { this.OperateOn });
+            newMbi.Data = itemAbove.Data;
+            newMbi.Key = itemAbove.Key;
+
+            children.RemoveAt(newAboveIdx);
+            children.Insert(newAboveIdx, newMbi);
+            this.Parent.SetMenuItems(children);
         }
 
         this.Bar?.SetNeedsDraw();
-
         return true;
     }
 

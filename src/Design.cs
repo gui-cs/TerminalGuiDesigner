@@ -278,16 +278,7 @@ public class Design
         return this.designableProperties;
     }
 
-    /// <summary>
-    /// Returns all operations not to do with setting properties.  Often these
-    /// are view specific e.g. add/remove column from a <see cref="TableView"/>.
-    /// </summary>
-    /// <returns>All view specific <see cref="Operation"/> supported on <see cref="View"/> Type.
-    /// Does not return regular <see cref="Property"/> changing operations.</returns>
-    public IEnumerable<IOperation> GetExtraOperations()
-    {
-        return this.GetExtraOperations(Point.Empty);
-    }
+
 
     /// <summary>
     /// Returns all <see cref="Operation"/> that can be performed on the view at position <paramref name="pos"/>
@@ -297,8 +288,10 @@ public class Design
     /// may inform what operations are returned (e.g. right clicking a specific table view column).  Otherwise
     /// <see cref="Point.Empty"/>.</param>
     /// <returns>All view specific <see cref="IOperation"/> that are supported at the <paramref name="pos"/>.</returns>
-    public IEnumerable<IOperation> GetExtraOperations(Point pos)
+    public IEnumerable<IOperation> GetExtraOperations(Mouse? mouse = null)
     {
+        var pos = mouse == null ? Point.Empty: View.ScreenToViewport(mouse.Position.Value);
+
         // Extra TableView operations
         if (this.View is TableView tv)
         {
@@ -358,7 +351,7 @@ public class Design
             {
                 yield return new AddMenuOperation(App, this, null);
 
-                var menu = pos.IsEmpty ? mb.GetSelectedMenuItem() : mb.ScreenToMenuBarItem(pos.X);
+                var menu = mouse == null ? mb.GetSelectedMenuItem() : mb.ScreenToMenuBarItem(App, mouse);
 
                 if (menu != null)
                 {

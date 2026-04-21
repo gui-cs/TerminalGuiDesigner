@@ -1,7 +1,7 @@
 using Terminal.Gui;
-using Terminal.Gui.Text;
+using Terminal.Gui.App;
+using Terminal.Gui.Input;
 using Terminal.Gui.Views;
-using TerminalGuiDesigner.Operations.MenuOperations;
 
 namespace TerminalGuiDesigner;
 
@@ -10,6 +10,8 @@ namespace TerminalGuiDesigner;
 /// </summary>
 public static class MenuBarExtensions
 {
+    /// <summary>The title used to mark a <see cref="MenuItem"/> as a separator in the designer.</summary>
+    public const string SeparatorTitle = "---";
     /// <summary>
     /// Gets the top level selected <see cref="MenuBarItem"/> in the <paramref name="menuBar"/>
     /// or null if it is not open/no selection is set.  Note that this is the top level menu item only
@@ -19,20 +21,16 @@ public static class MenuBarExtensions
     /// <returns>Selected <see cref="MenuItem"/> or null if none.</returns>
     public static MenuBarItem? GetSelectedMenuItem(this MenuBar menuBar)
     {
-        int selected = menuBar.GetNonNullNonPublicFieldValue<int, MenuBar>( "selected" );
+        if (menuBar.Focused is MenuBarItem mbi)
+            return mbi;
 
-        if (selected < 0 || selected >= menuBar.SubViews.OfType<MenuBarItem>().Count())
-        {
-            return null;
-        }
-
-        return menuBar.SubViews.OfType<MenuBarItem>().ElementAt(selected);
+        return menuBar.SubViews.OfType<MenuBarItem>().FirstOrDefault();
     }
 
     /// <summary>
     /// Walks all menus in <paramref name="menuBar"/> and replaces any <see cref="Line"/> views
     /// (produced by code generation for separators) with sentinel <see cref="MenuItem"/> instances
-    /// whose <see cref="MenuItem.Title"/> is <see cref="ConvertMenuItemToSeperatorOperation.SeparatorTitle"/>.
+    /// whose <see cref="MenuItem.Title"/> is <see cref="SeparatorTitle"/>.
     /// Call this after loading a <see cref="MenuBar"/> from generated code.
     /// </summary>
     public static void ConvertLineSeparatorsToSentinels(this MenuBar menuBar)
@@ -60,7 +58,7 @@ public static class MenuBarExtensions
             foreach (var v in allViews)
             {
                 menu.Add(v is Line
-                    ? new MenuItem { Title = ConvertMenuItemToSeperatorOperation.SeparatorTitle }
+                    ? new MenuItem { Title = SeparatorTitle }
                     : v);
             }
         }
@@ -85,48 +83,25 @@ public static class MenuBarExtensions
     /// <param name="menuBar"><see cref="MenuBar"/> you want to find the clicked <see cref="MenuBarItem"/> (top level menu) for.</param>
     /// <param name="screenX">Screen coordinate of the click in X.</param>
     /// <returns>The <see cref="MenuBarItem"/> under the mouse at this position or null (only considers X).</returns>
-    public static MenuBarItem? ScreenToMenuBarItem(this MenuBar menuBar, int screenX)
+    public static MenuBarItem? ScreenToMenuBarItem(this MenuBar menuBar, IApplication application, Mouse mouse)
     {
-        // These might be changed in Terminal.Gui library
-        // TODO: Maybe load these from a config file, so we aren't at TG's mercy
-        const int initialWhitespace = 1;
-        const int afterEachItemWhitespace = 2;
+        var hit = menuBar.HitTest(application,mouse, out _, out _);
 
-        if (menuBar.SubViews.OfType<MenuBarItem>().Count() == 0)
+        if(hit == null)
         {
             return null;
         }
 
-        var clientPoint = menuBar.ScreenToViewport(new Point(screenX, 0));
-
-        // if click is not in our client area
-        if (clientPoint.X < initialWhitespace)
+        if (hit is MenuBarItem mbi)
         {
-            return null;
+            return mbi;
+        }
+        if (hit.SuperView is MenuBarItem super)
+        {
+            return super;
         }
 
-        // Calculate the x display positions of each menu
-        int distance = initialWhitespace;
-        Dictionary<int, MenuBarItem?> menuXLocations = new();
-
-        foreach (var mb in menuBar.SubViews.OfType<MenuBarItem>())
-        {
-            menuXLocations.Add(distance, mb);
-            distance += mb.Title.GetColumns() + afterEachItemWhitespace;
-        }
-
-        // anything after this is not a click on a menu
-        menuXLocations.Add(distance, null);
-
-        // LastOrDefault does not work with Dictionaries, if we somehow still have a point outside bounds
-        // of anything then just return null;
-        if (!menuXLocations.Any(m => m.Key <= clientPoint.X))
-        {
-            return null;
-        }
-
-        // Return the last menu item that begins rendering before this X point
-        return menuXLocations.Last(m => m.Key <= clientPoint.X).Value;
+        return null;
     }
 
     /// <summary>

@@ -20,13 +20,13 @@ internal class ConvertMenuItemToSeperatorOperationTests : Tests
             op.Do();
 
             ClassicAssert.AreEqual(1, fileMenu.GetMenuItems(out _).Count);
-            ClassicAssert.AreEqual(ConvertMenuItemToSeperatorOperation.SeparatorTitle, fileMenu.GetMenuItems(out _)[0].Title.ToString());
+            ClassicAssert.AreEqual(MenuBarExtensions.SeparatorTitle, fileMenu.GetMenuItems(out _)[0].Title.ToString());
 
         }, out _);
 
         var mbInFileMenu = mbIn.SubViews.OfType<MenuBarItem>().First();
         ClassicAssert.AreEqual(1, mbInFileMenu.GetMenuItems(out _).Count);
-        ClassicAssert.AreEqual(ConvertMenuItemToSeperatorOperation.SeparatorTitle, mbInFileMenu.GetMenuItems(out _)[0].Title.ToString());
+        ClassicAssert.AreEqual(MenuBarExtensions.SeparatorTitle, mbInFileMenu.GetMenuItems(out _)[0].Title.ToString());
     }
 
     [Test]
@@ -40,7 +40,7 @@ internal class ConvertMenuItemToSeperatorOperationTests : Tests
             var op = new ConvertMenuItemToSeperatorOperation(App, orig);
             op.Do();
             ClassicAssert.AreEqual(1, fileMenu.GetMenuItems(out _).Count);
-            ClassicAssert.AreEqual(ConvertMenuItemToSeperatorOperation.SeparatorTitle, fileMenu.GetMenuItems(out _)[0].Title.ToString());
+            ClassicAssert.AreEqual(MenuBarExtensions.SeparatorTitle, fileMenu.GetMenuItems(out _)[0].Title.ToString());
 
             op.Undo();
             ClassicAssert.AreEqual(1, fileMenu.GetMenuItems(out _).Count);
@@ -50,7 +50,7 @@ internal class ConvertMenuItemToSeperatorOperationTests : Tests
             op.Undo();
             op.Redo();
             ClassicAssert.AreEqual(1, fileMenu.GetMenuItems(out _).Count);
-            ClassicAssert.AreEqual(ConvertMenuItemToSeperatorOperation.SeparatorTitle, fileMenu.GetMenuItems(out _)[0].Title.ToString());
+            ClassicAssert.AreEqual(MenuBarExtensions.SeparatorTitle, fileMenu.GetMenuItems(out _)[0].Title.ToString());
 
             op.Undo();
             op.Undo();
@@ -64,6 +64,6 @@ internal class ConvertMenuItemToSeperatorOperationTests : Tests
         var mbInFileMenu = mbIn.SubViews.OfType<MenuBarItem>().First();
         ClassicAssert.AreEqual(1, mbInFileMenu.GetMenuItems(out _).Count);
         ClassicAssert.IsNotNull(mbInFileMenu.GetMenuItems(out _)[0]);
-        ClassicAssert.AreNotEqual(ConvertMenuItemToSeperatorOperation.SeparatorTitle, mbInFileMenu.GetMenuItems(out _)[0].Title.ToString());
+        ClassicAssert.AreNotEqual(MenuBarExtensions.SeparatorTitle, mbInFileMenu.GetMenuItems(out _)[0].Title.ToString());
     }
 }

@@ -277,10 +277,10 @@ public class MenuTracker
             return potentialParent;
         }
 
-        // Recursively check each child's submenu
+        // Recursively check each child's submenu (SubMenu for MenuItem, PopoverMenu for MenuBarItem)
         foreach (var child in children)
         {
-            if (child.SubMenu != null)
+            if (child is MenuBarItem || child.SubMenu != null)
             {
                 var result = FindParentRecursive(item, child);
                 if (result != null)

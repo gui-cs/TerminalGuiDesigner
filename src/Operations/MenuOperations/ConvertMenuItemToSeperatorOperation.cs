@@ -8,16 +8,13 @@ namespace TerminalGuiDesigner.Operations.MenuOperations;
 /// <para>
 /// Converts a <see cref="MenuItem"/> into a Separator (horizontal line in menu).
 /// In the designer the separator is stored as a <see cref="MenuItem"/> with
-/// <see cref="SeparatorTitle"/> as its <see cref="MenuItem.Title"/>.
+/// <see cref="MenuBarExtensions.SeparatorTitle"/> as its <see cref="MenuItem.Title"/>.
 /// When code is generated it becomes a <c>new Line { Orientation = Orientation.Horizontal }</c>
 /// and on load those Line views are converted back to sentinel MenuItems.
 /// </para>
 /// </summary>
 public class ConvertMenuItemToSeperatorOperation : MenuItemOperation
 {
-    /// <summary>The title used to mark a MenuItem as a separator in the designer.</summary>
-    public const string SeparatorTitle = "---";
-
     private string? originalTitle;
 
     /// <summary>
@@ -28,7 +25,7 @@ public class ConvertMenuItemToSeperatorOperation : MenuItemOperation
     public ConvertMenuItemToSeperatorOperation(IApplication app, MenuItem toConvert)
         : base(app, toConvert)
     {
-        if (toConvert.Title?.ToString() == SeparatorTitle)
+        if (toConvert.Title?.ToString() == MenuBarExtensions.SeparatorTitle)
         {
             IsImpossible = true;
         }
@@ -61,7 +58,7 @@ public class ConvertMenuItemToSeperatorOperation : MenuItemOperation
         }
 
         this.originalTitle = this.OperateOn.Title?.ToString();
-        this.OperateOn.Title = SeparatorTitle;
+        this.OperateOn.Title = MenuBarExtensions.SeparatorTitle;
         this.Bar?.SetNeedsDraw();
         return true;
     }
