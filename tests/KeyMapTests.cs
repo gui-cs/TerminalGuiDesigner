@@ -53,6 +53,14 @@ internal class KeyMapTests
         """;
 
     [Test]
+    public void BadCtor()
+    {
+        var f9 = Key.F9;
+
+        var alsoF9 = new Key(f9.KeyCode);
+    }
+
+    [Test]
     [Category( "Configuration" )]
     public void Configuration_LoadingAndBinding( )
     {

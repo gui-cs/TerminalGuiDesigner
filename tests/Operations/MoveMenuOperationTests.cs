@@ -1,4 +1,4 @@
-﻿using TerminalGuiDesigner.Operations.MenuOperations;
+using TerminalGuiDesigner.Operations.MenuOperations;
 
 namespace UnitTests.Operations;
 
@@ -10,7 +10,7 @@ internal class MoveMenuOperationTests : Tests
         // Label is not a MenuBar so should get Exception
         RoundTrip<Window, Label>((d, v) =>
         {
-            ClassicAssert.Throws<ArgumentException>(()=>new MoveMenuOperation(d,new MenuBarItem(), 1));
+            ClassicAssert.Throws<ArgumentException>(() => new MoveMenuOperation(App, d, new MenuBarItem(), 1));
         }, out _);
     }
 
@@ -20,7 +20,7 @@ internal class MoveMenuOperationTests : Tests
         RoundTrip<Window, MenuBar>((d, v) =>
         {
             // we passed a new MenuBarItem which will not belong to d and therefore should be an Exception
-            ClassicAssert.Throws<ArgumentException>(() => new MoveMenuOperation(d, new MenuBarItem(), 1));
+            ClassicAssert.Throws<ArgumentException>(() => new MoveMenuOperation(App, d, new MenuBarItem(), 1));
         }, out _);
     }
 
@@ -29,8 +29,8 @@ internal class MoveMenuOperationTests : Tests
     {
         RoundTrip<Window, MenuBar>((d, v) =>
         {
-            ClassicAssert.AreEqual(1, v.Menus.Length, $"Expected {nameof(ViewFactory)} to create a {nameof(MenuBar)} with 1 example placeholder Menu");
-            ClassicAssert.IsTrue(new MoveMenuOperation(d, v.Menus[0], 1).IsImpossible,"Should be impossible to move Menu when there is only one of them");
+            ClassicAssert.AreEqual(1, v.SubViews.OfType<MenuBarItem>().Count(), $"Expected {nameof(ViewFactory)} to create a {nameof(MenuBar)} with 1 example placeholder Menu");
+            ClassicAssert.IsTrue(new MoveMenuOperation(App, d, v.SubViews.OfType<MenuBarItem>().First(), 1).IsImpossible, "Should be impossible to move Menu when there is only one of them");
         }, out _);
     }
 
@@ -49,9 +49,10 @@ internal class MoveMenuOperationTests : Tests
             new AddMenuOperation(App, d, "NewMenu").Do();
             new AddMenuOperation(App, d, "NewMenu").Do();
 
-            var toMove = v.Menus.ElementAt(idxToMove);
-            var originalIndex = v.Menus.IndexOf(toMove);
-            var op = new MoveMenuOperation(d, toMove, adjustment);
+            var menus = v.SubViews.OfType<MenuBarItem>().ToList();
+            var toMove = menus[idxToMove];
+            var originalIndex = menus.IndexOf(toMove);
+            var op = new MoveMenuOperation(App, d, toMove, adjustment);
 
             if(expectPossible)
             {
@@ -64,13 +65,13 @@ internal class MoveMenuOperationTests : Tests
                 ClassicAssert.False(op.Do());
             }
 
-            ClassicAssert.AreEqual(expectedNewIndex, v.Menus.IndexOf(toMove));
+            ClassicAssert.AreEqual(expectedNewIndex, v.SubViews.OfType<MenuBarItem>().ToList().IndexOf(toMove));
 
             op.Undo();
-            ClassicAssert.AreEqual(originalIndex, v.Menus.IndexOf(toMove));
+            ClassicAssert.AreEqual(originalIndex, v.SubViews.OfType<MenuBarItem>().ToList().IndexOf(toMove));
 
             op.Redo();
-            ClassicAssert.AreEqual(expectedNewIndex, v.Menus.IndexOf(toMove));
+            ClassicAssert.AreEqual(expectedNewIndex, v.SubViews.OfType<MenuBarItem>().ToList().IndexOf(toMove));
 
         }, out _);
     }

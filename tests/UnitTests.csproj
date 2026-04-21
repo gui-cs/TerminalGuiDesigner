@@ -9,14 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="MenuBarExtensionsTests.cs" />
-	  <Compile Remove="MenuBarTests.cs" />
-	  <Compile Remove="Operations\AddMenuItemOperationTests.cs" />
-	  <Compile Remove="Operations\AddMenuOperationTests.cs" />
-	  <Compile Remove="Operations\ConvertMenuItemToSeperatorOperationTests.cs" />
-	  <Compile Remove="Operations\MoveMenuItemLeftOperationTests.cs" />
-	  <Compile Remove="Operations\MoveMenuItemRightOperationTests.cs" />
-	  <Compile Remove="Operations\MoveMenuOperationTests.cs" />
+
 	</ItemGroup>
 	<ItemGroup>
 		<AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />

@@ -1,6 +1,7 @@
 using Terminal.Gui;
 using Terminal.Gui.Text;
 using Terminal.Gui.Views;
+using TerminalGuiDesigner.Operations.MenuOperations;
 
 namespace TerminalGuiDesigner;
 
@@ -26,6 +27,56 @@ public static class MenuBarExtensions
         }
 
         return menuBar.SubViews.OfType<MenuBarItem>().ElementAt(selected);
+    }
+
+    /// <summary>
+    /// Walks all menus in <paramref name="menuBar"/> and replaces any <see cref="Line"/> views
+    /// (produced by code generation for separators) with sentinel <see cref="MenuItem"/> instances
+    /// whose <see cref="MenuItem.Title"/> is <see cref="ConvertMenuItemToSeperatorOperation.SeparatorTitle"/>.
+    /// Call this after loading a <see cref="MenuBar"/> from generated code.
+    /// </summary>
+    public static void ConvertLineSeparatorsToSentinels(this MenuBar menuBar)
+    {
+        foreach (var mbi in menuBar.SubViews.OfType<MenuBarItem>())
+        {
+            if (mbi.PopoverMenu?.Root != null)
+            {
+                ConvertLineSeparatorsInMenu(mbi.PopoverMenu.Root);
+            }
+        }
+    }
+
+    private static void ConvertLineSeparatorsInMenu(Menu menu)
+    {
+        var allViews = menu.SubViews.ToList();
+
+        if (allViews.Any(v => v is Line))
+        {
+            foreach (var v in allViews)
+            {
+                menu.Remove(v);
+            }
+
+            foreach (var v in allViews)
+            {
+                menu.Add(v is Line
+                    ? new MenuItem { Title = ConvertMenuItemToSeperatorOperation.SeparatorTitle }
+                    : v);
+            }
+        }
+
+        // Recurse into child submenus
+        foreach (var child in menu.SubViews.OfType<MenuItem>())
+        {
+            if (child is MenuBarItem mbi && mbi.PopoverMenu?.Root != null)
+            {
+                ConvertLineSeparatorsInMenu(mbi.PopoverMenu.Root);
+            }
+            else if (child.SubMenu != null)
+            {
+                ConvertLineSeparatorsInMenu(child.SubMenu);
+            }
+        }
     }
 
     /// <summary>

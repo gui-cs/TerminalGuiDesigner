@@ -81,21 +81,26 @@ public class MenuBarItemsToCode : ToCodeBase
         // plus again let user name these
         foreach (var mi in child.GetMenuItems(out wasPopover))
         {
+            // Separators are stored as MenuItem("---") in the designer but emitted as Line in code
+            if (mi.Title?.ToString() == Operations.MenuOperations.ConvertMenuItemToSeperatorOperation.SeparatorTitle)
+            {
+                children.Add("new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal }");
+                continue;
+            }
+
             string subFieldName;
 
-            // If it has its own children e.g.
-            // File->New->Project
-            if (mi.SubMenu != null)
+            // If it has its own children e.g. File->New->Project
+            if (mi.SubMenu != null || mi is MenuBarItem)
             {
                 ToCode(args, mi, out subFieldName);
             }
             else
             {
-
-                // It has no children of its own e.g. its just Edit->Paste 
+                // It has no children of its own e.g. its just Edit->Paste
                 CreateMenuMembersAndPropertyAssignments(args, mi, out subFieldName);
             }
-         
+
             children.Add(subFieldName);
         }
 

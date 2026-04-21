@@ -203,6 +203,7 @@ public class Design
         if (subView is MenuBar mb)
         {
             MenuTracker.Instance.Register(mb);
+            mb.ConvertLineSeparatorsToSentinels();
         }
 
         if (subView is CheckBox cb)

@@ -39,16 +39,16 @@ internal class MenuBarExtensionsTests : Tests
             // Expect a MenuBar to be rendered that is
             // ".test..next..more.." (with 1 unit of preceding whitespace and 1 after each)
             // Note that this test is brittle and subject to changes in Terminal.Gui e.g. pushing menus closer together.
-            v.Menus[ 0 ].Title = "test";
+            v.SubViews.OfType<MenuBarItem>().First().Title = "test";
 
             Assume.That( ( ) => new AddMenuOperation(App, d, "next" ).Do( ), Throws.Nothing );
             Assume.That( ( ) => new AddMenuOperation(App, d, "more" ).Do( ), Throws.Nothing );
 
-            Assume.That( v.Menus, Has.Exactly( 3 ).InstanceOf<MenuBarItem>( ) );
+            Assume.That( v.SubViews.OfType<MenuBarItem>(), Has.Exactly( 3 ).InstanceOf<MenuBarItem>( ) );
 
             // Clicks in the "test" region
             var a = v.ScreenToMenuBarItem(clickXCoordinate + xOffset);
-            var b = v.Menus[expectedMenuItem];
+            var b = v.SubViews.OfType<MenuBarItem>().ElementAt(expectedMenuItem);
             Assert.That( a, Is.SameAs(b));
         }, out _ );
     }
@@ -72,12 +72,12 @@ internal class MenuBarExtensionsTests : Tests
             // Expect a MenuBar to be rendered that is
             // ".test..next..more.." (with 1 unit of preceding whitespace and 2 after each)
             // Note that this test is brittle and subject to changes in Terminal.Gui e.g. pushing menus closer together.
-            v.Menus[ 0 ].Title = "test";
+            v.SubViews.OfType<MenuBarItem>().First().Title = "test";
 
             Assume.That( ( ) => new AddMenuOperation(App, d, "next" ).Do( ), Throws.Nothing );
             Assume.That( ( ) => new AddMenuOperation(App, d, "more" ).Do( ), Throws.Nothing );
 
-            Assume.That( v.Menus, Has.Exactly( 3 ).InstanceOf<MenuBarItem>( ) );
+            Assume.That( v.SubViews.OfType<MenuBarItem>(), Has.Exactly( 3 ).InstanceOf<MenuBarItem>( ) );
 
             Assert.That( v.ScreenToMenuBarItem( clickXCoordinate + xOffset ), Is.Null );
         }, out _ );
@@ -99,14 +99,14 @@ internal class MenuBarExtensionsTests : Tests
             v.Y = yOffset;
 
             v.SuperView!.LayoutSubViews();
-             
-            // Expect a MenuBar to be rendered that is 
+
+            // Expect a MenuBar to be rendered that is
             // ".test.." (with 1 unit of preceding whitespace and 2 after)
             // Note that this test is brittle and subject to changes in Terminal.Gui e.g. pushing menus closer together.
-            Assume.That( v.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
-            v.Menus[ 0 ].Title = "test";
+            Assume.That( v.SubViews.OfType<MenuBarItem>(), Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
+            v.SubViews.OfType<MenuBarItem>().First().Title = "test";
 
-            Assert.That( v.ScreenToMenuBarItem( clickXCoordinate + xOffset ), Is.SameAs( v.Menus[ 0 ] ) );
+            Assert.That( v.ScreenToMenuBarItem( clickXCoordinate + xOffset ), Is.SameAs( v.SubViews.OfType<MenuBarItem>().First() ) );
         }, out _ );
     }
 
@@ -127,13 +127,13 @@ internal class MenuBarExtensionsTests : Tests
 
             v.SuperView!.LayoutSubViews();
 
-            // Expect a MenuBar to be rendered that is 
+            // Expect a MenuBar to be rendered that is
             // ".test.." (with 1 unit of preceding whitespace and 2 after)
             // Note that this test is brittle and subject to changes in Terminal.Gui e.g. pushing menus closer together.
-            Assume.That( v.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
-            v.Menus[ 0 ].Title = "test";
+            Assume.That( v.SubViews.OfType<MenuBarItem>(), Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
+            v.SubViews.OfType<MenuBarItem>().First().Title = "test";
 
-            Assert.That( v.ScreenToMenuBarItem( clickXCoordinate + xOffset ), Is.SameAs( v.Menus[ 0 ] ) );
+            Assert.That( v.ScreenToMenuBarItem( clickXCoordinate + xOffset ), Is.SameAs( v.SubViews.OfType<MenuBarItem>().First() ) );
         }, out _ );
     }
 
@@ -154,11 +154,11 @@ internal class MenuBarExtensionsTests : Tests
 
             v.SuperView!.LayoutSubViews();
 
-            // Expect a MenuBar to be rendered that is 
+            // Expect a MenuBar to be rendered that is
             // ".test.." (with 1 unit of preceding whitespace and 2 after)
             // Note that this test is brittle and subject to changes in Terminal.Gui e.g. pushing menus closer together.
-            Assume.That( v.Menus, Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
-            v.Menus[ 0 ].Title = "test";
+            Assume.That( v.SubViews.OfType<MenuBarItem>(), Has.Exactly( 1 ).InstanceOf<MenuBarItem>( ) );
+            v.SubViews.OfType<MenuBarItem>().First().Title = "test";
 
             Assert.That( v.ScreenToMenuBarItem( clickXCoordinate + xOffset ), Is.Null,
                          "Expected Terminal.Gui MenuBar to have 1 unit of whitespace before and 2 after any MenuBarItems (e.g. File) get rendered. This may change in future, if so then update this test." );
