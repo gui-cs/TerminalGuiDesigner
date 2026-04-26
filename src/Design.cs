@@ -1,9 +1,9 @@
+using NLog;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Mime;
 using System.Reflection;
 using System.Xml.Linq;
-using NLog;
 using Terminal.Gui;
 using Terminal.Gui.App;
 using Terminal.Gui.Configuration;
@@ -16,6 +16,7 @@ using TerminalGuiDesigner.Operations.MenuOperations;
 using TerminalGuiDesigner.Operations.StatusBarOperations;
 using TerminalGuiDesigner.Operations.TableViewOperations;
 using TerminalGuiDesigner.ToCode;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TerminalGuiDesigner;
 
@@ -239,22 +240,23 @@ public class Design
 
         if (subView is TreeView tree)
         {
-            tree.AddObject(new TreeNode("Example Branch 1")
-            {
-                Children = new[] { new TreeNode("Child 1") },
+            tree.AddObject(new TreeNode() {
+                Text = "Example Branch 1",
+                Children = new[] { new TreeNode() { Text = "Child 1" } },
             });
-            tree.AddObject(new TreeNode("Example Branch 2")
+            tree.AddObject(new TreeNode()
             {
+                Text = "Example Branch 2",
                 Children = new[]
                 {
-                    new TreeNode("Child 1"),
-                    new TreeNode("Child 2"),
+                    new TreeNode() { Text = "Child 1" },
+                    new TreeNode() { Text = "Child 2" },
                 },
             });
 
             for (int l = 0; l < 20; l++)
             {
-                tree.AddObject(new TreeNode($"Example Leaf {l}"));
+                tree.AddObject(new TreeNode() { Text = $"Example Leaf {l}" });
             }
         }
 
@@ -312,9 +314,9 @@ public class Design
             }
 
             // if no column was right clicked then provide commands for the selected column
-            if (col == null && tv.SelectedColumn >= 0)
+            if (col == null && tv.Cursor.Position.Value.X >= 0)
             {
-                col = dt.Columns[tv.SelectedColumn];
+                col = dt.Columns[tv.Cursor.Position.Value.X];
             }
 
             yield return new AddColumnOperation(App, this, null);
@@ -756,7 +758,6 @@ public class Design
             yield return this.CreateSubProperty(nameof(TreeStyle.ColorExpandSymbol), nameof(TreeView<ITreeNode>.Style), tree.Style);
             yield return this.CreateSubProperty(nameof(TreeStyle.ExpandableSymbol), nameof(TreeView<ITreeNode>.Style), tree.Style);
             yield return this.CreateSubProperty(nameof(TreeStyle.InvertExpandSymbolColors), nameof(TreeView<ITreeNode>.Style), tree.Style);
-            yield return this.CreateSubProperty(nameof(TreeStyle.LeaveLastRow), nameof(TreeView<ITreeNode>.Style), tree.Style);
             yield return this.CreateSubProperty(nameof(TreeStyle.ShowBranchLines), nameof(TreeView<ITreeNode>.Style), tree.Style);
         }
         

@@ -278,7 +278,7 @@ public static class ViewFactory
                     {
                         return Enumerable.Empty<FileSystemInfo>();
                     }
-                });
+                },(f)=>f is DirectoryInfo);
 
                 SetDefaultDimensions(newView, width ?? 16, height ?? 5);
                 break;

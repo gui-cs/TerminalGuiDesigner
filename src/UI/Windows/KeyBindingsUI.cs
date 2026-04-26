@@ -60,9 +60,9 @@ namespace TerminalGuiDesigner.UI.Windows {
                 return null;
             };
 
-            tableView.CellActivated += (s, e) =>
+            tableView.Activated += (s, e) =>
             {
-                var prop = _props[e.Row];
+                var prop = _props[tableView.Cursor.Position.Value.Y];
                 var k = Modals.GetShortcut(app);
                 prop.SetValue(this.keyMap,k.ToString());
                 this.SetNeedsDraw();
