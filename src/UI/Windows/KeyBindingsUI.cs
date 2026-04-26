@@ -17,7 +17,7 @@ using Attribute = System.Attribute;
 
 namespace TerminalGuiDesigner.UI.Windows {
     using Terminal.Gui;
-    
+    using Terminal.Gui.Input;
 
     public partial class KeyBindingsUI {
         private readonly IApplication app;
@@ -60,12 +60,15 @@ namespace TerminalGuiDesigner.UI.Windows {
                 return null;
             };
 
-            tableView.Activated += (s, e) =>
+            tableView.KeyBindings.Clear(Command.Accept);
+            tableView.KeyBindings.Add(Key.Enter, new KeyBinding([Command.Activate]));
+            tableView.Activating += (s, e) =>
             {
-                var prop = _props[tableView.Cursor.Position.Value.Y];
+                var prop = _props[tableView.Value.Cursor.Y];
                 var k = Modals.GetShortcut(app);
                 prop.SetValue(this.keyMap,k.ToString());
                 this.SetNeedsDraw();
+                e.Handled = true;
             };
             btnReset.Accepting += (s, e) =>
             {
