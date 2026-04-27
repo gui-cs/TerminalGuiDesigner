@@ -352,7 +352,7 @@ public class Editor : Runnable, IErrorReporter
     {
         var r = base.OnDrawingContent(context);
 
-        if (viewBeingEdited != null)
+        if (viewBeingEdited != null || app.TopRunnable is FileDialog)
         {
             return true;
         }
@@ -1270,7 +1270,7 @@ public class Editor : Runnable, IErrorReporter
         var ofd = new OpenDialog()
         {
             Title = "Open",
-            AllowedTypes = new List<IAllowedType>(new[] { new AllowedType("View", SourceCodeFile.ExpectedExtension) })
+//            AllowedTypes = new List<IAllowedType>(new[] { new AllowedType("View", SourceCodeFile.ExpectedExtension) })
         };
         ofd.Layout();
 
