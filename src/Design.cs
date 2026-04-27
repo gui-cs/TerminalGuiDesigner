@@ -307,9 +307,14 @@ public class Design
                 var cell = tv.ScreenToCell(pos.X, pos.Y, out var colIdx);
 
 
-                if (cell != null && colIdx == null)
+                if (cell != null)
                 {
                     col = dt.Columns[cell.Value.X];
+                }
+                else
+                if (colIdx != null && colIdx >= 0 && colIdx < dt.Columns.Count)
+                {
+                    col = dt.Columns[colIdx.Value];
                 }
             }
 
