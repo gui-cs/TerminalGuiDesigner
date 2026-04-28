@@ -1353,7 +1353,6 @@ public class Editor : Runnable, IErrorReporter
             Path = "MyView.cs",
         };
         ofd.Style.PreserveFilenameOnDirectoryChanges = true;
-        ofd.Layout();
 
         app.Run(ofd);
 
