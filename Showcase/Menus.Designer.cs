@@ -8,8 +8,7 @@
 //      the code is regenerated.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
-namespace Showcase
-{
+namespace YourNamespace {
     using System;
     using Terminal.Gui;
     using Terminal.Gui.App;
@@ -21,23 +20,67 @@ namespace Showcase
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Drawing;
-
-
-    public partial class Menus : Terminal.Gui.Views.Dialog
-    {
-
+    
+    
+    public partial class Menus : Terminal.Gui.Views.Dialog {
+        
         private Terminal.Gui.Views.MenuBar menuBar;
-
+        
         private Terminal.Gui.Views.MenuBarItem fileMenu;
-
+        
         private Terminal.Gui.Views.MenuItem newMenuItem;
-
-        private Terminal.Gui.Views.MenuItem carMenuItem;
-
+        
+        private Terminal.Gui.Views.MenuItem projectSolutionMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem projectFromExistingCodeMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem repositoryMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem fileMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem openMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem projectSolutionMenuItem2;
+        
+        private Terminal.Gui.Views.MenuItem folderMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem workspaceMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem fileMenuItem2;
+        
+        private Terminal.Gui.Views.MenuItem cloneRepositoryMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem startWindowMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem addMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem closeMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem closeSolutionMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem saveModalscsMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem saveModalscsAsMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem saveAllMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem saveSolutionAsFilterMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem pageSetupMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem printMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem accountSettingsMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem moveModalscsIntoMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem recentFilesMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem recentProjectsAndSolutionsMenuItem;
+        
         private Terminal.Gui.Views.MenuItem exitMenuItem;
-
-        private void InitializeComponent()
-        {
+        
+        private void InitializeComponent() {
             this.menuBar = new Terminal.Gui.Views.MenuBar();
             this.Width = Dim.Percent(90);
             this.Height = Dim.Percent(80);
@@ -55,26 +98,72 @@ namespace Showcase
             this.menuBar.Visible = true;
             this.menuBar.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.menuBar.CanFocus = false;
-            this.menuBar.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Transparent;
+            this.menuBar.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.None;
             this.menuBar.Data = "menuBar";
             this.menuBar.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.fileMenu = new Terminal.Gui.Views.MenuBarItem();
             this.fileMenu.Title = "_File";
-            this.fileMenu.Key = Key.F9;
+            this.fileMenu.Key = new Key("F9");
             this.newMenuItem = new Terminal.Gui.Views.MenuItem();
             this.newMenuItem.Title = "New";
-            this.newMenuItem.Data = "newMenuItem";
-
-
-            this.carMenuItem = new Terminal.Gui.Views.MenuItem();
-            this.carMenuItem.Title = "Car";
-            this.carMenuItem.Data = "carMenuItem";
-            this.newMenuItem.SubMenu = new Menu([carMenuItem]);
-
+            this.projectSolutionMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.projectSolutionMenuItem.Title = "Project/Solution...";
+            this.projectSolutionMenuItem.Key = new Key("N, CtrlMask, AltMask");
+            this.projectFromExistingCodeMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.projectFromExistingCodeMenuItem.Title = "Project From Existing Code...";
+            this.repositoryMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.repositoryMenuItem.Title = "Repository...";
+            this.fileMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.fileMenuItem.Title = "File...";
+            this.fileMenuItem.Key = new Key("N, CtrlMask");
+            this.newMenuItem.SubMenu = new Menu([projectSolutionMenuItem,projectFromExistingCodeMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },repositoryMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },fileMenuItem]);
+            this.openMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.openMenuItem.Title = "Open";
+            this.projectSolutionMenuItem2 = new Terminal.Gui.Views.MenuItem();
+            this.projectSolutionMenuItem2.Title = "Project/Solution...";
+            this.projectSolutionMenuItem2.Key = new Key("O, CtrlMask");
+            this.folderMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.folderMenuItem.Title = "Folder...";
+            this.folderMenuItem.Key = new Key("O, CtrlMask, AltMask");
+            this.workspaceMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.workspaceMenuItem.Title = "Workspace...";
+            this.fileMenuItem2 = new Terminal.Gui.Views.MenuItem();
+            this.fileMenuItem2.Title = "File...";
+            this.fileMenuItem2.Key = new Key("O, CtrlMask");
+            this.openMenuItem.SubMenu = new Menu([projectSolutionMenuItem2,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },folderMenuItem,workspaceMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },fileMenuItem2]);
+            this.cloneRepositoryMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.cloneRepositoryMenuItem.Title = "Clone Repository...";
+            this.startWindowMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.startWindowMenuItem.Title = "Start Window";
+            this.addMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.addMenuItem.Title = "Add";
+            this.closeMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.closeMenuItem.Title = "Close";
+            this.closeSolutionMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.closeSolutionMenuItem.Title = "Close Solution";
+            this.saveModalscsMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.saveModalscsMenuItem.Title = "Save Modals.cs";
+            this.saveModalscsAsMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.saveModalscsAsMenuItem.Title = "Save Modals.cs As...";
+            this.saveAllMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.saveAllMenuItem.Title = "Save All";
+            this.saveSolutionAsFilterMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.saveSolutionAsFilterMenuItem.Title = "Save Solution as Filter...";
+            this.pageSetupMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.pageSetupMenuItem.Title = "Page Setup...";
+            this.printMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.printMenuItem.Title = "Print...";
+            this.accountSettingsMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.accountSettingsMenuItem.Title = "Account Settings...";
+            this.moveModalscsIntoMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.moveModalscsIntoMenuItem.Title = "Move Modals.cs into";
+            this.recentFilesMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.recentFilesMenuItem.Title = "Recent Files";
+            this.recentProjectsAndSolutionsMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.recentProjectsAndSolutionsMenuItem.Title = "Recent Projects and Solutions";
             this.exitMenuItem = new Terminal.Gui.Views.MenuItem();
             this.exitMenuItem.Title = "Exit";
-            this.exitMenuItem.Data = "exitMenuItem";
-            this.fileMenu.PopoverMenu = new PopoverMenu([newMenuItem, exitMenuItem]);
+            this.fileMenu.PopoverMenu = new PopoverMenu([newMenuItem,openMenuItem,cloneRepositoryMenuItem,startWindowMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },addMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },closeMenuItem,closeSolutionMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },saveModalscsMenuItem,saveModalscsAsMenuItem,saveAllMenuItem,saveSolutionAsFilterMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },pageSetupMenuItem,printMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },accountSettingsMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },moveModalscsIntoMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },recentFilesMenuItem,recentProjectsAndSolutionsMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },exitMenuItem]);
             this.menuBar.Add(this.fileMenu);
             this.Add(this.menuBar);
         }

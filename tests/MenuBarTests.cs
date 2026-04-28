@@ -293,30 +293,28 @@ internal class MenuBarTests : Tests
         Assert.That( impossibleMoveRightOpSucceeded, Is.False );
 
         // can move element 1
-        // This is a destructive action, so references will change.
         MoveMenuItemRightOperation validMoveRightOp = new( App, fileMenu.GetMenuItems(out _)[1] );
         Assert.That( validMoveRightOp.IsImpossible, Is.False );
         bool validMoveRightOpSucceeded = false;
         Assert.That( ( ) => validMoveRightOpSucceeded = validMoveRightOp.Do( ), Throws.Nothing );
         Assert.That( validMoveRightOpSucceeded );
 
-        // We will have changed from a MenuItem to a MenuBarItem
-        // so element 0 will not be us.  In Terminal.Gui there is
-        // a different class for a menu item and one with submenus.
-        Assert.That( fileMenu.GetMenuItems(out _)[0], Is.Not.Null.And.InstanceOf<MenuBarItem>( ) );
-        MenuBarItem miConvertedToMenuBarItem = (MenuBarItem)fileMenu.GetMenuItems(out _)[0];
+        // In Terminal.Gui v2, nested items with sub-menus remain plain MenuItem instances
+        // (with SubMenu set) rather than being converted to MenuBarItem.  MenuBarItem is
+        // exclusively for top-level MenuBar entries.  The same object reference (mi) is
+        // retained at index 0 — it is not replaced with a new object.
+        Assert.That( fileMenu.GetMenuItems(out _), Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
+        MenuItem miWithSubMenu = fileMenu.GetMenuItems(out _)[0];
 
-        // Check that the references are unequal but values are equal
         Assert.Multiple( ( ) =>
         {
-            Assert.That( miConvertedToMenuBarItem, Is.Not.SameAs( mi ) );
-            Assert.That( miConvertedToMenuBarItem.Title, Is.EqualTo( mi.Title ) );
-            Assert.That( miConvertedToMenuBarItem.Data, Is.EqualTo( mi.Data ) );
-            Assert.That( miConvertedToMenuBarItem.GetMenuItems(out _), Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
+            Assert.That( miWithSubMenu, Is.SameAs( mi ) );
+            Assert.That( miWithSubMenu.Title, Is.EqualTo( mi.Title ) );
+            Assert.That( miWithSubMenu.Data, Is.EqualTo( mi.Data ) );
+            Assert.That( miWithSubMenu.GetMenuItems(out _), Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
         } );
 
         // Now undo it.
-        // This is destructive as well.
         Assert.That( validMoveRightOp.Undo, Throws.Nothing );
 
         Assert.That( fileMenu.GetMenuItems(out _), Has.Exactly( 2 ).InstanceOf<MenuItem>( ) );
@@ -326,23 +324,16 @@ internal class MenuBarTests : Tests
             Assert.That( fileMenu.GetMenuItems(out _)[1], Is.Not.Null.And.InstanceOf<MenuItem>( ) );
         } );
         MenuItem firstChildAfterUndo = fileMenu.GetMenuItems(out _)[0];
-        MenuItem secondChildAfterUndo = fileMenu.GetMenuItems(out _)[1];
 
         Assert.Multiple( ( ) =>
         {
-            // All the previous references are gone forever through this process.
-            // So, neither element should be mi.
-            Assert.That( firstChildAfterUndo, Is.Not.SameAs( mi ) );
-            Assert.That( secondChildAfterUndo, Is.Not.SameAs( mi ) );
+            // The same object reference is retained after undo.
+            Assert.That( firstChildAfterUndo, Is.SameAs( mi ) );
 
-            // Neither element should be miConvertedToMenuBarItem either
-            Assert.That( firstChildAfterUndo, Is.Not.SameAs( miConvertedToMenuBarItem ) );
-            Assert.That( secondChildAfterUndo, Is.Not.SameAs( miConvertedToMenuBarItem ) );
+            // The sub-menu should have been cleared after undo.
+            Assert.That( firstChildAfterUndo.GetMenuItems(out _), Is.Empty );
 
-            // And mi still should not be miConvertedToMenuBarItem
-            Assert.That( mi, Is.Not.SameAs( miConvertedToMenuBarItem ) );
-
-            // But the values need to be preserved
+            // Values need to be preserved.
             Assert.That( firstChildAfterUndo.Title, Is.EqualTo( mi.Title ) );
             Assert.That( firstChildAfterUndo.Data, Is.EqualTo( mi.Data ) );
             Assert.That( firstChildAfterUndo.Key, Is.EqualTo( mi.Key) );

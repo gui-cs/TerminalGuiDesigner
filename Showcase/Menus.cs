@@ -7,7 +7,7 @@
 //      You can make changes to this file and they will not be overwritten when saving.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
-namespace Showcase{
+namespace YourNamespace {
     using Terminal.Gui;
     
     
