@@ -54,6 +54,12 @@ namespace Showcase {
         
         private Terminal.Gui.Views.MenuItem addMenuItem;
         
+        private Terminal.Gui.Views.MenuItem newProjectMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem existingProjectMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem existingWebSiteMenuItem;
+        
         private Terminal.Gui.Views.MenuItem closeMenuItem;
         
         private Terminal.Gui.Views.MenuItem closeSolutionMenuItem;
@@ -74,7 +80,33 @@ namespace Showcase {
         
         private Terminal.Gui.Views.MenuItem moveModalscsIntoMenuItem;
         
+        private Terminal.Gui.Views.MenuItem terminalGuiDesignerMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem solutionItemsMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem unitTestsMenuItem;
+        
         private Terminal.Gui.Views.MenuItem recentFilesMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem dReposTerminalGuiDesignerShowcaseMenuscsMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem dReposTerminalGuiDesignerShowcaseMenusDesignercsMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem dReposTerminalGuiDesignertestsMenuBarTestscsMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem dMenuOperationsMoveMenuItemRightOperationcsMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem dReposTerminalGuiDesignerShowcaseProgramcsMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem dReposTerminalGuiDesignersrcUIEditorcsMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem dReposTerminalGuiDesignersrcProgramcsMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem dsrcbinDebugnet100MyViewDesignercsMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem dTerminalGuiDesignersrcToCodeShadowStylePropertycsMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem dReposTerminalGuiDesignersrcDesigncsMenuItem;
         
         private Terminal.Gui.Views.MenuItem recentProjectsAndSolutionsMenuItem;
         
@@ -209,12 +241,20 @@ namespace Showcase {
             this.startWindowMenuItem.Title = "Start Window";
             this.addMenuItem = new Terminal.Gui.Views.MenuItem();
             this.addMenuItem.Title = "Add";
+            this.newProjectMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.newProjectMenuItem.Title = "New Project...";
+            this.existingProjectMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.existingProjectMenuItem.Title = "Existing Project...";
+            this.existingWebSiteMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.existingWebSiteMenuItem.Title = "Existing Web Site...";
+            this.addMenuItem.SubMenu = new Menu([newProjectMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },existingProjectMenuItem,existingWebSiteMenuItem]);
             this.closeMenuItem = new Terminal.Gui.Views.MenuItem();
             this.closeMenuItem.Title = "Close";
             this.closeSolutionMenuItem = new Terminal.Gui.Views.MenuItem();
             this.closeSolutionMenuItem.Title = "Close Solution";
             this.saveModalscsMenuItem = new Terminal.Gui.Views.MenuItem();
             this.saveModalscsMenuItem.Title = "Save Modals.cs";
+            this.saveModalscsMenuItem.Key = new Key("S, CtrlMask");
             this.saveModalscsAsMenuItem = new Terminal.Gui.Views.MenuItem();
             this.saveModalscsAsMenuItem.Title = "Save Modals.cs As...";
             this.saveAllMenuItem = new Terminal.Gui.Views.MenuItem();
@@ -229,12 +269,41 @@ namespace Showcase {
             this.accountSettingsMenuItem.Title = "Account Settings...";
             this.moveModalscsIntoMenuItem = new Terminal.Gui.Views.MenuItem();
             this.moveModalscsIntoMenuItem.Title = "Move Modals.cs into";
+            this.terminalGuiDesignerMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.terminalGuiDesignerMenuItem.Title = "1 TerminalGuiDesigner";
+            this.solutionItemsMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.solutionItemsMenuItem.Title = "2 Solution Items";
+            this.unitTestsMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.unitTestsMenuItem.Title = "3 UnitTests";
+            this.moveModalscsIntoMenuItem.SubMenu = new Menu([terminalGuiDesignerMenuItem,solutionItemsMenuItem,unitTestsMenuItem]);
             this.recentFilesMenuItem = new Terminal.Gui.Views.MenuItem();
             this.recentFilesMenuItem.Title = "Recent Files";
+            this.dReposTerminalGuiDesignerShowcaseMenuscsMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.dReposTerminalGuiDesignerShowcaseMenuscsMenuItem.Title = "1 D:\\Repos\\TerminalGuiDesigner\\Showcase\\Menus.cs";
+            this.dReposTerminalGuiDesignerShowcaseMenusDesignercsMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.dReposTerminalGuiDesignerShowcaseMenusDesignercsMenuItem.Title = "2 D:\\Repos\\TerminalGuiDesigner\\Showcase\\Menus.Designer.cs";
+            this.dReposTerminalGuiDesignertestsMenuBarTestscsMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.dReposTerminalGuiDesignertestsMenuBarTestscsMenuItem.Title = "3 D:\\Repos\\TerminalGuiDesigner\\tests\\MenuBarTests.cs";
+            this.dMenuOperationsMoveMenuItemRightOperationcsMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.dMenuOperationsMoveMenuItemRightOperationcsMenuItem.Title = "4 D:\\...\\MenuOperations\\MoveMenuItemRightOperation.cs";
+            this.dReposTerminalGuiDesignerShowcaseProgramcsMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.dReposTerminalGuiDesignerShowcaseProgramcsMenuItem.Title = "5 D:\\Repos\\TerminalGuiDesigner\\Showcase\\Program.cs";
+            this.dReposTerminalGuiDesignersrcUIEditorcsMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.dReposTerminalGuiDesignersrcUIEditorcsMenuItem.Title = "6 D:\\Repos\\TerminalGuiDesigner\\src\\UI\\Editor.cs";
+            this.dReposTerminalGuiDesignersrcProgramcsMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.dReposTerminalGuiDesignersrcProgramcsMenuItem.Title = "7 D:\\Repos\\TerminalGuiDesigner\\src\\Program.cs";
+            this.dsrcbinDebugnet100MyViewDesignercsMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.dsrcbinDebugnet100MyViewDesignercsMenuItem.Title = "8 D:\\...\\src\\bin\\Debug\\net10.0\\MyView.Designer.cs";
+            this.dTerminalGuiDesignersrcToCodeShadowStylePropertycsMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.dTerminalGuiDesignersrcToCodeShadowStylePropertycsMenuItem.Title = "9 D:\\...\\TerminalGuiDesigner\\src\\ToCode\\ShadowStyleProperty.cs";
+            this.dReposTerminalGuiDesignersrcDesigncsMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.dReposTerminalGuiDesignersrcDesigncsMenuItem.Title = "10 D:\\Repos\\TerminalGuiDesigner\\src\\Design.cs";
+            this.recentFilesMenuItem.SubMenu = new Menu([dReposTerminalGuiDesignerShowcaseMenuscsMenuItem,dReposTerminalGuiDesignerShowcaseMenusDesignercsMenuItem,dReposTerminalGuiDesignertestsMenuBarTestscsMenuItem,dMenuOperationsMoveMenuItemRightOperationcsMenuItem,dReposTerminalGuiDesignerShowcaseProgramcsMenuItem,dReposTerminalGuiDesignersrcUIEditorcsMenuItem,dReposTerminalGuiDesignersrcProgramcsMenuItem,dsrcbinDebugnet100MyViewDesignercsMenuItem,dTerminalGuiDesignersrcToCodeShadowStylePropertycsMenuItem,dReposTerminalGuiDesignersrcDesigncsMenuItem]);
             this.recentProjectsAndSolutionsMenuItem = new Terminal.Gui.Views.MenuItem();
             this.recentProjectsAndSolutionsMenuItem.Title = "Recent Projects and Solutions";
             this.exitMenuItem = new Terminal.Gui.Views.MenuItem();
             this.exitMenuItem.Title = "Exit";
+            this.exitMenuItem.Key = new Key("X, CtrlMask");
             this.fileMenu.PopoverMenu = new PopoverMenu([newMenuItem,openMenuItem,cloneRepositoryMenuItem,startWindowMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },addMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },closeMenuItem,closeSolutionMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },saveModalscsMenuItem,saveModalscsAsMenuItem,saveAllMenuItem,saveSolutionAsFilterMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },pageSetupMenuItem,printMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },accountSettingsMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },moveModalscsIntoMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },recentFilesMenuItem,recentProjectsAndSolutionsMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },exitMenuItem]);
             this.menuBar.Add(this.fileMenu);
             this.editMenu = new Terminal.Gui.Views.MenuBarItem();
