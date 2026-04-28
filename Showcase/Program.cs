@@ -20,7 +20,7 @@ namespace Showcase
                 };
 
                 tv.Table = new EnumerableTableSource<Type>(types,
-                    new Dictionary<string, Func<Type, object>> { { "Scenario (Enter to open, Esc to close/exit)", (t) => t.Name } }
+                    new Dictionary<string, Func<Type, object>> { { "Scenario (Enter to open, Esc to close/exit)", (t) => t.Name + $" ({t.BaseType?.Name})"} }
                     );
 
                 tv.KeyBindings.ReplaceCommands(Key.Enter,Command.Activate);
