@@ -1352,7 +1352,7 @@ public class Editor : Runnable, IErrorReporter
             AllowedTypes = new List<IAllowedType>() { new AllowedType("C# File", ".cs") },
             Path = "MyView.cs",
         };
-        ofd.Style.PreserveFilenameOnDirectoryChanges = true;
+        // ofd.Style.PreserveFilenameOnDirectoryChanges = true;
 
         app.Run(ofd);
 
