@@ -8,7 +8,7 @@
 //      the code is regenerated.
 //  </auto-generated>
 // -----------------------------------------------------------------------------
-namespace YourNamespace {
+namespace Showcase {
     using System;
     using Terminal.Gui;
     using Terminal.Gui.App;
@@ -79,6 +79,78 @@ namespace YourNamespace {
         private Terminal.Gui.Views.MenuItem recentProjectsAndSolutionsMenuItem;
         
         private Terminal.Gui.Views.MenuItem exitMenuItem;
+        
+        private Terminal.Gui.Views.MenuBarItem editMenu;
+        
+        private Terminal.Gui.Views.MenuItem goToMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem findAndReplaceMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem undoMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem redoMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem undoLastGlobalActionMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem redoLastGlobalActionMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem cutMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem copyMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem pasteMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem deleteMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem selectAllMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem advancedMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem bookmarksMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem intelliSenseMenuItem;
+        
+        private Terminal.Gui.Views.MenuItem multipleCaretsMenuItem;
+        
+        private Terminal.Gui.Views.MenuBarItem viewMenu;
+        
+        private Terminal.Gui.Views.MenuItem editMeMenuItem;
+        
+        private Terminal.Gui.Views.MenuBarItem gitMenu;
+        
+        private Terminal.Gui.Views.MenuItem editMeMenuItem2;
+        
+        private Terminal.Gui.Views.MenuBarItem projectMenu;
+        
+        private Terminal.Gui.Views.MenuItem editMeMenuItem3;
+        
+        private Terminal.Gui.Views.MenuBarItem buildMenu;
+        
+        private Terminal.Gui.Views.MenuItem editMeMenuItem4;
+        
+        private Terminal.Gui.Views.MenuBarItem debugMenu;
+        
+        private Terminal.Gui.Views.MenuItem editMeMenuItem5;
+        
+        private Terminal.Gui.Views.MenuBarItem testMenu;
+        
+        private Terminal.Gui.Views.MenuItem editMeMenuItem6;
+        
+        private Terminal.Gui.Views.MenuBarItem toolsMenu;
+        
+        private Terminal.Gui.Views.MenuItem editMeMenuItem7;
+        
+        private Terminal.Gui.Views.MenuBarItem extensionsMenu;
+        
+        private Terminal.Gui.Views.MenuItem editMeMenuItem8;
+        
+        private Terminal.Gui.Views.MenuBarItem windowMenu;
+        
+        private Terminal.Gui.Views.MenuItem editMeMenuItem9;
+        
+        private Terminal.Gui.Views.MenuBarItem helpMenu;
+        
+        private Terminal.Gui.Views.MenuItem editMeMenuItem10;
         
         private void InitializeComponent() {
             this.menuBar = new Terminal.Gui.Views.MenuBar();
@@ -165,6 +237,100 @@ namespace YourNamespace {
             this.exitMenuItem.Title = "Exit";
             this.fileMenu.PopoverMenu = new PopoverMenu([newMenuItem,openMenuItem,cloneRepositoryMenuItem,startWindowMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },addMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },closeMenuItem,closeSolutionMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },saveModalscsMenuItem,saveModalscsAsMenuItem,saveAllMenuItem,saveSolutionAsFilterMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },pageSetupMenuItem,printMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },accountSettingsMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },moveModalscsIntoMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },recentFilesMenuItem,recentProjectsAndSolutionsMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },exitMenuItem]);
             this.menuBar.Add(this.fileMenu);
+            this.editMenu = new Terminal.Gui.Views.MenuBarItem();
+            this.editMenu.Title = "Edit";
+            this.goToMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.goToMenuItem.Title = "Go To";
+            this.findAndReplaceMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.findAndReplaceMenuItem.Title = "Find  and Replace";
+            this.undoMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.undoMenuItem.Title = "Undo";
+            this.redoMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.redoMenuItem.Title = "Redo";
+            this.undoLastGlobalActionMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.undoLastGlobalActionMenuItem.Title = "Undo Last Global Action";
+            this.redoLastGlobalActionMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.redoLastGlobalActionMenuItem.Title = "Redo Last Global Action";
+            this.cutMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.cutMenuItem.Title = "Cut";
+            this.copyMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.copyMenuItem.Title = "Copy";
+            this.pasteMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.pasteMenuItem.Title = "Paste";
+            this.deleteMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.deleteMenuItem.Title = "Delete";
+            this.selectAllMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.selectAllMenuItem.Title = "Select All";
+            this.advancedMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.advancedMenuItem.Title = "Advanced";
+            this.bookmarksMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.bookmarksMenuItem.Title = "Bookmarks";
+            this.intelliSenseMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.intelliSenseMenuItem.Title = "IntelliSense";
+            this.multipleCaretsMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.multipleCaretsMenuItem.Title = "Multiple Carets";
+            this.editMenu.PopoverMenu = new PopoverMenu([goToMenuItem,findAndReplaceMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },undoMenuItem,redoMenuItem,undoLastGlobalActionMenuItem,redoLastGlobalActionMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },cutMenuItem,copyMenuItem,pasteMenuItem,deleteMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },selectAllMenuItem,new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal },advancedMenuItem,bookmarksMenuItem,intelliSenseMenuItem,multipleCaretsMenuItem]);
+            this.menuBar.Add(this.editMenu);
+            this.viewMenu = new Terminal.Gui.Views.MenuBarItem();
+            this.viewMenu.Title = "View";
+            this.editMeMenuItem = new Terminal.Gui.Views.MenuItem();
+            this.editMeMenuItem.Title = "Edit Me";
+            this.viewMenu.PopoverMenu = new PopoverMenu([editMeMenuItem]);
+            this.menuBar.Add(this.viewMenu);
+            this.gitMenu = new Terminal.Gui.Views.MenuBarItem();
+            this.gitMenu.Title = "Git";
+            this.editMeMenuItem2 = new Terminal.Gui.Views.MenuItem();
+            this.editMeMenuItem2.Title = "Edit Me";
+            this.gitMenu.PopoverMenu = new PopoverMenu([editMeMenuItem2]);
+            this.menuBar.Add(this.gitMenu);
+            this.projectMenu = new Terminal.Gui.Views.MenuBarItem();
+            this.projectMenu.Title = "Project";
+            this.editMeMenuItem3 = new Terminal.Gui.Views.MenuItem();
+            this.editMeMenuItem3.Title = "Edit Me";
+            this.projectMenu.PopoverMenu = new PopoverMenu([editMeMenuItem3]);
+            this.menuBar.Add(this.projectMenu);
+            this.buildMenu = new Terminal.Gui.Views.MenuBarItem();
+            this.buildMenu.Title = "Build";
+            this.editMeMenuItem4 = new Terminal.Gui.Views.MenuItem();
+            this.editMeMenuItem4.Title = "Edit Me";
+            this.buildMenu.PopoverMenu = new PopoverMenu([editMeMenuItem4]);
+            this.menuBar.Add(this.buildMenu);
+            this.debugMenu = new Terminal.Gui.Views.MenuBarItem();
+            this.debugMenu.Title = "Debug";
+            this.editMeMenuItem5 = new Terminal.Gui.Views.MenuItem();
+            this.editMeMenuItem5.Title = "Edit Me";
+            this.debugMenu.PopoverMenu = new PopoverMenu([editMeMenuItem5]);
+            this.menuBar.Add(this.debugMenu);
+            this.testMenu = new Terminal.Gui.Views.MenuBarItem();
+            this.testMenu.Title = "Test";
+            this.editMeMenuItem6 = new Terminal.Gui.Views.MenuItem();
+            this.editMeMenuItem6.Title = "Edit Me";
+            this.testMenu.PopoverMenu = new PopoverMenu([editMeMenuItem6]);
+            this.menuBar.Add(this.testMenu);
+            this.toolsMenu = new Terminal.Gui.Views.MenuBarItem();
+            this.toolsMenu.Title = "Tools";
+            this.editMeMenuItem7 = new Terminal.Gui.Views.MenuItem();
+            this.editMeMenuItem7.Title = "Edit Me";
+            this.toolsMenu.PopoverMenu = new PopoverMenu([editMeMenuItem7]);
+            this.menuBar.Add(this.toolsMenu);
+            this.extensionsMenu = new Terminal.Gui.Views.MenuBarItem();
+            this.extensionsMenu.Title = "Extensions";
+            this.editMeMenuItem8 = new Terminal.Gui.Views.MenuItem();
+            this.editMeMenuItem8.Title = "Edit Me";
+            this.extensionsMenu.PopoverMenu = new PopoverMenu([editMeMenuItem8]);
+            this.menuBar.Add(this.extensionsMenu);
+            this.windowMenu = new Terminal.Gui.Views.MenuBarItem();
+            this.windowMenu.Title = "Window";
+            this.editMeMenuItem9 = new Terminal.Gui.Views.MenuItem();
+            this.editMeMenuItem9.Title = "Edit Me";
+            this.windowMenu.PopoverMenu = new PopoverMenu([editMeMenuItem9]);
+            this.menuBar.Add(this.windowMenu);
+            this.helpMenu = new Terminal.Gui.Views.MenuBarItem();
+            this.helpMenu.Title = "Help";
+            this.editMeMenuItem10 = new Terminal.Gui.Views.MenuItem();
+            this.editMeMenuItem10.Title = "Edit Me";
+            this.helpMenu.PopoverMenu = new PopoverMenu([editMeMenuItem10]);
+            this.menuBar.Add(this.helpMenu);
             this.Add(this.menuBar);
         }
     }
