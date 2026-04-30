@@ -9,7 +9,7 @@ namespace Showcase
     {
         static void Main(string[] args)
         {
-            Type[] types = [typeof(Menus)];
+            Type[] types = [typeof(Menus), typeof(Buttons)];
 
             using (var app = Application.Create())
             {
@@ -23,9 +23,9 @@ namespace Showcase
                     new Dictionary<string, Func<Type, object>> { { "Scenario (Enter to open, Esc to close/exit)", (t) => t.Name + $" ({t.BaseType?.Name})"} }
                     );
 
-                tv.KeyBindings.ReplaceCommands(Key.Enter,Command.Activate);
+                tv.KeyBindings.ReplaceCommands(Key.Enter,Command.Accept);
 
-                tv.Activating += (s, e) =>
+                tv.Accepted += (s, e) =>
                 {
                     var row = tv.Value.Cursor.Y;
                     if (row >= 0 && row < types.Length)
