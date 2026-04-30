@@ -614,8 +614,7 @@ public class Design
 
         yield return this.CreateSuppressedProperty(nameof(View.CanFocus), true);
         
-        yield return new ShadowStyleProperty(this, viewType.GetProperty(nameof(this.View.ShadowStyle))
-            ?? throw new Exception($"Could not find expected Property ShadowStyle on View of Type '{this.View.GetType()}'"));
+        yield return this.CreateProperty(nameof(this.View.ShadowStyle));
 
         
         // its important that this comes before Text because
