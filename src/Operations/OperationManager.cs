@@ -33,11 +33,11 @@ public class OperationManager
     public int RedoStackSize => this.redoStack.Count;
 
     /// <summary>
-    /// Gets or sets an in-progress text-typing operation that has not yet been committed.
-    /// Set byKeyboardManager while the user is typing; auto-committed by
-    /// <see cref="Do"/> before any other operation lands on the undo stack.
+    /// Gets or sets an in-progress operation that has not yet been committed (e.g. the user
+    /// is mid-keystroke editing a label or menu title).  Auto-committed by <see cref="Do"/>
+    /// and <see cref="Undo"/> before anything else lands on the undo stack.
     /// </summary>
-    public SetPropertyOperation? PendingOperation { get; set; }
+    public IOperation? PendingOperation { get; set; }
 
     /// <summary>
     /// Commits <see cref="PendingOperation"/> to the undo stack if one is set.
@@ -96,6 +96,8 @@ public class OperationManager
     /// </summary>
     public void Undo()
     {
+        this.FlushPending();
+
         if (this.undoStack.TryPop(out var op))
         {
             op.Undo();

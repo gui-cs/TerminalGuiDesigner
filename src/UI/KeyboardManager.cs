@@ -20,7 +20,7 @@ public class KeyboardManager
     private readonly IApplication app;
     private readonly KeyMap keyMap;
 
-    private SetPropertyOperation? CurrentOperation => OperationManager.Instance.PendingOperation;
+    private SetPropertyOperation? CurrentOperation => OperationManager.Instance.PendingOperation as SetPropertyOperation;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="KeyboardManager"/> class.
@@ -56,20 +56,18 @@ public class KeyboardManager
         // if we are no longer focused
         if (d == null)
         {
-            // if there is another operation underway
-            if (this.CurrentOperation != null)
-            {
-                this.FinishOperation();
-            }
-
-            // do not swallow this keystroke
+            OperationManager.Instance.FlushPending();
             return false;
         }
 
-        // if we have changed focus
-        if (this.CurrentOperation != null && !this.CurrentOperation.Designs.Contains(d))
+        // if we have changed focus, flush any pending operation
+        if (OperationManager.Instance.PendingOperation != null)
         {
-            this.FinishOperation();
+            var viewTextOp = this.CurrentOperation;
+            if (viewTextOp == null || !viewTextOp.Designs.Contains(d))
+            {
+                OperationManager.Instance.FlushPending();
+            }
         }
 
         if (keystroke.ToString( ) == this.keyMap.Rename)
@@ -117,9 +115,11 @@ public class KeyboardManager
 
         if (keystroke.ToString( ) == this.keyMap.SetShortcut)
         {
-            menuItem.Key = Modals.GetShortcut(app).KeyCode;
-
-            focusedView.SetNeedsDraw();
+            var shortcutProp = typeof(MenuItem).GetProperty(nameof(MenuItem.Key))
+                ?? throw new Exception("MenuItem.Key property not found");
+            var op = new SetChildPropertyOperation(this.app, menuItem, shortcutProp);
+            op.NewValue = Modals.GetShortcut(app);
+            OperationManager.Instance.Do(op);
             return false;
         }
 
@@ -196,7 +196,11 @@ public class KeyboardManager
         {
             if (Clipboard.TryGetClipboardData(out string text) && IsValidSimpleStringToPaste(text))
             {
-                menuItem.Title += text;
+                var titleProp = typeof(MenuItem).GetProperty(nameof(MenuItem.Title))
+                    ?? throw new Exception("MenuItem.Title property not found");
+                var pasteOp = new SetChildPropertyOperation(this.app, menuItem, titleProp);
+                pasteOp.NewValue = (menuItem.Title?.ToString() ?? string.Empty) + text;
+                OperationManager.Instance.Do(pasteOp);
                 return true;
             }
         }
@@ -209,27 +213,22 @@ public class KeyboardManager
 
         // TODO: This probably lets us edit the Editors own context menus lol
 
-        // TODO once https://github.com/migueldeicaza/gui.cs/pull/1689 is merged and published
-        // we can integrate this into the Design undo/redo systems
-        if (this.ApplyKeystrokeToString(menuItem.Title.ToString() ?? string.Empty, keystroke, out var newValue))
+        // Get or create a pending title operation for this menu item
+        var pendingTitleOp = OperationManager.Instance.PendingOperation as SetChildPropertyOperation;
+        if (pendingTitleOp == null || !ReferenceEquals(pendingTitleOp.Target, menuItem))
         {
-            // convert to a separator by typing three hyphens
-            if (newValue.Equals("---"))
-            {
-                if (OperationManager.Instance.Do(
-                        new ConvertMenuItemToSeperatorOperation(this.app, menuItem)))
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                // changing the title
-                menuItem.Title = newValue;
-            }
+            OperationManager.Instance.FlushPending();
+            var titleProp = typeof(MenuItem).GetProperty(nameof(MenuItem.Title))
+                ?? throw new Exception("MenuItem.Title property not found");
+            pendingTitleOp = new SetChildPropertyOperation(this.app, menuItem, titleProp);
+            OperationManager.Instance.PendingOperation = pendingTitleOp;
+        }
 
+        if (this.ApplyKeystrokeToString(menuItem.Title?.ToString() ?? string.Empty, keystroke, out var newValue))
+        {
+            menuItem.Title = newValue;
+            pendingTitleOp.NewValue = newValue;
             focusedView.SetNeedsDraw();
-
             return true;
         }
 
