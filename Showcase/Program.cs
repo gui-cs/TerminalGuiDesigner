@@ -12,7 +12,8 @@ namespace Showcase
             Type[] types = [
                 typeof(Menus),
                 typeof(Buttons),
-                typeof(Checkboxes)
+                typeof(Checkboxes),
+                typeof(DateTimes)
                 ];
 
             using (var app = Application.Create())

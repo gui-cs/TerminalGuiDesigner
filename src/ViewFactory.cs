@@ -398,6 +398,8 @@ public static class ViewFactory
             { } t when t == typeof( Button ) => Create<Button>( ),
             { } t when t == typeof( Line ) => Create<Line>( ),
             { } t when t == typeof( LinearRange ) => Create<LinearRange>( ),
+            { } t when t == typeof(DateEditor) => Create<DateEditor>(),
+            { } t when t == typeof(TimeEditor) => Create<TimeEditor>(),
             { } t when t == typeof(Label) => Create<Label>(),
             { } t when t == typeof(TextView) => Create<TextView>(),
             { } t when t == typeof(ColorPicker) => Create<ColorPicker>(),
