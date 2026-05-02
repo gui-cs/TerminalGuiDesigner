@@ -610,7 +610,11 @@ public class Design
 
         yield return this.CreateSuppressedProperty(nameof(this.View.Visible), true);
 
-        yield return this.CreateSuppressedProperty(nameof(this.View.Arrangement), ViewArrangement.Fixed);
+        if (this.View.IsContainerView())
+        {
+            // Don't offer to make checkboxes etc Resizeable/Overlapped etc
+            yield return this.CreateSuppressedProperty(nameof(this.View.Arrangement), ViewArrangement.Fixed);
+        }
 
         yield return this.CreateSuppressedProperty(nameof(View.CanFocus), true);
         
@@ -715,6 +719,7 @@ public class Design
         if (this.View is CheckBox)
         {
             yield return this.CreateProperty(nameof(CheckBox.Value));
+            yield return this.CreateProperty(nameof(CheckBox.RadioStyle));
         }
         if (this.View is ColorPicker cp)
         {

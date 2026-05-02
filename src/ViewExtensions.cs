@@ -200,6 +200,7 @@ public static class ViewExtensions
 
         // TODO: are there any others?
         return
+            v.GetType() == typeof(Runnable) ||
             v is FrameView ||
             v is Window ||
             type == typeof(View) || type.Name.Equals("ContentView");
@@ -213,11 +214,6 @@ public static class ViewExtensions
     /// <returns>True if no visible border and <see cref="ViewExtensions.IsContainerView(View)"/>.</returns>
     public static bool IsBorderlessContainerView(this View v)
     {
-        if (v is Runnable)
-        {
-            return false;
-        }
-
         if (v.IsContainerView() && v.HasNoBorderProperty())
         {
             return true;

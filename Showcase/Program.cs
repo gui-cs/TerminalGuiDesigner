@@ -9,7 +9,11 @@ namespace Showcase
     {
         static void Main(string[] args)
         {
-            Type[] types = [typeof(Menus), typeof(Buttons)];
+            Type[] types = [
+                typeof(Menus),
+                typeof(Buttons),
+                typeof(Checkboxes)
+                ];
 
             using (var app = Application.Create())
             {
