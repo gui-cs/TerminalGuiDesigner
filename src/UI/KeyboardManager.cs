@@ -19,7 +19,8 @@ public class KeyboardManager
 {
     private readonly IApplication app;
     private readonly KeyMap keyMap;
-    private SetPropertyOperation? currentOperation;
+
+    private SetPropertyOperation? CurrentOperation => OperationManager.Instance.PendingOperation;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="KeyboardManager"/> class.
@@ -56,7 +57,7 @@ public class KeyboardManager
         if (d == null)
         {
             // if there is another operation underway
-            if (this.currentOperation != null)
+            if (this.CurrentOperation != null)
             {
                 this.FinishOperation();
             }
@@ -66,7 +67,7 @@ public class KeyboardManager
         }
 
         // if we have changed focus
-        if (this.currentOperation != null && !this.currentOperation.Designs.Contains(d))
+        if (this.CurrentOperation != null && !this.CurrentOperation.Designs.Contains(d))
         {
             this.FinishOperation();
         }
@@ -88,7 +89,7 @@ public class KeyboardManager
         }
 
         // if we are not currently doing anything
-        if (this.currentOperation == null)
+        if (this.CurrentOperation == null)
         {
             // start a new operation
             this.StartOperation(d);
@@ -274,30 +275,23 @@ public class KeyboardManager
 
         if (textProp != null)
         {
-            this.currentOperation = new SetPropertyOperation(this.app, d, textProp, d.View.Text, d.View.Text);
+            OperationManager.Instance.PendingOperation = new SetPropertyOperation(this.app, d, textProp, d.View.Text, d.View.Text);
         }
     }
 
     private void FinishOperation()
     {
-        if (this.currentOperation == null)
-        {
-            return;
-        }
-
-        // finish it and clear it
-        OperationManager.Instance.Do(this.currentOperation);
-        this.currentOperation = null;
+        OperationManager.Instance.FlushPending();
     }
 
     private bool ApplyKeystrokeToTextProperty(Key keystroke)
     {
-        if (this.currentOperation == null || this.currentOperation.Designs.Count != 1)
+        if (this.CurrentOperation == null || this.CurrentOperation.Designs.Count != 1)
         {
             return false;
         }
 
-        var design = this.currentOperation.Designs.Single();
+        var design = this.CurrentOperation.Designs.Single();
 
         var str = design.View.GetActualText();
 
@@ -309,7 +303,7 @@ public class KeyboardManager
 
         design.View.SetActualText(newStr);
         design.View.SetNeedsDraw();
-        this.currentOperation.NewValue = newStr;
+        this.CurrentOperation!.NewValue = newStr;
 
         return true;
     }

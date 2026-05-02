@@ -33,6 +33,34 @@ public class OperationManager
     public int RedoStackSize => this.redoStack.Count;
 
     /// <summary>
+    /// Gets or sets an in-progress text-typing operation that has not yet been committed.
+    /// Set byKeyboardManager while the user is typing; auto-committed by
+    /// <see cref="Do"/> before any other operation lands on the undo stack.
+    /// </summary>
+    public SetPropertyOperation? PendingOperation { get; set; }
+
+    /// <summary>
+    /// Commits <see cref="PendingOperation"/> to the undo stack if one is set.
+    /// Called automatically by <see cref="Do"/> and also on focus change.
+    /// </summary>
+    public void FlushPending()
+    {
+        var pending = this.PendingOperation;
+        if (pending == null)
+        {
+            return;
+        }
+
+        this.PendingOperation = null;
+
+        if (!pending.IsImpossible && pending.Do() && pending.SupportsUndo)
+        {
+            this.redoStack.Clear();
+            this.undoStack.Push(pending);
+        }
+    }
+
+    /// <summary>
     /// Runs <see cref="Operation.Do"/> on <paramref name="op"/> if it is
     /// not <see cref="IOperation.IsImpossible"/> and then pushes it onto
     /// the undo stack (see <see cref="UndoStackSize"/>) in case user changes
@@ -42,6 +70,9 @@ public class OperationManager
     /// <returns>Result of <see cref="IOperation.Do"/> (true if operation did something).</returns>
     public bool Do(IOperation op)
     {
+        // Commit any in-progress text-typing operation before stacking this one
+        this.FlushPending();
+
         // If operation completes successfully
         if (!op.IsImpossible && op.Do())
         {
@@ -92,6 +123,7 @@ public class OperationManager
     /// </summary>
     public void ClearUndoRedo()
     {
+        this.PendingOperation = null;
         this.undoStack.Clear();
         this.redoStack.Clear();
     }
