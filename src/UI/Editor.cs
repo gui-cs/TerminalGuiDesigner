@@ -93,8 +93,8 @@ public class Editor : Runnable, IErrorReporter
             ErrorReporter = this
         };
 
-        // TODO: save changes
-        //this.Closing += this.Editor_Closing;
+
+        this.IsRunningChanging += this.Editor_Closing;
 
         this.BuildRootMenu();
     }
