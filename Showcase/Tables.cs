@@ -9,12 +9,32 @@
 // -----------------------------------------------------------------------------
 namespace Showcase {
     using Terminal.Gui;
-    
-    
+    using Terminal.Gui.Views;
+
     public partial class Tables {
         
         public Tables() {
             InitializeComponent();
+
+            // Graphs do not render unless they have at least 1 series or annotation
+            graphView.Series.Add(new ScatterSeries()
+            {
+                Points = [
+                    new System.Drawing.PointF(2.5f, 2f),
+                    new System.Drawing.PointF(5.5f, 5f)
+                    ],
+             
+                Fill = new GraphCellToRender(new System.Text.Rune('x'))
+            });
+
+            graphView.Annotations.Add(new PathAnnotation()
+            {
+                BeforeSeries = true,
+                Points = [
+                    new System.Drawing.PointF(2.5f, 2f),
+                    new System.Drawing.PointF(5.5f, 5f)
+                    ]
+            });
         }
     }
 }
