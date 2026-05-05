@@ -733,6 +733,11 @@ public class Design
             yield return this.CreateProperty(nameof(ListView.Source));
         }
 
+        if (this.View is DropDownList ddl)
+        {
+            yield return this.CreateProperty(nameof(ListView.Source));
+        }
+
         if (this.View is GraphView gv)
         {
             yield return this.CreateProperty(nameof(GraphView.GraphColor));

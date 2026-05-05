@@ -15,7 +15,8 @@ namespace Showcase
                 typeof(Checkboxes),
                 typeof(DateTimes),
                 typeof(ColorPickers),
-                typeof(Ranges)
+                typeof(Ranges),
+                typeof(Lists),
                 ];
 
             using (var app = Application.Create())
