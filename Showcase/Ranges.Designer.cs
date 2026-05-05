@@ -24,6 +24,8 @@ namespace Showcase {
     
     public partial class Ranges : Terminal.Gui.Views.Dialog {
         
+        private Terminal.Gui.Views.Line line;
+        
         private Terminal.Gui.Views.LinearRange<bool> linearRange1;
         
         private Terminal.Gui.Views.Label label;
@@ -54,6 +56,8 @@ namespace Showcase {
         
         private Terminal.Gui.Views.Label label8;
         
+        private Terminal.Gui.Views.Line line2;
+        
         private Terminal.Gui.Views.Label label93;
         
         private Terminal.Gui.Views.Label label9;
@@ -64,6 +68,7 @@ namespace Showcase {
             this.label92 = new Terminal.Gui.Views.Label();
             this.label9 = new Terminal.Gui.Views.Label();
             this.label93 = new Terminal.Gui.Views.Label();
+            this.line2 = new Terminal.Gui.Views.Line();
             this.label8 = new Terminal.Gui.Views.Label();
             this.linearRange7 = new Terminal.Gui.Views.LinearRange<string>();
             this.label6 = new Terminal.Gui.Views.Label();
@@ -79,6 +84,7 @@ namespace Showcase {
             this.linearRange2 = new Terminal.Gui.Views.LinearRange<double>();
             this.label = new Terminal.Gui.Views.Label();
             this.linearRange1 = new Terminal.Gui.Views.LinearRange<bool>();
+            this.line = new Terminal.Gui.Views.Line();
             this.Width = Dim.Percent(90);
             this.Height = Dim.Percent(80);
             this.X = Pos.Center();
@@ -87,6 +93,17 @@ namespace Showcase {
             this.CanFocus = true;
             this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Transparent;
             this.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
+            this.line.Width = 1;
+            this.line.Height = Dim.Fill(-1);
+            this.line.X = Pos.AnchorEnd(2);
+            this.line.Y = -1;
+            this.line.Visible = true;
+            this.line.CanFocus = false;
+            this.line.ShadowStyle = null;
+            this.line.Data = "line";
+            this.line.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
+            this.line.Orientation = Terminal.Gui.ViewBase.Orientation.Vertical;
+            this.Add(this.line);
             this.linearRange1.Width = 15;
             this.linearRange1.Height = 2;
             this.linearRange1.X = 3;
@@ -336,6 +353,17 @@ namespace Showcase {
             this.label8.Text = "LinearRange<string>\r\n(Thin)";
             this.label8.TextAlignment = Terminal.Gui.ViewBase.Alignment.Center;
             this.Add(this.label8);
+            this.line2.Width = Dim.Fill(-1);
+            this.line2.Height = 1;
+            this.line2.X = -1;
+            this.line2.Y = 17;
+            this.line2.Visible = true;
+            this.line2.CanFocus = false;
+            this.line2.ShadowStyle = null;
+            this.line2.Data = "line2";
+            this.line2.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
+            this.line2.Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal;
+            this.Add(this.line2);
             this.label93.Width = Dim.Fill(0);
             this.label93.Height = 1;
             this.label93.X = 0;
