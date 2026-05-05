@@ -158,7 +158,6 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lblType.Y = 4;
             this.lblType.Visible = true;
             this.lblType.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-            this.lblType.CanFocus = true;
             this.lblType.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.None;
             this.lblType.Data = "lblType";
             this.lblType.Text = "( Type ) ";

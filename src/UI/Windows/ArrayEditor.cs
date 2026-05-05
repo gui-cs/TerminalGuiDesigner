@@ -67,15 +67,24 @@ namespace TerminalGuiDesigner.UI.Windows {
 
             lvElements.Source = ResultAsList.ToListDataSource();
             lvElements.KeyDown += LvElements_KeyDown;
+            lvElements.MouseEvent += LvElements_MouseEvent;
             btnOk.Accepting += BtnOk_Clicked;
             btnCancel.Accepting += BtnCancel_Clicked;
             btnAddElement.Accepting += BtnAddElement_Clicked;
-            btnDelete.Accepting += (s, e) => DeleteSelectedItem();
+            btnDelete.Accepting +=  DeleteSelectedItem_Clicked;
             btnMoveDown.Accepting += BtnMoveDown_Clicked;
             btnMoveUp.Accepting += BtnMoveUp_Clicked;
             btnEdit.Accepting += BtnEdit_Clicked;
         }
 
+        private void LvElements_MouseEvent(object sender, Mouse e)
+        {
+            if(e.IsDoubleClicked)
+            {
+                EditSelectedItem();
+                e.Handled = true;
+            }
+        }
 
         private void BtnMoveUp_Clicked(object sender, CommandEventArgs e)
         {
@@ -124,7 +133,20 @@ namespace TerminalGuiDesigner.UI.Windows {
                 DeleteSelectedItem();
                 e.Handled = true;
             }
+
+            if(e == Key.Enter)
+            {
+                EditSelectedItem();
+                e.Handled = true;
+            }
         }
+
+        private void DeleteSelectedItem_Clicked(object sender, CommandEventArgs e)
+        {
+            e.Handled = true;
+            DeleteSelectedItem();
+        }
+
 
         private void DeleteSelectedItem()
         {
@@ -136,7 +158,10 @@ namespace TerminalGuiDesigner.UI.Windows {
 
                 lvElements.Source = ResultAsList.ToListDataSource();
                 lvElements.SetNeedsDraw();
-                lvElements.SelectedItem = 0;
+                if(ResultAsList.Count>=1)
+                {
+                    lvElements.SelectedItem = 0;
+                }
             }
         }
 
@@ -152,7 +177,14 @@ namespace TerminalGuiDesigner.UI.Windows {
             lvElements.SetNeedsDraw();
             e.Handled = true;
         }
+
         private void BtnEdit_Clicked(object sender, CommandEventArgs e)
+        {
+            EditSelectedItem();
+            e.Handled = true;
+        }
+
+        private void EditSelectedItem()
         {
             var idx = lvElements.SelectedItem ?? -1;
 
@@ -171,8 +203,6 @@ namespace TerminalGuiDesigner.UI.Windows {
                 lvElements.SelectedItem = idx;
                 lvElements.SetNeedsDraw();
             }
-
-            e.Handled = true;
         }
 
         private void BtnCancel_Clicked(object sender, CommandEventArgs e)

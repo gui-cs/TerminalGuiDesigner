@@ -13,7 +13,9 @@ namespace Showcase
                 typeof(Menus),
                 typeof(Buttons),
                 typeof(Checkboxes),
-                typeof(DateTimes)
+                typeof(DateTimes),
+                typeof(ColorPickers),
+                typeof(Ranges)
                 ];
 
             using (var app = Application.Create())

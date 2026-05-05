@@ -15,7 +15,7 @@ using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner.UI.Windows {
     using System.Text;
-
+    using Terminal.Gui.Text;
 
     public partial class SliderOptionEditor : IValueGetterDialog
     {
@@ -103,8 +103,11 @@ namespace TerminalGuiDesigner.UI.Windows {
             var p = sliderOptionType.GetProperty("Legend");
             p.SetValue(ActualResult, tfLegend.Text);
 
-            p = sliderOptionType.GetProperty("LegendAbbr");
-            p.SetValue(ActualResult, new Rune(tfLegendAbbr.Text[0]));
+            if(tfLegendAbbr.Text.Length > 0)
+            {
+                p = sliderOptionType.GetProperty("LegendAbbr");
+                p.SetValue(ActualResult, tfLegendAbbr.Text.ToRunes().First());
+            }
 
             p = sliderOptionType.GetProperty("Data");
 
