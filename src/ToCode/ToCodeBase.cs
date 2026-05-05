@@ -162,4 +162,22 @@ public abstract class ToCodeBase
             new CodeTypeReference("Key"),
              new CodePrimitiveExpression(key.KeyCode.ToString()));
     }
+
+    protected CodeExpression GetRuneExpression(Rune rune)
+    {
+        char[] chars = new char[rune.Utf16SequenceLength];
+        rune.EncodeToUtf16(chars);
+
+        if (chars.Length == 2)
+        {
+            return new CodeObjectCreateExpression(
+                typeof(Rune),
+                new CodePrimitiveExpression(chars[0]),
+                new CodePrimitiveExpression(chars[1]));
+        }
+
+        return new CodeObjectCreateExpression(
+            typeof(Rune),
+            new CodePrimitiveExpression(chars[0]));
+    }
 }

@@ -140,27 +140,7 @@ public class Property : ToCodeBase
 
         if(val is Rune rune)
         {
-            char[] chars = new char[rune.Utf16SequenceLength];
-            rune.EncodeToUtf16(chars);
-
-            if(chars.Length == 1)
-            {
-                return new CodeObjectCreateExpression(
-                    typeof(Rune),
-                    new CodePrimitiveExpression(chars[0]));
-            }
-            else if (chars.Length == 2)
-            {
-                // User is setting to an emoticon or something
-                return new CodeObjectCreateExpression(
-                    typeof(Rune),
-                    new CodePrimitiveExpression(chars[0]),
-                    new CodePrimitiveExpression(chars[1]));
-            }
-            else
-            {
-                throw new Exception($"Unexpected unicode character size.  Rune was {rune}");
-            }
+            return this.GetRuneExpression(rune);
         }
 
         if (val is Attribute attribute)
@@ -318,7 +298,7 @@ public class Property : ToCodeBase
             return new CodeObjectCreateExpression(
                 new CodeTypeReference(val.GetType()),
                 new CodePrimitiveExpression(a1),
-                new CodeObjectCreateExpression(typeof(Rune),new CodePrimitiveExpression(a2.ToString()[0])),
+                this.GetRuneExpression(a2),
                 new CodePrimitiveExpression(a3));
         }
         else

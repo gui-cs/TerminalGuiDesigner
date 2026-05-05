@@ -146,6 +146,35 @@ namespace UnitTests
         }
 
         [Test]
+        public void TestRoundTrip_Slider_PreserveEmojiLegendAbbr()
+        {
+            // Emoji are surrogate pairs in UTF-16. The codegen bug emits only the
+            // first surrogate (e.g. new Rune('\uD83D')) which is an invalid scalar value
+            // and throws at runtime, so this round-trip should fail until the bug is fixed.
+            var catEmoji = new Rune(0x1F431);  // 🐱
+            var dogEmoji = new Rune(0x1F436);  // 🐶
+
+            // ViewFactory.Create gives 3 default options; adjust adds 2 more = 5 total
+            var sliderIn = RoundTrip<Dialog, LinearRange<string>>((d, v) =>
+            {
+                v.Options.Add(new LinearRangeOption<string>("Cat", catEmoji, "Cat"));
+                v.Options.Add(new LinearRangeOption<string>("Dog", dogEmoji, "Dog"));
+
+                Assert.That(v.Options.Count, Is.EqualTo(5));
+            }, out _);
+
+            Assert.That(sliderIn.Options.Count, Is.EqualTo(5));
+
+            Assert.That(sliderIn.Options[3].Legend, Is.EqualTo("Cat"));
+            Assert.That(sliderIn.Options[3].LegendAbbr, Is.EqualTo(catEmoji));
+            Assert.That(sliderIn.Options[3].Data, Is.EqualTo("Cat"));
+
+            Assert.That(sliderIn.Options[4].Legend, Is.EqualTo("Dog"));
+            Assert.That(sliderIn.Options[4].LegendAbbr, Is.EqualTo(dogEmoji));
+            Assert.That(sliderIn.Options[4].Data, Is.EqualTo("Dog"));
+        }
+
+        [Test]
         [TestCaseSource(nameof(Orientation_Cases))]
         public void TestRoundTrip_Slider_PreserveOrientation(Orientation o)
         {

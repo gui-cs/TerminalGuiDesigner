@@ -278,9 +278,9 @@ namespace Showcase {
             this.linearRange6.CanFocus = true;
             this.linearRange6.ShadowStyle = null;
             this.linearRange6.Options = new System.Collections.Generic.List<Terminal.Gui.Views.LinearRangeOption<string>>(new Terminal.Gui.Views.LinearRangeOption<string>[] {
-                        new Terminal.Gui.Views.LinearRangeOption<string>("Cat", new System.Text.Rune('\uD83D'), "Cat"),
-                        new Terminal.Gui.Views.LinearRangeOption<string>("Dog", new System.Text.Rune('\uD83D'), "Dog"),
-                        new Terminal.Gui.Views.LinearRangeOption<string>("Fish", new System.Text.Rune('\uD83D'), "Fish")});
+                        new Terminal.Gui.Views.LinearRangeOption<string>("Cat", new System.Text.Rune('\uD83D', '\uDC31'), "Cat"),
+                        new Terminal.Gui.Views.LinearRangeOption<string>("Dog", new System.Text.Rune('\uD83D', '\uDC36'), "Dog"),
+                        new Terminal.Gui.Views.LinearRangeOption<string>("Fish", new System.Text.Rune('\uD83D', '\uDC1F'), "Fish")});
             this.linearRange6.Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal;
             this.linearRange6.RangeAllowSingle = false;
             this.linearRange6.AllowEmpty = false;
@@ -311,9 +311,9 @@ namespace Showcase {
             this.linearRange7.CanFocus = true;
             this.linearRange7.ShadowStyle = null;
             this.linearRange7.Options = new System.Collections.Generic.List<Terminal.Gui.Views.LinearRangeOption<string>>(new Terminal.Gui.Views.LinearRangeOption<string>[] {
-                        new Terminal.Gui.Views.LinearRangeOption<string>("Cat", new System.Text.Rune('\uD83D'), "Cat"),
-                        new Terminal.Gui.Views.LinearRangeOption<string>("Dog", new System.Text.Rune('\uD83D'), "Dog"),
-                        new Terminal.Gui.Views.LinearRangeOption<string>("Fish", new System.Text.Rune('\uD83D'), "Fish")});
+                        new Terminal.Gui.Views.LinearRangeOption<string>("Cat", new System.Text.Rune('\uD83D', '\uDC31'), "Cat"),
+                        new Terminal.Gui.Views.LinearRangeOption<string>("Dog", new System.Text.Rune('\uD83D', '\uDC36'), "Dog"),
+                        new Terminal.Gui.Views.LinearRangeOption<string>("Fish", new System.Text.Rune('\uD83D', '\uDC1F'), "Fish")});
             this.linearRange7.Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal;
             this.linearRange7.RangeAllowSingle = false;
             this.linearRange7.AllowEmpty = false;
