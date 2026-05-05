@@ -17,7 +17,7 @@ namespace Showcase
                 typeof(ColorPickers),
                 typeof(Ranges),
                 typeof(Lists),
-                typeof(Tables)
+                typeof(TablesAndGraphs)
                 ];
 
             using (var app = Application.Create())

@@ -11,9 +11,9 @@ namespace Showcase {
     using Terminal.Gui;
     using Terminal.Gui.Views;
 
-    public partial class Tables {
+    public partial class TablesAndGraphs {
         
-        public Tables() {
+        public TablesAndGraphs() {
             InitializeComponent();
 
             // Graphs do not render unless they have at least 1 series or annotation

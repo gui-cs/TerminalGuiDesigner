@@ -22,7 +22,7 @@ namespace Showcase {
     using System.Drawing;
     
     
-    public partial class Tables : Terminal.Gui.Views.Window {
+    public partial class TablesAndGraphs : Terminal.Gui.Views.Window {
         
         private Terminal.Gui.Views.Label label;
         
@@ -92,8 +92,8 @@ namespace Showcase {
             tableViewTable.Columns.Add(tableViewTableNetwork);
             this.tableView.Table = new Terminal.Gui.Views.DataTableSource(tableViewTable);
             this.Add(this.tableView);
-            this.graphView.Width = 47;
-            this.graphView.Height = 11;
+            this.graphView.Width = Dim.Fill(3);
+            this.graphView.Height = Dim.Fill(3);
             this.graphView.X = 50;
             this.graphView.Y = 2;
             this.graphView.Visible = true;
