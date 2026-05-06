@@ -93,6 +93,9 @@ public static class ViewFactory
         typeof(StatusBar),
         typeof(Tabs),
         typeof(TitleView),
+
+        // Only point of this view is to have a regex validation on view but we don't have designer yet for regex type
+        typeof(TextValidateField)
     ];
 
     /// <summary>
@@ -184,6 +187,7 @@ public static class ViewFactory
             case Button:
             case CheckBox:
             case Label:
+            case Link:
                 newView.SetActualText(text ?? "Heya");
                 SetDefaultDimensionsDimAuto(newView);
                 break;

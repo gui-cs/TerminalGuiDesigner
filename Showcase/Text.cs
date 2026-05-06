@@ -9,12 +9,32 @@
 // -----------------------------------------------------------------------------
 namespace Showcase {
     using Terminal.Gui;
-    
-    
+    using Terminal.Gui.Views;
+
     public partial class Text {
         
         public Text() {
             InitializeComponent();
+
+            try 
+            {
+                var dirs = Environment.GetLogicalDrives().Select(p => new DirectoryInfo(p));
+                treeView1.AddObjects(dirs);
+            }
+            catch (Exception)
+            {
+                // Could not enumerate drives on system, maybe permission issue
+            }
+
+
+            treeView.AddObject(new TreeNode()
+            {
+                Text = "Root",
+                Children = [
+                    new TreeNode(){ Text="Child 1"},
+                    new TreeNode(){ Text="Child 2"},
+                    ]
+            });
         }
     }
 }

@@ -12,6 +12,7 @@ namespace Showcase
             Type[] types = [
                 typeof(Menus),
                 typeof(Buttons),
+                typeof(Text),
                 typeof(Checkboxes),
                 typeof(DateTimes),
                 typeof(ColorPickers),

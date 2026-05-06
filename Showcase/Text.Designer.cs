@@ -28,7 +28,40 @@ namespace Showcase {
         
         private Terminal.Gui.Views.TextField textField;
         
+        private Terminal.Gui.Views.Label lblTextField2;
+        
+        private Terminal.Gui.Views.TextField textField2;
+        
+        private Terminal.Gui.Views.Window window;
+        
+        private Terminal.Gui.Views.TextView textView;
+        
+        private Terminal.Gui.Views.Label lblTextField3;
+        
+        private Terminal.Gui.Views.HexView hexView;
+        
+        private Terminal.Gui.Views.Window window2;
+        
+        private Terminal.Gui.Views.TreeView treeView;
+        
+        private Terminal.Gui.Views.Window window3;
+        
+        private Terminal.Gui.Views.TreeView<System.IO.FileSystemInfo> treeView1;
+        
+        private Terminal.Gui.Views.Link link;
+        
         private void InitializeComponent() {
+            this.link = new Terminal.Gui.Views.Link();
+            this.treeView1 = new Terminal.Gui.Views.TreeView<System.IO.FileSystemInfo>();
+            this.window3 = new Terminal.Gui.Views.Window();
+            this.treeView = new Terminal.Gui.Views.TreeView();
+            this.window2 = new Terminal.Gui.Views.Window();
+            this.hexView = new Terminal.Gui.Views.HexView();
+            this.lblTextField3 = new Terminal.Gui.Views.Label();
+            this.textView = new Terminal.Gui.Views.TextView();
+            this.window = new Terminal.Gui.Views.Window();
+            this.textField2 = new Terminal.Gui.Views.TextField();
+            this.lblTextField2 = new Terminal.Gui.Views.Label();
             this.textField = new Terminal.Gui.Views.TextField();
             this.lblTextField = new Terminal.Gui.Views.Label();
             this.Width = Dim.Percent(90);
@@ -62,6 +95,156 @@ namespace Showcase {
             this.textField.Text = "";
             this.textField.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.textField);
+            this.lblTextField2.Width = Dim.Auto();
+            this.lblTextField2.Height = Dim.Auto();
+            this.lblTextField2.X = 0;
+            this.lblTextField2.Y = 1;
+            this.lblTextField2.Visible = true;
+            this.lblTextField2.CanFocus = false;
+            this.lblTextField2.ShadowStyle = null;
+            this.lblTextField2.Data = "lblTextField2";
+            this.lblTextField2.Text = "Secret:";
+            this.lblTextField2.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
+            this.Add(this.lblTextField2);
+            this.textField2.Width = 10;
+            this.textField2.Height = 1;
+            this.textField2.X = 11;
+            this.textField2.Y = Pos.Top(lblTextField2);
+            this.textField2.Visible = true;
+            this.textField2.CanFocus = true;
+            this.textField2.ShadowStyle = null;
+            this.textField2.Secret = true;
+            this.textField2.Data = "textField2";
+            this.textField2.Text = "Somevalue";
+            this.textField2.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
+            this.Add(this.textField2);
+            this.window.Width = 47;
+            this.window.Height = 9;
+            this.window.X = 0;
+            this.window.Y = 3;
+            this.window.Visible = true;
+            this.window.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Overlapped;
+            this.window.CanFocus = true;
+            this.window.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.None;
+            this.window.Data = "window";
+            this.window.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
+            this.window.Title = "TextView";
+            this.Add(this.window);
+            this.textView.Width = Dim.Fill(0);
+            this.textView.Height = Dim.Fill(0);
+            this.textView.X = 1;
+            this.textView.Y = 1;
+            this.textView.Visible = true;
+            this.textView.CanFocus = true;
+            this.textView.ShadowStyle = null;
+            this.textView.TabKeyAddsTab = false;
+            this.textView.EnterKeyAddsLine = true;
+            this.textView.WordWrap = false;
+            this.textView.Data = "textView";
+            this.textView.Text = "";
+            this.textView.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
+            this.window.Add(this.textView);
+            this.lblTextField3.Width = Dim.Auto();
+            this.lblTextField3.Height = Dim.Auto();
+            this.lblTextField3.X = 48;
+            this.lblTextField3.Y = 3;
+            this.lblTextField3.Visible = true;
+            this.lblTextField3.CanFocus = false;
+            this.lblTextField3.ShadowStyle = null;
+            this.lblTextField3.Data = "lblTextField3";
+            this.lblTextField3.Text = "HexView:";
+            this.lblTextField3.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
+            this.Add(this.lblTextField3);
+            this.hexView.Width = 9;
+            this.hexView.Height = 6;
+            this.hexView.X = 48;
+            this.hexView.Y = 4;
+            this.hexView.Visible = true;
+            this.hexView.CanFocus = true;
+            this.hexView.ShadowStyle = null;
+            this.hexView.Data = "hexView";
+            this.hexView.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
+            this.Add(this.hexView);
+            this.window2.Width = 47;
+            this.window2.Height = 9;
+            this.window2.X = 0;
+            this.window2.Y = 12;
+            this.window2.Visible = true;
+            this.window2.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Overlapped;
+            this.window2.CanFocus = true;
+            this.window2.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.None;
+            this.window2.Data = "window2";
+            this.window2.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
+            this.window2.Title = "TreeView";
+            this.Add(this.window2);
+            this.treeView.Width = Dim.Fill(0);
+            this.treeView.Height = Dim.Fill(0);
+            this.treeView.X = 0;
+            this.treeView.Y = 0;
+            this.treeView.Visible = true;
+            this.treeView.CanFocus = true;
+            this.treeView.ShadowStyle = null;
+            this.treeView.Data = "treeView";
+            this.treeView.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
+            this.treeView.Style.CollapseableSymbol = new System.Text.Rune('-');
+            this.treeView.Style.ColorExpandSymbol = false;
+            this.treeView.Style.ExpandableSymbol = new System.Text.Rune('+');
+            this.treeView.Style.InvertExpandSymbolColors = false;
+            this.treeView.Style.ShowBranchLines = true;
+            this.window2.Add(this.treeView);
+            this.window3.Width = 47;
+            this.window3.Height = 9;
+            this.window3.X = 49;
+            this.window3.Y = 12;
+            this.window3.Visible = true;
+            this.window3.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Overlapped;
+            this.window3.CanFocus = true;
+            this.window3.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.None;
+            this.window3.Data = "window3";
+            this.window3.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
+            this.window3.Title = "TreeView<FileSystemInfo>";
+            this.Add(this.window3);
+            this.treeView1.Width = Dim.Fill(0);
+            this.treeView1.Height = Dim.Fill(0);
+            this.treeView1.X = 1;
+            this.treeView1.Y = 0;
+            this.treeView1.Visible = true;
+            this.treeView1.CanFocus = true;
+            this.treeView1.ShadowStyle = null;
+            this.treeView1.Data = "treeView1";
+            this.treeView1.Text = "";
+            this.treeView1.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
+            this.treeView1.Style.CollapseableSymbol = new System.Text.Rune('-');
+            this.treeView1.Style.ColorExpandSymbol = false;
+            this.treeView1.Style.ExpandableSymbol = new System.Text.Rune('+');
+            this.treeView1.Style.InvertExpandSymbolColors = false;
+            this.treeView1.Style.ShowBranchLines = true;
+            this.treeView1.AddObjects(new System.IO.FileSystemInfo[0]);
+            this.treeView1.TreeBuilder =                             
+new Terminal.Gui.Views.DelegateTreeBuilder<System.IO.FileSystemInfo>((p) =>
+{
+    try
+    {
+        return p is System.IO.DirectoryInfo d ? d.GetFileSystemInfos() : System.Linq.Enumerable.Empty<System.IO.FileSystemInfo>();
+    }
+    catch (Exception)
+    {
+        return System.Linq.Enumerable.Empty<System.IO.FileSystemInfo>();
+    }
+});;
+            this.window3.Add(this.treeView1);
+            this.link.Width = Dim.Auto();
+            this.link.Height = 1;
+            this.link.X = Pos.Center();
+            this.link.Y = Pos.AnchorEnd(1);
+            this.link.Visible = true;
+            this.link.CanFocus = true;
+            this.link.ShadowStyle = null;
+            this.link.Url = "https://github.com/gui-cs/TerminalGuiDesigner";
+            this.link.Data = "link";
+            this.link.Text = "Terminal Gui Designer Link";
+            this.link.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
+            this.Add(this.link);
         }
     }
 }
