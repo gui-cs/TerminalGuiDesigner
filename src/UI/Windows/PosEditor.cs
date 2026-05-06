@@ -69,10 +69,8 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
             d=>d.FieldName,
             d=>d);
 
-        tbRelativeTo.Autocomplete.SuggestionGenerator = new SingleWordSuggestionGenerator()
-        {
-            AllSuggestions = _siblings.Keys.OrderBy(a => a).ToList()
-        };
+        tbRelativeTo.Source = new Terminal.Gui.Views.ListWrapper<string>(
+            new System.Collections.ObjectModel.ObservableCollection<string>(_siblings.Keys.OrderBy(a => a).ToList()));
 
         var val = oldValue;
         if(val.GetPosType(_siblings.Values.ToList(),

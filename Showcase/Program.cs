@@ -36,7 +36,7 @@ namespace Showcase
 
                 tv.Accepted += (s, e) =>
                 {
-                    var row = tv.Value.Cursor.Y;
+                    var row = tv.Value.SelectedCell.Y;
                     if (row >= 0 && row < types.Length)
                     {
                         var toCreate = types[row];

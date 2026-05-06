@@ -319,9 +319,9 @@ public class Design
             }
 
             // if no column was right clicked then provide commands for the selected column
-            if (col == null && tv.Value != null && tv.Value.Cursor.X >= 0)
+            if (col == null && tv.Value != null && tv.Value.SelectedCell.X >= 0)
             {
-                col = dt.Columns[tv.Value.Cursor.X];
+                col = dt.Columns[tv.Value.SelectedCell.X];
             }
 
             yield return new AddColumnOperation(App, this, null);

@@ -64,7 +64,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             tableView.KeyBindings.Add(Key.Enter, new KeyBinding([Command.Activate]));
             tableView.Activating += (s, e) =>
             {                
-                var prop = _props[tableView.Value.Cursor.Y];
+                var prop = _props[tableView.Value.SelectedCell.Y];
                 var k = Modals.GetShortcut(app);
                 prop.SetValue(this.keyMap,k.ToString());
                 this.SetNeedsDraw();
