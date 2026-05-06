@@ -16,6 +16,10 @@ namespace Showcase {
         public Text() {
             InitializeComponent();
 
+            // Tree View setup (manual)
+
+
+            // For TreeView<FileSystemInfo> choose what directories to add
             try 
             {
                 var dirs = Environment.GetLogicalDrives().Select(p => new DirectoryInfo(p));
@@ -27,6 +31,7 @@ namespace Showcase {
             }
 
 
+            // For non generic TreeView you must manually create all nodes yourself
             treeView.AddObject(new TreeNode()
             {
                 Text = "Root",
@@ -35,6 +40,36 @@ namespace Showcase {
                     new TreeNode(){ Text="Child 2"},
                     ]
             });
+
+
+            // For TreeView<Object> you must define your classes and how they relate to one another
+            treeView2.AddObjects([new SomeObj(), new SomeObj(), new SomeObj()]);
+            treeView2.TreeBuilder = new DelegateTreeBuilder<object>((o) => ((SomeObj)o).Kids.Value, (o) => true);
+
+            // Discards any known state of tree
+            treeView2.RebuildTree();
+        }
+
+        /// <summary>
+        /// Example class with infinite hierarchy of children
+        /// </summary>
+        class SomeObj
+        {
+            // My object has a random name
+            public string Name = Guid.NewGuid().ToString();
+
+            // Each of my objects has 2 sub objects lazily initialised
+            public Lazy<IEnumerable<SomeObj>> Kids = new Lazy<IEnumerable<SomeObj>>(() => [new SomeObj(), new SomeObj()]);
+
+
+            /// <summary>
+            /// Used for drawing the classes representation in the tree.  You can also register custom lamda via TreeView&lt;object&gt;.AspectGetter
+            /// </summary>
+            /// <returns></returns>
+            public override string ToString()
+            {
+                return Name;
+            }
         }
     }
 }

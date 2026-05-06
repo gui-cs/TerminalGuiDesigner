@@ -38,7 +38,11 @@ namespace Showcase {
         
         private Terminal.Gui.Views.Label lblTextField3;
         
+        private Terminal.Gui.Views.Label lblTextField4;
+        
         private Terminal.Gui.Views.HexView hexView;
+        
+        private Terminal.Gui.Views.TreeView<object> treeView2;
         
         private Terminal.Gui.Views.Window window2;
         
@@ -56,7 +60,9 @@ namespace Showcase {
             this.window3 = new Terminal.Gui.Views.Window();
             this.treeView = new Terminal.Gui.Views.TreeView();
             this.window2 = new Terminal.Gui.Views.Window();
+            this.treeView2 = new Terminal.Gui.Views.TreeView<object>();
             this.hexView = new Terminal.Gui.Views.HexView();
+            this.lblTextField4 = new Terminal.Gui.Views.Label();
             this.lblTextField3 = new Terminal.Gui.Views.Label();
             this.textView = new Terminal.Gui.Views.TextView();
             this.window = new Terminal.Gui.Views.Window();
@@ -155,6 +161,17 @@ namespace Showcase {
             this.lblTextField3.Text = "HexView:";
             this.lblTextField3.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.lblTextField3);
+            this.lblTextField4.Width = Dim.Auto();
+            this.lblTextField4.Height = Dim.Auto();
+            this.lblTextField4.X = 59;
+            this.lblTextField4.Y = 3;
+            this.lblTextField4.Visible = true;
+            this.lblTextField4.CanFocus = false;
+            this.lblTextField4.ShadowStyle = null;
+            this.lblTextField4.Data = "lblTextField4";
+            this.lblTextField4.Text = "TreeView<Object>";
+            this.lblTextField4.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
+            this.Add(this.lblTextField4);
             this.hexView.Width = 9;
             this.hexView.Height = 6;
             this.hexView.X = 48;
@@ -165,6 +182,22 @@ namespace Showcase {
             this.hexView.Data = "hexView";
             this.hexView.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.hexView);
+            this.treeView2.Width = 36;
+            this.treeView2.Height = 6;
+            this.treeView2.X = 59;
+            this.treeView2.Y = 4;
+            this.treeView2.Visible = true;
+            this.treeView2.CanFocus = true;
+            this.treeView2.ShadowStyle = null;
+            this.treeView2.Data = "treeView2";
+            this.treeView2.Text = "";
+            this.treeView2.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
+            this.treeView2.Style.CollapseableSymbol = new System.Text.Rune('-');
+            this.treeView2.Style.ColorExpandSymbol = false;
+            this.treeView2.Style.ExpandableSymbol = new System.Text.Rune('+');
+            this.treeView2.Style.InvertExpandSymbolColors = false;
+            this.treeView2.Style.ShowBranchLines = true;
+            this.Add(this.treeView2);
             this.window2.Width = 47;
             this.window2.Height = 9;
             this.window2.X = 0;
@@ -220,7 +253,7 @@ namespace Showcase {
             this.treeView1.Style.InvertExpandSymbolColors = false;
             this.treeView1.Style.ShowBranchLines = true;
             this.treeView1.AddObjects(new System.IO.FileSystemInfo[0]);
-            this.treeView1.TreeBuilder =                             
+            this.treeView1.TreeBuilder = 
 new Terminal.Gui.Views.DelegateTreeBuilder<System.IO.FileSystemInfo>((p) =>
 {
     try
@@ -231,7 +264,9 @@ new Terminal.Gui.Views.DelegateTreeBuilder<System.IO.FileSystemInfo>((p) =>
     {
         return System.Linq.Enumerable.Empty<System.IO.FileSystemInfo>();
     }
-});;
+},
+(p)=>p is System.IO.DirectoryInfo
+);
             this.window3.Add(this.treeView1);
             this.link.Width = Dim.Auto();
             this.link.Height = 1;

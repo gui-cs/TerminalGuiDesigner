@@ -46,6 +46,18 @@
         }
 
         [Test]
+        public void TestRoundTrip_TreeView_DelegateTreeBuilder()
+        {
+            RoundTrip<Dialog, TreeView<FileSystemInfo>>((d, v) => { }, out var viewAfter);
+
+            Assert.That(viewAfter.TreeBuilder, Is.InstanceOf<DelegateTreeBuilder<FileSystemInfo>>());
+
+            var builder = (DelegateTreeBuilder<FileSystemInfo>)viewAfter.TreeBuilder;
+            Assert.That(builder.CanExpand(new DirectoryInfo(".")), Is.True);
+            Assert.That(builder.CanExpand(new FileInfo(".")), Is.False);
+        }
+
+        [Test]
         public void TestRoundTrip_TreeView_Object()
         {
             Assert.That(
