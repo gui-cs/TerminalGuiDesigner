@@ -33,6 +33,8 @@
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
+			2.0.2-develop.40
+			* Release version of v2 Terminal Gui !!!
 			2.0.0-alpha.5373
 			* Update to latest nuget package
 			* Fix crash caused moving PosRelative view without its pair into different container View
