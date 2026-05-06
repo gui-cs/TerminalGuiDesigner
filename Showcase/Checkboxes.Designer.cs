@@ -24,6 +24,10 @@ namespace Showcase {
     
     public partial class Checkboxes : Terminal.Gui.Views.Runnable {
         
+        private Terminal.Gui.Views.FrameView frameView;
+        
+        private Terminal.Gui.Views.OptionSelector optionSelector;
+        
         private Terminal.Gui.Views.CheckBox checkBox;
         
         private Terminal.Gui.Views.CheckBox checkBox2;
@@ -43,6 +47,8 @@ namespace Showcase {
             this.checkBox3 = new Terminal.Gui.Views.CheckBox();
             this.checkBox2 = new Terminal.Gui.Views.CheckBox();
             this.checkBox = new Terminal.Gui.Views.CheckBox();
+            this.optionSelector = new Terminal.Gui.Views.OptionSelector();
+            this.frameView = new Terminal.Gui.Views.FrameView();
             this.Width = Dim.Fill(0);
             this.Height = Dim.Fill(0);
             this.X = 0;
@@ -51,6 +57,32 @@ namespace Showcase {
             this.CanFocus = true;
             this.ShadowStyle = null;
             this.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
+            this.frameView.Width = 20;
+            this.frameView.Height = 5;
+            this.frameView.X = 37;
+            this.frameView.Y = 1;
+            this.frameView.Visible = true;
+            this.frameView.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
+            this.frameView.CanFocus = true;
+            this.frameView.ShadowStyle = null;
+            this.frameView.Data = "frameView";
+            this.frameView.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
+            this.frameView.Title = "OptionSelector";
+            this.Add(this.frameView);
+            this.optionSelector.Width = 8;
+            this.optionSelector.Height = 3;
+            this.optionSelector.X = 0;
+            this.optionSelector.Y = 0;
+            this.optionSelector.Visible = true;
+            this.optionSelector.CanFocus = true;
+            this.optionSelector.ShadowStyle = null;
+            this.optionSelector.Data = "optionSelector";
+            this.optionSelector.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
+            this.optionSelector.Labels = new string[] {
+                    "Cat",
+                    "Fish",
+                    "Dog"};
+            this.frameView.Add(this.optionSelector);
             this.checkBox.Width = Dim.Auto();
             this.checkBox.Height = Dim.Auto();
             this.checkBox.X = 3;

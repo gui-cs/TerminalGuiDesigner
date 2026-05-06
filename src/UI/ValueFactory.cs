@@ -105,7 +105,7 @@ namespace TerminalGuiDesigner.UI
                         app,
                         propertyName,
                         "New Array Value",
-                        type.GetElementType() ?? throw new Exception("Property was an Array but GetElementType returned null"),
+                        elementType,
                         (Array?)oldValue,
                         out Array? resultArray))
                     {

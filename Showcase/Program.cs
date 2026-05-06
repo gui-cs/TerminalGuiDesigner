@@ -17,6 +17,7 @@ namespace Showcase
                 typeof(DateTimes),
                 typeof(ColorPickers),
                 typeof(Ranges),
+                typeof(Numbers),
                 typeof(Lists),
                 typeof(TablesAndGraphs)
                 ];

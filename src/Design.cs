@@ -16,7 +16,6 @@ using TerminalGuiDesigner.Operations.MenuOperations;
 using TerminalGuiDesigner.Operations.StatusBarOperations;
 using TerminalGuiDesigner.Operations.TableViewOperations;
 using TerminalGuiDesigner.ToCode;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace TerminalGuiDesigner;
 
@@ -800,12 +799,18 @@ public class Design
         if (this.View is OptionSelector)
         {
             yield return this.CreateProperty(nameof(OptionSelector.Labels));
+            this.View.MouseBindings.Clear();
         }
 
         if (viewType.IsGenericType(typeof(NumericUpDown<>)))
         {
             yield return this.CreateProperty(nameof(NumericUpDown.Value));
             yield return this.CreateProperty(nameof(NumericUpDown.Increment));
+
+            foreach(var sub in this.View.SubViews)
+            {
+                sub.Enabled = false;
+            }
 
             // TODO: Probably needs some thought
             // yield return this.CreateProperty(nameof(NumericUpDown.Format));
