@@ -291,15 +291,8 @@ public static class ViewFactory
                 break;
             case SpinnerView sv:
                 sv.AutoSpin = true;
-                if ( width is not null )
-                {
-                    sv.Width = width;
-                }
-
-                if ( height is not null )
-                {
-                    sv.Height = height;
-                }
+                sv.Width = 1;
+                sv.Height = 1;
 
                 break;
             case not null when newView.GetType( ).IsSubclassOf( typeof(View) ):

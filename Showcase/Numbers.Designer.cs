@@ -244,8 +244,8 @@ namespace Showcase {
             this.progressBar.SegmentCharacter = new System.Text.Rune('▌');
             this.Add(this.progressBar);
             this.spinnerView.Width = 1;
-            this.spinnerView.Height = Dim.Auto();
-            this.spinnerView.X = 95;
+            this.spinnerView.Height = 1;
+            this.spinnerView.X = 96;
             this.spinnerView.Y = 8;
             this.spinnerView.Visible = true;
             this.spinnerView.CanFocus = false;
