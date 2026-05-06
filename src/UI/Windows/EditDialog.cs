@@ -19,6 +19,7 @@ namespace TerminalGuiDesigner.UI.Windows;
 public class EditDialog : Window
 {
     private readonly ListView list;
+    private readonly IApplication app;
     private readonly Design design;
     private readonly List<Property> collection = new();
 
@@ -26,8 +27,9 @@ public class EditDialog : Window
     /// Initializes a new instance of the <see cref="EditDialog"/> class.
     /// </summary>
     /// <param name="design">The <see cref="Design"/> on which you want to set properties.</param>
-    public EditDialog(Design design)
+    public EditDialog(IApplication app, Design design)
     {
+        this.app = app;
         this.design = design;
         this.collection.Clear( );
         this.collection.AddRange( this.design.GetDesignableProperties( )
@@ -74,7 +76,7 @@ public class EditDialog : Window
         btnClose.Accepting += (s, e) =>
         {
             e.Handled = true;
-            Application.RequestStop();
+            app.RequestStop();
         };
 
         this.list.KeyDown += (s, e) =>
@@ -93,13 +95,13 @@ public class EditDialog : Window
     }
 
 
-    internal static bool SetPropertyToNewValue(Design design, Property p, object? oldValue)
+    internal static bool SetPropertyToNewValue(IApplication app, Design design, Property p, object? oldValue)
     {
         // user wants to give us a new value for this property
-        if (ValueFactory.GetNewValue(design, p, p.GetValue(), out object? newValue))
+        if (ValueFactory.GetNewValue(app, design, p, p.GetValue(), out object? newValue))
         {
             OperationManager.Instance.Do(
-                new SetPropertyOperation(design, p, oldValue, newValue));
+                new SetPropertyOperation(app, design, p, oldValue, newValue));
 
             return true;
         }
@@ -109,22 +111,22 @@ public class EditDialog : Window
 
     private void SetProperty(bool setNull)
     {
-        if (this.list.SelectedItem != -1)
+        if (this.list.SelectedItem.HasValue)
         {
             try
             {
-                var p = this.collection[this.list.SelectedItem];
+                var p = this.collection[this.list.SelectedItem.Value];
                 var oldValue = p.GetValue();
 
                 if (setNull)
                 {
                     // user wants to set this property to null/default
                     OperationManager.Instance.Do(
-                        new SetPropertyOperation(this.design, p, oldValue, null));
+                        new SetPropertyOperation(app, this.design, p, oldValue, null));
                 }
                 else
                 {
-                    if (!SetPropertyToNewValue(this.design, p, oldValue))
+                    if (!SetPropertyToNewValue(app, this.design, p, oldValue))
                     {
                         // user cancelled editing the value
                         return;
@@ -138,7 +140,7 @@ public class EditDialog : Window
             }
             catch (Exception e)
             {
-                ExceptionViewer.ShowException("Failed to set Property", e);
+                ExceptionViewer.ShowException(app, "Failed to set Property", e);
             }
         }
     }
@@ -148,7 +150,7 @@ public class EditDialog : Window
         // TODO: Should really be using the _keyMap here
         if (obj == Key.DeleteChar)
         {
-            int rly = ChoicesDialog.Query("Clear", "Clear Property Value?", "Yes", "Cancel");
+            int rly = ChoicesDialog.Query(app, "Clear", "Clear Property Value?", "Yes", "Cancel");
             obj.Handled = true;
 
             if (rly == 0)

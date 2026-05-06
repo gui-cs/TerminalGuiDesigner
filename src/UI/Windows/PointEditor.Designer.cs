@@ -50,8 +50,7 @@ namespace TerminalGuiDesigner {
             this.Visible = true;
             this.Arrangement = (Terminal.Gui.ViewBase.ViewArrangement.Movable | Terminal.Gui.ViewBase.ViewArrangement.Overlapped);
             this.CanFocus = true;
-            this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Transparent;
-            this.Modal = true;
+            this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Transparent;
             this.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Title = "Point Designer";
             this.lblX.Width = 2;
@@ -61,7 +60,7 @@ namespace TerminalGuiDesigner {
             this.lblX.Visible = true;
             this.lblX.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.lblX.CanFocus = false;
-            this.lblX.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
+            this.lblX.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.None;
             this.lblX.Data = "lblX";
             this.lblX.Text = "X:";
             this.lblX.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
@@ -73,7 +72,7 @@ namespace TerminalGuiDesigner {
             this.tbX.Visible = true;
             this.tbX.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.tbX.CanFocus = true;
-            this.tbX.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
+            this.tbX.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.None;
             this.tbX.Secret = false;
             this.tbX.Data = "tbX";
             this.tbX.Text = "";
@@ -86,7 +85,7 @@ namespace TerminalGuiDesigner {
             this.lblY.Visible = true;
             this.lblY.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.lblY.CanFocus = false;
-            this.lblY.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
+            this.lblY.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.None;
             this.lblY.Data = "lblY";
             this.lblY.Text = "Y:";
             this.lblY.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
@@ -98,7 +97,7 @@ namespace TerminalGuiDesigner {
             this.tbY.Visible = true;
             this.tbY.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.tbY.CanFocus = true;
-            this.tbY.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
+            this.tbY.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.None;
             this.tbY.Secret = false;
             this.tbY.Data = "tbY";
             this.tbY.Text = "";
@@ -111,7 +110,7 @@ namespace TerminalGuiDesigner {
             this.btnOk.Visible = true;
             this.btnOk.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.btnOk.CanFocus = true;
-            this.btnOk.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
+            this.btnOk.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Opaque;
             this.btnOk.Data = "btnOk";
             this.btnOk.Text = "Ok";
             this.btnOk.TextAlignment = Terminal.Gui.ViewBase.Alignment.Center;
@@ -124,7 +123,7 @@ namespace TerminalGuiDesigner {
             this.btnCancel.Visible = true;
             this.btnCancel.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.btnCancel.CanFocus = true;
-            this.btnCancel.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
+            this.btnCancel.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Opaque;
             this.btnCancel.Data = "btnCancel";
             this.btnCancel.Text = "Cancel";
             this.btnCancel.TextAlignment = Terminal.Gui.ViewBase.Alignment.Center;

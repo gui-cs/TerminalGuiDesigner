@@ -13,9 +13,9 @@ namespace TerminalGuiDesigner;
 /// </summary>
 public static class ViewExtensions
 {
-    public static View? FindDeepestView(Point screenPoint)
+    public static View? FindDeepestView(IApplication app, Point screenPoint)
     {
-        return View.GetViewsAtLocation(Application.Top,screenPoint).LastOrDefault(v=> v!= null);
+        return View.GetViewsAtLocation(app.TopRunnableView, screenPoint).LastOrDefault(v=> v!= null);
     }
     /// <summary>
     /// Returns the sub-views of <paramref name="v"/> skipping out any
@@ -30,11 +30,6 @@ public static class ViewExtensions
     /// any Terminal.Gui artifacts (e.g. ContentView).</returns>
     public static IReadOnlyCollection<View> GetActualSubviews(this View v)
     {
-        if (v is TabView t)
-        {
-            return t.Tabs.Select(tab => tab.View).Where(v => v != null).ToList();
-        }
-
         return v.SubViews;
     }
 
@@ -205,7 +200,7 @@ public static class ViewExtensions
 
         // TODO: are there any others?
         return
-            v is TabView ||
+            v.GetType() == typeof(Runnable) ||
             v is FrameView ||
             v is Window ||
             type == typeof(View) || type.Name.Equals("ContentView");
@@ -219,16 +214,6 @@ public static class ViewExtensions
     /// <returns>True if no visible border and <see cref="ViewExtensions.IsContainerView(View)"/>.</returns>
     public static bool IsBorderlessContainerView(this View v)
     {
-        if (v is Toplevel)
-        {
-            return false;
-        }
-
-        if (v is TabView tabView)
-        {
-            return !tabView.Style.ShowBorder || tabView.Style.TabsOnBottom;
-        }
-
         if (v.IsContainerView() && v.HasNoBorderProperty())
         {
             return true;
@@ -250,30 +235,31 @@ public static class ViewExtensions
     /// <param name="m">Screen coordinates.</param>
     /// <param name="isBorder">True if the click lands on the border of the returned <see cref="View"/>.</param>
     /// <param name="isLowerRight">True if the click lands in the lower right of the returned <see cref="View"/>.</param>
+    /// <param name="app">The application instance.</param>
     /// <param name="ignoring">One or more <see cref="View"/> to ignore (click through) when performing the hit test.</param>
     /// <returns>The <see cref="View"/> at the given screen location or null if none found.</returns>
-    public static View? HitTest(this View w, MouseEventArgs m, out bool isBorder, out bool isLowerRight, params View[] ignoring)
+    public static View? HitTest(this View w, IApplication app, Mouse m, out bool isBorder, out bool isLowerRight, params View[] ignoring)
     {
         // hide the views while we perform the hit test
         foreach (View v in ignoring)
         {
             v.Visible = false;
         }
-        
-        var hit = ViewExtensions.FindDeepestView(m.Position);
+
+        var hit = ViewExtensions.FindDeepestView(app, m.Position ?? Point.Empty);
 
         hit = UnpackHitView(hit);
 
         int resizeBoxArea = 2;
 
-        if (hit != null)
+        if (hit != null && m.Position.HasValue)
         {
             var screenFrame = hit.FrameToScreen();
 
             if (m.Position != new Point(screenFrame.X, screenFrame.Y))
             {
-                isLowerRight = Math.Abs(screenFrame.X + screenFrame.Width - m.Position.X) <= resizeBoxArea
-                && Math.Abs(screenFrame.Y + screenFrame.Height - m.Position.Y) <= resizeBoxArea;
+                isLowerRight = Math.Abs(screenFrame.X + screenFrame.Width - m.Position.Value.X) <= resizeBoxArea
+                && Math.Abs(screenFrame.Y + screenFrame.Height - m.Position.Value.Y) <= resizeBoxArea;
             }
             else
             {
@@ -281,10 +267,10 @@ public static class ViewExtensions
             }
 
             isBorder =
-                m.Position.X == screenFrame.X + screenFrame.Width - 1 ||
-                m.Position.X == screenFrame.X ||
-                m.Position.Y == screenFrame.Y + screenFrame.Height - 1 ||
-                m.Position.Y == screenFrame.Y;
+                m.Position.Value.X == screenFrame.X + screenFrame.Width - 1 ||
+                m.Position.Value.X == screenFrame.X ||
+                m.Position.Value.Y == screenFrame.Y + screenFrame.Height - 1 ||
+                m.Position.Value.Y == screenFrame.Y;
         }
         else
         {
@@ -297,8 +283,8 @@ public static class ViewExtensions
         {
             v.Visible = true;
         }
-
-        return hit is Adornment a ? a.Parent : hit;
+        
+        return hit is AdornmentView a ? a.SuperView : hit;
     }
 
 
@@ -321,26 +307,9 @@ public static class ViewExtensions
         }
 
         // Translate clicks in the border as the real View being clicked
-        if (hit is Border b)
-        {
-            hit = b.Parent;
-
-        }
-
         if (hit?.IsAdornment() ?? false)
         {
             hit = hit.GetAdornmentParent();
-        }
-
-        // TabView nesting of 'fake' views goes:
-        // TabView
-        //   - TabViewRow
-        //   - View (pane)
-        //     - Border (note you need Parent not SuperView to find Border parent)
-
-        if (hit?.SuperView is TabView tv)
-        {
-            hit = tv;
         }
 
         return hit;
@@ -447,14 +416,13 @@ public static class ViewExtensions
 
     /// <summary>
     /// Returns <see langword="true"/> if <paramref name="v"/> is part of
-    /// a <see cref="Adornment"/> (either directly or embedded sub view of
-    /// one - e.g. <see cref="ShadowView"/>).
+    /// an Adornment (either directly or embedded sub view of one - e.g. <see cref="ShadowView"/>).
     /// </summary>
     /// <param name="v"></param>
     /// <returns></returns>
     public static bool IsAdornment(this View v)
     {
-        return v is Adornment || v.AnySuperViewIs<Adornment>();
+        return v is AdornmentView || v.AnySuperViewIs<AdornmentView>();
     }
 
     /// <summary>
@@ -481,8 +449,8 @@ public static class ViewExtensions
     }
 
     /// <summary>
-    /// Returns the <see cref="Adornment.Parent"/> of <paramref name="v"/>
-    /// if it is an <see cref="Adornment"/>. Or if <paramref name="v"/> is not
+    /// Returns the <see cref="IAdornment.Parent"/> of <paramref name="v"/>
+    /// if it is an <see cref="AdornmentView"/>. Or if <paramref name="v"/> is not
     /// directly an adornment but <see cref="AnySuperViewIs{T}"/> then the method
     /// will traverse up <see cref="View.SuperView"/> hierarchy until parent is found.
     /// </summary>
@@ -492,9 +460,9 @@ public static class ViewExtensions
     {
         while (v != null)
         {
-            if (v is Adornment a)
+            if(v is AdornmentView av)
             {
-                return a.Parent;
+                return av.Adornment?.Parent;
             }
 
             v = v.SuperView;

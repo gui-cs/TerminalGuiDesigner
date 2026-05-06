@@ -1,4 +1,5 @@
 ﻿using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 
@@ -15,9 +16,10 @@ public abstract class GenericOperation<T> : Operation
     /// <summary>
     /// Initializes a new instance of the <see cref="GenericOperation{T}"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="design">Design Wrapper for a <see cref="View"/> of Type <typeparamref name="T"/>.</param>
     /// <exception cref="ArgumentException">Thrown if <paramref name="design"/> does not wrap a <typeparamref name="T"/>.</exception>
-    public GenericOperation(Design design)
+    public GenericOperation(IApplication app, Design design) : base(app)
     {
         if (design.View is not T t)
         {

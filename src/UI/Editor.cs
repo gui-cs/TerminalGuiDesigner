@@ -2,10 +2,8 @@ using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using Terminal.Gui;
 using Terminal.Gui.App;
 using Terminal.Gui.Drawing;
 using Terminal.Gui.Drivers;
@@ -22,12 +20,13 @@ using ILogger = Microsoft.Extensions.Logging.ILogger;
 namespace TerminalGuiDesigner.UI;
 
 /// <summary>
-/// Root <see cref="Toplevel"/> <see cref="View"/> that is visible on loading the
+/// Root <see cref="View"/> <see cref="View"/> that is visible on loading the
 /// application.  Hooks key and mouse events and mounts as a sub-view whatever file
 /// the user opens.
 /// </summary>
-public class Editor : Toplevel, IErrorReporter
+public class Editor : Runnable, IErrorReporter
 {
+    private readonly IApplication app;
     private KeyMap keyMap;
     private readonly KeyboardManager keyboardManager;
     private readonly MouseManager mouseManager;
@@ -67,10 +66,17 @@ public class Editor : Toplevel, IErrorReporter
     public const string Error = "Error";
 
     /// <summary>
+    /// String to assign to popover data field so that we don't accidentally edit our own context menus!
+    /// </summary>
+    public const string? DesignerCorePopoverName = "CoreDesignerPopupMenu";
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="Editor"/> class.
     /// </summary>
-    public Editor()
+    /// <param name="app"></param>
+    public Editor(IApplication app)
     {
+        this.app = app;
         // Bug: This will have strange inheritance behavior if Editor is inherited from.
         this.CanFocus = true;
 
@@ -81,12 +87,14 @@ public class Editor : Toplevel, IErrorReporter
 
         LoadKeyMap();
 
-        this.keyboardManager = new KeyboardManager(this.keyMap);
-        this.mouseManager = new MouseManager()
+        this.keyboardManager = new KeyboardManager(app, this.keyMap);
+        this.mouseManager = new MouseManager(app)
         {
             ErrorReporter = this
         };
-        this.Closing += this.Editor_Closing;
+
+
+        this.IsRunningChanging += this.Editor_Closing;
 
         this.BuildRootMenu();
     }
@@ -114,7 +122,7 @@ public class Editor : Toplevel, IErrorReporter
         catch (Exception ex)
         {
             // if there is bad yaml use the defaults
-            ExceptionViewer.ShowException("Failed to read keybindings from configuration file", ex);
+            ExceptionViewer.ShowException(app,"Failed to read keybindings from configuration file", ex);
             this.keyMap = new KeyMap();
         }
     }
@@ -130,7 +138,7 @@ public class Editor : Toplevel, IErrorReporter
         }
         catch (Exception ex)
         {
-            ExceptionViewer.ShowException("Failed to save keybindings from configuration file", ex);
+            ExceptionViewer.ShowException(app, "Failed to save keybindings from configuration file", ex);
         }
     }
 
@@ -204,13 +212,12 @@ public class Editor : Toplevel, IErrorReporter
             }
             catch (Exception ex)
             {
-                MessageBox.ErrorQuery("Error Loading Designer", ex.Message, "Ok");
-                Application.Shutdown();
+                MessageBox.ErrorQuery(app, "Error Loading Designer", ex.Message, "Ok");
                 return;
             }
         }
 
-        Application.KeyDown += (_, k) =>
+        app.Keyboard.KeyDown += (_, k) =>
         {
             if (this.editing || this.viewBeingEdited == null)
             {
@@ -226,11 +233,11 @@ public class Editor : Toplevel, IErrorReporter
             }
             catch (Exception ex)
             {
-                ExceptionViewer.ShowException("Error processing keystroke", ex);
+                ExceptionViewer.ShowException(app, "Error processing keystroke", ex);
             }
         };
 
-        Application.MouseEvent += (s, m) =>
+        app.Mouse.MouseEvent += (s, m) =>
         {
             // if another window is showing don't respond to mouse
             if (!this.IsCurrentTop)
@@ -239,7 +246,7 @@ public class Editor : Toplevel, IErrorReporter
             }
 
             // If disabling drag we suppress all but right click (button 3)
-            if (!m.Flags.HasFlag(MouseFlags.Button3Clicked) && !this.enableDrag)
+            if (!m.Flags.HasFlag(MouseFlags.MiddleButtonClicked) && !this.enableDrag)
             {
                 return;
             }
@@ -256,7 +263,7 @@ public class Editor : Toplevel, IErrorReporter
                 // right click
                 if (m.Flags.HasFlag(this.keyMap.RightClick))
                 {
-                    var hit = this.viewBeingEdited.View.HitTest(m, out _, out _);
+                    var hit = this.viewBeingEdited.View.HitTest(app, m, out _, out _);
 
                     if (hit != null)
                     {
@@ -270,12 +277,11 @@ public class Editor : Toplevel, IErrorReporter
             }
             catch (Exception ex)
             {
-                ExceptionViewer.ShowException("Error processing mouse", ex);
+                ExceptionViewer.ShowException(app,"Error processing mouse", ex);
             }
         };
 
-        Application.Run(this, this.ErrorHandler);
-        Application.Shutdown();
+        app.Run(this, this.ErrorHandler);
     }
 
     /// <summary>
@@ -342,19 +348,19 @@ public class Editor : Toplevel, IErrorReporter
     /// <summary>
     /// Draws title screen when no view is currently open
     /// </summary>
-    protected override bool OnDrawingContent()
+    protected override bool OnDrawingContent(DrawContext? context)
     {
-        var r = base.OnDrawingContent();
+        var r = base.OnDrawingContent(context);
 
-        if (viewBeingEdited != null)
+        if (viewBeingEdited != null || app.TopRunnable is FileDialog)
         {
             return true;
         }
 
         var bounds = Viewport;
-
-        Application.Driver.SetAttribute(new Attribute(Color.Black));
-        Application.Driver.FillRect(bounds,' ');
+        
+        SetAttribute(new Attribute(Color.Black));
+        FillRect(bounds,new Rune(' '));
 
         var top = new Rectangle(0, 0, bounds.Width, rootCommandsListView.Frame.Top - 1);
         RenderTitle(top);
@@ -737,7 +743,7 @@ public class Editor : Toplevel, IErrorReporter
         }
         catch (Exception ex)
         {
-            ExceptionViewer.ShowException("Error", ex);
+            ExceptionViewer.ShowException(app, "Error", ex);
         }
         finally
         {
@@ -892,9 +898,9 @@ public class Editor : Toplevel, IErrorReporter
 
     private void ChangeKeybindings()
     {
-        var kb = new KeyBindingsUI(keyMap);
-        Application.Run(kb);
-        
+        var kb = new KeyBindingsUI(app, keyMap);
+        app.Run(kb);
+
         if (kb.Save)
         {
             SaveKeyMap();
@@ -902,7 +908,7 @@ public class Editor : Toplevel, IErrorReporter
     }
 
 
-    private void Editor_Closing(object? sender, ToplevelClosingEventArgs obj)
+    private void Editor_Closing(object? sender, CancelEventArgs<bool> obj)
     {
         if (this.viewBeingEdited == null)
         {
@@ -911,7 +917,7 @@ public class Editor : Toplevel, IErrorReporter
 
         if (this.HasUnsavedChanges)
         {
-            int answer = ChoicesDialog.Query("Unsaved Changes", $"You have unsaved changes to {this.viewBeingEdited.SourceCode.DesignerFile.Name}", "Save", "Don't Save", "Cancel");
+            int answer = ChoicesDialog.Query(app, "Unsaved Changes", $"You have unsaved changes to {this.viewBeingEdited.SourceCode.DesignerFile.Name}", "Save", "Don't Save", "Cancel");
 
             if (answer == 0)
             {
@@ -929,7 +935,7 @@ public class Editor : Toplevel, IErrorReporter
         }
     }
 
-    private void CreateAndShowContextMenu(MouseEventArgs? m, Design? rightClicked)
+    private void CreateAndShowContextMenu(Mouse? m, Design? rightClicked)
     {
         if (this.viewBeingEdited == null)
         {
@@ -940,7 +946,8 @@ public class Editor : Toplevel, IErrorReporter
 
         // BUG: This is an improper exception here and could have unexpected behavior if this method is ever called asynchronously.
         var factory = new OperationFactory(
-                (p, v) => ValueFactory.GetNewValue(p.Design, p, v, out var newValue) ? newValue : throw new OperationCanceledException() );
+                app,
+                (p, v) => ValueFactory.GetNewValue(app, p.Design, p, v, out var newValue) ? newValue : throw new OperationCanceledException() );
 
         var operations = factory
             .CreateOperations(selected, m, rightClicked, out string name)
@@ -950,27 +957,44 @@ public class Editor : Toplevel, IErrorReporter
         var setProps = operations.OfType<SetPropertyOperation>();
         var others = operations
             .Except(setProps)
-            .GroupBy(k => k.Category, ToMenuItem);
+            .GroupBy(k => k.Category, p=>ToMenuItem(app,p));
 
-        var setPropsItems = setProps.Select(ToMenuItem).ToArray();
+        var setPropsItems = setProps.Select(p=>ToMenuItem(app,p)).ToList();
         bool hasPropsItems = setPropsItems.Any();
 
-        var all = new List<MenuItemv2>();
+        var all = new List<MenuItem>();
 
         // only add the set properties category if there are some
         if (hasPropsItems)
         {
-            all.Add(new MenuItemv2()
+            // Also add to the submenu an 'All' version
+            // Workaround for https://github.com/gui-cs/Terminal.Gui/issues/4876 
+            // Previously user could do it by selecting the root 'Properties' expandable
+            // menu
+            setPropsItems.Insert(0, new MenuItem() { 
+                Title="(All)",
+                Action = () =>
+                    {
+                        if (selected.Length == 1 || rightClicked != null)
+                        {
+                            this.ShowEditProperties(rightClicked ?? selected[0]);
+                        }
+                    },
+                });
+
+            all.Add(new MenuItem()
             {
                 Title = name,
-                Action = () =>
+                SubMenu = new Menu(setPropsItems)
+                /*
+                 * No longer supported, see https://github.com/gui-cs/Terminal.Gui/issues/4876
+                 * ,Action = () =>
                 {
                     if (selected.Length == 1 || rightClicked != null)
                     {
                         this.ShowEditProperties(rightClicked ?? selected[0]);
                     }
-                },
-                SubMenu = new Menuv2(setPropsItems)
+                },*/
             });
         }
 
@@ -988,10 +1012,10 @@ public class Editor : Toplevel, IErrorReporter
                 // Add categories first
                 all.Insert(
                     hasPropsItems ? 1 : 0,
-                    new MenuItemv2()
+                    new MenuItem()
                     {
                         Title = g.Key,
-                        SubMenu = new Menuv2(g.ToArray())
+                        SubMenu = new Menu(g.ToArray())
                     });
             }
         }
@@ -1003,10 +1027,12 @@ public class Editor : Toplevel, IErrorReporter
         }
 
         var menu = new PopoverMenu(all.ToArray());
+        menu.Data = DesignerCorePopoverName;
+
         Point position;
-        if (m != null)
+        if (m != null && m.Position.HasValue)
         {
-            position = m.Position;
+            position = m.Position.Value;
         }
         else
         {
@@ -1023,21 +1049,34 @@ public class Editor : Toplevel, IErrorReporter
             m.Handled = true;
         }
 
-        
-        // TODO: rly? you have to pass it its own menu items!?
+        // This internal method call shouldn't be required
+        menu.App = app;
+        app.Popovers!.Register(menu);
+
         menu.MakeVisible(position);
         menu.Accepted += (_, _) =>
         {
             this.menuOpen = false;
             SelectionManager.Instance.LockSelection = false;
+            app.Popovers.DeRegister(menu);
+        };
+        menu.VisibleChanged += (_, e) =>
+        {
+            // Its closing probably
+            if(menu.Visible == false)
+            {
+                this.menuOpen = false;
+                SelectionManager.Instance.LockSelection = false;
+            app.Popovers.DeRegister(menu);
+            }
         };
     }
-
-    private static MenuItemv2 ToMenuItem(IOperation operation)
+    
+    private static MenuItem ToMenuItem(IApplication application, IOperation operation)
     {
-        return new MenuItemv2(operation.ToString(), string.Empty, () => Try(() => OperationManager.Instance.Do(operation)));
+        return new MenuItem(operation.ToString(), string.Empty, () => Try(application,() => OperationManager.Instance.Do(operation)));
 
-        static void Try(Action action)
+        static void Try(IApplication application, Action action)
         {
             try
             {
@@ -1048,7 +1087,7 @@ public class Editor : Toplevel, IErrorReporter
             }
             catch (Exception ex)
             {
-                ExceptionViewer.ShowException("Operation failed", ex);
+                ExceptionViewer.ShowException(application, "Operation failed", ex);
             }
             finally
             {
@@ -1067,9 +1106,10 @@ public class Editor : Toplevel, IErrorReporter
             return m;
         }
 
-        if (MenuTracker.Instance.CurrentlyOpenMenuItem != null)
+        var selectedMenuItem = MenuTracker.GetFocusedMenuItemIfAny(app);
+        if (selectedMenuItem != null)
         {
-            return $"Selected: {MenuTracker.Instance.CurrentlyOpenMenuItem.Title}";
+            return $"Selected: {selectedMenuItem.Title}";
         }
 
         var selected = SelectionManager.Instance.Selected.ToArray();
@@ -1104,7 +1144,7 @@ public class Editor : Toplevel, IErrorReporter
 
         if (d != null)
         {
-            var paste = new PasteOperation(d);
+            var paste = new PasteOperation(app, d);
 
             if (paste.IsImpossible)
             {
@@ -1117,7 +1157,7 @@ public class Editor : Toplevel, IErrorReporter
 
     private void Copy()
     {
-        var copy = new CopyOperation(SelectionManager.Instance.Selected.ToArray());
+        var copy = new CopyOperation(app, SelectionManager.Instance.Selected.ToArray());
         OperationManager.Instance.Do(copy);
     }
 
@@ -1129,7 +1169,7 @@ public class Editor : Toplevel, IErrorReporter
         {
             var options = d.GetExtraOperations().Where(o => !o.IsImpossible).ToArray();
 
-            if (options.Any() && Modals.Get("Operations", "Ok", options, null, out var selected) && selected != null)
+            if (options.Any() && Modals.Get(app, "Operations", "Ok", options, null, out var selected) && selected != null)
             {
                 OperationManager.Instance.Do(selected);
             }
@@ -1142,20 +1182,20 @@ public class Editor : Toplevel, IErrorReporter
         {
             return;
         }
-        var menuItem = MenuTracker.Instance.CurrentlyOpenMenuItem;
+        var menuItem = MenuTracker.GetFocusedMenuItemIfAny(app);
 
         // if we are in a menu
         if (menuItem != null)
         {
             return;
         }
-        
-        ChoicesDialog.Query("Help", this.GetHelp(), "Ok");
+
+        ChoicesDialog.Query(app, "Help", this.GetHelp(), "Ok");
     }
 
     private void MoveControl(int deltaX, int deltaY)
     {
-        this.DoForSelectedViews((d) => new MoveViewOperation(d, deltaX, deltaY));
+        this.DoForSelectedViews((d) => new MoveViewOperation(app, d, deltaX, deltaY));
     }
 
     private void Delete()
@@ -1167,7 +1207,7 @@ public class Editor : Toplevel, IErrorReporter
 
         if (SelectionManager.Instance.Selected.Any())
         {
-            var cmd = new DeleteViewOperation(SelectionManager.Instance.Selected.ToArray());
+            var cmd = new DeleteViewOperation(app, SelectionManager.Instance.Selected.ToArray());
             
             
             if (cmd.IsImpossible && cmd.PreventDeleting.Any())
@@ -1205,6 +1245,7 @@ public class Editor : Toplevel, IErrorReporter
         if (selected.Length > 1)
         {
             var op = new CompositeOperation(
+                app,
                 SelectionManager.Instance.Selected
                 .Select(operationFunc).ToArray());
 
@@ -1231,9 +1272,8 @@ public class Editor : Toplevel, IErrorReporter
             Title = "Open",
             AllowedTypes = new List<IAllowedType>(new[] { new AllowedType("View", SourceCodeFile.ExpectedExtension) })
         };
-        ofd.Layout();
-
-        Application.Run(ofd, this.ErrorHandler);
+        
+        app.Run(ofd, this.ErrorHandler);
 
         if (!ofd.Canceled)
         {
@@ -1250,14 +1290,14 @@ public class Editor : Toplevel, IErrorReporter
             }
             catch (Exception ex)
             {
-                ExceptionViewer.ShowException($"Failed to open '{ofd.Path}'", ex);
+                ExceptionViewer.ShowException(app,$"Failed to open '{ofd.Path}'", ex);
             }
         }
     }
 
     private bool ErrorHandler(Exception arg)
     {
-        ExceptionViewer.ShowException("Global Exception", arg);
+        ExceptionViewer.ShowException(app,"Global Exception", arg);
         return true;
     }
 
@@ -1273,18 +1313,18 @@ public class Editor : Toplevel, IErrorReporter
 
         Task.Run(() =>
         {
-            var decompiler = new CodeToView(new SourceCodeFile(toOpen));
+            var decompiler = new CodeToView(app, new SourceCodeFile(toOpen));
             instance = decompiler.CreateInstance();
         }).ContinueWith(
             (t, _) =>
             {
                 // no longer loading
-                Application.Invoke(() => Application.RequestStop());
+                app.Invoke(() => app.RequestStop());
 
                 if (t.Exception != null)
                 {
-                    Application.Invoke(() =>
-                        ExceptionViewer.ShowException($"Failed to open '{toOpen.Name}'", t.Exception));
+                    app.Invoke(() =>
+                        ExceptionViewer.ShowException(app, $"Failed to open '{toOpen.Name}'", t.Exception));
                     return;
                 }
 
@@ -1296,12 +1336,12 @@ public class Editor : Toplevel, IErrorReporter
             },
             TaskScheduler.FromCurrentSynchronizationContext());
 
-        Application.Run(open, this.ErrorHandler);
+        app.Run(open, this.ErrorHandler);
     }
 
     private void New()
     {
-        if (!Modals.Get("Create New View", "Ok", GetSupportedRootViews(), null, out var selected))
+        if (!Modals.Get(app, "Create New View", "Ok", GetSupportedRootViews(), null, out var selected))
         {
             return;
         }
@@ -1312,10 +1352,9 @@ public class Editor : Toplevel, IErrorReporter
             AllowedTypes = new List<IAllowedType>() { new AllowedType("C# File", ".cs") },
             Path = "MyView.cs",
         };
-        ofd.Style.PreserveFilenameOnDirectoryChanges = true;
-        ofd.Layout();
+        // ofd.Style.PreserveFilenameOnDirectoryChanges = true;
 
-        Application.Run(ofd);
+        app.Run(ofd);
 
         if (!ofd.Canceled)
         {
@@ -1336,7 +1375,7 @@ public class Editor : Toplevel, IErrorReporter
 
                 if(!CodeDomArgs.IsValidIdentifier(files.ClassName))
                 {
-                    ChoicesDialog.Query("Invalid Name",$"Invalid class name '{files.ClassName}'","Ok");
+                    ChoicesDialog.Query(app, "Invalid Name",$"Invalid class name '{files.ClassName}'","Ok");
                     return;
                 }
 
@@ -1354,7 +1393,7 @@ public class Editor : Toplevel, IErrorReporter
 
                 if (sb.Length > 0)
                 {
-                    if (!ChoicesDialog.Confirm("Overwrite Files?", $"The following files will be overwritten:{Environment.NewLine}{sb.ToString().TrimEnd()}", "Ok", "Cancel"))
+                    if (!ChoicesDialog.Confirm(app, "Overwrite Files?", $"The following files will be overwritten:{Environment.NewLine}{sb.ToString().TrimEnd()}", "Ok", "Cancel"))
                     {
                         return; // user canceled overwrite
                     }
@@ -1364,7 +1403,7 @@ public class Editor : Toplevel, IErrorReporter
             }
             catch (Exception ex)
             {
-                ExceptionViewer.ShowException($"Failed to create '{ofd.Path}'", ex);
+                ExceptionViewer.ShowException(app, $"Failed to create '{ofd.Path}'", ex);
                 throw;
             }
         }
@@ -1372,12 +1411,12 @@ public class Editor : Toplevel, IErrorReporter
 
     private static Type[] GetSupportedRootViews()
     {
-        return new Type[] { typeof(Window), typeof(Dialog), typeof(View), typeof(Toplevel) };
+        return new Type[] { typeof(Window), typeof(Dialog), typeof(View), typeof(Runnable) };
     }
 
     private void New(FileInfo toOpen, Type typeToCreate, string? explicitNamespace)
     {
-        var viewToCode = new ViewToCode();
+        var viewToCode = new ViewToCode(app);
         string? ns = explicitNamespace;
 
         // TODO: The following two if statements can be combined and run in a loop until the user either cancels or gets it right
@@ -1385,7 +1424,7 @@ public class Editor : Toplevel, IErrorReporter
         if (string.IsNullOrWhiteSpace(ns))
         {
             // prompt user for namespace
-            if (!Modals.GetString("Namespace", "Enter the namespace for your class", "YourNamespace", out ns))
+            if (!Modals.GetString(app, "Namespace", "Enter the namespace for your class", "YourNamespace", out ns))
             {
                 // user cancelled typing a namespace
                 return;
@@ -1395,7 +1434,7 @@ public class Editor : Toplevel, IErrorReporter
         // Validate the namespace
         if (string.IsNullOrWhiteSpace(ns) || ns.Contains(' ') || char.IsDigit(ns.First()))
         {
-            MessageBox.ErrorQuery("Invalid Namespace", "Namespace must not contain spaces, be empty or begin with a number", "Ok");
+            MessageBox.ErrorQuery(app, "Invalid Namespace", "Namespace must not contain spaces, be empty or begin with a number", "Ok");
             return;
         }
 
@@ -1416,12 +1455,12 @@ public class Editor : Toplevel, IErrorReporter
             (t, _) =>
             {
                 // no longer loading
-                Application.Invoke(() => Application.RequestStop());
+                app.Invoke(() => app.RequestStop());
 
                 if (t.Exception != null)
                 {
-                    Application.Invoke(() =>
-                        ExceptionViewer.ShowException($"Failed to create '{toOpen.Name}'", t.Exception));
+                    app.Invoke(() =>
+                        ExceptionViewer.ShowException(app, $"Failed to create '{toOpen.Name}'", t.Exception));
                     return;
                 }
 
@@ -1433,12 +1472,12 @@ public class Editor : Toplevel, IErrorReporter
             },
             TaskScheduler.FromCurrentSynchronizationContext());
 
-        Application.Run(open, this.ErrorHandler);
+        app.Run(open, this.ErrorHandler);
     }
 
     private void ReplaceViewBeingEdited(Design design)
     {
-        Application.Invoke(() =>
+        app.Invoke(() =>
         {
             // remove the old view
             if (this.viewBeingEdited != null)
@@ -1467,7 +1506,7 @@ public class Editor : Toplevel, IErrorReporter
             return;
         }
 
-        var viewToCode = new ViewToCode();
+        var viewToCode = new ViewToCode(app);
 
         viewToCode.GenerateDesignerCs(
             this.viewBeingEdited,
@@ -1490,7 +1529,7 @@ public class Editor : Toplevel, IErrorReporter
         var toAddTo = SelectionManager.Instance.GetMostSelectedContainerOrNull() ?? this.viewBeingEdited;
 
         OperationManager.Instance.Do(
-            new AddViewOperation(toAddTo));
+            new AddViewOperation(app, toAddTo));
     }
 
     private void ShowEditProperties()
@@ -1504,7 +1543,7 @@ public class Editor : Toplevel, IErrorReporter
 
     private void ShowEditProperties(Design d)
     {
-        var edit = new EditDialog(d);
-        Application.Run(edit, this.ErrorHandler);
+        var edit = new EditDialog(app, d);
+        app.Run(edit, this.ErrorHandler);
     }
 }

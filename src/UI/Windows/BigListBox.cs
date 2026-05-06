@@ -19,6 +19,7 @@ public class BigListBox<T>
     private static readonly string[ ] ErrorStringArray = new[] { "Error" };
     private readonly object taskCancellationLock = new();
     private readonly ConcurrentBag<CancellationTokenSource> cancelFiltering = new();
+    private readonly IApplication app;
     private readonly Window win;
     private readonly ListView listView;
     private readonly bool addNull;
@@ -45,6 +46,7 @@ public class BigListBox<T>
     /// <summary>
     /// Initializes a new instance of the <see cref="BigListBox{T}"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="prompt">User message indicating what they are being asked to select.</param>
     /// <param name="okText">The confirmation text on the 'ok' button.</param>
     /// <param name="addSearch">True to add search text box.</param>
@@ -53,7 +55,8 @@ public class BigListBox<T>
     /// <param name="addNull">Creates a selection option "Null" that returns a null selection.</param>
     /// <param name="currentSelection">The optional existing value, if present it should be selected in the list.</param>
     /// <param name="sort"></param>
-    public BigListBox(string prompt,
+    public BigListBox(IApplication app,
+        string prompt,
         string okText,
         in bool addSearch,
         IList<T> collection,
@@ -61,6 +64,7 @@ public class BigListBox<T>
         bool addNull,
         T? currentSelection, bool sort = true)
     {
+        this.app = app;
         this.AspectGetter = displayMember ?? (arg => arg?.ToString() ?? string.Empty);
 
         // Sort alphabetically according to display member
@@ -80,8 +84,7 @@ public class BigListBox<T>
 
             // By using Dim.Fill(), it will automatically resize without manual intervention
             Width = Dim.Fill(),
-            Height = Dim.Fill(),
-            Modal = true,
+            Height = Dim.Fill()
         };
 
         this.listView = new ListView()
@@ -94,7 +97,7 @@ public class BigListBox<T>
         };
         listView.SetSource(new ObservableCollection<string>(ErrorStringArray));
         
-        this.listView.MouseClick += this.ListView_MouseClick;
+        this.listView.MouseEvent += this.ListView_MouseClick;
         
         this.collection = this.BuildList(this.GetInitialSource()).ToList();
 
@@ -123,7 +126,7 @@ public class BigListBox<T>
         btnCancel.Accepting += (s, e) =>
         {
             e.Handled = true;
-            Application.RequestStop();
+            app.RequestStop();
         };
 
         if (addSearch)
@@ -176,7 +179,7 @@ public class BigListBox<T>
             this.listView.SelectedItem = 0;
         }
 
-        this.callback = Application.AddTimeout(TimeSpan.FromMilliseconds(100), this.Timer);
+        this.callback = app.AddTimeout(TimeSpan.FromMilliseconds(100), this.Timer);
 
         this.listView.FocusDeepest(NavigationDirection.Forward,TabBehavior.TabStop);
     }
@@ -198,29 +201,29 @@ public class BigListBox<T>
     /// <returns>True if selection was made (see <see cref="Selected"/>) or false if user cancelled the dialog.</returns>
     public bool ShowDialog()
     {
-        Application.Run(this.win);
+        app.Run(this.win);
 
-        Application.RemoveTimeout(this.callback);
+        app.RemoveTimeout(this.callback);
 
         return this.okClicked;
     }
 
     private void Accept()
     {
-        var selected = this.listView.SelectedItem;
+        var selected = this.listView.SelectedItem ?? -1;
         if (selected < 0 || selected >= this.collection.Count)
         {
             return;
         }
 
         this.okClicked = true;
-        Application.RequestStop();
+        app.RequestStop();
         this.Selected = this.collection[selected].Object;
     }
 
-    private void ListView_MouseClick(object? sender, MouseEventArgs obj)
+    private void ListView_MouseClick(object? sender, Mouse obj)
     {
-        if (obj.Flags.HasFlag(MouseFlags.Button1DoubleClicked))
+        if (obj.Flags.HasFlag(MouseFlags.LeftButtonDoubleClicked))
         {
             obj.Handled = true;
             this.Accept();

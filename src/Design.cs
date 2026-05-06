@@ -1,10 +1,11 @@
+using NLog;
 using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.Mime;
 using System.Reflection;
 using System.Xml.Linq;
-using NLog;
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Configuration;
 using Terminal.Gui.Drawing;
 using Terminal.Gui.Input;
@@ -14,7 +15,6 @@ using TerminalGuiDesigner.Operations;
 using TerminalGuiDesigner.Operations.MenuOperations;
 using TerminalGuiDesigner.Operations.StatusBarOperations;
 using TerminalGuiDesigner.Operations.TableViewOperations;
-using TerminalGuiDesigner.Operations.TabOperations;
 using TerminalGuiDesigner.ToCode;
 
 namespace TerminalGuiDesigner;
@@ -32,6 +32,8 @@ public class Design
     private readonly List<Property> designableProperties;
     private readonly Logger logger = LogManager.GetCurrentClassLogger();
 
+    public IApplication App { get; }
+
     /// <summary>
     /// View Types for which <see cref="MediaTypeNames.Text"/> does not make sense as a user
     /// configurable field (e.g. there is a Title field instead).
@@ -39,19 +41,17 @@ public class Design
     private readonly HashSet<Type> excludeTextPropertyFor = new()
     {
         typeof(FrameView),
-        typeof(TabView),
         typeof(Window),
-        typeof(Toplevel),
         typeof(GraphView),
         typeof(HexView),
-        typeof(LineView),
+        typeof(Line),
         typeof(ListView),
         typeof(MenuBar),
         typeof(TableView),
-        typeof(TabView),
         typeof(TreeView),
         typeof(Dialog),
-        typeof(NumericUpDown)
+        typeof(NumericUpDown),
+        typeof(Runnable)
     };
 
     /// <summary>
@@ -61,8 +61,10 @@ public class Design
     /// <param name="fieldName">The private instance name to use for <paramref name="view"/> when writing it out
     /// to <paramref name="sourceCode"/> or <see cref="RootDesignName"/> if <paramref name="view"/> <see cref="IsRoot"/>.</param>
     /// <param name="view">The view to wrap.</param>
-    public Design(SourceCodeFile sourceCode, string fieldName, View view)
+    /// <param name="app">Application instance</param>
+    public Design(IApplication app, SourceCodeFile sourceCode, string fieldName, View view)
     {
+        App = app;
         this.View = view;
         this.SourceCode = sourceCode;
         this.FieldName = fieldName;
@@ -201,6 +203,7 @@ public class Design
         if (subView is MenuBar mb)
         {
             MenuTracker.Instance.Register(mb);
+            mb.ConvertLineSeparatorsToSentinels();
         }
 
         if (subView is CheckBox cb)
@@ -211,40 +214,48 @@ public class Design
         if (subView is TextView txt)
         {
             // prevent control from responding to events
-            txt.MouseClick += (s, e) => this.SuppressNativeClickEvents(s, e);
+            txt.MouseEvent += (s, e) => this.SuppressNativeClickEvents(s, e);
         }
 
         if (subView is TextField tf)
         {
             // prevent control from responding to events
-            tf.MouseClick += (s,e)=>this.SuppressNativeClickEvents(s,e);
+            tf.MouseEvent += (s,e)=>this.SuppressNativeClickEvents(s,e);
         }
 
-        if (subView.GetType().IsGenericType(typeof(Slider<>)))
+        if (subView is Button btn)
+        {
+            // prevent control from responding to events
+            btn.MouseEvent += (s, e) => this.SuppressNativeClickEvents(s, e, true);
+            btn.MouseEnter += (s, e) => e.Cancel = true;
+        }
+
+        if (subView.GetType().IsGenericType(typeof(LinearRange<>)))
         {
             // TODO: Does not seem to work
             subView.MouseEvent += (s, e) => SuppressNativeClickEvents(s, e,true);
-            subView.MouseClick += (s, e) => SuppressNativeClickEvents(s,e, true);
+            subView.MouseEvent += (s, e) => SuppressNativeClickEvents(s,e, true);
         }
 
         if (subView is TreeView tree)
         {
-            tree.AddObject(new TreeNode("Example Branch 1")
-            {
-                Children = new[] { new TreeNode("Child 1") },
+            tree.AddObject(new TreeNode() {
+                Text = "Example Branch 1",
+                Children = new[] { new TreeNode() { Text = "Child 1" } },
             });
-            tree.AddObject(new TreeNode("Example Branch 2")
+            tree.AddObject(new TreeNode()
             {
+                Text = "Example Branch 2",
                 Children = new[]
                 {
-                    new TreeNode("Child 1"),
-                    new TreeNode("Child 2"),
+                    new TreeNode() { Text = "Child 1" },
+                    new TreeNode() { Text = "Child 2" },
                 },
             });
 
             for (int l = 0; l < 20; l++)
             {
-                tree.AddObject(new TreeNode($"Example Leaf {l}"));
+                tree.AddObject(new TreeNode() { Text = $"Example Leaf {l}" });
             }
         }
 
@@ -252,11 +263,10 @@ public class Design
         // in non designed subcomponents e.g. the bar of a true color picker.
         foreach (var v in subView.GetAllNonDesignableSubviews())
         {
-            v.MouseClick += (s,e)=>this.SuppressNativeClickEvents(s,e,true);
             v.MouseEvent += (s, e) => this.SuppressNativeClickEvents(s, e, true);
         }
         
-        var d = new Design(this.SourceCode, name, subView);
+        var d = new Design(App, this.SourceCode, name, subView);
         return d;
     }
 
@@ -269,16 +279,7 @@ public class Design
         return this.designableProperties;
     }
 
-    /// <summary>
-    /// Returns all operations not to do with setting properties.  Often these
-    /// are view specific e.g. add/remove column from a <see cref="TableView"/>.
-    /// </summary>
-    /// <returns>All view specific <see cref="Operation"/> supported on <see cref="View"/> Type.
-    /// Does not return regular <see cref="Property"/> changing operations.</returns>
-    public IEnumerable<IOperation> GetExtraOperations()
-    {
-        return this.GetExtraOperations(Point.Empty);
-    }
+
 
     /// <summary>
     /// Returns all <see cref="Operation"/> that can be performed on the view at position <paramref name="pos"/>
@@ -288,8 +289,10 @@ public class Design
     /// may inform what operations are returned (e.g. right clicking a specific table view column).  Otherwise
     /// <see cref="Point.Empty"/>.</param>
     /// <returns>All view specific <see cref="IOperation"/> that are supported at the <paramref name="pos"/>.</returns>
-    public IEnumerable<IOperation> GetExtraOperations(Point pos)
+    public IEnumerable<IOperation> GetExtraOperations(Mouse? mouse = null)
     {
+        var pos = mouse == null ? Point.Empty: View.ScreenToViewport(mouse.Position.Value);
+
         // Extra TableView operations
         if (this.View is TableView tv)
         {
@@ -303,91 +306,82 @@ public class Design
                 var cell = tv.ScreenToCell(pos.X, pos.Y, out var colIdx);
 
 
-                if (cell != null && colIdx == null)
+                if (cell != null)
                 {
                     col = dt.Columns[cell.Value.X];
+                }
+                else
+                if (colIdx != null && colIdx >= 0 && colIdx < dt.Columns.Count)
+                {
+                    col = dt.Columns[colIdx.Value];
                 }
             }
 
             // if no column was right clicked then provide commands for the selected column
-            if (col == null && tv.SelectedColumn >= 0)
+            if (col == null && tv.Value != null && tv.Value.SelectedCell.X >= 0)
             {
-                col = dt.Columns[tv.SelectedColumn];
+                col = dt.Columns[tv.Value.SelectedCell.X];
             }
 
-            yield return new AddColumnOperation(this, null);
+            yield return new AddColumnOperation(App, this, null);
 
             // no columns are selected so don't offer removal.
             if (col != null)
             {
-                yield return new RemoveColumnOperation(this, col);
-                yield return new RenameColumnOperation(this, col, null);
-                yield return new MoveColumnOperation(this, col, -1);
-                yield return new MoveColumnOperation(this, col, 1);
+                yield return new RemoveColumnOperation(App, this, col);
+                yield return new RenameColumnOperation(App, this, col, null);
+                yield return new MoveColumnOperation(App, this, col, -1);
+                yield return new MoveColumnOperation(App, this, col, 1);
             }
         }
 
         if (this.IsContainerView || this.IsRoot)
         {
-            yield return new AddViewOperation(this);
-            yield return new PasteOperation(this);
+            yield return new AddViewOperation(App,this);
+            yield return new PasteOperation(App, this);
         }
         else
         {
             var nearestContainer = this.View.GetNearestContainerDesign();
             if (nearestContainer != null)
             {
-                yield return new AddViewOperation(nearestContainer);
+                yield return new AddViewOperation(App, nearestContainer);
             }
         }
 
-        yield return new DeleteViewOperation(this);
+        yield return new DeleteViewOperation(App, this);
 
         switch ( this.View )
         {
-            case TabView tabView:
-            {
-                yield return new AddTabOperation(this, null);
-
-                if (tabView.SelectedTab != null)
-                {
-                    yield return new RemoveTabOperation(this, tabView.SelectedTab);
-                    yield return new RenameTabOperation(this, tabView.SelectedTab, null);
-                    yield return new MoveTabOperation(this, tabView.SelectedTab, -1);
-                    yield return new MoveTabOperation(this, tabView.SelectedTab, 1);
-                }
-
-                break;
-            }
             case MenuBar mb:
             {
-                yield return new AddMenuOperation(this, null);
+                yield return new AddMenuOperation(App, this, null);
 
-                var menu = pos.IsEmpty ? mb.GetSelectedMenuItem() : mb.ScreenToMenuBarItem(pos.X);
+                var menu = mouse == null ? mb.GetSelectedMenuItem() : mb.ScreenToMenuBarItem(App, mouse);
 
                 if (menu != null)
                 {
-                    yield return new RemoveMenuOperation(this, menu);
-                    yield return new RenameMenuOperation(this, menu, null);
-                    yield return new MoveMenuOperation(this, menu, -1);
-                    yield return new MoveMenuOperation(this, menu, 1);
+                    yield return new RemoveMenuOperation(App, this, menu);
+                    yield return new RenameMenuOperation(App, this, menu, null);
+                    yield return new MoveMenuOperation(App, this, menu, -1);
+                    yield return new MoveMenuOperation(App, this, menu, 1);
                 }
 
                 break;
             }
             case StatusBar sb:
             {
-                yield return new AddStatusItemOperation(this, null);
+                yield return new AddStatusItemOperation(App, this, null);
 
                 var item = sb.ScreenToMenuBarItem(pos.X);
 
                 if (item != null)
                 {
-                    yield return new RemoveStatusItemOperation(this, item);
-                    yield return new RenameStatusItemOperation(this, item, null);
-                    yield return new SetShortcutOperation(this, item, null);
-                    yield return new MoveStatusItemOperation(this, item, -1);
-                    yield return new MoveStatusItemOperation(this, item, 1);
+                    yield return new RemoveStatusItemOperation(App, this, item);
+                    yield return new RenameStatusItemOperation(App, this, item, null);
+                    yield return new SetShortcutOperation(App, this, item, null);
+                    yield return new MoveStatusItemOperation(App, this, item, -1);
+                    yield return new MoveStatusItemOperation(App, this, item, 1);
                 }
 
                 break;
@@ -569,16 +563,20 @@ public class Design
         }
     }
 
-    private void SuppressNativeClickEvents(object? sender, MouseEventArgs obj, bool alsoSuppressClick = false)
+    private void SuppressNativeClickEvents(object? sender, Mouse obj, bool alsoSuppressClick = false)
     {
         if (alsoSuppressClick)
         {
             obj.Handled = true;
+            if(sender is View v && obj.Flags == MouseFlags.LeftButtonClicked)
+            {
+                v.SetFocus();
+            }
         }
         else
         {
             // Suppress everything except single click (selection)
-            obj.Handled = obj.Flags != MouseFlags.Button1Clicked;
+            obj.Handled = obj.Flags != MouseFlags.LeftButtonClicked;
         }
     }
 
@@ -588,9 +586,9 @@ public class Design
         // prevent space toggling the checkbox
         // (gives better typing experience e.g. "my lovely checkbox")
         cb.KeyBindings.Remove(Key.Space);
-        cb.MouseClick += (s, e) =>
+        cb.MouseEvent += (s, e) =>
         {
-            if (e.Flags.HasFlag(MouseFlags.Button1Clicked))
+            if (e.Flags.HasFlag(MouseFlags.LeftButtonClicked))
             {
                 e.Handled = true;
                 cb.SetFocus();
@@ -611,14 +609,20 @@ public class Design
 
         yield return this.CreateSuppressedProperty(nameof(this.View.Visible), true);
 
-        yield return this.CreateSuppressedProperty(nameof(this.View.Arrangement), ViewArrangement.Fixed);
+        if (this.View.IsContainerView())
+        {
+            // Don't offer to make checkboxes etc Resizeable/Overlapped etc
+            yield return this.CreateSuppressedProperty(nameof(this.View.Arrangement), ViewArrangement.Fixed);
+        }
 
         yield return this.CreateSuppressedProperty(nameof(View.CanFocus), true);
+        
         yield return this.CreateProperty(nameof(this.View.ShadowStyle));
 
+        
         // its important that this comes before Text because
         // changing the validator clears the text
-        if (this.View is TextValidateField)
+        if (this.View.GetType() == typeof(TextValidateField)) // Use == because subclasses TimeEditor and DateEditor don't support setting custom Provider
         {
             yield return this.CreateProperty(nameof(TextValidateField.Provider));
         }
@@ -628,17 +632,22 @@ public class Design
             yield return this.CreateProperty(nameof(TextField.Secret));
         }
 
-        if (isGenericType && viewType.GetGenericTypeDefinition() == typeof(Slider<>))
+        if (isGenericType && viewType.GetGenericTypeDefinition() == typeof(LinearRange<>))
         {
-            yield return this.CreateProperty(nameof(Slider.Options));
-            yield return this.CreateProperty(nameof(Slider.Orientation));
-            yield return this.CreateProperty(nameof(Slider.RangeAllowSingle));
-            yield return this.CreateProperty(nameof(Slider.AllowEmpty));
-            yield return this.CreateProperty(nameof(Slider.MinimumInnerSpacing));
-            yield return this.CreateProperty(nameof(Slider.LegendsOrientation));
-            yield return this.CreateProperty(nameof(Slider.ShowLegends));
-            yield return this.CreateProperty(nameof(Slider.ShowEndSpacing));
-            yield return this.CreateProperty(nameof(Slider.Type));
+            yield return this.CreateProperty(nameof(LinearRange.Options));
+            yield return this.CreateProperty(nameof(LinearRange.Orientation));
+            yield return this.CreateProperty(nameof(LinearRange.RangeAllowSingle));
+            yield return this.CreateProperty(nameof(LinearRange.AllowEmpty));
+            yield return this.CreateProperty(nameof(LinearRange.MinimumInnerSpacing));
+            yield return this.CreateProperty(nameof(LinearRange.LegendsOrientation));
+            yield return this.CreateProperty(nameof(LinearRange.ShowLegends));
+            yield return this.CreateProperty(nameof(LinearRange.ShowEndSpacing));
+            yield return this.CreateProperty(nameof(LinearRange.Type));
+        }
+
+        if(this.View is Link)
+        {
+            yield return this.CreateProperty(nameof(Link.Url));
         }
 
         if (this.View is SpinnerView)
@@ -654,14 +663,9 @@ public class Design
         {
             // Do not allow tab at design time so that we don't get stuck in the View (adding more tabs each time!)
             // But let user edit if they want
-            yield return this.CreateSuppressedProperty(nameof(TextView.AllowsTab), false);
-            yield return this.CreateProperty(nameof(TextView.AllowsReturn));
+            yield return this.CreateSuppressedProperty(nameof(TextView.TabKeyAddsTab), false);
+            yield return this.CreateProperty(nameof(TextView.EnterKeyAddsLine));
             yield return this.CreateProperty(nameof(TextView.WordWrap));
-        }
-
-        if (this.View is Toplevel)
-        {
-            yield return this.CreateProperty(nameof(Toplevel.Modal));
         }
 
         // Allow changing the FieldName on anything but root where
@@ -696,10 +700,9 @@ public class Design
             yield return this.CreateProperty(nameof(Button.IsDefault));
         }
 
-        if (this.View is LineView)
+        if (this.View is Line)
         {
-            yield return this.CreateProperty(nameof(LineView.LineRune));
-            yield return this.CreateProperty(nameof(LineView.Orientation));
+            yield return this.CreateProperty(nameof(Line.Orientation));
         }
 
         if (this.View is ProgressBar)
@@ -711,9 +714,11 @@ public class Design
             yield return this.CreateProperty(nameof(ProgressBar.SegmentCharacter));
         }
 
+
         if (this.View is CheckBox)
         {
-            yield return this.CreateProperty(nameof(CheckBox.CheckedState));
+            yield return this.CreateProperty(nameof(CheckBox.Value));
+            yield return this.CreateProperty(nameof(CheckBox.RadioStyle));
         }
         if (this.View is ColorPicker cp)
         {
@@ -725,8 +730,11 @@ public class Design
         if (this.View is ListView lv)
         {
             yield return this.CreateProperty(nameof(ListView.Source));
-            yield return this.CreateProperty(nameof(ListView.AllowsMarking));
-            yield return this.CreateProperty(nameof(ListView.AllowsMultipleSelection));
+        }
+
+        if (this.View is DropDownList ddl)
+        {
+            yield return this.CreateProperty(nameof(ListView.Source));
         }
 
         if (this.View is GraphView gv)
@@ -765,7 +773,6 @@ public class Design
             yield return this.CreateSubProperty(nameof(TreeStyle.ColorExpandSymbol), nameof(TreeView<ITreeNode>.Style), tree.Style);
             yield return this.CreateSubProperty(nameof(TreeStyle.ExpandableSymbol), nameof(TreeView<ITreeNode>.Style), tree.Style);
             yield return this.CreateSubProperty(nameof(TreeStyle.InvertExpandSymbolColors), nameof(TreeView<ITreeNode>.Style), tree.Style);
-            yield return this.CreateSubProperty(nameof(TreeStyle.LeaveLastRow), nameof(TreeView<ITreeNode>.Style), tree.Style);
             yield return this.CreateSubProperty(nameof(TreeStyle.ShowBranchLines), nameof(TreeView<ITreeNode>.Style), tree.Style);
         }
         
@@ -789,24 +796,21 @@ public class Design
             yield return this.CreateSubProperty(nameof(TableStyle.ShowVerticalHeaderLines), nameof(TableView.Style), tv.Style);
         }
 
-        if (this.View is TabView tabView)
+        if (this.View is OptionSelector)
         {
-            yield return this.CreateProperty(nameof(TabView.MaxTabTextWidth));
-
-            yield return this.CreateSubProperty(nameof(TabStyle.ShowBorder), nameof(TabView.Style), tabView.Style);
-            yield return this.CreateSubProperty(nameof(TabStyle.ShowTopLine), nameof(TabView.Style), tabView.Style);
-            yield return this.CreateSubProperty(nameof(TabStyle.TabsOnBottom), nameof(TabView.Style), tabView.Style);
-        }
-
-        if (this.View is RadioGroup)
-        {
-            yield return this.CreateProperty(nameof(RadioGroup.RadioLabels));
+            yield return this.CreateProperty(nameof(OptionSelector.Labels));
+            this.View.MouseBindings.Clear();
         }
 
         if (viewType.IsGenericType(typeof(NumericUpDown<>)))
         {
             yield return this.CreateProperty(nameof(NumericUpDown.Value));
             yield return this.CreateProperty(nameof(NumericUpDown.Increment));
+
+            foreach(var sub in this.View.SubViews)
+            {
+                sub.Enabled = false;
+            }
 
             // TODO: Probably needs some thought
             // yield return this.CreateProperty(nameof(NumericUpDown.Format));
@@ -839,8 +843,8 @@ public class Design
             return false;
         }
 
-        // Do not let Text be set on Slider or Slider<> implementations as weird stuff happens
-        if(this.View.GetType().Name.StartsWith("Slider") || View is RadioGroup || View.GetType().IsGenericType(typeof(NumericUpDown<>)))
+        // Do not let Text be set on LinearRange or LinearRange<> implementations as weird stuff happens
+        if(this.View.GetType().Name.StartsWith("LinearRange") || View is OptionSelector || View.GetType().IsGenericType(typeof(NumericUpDown<>)))
         {
             return false;
         }

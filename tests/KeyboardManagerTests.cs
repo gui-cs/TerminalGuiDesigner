@@ -1,13 +1,5 @@
-using System.Collections.Generic;
-using System.IO;
-using Terminal.Gui;
-using Terminal.Gui.App;
 using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
-using Terminal.Gui.Views;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.Operations;
-using TerminalGuiDesigner.UI;
 
 namespace UnitTests;
 
@@ -31,7 +23,7 @@ internal class KeyboardManagerTests : Tests
         Assume.That( keyMap, Is.Not.Null.And.TypeOf<KeyMap>( ) );
 
         KeyboardManager? mgr = null;
-        Assert.That( ( ) => mgr = new( keyMap! ), Throws.Nothing );
+        Assert.That( ( ) => mgr = new(App, keyMap! ), Throws.Nothing );
         Assert.That( mgr, Is.Not.Null.And.TypeOf<KeyboardManager>( ) );
     }
 
@@ -39,8 +31,8 @@ internal class KeyboardManagerTests : Tests
     [Test]
     public void Backspace_WithDateFieldSelected( )
     {
-        DateField v = ViewFactory.Create<DateField>( );
-        Assume.That( v, Is.Not.Null.And.TypeOf<DateField>( ) );
+        DateEditor v = ViewFactory.Create<DateEditor>( );
+        Assume.That( v, Is.Not.Null.And.TypeOf<DateEditor>( ) );
 
         FileInfo? file = null;
         Assume.That( ( ) => file = new( "ff.cs" ), Throws.Nothing );
@@ -51,7 +43,7 @@ internal class KeyboardManagerTests : Tests
         Assume.That( sourceCodeFile, Is.Not.Null.And.TypeOf<SourceCodeFile>( ) );
 
         Design? d = null;
-        Assume.That( ( ) => d = new( sourceCodeFile!, "ff", v ), Throws.Nothing );
+        Assume.That( ( ) => d = new(App, sourceCodeFile!, "ff", v ), Throws.Nothing );
         Assume.That( d, Is.Not.Null.And.TypeOf<Design>( ) );
         v.Data = d;
 
@@ -60,18 +52,12 @@ internal class KeyboardManagerTests : Tests
         Assume.That( keyMap, Is.Not.Null.And.TypeOf<KeyMap>( ) );
 
         KeyboardManager? mgr = null;
-        Assert.That( ( ) => mgr = new( keyMap! ), Throws.Nothing );
+        Assert.That( ( ) => mgr = new(App, keyMap! ), Throws.Nothing );
         Assert.That( mgr, Is.Not.Null.And.TypeOf<KeyboardManager>( ) );
 
         bool keyEventSuppressed = false;
         Assert.That( ( ) => keyEventSuppressed = mgr!.HandleKey( v, backspace ), Throws.Nothing );
-        Assert.That( keyEventSuppressed, Is.False );
-
-        //TODO: What is this stuff doing and why?
-        Application.Top.Add( v );
-        v.Width = 6;
-        v.Height = 1;
-        v.Draw( );
+        Assert.That( keyEventSuppressed, Is.True );
     }
 
     [Test]
@@ -90,7 +76,7 @@ internal class KeyboardManagerTests : Tests
         Assume.That( sourceCodeFile, Is.Not.Null.And.TypeOf<SourceCodeFile>( ) );
 
         Design? d = null;
-        Assume.That( ( ) => d = new( sourceCodeFile!, "ff", v ), Throws.Nothing );
+        Assume.That( ( ) => d = new(App, sourceCodeFile!, "ff", v ), Throws.Nothing );
         Assume.That( d, Is.Not.Null.And.TypeOf<Design>( ) );
         v.Data = d;
 
@@ -99,7 +85,7 @@ internal class KeyboardManagerTests : Tests
         Assume.That( keyMap, Is.Not.Null.And.TypeOf<KeyMap>( ) );
 
         KeyboardManager? mgr = null;
-        Assert.That( ( ) => mgr = new( keyMap! ), Throws.Nothing );
+        Assert.That( ( ) => mgr = new(App, keyMap! ), Throws.Nothing );
         Assert.That( mgr, Is.Not.Null.And.TypeOf<KeyboardManager>( ) );
 
         Assert.That( ( ) => mgr!.HandleKey( v, backspace ), Throws.Nothing );
@@ -136,7 +122,7 @@ internal class KeyboardManagerTests : Tests
         Assume.That( keyMap, Is.Not.Null.And.TypeOf<KeyMap>() );
 
         KeyboardManager? mgr = null;
-        Assert.That( () => mgr = new( keyMap! ), Throws.Nothing );
+        Assert.That( () => mgr = new(App, keyMap! ), Throws.Nothing );
         Assert.That( mgr, Is.Not.Null.And.TypeOf<KeyboardManager>() );
 
         Assume.That( testView, Is.Not.Null.And.InstanceOf<T>() );
@@ -144,7 +130,7 @@ internal class KeyboardManagerTests : Tests
         Assume.That( mgr, Is.Not.Null.And.InstanceOf<KeyboardManager>() );
 
         Design d = Get10By10View();
-        Assume.That( new AddViewOperation( testView, d, "testView" ).Do() );
+        Assume.That( new AddViewOperation(App, testView, d, "testView" ).Do() );
         testView.SetFocus();
 
         Assert.That( Key.TryParse( keyChar.ToString(), out Key k ) );

@@ -1,4 +1,5 @@
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Input;
 using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations.Generics;
@@ -18,11 +19,13 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
         /// <summary>
         /// Initializes a new instance of the <see cref="SetShortcutOperation"/> class.
         /// </summary>
+        /// <param name="app">The application instance.</param>
         /// <param name="design">Wrapper for a <see cref="StatusBar"/>.</param>
         /// <param name="statusItem">The <see cref="Shortcut"/> whose shortcut you want to change.</param>
         /// <param name="shortcut">The new shortcut or null to prompt user at runtime.</param>
-        public SetShortcutOperation(Design design, Shortcut statusItem, Key? shortcut)
+        public SetShortcutOperation(IApplication app, Design design, Shortcut statusItem, Key? shortcut)
             : base(
+                  app,
                   (v) => v.GetShortcuts(),
                   (v, a) => v.SetShortcuts(a),
                   (e) => e.Title?.ToString() ?? Operation.Unnamed,
@@ -55,7 +58,7 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
         {
             if (this.shortcut == Key.Empty)
             {
-                this.shortcut = Modals.GetShortcut();
+                this.shortcut = Modals.GetShortcut(App!);
             }
 
             this.OperateOn.Key = this.shortcut;

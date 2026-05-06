@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Data;
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Drawing;
 using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
@@ -33,7 +34,7 @@ public static class ViewFactory
 
     internal static readonly Type[] KnownUnsupportedTypes =
     [
-        typeof( Toplevel ),
+        typeof( Runnable ),
         typeof( Dialog ),
         typeof( FileDialog ),
         typeof( SaveDialog ),
@@ -42,24 +43,59 @@ public static class ViewFactory
         // BUG These seem to cause stack overflows in CreateSubControlDesigns (see TestAddView_RoundTrip)
         typeof( Wizard ),
         typeof( WizardStep ),
-        
-        // Ignore menu bar v2 for now
-        typeof(MenuBarv2),
 
         // This is unstable when added directly as a view see https://github.com/gui-cs/Terminal.Gui/issues/3664
         typeof(Shortcut),
 
-        typeof(Tab),
         typeof(CharMap),
         typeof(LegendAnnotation),
-        typeof(Menuv2),
         typeof(ScrollBar),
         typeof(ScrollSlider),
-        typeof(TileView),
 
-        // Terminal.Gui combo boxes do not really work properly
-        typeof(ComboBox),
-        typeof(FlagSelector<>)
+
+        typeof(FlagSelector),
+        typeof(FlagSelector<>),
+        typeof(Dialog<>),
+        typeof(Prompt<,>),
+        typeof(FlagSelector<>),
+        typeof(Runnable<>),
+
+        // Could proably support later on
+        typeof(OptionSelector<>),
+        typeof(DropDownList<>),
+        typeof(Popover<,>),
+        typeof(ListView<>),
+        typeof(ToolTipHost<>),
+        typeof(RunnableWrapper<,>),
+        typeof(MarginView),
+        typeof(AttributePicker),
+
+
+        typeof(BorderView),
+        typeof(Bar),
+        
+        // Not looked at these yet
+        typeof(Markdown),
+        typeof(MarkdownCodeBlock),
+        typeof(MarkdownTable),
+
+        // All are MenuBar subcomponents
+        typeof(Menu),
+        typeof(MenuBarItem),
+        typeof(MenuItem),
+        typeof(MenuItem),
+        typeof(PopoverMenu),
+
+
+        typeof(PaddingView),
+
+        typeof(ScrollButton),
+        typeof(StatusBar),
+        typeof(Tabs),
+        typeof(TitleView),
+
+        // Only point of this view is to have a regex validation on view but we don't have designer yet for regex type
+        typeof(TextValidateField)
     ];
 
     /// <summary>
@@ -77,8 +113,10 @@ public static class ViewFactory
         {
             return
             [
-                new( "_File (F9)",
-                     [ new MenuItem( DefaultMenuItemText, string.Empty, static ( ) => { } ) ] )
+                new MenuBarItem( "_File",
+                     [ new MenuItem( DefaultMenuItemText, string.Empty, static ( ) => { } )] ){
+                    Key = Key.F9
+                }
             ];
         }
     }
@@ -97,12 +135,10 @@ public static class ViewFactory
                         IsValueType: false
                     })
                     .Where(filteredType => filteredType == typeof(View) || filteredType.IsSubclassOf(typeof(View))
-                        && filteredType != typeof(Adornment)
-                        && filteredType != typeof(FlagSelector<>)
-                        && filteredType != typeof(FlagSelector<>))
+                        && filteredType != typeof(AdornmentView))
                     .Except(KnownUnsupportedTypes)
                     // Slider is an alias of Slider<object> so don't offer that
-                    .Where(vt => vt != typeof(Slider));
+                    .Where(vt => vt != typeof(LinearRange));
 
     private static bool IsSupportedType( this Type t )
     {
@@ -148,13 +184,10 @@ public static class ViewFactory
 
         switch ( newView )
         {
-            case TimeField:
-                SetDefaultDimensions(newView, width ?? 9, height ?? 1);
-                break;
             case Button:
             case CheckBox:
-            case ComboBox:
             case Label:
+            case Link:
                 newView.SetActualText(text ?? "Heya");
                 SetDefaultDimensionsDimAuto(newView);
                 break;
@@ -175,9 +208,7 @@ public static class ViewFactory
                 SetDefaultDimensions(newView, width ?? 10, height ?? 4);
                 break;
             case Line:
-            case Slider:
-            case TileView:
-                SetDefaultDimensions( newView, width ?? 4, height ?? 1 );
+            case LinearRange:
                 break;
             case TableView tv:
                 var dt = new DataTable( );
@@ -188,19 +219,16 @@ public static class ViewFactory
                 SetDefaultDimensions( newView, width ?? 50, height ?? 5 );
                 tv.Table = new DataTableSource( dt );
                 break;
-            case TabView tv:
-                tv.AddEmptyTab( "Tab1" );
-                tv.AddEmptyTab( "Tab2" );
-                SetDefaultDimensions( newView, width ?? 50, height ?? 5 );
+            case TimeEditor te:
+                SetDefaultDimensions(newView, width ?? 10, height ?? 1);
+                break;
+            case DateEditor de:
+                SetDefaultDimensions(newView, width ?? 10, height ?? 1);
                 break;
             case TextValidateField tvf:
                 tvf.Provider = new TextRegexProvider( ".*" );
                 tvf.Text = text ?? "Heya";
                 SetDefaultDimensions( newView, width ?? 5, height ?? 1 );
-                break;
-            case DateField df:
-                df.Date = DateTime.Today;
-                SetDefaultDimensions( newView, width ?? 20, height ?? 1 );
                 break;
             case TextField tf:
                 tf.Text = text ?? "Heya";
@@ -216,8 +244,8 @@ public static class ViewFactory
             case StatusBar sb:
                 sb.SetShortcuts(new[] { new Shortcut( Key.F1, "F1 - Edit Me", null ) });
                 break;
-            case RadioGroup rg:
-                rg.RadioLabels = new string[] { "Option 1", "Option 2" };
+            case OptionSelector rg:
+                rg.Labels = new string[] { "Option 1", "Option 2" };
                 SetDefaultDimensions( newView, width ?? 10, height ?? 2 );
                 break;
             case GraphView gv:
@@ -235,9 +263,6 @@ public static class ViewFactory
                 break;
             case Window:
                 SetDefaultDimensions( newView, width ?? 10, height ?? 5 );
-                break;
-            case LineView:
-                SetDefaultDimensions( newView, width ?? 8, height ?? 1 );
                 break;
             case TreeView:
                 SetDefaultDimensions( newView, width ?? 16, height ?? 5 );
@@ -257,7 +282,7 @@ public static class ViewFactory
                     {
                         return Enumerable.Empty<FileSystemInfo>();
                     }
-                });
+                },(f)=>f is DirectoryInfo);
 
                 SetDefaultDimensions(newView, width ?? 16, height ?? 5);
                 break;
@@ -266,15 +291,8 @@ public static class ViewFactory
                 break;
             case SpinnerView sv:
                 sv.AutoSpin = true;
-                if ( width is not null )
-                {
-                    sv.Width = width;
-                }
-
-                if ( height is not null )
-                {
-                    sv.Height = height;
-                }
+                sv.Width = 1;
+                sv.Height = 1;
 
                 break;
             case not null when newView.GetType( ).IsSubclassOf( typeof(View) ):
@@ -288,6 +306,8 @@ public static class ViewFactory
             case null:
                 throw new InvalidOperationException( $"Unexpected null result from type {typeof( T ).Name} constructor." );
         }
+
+        SetupLinearRangeOptions(newView);
          
         return newView;
 
@@ -304,6 +324,48 @@ public static class ViewFactory
         }
     }
 
+    private static void SetupLinearRangeOptions<T>(T newView) where T : View, new()
+    {
+        if (newView is LinearRange<bool> lrb)
+        {
+            lrb.Options = new List<LinearRangeOption<bool>>([
+                new LinearRangeOption<bool>("True", new System.Text.Rune('T'), true),
+                new LinearRangeOption<bool>("False", new System.Text.Rune('F'), false),
+            ]);
+            lrb.Width = 10;
+            lrb.Height = 2;
+        }
+        else if (newView is LinearRange<int> lri)
+        {
+            lri.Options = new List<LinearRangeOption<int>>([
+                new LinearRangeOption<int>("One", new System.Text.Rune('1'), 1),
+                new LinearRangeOption<int>("Two", new System.Text.Rune('2'), 2),
+                new LinearRangeOption<int>("Three", new System.Text.Rune('3'), 3),
+            ]);
+            lri.Width = 10;
+            lri.Height = 2;
+        }
+        else if (newView is LinearRange<double> lrd)
+        {
+            lrd.Options = new List<LinearRangeOption<double>>([
+                new LinearRangeOption<double>("Low", new System.Text.Rune('L'), 0.0),
+                new LinearRangeOption<double>("Mid", new System.Text.Rune('M'), 0.5),
+                new LinearRangeOption<double>("High", new System.Text.Rune('H'), 1.0),
+            ]);
+            lrd.Width = 18;
+            lrd.Height = 2;
+        }
+        else if (newView is LinearRange<string> lrs)
+        {
+            lrs.Options = new List<LinearRangeOption<string>>([
+                new LinearRangeOption<string>("Option 1", new System.Text.Rune('1'), "Option 1"),
+                new LinearRangeOption<string>("Option 2", new System.Text.Rune('2'), "Option 2"),
+                new LinearRangeOption<string>("Option 3", new System.Text.Rune('3'), "Option 3"),
+            ]);
+            lrs.Width = 25;
+            lrs.Height = 2;
+        }
+    }
 
     /// <summary>
     ///   Creates a new instance of <see cref="View" /> of <see cref="Type" /> <paramref name="requestedType" /> with
@@ -330,20 +392,17 @@ public static class ViewFactory
         return requestedType switch
         {
             null => throw new ArgumentNullException( nameof( requestedType ) ),
-            { } t when t == typeof(TimeField) => Create<TimeField>(),
-            { } t when t == typeof( DateField ) => Create<DateField>( ),
             { } t when t == typeof( Button ) => Create<Button>( ),
-            { } t when t == typeof( ComboBox ) => Create<ComboBox>( ),
             { } t when t == typeof( Line ) => Create<Line>( ),
-            { } t when t == typeof( Slider ) => Create<Slider>( ),
+            { } t when t == typeof( LinearRange ) => Create<LinearRange>( ),
+            { } t when t == typeof(DateEditor) => Create<DateEditor>(),
+            { } t when t == typeof(TimeEditor) => Create<TimeEditor>(),
             { } t when t == typeof(Label) => Create<Label>(),
             { } t when t == typeof(TextView) => Create<TextView>(),
             { } t when t == typeof(ColorPicker) => Create<ColorPicker>(),
-            { } t when t == typeof( TileView ) => Create<TileView>( ),
             { } t when t.IsAssignableTo( typeof( CheckBox ) ) => Create<CheckBox>( ),
             { } t when t.IsAssignableTo( typeof( TableView ) ) => Create<TableView>( ),
-            { } t when t.IsAssignableTo( typeof( TabView ) ) => Create<TabView>( ),
-            { } t when t.IsAssignableTo( typeof( RadioGroup ) ) => Create<RadioGroup>( ),
+{ } t when t.IsAssignableTo( typeof( OptionSelector ) ) => Create<OptionSelector>( ),
             { } t when t.IsAssignableTo( typeof( MenuBar ) ) => Create<MenuBar>( ),
             { } t when t.IsAssignableTo( typeof( StatusBar ) ) => Create<StatusBar>( ),
             { } t when t == typeof( TextValidateField ) => Create<TextValidateField>( ),
@@ -355,13 +414,12 @@ public static class ViewFactory
             { } t when t == typeof( TextField ) => Create<TextField>( ),
             { } t when t.IsAssignableTo( typeof( GraphView ) ) => Create<GraphView>( ),
             { } t when t.IsAssignableTo( typeof( ListView ) ) => Create<ListView>( ),
-            { } t when t == typeof( LineView ) => Create<LineView>( ),
+            { } t when t == typeof( Line ) => Create<Line>( ),
             { } t when t == typeof( TreeView ) => Create<TreeView>( ),
             { } t when t.IsAssignableTo( typeof( SpinnerView ) ) => Create<SpinnerView>( ),
             { } t when t.IsAssignableTo( typeof( FrameView ) ) => Create<FrameView>( ),
             { } t when t.IsAssignableTo( typeof( HexView ) ) => Create<HexView>( ),
-            { } t when t.IsAssignableTo( typeof( Tab ) ) => Create<Tab>( ),
-            { } t when t.IsAssignableTo( typeof( LegendAnnotation ) ) => Create<LegendAnnotation>( ),
+{ } t when t.IsAssignableTo( typeof( LegendAnnotation ) ) => Create<LegendAnnotation>( ),
             { } t when t.IsAssignableTo( typeof( DatePicker ) ) => Create<DatePicker>( ),
             _ => ReflectionHelpers.GetDefaultViewInstance( requestedType )
         };

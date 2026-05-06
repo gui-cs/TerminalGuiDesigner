@@ -61,9 +61,8 @@ public class Options
     /// <summary>
     /// Gets or sets a which driver to use.
     /// </summary>
-    [Option('d', HelpText = "Driver to use. v2, v2net, v2win, WindowsDriver, CursesDriver or NetDriver",
-        Default = "v2")]
-    public string Driver { get; set; } = "v2";
+    [Option('d', HelpText = "Driver to use")]
+    public string Driver { get; set; }
 
 
     /// <summary>

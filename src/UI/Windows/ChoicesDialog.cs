@@ -24,24 +24,28 @@ using Terminal.Gui;
 /// </summary>
 public partial class ChoicesDialog
 {
+    private readonly IApplication app;
+
     /// <summary>
     /// The index of the button user clicked (starting at 0).
     /// </summary>
-    public int Result { get; private set; }
+    public int ActualResult { get; private set; }
 
     private string _title;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="title"></param>
     /// <param name="message"></param>
     /// <param name="options"></param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public ChoicesDialog(string title, string message, params string[] options) {
-        
+    public ChoicesDialog(IApplication app, string title, string message, params string[] options) {
+
         const int defaultWidth = 50;
 
+        this.app = app;
         InitializeComponent();
 
         if (options.Length == 0 || options.Length > 4)
@@ -62,9 +66,9 @@ public partial class ChoicesDialog
             var i2 = i;
 
             buttons[i].Accepting += (s,e) => {
-                Result = i2;
+                ActualResult = i2;
                 e.Handled = true;
-                Application.RequestStop();
+                app.RequestStop();
 
             };
         }
@@ -86,34 +90,34 @@ public partial class ChoicesDialog
         buttonPanel.Width = buttonWidth = buttons.Sum(b=>buttonPanel.SubViews.Contains(b) ? b.Frame.Width : 0) + 1;
 
         int maxWidthLine = TextFormatter.GetSumMaxCharWidth(message);
-        if (maxWidthLine > Application.Driver.Cols)
+        if (maxWidthLine > app.Driver.Cols)
         {
-            maxWidthLine = Application.Driver.Cols;
+            maxWidthLine = app.Driver.Cols;
         }
-        
+
         maxWidthLine = Math.Max(maxWidthLine, defaultWidth);
-           
 
-        int textWidth = Math.Min(TextFormatter.GetSumMaxCharWidth(message, maxWidthLine), Application.Driver.Cols);
+
+        int textWidth = Math.Min(TextFormatter.GetSumMaxCharWidth(message, maxWidthLine), app.Driver.Cols);
         int textHeight =  message.Count (c=>c=='\n') + 4;
-        int msgboxHeight = Math.Min(Math.Max(1, textHeight) + 4, Application.Driver.Rows); // textHeight + (top + top padding + buttons + bottom)
+        int msgboxHeight = Math.Min(Math.Max(1, textHeight) + 4, app.Driver.Rows); // textHeight + (top + top padding + buttons + bottom)
 
-        Width = Math.Min(Math.Max(maxWidthLine, Math.Max(Title.GetColumns(), Math.Max(textWidth + 2, buttonWidth))), Application.Driver.Cols);
+        Width = Math.Min(Math.Max(maxWidthLine, Math.Max(Title.GetColumns(), Math.Max(textWidth + 2, buttonWidth))), app.Driver.Cols);
         Height = msgboxHeight;
 
         btn1.FocusDeepest(NavigationDirection.Forward, TabBehavior.TabGroup);
     }
 
-    internal static int Query(string title, string message, params string[] options)
+    internal static int Query(IApplication app, string title, string message, params string[] options)
     {
-        var dlg = new ChoicesDialog(title, message, options);
-        Application.Run(dlg);
-        return dlg.Result;
+        var dlg = new ChoicesDialog(app, title, message, options);
+        app.Run(dlg);
+        return dlg.ActualResult;
     }
-    internal static bool Confirm(string title, string message, string okText = "Yes", string cancelText = "No")
+    internal static bool Confirm(IApplication app, string title, string message, string okText = "Yes", string cancelText = "No")
     {
-        var dlg = new ChoicesDialog(title, message, okText, cancelText);
-        Application.Run(dlg);
-        return dlg.Result == 0;
+        var dlg = new ChoicesDialog(app, title, message, okText, cancelText);
+        app.Run(dlg);
+        return dlg.ActualResult == 0;
     }
 }

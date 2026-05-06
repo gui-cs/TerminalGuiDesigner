@@ -1,4 +1,5 @@
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner.Operations.MenuOperations;
@@ -12,12 +13,13 @@ public abstract class MenuItemOperation : Operation
     /// <summary>
     /// Initializes a new instance of the <see cref="MenuItemOperation"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="operateOn"><see cref="MenuItem"/> that you will operate on.</param>
-    protected MenuItemOperation(MenuItem operateOn)
+    protected MenuItemOperation(IApplication app, MenuItem operateOn) : base(app)
     {
         // if taking a new line add an extra menu item
         // menuItem.Parent doesn't work for root menu items
-        if ( !MenuTracker.Instance.TryGetParent( operateOn, out MenuBar? bar, out MenuBarItem? parent ) )
+        if ( !MenuTracker.Instance.TryGetParent( operateOn, out MenuBar? bar, out MenuItem? parent ) )
         {
             IsImpossible = true;
             return;
@@ -40,8 +42,9 @@ public abstract class MenuItemOperation : Operation
     /// This may be a top level entry on the <see cref="Bar"/> (File, Edit etc)
     /// or it could be a sub entry of that if <see cref="OperateOn"/> is in a sub menu
     /// (e.g. File=>*New*=>Document - where Parent is *New*).
+    /// In the new API, this can be either a MenuBarItem or a MenuItem with a SubMenu.
     /// </summary>
-    public MenuBarItem? Parent { get; private set; }
+    public MenuItem? Parent { get; private set; }
 
     /// <summary>
     /// Gets the <see cref="MenuItem"/> that will be affected by this <see cref="Operation"/>.

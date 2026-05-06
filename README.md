@@ -198,12 +198,12 @@ italics are experimental and require passing the `-e` flag when starting applica
   - [x] GraphView
   - [x] HexView
   - [x] Label
-  - [x] LineView
+  - [x] Line
   - [x] ListView
   - [x] MenuBar
     - [ ] Copy/Paste preserve menu entries
   - [x] ProgressBar
-  - [x] RadioGroup
+  - [x] OptionSelector
   - [ ] [SplitContainer](https://github.com/gui-cs/Terminal.Gui/pull/2258) (Unreleased)
     - [ ] Copy/Paste preserve split content panels
   - [x] StatusBar

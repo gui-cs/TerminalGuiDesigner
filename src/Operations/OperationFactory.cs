@@ -1,4 +1,5 @@
 ﻿using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
 using TerminalGuiDesigner.ToCode;
@@ -11,15 +12,18 @@ namespace TerminalGuiDesigner.Operations;
 /// </summary>
 public class OperationFactory
 {
+    private readonly IApplication app;
     private PropertyValueGetterDelegate valueGetter;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="OperationFactory"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="valueGetter">Delegate for getting new <see cref="Property"/> values.  This
     /// will be passed to created operations e.g. <see cref="SetPropertyOperation"/>.</param>
-    public OperationFactory(PropertyValueGetterDelegate valueGetter)
+    public OperationFactory(IApplication app, PropertyValueGetterDelegate valueGetter)
     {
+        this.app = app;
         this.valueGetter = valueGetter;
     }
 
@@ -33,7 +37,7 @@ public class OperationFactory
     /// the <see cref="View"/> that the mouse was over at the time it was clicked (see <see cref="ViewExtensions.HitTest(View, MouseEventArgs, out bool, out bool, View[])"/>.</param>
     /// <param name="name">String that represents what the returned <see cref="IOperation"/> act upon e.g. "myLabel" or "8 objects".</param>
     /// <returns>Collection of all <see cref="IOperation"/> that can be offered to user as runnable given the current selection.</returns>
-    public IEnumerable<IOperation> CreateOperations(Design[] selected, MouseEventArgs? m, Design? rightClicked, out string name)
+    public IEnumerable<IOperation> CreateOperations(Design[] selected, Mouse? m, Design? rightClicked, out string name)
     {
         List<IOperation> toReturn = new();
 
@@ -78,7 +82,7 @@ public class OperationFactory
                 if (all.Count == selected.Length)
                 {
                     // create an operation to change them all at once
-                    props.Add(new SetPropertyOperation(all.Select(v => v.Design).ToArray(), propertyName, this.valueGetter));
+                    props.Add(new SetPropertyOperation(this.app, all.Select(v => v.Design).ToArray(), propertyName, this.valueGetter));
                 }
             }
 
@@ -91,21 +95,21 @@ public class OperationFactory
 
         if (SelectionManager.Instance.Selected.Any())
         {
-            toReturn.Add(new CopyOperation(SelectionManager.Instance.Selected.ToArray()));
+            toReturn.Add(new CopyOperation(this.app, SelectionManager.Instance.Selected.ToArray()));
         }
         else if (rightClicked != null)
         {
-            toReturn.Add(new CopyOperation(rightClicked));
+            toReturn.Add(new CopyOperation(this.app, rightClicked));
         }
 
         return toReturn;
     }
 
-    private IEnumerable<IOperation> CreateOperations(MouseEventArgs? m, Design d)
+    private IEnumerable<IOperation> CreateOperations(Mouse? m, Design d)
     {
-        var ops = m == null ?
+        var ops = m == null || !m.Position.HasValue?
             d.GetExtraOperations() :
-            d.GetExtraOperations(d.View.ScreenToContent(m.Position));
+            d.GetExtraOperations(m);
 
         foreach (var extra in ops.Where(c => !c.IsImpossible))
         {
@@ -114,7 +118,7 @@ public class OperationFactory
 
         foreach (var prop in d.GetDesignableProperties().OrderBy(p => p.GetHumanReadableName()))
         {
-            yield return new SetPropertyOperation(d, prop, this.valueGetter);
+            yield return new SetPropertyOperation(this.app, d, prop, this.valueGetter);
         }
     }
 }

@@ -13,7 +13,7 @@ ToggleDragging: F5
 AddView: F6
 ToggleShowFocused: Ctrl+L
 ToggleShowBorders: Ctrl+B
-RightClick: Button3Clicked
+RightClick: RightButtonClicked
 Copy: Ctrl+C
 Paste: Ctrl+V
 Rename: Ctrl+R

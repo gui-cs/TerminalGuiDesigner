@@ -1,4 +1,5 @@
 ﻿using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.ViewBase;
 
 namespace TerminalGuiDesigner.Operations;
@@ -12,12 +13,13 @@ public class ResizeOperation : Operation
     /// <summary>
     /// Initializes a new instance of the <see cref="ResizeOperation"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="beingResized">Wrapper for the <see cref="View"/> that is to be resized.</param>
     /// <param name="destX">Client coordinate X point within <paramref name="beingResized"/> <see cref="View.SuperView"/>
     /// where the mouse cursor is positioned for resizing.</param>
     /// <param name="destY">Client coordinate Y point within <paramref name="beingResized"/> <see cref="View.SuperView"/>
     /// where the mouse cursor is positioned for resizing.</param>
-    public ResizeOperation(Design beingResized, int destX, int destY)
+    public ResizeOperation(IApplication app, Design beingResized, int destX, int destY) : base(app)
     {
         this.BeingResized = beingResized;
         this.OriginalWidth = beingResized.View.Width;

@@ -38,7 +38,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         
         private Terminal.Gui.Views.Button btnEdit;
         
-        private Terminal.Gui.Views.LineView lineView;
+        private Terminal.Gui.Views.Line Line;
         
         private Terminal.Gui.Views.Button btnOk;
         
@@ -47,7 +47,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         private void InitializeComponent() {
             this.btnCancel = new Terminal.Gui.Views.Button();
             this.btnOk = new Terminal.Gui.Views.Button();
-            this.lineView = new Terminal.Gui.Views.LineView();
+            this.Line = new Terminal.Gui.Views.Line();
             this.btnEdit = new Terminal.Gui.Views.Button();
             this.btnMoveDown = new Terminal.Gui.Views.Button();
             this.btnMoveUp = new Terminal.Gui.Views.Button();
@@ -62,8 +62,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Visible = true;
             this.Arrangement = (Terminal.Gui.ViewBase.ViewArrangement.Movable | Terminal.Gui.ViewBase.ViewArrangement.Overlapped);
             this.CanFocus = true;
-            this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Transparent;
-            this.Modal = true;
+            this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Transparent;
             this.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Title = "Array Editor";
             this.frameView.Width = Dim.Fill(0);
@@ -73,7 +72,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.frameView.Visible = true;
             this.frameView.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.frameView.CanFocus = true;
-            this.frameView.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
+            this.frameView.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.None;
             this.frameView.Data = "frameView";
             this.frameView.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.frameView.Title = "Elements";
@@ -85,15 +84,13 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.lvElements.Visible = true;
             this.lvElements.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.lvElements.CanFocus = true;
-            this.lvElements.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
+            this.lvElements.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.None;
             this.lvElements.Data = "lvElements";
             this.lvElements.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.lvElements.Source = new Terminal.Gui.Views.ListWrapper<string>(new System.Collections.ObjectModel.ObservableCollection<string>(new string[] {
                             "Item1",
                             "Item2",
                             "Item3"}));
-            this.lvElements.AllowsMarking = false;
-            this.lvElements.AllowsMultipleSelection = true;
             this.frameView.Add(this.lvElements);
             this.btnAddElement.Width = Dim.Auto();
             this.btnAddElement.Height = Dim.Auto();
@@ -102,7 +99,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnAddElement.Visible = true;
             this.btnAddElement.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.btnAddElement.CanFocus = true;
-            this.btnAddElement.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
+            this.btnAddElement.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Opaque;
             this.btnAddElement.Data = "btnAddElement";
             this.btnAddElement.Text = "Add";
             this.btnAddElement.TextAlignment = Terminal.Gui.ViewBase.Alignment.Center;
@@ -115,7 +112,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnDelete.Visible = true;
             this.btnDelete.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.btnDelete.CanFocus = true;
-            this.btnDelete.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
+            this.btnDelete.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Opaque;
             this.btnDelete.Data = "btnDelete";
             this.btnDelete.Text = "Delete";
             this.btnDelete.TextAlignment = Terminal.Gui.ViewBase.Alignment.Center;
@@ -128,7 +125,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnMoveUp.Visible = true;
             this.btnMoveUp.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.btnMoveUp.CanFocus = true;
-            this.btnMoveUp.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
+            this.btnMoveUp.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Opaque;
             this.btnMoveUp.Data = "btnMoveUp";
             this.btnMoveUp.Text = "Move Up";
             this.btnMoveUp.TextAlignment = Terminal.Gui.ViewBase.Alignment.Center;
@@ -141,7 +138,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnMoveDown.Visible = true;
             this.btnMoveDown.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.btnMoveDown.CanFocus = true;
-            this.btnMoveDown.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
+            this.btnMoveDown.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Opaque;
             this.btnMoveDown.Data = "btnMoveDown";
             this.btnMoveDown.Text = "Move Down";
             this.btnMoveDown.TextAlignment = Terminal.Gui.ViewBase.Alignment.Center;
@@ -154,25 +151,24 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnEdit.Visible = true;
             this.btnEdit.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.btnEdit.CanFocus = true;
-            this.btnEdit.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
+            this.btnEdit.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Opaque;
             this.btnEdit.Data = "btnEdit";
             this.btnEdit.Text = "Edit";
             this.btnEdit.TextAlignment = Terminal.Gui.ViewBase.Alignment.Center;
             this.btnEdit.IsDefault = false;
             this.Add(this.btnEdit);
-            this.lineView.Width = Dim.Fill(1);
-            this.lineView.Height = 1;
-            this.lineView.X = -1;
-            this.lineView.Y = Pos.AnchorEnd(3);
-            this.lineView.Visible = true;
-            this.lineView.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
-            this.lineView.CanFocus = true;
-            this.lineView.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
-            this.lineView.Data = "lineView";
-            this.lineView.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
-            this.lineView.LineRune = new System.Text.Rune('─');
-            this.lineView.Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal;
-            this.Add(this.lineView);
+            this.Line.Width = Dim.Fill(1);
+            this.Line.Height = 1;
+            this.Line.X = -1;
+            this.Line.Y = Pos.AnchorEnd(3);
+            this.Line.Visible = true;
+            this.Line.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
+            this.Line.CanFocus = true;
+            this.Line.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.None;
+            this.Line.Data = "Line";
+            this.Line.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start; 
+            this.Line.Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal;
+            this.Add(this.Line);
             this.btnOk.Width = Dim.Auto();
             this.btnOk.Height = Dim.Auto();
             this.btnOk.X = 0;
@@ -180,7 +176,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnOk.Visible = true;
             this.btnOk.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.btnOk.CanFocus = true;
-            this.btnOk.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
+            this.btnOk.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Opaque;
             this.btnOk.Data = "btnOk";
             this.btnOk.Text = "Ok";
             this.btnOk.TextAlignment = Terminal.Gui.ViewBase.Alignment.Center;
@@ -193,7 +189,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnCancel.Visible = true;
             this.btnCancel.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.btnCancel.CanFocus = true;
-            this.btnCancel.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
+            this.btnCancel.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Opaque;
             this.btnCancel.Data = "btnCancel";
             this.btnCancel.Text = "Cancel";
             this.btnCancel.TextAlignment = Terminal.Gui.ViewBase.Alignment.Center;

@@ -1,3 +1,5 @@
+using Terminal.Gui.App;
+
 namespace TerminalGuiDesigner.Operations;
 
 /// <summary>
@@ -14,8 +16,9 @@ public class CopyOperation : Operation
     /// Initializes a new instance of the <see cref="CopyOperation"/> class.  When
     /// run copies <paramref name="toCopy"/> to <see cref="LastCopiedDesign"/>.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="toCopy">One or more designs to copy.</param>
-    public CopyOperation(params Design[] toCopy)
+    public CopyOperation(IApplication app, params Design[] toCopy) : base(app)
     {
         if (toCopy.Any())
         {

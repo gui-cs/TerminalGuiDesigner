@@ -61,6 +61,12 @@ public class DesignState
         if (this.Design.View.IsBorderlessContainerView() && Editor.ShowBorders)
         {
             this.DrawBorderlessViewFrame(r.NewViewport);
+
+            foreach(var child in this.Design.View.SubViews)
+            {
+                child.SetNeedsDraw();
+                child.Draw(r.DrawContext);
+            }
         }
     }
 
@@ -72,7 +78,7 @@ public class DesignState
             SelectionManager.Instance.SelectedScheme.Normal :
             this.Design.View.GetScheme().Normal;
 
-        Application.Driver.SetAttribute(color);
+        Design.App.Driver!.SetAttribute(color);
 
         var v = this.Design.View;
 

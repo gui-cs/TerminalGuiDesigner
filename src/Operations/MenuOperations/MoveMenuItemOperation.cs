@@ -1,4 +1,5 @@
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner.Operations.MenuOperations;
@@ -17,11 +18,12 @@ public class MoveMenuItemOperation : MenuItemOperation
     /// <summary>
     /// Initializes a new instance of the <see cref="MoveMenuItemOperation"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="toMove">The <see cref="MenuItem"/> that should change places relative to other <see cref="MenuItem"/>
     /// on its <see cref="MenuBarItem"/>.</param>
     /// <param name="up">True to move up on the screen (array index decreases).  False to move down on the screen (array index increases).</param>
-    public MoveMenuItemOperation(MenuItem toMove, bool up)
-        : base(toMove)
+    public MoveMenuItemOperation(IApplication app, MenuItem toMove, bool up)
+        : base(app, toMove)
     {
         this.up = up;
 
@@ -32,7 +34,7 @@ public class MoveMenuItemOperation : MenuItemOperation
             return;
         }
 
-        this.siblings = this.Parent.Children.ToList<MenuItem>();
+        this.siblings = this.Parent.GetMenuItems(out _);
         this.currentItemIdx = this.siblings.IndexOf(this.OperateOn);
 
         if (this.currentItemIdx < 0)
@@ -79,7 +81,9 @@ public class MoveMenuItemOperation : MenuItemOperation
 
         // push it in at the destination
         this.siblings.Insert(moveTo, this.OperateOn);
-        this.Parent.Children = this.siblings.ToArray();
+
+        // Update the menu with the new order
+        this.Parent.SetMenuItems(this.siblings);
 
         this.Bar?.SetNeedsDraw();
 

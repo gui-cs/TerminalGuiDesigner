@@ -1,6 +1,4 @@
-﻿using Terminal.Gui.Views;
-
-namespace UnitTests
+﻿namespace UnitTests
 {
     internal class TreeViewTests : Tests
     {
@@ -45,6 +43,18 @@ namespace UnitTests
             Assert.That(viewAfter.TreeBuilder, Is.Not.Null);
 
             Assert.That(viewAfter.IsBorderlessContainerView, Is.False);
+        }
+
+        [Test]
+        public void TestRoundTrip_TreeView_DelegateTreeBuilder()
+        {
+            RoundTrip<Dialog, TreeView<FileSystemInfo>>((d, v) => { }, out var viewAfter);
+
+            Assert.That(viewAfter.TreeBuilder, Is.InstanceOf<DelegateTreeBuilder<FileSystemInfo>>());
+
+            var builder = (DelegateTreeBuilder<FileSystemInfo>)viewAfter.TreeBuilder;
+            Assert.That(builder.CanExpand(new DirectoryInfo(".")), Is.True);
+            Assert.That(builder.CanExpand(new FileInfo(".")), Is.False);
         }
 
         [Test]

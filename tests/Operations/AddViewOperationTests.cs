@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Terminal.Gui;
 using Terminal.Gui.ViewBase;
-using Terminal.Gui.Views;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.Operations;
 
 namespace UnitTests.Operations;
 
@@ -22,20 +15,21 @@ internal class AddViewOperationTests : Tests
     /// </summary>
     public static HashSet<Type> PopoverTypes = new HashSet<Type>
     {
+        typeof(DropDownList),
         typeof(TextField),
-        typeof(TextView),
-        typeof(DateField),
-        typeof(TimeField),
+
+        // Has popover
+        typeof(TextView)
     };
 
     [Test( Description = "Tests AddViewOperation against all SupportedViewTypes" )]
     public void Do_AddsExpectedSubview( [ValueSource( nameof( SupportedViewTypes ) )] Type candidateType )
     {
-        var d = Get10By10View( );
+        var d = Get10By10View();
 
         var instance = ViewFactory.Create( candidateType );
         const string instanceFieldName = "blah";
-        var op = new AddViewOperation( instance, d, instanceFieldName );
+        var op = new AddViewOperation(App, instance, d, instanceFieldName );
         Assert.That( op.Do, Throws.Nothing );
 
         IList<View> SubViews = d.View.SubViews.ToList();
@@ -54,15 +48,15 @@ internal class AddViewOperationTests : Tests
     [TestCase( 10, "multiple" )]
     public void Do_SubviewNamesProperlyDeDuplicated( int numberOfViews, string baseName )
     {
-        var d = Get10By10View( );
+        var d = Get10By10View();
 
         for ( int operationNumber = 1; operationNumber <= numberOfViews; operationNumber++ )
         {
             // Doesn't matter which type we use, here, because this isn't a type test
             // Just needs to be a valid type, which is tested in Do_AddsExpectedSubview
             var instance = ViewFactory.Create<TextField>( );
-            
-            var op = new AddViewOperation( instance, d, baseName );
+
+            var op = new AddViewOperation(App, instance, d, baseName );
             Assert.That( op.Do, Throws.Nothing );
 
             IList<View> SubViews = d.View.SubViews.ToList();
@@ -84,10 +78,10 @@ internal class AddViewOperationTests : Tests
     [Test]
     public void TestAddView_RoundTrip( [ValueSource( nameof( SupportedViewTypes ) )] Type type )
     {
-        using var windowIn = RoundTrip<Toplevel, Window>( ( d, v ) =>
+        using var windowIn = RoundTrip<Runnable, Window>(( d, v ) =>
         {
             var instance = ViewFactory.Create( type );
-            var op = new AddViewOperation( instance, d, "blah" );
+            var op = new AddViewOperation(App, instance, d, "blah" );
             op.Do( );
         }, out _ );
 
@@ -105,12 +99,12 @@ internal class AddViewOperationTests : Tests
         int stackSize = 0;
 
         Assume.That( d.View.SubViews, Is.Empty );
-        
+
         foreach (var type in SupportedViewTypes)
         {
             stackSize++;
             var instance = ViewFactory.Create(type);
-            var op = new AddViewOperation(instance, d, "blah");
+            var op = new AddViewOperation(App, instance, d, "blah");
             Assume.That( ( ) => OperationManager.Instance.Do( op ), Throws.Nothing );
 
             Assume.That( d.View.SubViews, Has.Count.EqualTo( stackSize ) );

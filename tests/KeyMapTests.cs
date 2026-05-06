@@ -1,5 +1,4 @@
 using Terminal.Gui.Input;
-using TerminalGuiDesigner.UI;
 
 namespace UnitTests;
 
@@ -27,7 +26,7 @@ internal class KeyMapTests
         AddView: F2
         ToggleShowFocused: Ctrl+L
         ToggleShowBorders: Ctrl+B
-        RightClick: Button3Clicked
+        RightClick: RightButtonClicked
         Copy: Ctrl+C
         Paste: Ctrl+V
         Rename: Ctrl+R
@@ -52,6 +51,14 @@ internal class KeyMapTests
             
         
         """;
+
+    [Test]
+    public void BadCtor()
+    {
+        var f9 = Key.F9;
+
+        var alsoF9 = new Key(f9.KeyCode);
+    }
 
     [Test]
     [Category( "Configuration" )]
@@ -125,7 +132,7 @@ internal class KeyMapTests
             Key.F2.ToString( ),
             Key.L.WithCtrl.ToString( ),
             Key.B.WithCtrl.ToString( ),
-            MouseFlags.Button3Clicked,
+            MouseFlags.RightButtonClicked,
             Key.C.WithCtrl.ToString( ),
             Key.V.WithCtrl.ToString( ),
             Key.R.WithCtrl.ToString( ),

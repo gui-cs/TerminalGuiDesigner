@@ -1,6 +1,7 @@
 ﻿using System.CodeDom;
 using Terminal.Gui;
 using Terminal.Gui.Drivers;
+using Terminal.Gui.Input;
 using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner.ToCode;
@@ -47,89 +48,108 @@ public class MenuBarItemsToCode : ToCodeBase
         MenuBarItem m1 = new MenuBarItem();
         m1.Children = new []{m1_1};
 
-        mb.Menus = new []{m1};
-        */
-
+        mb.Menus = new []{m1};*/
+        
         // TODO: Let user name these
         List<string> menus = new();
-        foreach (var child in this.menuBar.Menus)
+
+        foreach (var child in this.menuBar.SubViews.OfType<MenuBarItem>())
         {
             this.ToCode(args, child, out string fieldName);
             menus.Add(fieldName);
+
+
+            this.AddMethodCall(args,
+                new CodeFieldReferenceExpression(
+                    new CodeThisReferenceExpression(), this.design.FieldName),
+                "Add",
+                        // or the name of the field for each menu item
+                        new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), fieldName)
+            );
         }
-
-        this.AddPropertyAssignment(
-            args,
-            $"this.{this.design.FieldName}.{nameof(this.menuBar.Menus)}",
-            new CodeArrayCreateExpression(
-                typeof(MenuBarItem),
-                menus.Select(c =>
-                    new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), c))
-                    .ToArray()));
     }
-
-    private void ToCode(CodeDomArgs args, MenuBarItem child, out string fieldName)
+    
+    private void ToCode(CodeDomArgs args, MenuItem child, out string fieldName)
     {
-        fieldName = this.GetUniqueFieldName(args, child);
-        this.AddFieldToClass(args, child.GetType(), fieldName);
-        this.AddConstructorCall(args, $"this.{fieldName}", child.GetType());
-        this.AddPropertyAssignment(args, $"this.{fieldName}.{nameof(MenuItem.Title)}", child.Title);
+        CreateMenuMembersAndPropertyAssignments(args, child, out fieldName);
 
         List<string?> children = new();
 
+        bool wasPopover;
+
         // TODO: Make recursive for more children
         // plus again let user name these
-        foreach (var sub in child.Children)
+        foreach (var mi in child.GetMenuItems(out wasPopover))
         {
-            if (sub is MenuBarItem bar)
+            // Separators are stored as MenuItem("---") in the designer but emitted as Line in code
+            if (mi.Title?.ToString() == MenuBarExtensions.SeparatorTitle)
             {
-                this.ToCode(args, bar, out string f);
-                children.Add(f);
+                children.Add("new Line { Orientation = Terminal.Gui.ViewBase.Orientation.Horizontal }");
+                continue;
+            }
+
+            string subFieldName;
+
+            // If it has its own children e.g. File->New->Project
+            if (mi.SubMenu != null || mi is MenuBarItem)
+            {
+                ToCode(args, mi, out subFieldName);
             }
             else
-            if (sub == null)
             {
-                // its a menu separator (in Terminal.Gui separators are indicated by having a null element).
-                children.Add(null);
+                // It has no children of its own e.g. its just Edit->Paste
+                CreateMenuMembersAndPropertyAssignments(args, mi, out subFieldName);
             }
-            else
-            {
-                string subFieldName = this.GetUniqueFieldName(args, sub);
-                this.AddFieldToClass(args, sub.GetType(), subFieldName);
-                this.AddConstructorCall(args, $"this.{subFieldName}", sub.GetType());
-                this.AddPropertyAssignment(args, $"this.{subFieldName}.{nameof(MenuItem.Title)}", sub.Title);
-                this.AddPropertyAssignment(args, $"this.{subFieldName}.{nameof(MenuItem.Data)}", subFieldName);
 
-                if (sub.ShortcutKey != KeyCode.Null)
-                {
-                    this.AddPropertyAssignment(
-                    args,
-                    $"this.{subFieldName}.{nameof(MenuItem.ShortcutKey)}",
-                    new CodeCastExpression(
-                        new CodeTypeReference(typeof(KeyCode)),
-                        new CodePrimitiveExpression((uint)sub.ShortcutKey)));
-                }
-
-                children.Add(subFieldName);
-            }
+            children.Add(subFieldName);
         }
 
-        // we have created fields and constructor calls for our menu
-        // now set the menu to an array of all those fields
-        this.AddPropertyAssignment(
-            args,
-            $"this.{fieldName}.{nameof(MenuBarItem.Children)}",
-            new CodeArrayCreateExpression(
-                typeof(MenuItem),
-                children.Select(c =>
-
-                    // the array elements have null for separator
-                    c is null ? new CodePrimitiveExpression() :
-
-                    // or the name of the field for each menu item
-                    (CodeExpression)new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), c))
-                    .ToArray()));
+        if (wasPopover)
+        {
+            // this.fileMenu.PopoverMenu = new PopoverMenu([editMeMenuItem]);
+            this.AddPropertyAssignment(args, $"this.{fieldName}.{nameof(MenuBarItem.PopoverMenu)}",
+                 new CodeSnippetExpression($"new PopoverMenu([{string.Join(",", children)}])"));
+        }
+        else
+        {
+            // this.newMenu.SubMenu = new Menu([carMenuItem]);
+            this.AddPropertyAssignment(args, $"this.{fieldName}.{nameof(MenuBarItem.SubMenu)}",
+                 new CodeSnippetExpression($"new Menu([{string.Join(",", children)}])"));
+        }
     }
+
+    /// <summary>
+    /// Creates all class fields and property assignments for <see cref="MenuItem"/> excluding
+    /// child menu items (which are handled in <see cref="ToCode(CodeDomArgs, MenuItem, out string)"/>)
+    /// </summary>
+    /// <param name="args"></param>
+    /// <param name="child"></param>
+    /// <param name="fieldName"></param>
+    private void CreateMenuMembersAndPropertyAssignments(CodeDomArgs args, MenuItem child, out string fieldName)
+    {
+        // ------------ Class Fields -------------
+
+        // private Terminal.Gui.Views.MenuBarItem fileMenu;
+        fieldName = this.GetUniqueFieldName(args, child);
+        this.AddFieldToClass(args, child.GetType(), fieldName);
+
+        // --------- InitializeComponent() ---------
+
+        // this.fileMenu = new Terminal.Gui.Views.MenuBarItem();
+        this.AddConstructorCall(args, $"this.{fieldName}", child.GetType());
+
+        // this.fileMenu.Title = "_File";
+        this.AddPropertyAssignment(args, $"this.{fieldName}.{nameof(MenuItem.Title)}", child.Title);
+
+        // TODO: Verify that all ToString exactly match the static property
+        // this.fileMenu.Key = Key.F9;
+        if (child.Key != KeyCode.Null)
+        {
+            this.AddPropertyAssignment(args, $"this.{fieldName}.{nameof(MenuItem.Key)}",
+                GetKeyCodeExpression(child.Key));
+        }
+    }
+
 
     private string GetUniqueFieldName(CodeDomArgs args, MenuItem item)
     {

@@ -18,25 +18,28 @@ namespace TerminalGuiDesigner
         public static Type? GetElementTypeEx(this Type type)
         {
             var elementType = type.GetElementType();
-
             if (elementType != null)
-            {
                 return elementType;
-            }
 
             if (type.IsAssignableTo(typeof(IList)) && type.IsGenericType)
             {
-                return type.GetGenericArguments().Single();
-            }
-            
-            if (type.IsGenericType(typeof(IEnumerable<>)))
-            {
-                return type.GetGenericArguments().Single();
+                var args = type.GetGenericArguments();
+                if (args.Length != 1)
+                    throw new InvalidOperationException($"Expected exactly one generic argument for IList type {type}, but found {args.Length}.");
+                return args[0];
             }
 
+            if (type.IsGenericType(typeof(IEnumerable<>)))
+            {
+                var args = type.GetGenericArguments();
+                if (args.Length != 1)
+                    throw new InvalidOperationException($"Expected exactly one generic argument for IEnumerable type {type}, but found {args.Length}.");
+                return args[0];
+            }
 
             return null;
         }
+
 
         /// <summary>
         /// Returns true if <paramref name="type"/> is an implementation of a generic parent
@@ -47,7 +50,29 @@ namespace TerminalGuiDesigner
         /// <returns></returns>
         public static bool IsGenericType(this Type type, Type genericParentHypothesis)
         {
-            return type.IsGenericType && type.GetGenericTypeDefinition() == genericParentHypothesis;
+            if (!genericParentHypothesis.IsGenericTypeDefinition)
+                return false;
+
+            // Interfaces (e.g. IReadOnlyList<T>)
+            if (genericParentHypothesis.IsInterface &&
+                type.GetInterfaces().Any(i =>
+                    i.IsGenericType &&
+                    i.GetGenericTypeDefinition() == genericParentHypothesis))
+            {
+                return true;
+            }
+
+            // Base types + self (e.g. List<T> : Collection<T>)
+            for (var t = type; t != null; t = t.BaseType)
+            {
+                if (t.IsGenericType &&
+                    t.GetGenericTypeDefinition() == genericParentHypothesis)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>

@@ -17,15 +17,17 @@ using Attribute = System.Attribute;
 
 namespace TerminalGuiDesigner.UI.Windows {
     using Terminal.Gui;
-    
-    
+    using Terminal.Gui.Input;
+
     public partial class KeyBindingsUI {
+        private readonly IApplication app;
         private readonly KeyMap keyMap;
         private readonly PropertyInfo[] _props;
 
         public bool Save { get; set; } = false;
 
-        public KeyBindingsUI(KeyMap keyMap) {
+        public KeyBindingsUI(IApplication app, KeyMap keyMap) {
+            this.app = app;
             this.keyMap = keyMap;
             InitializeComponent();
 
@@ -58,12 +60,15 @@ namespace TerminalGuiDesigner.UI.Windows {
                 return null;
             };
 
-            tableView.CellActivated += (s, e) =>
-            {
-                var prop = _props[e.Row];
-                var k = Modals.GetShortcut();
+            tableView.KeyBindings.Clear(Command.Accept);
+            tableView.KeyBindings.Add(Key.Enter, new KeyBinding([Command.Activate]));
+            tableView.Activating += (s, e) =>
+            {                
+                var prop = _props[tableView.Value.SelectedCell.Y];
+                var k = Modals.GetShortcut(app);
                 prop.SetValue(this.keyMap,k.ToString());
                 this.SetNeedsDraw();
+                e.Handled = true;
             };
             btnReset.Accepting += (s, e) =>
             {
@@ -80,12 +85,12 @@ namespace TerminalGuiDesigner.UI.Windows {
             {
                 Save = true;
                 e.Handled = true;
-                Application.RequestStop();
+                app.RequestStop();
             };
             btnCancel.Accepting += (s, e) =>
             {
                 e.Handled = true;
-                Application.RequestStop();
+                app.RequestStop();
             };
         }
 

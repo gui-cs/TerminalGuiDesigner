@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations.Generics;
 
@@ -14,10 +15,12 @@ public class RemoveColumnOperation : RemoveOperation<TableView, DataColumn>
     /// <summary>
     /// Initializes a new instance of the <see cref="RemoveColumnOperation"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="design">Wrapper for a <see cref="TableView"/>.</param>
     /// <param name="column">Column to remove.</param>
-    public RemoveColumnOperation(Design design, DataColumn column)
+    public RemoveColumnOperation(IApplication app, Design design, DataColumn column)
          : base(
+            app,
             (v) => v.GetDataTable().Columns.Cast<DataColumn>().ToArray(),
             (v, a) => v.ReOrderColumns(a),
             (c) => c.ColumnName,

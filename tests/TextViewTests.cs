@@ -1,9 +1,4 @@
-﻿using Terminal.Gui;
-using Terminal.Gui.Views;
-using TerminalGuiDesigner;
-using TerminalGuiDesigner.Operations;
-
-namespace UnitTests;
+﻿namespace UnitTests;
 
 internal class TextViewTests : Tests
 {
@@ -12,11 +7,11 @@ internal class TextViewTests : Tests
     {
         var tv = new TextView();
 
-        var d = new Design(new SourceCodeFile("Blah.cs"), "mytv", tv);
+        var d = new Design(App, new SourceCodeFile("Blah.cs"), "mytv", tv);
         tv.Data = d;
         tv.Text = "fff";
 
-        var op = new SetPropertyOperation(
+        var op = new SetPropertyOperation(App,
             d,
             d.GetDesignableProperty("Text") ?? throw new System.Exception("Did not find expected designable property"),
             tv.Text, null);

@@ -1,5 +1,4 @@
 ﻿using Terminal.Gui.ViewBase;
-using Terminal.Gui.Views;
 
 namespace UnitTests;
 
@@ -18,7 +17,7 @@ public class NumericUpDownTests<T> : Tests
     public void NumericUpDownPreserveValue()
     {
         T testValue = (T)Convert.ChangeType(1.25, typeof(T));
-        using var backIn = RoundTrip<View, NumericUpDown<T>>( (d, v) =>
+        using var backIn = RoundTrip<View, NumericUpDown<T>>((d, v) =>
         {
 
             // Expected designable properties

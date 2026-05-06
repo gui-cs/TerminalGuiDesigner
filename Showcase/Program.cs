@@ -1,8 +1,5 @@
-﻿using System.Collections.ObjectModel;
-using System.Runtime.InteropServices.ComTypes;
-using Terminal.Gui;
-using Terminal.Gui.App;
-using Terminal.Gui.Drivers;
+﻿using Terminal.Gui.App;
+using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 
@@ -10,42 +7,65 @@ namespace Showcase
 {
     internal class Program
     {
-        private static Type[] views = new[]
-        {
-            typeof(Menus),
-            typeof(Tabs)
-
-        };
         static void Main(string[] args)
         {
-            Application.Init();
+            Type[] types = [
+                typeof(Menus),
+                typeof(Buttons),
+                typeof(Text),
+                typeof(Checkboxes),
+                typeof(DateTimes),
+                typeof(ColorPickers),
+                typeof(Ranges),
+                typeof(Numbers),
+                typeof(Lists),
+                typeof(TablesAndGraphs)
+                ];
 
-            var w = new Window()
+            using (var app = Application.Create())
             {
-                Title = "Showcase"
-            };
-
-            var lv = new ListView()
-            {
-                Width = Dim.Fill(),
-                Height = Dim.Fill(),
-            };
-            w.Add(lv);
-            lv.SetSource(new ObservableCollection<Type>(views));
-            
-
-            lv.KeyDown += (_, e) =>
-            {
-                if (e.KeyCode == KeyCode.Enter)
+                var tv = new TableView()
                 {
-                    var v = (Toplevel)Activator.CreateInstance(views[lv.SelectedItem]);
-                    e.Handled = true;
-                    Application.Run(v);
-                }
-            };
+                    Width = Dim.Fill(),
+                    Height = Dim.Fill()
+                };
 
-            Application.Run(w);
-            Application.Shutdown();
+                tv.Table = new EnumerableTableSource<Type>(types,
+                    new Dictionary<string, Func<Type, object>> { { "Scenario (Enter to open, Esc to close/exit)", (t) => t.Name + $" ({t.BaseType?.Name})"} }
+                    );
+
+                tv.KeyBindings.ReplaceCommands(Key.Enter,Command.Accept);
+
+                tv.Accepted += (s, e) =>
+                {
+                    var row = tv.Value.SelectedCell.Y;
+                    if (row >= 0 && row < types.Length)
+                    {
+                        var toCreate = types[row];
+                        View view = (View)Activator.CreateInstance(toCreate);
+                        
+                        if(view is Runnable r)
+                        {
+                            app.Run(r);
+                        }
+                        else
+                        {
+                            var newRunnable = new Runnable();
+                            newRunnable.Add(view);
+                            app.Run(newRunnable);
+                        }
+
+                        e.Handled = true;
+                    }
+                };
+
+                var r = new Runnable();
+                r.Add(tv);
+
+                app.Init();
+                app.Run(r);
+                app.Dispose();
+            }
         }
     }
 }

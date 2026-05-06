@@ -28,13 +28,14 @@ namespace TerminalGuiDesigner.UI.Windows {
         /// </summary>
         public bool Cancelled { get; private set; } = true;
 
+        private readonly IApplication app;
         private readonly Design design;
         private Type elementType;
 
         /// <summary>
         /// The new array 
         /// </summary>
-        public object Result => ResultAsList;
+        public object ActualResult => ResultAsList;
 
         /// <summary>
         /// Returns the <see cref="Array"/> being designed as an <see cref="IList"/>
@@ -46,11 +47,13 @@ namespace TerminalGuiDesigner.UI.Windows {
         /// Creates a new instance of the editor configured to build lists of <paramref name="elementType"/>
         /// and showing initial values held in <paramref name="oldValue"/> (if any).
         /// </summary>
+        /// <param name="app"></param>
         /// <param name="design"></param>
         /// <param name="elementType"></param>
         /// <param name="oldValue"></param>
-        public ArrayEditor(Design design, Type elementType, IList oldValue) {
+        public ArrayEditor(IApplication app, Design design, Type elementType, IList oldValue) {
             InitializeComponent();
+            this.app = app;
             this.design = design;
             this.elementType = elementType;
             
@@ -64,20 +67,29 @@ namespace TerminalGuiDesigner.UI.Windows {
 
             lvElements.Source = ResultAsList.ToListDataSource();
             lvElements.KeyDown += LvElements_KeyDown;
+            lvElements.MouseEvent += LvElements_MouseEvent;
             btnOk.Accepting += BtnOk_Clicked;
             btnCancel.Accepting += BtnCancel_Clicked;
             btnAddElement.Accepting += BtnAddElement_Clicked;
-            btnDelete.Accepting += (s, e) => DeleteSelectedItem();
+            btnDelete.Accepting +=  DeleteSelectedItem_Clicked;
             btnMoveDown.Accepting += BtnMoveDown_Clicked;
             btnMoveUp.Accepting += BtnMoveUp_Clicked;
             btnEdit.Accepting += BtnEdit_Clicked;
         }
 
+        private void LvElements_MouseEvent(object sender, Mouse e)
+        {
+            if(e.IsDoubleClicked)
+            {
+                EditSelectedItem();
+                e.Handled = true;
+            }
+        }
 
         private void BtnMoveUp_Clicked(object sender, CommandEventArgs e)
         {
             // Moving up means reducing the index by 1
-            var idx = lvElements.SelectedItem;
+            var idx = lvElements.SelectedItem ?? -1;
 
             if (idx >= 1 && idx < ResultAsList.Count)
             { 
@@ -97,7 +109,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         private void BtnMoveDown_Clicked(object sender, CommandEventArgs e)
         {
             // Moving up means increasing the index by 1
-            var idx = lvElements.SelectedItem;
+            var idx = lvElements.SelectedItem ?? -1;
 
             if (idx >= 0 && idx < ResultAsList.Count-1)
             {
@@ -121,11 +133,24 @@ namespace TerminalGuiDesigner.UI.Windows {
                 DeleteSelectedItem();
                 e.Handled = true;
             }
+
+            if(e == Key.Enter)
+            {
+                EditSelectedItem();
+                e.Handled = true;
+            }
         }
+
+        private void DeleteSelectedItem_Clicked(object sender, CommandEventArgs e)
+        {
+            e.Handled = true;
+            DeleteSelectedItem();
+        }
+
 
         private void DeleteSelectedItem()
         {
-            var idx = lvElements.SelectedItem;
+            var idx = lvElements.SelectedItem??-1;
 
             if (idx >= 0 && idx < ResultAsList.Count)
             {
@@ -133,13 +158,16 @@ namespace TerminalGuiDesigner.UI.Windows {
 
                 lvElements.Source = ResultAsList.ToListDataSource();
                 lvElements.SetNeedsDraw();
-                lvElements.SelectedItem = 0;
+                if(ResultAsList.Count>=1)
+                {
+                    lvElements.SelectedItem = 0;
+                }
             }
         }
 
         private void BtnAddElement_Clicked(object sender, CommandEventArgs e)
         {
-            if(ValueFactory.GetNewValue("Element Value", design, this.elementType,null, out var newValue,true))
+            if(ValueFactory.GetNewValue(app, "Element Value", design, this.elementType,null, out var newValue,true))
             {
                 ResultAsList.Add(newValue);                
             }
@@ -149,15 +177,22 @@ namespace TerminalGuiDesigner.UI.Windows {
             lvElements.SetNeedsDraw();
             e.Handled = true;
         }
+
         private void BtnEdit_Clicked(object sender, CommandEventArgs e)
         {
-            var idx = lvElements.SelectedItem;
+            EditSelectedItem();
+            e.Handled = true;
+        }
+
+        private void EditSelectedItem()
+        {
+            var idx = lvElements.SelectedItem ?? -1;
 
             if (idx >= 0 && idx < ResultAsList.Count)
             {
                 var toEdit = ResultAsList[idx];
 
-                if (ValueFactory.GetNewValue("Element Value", design, this.elementType, toEdit, out var newValue, true))
+                if (ValueFactory.GetNewValue(app, "Element Value", design, this.elementType, toEdit, out var newValue, true))
                 {
                     // Replace old with new
                     ResultAsList.RemoveAt(idx);
@@ -168,22 +203,20 @@ namespace TerminalGuiDesigner.UI.Windows {
                 lvElements.SelectedItem = idx;
                 lvElements.SetNeedsDraw();
             }
-
-            e.Handled = true;
         }
 
         private void BtnCancel_Clicked(object sender, CommandEventArgs e)
         {
             e.Handled = true;
             Cancelled = true;
-            Application.RequestStop();
+            app.RequestStop();
         }
 
         private void BtnOk_Clicked(object sender, CommandEventArgs e)
         {
             e.Handled = true;
             Cancelled = false;
-            Application.RequestStop();
+            app.RequestStop();
         }
     }
 }

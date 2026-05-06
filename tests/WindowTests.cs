@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terminal.Gui.ViewBase;
-using Terminal.Gui.Views;
+﻿using Terminal.Gui.ViewBase;
 
 namespace UnitTests
 {
@@ -21,7 +15,7 @@ namespace UnitTests
         [Test]
         public void TestViewFactory_IsNotVanillaDraggable()
         {
-            RoundTrip<View, Window>(static (_, w) =>
+            RoundTrip<View, Window>( static (_, w) =>
             {
                 // When adding a Window to the editor it should not be 'moveable'
                 // This is because the core Terminal.Gui drag will conflict with the TGD dragging.
@@ -33,7 +27,7 @@ namespace UnitTests
         [Test]
         public void Window_ArrangementIsUserServiceable()
         {
-            RoundTrip<View, Window>(static (_, w) =>
+            RoundTrip<View, Window>( static (_, w) =>
             {
                 // The Window in the editor should be fixed so that it plays nicely with designer
                 Assert.That(w.Arrangement, Is.EqualTo(ViewArrangement.Fixed));

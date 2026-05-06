@@ -14,13 +14,12 @@ using Terminal.Gui.Input;
 using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner.UI.Windows {
-    using System.Reflection;
     using System.Text;
-    using Terminal.Gui;
-    
-    
+    using Terminal.Gui.Text;
+
     public partial class SliderOptionEditor : IValueGetterDialog
     {
+        private readonly IApplication app;
         private readonly Type genericTypeArgument;
         private readonly Type sliderOptionType;
 
@@ -32,7 +31,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         /// <summary>
         /// The resulting value as configured by the user
         /// </summary>
-        public object Result { get; internal set; }
+        public object ActualResult { get; internal set; }
 
         /// <summary>
         /// Creates a new instance of the Designer to create an instance of <see cref="SliderOption{T}"/>
@@ -40,11 +39,12 @@ namespace TerminalGuiDesigner.UI.Windows {
         /// </summary>
         /// <param name="genericTypeArgument">The T Type of the <see cref="SliderOption{T}"/> you want to design</param>
         /// <param name="oldValue">Previous value (if editing an existing instance).</param>
-        public SliderOptionEditor(Type genericTypeArgument, object? oldValue) {
+        public SliderOptionEditor(IApplication app, Type genericTypeArgument, object? oldValue) {
             InitializeComponent();
 
+            this.app = app;
             this.genericTypeArgument = genericTypeArgument;
-            this.sliderOptionType = typeof(SliderOption<>).MakeGenericType(this.genericTypeArgument);
+            this.sliderOptionType = typeof(LinearRangeOption<>).MakeGenericType(this.genericTypeArgument);
 
             btnOk.Accepting += BtnOk_Clicked;
             btnCancel.Accepting += BtnCancel_Clicked;
@@ -76,7 +76,7 @@ namespace TerminalGuiDesigner.UI.Windows {
         {
             e.Handled = true;
             this.Cancelled = true;
-            Application.RequestStop();
+            app.RequestStop();
         }
 
         private void BtnOk_Clicked(object sender, CommandEventArgs e)
@@ -88,33 +88,36 @@ namespace TerminalGuiDesigner.UI.Windows {
             }
             catch(Exception ex)
             {
-                ExceptionViewer.ShowException("Could not build result", ex);
+                ExceptionViewer.ShowException(app, "Could not build result", ex);
                 return;
             }
 
             this.Cancelled = false;
-            Application.RequestStop();
+            app.RequestStop();
         }
 
         private void BuildResult()
         {
-            Result = Activator.CreateInstance(sliderOptionType);
+            ActualResult = Activator.CreateInstance(sliderOptionType);
 
             var p = sliderOptionType.GetProperty("Legend");
-            p.SetValue(Result, tfLegend.Text);
+            p.SetValue(ActualResult, tfLegend.Text);
 
-            p = sliderOptionType.GetProperty("LegendAbbr");
-            p.SetValue(Result, new Rune(tfLegendAbbr.Text[0]));
+            if(tfLegendAbbr.Text.Length > 0)
+            {
+                p = sliderOptionType.GetProperty("LegendAbbr");
+                p.SetValue(ActualResult, tfLegendAbbr.Text.ToRunes().First());
+            }
 
             p = sliderOptionType.GetProperty("Data");
 
             if(this.genericTypeArgument == typeof(string))
             {
-                p.SetValue(Result, tfData.Text);
+                p.SetValue(ActualResult, tfData.Text);
             }
             else
             {
-                p.SetValue(Result, Convert.ChangeType(tfData.Text, this.genericTypeArgument));
+                p.SetValue(ActualResult, Convert.ChangeType(tfData.Text, this.genericTypeArgument));
             }
 
         }

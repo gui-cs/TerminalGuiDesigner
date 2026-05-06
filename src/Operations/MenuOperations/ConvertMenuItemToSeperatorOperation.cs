@@ -1,4 +1,5 @@
-﻿using Terminal.Gui;
+using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner.Operations.MenuOperations;
@@ -6,20 +7,28 @@ namespace TerminalGuiDesigner.Operations.MenuOperations;
 /// <summary>
 /// <para>
 /// Converts a <see cref="MenuItem"/> into a Separator (horizontal line in menu).
-/// In Terminal.Gui this is represented as a null in the <see cref="MenuBar"/>.
+/// In the designer the separator is stored as a <see cref="MenuItem"/> with
+/// <see cref="MenuBarExtensions.SeparatorTitle"/> as its <see cref="MenuItem.Title"/>.
+/// When code is generated it becomes a <c>new Line { Orientation = Orientation.Horizontal }</c>
+/// and on load those Line views are converted back to sentinel MenuItems.
 /// </para>
 /// </summary>
 public class ConvertMenuItemToSeperatorOperation : MenuItemOperation
 {
-    private int removedAtIdx;
+    private string? originalTitle;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ConvertMenuItemToSeperatorOperation"/> class.
     /// </summary>
-    /// <param name="toConvert">A <see cref="MenuItem"/> to replace with a separator (null) in it's parent <see cref="MenuBar"/>.</param>
-    public ConvertMenuItemToSeperatorOperation(MenuItem toConvert)
-        : base(toConvert)
+    /// <param name="app">The application instance.</param>
+    /// <param name="toConvert">A <see cref="MenuItem"/> to convert into a separator.</param>
+    public ConvertMenuItemToSeperatorOperation(IApplication app, MenuItem toConvert)
+        : base(app, toConvert)
     {
+        if (toConvert.Title?.ToString() == MenuBarExtensions.SeparatorTitle)
+        {
+            IsImpossible = true;
+        }
     }
 
     /// <inheritdoc/>
@@ -31,34 +40,26 @@ public class ConvertMenuItemToSeperatorOperation : MenuItemOperation
     /// <inheritdoc/>
     protected override void UndoImpl()
     {
-        if (this.Parent == null || this.OperateOn == null)
+        if (this.OperateOn == null)
         {
             return;
         }
 
-        var children = this.Parent.Children.ToList<MenuItem>();
-
-        children[this.removedAtIdx] = this.OperateOn;
-        this.Parent.Children = children.ToArray();
+        this.OperateOn.Title = this.originalTitle ?? string.Empty;
         this.Bar?.SetNeedsDraw();
     }
 
     /// <inheritdoc/>
     protected override bool DoImpl()
     {
-        if (this.Parent == null || this.OperateOn == null)
+        if (this.OperateOn == null)
         {
             return false;
         }
 
-        var children = this.Parent.Children.ToList<MenuItem?>();
-
-        this.removedAtIdx = Math.Max(0, children.IndexOf(this.OperateOn));
-        children[this.removedAtIdx] = null;
-
-        this.Parent.Children = children.ToArray();
+        this.originalTitle = this.OperateOn.Title?.ToString();
+        this.OperateOn.Title = MenuBarExtensions.SeparatorTitle;
         this.Bar?.SetNeedsDraw();
-
         return true;
     }
 }

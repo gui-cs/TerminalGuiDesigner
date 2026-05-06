@@ -41,9 +41,9 @@ namespace TerminalGuiDesigner
         /// <returns></returns>
         public static IEnumerable<Type> GetSupportedTTypesForGenericViewOfType(Type viewType)
         {
-            if (viewType == typeof(Slider<>))
+            if (viewType == typeof(LinearRange<>))
             {
-                return new[] { typeof(int), typeof(string), typeof(int), typeof(double), typeof(bool) };
+                return new[] { typeof(int), typeof(string),typeof(double), typeof(bool) };
             }
 
             if (viewType == typeof(NumericUpDown<>))
@@ -62,6 +62,7 @@ namespace TerminalGuiDesigner
             {
                 return new[] { typeof(object), typeof(FileSystemInfo) };
             }
+
 
             throw new NotSupportedException($"Generic View {viewType} is not yet supported");
         }

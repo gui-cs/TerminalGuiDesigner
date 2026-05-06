@@ -13,18 +13,19 @@ using Terminal.Gui.Views;
 namespace TerminalGuiDesigner.UI.Windows;
 
 using Terminal.Gui;
+using Terminal.Gui.App;
 
 /// <summary>
 /// Popup editor for the <see cref="Size"/> class.
 /// </summary>
 public partial class SizeEditor : IValueGetterDialog
 {
-
+    private readonly IApplication app;
 
     /// <summary>
-    /// The users edited <see cref="Size"/> 
+    /// The users edited <see cref="Size"/>
     /// </summary>
-    public object? Result { get; private set; }
+    public object? ActualResult { get; private set; }
 
     /// <summary>
     /// True if user cancelled the dialog instead of hitting "Ok".
@@ -34,11 +35,13 @@ public partial class SizeEditor : IValueGetterDialog
     /// <summary>
     /// Creates a new instance of the <see cref="SizeEditor"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="s"></param>
-    public SizeEditor(Size s)
+    public SizeEditor(IApplication app, Size s)
     {
+        this.app = app;
         InitializeComponent();
-        Result = s;
+        ActualResult = s;
 
         tfWidth.Text = s.Width.ToString();
         tfHeight.Text = s.Height.ToString();
@@ -48,11 +51,11 @@ public partial class SizeEditor : IValueGetterDialog
             e.Handled = true;
             try
             {
-                Result = new Size(int.Parse(tfWidth.Text.ToString()), int.Parse(tfHeight.Text.ToString()));
+                ActualResult = new Size(int.Parse(tfWidth.Text.ToString()), int.Parse(tfHeight.Text.ToString()));
             }
             catch (Exception ex)
             {
-                MessageBox.ErrorQuery("Bad Value", ex.Message);
+                MessageBox.ErrorQuery(app, "Bad Value", ex.Message);
                 return;
             }
 

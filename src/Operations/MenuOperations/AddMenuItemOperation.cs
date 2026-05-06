@@ -1,4 +1,5 @@
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner.Operations.MenuOperations;
@@ -21,10 +22,11 @@ public class AddMenuItemOperation : MenuItemOperation
     /// Initializes a new instance of the <see cref="AddMenuItemOperation"/> class. When
     /// performed the operation will add a new <see cref="MenuItem"/> below <paramref name="adjacentTo"/>.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="adjacentTo">An existing <see cref="MenuItem"/> to add the new one below.  Must be a
     /// sub-menu (e.g. Open, Copy) not a top level menu (e.g. File, Edit).</param>
-    public AddMenuItemOperation(MenuItem adjacentTo)
-        : base(adjacentTo)
+    public AddMenuItemOperation(IApplication app, MenuItem adjacentTo)
+        : base(app, adjacentTo)
     {
     }
 
@@ -45,7 +47,7 @@ public class AddMenuItemOperation : MenuItemOperation
             return;
         }
 
-        var remove = new RemoveMenuItemOperation(this.added);
+        var remove = new RemoveMenuItemOperation(App, this.added);
         remove.Do();
     }
 
@@ -65,20 +67,17 @@ public class AddMenuItemOperation : MenuItemOperation
             return false;
         }
 
-        var children = this.Parent.Children.ToList<MenuItem>();
+        var children = this.Parent.GetMenuItems(out _);
         var currentItemIdx = children.IndexOf(this.OperateOn);
 
-        // We are the parent but parents children don't contain
-        // us.  Thats bad. TODO: log this
+        // We are the parent but parents children don't contain us.  That's bad. TODO: log this
         if (currentItemIdx == -1)
         {
             return false;
         }
 
         int insertAt = Math.Max(0, currentItemIdx + 1);
-
-        children.Insert(insertAt, menuItem);
-        this.Parent.Children = children.ToArray();
+        this.Parent.InsertMenuItem(insertAt, menuItem);
 
         this.Bar?.SetNeedsDraw();
 

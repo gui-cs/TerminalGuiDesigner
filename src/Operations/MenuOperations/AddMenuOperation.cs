@@ -1,4 +1,5 @@
 ﻿using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations.Generics;
 
@@ -14,12 +15,14 @@ public class AddMenuOperation : AddOperation<MenuBar, MenuBarItem>
     /// Calling <see cref="Operation.Do"/> will add a new top level menu to the <see cref="MenuBar"/>
     /// wrapped by <paramref name="design"/>.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="design"><see cref="Design"/> wrapper for a view of Type <see cref="MenuBar"/>.</param>
     /// <param name="name">Optional explicit name to add with or null to prompt user interactively.</param>
     /// <exception cref="ArgumentException">Thrown if the <paramref name="design"/> is not wrapping a <see cref="MenuBar"/>.</exception>
-    public AddMenuOperation(Design design, string? name)
+    public AddMenuOperation(IApplication app, Design design, string? name)
         : base(
-            (v) => v.Menus,
+            app,
+            (v) => v.SubViews.OfType<MenuBarItem>().ToArray(),
             (v, a) => v.Menus = a,
             (s) => s.Title.ToString() ?? "blank menu",
             (v, n) => new(n, new MenuItem[] { new() { Title = ViewFactory.DefaultMenuItemText } }),

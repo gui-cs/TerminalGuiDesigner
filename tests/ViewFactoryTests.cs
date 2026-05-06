@@ -1,9 +1,6 @@
-using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Terminal.Gui.App;
-using Terminal.Gui.Drivers;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
 
@@ -14,31 +11,8 @@ namespace UnitTests;
 [Category( "Core" )]
 [Order( 1 )]
 [NonParallelizable]
-internal class ViewFactoryTests
+internal class ViewFactoryTests : Tests
 {
-    [ThreadStatic]
-    private static bool? _init;
-
-    [OneTimeSetUp]
-    public virtual void SetUp()
-    {
-        _init ??= false;
-        if (_init.Value)
-        {
-            throw new InvalidOperationException("After did not run.");
-        }
-
-        Application.Init(new FakeDriver());
-        _init = true;
-    }
-
-    [OneTimeTearDown]
-    public virtual void TearDown()
-    {
-        Application.Shutdown();
-        _init = false;
-    }
-
     /// <summary>
     ///   Gets every known supported <see cref="View" /> type as an uninitialized object of the corresponding type for testing of generic methods.
     /// </summary>
@@ -48,8 +22,10 @@ internal class ViewFactoryTests
                 .Select(Tests.PickFirstTTypeForGenerics)
                 .Select(
             static t => new TestCaseData( 
-                RuntimeHelpers.GetUninitializedObject( t ) 
-                ) ); }
+                RuntimeHelpers.GetUninitializedObject( t )
+                )
+            .SetName($"Create_And_CreateT_ReturnExpectedType<{t.Name}>")
+                ); }
     }
 
     private static MenuBarItem[] ViewFactory_DefaultMenuBarItems => ViewFactory.DefaultMenuBarItems;
@@ -134,18 +110,15 @@ internal class ViewFactoryTests
     [Category( "Change Control" )]
     public void DefaultMenuBarItems_IsExactlyAsExpected( )
     {
-        Assert.Multiple( static ( ) =>
-        {
-            Assert.That( ViewFactory_DefaultMenuBarItems, Has.Length.EqualTo( 1 ) );
-            Assert.That( ViewFactory_DefaultMenuBarItems[ 0 ].Title, Is.EqualTo( "_File (F9)" ) );
-        } );
 
-        Assert.Multiple( static ( ) =>
-        {
-            Assert.That( ViewFactory_DefaultMenuBarItems[ 0 ].Children, Has.Length.EqualTo( 1 ) );
-            Assert.That( ViewFactory_DefaultMenuBarItems[ 0 ].Children[ 0 ].Title, Is.EqualTo( ViewFactory.DefaultMenuItemText ) );
-            Assert.That( ViewFactory_DefaultMenuBarItems[ 0 ].Children[ 0 ].Help, Is.Empty );
-        } );
+        // Confirm creates a single menu 
+        Assert.That( ViewFactory_DefaultMenuBarItems.Count, Is.EqualTo(1));
+        Assert.That( ViewFactory_DefaultMenuBarItems[ 0 ].SubViews.ElementAt(0).Text, Is.EqualTo( "_File" ) );
+
+        // With single item under it "Edit Me"
+        Assert.That( ViewFactory_DefaultMenuBarItems [ 0 ].PopoverMenu, Is.Not.Null);
+        Assert.That( ViewFactory_DefaultMenuBarItems[ 0 ].PopoverMenu!.Root!.SubViews.Count, Is.EqualTo( 1 ) );
+        Assert.That(ViewFactory_DefaultMenuBarItems[0].PopoverMenu!.Root!.SubViews.ElementAt(0).Title, Is.EqualTo("Edit Me"));
     }
 
     [Test]
@@ -173,15 +146,13 @@ internal class ViewFactoryTests
     {
         return new[]
         {
-            typeof( Toplevel ),
+            typeof( Runnable ),
             typeof( Dialog ),
             typeof( FileDialog ),
             typeof( SaveDialog ),
             typeof( OpenDialog ),
             typeof( Wizard ),
             typeof( WizardStep ),
-
-            typeof( MenuBarv2 ),
             typeof( Shortcut )
         };
     }

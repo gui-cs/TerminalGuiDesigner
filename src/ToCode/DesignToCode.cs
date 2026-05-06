@@ -37,21 +37,6 @@ internal class DesignToCode : ToCodeBase
             designItems.ToCode(args);
         }
 
-        if (this.Design.View is TabView tabView)
-        {
-            foreach (var tab in tabView.Tabs)
-            {
-                var designTab = new TabToCode(this.Design, tab);
-                designTab.ToCode(args);
-            }
-
-            // add call to ApplyStyleChanges();
-            this.AddMethodCall(
-                args,
-                new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), this.Design.FieldName),
-                nameof(TabView.ApplyStyleChanges));
-        }
-
         if (this.Design.View is StatusBar)
         {
             var designItems = new StatusBarItemsToCode(this.Design);

@@ -1,8 +1,4 @@
-﻿using System;
-using Terminal.Gui;
-using Terminal.Gui.ViewBase;
-using Terminal.Gui.Views;
-using TerminalGuiDesigner;
+﻿using Terminal.Gui.ViewBase;
 using TerminalGuiDesigner.Operations.TableViewOperations;
 
 namespace UnitTests.Operations;
@@ -13,7 +9,7 @@ internal class AddColumnOperationTests : Tests
     public void TestAddColumn_BadViewType()
     {
         var d = Get10By10View();
-        var ex = ClassicAssert.Throws<ArgumentException>(() => new AddColumnOperation(d, null));
+        var ex = ClassicAssert.Throws<ArgumentException>(() => new AddColumnOperation(App, d, null));
 
         ClassicAssert.AreEqual("Design must wrap a TableView to be used with this operation.", ex?.Message);
     }
@@ -30,8 +26,8 @@ internal class AddColumnOperationTests : Tests
 
             vBefore = v;
             colsBefore = dt.Columns.Count;
-            
-            var op = new AddColumnOperation(d, "MyCol");
+
+            var op = new AddColumnOperation(App, d, "MyCol");
             op.Do();
 
             ClassicAssert.AreEqual(colsBefore + 1, dt.Columns.Count, "Expected AddColumnOperation to increase column count by 1");
@@ -55,7 +51,7 @@ internal class AddColumnOperationTests : Tests
             vBefore = v;
             colsBefore = dt.Columns.Count;
 
-            var op = new AddColumnOperation(d, "MyCol");
+            var op = new AddColumnOperation(App, d, "MyCol");
             op.Do();
             ClassicAssert.AreEqual(colsBefore + 1, dt.Columns.Count, "Expected AddColumnOperation to increase column count by 1");
 
@@ -83,7 +79,7 @@ internal class AddColumnOperationTests : Tests
 
             // TableView comes with some free columns.  Try using that column name again
             dt.Columns[0].ColumnName = "Test";
-            var op = new AddColumnOperation(d, "Test");
+            var op = new AddColumnOperation(App, d, "Test");
             op.Do();
 
             ClassicAssert.AreEqual("Test2", dt.Columns[colsBefore].ColumnName);

@@ -25,6 +25,7 @@ using TerminalGuiDesigner.ToCode;
 /// </summary>
 public partial class DimEditor : Dialog, IValueGetterDialog
 {
+    private readonly IApplication app;
     private Design design;
 
     /// <summary>
@@ -32,7 +33,7 @@ public partial class DimEditor : Dialog, IValueGetterDialog
     /// radio buttons and text box values.
     /// </summary>
     [CanBeNull]
-    public object Result { get; private set; }
+    public object ActualResult { get; private set; }
 
     /// <summary>
     /// True if dialog was canceled.
@@ -42,21 +43,22 @@ public partial class DimEditor : Dialog, IValueGetterDialog
     /// <summary>
     /// Creates a new instance of the <see cref="DimEditor"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="design"></param>
     /// <param name="oldValue">Old value (if editing an existing instance)</param>
-    public DimEditor(Design design, Dim oldValue) {
+    public DimEditor(IApplication app, Design design, Dim oldValue) {
         InitializeComponent();
-        
+
+        this.app = app;
         this.design = design;
 
 
         Title = "Dim Designer";
-        Border.BorderStyle = LineStyle.Double;
+        Border.LineStyle = LineStyle.Double;
 
         btnOk.Accepting += BtnOk_Clicked;
         btnCancel.Accepting += BtnCancel_Clicked;
         Cancelled = true;
-        Modal = true;
         rgDimType.KeyDown += RgDimType_KeyPress;
         
         if(oldValue.GetDimType(out var type,out var value, out var offset))
@@ -64,16 +66,16 @@ public partial class DimEditor : Dialog, IValueGetterDialog
             switch(type)
             {
                 case DimType.Absolute:
-                    rgDimType.SelectedItem = 0;
+                    rgDimType.Value = 0;
                     break;
                 case DimType.Percent:
-                    rgDimType.SelectedItem = 1;
+                    rgDimType.Value = 1;
                     break;
                 case DimType.Fill:
-                    rgDimType.SelectedItem = 2;
+                    rgDimType.Value = 2;
                     break;
                 case DimType.Auto:
-                    rgDimType.SelectedItem = 3;
+                    rgDimType.Value = 3;
                     break;
             }
 
@@ -83,7 +85,7 @@ public partial class DimEditor : Dialog, IValueGetterDialog
 
         SetupForCurrentDimType();
 
-        rgDimType.SelectedItemChanged += DdType_SelectedItemChanged;
+        rgDimType.ValueChanged += DdType_SelectedItemChanged;
     }
 
     private void RgDimType_KeyPress(object sender, Key obj)
@@ -97,13 +99,13 @@ public partial class DimEditor : Dialog, IValueGetterDialog
         }
     }
 
-    private void DdType_SelectedItemChanged(object sender, SelectedItemChangedArgs obj)
+    private void DdType_SelectedItemChanged(object sender, ValueChangedEventArgs<int?> e)
     {
         SetupForCurrentDimType();
     }
     private DimType GetDimType()
     {
-        return Enum.Parse<DimType>(rgDimType.RadioLabels[rgDimType.SelectedItem].ToString());
+        return Enum.Parse<DimType>(rgDimType.Labels[rgDimType.Value??0].ToString());
     }
     private void SetupForCurrentDimType()
     {
@@ -152,15 +154,15 @@ public partial class DimEditor : Dialog, IValueGetterDialog
     {
         e.Handled = true;
         Cancelled = true;
-        Application.RequestStop();
+        app.RequestStop();
     }
 
     private void BtnOk_Clicked(object sender, CommandEventArgs e)
     {
         e.Handled = true;
         Cancelled = false;
-        Result = BuildResult();
-        Application.RequestStop();
+        ActualResult = BuildResult();
+        app.RequestStop();
     }
 
     private Dim BuildResult()

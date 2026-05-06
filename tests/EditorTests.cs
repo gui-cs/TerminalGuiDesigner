@@ -1,11 +1,4 @@
-﻿using System;
-using System.Reflection;
-using Terminal.Gui;
-using Terminal.Gui.Views;
-using TerminalGuiDesigner.Operations;
-using TerminalGuiDesigner.UI;
-
-namespace UnitTests;
+﻿namespace UnitTests;
 
 [TestFixture]
 [TestOf(typeof(Editor))]
@@ -18,12 +11,12 @@ internal class EditorTests : Tests
     public void TestHasUnsavedChanges( )
     {
         //TODO: This test should be re-factored to test only HasUnsavedChanges
-        Editor e = new Editor( );
+        Editor e = new Editor(App);
         Assume.That( e, Is.Not.Null.And.InstanceOf<Editor>( ) );
 
         Assert.That( e.HasUnsavedChanges, Is.False, "With nothing open there should not be any unsaved changes" );
 
-        DummyOperation dummyOperation1 = new( );
+        DummyOperation dummyOperation1 = new(App );
         Assume.That( dummyOperation1, Is.Not.Null.And.InstanceOf<DummyOperation>( ) );
         Assume.That( dummyOperation1.IsImpossible, Is.False );
 
@@ -44,7 +37,7 @@ internal class EditorTests : Tests
         e.LastSavedOperation = saveMock!.UniqueIdentifier;
         Assert.That( e.HasUnsavedChanges, Is.False, "Now that we have saved there should be no unsaved changes" );
 
-        DummyOperation dummyOperation2 = new( );
+        DummyOperation dummyOperation2 = new( App);
         Assume.That( dummyOperation2, Is.Not.Null.And.InstanceOf<DummyOperation>( ) );
         Assume.That( dummyOperation2.IsImpossible, Is.False );
 
@@ -65,7 +58,11 @@ internal class EditorTests : Tests
     }
 
     private class DummyOperation : Operation
-    { 
+    {
+        public DummyOperation(IApplication app) : base(app)
+        {
+        }
+
         protected override bool DoImpl()
         {
             return true;

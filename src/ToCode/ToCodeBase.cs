@@ -1,5 +1,9 @@
-﻿using System.CodeDom;
+﻿using Markdig.Helpers;
+using System.CodeDom;
+using System.Text;
 using Terminal.Gui;
+using Terminal.Gui.Drivers;
+using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
 
 namespace TerminalGuiDesigner.ToCode;
@@ -149,5 +153,31 @@ public abstract class ToCodeBase
         assignStatement.Left = setLhs;
         assignStatement.Right = rhs;
         args.InitMethod.Statements.Add(assignStatement);
+    }
+
+
+    protected CodeExpression GetKeyCodeExpression(Key key)
+    {
+        return new CodeObjectCreateExpression(
+            new CodeTypeReference("Key"),
+             new CodePrimitiveExpression(key.KeyCode.ToString()));
+    }
+
+    protected CodeExpression GetRuneExpression(Rune rune)
+    {
+        char[] chars = new char[rune.Utf16SequenceLength];
+        rune.EncodeToUtf16(chars);
+
+        if (chars.Length == 2)
+        {
+            return new CodeObjectCreateExpression(
+                typeof(Rune),
+                new CodePrimitiveExpression(chars[0]),
+                new CodePrimitiveExpression(chars[1]));
+        }
+
+        return new CodeObjectCreateExpression(
+            typeof(Rune),
+            new CodePrimitiveExpression(chars[0]));
     }
 }

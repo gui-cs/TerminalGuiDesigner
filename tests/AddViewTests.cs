@@ -1,5 +1,4 @@
 using Terminal.Gui.ViewBase;
-using Terminal.Gui.Views;
 
 namespace UnitTests;
 
@@ -17,13 +16,13 @@ internal class AddViewTests : Tests
     [Test]
     public void TestAdd_Undo()
     {
-        var viewToCode = new ViewToCode();
+        var viewToCode = new ViewToCode(App);
 
         var file = new FileInfo("TestAdd_Undo.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
         var lbl = ViewFactory.Create<Label>( );
-        var op = new AddViewOperation(lbl, designOut, "label1");
+        var op = new AddViewOperation(App, lbl, designOut, "label1");
 
         OperationManager.Instance.Do(op);
         Assert.That( designOut.View.GetActualSubviews( ).OfType<Label>( ).Count( ), Is.EqualTo( 1 ) );
@@ -33,7 +32,7 @@ internal class AddViewTests : Tests
 
         viewToCode.GenerateDesignerCs(designOut, typeof(Dialog));
 
-        var codeToView = new CodeToView(designOut.SourceCode);
+        var codeToView = new CodeToView(App, designOut.SourceCode);
         var designBackIn = codeToView.CreateInstance();
 
         Assert.That( designBackIn.View.GetActualSubviews().OfType<Label>(), Is.Empty );
@@ -42,13 +41,13 @@ internal class AddViewTests : Tests
     [Test]
     public void TestAddUndoRedo_RoundTrip()
     {
-        var viewToCode = new ViewToCode();
+        var viewToCode = new ViewToCode(App);
 
         var file = new FileInfo("TestAddUndoRedo_RoundTrip.cs");
         var designOut = viewToCode.GenerateNewView(file, "YourNamespace", typeof(Dialog));
 
         var lbl = ViewFactory.Create<Label>( );
-        var op = new AddViewOperation(lbl, designOut, "label1");
+        var op = new AddViewOperation(App, lbl, designOut, "label1");
 
         OperationManager.Instance.Do(op);
         OperationManager.Instance.Undo();
@@ -58,7 +57,7 @@ internal class AddViewTests : Tests
 
         var lblOut = designOut.View.GetActualSubviews().OfType<Label>().Single();
 
-        var codeToView = new CodeToView(designOut.SourceCode);
+        var codeToView = new CodeToView(App, designOut.SourceCode);
         var designBackIn = codeToView.CreateInstance();
 
         var lblIn = designBackIn.View.GetActualSubviews().OfType<Label>().Single();
@@ -76,8 +75,7 @@ internal class AddViewTests : Tests
     [Test]
     public void Test60Percent_RoundTrip([Values]bool? offset)
     {
-        var lblIn = RoundTrip<Dialog, Label>(
-            (d, lbl) =>
+        var lblIn = RoundTrip<Dialog, Label>((d, lbl) =>
         {
             lbl.Width = offset == null ? Dim.Percent(60) : offset.Value ? Dim.Percent(60) + 1 : Dim.Percent(60) - 1;
             lbl.X = offset == null ? Pos.Percent(60) : offset.Value ? Pos.Percent(60) + 1 : Pos.Percent(60) - 1;

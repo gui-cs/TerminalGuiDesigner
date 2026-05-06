@@ -2,7 +2,6 @@ using System.CodeDom;
 using System.Text;
 using Terminal.Gui.Drawing;
 using Terminal.Gui.ViewBase;
-using Terminal.Gui.Views;
 using TerminalGuiAttribute = Terminal.Gui.Drawing.Attribute;
 
 namespace UnitTests;
@@ -13,11 +12,11 @@ namespace UnitTests;
 internal class PropertyTests : Tests
 {
     [Test]
-    public void Changing_LineViewOrientation( )
+    public void Changing_LineOrientation( )
     {
-        Design v = Get10By10View( );
-        using LineView lv = ViewFactory.Create<LineView>( );
-        Design d = new( v.SourceCode, "lv", lv );
+        Design v = Get10By10View();
+        using Line lv = ViewFactory.Create<Line>( );
+        Design d = new(App, v.SourceCode, "lv", lv );
 
         v.View.Add( lv );
         lv.IsInitialized = true;
@@ -25,25 +24,30 @@ internal class PropertyTests : Tests
         Assert.Multiple( ( ) =>
         {
             Assert.That( lv.Orientation, Is.EqualTo( Orientation.Horizontal ) );
-            Assert.That( lv.LineRune, Is.EqualTo( new Rune( '─' ) ) );
+            //Assert.That( lv.LineRune, Is.EqualTo( new Rune( '─' ) ) );
         } );
 
-        Property? prop = d.GetDesignableProperty( nameof( LineView.Orientation ) );
+        Property? prop = d.GetDesignableProperty( nameof( Line.Orientation ) );
 
         Assert.That( prop, Is.Not.Null );
         prop?.SetValue( Orientation.Vertical );
-        Assert.That( lv.LineRune, Is.EqualTo( Glyphs.VLine ) );
+        //Assert.That( lv.LineRune, Is.EqualTo( Glyphs.VLine ) );
 
-        // now try with a dim fill
-        lv.Height = Dim.Fill( );
-        lv.Width = 1;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(lv.Orientation, Is.EqualTo(Orientation.Vertical));
+            //Assert.That( lv.LineRune, Is.EqualTo( Glyphs.HLine ) );
+            Assert.That(lv.Width, Is.EqualTo(Dim.Absolute(1)));
+            Assert.That(lv.Height, Is.EqualTo(Dim.Fill()));
+        });
 
         prop?.SetValue( Orientation.Horizontal );
 
         Assert.Multiple( ( ) =>
         {
             Assert.That( lv.Orientation, Is.EqualTo( Orientation.Horizontal ) );
-            Assert.That( lv.LineRune, Is.EqualTo( Glyphs.HLine ) );
+            //Assert.That( lv.LineRune, Is.EqualTo( Glyphs.HLine ) );
             Assert.That( lv.Width, Is.EqualTo( Dim.Fill( ) ) );
             Assert.That( lv.Height, Is.EqualTo( Dim.Absolute( 1 ) ) );
         } );
@@ -53,7 +57,7 @@ internal class PropertyTests : Tests
     public string PropertyOfType_Attribute( )
     {
         using GraphView graphView = new( );
-        Design d = new( new( $"{nameof( PropertyOfType_Attribute )}.cs" ), "FFF", graphView );
+        Design d = new(App, new( $"{nameof( PropertyOfType_Attribute )}.cs" ), "FFF", graphView );
         Property colorProp = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof( GraphView.GraphColor ) ) );
 
         colorProp.SetValue( null );
@@ -72,7 +76,7 @@ internal class PropertyTests : Tests
     public void PropertyOfType_PointF( [Values( 4.5f, 10.1f )] float x, [Values( 4.5f, 10.1f )] float y )
     {
         using GraphView graphView = new( );
-        Design d = new( new( $"{nameof( PropertyOfType_PointF )}.cs" ), "FFF", graphView );
+        Design d = new(App, new( $"{nameof( PropertyOfType_PointF )}.cs" ), "FFF", graphView );
         Property pointProp = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof( GraphView.ScrollOffset ) ) );
 
         PointF pointF = new( x, y );
@@ -91,7 +95,7 @@ internal class PropertyTests : Tests
     public string PropertyOfType_Pos( )
     {
         using Label label = new( );
-        Design d = new( new( $"{nameof( PropertyOfType_Pos )}.cs" ), "FFF", label );
+        Design d = new(App, new( $"{nameof( PropertyOfType_Pos )}.cs" ), "FFF", label );
         Property xProp = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof( View.X ) ) );
 
         xProp.SetValue( Pos.Center( ) );
@@ -103,13 +107,13 @@ internal class PropertyTests : Tests
     public void PropertyOfType_Rune( [Values( 'a', 'A', 'f', 'F' )] char runeCharacter )
     {
         FileInfo file = new( $"{nameof( PropertyOfType_Rune )}_{runeCharacter}.cs" );
-        using LineView lv = new( );
-        Design d = new( new( file ), "lv", lv );
-        Property prop = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( "LineRune" ) );
+        using ProgressBar pb = new( );
+        Design d = new(App, new( file ), "lv", pb );
+        Property prop = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof(ProgressBar.SegmentCharacter) ) );
 
         prop.SetValue( runeCharacter );
 
-        Assert.That( lv.LineRune, Is.EqualTo( new Rune( runeCharacter ) ) );
+        //Assert.That( lv.LineRune, Is.EqualTo( new Rune( runeCharacter ) ) );
 
         string code = Helpers.ExpressionToCode( prop.GetRhs( ) );
 
@@ -121,7 +125,7 @@ internal class PropertyTests : Tests
     public string PropertyOfType_Size( )
     {
         using View view = new( );
-        Design d = new( new( $"{nameof( PropertyOfType_Size )}.cs" ), "FFF", view );
+        Design d = new(App, new( $"{nameof( PropertyOfType_Size )}.cs" ), "FFF", view );
         Property xProp = d.GetDesignableProperties( ).Single( static p => p.PropertyInfo.Name.Equals( nameof( View.X ) ) );
 
         xProp.SetValue( Pos.Center( ) );

@@ -17,15 +17,19 @@ namespace TerminalGuiDesigner.UI;
 /// </summary>
 public class KeyboardManager
 {
+    private readonly IApplication app;
     private readonly KeyMap keyMap;
-    private SetPropertyOperation? currentOperation;
+
+    private SetPropertyOperation? CurrentOperation => OperationManager.Instance.PendingOperation as SetPropertyOperation;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="KeyboardManager"/> class.
     /// </summary>
+    /// <param name="app"></param>
     /// <param name="keyMap">User configurable keybindings for class functionality.</param>
-    public KeyboardManager(KeyMap keyMap)
+    public KeyboardManager(IApplication app, KeyMap keyMap)
     {
+        this.app = app;
         this.keyMap = keyMap;
     }
 
@@ -39,7 +43,7 @@ public class KeyboardManager
     /// <returns><see langword="true"/> if <paramref name="keystroke"/> should be suppressed.</returns>
     public bool HandleKey(View focusedView, Key keystroke)
     {
-        var menuItem = MenuTracker.Instance.CurrentlyOpenMenuItem;
+        var menuItem = MenuTracker.GetFocusedMenuItemIfAny(app);
 
         // if we are in a menu
         if (menuItem != null)
@@ -52,20 +56,18 @@ public class KeyboardManager
         // if we are no longer focused
         if (d == null)
         {
-            // if there is another operation underway
-            if (this.currentOperation != null)
-            {
-                this.FinishOperation();
-            }
-
-            // do not swallow this keystroke
+            OperationManager.Instance.FlushPending();
             return false;
         }
 
-        // if we have changed focus
-        if (this.currentOperation != null && !this.currentOperation.Designs.Contains(d))
+        // if we have changed focus, flush any pending operation
+        if (OperationManager.Instance.PendingOperation != null)
         {
-            this.FinishOperation();
+            var viewTextOp = this.CurrentOperation;
+            if (viewTextOp == null || !viewTextOp.Designs.Contains(d))
+            {
+                OperationManager.Instance.FlushPending();
+            }
         }
 
         if (keystroke.ToString( ) == this.keyMap.Rename)
@@ -73,7 +75,7 @@ public class KeyboardManager
             var nameProp = d.GetDesignableProperties().OfType<NameProperty>().FirstOrDefault();
             if (nameProp != null)
             {
-                EditDialog.SetPropertyToNewValue(d, nameProp, nameProp.GetValue());
+                EditDialog.SetPropertyToNewValue(app, d, nameProp, nameProp.GetValue());
                 return true;
             }
         }
@@ -85,7 +87,7 @@ public class KeyboardManager
         }
 
         // if we are not currently doing anything
-        if (this.currentOperation == null)
+        if (this.CurrentOperation == null)
         {
             // start a new operation
             this.StartOperation(d);
@@ -99,31 +101,32 @@ public class KeyboardManager
         if (keystroke.ToString( ) == this.keyMap.Rename)
         {
             OperationManager.Instance.Do(
-                    new RenameMenuItemOperation(menuItem));
+                    new RenameMenuItemOperation(this.app, menuItem));
             return true;
         }
 
         if (keystroke == Key.Enter)
         {
             OperationManager.Instance.Do(
-                    new AddMenuItemOperation(menuItem));
+                    new AddMenuItemOperation(this.app, menuItem));
 
-            ChangeKeyTo(keystroke, Key.CursorDown);
-            return false;
+            return true;
         }
 
         if (keystroke.ToString( ) == this.keyMap.SetShortcut)
         {
-            menuItem.ShortcutKey = Modals.GetShortcut().KeyCode;
-
-            focusedView.SetNeedsDraw();
+            var shortcutProp = typeof(MenuItem).GetProperty(nameof(MenuItem.Key))
+                ?? throw new Exception("MenuItem.Key property not found");
+            var op = new SetChildPropertyOperation(this.app, menuItem, shortcutProp);
+            op.NewValue = Modals.GetShortcut(app);
+            OperationManager.Instance.Do(op);
             return false;
         }
 
         if (keystroke.ToString( ) == this.keyMap.MoveRight)
         {
             OperationManager.Instance.Do(
-                new MoveMenuItemRightOperation(menuItem));
+                new MoveMenuItemRightOperation(this.app, menuItem));
 
             ChangeKeyTo(keystroke, Key.CursorUp);
             return true;
@@ -132,7 +135,7 @@ public class KeyboardManager
         if (keystroke.ToString( ) == this.keyMap.MoveLeft)
         {
             OperationManager.Instance.Do(
-                new MoveMenuItemLeftOperation(menuItem));
+                new MoveMenuItemLeftOperation(this.app, menuItem));
 
             ChangeKeyTo(keystroke, Key.CursorDown);
             return false;
@@ -141,7 +144,7 @@ public class KeyboardManager
         if (keystroke.ToString( ) == this.keyMap.MoveUp)
         {
             OperationManager.Instance.Do(
-                new MoveMenuItemOperation(menuItem, true));
+                new MoveMenuItemOperation(this.app, menuItem, true));
             ChangeKeyTo(keystroke, Key.CursorUp);
             return false;
         }
@@ -149,7 +152,7 @@ public class KeyboardManager
         if (keystroke.ToString( ) == this.keyMap.MoveDown)
         {
             OperationManager.Instance.Do(
-                new MoveMenuItemOperation(menuItem, false));
+                new MoveMenuItemOperation(this.app, menuItem, false));
             ChangeKeyTo(keystroke, Key.CursorDown);
             return false;
         }
@@ -160,18 +163,19 @@ public class KeyboardManager
         {
             // deleting the menu item using backspace to
             // remove all characters in the title or the Del key
-            var remove = new RemoveMenuItemOperation(menuItem);
+            var remove = new RemoveMenuItemOperation(this.app, menuItem);
             if (OperationManager.Instance.Do(remove))
             {
                 // if we are removing the last item
                 if (remove.PrunedTopLevelMenu)
                 {
                     // if we deleted the last menu item
+                    /*
                     if (remove.Bar?.Menus.Length == 0)
                     {
                         remove.Bar.CloseMenu(false);
                         return true;
-                    }
+                    }*/
 
                     // convert keystroke to left,
                     // so we move to the next menu
@@ -192,7 +196,11 @@ public class KeyboardManager
         {
             if (Clipboard.TryGetClipboardData(out string text) && IsValidSimpleStringToPaste(text))
             {
-                menuItem.Title += text;
+                var titleProp = typeof(MenuItem).GetProperty(nameof(MenuItem.Title))
+                    ?? throw new Exception("MenuItem.Title property not found");
+                var pasteOp = new SetChildPropertyOperation(this.app, menuItem, titleProp);
+                pasteOp.NewValue = (menuItem.Title?.ToString() ?? string.Empty) + text;
+                OperationManager.Instance.Do(pasteOp);
                 return true;
             }
         }
@@ -205,27 +213,22 @@ public class KeyboardManager
 
         // TODO: This probably lets us edit the Editors own context menus lol
 
-        // TODO once https://github.com/migueldeicaza/gui.cs/pull/1689 is merged and published
-        // we can integrate this into the Design undo/redo systems
-        if (this.ApplyKeystrokeToString(menuItem.Title.ToString() ?? string.Empty, keystroke, out var newValue))
+        // Get or create a pending title operation for this menu item
+        var pendingTitleOp = OperationManager.Instance.PendingOperation as SetChildPropertyOperation;
+        if (pendingTitleOp == null || !ReferenceEquals(pendingTitleOp.Target, menuItem))
         {
-            // convert to a separator by typing three hyphens
-            if (newValue.Equals("---"))
-            {
-                if (OperationManager.Instance.Do(
-                        new ConvertMenuItemToSeperatorOperation(menuItem)))
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                // changing the title
-                menuItem.Title = newValue;
-            }
+            OperationManager.Instance.FlushPending();
+            var titleProp = typeof(MenuItem).GetProperty(nameof(MenuItem.Title))
+                ?? throw new Exception("MenuItem.Title property not found");
+            pendingTitleOp = new SetChildPropertyOperation(this.app, menuItem, titleProp);
+            OperationManager.Instance.PendingOperation = pendingTitleOp;
+        }
 
+        if (this.ApplyKeystrokeToString(menuItem.Title?.ToString() ?? string.Empty, keystroke, out var newValue))
+        {
+            menuItem.Title = newValue;
+            pendingTitleOp.NewValue = newValue;
             focusedView.SetNeedsDraw();
-
             return true;
         }
 
@@ -262,7 +265,7 @@ public class KeyboardManager
     private void StartOperation(Design d)
     {
         // these can already handle editing themselves
-        if (d.View is DateField || d.View is TextField || d.View is TextView)
+        if (d.View is TextField || d.View is TextView)
         {
             return;
         }
@@ -271,30 +274,23 @@ public class KeyboardManager
 
         if (textProp != null)
         {
-            this.currentOperation = new SetPropertyOperation(d, textProp, d.View.Text, d.View.Text);
+            OperationManager.Instance.PendingOperation = new SetPropertyOperation(this.app, d, textProp, d.View.Text, d.View.Text);
         }
     }
 
     private void FinishOperation()
     {
-        if (this.currentOperation == null)
-        {
-            return;
-        }
-
-        // finish it and clear it
-        OperationManager.Instance.Do(this.currentOperation);
-        this.currentOperation = null;
+        OperationManager.Instance.FlushPending();
     }
 
     private bool ApplyKeystrokeToTextProperty(Key keystroke)
     {
-        if (this.currentOperation == null || this.currentOperation.Designs.Count != 1)
+        if (this.CurrentOperation == null || this.CurrentOperation.Designs.Count != 1)
         {
             return false;
         }
 
-        var design = this.currentOperation.Designs.Single();
+        var design = this.CurrentOperation.Designs.Single();
 
         var str = design.View.GetActualText();
 
@@ -306,7 +302,7 @@ public class KeyboardManager
 
         design.View.SetActualText(newStr);
         design.View.SetNeedsDraw();
-        this.currentOperation.NewValue = newStr;
+        this.CurrentOperation!.NewValue = newStr;
 
         return true;
     }

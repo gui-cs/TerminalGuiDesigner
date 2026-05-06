@@ -50,8 +50,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.Visible = true;
             this.Arrangement = (Terminal.Gui.ViewBase.ViewArrangement.Movable | Terminal.Gui.ViewBase.ViewArrangement.Overlapped);
             this.CanFocus = true;
-            this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Transparent;
-            this.Modal = true;
+            this.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Transparent;
             this.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Title = "Size";
             this.label1.Width = Dim.Auto();
@@ -61,7 +60,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.label1.Visible = true;
             this.label1.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.label1.CanFocus = false;
-            this.label1.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
+            this.label1.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.None;
             this.label1.Data = "label1";
             this.label1.Text = "Width:";
             this.label1.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
@@ -73,7 +72,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.tfWidth.Visible = true;
             this.tfWidth.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.tfWidth.CanFocus = true;
-            this.tfWidth.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
+            this.tfWidth.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.None;
             this.tfWidth.Secret = false;
             this.tfWidth.Data = "tfWidth";
             this.tfWidth.Text = "";
@@ -86,7 +85,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.label12.Visible = true;
             this.label12.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.label12.CanFocus = false;
-            this.label12.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
+            this.label12.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.None;
             this.label12.Data = "label12";
             this.label12.Text = "Height:";
             this.label12.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
@@ -98,7 +97,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.tfHeight.Visible = true;
             this.tfHeight.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.tfHeight.CanFocus = true;
-            this.tfHeight.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.None;
+            this.tfHeight.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.None;
             this.tfHeight.Secret = false;
             this.tfHeight.Data = "tfHeight";
             this.tfHeight.Text = "";
@@ -111,7 +110,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnOk.Visible = true;
             this.btnOk.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.btnOk.CanFocus = true;
-            this.btnOk.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
+            this.btnOk.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Opaque;
             this.btnOk.Data = "btnOk";
             this.btnOk.Text = "Ok";
             this.btnOk.TextAlignment = Terminal.Gui.ViewBase.Alignment.Center;
@@ -124,7 +123,7 @@ namespace TerminalGuiDesigner.UI.Windows {
             this.btnCancel.Visible = true;
             this.btnCancel.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.btnCancel.CanFocus = true;
-            this.btnCancel.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyle.Opaque;
+            this.btnCancel.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Opaque;
             this.btnCancel.Data = "btnCancel";
             this.btnCancel.Text = "Cancel";
             this.btnCancel.TextAlignment = Terminal.Gui.ViewBase.Alignment.Center;

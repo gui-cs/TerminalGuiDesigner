@@ -1,4 +1,5 @@
 ﻿using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Drivers;
 using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations.Generics;
@@ -13,10 +14,12 @@ namespace TerminalGuiDesigner.Operations.StatusBarOperations
         /// <summary>
         /// Initializes a new instance of the <see cref="AddStatusItemOperation"/> class.
         /// </summary>
+        /// <param name="app">The application instance.</param>
         /// <param name="design">Wrapper for a <see cref="StatusBar"/>.</param>
         /// <param name="name">Name for the new item created or null to prompt user.</param>
-        public AddStatusItemOperation(Design design, string? name)
+        public AddStatusItemOperation(IApplication app, Design design, string? name)
             : base(
+                  app,
                   (d) => d.GetShortcuts(),
                   (d, v) => d.SetShortcuts(v),
                   (v) => v.Title.ToString() ?? Operation.Unnamed,

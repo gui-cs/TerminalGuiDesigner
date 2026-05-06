@@ -1,5 +1,6 @@
 using System.Reflection;
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.ViewBase;
 using TerminalGuiDesigner.ToCode;
 using TerminalGuiDesigner.UI.Windows;
@@ -32,12 +33,13 @@ public class SetPropertyOperation : Operation
     /// time.  Throw <see cref="OperationCanceledException"/> in delegate if you want to perform last
     /// minute cancellation instead of returning a new value to set.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="design">A single <see cref="Design"/> on which to change a single <paramref name="property"/>.</param>
     /// <param name="property">Property to change (see <see cref="Design.GetDesignableProperties()"/>).</param>
     /// <param name="valueGetter">Delegate for fetching the new value for the <paramref name="property"/> when
     /// command is run e.g. via a <see cref="Modals"/> dialog.</param>
-    public SetPropertyOperation(Design design, Property property, PropertyValueGetterDelegate valueGetter)
-        : this(design, property, property.GetValue(), null)
+    public SetPropertyOperation(IApplication app, Design design, Property property, PropertyValueGetterDelegate valueGetter)
+        : this(app, design, property, property.GetValue(), null)
     {
         this.valueGetter = valueGetter;
     }
@@ -46,11 +48,12 @@ public class SetPropertyOperation : Operation
     /// Initializes a new instance of the <see cref="SetPropertyOperation"/> class.
     /// Operation that changes the <paramref name="property"/> to have a specific <paramref name="newValue"/>.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="design">A single <see cref="Design"/> on which to change a single <paramref name="property"/>.</param>
     /// <param name="property">Property to change (see <see cref="Design.GetDesignableProperties()"/>).</param>
     /// <param name="oldValue">The old value that <paramref name="property"/> had.</param>
     /// <param name="newValue">The new value you want to assign to <paramref name="property"/>.</param>
-    public SetPropertyOperation(Design design, Property property, object? oldValue, object? newValue)
+    public SetPropertyOperation(IApplication app, Design design, Property property, object? oldValue, object? newValue) : base(app)
     {
         this.mementos = new[]
         {
@@ -71,6 +74,7 @@ public class SetPropertyOperation : Operation
     /// Constructor for setting the same property on multiple views at once (e.g. change color scheme on
     /// all multi selected views).
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="designs">All <see cref="Design"/> for which you want to change
     /// <paramref name="propertyName"/>.</param>
     /// <param name="propertyName">The name of a designable <see cref="Property"/> on
@@ -78,7 +82,7 @@ public class SetPropertyOperation : Operation
     /// <param name="valueGetter">Delegate for fetching the new value for
     /// the <paramref name="propertyName"/> when command is run e.g. via a <see cref="Modals"/>.</param>
     /// <exception cref="ArgumentException">Thrown if <paramref name="propertyName"/> is not found amongst <paramref name="designs"/> properties.</exception>
-    public SetPropertyOperation(Design[] designs, string propertyName, PropertyValueGetterDelegate valueGetter)
+    public SetPropertyOperation(IApplication app, Design[] designs, string propertyName, PropertyValueGetterDelegate valueGetter) : base(app)
     {
         this.valueGetter = valueGetter;
         var mementos = new List<SetPropertyMemento>();

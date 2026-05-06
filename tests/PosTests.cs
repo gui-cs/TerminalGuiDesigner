@@ -1,5 +1,4 @@
 using Terminal.Gui.ViewBase;
-using Terminal.Gui.Views;
 
 namespace UnitTests;
 
@@ -14,7 +13,7 @@ internal class PosTests : Tests
         get
         {
             View v = new( );
-            Design d = new( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            Design d = new(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
             return new[] { -10, -1, 0, 1, 10 }.SelectMany( offset =>
             {
                 string offsetString = offset switch
@@ -45,7 +44,7 @@ internal class PosTests : Tests
         get
         {
             View v = new( );
-            Design d = new( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            Design d = new(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -89,7 +88,7 @@ internal class PosTests : Tests
         get
         {
             View v = new( );
-            Design d = new( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            Design d = new(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -112,7 +111,7 @@ internal class PosTests : Tests
         get
         {
             View v = new( );
-            Design d = new( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            Design d = new(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -135,7 +134,7 @@ internal class PosTests : Tests
         get
         {
             View v = new( );
-            _ = new Design( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            _ = new Design(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -172,7 +171,7 @@ internal class PosTests : Tests
         get
         {
             View v = new( );
-            _ = new Design( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            _ = new Design(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -197,7 +196,7 @@ internal class PosTests : Tests
         get
         {
             View v = new( );
-            _ = new Design( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            _ = new Design(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -222,7 +221,7 @@ internal class PosTests : Tests
         get
         {
             View v = new( );
-            _ = new Design( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            _ = new Design(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -246,7 +245,7 @@ internal class PosTests : Tests
         get
         {
             View v = new( );
-            _ = new Design( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            _ = new Design(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -284,7 +283,7 @@ internal class PosTests : Tests
         get
         {
             View v = new( );
-            _ = new Design( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            _ = new Design(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -308,7 +307,7 @@ internal class PosTests : Tests
         get
         {
             View v = new( );
-            Design d = new( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+            Design d = new(Mock.Of<IApplication>(), new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
             return new TestCaseData[]
             {
@@ -485,7 +484,7 @@ internal class PosTests : Tests
     public void CreatePosRelative( [Values] Side side, [Values( -10, -5, 0, 5, 10 )] int offset )
     {
         View v = new( );
-        Design d = new( new( new FileInfo( "yarg.cs" ) ), "myView", v );
+        Design d = new(App, new( new FileInfo( "yarg.cs" ) ), "myView", v );
 
         Pos p = d.CreatePosRelative( side, offset );
         if ( offset != 0 )
@@ -523,7 +522,7 @@ internal class PosTests : Tests
     [Test]
     public void TestRoundTrip_PosRelative( [Values] Side side, [Values( -2, 1, 5 )] int offset, [Values( "X", "Y" )] string property )
     {
-        ViewToCode viewToCode = new( );
+        ViewToCode viewToCode = new( App);
 
         FileInfo file = new( $"{nameof( TestRoundTrip_PosRelative )}.cs" );
         Design designOut = viewToCode.GenerateNewView( file, "YourNamespace", typeof( Window ) );
@@ -537,8 +536,8 @@ internal class PosTests : Tests
 
         using Button btn = ViewFactory.Create<Button>( );
 
-        Assert.That( ( ) => new AddViewOperation( lbl, designOut, "label1" ).Do( ), Throws.Nothing );
-        Assert.That( ( ) => new AddViewOperation( btn, designOut, "btn" ).Do( ), Throws.Nothing );
+        Assert.That( ( ) => new AddViewOperation( App, lbl, designOut, "label1" ).Do( ), Throws.Nothing );
+        Assert.That( ( ) => new AddViewOperation( App, btn, designOut, "btn" ).Do( ), Throws.Nothing );
 
         switch ( property )
         {
@@ -554,7 +553,7 @@ internal class PosTests : Tests
 
         viewToCode.GenerateDesignerCs( designOut, typeof( Window ) );
 
-        CodeToView codeToView = new( designOut.SourceCode );
+        CodeToView codeToView = new(App, designOut.SourceCode );
         Design designBackIn = codeToView.CreateInstance( );
 
         using Button btnIn = designBackIn.View.GetActualSubviews( ).OfType<Button>( ).Single( );

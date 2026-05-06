@@ -1,5 +1,4 @@
 using System.Data;
-using Terminal.Gui.Views;
 
 namespace UnitTests;
 
@@ -39,11 +38,11 @@ internal class TableViewTests : Tests
     public void RoundTrip_TwoTablesWithDuplicatedColumns( )
     {
         // Create a TableView
-        using TableView tableIn = RoundTrip<Window, TableView>( static ( d, _ ) =>
+        using TableView tableIn = RoundTrip<Window, TableView>( ( d, _ ) =>
                                                                 {
                                                                     // create a second TableView also on the root
                                                                     TableView tvOut2 = ViewFactory.Create<TableView>( );
-                                                                    OperationManager.Instance.Do( new AddViewOperation( tvOut2, d.GetRootDesign( ), "myTable2" ) );
+                                                                    OperationManager.Instance.Do( new AddViewOperation( App, tvOut2, d.GetRootDesign( ), "myTable2" ) );
                                                                 },
                                                                 out TableView tableOut );
 

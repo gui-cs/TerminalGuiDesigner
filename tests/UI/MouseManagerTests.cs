@@ -1,7 +1,6 @@
 using System.Runtime.CompilerServices;
 using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
-using Terminal.Gui.Views;
 
 namespace UnitTests.UI;
 
@@ -14,38 +13,45 @@ internal class MouseManagerTests : Tests
     public void DragResizeView<T>( [ValueSource( nameof( DragResizeView_Types ) )] T dummy )
         where T : View, new( )
     {
-        Design d = Get10By10View( );
+        Design d = Get10By10View();
         Assume.That( dummy, Is.TypeOf<T>( ) );
 
         using T view = ViewFactory.Create<T>( );
+        
+        if (view is Button btn)
+        {
+            btn.ShadowStyle = null;
+        }
+
         view.Width = 8;
         view.Height = 1;
+        
+        Assert.That(view.Viewport.Height, Is.EqualTo(1));
+        Assert.That(view.Viewport.Width, Is.EqualTo(8));
 
-        Design design = new( d.SourceCode, "myView", view );
+        Design design = new(App, d.SourceCode, "myView", view );
         view.Data = design;
         d.View.Add( view );
 
-        if (view is Button btn)
-        {
-            btn.ShadowStyle = ShadowStyle.None;
-        }
+        Assert.That(view.Viewport.Width, Is.EqualTo(8));
 
-        Assert.That( view.GetContentSize().Width, Is.EqualTo( 8 ) );
-        MouseManager mgr = new( );
+
+        Assert.That( view.Viewport.Width, Is.EqualTo( 8 ) );
+        MouseManager mgr = new(App);
 
         // we haven't done anything yet
         Assert.Multiple( ( ) =>
         {
             Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
-            Assert.That( view.GetContentSize().Width, Is.EqualTo( 8 ) );
-            Assert.That( view.GetContentSize().Height, Is.EqualTo( 1 ) );
+            Assert.That( view.Viewport.Width, Is.EqualTo( 8 ) );
+            Assert.That( view.Viewport.Height, Is.EqualTo( 1 ) );
         } );
 
         // user presses down in the lower right of control
-        MouseEventArgs e = new( )
+        Mouse e = new( )
         {
             Position = new Point( 6, 0),
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.LeftButtonPressed
         };
 
         mgr.HandleMouse( e, d );
@@ -60,15 +66,15 @@ internal class MouseManagerTests : Tests
         e = new( )
         {
             Position = new System.Drawing.Point(9,0),
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.LeftButtonPressed
         };
         mgr.HandleMouse( e, d );
 
         // we still haven't committed to anything
         Assert.Multiple( ( ) =>
         {
-            Assert.That( view.GetContentSize().Width, Is.EqualTo( 10 ), "Expected resize to increase Width when dragging" );
-            Assert.That( view.GetContentSize().Height, Is.EqualTo( 1 ), "Expected resize of button to ignore Y component" );
+            Assert.That( view.Viewport.Width, Is.EqualTo( 10 ), "Expected resize to increase Width when dragging" );
+            Assert.That( view.Viewport.Height, Is.EqualTo( 1 ), "Expected resize of button to ignore Y component" );
             Assert.That( OperationManager.Instance.UndoStackSize, Is.Zero );
         } );
 
@@ -81,8 +87,8 @@ internal class MouseManagerTests : Tests
 
         Assert.Multiple( ( ) =>
         {
-            Assert.That( view.GetContentSize().Width, Is.EqualTo( 10 ), "Expected resize to increase Width when dragging" );
-            Assert.That( view.GetContentSize().Height, Is.EqualTo( 1 ) );
+            Assert.That( view.Viewport.Width, Is.EqualTo( 10 ), "Expected resize to increase Width when dragging" );
+            Assert.That( view.Viewport.Height, Is.EqualTo( 1 ) );
 
             // we have now committed the drag so could undo
             Assert.That( OperationManager.Instance.UndoStackSize, Is.EqualTo( 1 ) );
@@ -98,15 +104,14 @@ internal class MouseManagerTests : Tests
         using Button btn = ViewFactory.Create<Button>();
         btn.Width = 8;
         btn.Height = 2;
-        btn.ShadowStyle = ShadowStyle.Opaque;
+        btn.ShadowStyle = ShadowStyles.Opaque;
 
-        Design design = new(d.SourceCode, "myView", btn);
+        Design design = new(App, d.SourceCode, "myView", btn);
         btn.Data = design;
         d.View.Add(btn);
 
         Assert.That(btn.Margin, Is.Not.Null);
-        Assert.That(btn.Margin!.IsAdornment(), Is.True);
-        var shadow = btn.Margin!.SubViews.ElementAt(0);
+        var shadow = btn.Margin.View!.SubViews.ElementAt(0);
         Assert.That(shadow,Is.InstanceOf<ShadowView>());
         Assert.That(shadow.IsAdornment,Is.True);
         Assert.That(shadow.GetAdornmentParent(),Is.SameAs(btn));
@@ -116,7 +121,7 @@ internal class MouseManagerTests : Tests
         Assert.That(btn.GetContentSize().Width, Is.EqualTo(7));
         // View height is 2 but 1 is taken up by the shadow so content height is 1
         Assert.That(btn.GetContentSize().Height, Is.EqualTo(1));
-        MouseManager mgr = new();
+        MouseManager mgr = new(App);
 
         // we haven't done anything yet
         Assert.Multiple(() =>
@@ -127,10 +132,10 @@ internal class MouseManagerTests : Tests
         });
 
         // user presses down in the lower right of control
-        MouseEventArgs e = new()
+        Mouse e = new()
         {
             Position = new Point(7, 1),
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.LeftButtonPressed
         };
         
         mgr.HandleMouse(e, d);
@@ -145,7 +150,7 @@ internal class MouseManagerTests : Tests
         e = new()
         {
             Position = new System.Drawing.Point(8, 2),
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.LeftButtonPressed
         };
         mgr.HandleMouse(e, d);
 
@@ -186,13 +191,13 @@ internal class MouseManagerTests : Tests
         view.Width = 1;
         view.Height = 1;
 
-        Design design = new( d.SourceCode, "myView", view );
+        Design design = new(App, d.SourceCode, "myView", view );
         view.Data = design;
         d.View.Add( view );
 
         d.View.LayoutSubViews( );
 
-        MouseManager mgr = new( );
+        MouseManager mgr = new(App);
 
         // we haven't done anything yet
         Assert.Multiple( ( ) =>
@@ -205,13 +210,13 @@ internal class MouseManagerTests : Tests
         } );
 
         // user presses down in the lower right of control
-        MouseEventArgs e = new( )
+        Mouse e = new( )
         {
             Position = new Point(locationOfViewX,locationOfViewY),
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.LeftButtonPressed
         };
 
-        View? hit = view.HitTest( e, out bool isBorder, out bool isLowerRight );
+        View? hit = view.HitTest( App, e, out bool isBorder, out bool isLowerRight );
         Assert.Multiple( ( ) =>
         {
             Assert.That( hit, Is.SameAs( view ) );
@@ -233,7 +238,7 @@ internal class MouseManagerTests : Tests
         e = new( )
         {
             Position = new Point(6,3),
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.LeftButtonPressed
         };
         mgr.HandleMouse( e, d );
 
@@ -256,11 +261,11 @@ internal class MouseManagerTests : Tests
         view.Width = Dim.Fill( );
         view.Height = 1;
 
-        Design design = new( d.SourceCode, "myView", view );
+        Design design = new(App, d.SourceCode, "myView", view );
         view.Data = design;
         d.View.Add( view );
 
-        MouseManager mgr = new( );
+        MouseManager mgr = new( App);
 
         // we haven't done anything yet
         Assert.Multiple( ( ) =>
@@ -271,10 +276,10 @@ internal class MouseManagerTests : Tests
         } );
 
         // user presses down in the lower right of control
-        MouseEventArgs e = new( )
+        Mouse e = new( )
         {
             Position = new Point(9,0),
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.LeftButtonPressed
         };
 
         mgr.HandleMouse( e, d );
@@ -289,7 +294,7 @@ internal class MouseManagerTests : Tests
         e = new( )
         {
             Position = new Point(6,3),
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.LeftButtonPressed
         };
         mgr.HandleMouse( e, d );
         
@@ -369,9 +374,9 @@ internal class MouseManagerTests : Tests
 
         Design[] labels =
         [
-            new( d.SourceCode, "lbl1", lbl1 ),
-            new( d.SourceCode, "lbl2", lbl2 ),
-            new( d.SourceCode, "lbl3", lbl3 )
+            new(App, d.SourceCode, "lbl1", lbl1 ),
+            new(App, d.SourceCode, "lbl2", lbl2 ),
+            new(App, d.SourceCode, "lbl3", lbl3 )
         ];
 
         lbl1.Data = labels[ 0 ];
@@ -384,13 +389,13 @@ internal class MouseManagerTests : Tests
 
         SelectionManager selection = SelectionManager.Instance;
         selection.Clear( );
-        MouseManager mgr = new( );
+        MouseManager mgr = new(App);
 
         // user presses down
-        MouseEventArgs e = new( )
+        Mouse e = new( )
         {
             Position = new Point(xStart,yStart),
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.LeftButtonPressed
         };
 
         mgr.HandleMouse( e, d );
@@ -399,7 +404,7 @@ internal class MouseManagerTests : Tests
         e = new( )
         {
             Position = new Point(xEnd,yEnd),
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.LeftButtonPressed
         };
         mgr.HandleMouse( e, d );
 
@@ -437,11 +442,11 @@ internal class MouseManagerTests : Tests
         Assume.That( dummy.GetType( ), Is.EqualTo( typeof( T ) ) );
         Design d = Get10By10View( );
         using T view = ViewFactory.Create<T>( null, null, "Hi there buddy" );
-        Design viewDesign = new( d.SourceCode, $"my{typeof( T ).Name}", view );
+        Design viewDesign = new(App, d.SourceCode, $"my{typeof( T ).Name}", view );
         view.Data = viewDesign;
         d.View.Add( view );
 
-        MouseManager mgr = new( );
+        MouseManager mgr = new(App );
 
         // we haven't done anything yet
         Assume.That( OperationManager.Instance.UndoStackSize, Is.Zero );
@@ -450,10 +455,10 @@ internal class MouseManagerTests : Tests
         Assume.That( view.Y, Is.EqualTo( (Pos)initialViewYPos ) );
 
         // user presses down over the control
-        MouseEventArgs firstClick = new( )
+        Mouse firstClick = new( )
         {
             Position = new Point(startDragX,startDragY),
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.LeftButtonPressed
         };
 
         mgr.HandleMouse( firstClick, d );
@@ -468,12 +473,12 @@ internal class MouseManagerTests : Tests
         } );
 
         // user moved view but still has mouse down
-        MouseEventArgs dragWithMouseButton1Down = new( )
+        Mouse dragWithMouseButton1Down = new( )
         {
             Position = new Point(
                 startDragX + deltaX,
                 startDragY + deltaY),
-            Flags = MouseFlags.Button1Pressed
+            Flags = MouseFlags.LeftButtonPressed
         };
         mgr.HandleMouse( dragWithMouseButton1Down, d );
 
@@ -487,7 +492,7 @@ internal class MouseManagerTests : Tests
         } );
 
         // user releases mouse
-        MouseEventArgs releaseMouseButton1AtNewCoordinates = new( )
+        Mouse releaseMouseButton1AtNewCoordinates = new( )
         {
             Position = new Point(
                 startDragX + deltaX,
@@ -556,7 +561,6 @@ internal class MouseManagerTests : Tests
     {
         yield return (Label)RuntimeHelpers.GetUninitializedObject( typeof( Label ) );
         yield return (Button)RuntimeHelpers.GetUninitializedObject( typeof( Button ) );
-        yield return (TabView)RuntimeHelpers.GetUninitializedObject( typeof( TabView ) );
         yield return (TableView)RuntimeHelpers.GetUninitializedObject( typeof( TableView ) );
         yield return (View)RuntimeHelpers.GetUninitializedObject( typeof( View ) );
     }

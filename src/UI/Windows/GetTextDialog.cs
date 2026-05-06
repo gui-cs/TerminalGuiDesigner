@@ -11,6 +11,7 @@ namespace TerminalGuiDesigner.UI.Windows;
 /// </summary>
 internal class GetTextDialog
 {
+    private readonly IApplication app;
     private readonly DialogArgs args;
     private readonly string? initialValue;
     private readonly Window win;
@@ -19,8 +20,9 @@ internal class GetTextDialog
     private static CheckState lastKnownEnableNewlines = CheckState.UnChecked;
     private bool? multiLineChecked;
 
-    public GetTextDialog(DialogArgs args, string? initialValue)
+    public GetTextDialog(IApplication app, DialogArgs args, string? initialValue)
     {
+        this.app = app;
         this.args = args;
         this.initialValue = initialValue;
 
@@ -29,7 +31,6 @@ internal class GetTextDialog
             Title = this.args.WindowTitle,
             X = 0,
             Y = 0,
-            Modal = true,
         };
 
         var description = new Label
@@ -55,7 +56,7 @@ internal class GetTextDialog
             Height = Dim.Fill(2),
             Width = Dim.Fill(2),
             Text = this.initialValue ?? string.Empty,
-            AllowsTab = false,
+            TabKeyAddsTab = false,
         };
         this.textView.KeyDown += this.TextViewKeyPress;
 
@@ -72,7 +73,8 @@ internal class GetTextDialog
             SetupMultiLineOptional();
         }
 
-        this.textView.CursorPosition = new(0, 0);
+        // No longer supported? 
+        // this.textView.CursorPosition = new(0, 0);
 
         // make it easier for user to replace this text with something else
         // by directly selecting it all so next keypress replaces text
@@ -102,7 +104,7 @@ internal class GetTextDialog
         {
             e.Handled = true;
             this.okClicked = false;
-            Application.RequestStop();
+            app.RequestStop();
         };
 
         var btnClear = new Button()
@@ -128,7 +130,7 @@ internal class GetTextDialog
         {
             Text = "Enable Newlines",
             X = Pos.AnchorEnd(),
-            CheckedState = CheckState.Checked,
+            Value = CheckState.Checked,
             Enabled = false
         };
         win.Add(cbMultiLine);
@@ -143,11 +145,11 @@ internal class GetTextDialog
         {
             Text = "Enable Newlines",
             X = Pos.AnchorEnd(),
-            CheckedState = lastKnownEnableNewlines
+            Value = lastKnownEnableNewlines
         };
-        cbMultiLine.CheckedStateChanging += (s, e) =>
+        cbMultiLine.ValueChanged += (s, e) =>
         {
-            SetEnableNewlines(e.Result);
+            SetEnableNewlines(e.NewValue);
         };
         win.Add(cbMultiLine);
     }
@@ -160,14 +162,14 @@ internal class GetTextDialog
     private void SetEnableNewlines(CheckState newValue)
     {
         lastKnownEnableNewlines = newValue;
-        multiLineChecked = textView.AllowsReturn = newValue == CheckState.Checked;
+        multiLineChecked = textView.EnterKeyAddsLine = newValue == CheckState.Checked;
     }
 
     public string? ResultText { get; set; }
 
     public bool ShowDialog()
     {
-        Application.Run(this.win);
+        app.Run(this.win);
 
         return this.okClicked;
     }
@@ -176,7 +178,7 @@ internal class GetTextDialog
     {
         this.okClicked = true;
         this.ResultText = this.textView.Text.ToString();
-        Application.RequestStop();
+        app.RequestStop();
     }
 
     private void TextViewKeyPress(object? sender, Key key)

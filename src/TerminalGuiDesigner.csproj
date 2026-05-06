@@ -10,9 +10,9 @@
 		</None>
 	</ItemGroup>
 	<PropertyGroup>
-		<TargetFrameworks>net8.0</TargetFrameworks>
+		<TargetFrameworks>net10.0</TargetFrameworks>
 		<DefineConstants>$(DefineConstants)</DefineConstants>
-		<LangVersion>12</LangVersion>
+		<LangVersion>13</LangVersion>
 		<OutputType>Exe</OutputType>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<PackAsTool>true</PackAsTool>
@@ -20,7 +20,7 @@
 		<PackageOutputPath>./nupkg</PackageOutputPath>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<PackageId>TerminalGuiDesigner</PackageId>
-		<Version>2.0.0-develop.4538</Version>
+		<Version>2.0.2-develop.40</Version>
 		<Authors>Thomas Nind</Authors>
 		<Nullable>enable</Nullable>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -33,7 +33,7 @@
 		<PackageIcon>logo.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageReleaseNotes>
-			2.0.0-alpha.4538
+			2.0.0-alpha.5373
 			* Update to latest nuget package
 			* Fix crash caused moving PosRelative view without its pair into different container View
 			2.0.0-alpha.4519
@@ -70,7 +70,7 @@
 			* Fix right click on TableView headers
 			* Improve context menu layout for menus, status bars etc
 			* Improved private field naming conventions
-			* RadioGroup can now be set to horizontal
+			* OptionSelector can now be set to horizontal
 			v1.0.19
 			* Added `-e` experimental mode flag that lets you create new Toplevel and View classes
 			* Added dotted border around Views that do not have any visible boundary (e.g. `View`, `TabView` with ShowBorder off)
@@ -101,7 +101,7 @@
 			* Deleting the last item on a MenuBar now removes the MenuBar too
 			* Added multi copy/paste (drag selection box and copy/paste).  Still restricted to non container views (i.e. not TabView etc)
 			v1.0.13
-			* Changing LineView Orientation now properly flips rune and Width/Height
+			* Changing Line Orientation now properly flips rune and Width/Height
 			* Fixed mouse drag moving and resizing container views (e.g. TabView)
 			* Fixed bug where you were able to copy/paste the root view
 			v1.0.12
@@ -154,21 +154,21 @@
 		</Content>
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Basic.Reference.Assemblies.Net70" Version="1.7.7" />
+		<PackageReference Include="Basic.Reference.Assemblies.Net80" Version="1.7.7" />
 		<PackageReference Include="CommandLineParser" Version="2.9.1" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="8.0.1" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="10.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0" />
 		<PackageReference Include="NetEscapades.Configuration.Yaml" Version="3.1.0" />
 		<PackageReference Include="Serilog" Version="4.2.0" />
 		<PackageReference Include="Serilog.Extensions.Logging" Version="9.0.0" />
 		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
-		<PackageReference Include="Terminal.Gui" Version="2.0.0-develop.4538" />
+		<PackageReference Include="Terminal.Gui" Version="2.0.2-develop.40" />
 		<PackageReference Include="nlog" Version="5.3.3" />
-		<PackageReference Include="Basic.Reference.Assemblies.Net80" Version="1.7.7" />
-		<PackageReference Include="System.CodeDom" Version="8.0.0" />
+		<PackageReference Include="Basic.Reference.Assemblies.Net100" Version="1.7.7" />
+		<PackageReference Include="System.CodeDom" Version="10.0.0" />
 	</ItemGroup>
 	
 	<ItemGroup>

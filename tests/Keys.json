@@ -13,7 +13,7 @@
   "Paste": "Ctrl+V",
   "Redo": "Ctrl+Y",
   "Rename": "Ctrl+R",
-  "RightClick": "Button3Clicked",
+  "RightClick": "RightButtonClicked",
   "Save": "Ctrl+S",
   "SelectAll": "Ctrl+A",
   "SelectionColor": {

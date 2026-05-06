@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Views;
 using TerminalGuiDesigner.Operations.Generics;
 
@@ -16,11 +17,13 @@ public class MoveColumnOperation : MoveOperation<TableView, DataColumn>
     /// Creates an operation that will change the ordering of columns within
     /// a <see cref="TableView"/>.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="design">Wrapper for a <see cref="TableView"/>.</param>
     /// <param name="column">The <see cref="DataColumn"/> to move.</param>
     /// <param name="adjustment">Negative to move left, positive to move right.</param>
-    public MoveColumnOperation(Design design, DataColumn column, int adjustment)
+    public MoveColumnOperation(IApplication app, Design design, DataColumn column, int adjustment)
         : base(
+            app,
             (v) => v.GetDataTable().Columns.Cast<DataColumn>().ToArray(),
             (v, a) => v.ReOrderColumns(a),
             (c) => c.ColumnName,

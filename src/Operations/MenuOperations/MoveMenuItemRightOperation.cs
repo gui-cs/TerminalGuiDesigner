@@ -1,4 +1,5 @@
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.Views;
 
 namespace TerminalGuiDesigner.Operations.MenuOperations;
@@ -14,11 +15,22 @@ public class MoveMenuItemRightOperation : MenuItemOperation
     /// <summary>
     /// Initializes a new instance of the <see cref="MoveMenuItemRightOperation"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="toMove">Moves the <paramref name="toMove"/> to the sub-menu of the <see cref="MenuItem"/> above it.</param>
-    public MoveMenuItemRightOperation(MenuItem toMove)
-        : base(toMove)
+    public MoveMenuItemRightOperation(IApplication app, MenuItem toMove)
+        : base(app, toMove)
     {
-        if (this.Parent?.GetChildrenIndex(toMove) == 0)
+        if (this.Parent == null || this.OperateOn == null)
+        {
+            this.IsImpossible = true;
+            return;
+        }
+
+        var items = this.Parent.GetMenuItems(out _);
+        int idx = items.IndexOf(toMove);
+
+        // Can't move right if we're the first item (no item above to become parent)
+        if (idx <= 0)
         {
             this.IsImpossible = true;
         }
@@ -39,7 +51,7 @@ public class MoveMenuItemRightOperation : MenuItemOperation
             return;
         }
 
-        new MoveMenuItemRightOperation(this.OperateOn).Do();
+        new MoveMenuItemRightOperation(App, this.OperateOn).Do();
     }
 
     /// <inheritdoc/>
@@ -50,7 +62,7 @@ public class MoveMenuItemRightOperation : MenuItemOperation
             return;
         }
 
-        new MoveMenuItemLeftOperation(this.OperateOn).Do();
+        new MoveMenuItemLeftOperation(App, this.OperateOn).Do();
     }
 
     /// <inheritdoc/>
@@ -62,7 +74,7 @@ public class MoveMenuItemRightOperation : MenuItemOperation
         }
 
         // When user hits shift right
-        var children = this.Parent.Children.ToList<MenuItem>();
+        var children = this.Parent.GetMenuItems(out _);
         var currentItemIdx = children.IndexOf(this.OperateOn);
         var aboveIdx = currentItemIdx - 1;
 
@@ -72,30 +84,25 @@ public class MoveMenuItemRightOperation : MenuItemOperation
             return false;
         }
 
-        var addTo = this.ConvertToMenuBarItem(children, aboveIdx);
+        // Get or create a submenu on the item above
+        var itemAbove = children[aboveIdx];
+        if (itemAbove.SubMenu == null)
+        {
+            itemAbove.SubMenu = new Menu();
+        }
 
-        // pull us out
-        children.Remove(this.OperateOn);
+        // Remove us from current menu
+        this.Parent.RemoveMenuItem(this.OperateOn);
 
-        // add us to the sub-menu
-        var submenuChildren = addTo.Children.ToList<MenuItem>();
-
+        // Add us to the submenu of the item above
         if (this.InsertionIndex != null)
         {
-            submenuChildren.Insert(
-                Math.Min(this.InsertionIndex.Value, submenuChildren.Count),
-                this.OperateOn);
+            itemAbove.InsertMenuItem(this.InsertionIndex.Value, this.OperateOn);
         }
         else
         {
-            submenuChildren.Add(this.OperateOn);
+            itemAbove.SubMenu.Add(this.OperateOn);
         }
-
-        // update the main menu
-        this.Parent.Children = children.ToArray();
-
-        // update the sub-menu
-        addTo.Children = submenuChildren.ToArray();
 
         this.Bar?.SetNeedsDraw();
 
@@ -109,9 +116,12 @@ public class MoveMenuItemRightOperation : MenuItemOperation
             return mb;
         }
 
-        var added = new MenuBarItem(children[idx].Title, new MenuItem[0], null);
+        var added = new MenuBarItem()
+        {
+            Title = children[idx].Title
+        };
         added.Data = children[idx].Data;
-        added.ShortcutKey = children[idx].ShortcutKey;
+        added.Key = children[idx].Key;
 
         children.RemoveAt(idx);
         children.Insert(idx, added);

@@ -1,4 +1,5 @@
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.ViewBase;
 
 namespace TerminalGuiDesigner.Operations;
@@ -15,12 +16,13 @@ public class MoveViewOperation : Operation
     /// Moves a <see cref="View"/> within it's current container by a fixed amount
     /// (e.g. nudging with Shift+Cursor).
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="toMove">Wrapper of the <see cref="View"/> to move.</param>
     /// <param name="deltaX">The amount to move in the X plane.  Positive for Right and Negative for Left.
     /// Ignored if <see cref="View.X"/> is relative (e.g. <see cref="Pos.Center"/>).</param>
     /// <param name="deltaY">The amount to move in the Y plane.  Positive for Down and Negative for Up.
     /// Ignored if <see cref="View.Y"/> is relative (e.g. <see cref="Pos.Center"/>).</param>
-    public MoveViewOperation(Design toMove, int deltaX, int deltaY)
+    public MoveViewOperation(IApplication app, Design toMove, int deltaX, int deltaY) : base(app)
     {
         this.BeingMoved = toMove;
         this.OriginX = toMove.View.X;

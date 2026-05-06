@@ -17,14 +17,15 @@ public class Modals
     /// <summary>
     /// Prompts user to enter a number.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="windowTitle">Title for the pop-up.</param>
     /// <param name="entryLabel">Text to show next to the entry field.</param>
     /// <param name="initialValue">Initial value to put into the entry field.</param>
     /// <param name="result">Output value user typed.</param>
     /// <returns>True if user confirmed a choice.</returns>
-    public static bool GetInt(string windowTitle, string entryLabel, int? initialValue, out int? result)
+    public static bool GetInt(IApplication app, string windowTitle, string entryLabel, int? initialValue, out int? result)
     {
-        if (GetString(windowTitle, entryLabel, initialValue.ToString(), out var newValue))
+        if (GetString(app, windowTitle, entryLabel, initialValue.ToString(), out var newValue))
         {
             if (string.IsNullOrWhiteSpace(newValue))
             {
@@ -43,9 +44,10 @@ public class Modals
         return false;
     }
 
-    internal static bool GetArray(string windowTitle, string entryLabel, Type arrayElement, Array? initialValue, out Array? result)
+    internal static bool GetArray(IApplication app, string windowTitle, string entryLabel, Type arrayElement, Array? initialValue, out Array? result)
     {
         var dlg = new GetTextDialog(
+            app,
             new DialogArgs()
         {
             WindowTitle = windowTitle,
@@ -81,9 +83,10 @@ public class Modals
         return false;
     }
 
-    internal static bool TryGetArray<T>(string windowTitle, string entryLabel, Array? initialValue, out Array? result)
+    internal static bool TryGetArray<T>(IApplication app, string windowTitle, string entryLabel, Array? initialValue, out Array? result)
     {
         var dlg = new GetTextDialog(
+            app,
             new ()
             {
                 WindowTitle = windowTitle,
@@ -119,9 +122,10 @@ public class Modals
         return false;
     }
 
-    internal static bool GetString(string windowTitle, string entryLabel, string? initialValue, out string? result, bool multiLine = false)
+    internal static bool GetString(IApplication app, string windowTitle, string entryLabel, string? initialValue, out string? result, bool multiLine = false)
     {
         var dlg = new GetTextDialog(
+            app,
             new DialogArgs()
         {
             WindowTitle = windowTitle,
@@ -140,27 +144,32 @@ public class Modals
         return false;
     }
 
-    internal static bool Get<T>(string prompt, string okText, T[] collection, T? currentSelection, out T? selected, bool sort = true)
+    internal static bool Get<T>(IApplication app, string prompt, string okText, T[] collection, T? currentSelection, out T? selected, bool sort = true)
     {
-        return Get(prompt, okText, true, collection, o => o is Type t ? t.Name : o?.ToString() ?? "Null", false, currentSelection, out selected,sort);
+        return Get(app, prompt, okText, true, collection, o => o is Type t ? t.Name : o?.ToString() ?? "Null", false, currentSelection, out selected,sort);
     }
 
-    internal static bool Get<T>( string prompt, string okText, in bool addSearch, T[] collection, Func<T?, string> displayMember, bool addNull, [NotNullWhen( true )]T? currentSelection, [NotNullWhen( true )] out T? selected, bool sort=true )
+    internal static bool Get<T>(IApplication app, string prompt, string okText, in bool addSearch, T[] collection, Func<T?, string> displayMember, bool addNull, [NotNullWhen( true )]T? currentSelection, [NotNullWhen( true )] out T? selected, bool sort=true )
     {
-        var pick = new BigListBox<T>( prompt, okText, in addSearch, collection, displayMember, addNull, currentSelection,sort );
+        var pick = new BigListBox<T>(app, prompt, okText, in addSearch, collection, displayMember, addNull, currentSelection,sort );
         bool toReturn = pick.ShowDialog( );
         selected = pick.Selected;
         return toReturn;
     }
 
-    internal static bool GetEnum(string prompt, string okText, Type enumType, Enum? currentValue, out Enum? result)
+    internal static bool GetEnum(IApplication app, string prompt, string okText, Type enumType, Enum? currentValue, out Enum? result)
     {
-        return Get(prompt, okText, true, Enum.GetValues(enumType).Cast<Enum>().ToArray(), o => o?.ToString() ?? "Null", false, currentValue, out result);
+        if(Nullable.GetUnderlyingType(enumType) is Type underlyingEnumType)
+        {
+            enumType = underlyingEnumType;
+        }
+
+        return Get(app, prompt, okText, true, Enum.GetValues(enumType).Cast<Enum>().ToArray(), o => o?.ToString() ?? "Null", false, currentValue, out result);
     }
 
-    internal static bool GetChar(string windowTitle, string entryLabel, char? oldValue, out char? resultChar)
+    internal static bool GetChar(IApplication app, string windowTitle, string entryLabel, char? oldValue, out char? resultChar)
     {
-        if (GetString(windowTitle, entryLabel, oldValue?.ToString() ?? string.Empty, out var result))
+        if (GetString(app, windowTitle, entryLabel, oldValue?.ToString() ?? string.Empty, out var result))
         {
             if (result == null || result.Length == 0)
             {
@@ -179,7 +188,7 @@ public class Modals
         return false;
     }
 
-    internal static Key GetShortcut()
+    internal static Key GetShortcut(IApplication app)
     {
         Key key = KeyCode.Null;
         var dlg = new LoadingDialog("Press Shortcut or Del");
@@ -189,10 +198,10 @@ public class Modals
             {
                 key = e;
                 key.Handled = true;
-                Application.RequestStop();
+                app.RequestStop();
             }
         };
-        Application.Run(dlg);
+        app.Run(dlg);
 
         return key == Key.DeleteChar ? KeyCode.Null : key;
     }

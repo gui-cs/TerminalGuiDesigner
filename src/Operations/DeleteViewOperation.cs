@@ -1,4 +1,5 @@
 using Terminal.Gui;
+using Terminal.Gui.App;
 using Terminal.Gui.ViewBase;
 
 namespace TerminalGuiDesigner.Operations;
@@ -22,8 +23,9 @@ public class DeleteViewOperation : Operation
     /// <summary>
     /// Initializes a new instance of the <see cref="DeleteViewOperation"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="delete">Wrappers for the <see cref="View"/> you want to delete.</param>
-    public DeleteViewOperation(params Design[] delete)
+    public DeleteViewOperation(IApplication app, params Design[] delete) : base(app)
     {
         this.delete = delete;
         this.from = delete.Select(d => d.View.SuperView).ToArray();

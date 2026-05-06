@@ -1,15 +1,9 @@
-using System;
-using Terminal.Gui;
-using Terminal.Gui.App;
-using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
-using Terminal.Gui.Views;
-using TerminalGuiDesigner;
 
 namespace UnitTests;
 
 [TestFixture]
-[TestOf( typeof( ViewExtensions ) )]
+[TestOf( typeof( TerminalGuiDesigner.ViewExtensions ) )]
 [Category( "Core" )]
 [Category( "UI" )]
 internal class ViewExtensionsTests : Tests
@@ -37,14 +31,14 @@ internal class ViewExtensionsTests : Tests
         v.Height = 3;
 
         // Hit test does not find things that are not designable
-        v.Data = new Design(new SourceCodeFile("MyView.cs"), "myview", v);
+        v.Data = new Design(App, new SourceCodeFile("MyView.cs"), "myview", v);
 
-        Application.Top.Add(v);
+        App.TopRunnableView.Add(v);
         bool isLowerRight;
         bool isBorder;
 
-        var result = v.HitTest(
-            new MouseEventArgs
+        var result = v.HitTest(App,
+            new Mouse
         {
                 Position = new Point(x, y),
         }, out isBorder, out isLowerRight);
@@ -56,7 +50,7 @@ internal class ViewExtensionsTests : Tests
         }
         else
         {
-            ClassicAssert.AreSame(Application.Top,result);
+            ClassicAssert.AreSame(App.TopRunnableView,result);
         }
 
         ClassicAssert.AreEqual(lowerRight, isLowerRight);
@@ -65,7 +59,6 @@ internal class ViewExtensionsTests : Tests
 
     [TestCase(typeof(Label), false)]
     [TestCase(typeof(TableView), false)]
-    [TestCase(typeof(TabView), true)]
     [TestCase(typeof(View), true)]
     [TestCase(typeof(Window), true)]
     public void TestIsContainerView(Type viewType, bool expectIsContainerView)
@@ -78,7 +71,6 @@ internal class ViewExtensionsTests : Tests
 
     [TestCase(typeof(Label), false)]
     [TestCase(typeof(TableView), false)]
-    [TestCase(typeof(TabView), false)]
     [TestCase(typeof(Window), false)]
     [TestCase(typeof(View), true)]
     public void TestOutOfBox_IsBorderlessContainerView(Type viewType, bool expectResult)
@@ -100,18 +92,18 @@ internal class ViewExtensionsTests : Tests
         };
 
         // Hit test does not find things that are not designable
-        f.Data = new Design(new SourceCodeFile("MyView.cs"), "myframe", f);
+        f.Data = new Design(App, new SourceCodeFile("MyView.cs"), "myframe", f);
 
         w.Add(f);
         Application.Begin(w);
         w.LayoutSubViews();
 
-        ClassicAssert.AreSame(w, w.HitTest(new MouseEventArgs {Position = new Point(13, 0) }, out var isBorder, out _),
+        ClassicAssert.AreSame(w, w.HitTest(App, new Mouse {Position = new Point(13, 0) }, out var isBorder, out _),
             "Expected 0,0 to be the window border (its client area should start at 1,1)");
         ClassicAssert.IsTrue(isBorder);
 
         // 1,1
-        ClassicAssert.AreSame(f, w.HitTest(new MouseEventArgs {Position = new Point(1, 1) }, out isBorder, out _),
+        ClassicAssert.AreSame(f, w.HitTest(App, new Mouse {Position = new Point(1, 1) }, out isBorder, out _),
             "Expected 1,1 to be the Frame border (its client area should start at 1,1)");
         ClassicAssert.IsTrue(isBorder);
     }

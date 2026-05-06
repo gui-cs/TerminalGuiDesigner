@@ -100,28 +100,6 @@ public class Property : ToCodeBase
     {
         value = AdjustValueBeingSet(value);
 
-        // if a LineView and changing Orientation then also flip
-        // the Height/Width and set appropriate new rune
-        if (this.PropertyInfo.Name == nameof(LineView.Orientation)
-            && this.Design.View is LineView v && value is Orientation newOrientation)
-        {
-            switch (newOrientation)
-            {
-                case Orientation.Horizontal:
-                    v.Width = v.Height;
-                    v.Height = 1;
-                    v.LineRune = Glyphs.HLine;
-
-                    break;
-                case Orientation.Vertical:
-                    v.Height = v.Width;
-                    v.Width = 1;
-                    v.LineRune = Glyphs.VLine;
-                    break;
-                default:
-                    throw new ArgumentException($"Unknown Orientation {newOrientation}");
-            }
-        }
 
         this.PropertyInfo.SetValue(this.DeclaringObject, value);
 
@@ -162,27 +140,7 @@ public class Property : ToCodeBase
 
         if(val is Rune rune)
         {
-            char[] chars = new char[rune.Utf16SequenceLength];
-            rune.EncodeToUtf16(chars);
-
-            if(chars.Length == 1)
-            {
-                return new CodeObjectCreateExpression(
-                    typeof(Rune),
-                    new CodePrimitiveExpression(chars[0]));
-            }
-            else if (chars.Length == 2)
-            {
-                // User is setting to an emoticon or something
-                return new CodeObjectCreateExpression(
-                    typeof(Rune),
-                    new CodePrimitiveExpression(chars[0]),
-                    new CodePrimitiveExpression(chars[1]));
-            }
-            else
-            {
-                throw new Exception($"Unexpected unicode character size.  Rune was {rune}");
-            }
+            return this.GetRuneExpression(rune);
         }
 
         if (val is Attribute attribute)
@@ -230,6 +188,7 @@ public class Property : ToCodeBase
 
         var type = val.GetType();
 
+        // But less specific
         if (type.IsArray)
         {
             var elementType = type.GetElementType();
@@ -238,6 +197,20 @@ public class Property : ToCodeBase
             return new CodeArrayCreateExpression(
                 elementType ?? throw new Exception($"Type {type} was an Array but {nameof(Type.GetElementType)} returned null"),
                 values.Select(v => v.ToCodePrimitiveExpression()).ToArray());
+        }
+
+        
+        if (type.IsGenericType(typeof(IReadOnlyList<>)))
+        {
+            var elementType = type.GetGenericArguments()[0];
+
+            if(elementType.IsPrimitive || elementType == typeof(string))
+            {
+                var values = ((IEnumerable)val).Cast<object>().ToList();
+                return new CodeArrayCreateExpression(
+                    elementType ?? throw new Exception($"Type {type} was an IReadOnlyList<> but {nameof(Type.GetGenericArguments)} returned null"),
+                    values.Select(v => v.ToCodePrimitiveExpression()).ToArray());
+            }            
         }
 
         if (val is IList valList)
@@ -308,19 +281,24 @@ public class Property : ToCodeBase
 
         var type = val.GetType();
 
+        if( type.IsValueType || type == typeof(string))
+        {
+            return new CodePrimitiveExpression(val);
+        }
+
         // TODO: Could move lots of logic in GetRHS into here
-        if (type.GetGenericTypeDefinition() == typeof(SliderOption<>))
+        if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(LinearRangeOption<>))
         {
             // TODO: this feels very brittle!
-            var a1 = type.GetPropertyOrThrow(nameof(SliderOption<object>.Legend)).GetValue(val);
-            var a2 = (Rune)type.GetPropertyOrThrow(nameof(SliderOption<object>.LegendAbbr)).GetValue(val)!;
-            var a3 = type.GetPropertyOrThrow(nameof(SliderOption<object>.Data)).GetValue(val);
+            var a1 = type.GetPropertyOrThrow(nameof(LinearRangeOption<object>.Legend)).GetValue(val);
+            var a2 = (Rune)type.GetPropertyOrThrow(nameof(LinearRangeOption<object>.LegendAbbr)).GetValue(val)!;
+            var a3 = type.GetPropertyOrThrow(nameof(LinearRangeOption<object>.Data)).GetValue(val);
             
 
             return new CodeObjectCreateExpression(
                 new CodeTypeReference(val.GetType()),
                 new CodePrimitiveExpression(a1),
-                new CodeObjectCreateExpression(typeof(Rune),new CodePrimitiveExpression(a2.ToString()[0])),
+                this.GetRuneExpression(a2),
                 new CodePrimitiveExpression(a3));
         }
         else
@@ -464,11 +442,6 @@ public class Property : ToCodeBase
     /// </summary>
     private void CallRefreshMethodsIfAny()
     {
-        if (this.Design.View is TabView tv)
-        {
-            tv.ApplyStyleChanges();
-        }
-
         if (this.Design.View is TableView t)
         {
             t.Update();

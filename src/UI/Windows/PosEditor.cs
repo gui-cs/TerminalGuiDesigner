@@ -27,6 +27,7 @@ using TerminalGuiDesigner.UI.Windows;
 /// </summary>
 public partial class PosEditor : Dialog, IValueGetterDialog {
 
+    private readonly IApplication app;
     private Design design;
     private readonly Dictionary<string, Design> _siblings;
 
@@ -35,7 +36,7 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
     /// selected and text values entered - offset etc).
     /// </summary>
     [CanBeNull]
-    public object Result { get; private set; }
+    public object ActualResult { get; private set; }
 
     /// <summary>
     /// True if user cancelled the dialog instead of hitting Ok.
@@ -46,31 +47,30 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
     /// Prompt user to create a new <see cref="Pos"/> value to populate
     /// on <paramref name="design"/> with.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="design">What to set the value on.</param>
     /// <param name="oldValue">The current value for the property.</param>
-    public PosEditor(Design design, Pos oldValue) {
+    public PosEditor(IApplication app, Design design, Pos oldValue) {
         InitializeComponent();
-        
+
+        this.app = app;
         this.design = design;
 
         Title = "Pos Designer";
-        Border.BorderStyle = LineStyle.Double;
+        Border.LineStyle = LineStyle.Double;
 
         rgPosType.KeyDown += RgPosType_KeyPress;
 
         btnOk.Accepting += BtnOk_Clicked;
         btnCancel.Accepting += BtnCancel_Clicked;
         Cancelled = true;
-        Modal = true;
 
         _siblings = design.GetSiblings().ToDictionary(
             d=>d.FieldName,
             d=>d);
 
-        tbRelativeTo.Autocomplete.SuggestionGenerator = new SingleWordSuggestionGenerator()
-        {
-            AllSuggestions = _siblings.Keys.OrderBy(a => a).ToList()
-        };
+        tbRelativeTo.Source = new Terminal.Gui.Views.ListWrapper<string>(
+            new System.Collections.ObjectModel.ObservableCollection<string>(_siblings.Keys.OrderBy(a => a).ToList()));
 
         var val = oldValue;
         if(val.GetPosType(_siblings.Values.ToList(),
@@ -79,22 +79,22 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
             switch(type)
             {
                 case PosType.Absolute:
-                    rgPosType.SelectedItem = 0;
+                    rgPosType.Value = 0;
                     break;
                 case PosType.Percent:
-                    rgPosType.SelectedItem = 1;
+                    rgPosType.Value = 1;
                     break;
                 case PosType.Relative:
-                    rgPosType.SelectedItem = 2;
+                    rgPosType.Value = 2;
                     if(relativeTo != null)
                         tbRelativeTo.Text = relativeTo.FieldName;
-                    rgSide.SelectedItem = (int)side;
+                    rgSide.Value = (int)side;
                     break;
                 case PosType.Center:
-                    rgPosType.SelectedItem = 3;                        
+                    rgPosType.Value = 3;                        
                     break;
                 case PosType.AnchorEnd:
-                    rgPosType.SelectedItem = 4;
+                    rgPosType.Value = 4;
                     break;
             }
 
@@ -104,7 +104,7 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
 
         SetupForCurrentPosType();
 
-        rgPosType.SelectedItemChanged += DdType_SelectedItemChanged;
+        rgPosType.ValueChanged += DdType_SelectedItemChanged;
 
     }
 
@@ -119,7 +119,7 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
         }            
     }
 
-    private void DdType_SelectedItemChanged(object sender, SelectedItemChangedArgs obj)
+    private void DdType_SelectedItemChanged(object sender, ValueChangedEventArgs<int?> e)
     {
         SetupForCurrentPosType();            
     }
@@ -210,7 +210,7 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
     {
         e.Handled = true;
         Cancelled = true;
-        Application.RequestStop();
+        app.RequestStop();
     }
 
     private void BtnOk_Clicked(object sender, CommandEventArgs e)
@@ -218,15 +218,15 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
         e.Handled = true;
         if(GetPosType() == PosType.AnchorEnd && GetValue(out var value) && value <=0)
         {
-            if (!ChoicesDialog.Confirm("Anchor Without Margin", "Using AnchorEnd without a margin will result in a point outside of parent bounds.\nAre you sure?"))
+            if (!ChoicesDialog.Confirm(app, "Anchor Without Margin", "Using AnchorEnd without a margin will result in a point outside of parent bounds.\nAre you sure?"))
             {
                 return;
-            }   
+            }
         }
 
         Cancelled = !BuildPos(out var result);
-        Result = result;
-        Application.RequestStop();
+        ActualResult = result;
+        app.RequestStop();
     }
 
     private bool BuildPos(out Pos result)
@@ -254,13 +254,13 @@ public partial class PosEditor : Dialog, IValueGetterDialog {
 
     private PosType GetPosType()
     {
-        return Enum.Parse<PosType>(rgPosType.RadioLabels[rgPosType.SelectedItem].ToString());
+        return Enum.Parse<PosType>(rgPosType.Labels[rgPosType.Value ?? 0].ToString());
     }
 
 
     private Side? GetSide()
     {
-        return rgSide.SelectedItem == -1 ? null : (Side)rgSide.SelectedItem;
+        return rgSide.Value == null ? null : (Side)rgSide.Value;
     }
 
     private bool GetOffset(out int offset)

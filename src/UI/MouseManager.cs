@@ -12,6 +12,7 @@ namespace TerminalGuiDesigner.UI;
 /// </summary>
 public class MouseManager
 {
+    private readonly IApplication app;
     private DragOperation? dragOperation = null;
     private ResizeOperation? resizeOperation = null;
 
@@ -21,6 +22,11 @@ public class MouseManager
     /// </summary>
     private Point? selectionStart = null;
     private Point? selectionEnd = null;
+
+    public MouseManager(IApplication app)
+    {
+        this.app = app;
+    }
 
     /// <summary>
     /// Gets the container that 'drag a box' selection is occurring in (if any).
@@ -40,21 +46,21 @@ public class MouseManager
     public IErrorReporter? ErrorReporter;
 
     /// <summary>
-    /// Responds to <see cref="Application.MouseEvent"/>(by changing a 'drag a box' selection area
+    /// Responds to <see cref="Application.MouseEventArgs"/>(by changing a 'drag a box' selection area
     /// or starting a resize etc).
     /// </summary>
-    /// <param name="m">The <see cref="MouseEventArgs"/> reported by <see cref="Application.MouseEvent"/>.</param>
+    /// <param name="m">The <see cref="MouseEventArgs"/> reported by <see cref="Application.MouseEventArgs"/>.</param>
     /// <param name="viewBeingEdited">The root <see cref="Design"/> that is open in the <see cref="Editor"/>.</param>
-    public void HandleMouse(MouseEventArgs m, Design viewBeingEdited)
+    public void HandleMouse(Mouse m, Design viewBeingEdited)
     {
         // start dragging
-        if (m.Flags.HasFlag(MouseFlags.Button1Pressed)
+        if (m.Flags.HasFlag(MouseFlags.LeftButtonPressed)
             && this.resizeOperation == null && this.dragOperation == null && this.selectionStart == null)
         {
-            View? drag = viewBeingEdited.View.HitTest(m, out bool isBorder, out bool isLowerRight);
+            View? drag = viewBeingEdited.View.HitTest(app, m, out bool isBorder, out bool isLowerRight);
 
             // if user is ctrl+click
-            if (m.Flags.HasFlag(MouseFlags.ButtonCtrl) && drag != null)
+            if (m.Flags.HasFlag(MouseFlags.Ctrl) && drag != null)
             {
                 // then add or remove the clicked item from the group selection
                 var addOrRemove = drag.GetNearestDesign();
@@ -90,11 +96,11 @@ public class MouseManager
             {
                 var parent = drag.SuperView;
 
-                var dest = parent.ScreenToContent(m.Position);
+                var dest = parent.ScreenToViewport(m.Position ?? Point.Empty);
 
                 if (isLowerRight)
                 {
-                    this.resizeOperation = new ResizeOperation(design, dest.X, dest.Y);
+                    this.resizeOperation = new ResizeOperation(this.app, design, dest.X, dest.Y);
                 }
                 else
                 {
@@ -106,6 +112,7 @@ public class MouseManager
                     {
                         // drag all the views at once
                         this.dragOperation = new DragOperation(
+                            this.app,
                             design,
                             dest.X,
                             dest.Y,
@@ -114,7 +121,7 @@ public class MouseManager
                     else
                     {
                         // else drag only the non selected one
-                        this.dragOperation = new DragOperation(design, dest.X, dest.Y, new Design[0]);
+                        this.dragOperation = new DragOperation(this.app, design, dest.X, dest.Y, new Design[0]);
                     }
 
                     // don't begin an impossible drag!
@@ -127,7 +134,7 @@ public class MouseManager
         }
 
         // continue dragging a selection box
-        if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && this.selectionStart != null)
+        if (m.Flags.HasFlag(MouseFlags.LeftButtonPressed) && this.selectionStart != null)
         {
             // move selection box to new mouse position
             this.selectionEnd = m.Position;
@@ -136,9 +143,9 @@ public class MouseManager
         }
 
         // continue dragging a view
-        if (m.Flags.HasFlag(MouseFlags.Button1Pressed) && this.dragOperation?.BeingDragged.View?.SuperView != null)
+        if (m.Flags.HasFlag(MouseFlags.LeftButtonPressed) && this.dragOperation?.BeingDragged.View?.SuperView != null && m.Position.HasValue)
         {
-            var dest = this.dragOperation?.BeingDragged.View.SuperView.ScreenToContent(m.Position);
+            var dest = this.dragOperation?.BeingDragged.View.SuperView.ScreenToViewport(m.Position.Value);
 
             if (dest != null && this.dragOperation != null)
             {
@@ -150,11 +157,12 @@ public class MouseManager
         }
 
         // continue resizing
-        if (m.Flags.HasFlag(MouseFlags.Button1Pressed)
+        if (m.Flags.HasFlag(MouseFlags.LeftButtonPressed)
             && this.resizeOperation != null
-            && this.resizeOperation.BeingResized.View.SuperView != null)
+            && this.resizeOperation.BeingResized.View.SuperView != null
+            && m.Position.HasValue)
         {
-            var dest = this.resizeOperation.BeingResized.View.SuperView.ScreenToContent(m.Position);
+            var dest = this.resizeOperation.BeingResized.View.SuperView.ScreenToViewport(m.Position.Value);
 
             this.resizeOperation.ContinueResize(dest);
 
@@ -164,7 +172,7 @@ public class MouseManager
         }
 
         // end things (because mouse released)
-        if (!m.Flags.HasFlag(MouseFlags.Button1Pressed))
+        if (!m.Flags.HasFlag(MouseFlags.LeftButtonPressed))
         {
             // end selection box
             if (this.selectionStart != null && this.SelectionBox != null && this.selectionContainer != null)
@@ -189,7 +197,7 @@ public class MouseManager
             if (this.dragOperation != null)
             {
                 // see if we are dragging into a new container
-                var dropInto = viewBeingEdited.View.HitTest(m, out _, out _, this.dragOperation.BeingDragged.View);
+                var dropInto = viewBeingEdited.View.HitTest(app, m, out _, out _, this.dragOperation.BeingDragged.View);
 
                 // TODO: this is quite hacky workaround for dropping on things like TabView top row.  Need
                 // a better solution to this.

@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using Terminal.Gui.App;
 
 namespace TerminalGuiDesigner.Operations;
 
@@ -24,7 +25,7 @@ public class CompositeOperation : Operation
     /// </para>
     /// </summary>
     /// <param name="operations">All operations to perform in <see cref="Operation.Do"/>.</param>
-    public CompositeOperation(params Operation[] operations)
+    public CompositeOperation(IApplication app, params Operation[] operations):base(app)
     {
         this.operations = operations;
 

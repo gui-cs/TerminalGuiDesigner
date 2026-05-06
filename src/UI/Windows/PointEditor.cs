@@ -22,6 +22,8 @@ using Terminal.Gui;
 /// </summary>
 public partial class PointEditor : IValueGetterDialog {
 
+    private readonly IApplication app;
+
     /// <summary>
     /// Gets a value indicating whether user cancelled the dialog before
     /// making a choice.
@@ -38,16 +40,18 @@ public partial class PointEditor : IValueGetterDialog {
     /// </summary>
     public float ResultY {get;private set;}
 
-    [CanBeNull] public object Result => new PointF(ResultX, ResultY);
+    [CanBeNull] public object ActualResult => new PointF(ResultX, ResultY);
 
     /// <summary>
     /// Creates a new instance of the <see cref="PointEditor"/> class.
     /// </summary>
+    /// <param name="app">The application instance.</param>
     /// <param name="x">Initial value to show in dialog for X.</param>
     /// <param name="y">Initial value to show in dialog for Y.</param>
-    public PointEditor(float x, float y) {
+    public PointEditor(IApplication app, float x, float y) {
         InitializeComponent();
 
+        this.app = app;
         tbX.Text = x.ToString();
         tbY.Text = y.ToString();
 
@@ -59,7 +63,7 @@ public partial class PointEditor : IValueGetterDialog {
     {
         e.Handled = true;
         Cancelled = true;
-        Application.RequestStop();
+        app.RequestStop();
     }
 
     private void Ok(object sender, CommandEventArgs e)
@@ -73,16 +77,16 @@ public partial class PointEditor : IValueGetterDialog {
                 ResultY = y;
 
                 Cancelled = false;
-                Application.RequestStop();
+                app.RequestStop();
             }
             else
             {
-                MessageBox.ErrorQuery(20,5,"Could no parse",$"Could not parse '{tbY.Text}'","Ok");
+                MessageBox.ErrorQuery(app, "Could no parse",$"Could not parse '{tbY.Text}'","Ok");
             }
         }
         else
         {
-                MessageBox.ErrorQuery(20,5,"Could no parse",$"Could not parse '{tbX.Text}'","Ok");
+                MessageBox.ErrorQuery(app,"Could no parse",$"Could not parse '{tbX.Text}'","Ok");
         }
     }
 }
