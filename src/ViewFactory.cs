@@ -95,7 +95,10 @@ public static class ViewFactory
         typeof(TitleView),
 
         // Only point of this view is to have a regex validation on view but we don't have designer yet for regex type
-        typeof(TextValidateField)
+        typeof(TextValidateField),
+
+        typeof(LinearSelector<>),
+        typeof(LinearMultiSelector<>)
     ];
 
     /// <summary>
