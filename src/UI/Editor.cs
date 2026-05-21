@@ -70,6 +70,12 @@ public class Editor : Runnable, IErrorReporter
     /// </summary>
     public const string? DesignerCorePopoverName = "CoreDesignerPopupMenu";
 
+
+    /// <summary>
+    /// The file path that was opened or newed last, allows opening the same directory in file dialog as last time.
+    /// </summary>
+    string? LastOpenedFilePath = null;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="Editor"/> class.
     /// </summary>
@@ -1264,14 +1270,15 @@ public class Editor : Runnable, IErrorReporter
             OperationManager.Instance.Do(operationFunc(viewDesign));
         }
     }
-
     private void Open()
     {
         var ofd = new OpenDialog()
         {
             Title = "Open",
-            AllowedTypes = new List<IAllowedType>(new[] { new AllowedType("View", SourceCodeFile.ExpectedExtension) })
+            AllowedTypes = new List<IAllowedType>(new[] { new AllowedType("View", SourceCodeFile.ExpectedExtension) }),
         };
+
+        SetOpenPath(ofd, null);
         
         app.Run(ofd, this.ErrorHandler);
 
@@ -1286,6 +1293,7 @@ public class Editor : Runnable, IErrorReporter
                     return;
                 }
 
+                LastOpenedFilePath = path;
                 this.Open(new FileInfo(path));
             }
             catch (Exception ex)
@@ -1354,6 +1362,8 @@ public class Editor : Runnable, IErrorReporter
         };
         // ofd.Style.PreserveFilenameOnDirectoryChanges = true;
 
+        SetOpenPath(ofd, "MyView.cs");
+
         app.Run(ofd);
 
         if (!ofd.Canceled)
@@ -1406,6 +1416,38 @@ public class Editor : Runnable, IErrorReporter
                 ExceptionViewer.ShowException(app, $"Failed to create '{ofd.Path}'", ex);
                 throw;
             }
+        }
+    }
+
+    /// <summary>
+    /// Sets the path to open to the last opened/newed path optionally with a filename
+    /// e.g. MyView.cs
+    /// </summary>
+    /// <param name="fd"></param>
+    /// <param name="fileName"></param>
+    private void SetOpenPath(FileDialog fd, string? fileName)
+    {
+        try
+        {
+            if (!string.IsNullOrWhiteSpace(LastOpenedFilePath))
+            {
+                var p = Path.GetDirectoryName(LastOpenedFilePath);
+
+                if (p != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(fileName))
+                    {
+                        p = Path.Combine(p, fileName);
+                    }
+
+                    // Todo bugged
+                    //      fd.Path = p;
+                }
+            }
+        }
+        catch (Exception)
+        {
+            return;
         }
     }
 
