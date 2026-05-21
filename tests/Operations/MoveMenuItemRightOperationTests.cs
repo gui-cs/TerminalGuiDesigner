@@ -37,8 +37,8 @@ internal class MoveMenuItemRightOperationTests : Tests
             op.Do();
 
             ClassicAssert.AreEqual(1, fileMenu.GetMenuItems(out _).Count);
-            ClassicAssert.IsInstanceOf<MenuBarItem>(fileMenu.GetMenuItems(out _)[0], "Expected top entry to be converted to the Type that has sub items");
-            ClassicAssert.Contains(toMove, ((MenuBarItem)fileMenu.GetMenuItems(out _)[0]).GetMenuItems(out _));
+            ClassicAssert.IsInstanceOf<MenuItem>(fileMenu.GetMenuItems(out _)[0], "Expected top entry to be converted to the Type that has sub items");
+            ClassicAssert.Contains(toMove, ((MenuItem)fileMenu.GetMenuItems(out _)[0]).GetMenuItems(out _));
 
         }, out _);
     }
@@ -49,7 +49,7 @@ internal class MoveMenuItemRightOperationTests : Tests
     {
         RoundTrip<Runnable, MenuBar>((d, v) =>
         {
-            var fileMenu = v.SubViews.OfType<MenuBarItem>().First();
+            var fileMenu = v.SubViews.OfType<MenuItem>().First();
             new AddMenuItemOperation(App, fileMenu.GetMenuItems(out _)[0]).Do();
 
             var items = fileMenu.GetMenuItems(out _);
@@ -67,8 +67,8 @@ internal class MoveMenuItemRightOperationTests : Tests
             var afterDo = fileMenu.GetMenuItems(out _);
             ClassicAssert.AreEqual("yarg", afterDo[0].Data);
             ClassicAssert.AreEqual(Key.Y.WithCtrl, afterDo[0].Key);
-            ClassicAssert.AreEqual("blarg", ((MenuBarItem)afterDo[0]).GetMenuItems(out _)[0].Data);
-            ClassicAssert.AreEqual(Key.B.WithCtrl, ((MenuBarItem)afterDo[0]).GetMenuItems(out _)[0].Key);
+            ClassicAssert.AreEqual("blarg", ((MenuItem)afterDo[0]).GetMenuItems(out _)[0].Data);
+            ClassicAssert.AreEqual(Key.B.WithCtrl, ((MenuItem)afterDo[0]).GetMenuItems(out _)[0].Key);
 
             op.Undo();
             var afterUndo = fileMenu.GetMenuItems(out _);
@@ -81,8 +81,8 @@ internal class MoveMenuItemRightOperationTests : Tests
             var afterRedo = fileMenu.GetMenuItems(out _);
             ClassicAssert.AreEqual("yarg", afterRedo[0].Data);
             ClassicAssert.AreEqual(Key.Y.WithCtrl, afterRedo[0].Key);
-            ClassicAssert.AreEqual("blarg", ((MenuBarItem)afterRedo[0]).GetMenuItems(out _)[0].Data);
-            ClassicAssert.AreEqual(Key.B.WithCtrl, ((MenuBarItem)afterRedo[0]).GetMenuItems(out _)[0].Key);
+            ClassicAssert.AreEqual("blarg", ((MenuItem)afterRedo[0]).GetMenuItems(out _)[0].Data);
+            ClassicAssert.AreEqual(Key.B.WithCtrl, ((MenuItem)afterRedo[0]).GetMenuItems(out _)[0].Key);
 
         }, out _);
     }
