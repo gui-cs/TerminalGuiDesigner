@@ -1440,8 +1440,8 @@ public class Editor : Runnable, IErrorReporter
                         p = Path.Combine(p, fileName);
                     }
 
-                    // Todo bugged
-                    //      fd.Path = p;
+                    fd.Path = p;
+                    fd.OpenMode = OpenMode.File;
                 }
             }
         }
