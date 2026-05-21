@@ -54,7 +54,6 @@ namespace Showcase {
             this.X = 0;
             this.Y = 0;
             this.Visible = true;
-            this.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.CanFocus = false;
             this.ShadowStyle = null;
             this.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
@@ -63,7 +62,6 @@ namespace Showcase {
             this.button.X = 47;
             this.button.Y = 0;
             this.button.Visible = true;
-            this.button.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.button.CanFocus = true;
             this.button.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Opaque;
             this.button.Data = "button";
@@ -73,10 +71,9 @@ namespace Showcase {
             this.Add(this.button);
             this.button2.Width = Dim.Auto();
             this.button2.Height = Dim.Auto();
-            this.button2.X = 43;
+            this.button2.X = 46;
             this.button2.Y = 2;
             this.button2.Visible = true;
-            this.button2.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.button2.CanFocus = true;
             this.button2.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.None;
             this.button2.Data = "button2";
@@ -86,10 +83,9 @@ namespace Showcase {
             this.Add(this.button2);
             this.button3.Width = Dim.Auto();
             this.button3.Height = Dim.Auto();
-            this.button3.X = 46;
+            this.button3.X = 49;
             this.button3.Y = 4;
             this.button3.Visible = true;
-            this.button3.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.button3.CanFocus = true;
             this.button3.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Opaque;
             this.button3.Data = "button3";
@@ -102,7 +98,6 @@ namespace Showcase {
             this.button4.X = 38;
             this.button4.Y = 6;
             this.button4.Visible = true;
-            this.button4.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.button4.CanFocus = true;
             this.button4.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Opaque;
             this.button4.Data = "button4";
@@ -115,7 +110,6 @@ namespace Showcase {
             this.button5.X = 42;
             this.button5.Y = 8;
             this.button5.Visible = true;
-            this.button5.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.button5.CanFocus = true;
             this.button5.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Transparent;
             this.button5.Data = "button5";
@@ -128,7 +122,6 @@ namespace Showcase {
             this.label.X = 0;
             this.label.Y = 14;
             this.label.Visible = true;
-            this.label.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.label.CanFocus = false;
             this.label.ShadowStyle = null;
             this.label.Data = "label";
@@ -142,7 +135,6 @@ namespace Showcase {
             this.button6.X = Pos.Percent(30);
             this.button6.Y = Pos.AnchorEnd(1);
             this.button6.Visible = true;
-            this.button6.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.button6.CanFocus = true;
             this.button6.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Opaque;
             this.button6.Data = "button6";
@@ -155,7 +147,6 @@ namespace Showcase {
             this.button7.X = Pos.Right(button6) + 1;
             this.button7.Y = Pos.AnchorEnd(1);
             this.button7.Visible = true;
-            this.button7.Arrangement = Terminal.Gui.ViewBase.ViewArrangement.Fixed;
             this.button7.CanFocus = true;
             this.button7.ShadowStyle = Terminal.Gui.ViewBase.ShadowStyles.Opaque;
             this.button7.Data = "button7";

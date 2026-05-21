@@ -642,7 +642,6 @@ public class Design
             yield return this.CreateProperty(nameof(LinearRange.LegendsOrientation));
             yield return this.CreateProperty(nameof(LinearRange.ShowLegends));
             yield return this.CreateProperty(nameof(LinearRange.ShowEndSpacing));
-            yield return this.CreateProperty(nameof(LinearRange.Type));
         }
 
         if(this.View is Link)
