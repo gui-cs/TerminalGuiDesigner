@@ -569,17 +569,33 @@ public class Design
         cp.MouseEvent += (s, e) => this.SuppressNativeClickEvents(s, e, true);
         cp.MouseEnter += (s, e) => e.Cancel = true;
         cp.MouseBindings.Clear();
+        
+        cp.SubViewAdded += (s,e)=> { 
+            if(e.SubView is ColorBar cb)
+            {
+                // Many things trigger CreateBars to happen which recreates all the hue/saturation/lightness etc bars
+                // So we need to re-register our events each time they are created
+                SuppressNativeClickEvents(cb);
+            }
+        };
 
-        foreach (var hue in cp.SubViews.OfType<ColorBar>())
+        foreach (var cb in cp.SubViews.OfType<ColorBar>())
         {
-            // prevent control from responding to events
-            hue.MouseEvent += (s, e) => this.SuppressNativeClickEvents(s, e, true);
-            hue.MouseEnter += (s, e) => e.Cancel = true;
-            hue.MouseBindings.Clear();
-
-            // Prevent the color picker bar from activating as the wiring for drag changing hue bar etc is tied to activate
-            hue.RemoveCommand(Command.Activate);
+            SuppressNativeClickEvents(cb);
         }
+    }
+
+
+    private void SuppressNativeClickEvents(ColorBar cb)
+    {
+        // prevent control from responding to events
+        cb.MouseEvent += (s, e) => this.SuppressNativeClickEvents(s, e, true);
+        cb.MouseEnter += (s, e) => e.Cancel = true;
+        cb.MouseBindings.Clear();
+
+        // Prevent the color picker bar from activating as the wiring for drag changing hue bar etc is tied to activate
+        cb.RemoveCommand(Command.Activate);
+
     }
 
     private void SuppressNativeClickEvents(object? sender, Mouse obj, bool alsoSuppressClick = false)
