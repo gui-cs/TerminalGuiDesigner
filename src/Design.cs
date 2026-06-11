@@ -592,10 +592,6 @@ public class Design
         cb.MouseEvent += (s, e) => this.SuppressNativeClickEvents(s, e, true);
         cb.MouseEnter += (s, e) => e.Cancel = true;
         cb.MouseBindings.Clear();
-
-        // Prevent the color picker bar from activating as the wiring for drag changing hue bar etc is tied to activate
-        cb.RemoveCommand(Command.Activate);
-
     }
 
     private void SuppressNativeClickEvents(object? sender, Mouse obj, bool alsoSuppressClick = false)
