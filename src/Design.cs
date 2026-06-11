@@ -563,6 +563,25 @@ public class Design
         }
     }
 
+    private void SuppressNativeClickEvents(ColorPicker cp)
+    {
+
+        cp.MouseEvent += (s, e) => this.SuppressNativeClickEvents(s, e, true);
+        cp.MouseEnter += (s, e) => e.Cancel = true;
+        cp.MouseBindings.Clear();
+
+        foreach (var hue in cp.SubViews.OfType<ColorBar>())
+        {
+            // prevent control from responding to events
+            hue.MouseEvent += (s, e) => this.SuppressNativeClickEvents(s, e, true);
+            hue.MouseEnter += (s, e) => e.Cancel = true;
+            hue.MouseBindings.Clear();
+
+            // Prevent the color picker bar from activating as the wiring for drag changing hue bar etc is tied to activate
+            hue.RemoveCommand(Command.Activate);
+        }
+    }
+
     private void SuppressNativeClickEvents(object? sender, Mouse obj, bool alsoSuppressClick = false)
     {
         if (alsoSuppressClick)
@@ -724,6 +743,8 @@ public class Design
             yield return this.CreateSubProperty(nameof(ColorPickerStyle.ColorModel),nameof(ColorPicker.Style),cp.Style);
             yield return this.CreateSubProperty(nameof(ColorPickerStyle.ShowColorName), nameof(ColorPicker.Style), cp.Style);
             yield return this.CreateSubProperty(nameof(ColorPickerStyle.ShowTextFields), nameof(ColorPicker.Style), cp.Style);
+
+            SuppressNativeClickEvents(cp);
         }
 
         if (this.View is ListView lv)
