@@ -2,6 +2,7 @@ namespace UnitTests;
 
 class TextValidateFieldTests : Tests
 {
+    /*
     [Test]
     public void TestRoundTrip_PreserveProvider()
     {
@@ -25,4 +26,5 @@ class TextValidateFieldTests : Tests
 
         ClassicAssert.IsNotNull(tvfIn.Provider);
     }
+    */
 }

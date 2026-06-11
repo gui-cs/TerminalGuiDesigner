@@ -5,6 +5,7 @@ using Terminal.Gui.Drawing;
 using Terminal.Gui.Input;
 using Terminal.Gui.ViewBase;
 using Terminal.Gui.Views;
+using static Terminal.Gui.ViewBase.View;
 
 namespace TerminalGuiDesigner;
 
@@ -469,5 +470,20 @@ public static class ViewExtensions
         }
 
         return null;
+    }
+
+    public static void RemoveCommand(this View v,Command c)
+    {
+        var commands = typeof(View).GetField("_commandImplementations", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(v)
+            ?? throw new Exception("Expected private field command implementations not found");
+
+        if(commands is Dictionary<Command, CommandImplementation> commandDict)
+        {
+            commandDict.Remove(c);
+        }
+        else
+        {
+            throw new Exception($"Expected _commandImplementations to be a Dictionary<Command, CommandImplementation> but it was {commands.GetType().Name}");
+        }
     }
 }

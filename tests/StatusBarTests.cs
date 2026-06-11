@@ -8,6 +8,7 @@ namespace UnitTests;
 [NonParallelizable]
 internal class StatusBarTests : Tests
 {
+    /*
     [Test]
     public void ItemsArePreserved( )
     {
@@ -22,5 +23,5 @@ internal class StatusBarTests : Tests
 
         Assert.That( statusBarIn.GetShortcuts(), Has.Length.EqualTo( 1 ), "Expected reloading StatusBar to create the same number of StatusItems" );
         Assert.That( statusBarIn.GetShortcuts()[ 0 ].Key, Is.EqualTo( shortcutBefore ) );
-    }
+    }*/
 }

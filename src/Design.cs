@@ -563,6 +563,37 @@ public class Design
         }
     }
 
+    private void SuppressNativeClickEvents(ColorPicker cp)
+    {
+
+        cp.MouseEvent += (s, e) => this.SuppressNativeClickEvents(s, e, true);
+        cp.MouseEnter += (s, e) => e.Cancel = true;
+        cp.MouseBindings.Clear();
+        
+        cp.SubViewAdded += (s,e)=> { 
+            if(e.SubView is ColorBar cb)
+            {
+                // Many things trigger CreateBars to happen which recreates all the hue/saturation/lightness etc bars
+                // So we need to re-register our events each time they are created
+                SuppressNativeClickEvents(cb);
+            }
+        };
+
+        foreach (var cb in cp.SubViews.OfType<ColorBar>())
+        {
+            SuppressNativeClickEvents(cb);
+        }
+    }
+
+
+    private void SuppressNativeClickEvents(ColorBar cb)
+    {
+        // prevent control from responding to events
+        cb.MouseEvent += (s, e) => this.SuppressNativeClickEvents(s, e, true);
+        cb.MouseEnter += (s, e) => e.Cancel = true;
+        cb.MouseBindings.Clear();
+    }
+
     private void SuppressNativeClickEvents(object? sender, Mouse obj, bool alsoSuppressClick = false)
     {
         if (alsoSuppressClick)
@@ -642,7 +673,6 @@ public class Design
             yield return this.CreateProperty(nameof(LinearRange.LegendsOrientation));
             yield return this.CreateProperty(nameof(LinearRange.ShowLegends));
             yield return this.CreateProperty(nameof(LinearRange.ShowEndSpacing));
-            yield return this.CreateProperty(nameof(LinearRange.Type));
         }
 
         if(this.View is Link)
@@ -725,6 +755,8 @@ public class Design
             yield return this.CreateSubProperty(nameof(ColorPickerStyle.ColorModel),nameof(ColorPicker.Style),cp.Style);
             yield return this.CreateSubProperty(nameof(ColorPickerStyle.ShowColorName), nameof(ColorPicker.Style), cp.Style);
             yield return this.CreateSubProperty(nameof(ColorPickerStyle.ShowTextFields), nameof(ColorPicker.Style), cp.Style);
+
+            SuppressNativeClickEvents(cp);
         }
 
         if (this.View is ListView lv)

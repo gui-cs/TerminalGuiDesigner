@@ -493,8 +493,8 @@ internal class MenuBarTests : Tests
         Assert.That( fileMenu.GetMenuItems(out _), Has.Exactly( 3 ).InstanceOf<MenuItem>( ) );
 
         // should be 1 submenu item (the one we moved)
-        Assert.That( fileMenu.GetMenuItems(out _)[0], Is.InstanceOf<MenuBarItem>( ) );
-        Assert.That( ( (MenuBarItem)fileMenu.GetMenuItems(out _)[0] ).GetMenuItems(out _), Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
+        Assert.That( fileMenu.GetMenuItems(out _)[0], Is.InstanceOf<MenuItem>( ) );
+        Assert.That( ( (MenuItem)fileMenu.GetMenuItems(out _)[0] ).GetMenuItems(out _), Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
 
         Assume.That( ( ) => viewToCode.GenerateDesignerCs( designOut, typeof( Dialog ) ), Throws.Nothing );
         Assume.That( designOut, Is.Not.Null.And.InstanceOf<Design>( ) );
@@ -524,10 +524,10 @@ internal class MenuBarTests : Tests
         Assert.That( mbInFileMenu.GetMenuItems(out _), Has.All.Not.Null );
 
         // should be 1 submenu item (the one we moved)
-        Assert.That( ( (MenuBarItem)mbInFileMenu.GetMenuItems(out _)[0] ).GetMenuItems(out _), Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
+        Assert.That( ( (MenuItem)mbInFileMenu.GetMenuItems(out _)[0] ).GetMenuItems(out _), Has.Exactly( 1 ).InstanceOf<MenuItem>( ) );
         Assert.That(
-            ( (MenuBarItem)mbInFileMenu.GetMenuItems(out _)[0] ).GetMenuItems(out _)[0].Title,
-            Is.EqualTo( ( (MenuBarItem)fileMenu.GetMenuItems(out _)[0] ).GetMenuItems(out _)[0].Title ) );
+            ( (MenuItem)mbInFileMenu.GetMenuItems(out _)[0] ).GetMenuItems(out _)[0].Title,
+            Is.EqualTo( ( (MenuItem)fileMenu.GetMenuItems(out _)[0] ).GetMenuItems(out _)[0].Title ) );
     }
 
     [Test]

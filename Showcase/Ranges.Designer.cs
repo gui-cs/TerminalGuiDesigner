@@ -121,7 +121,6 @@ namespace Showcase {
             this.linearRange1.LegendsOrientation = Terminal.Gui.ViewBase.Orientation.Horizontal;
             this.linearRange1.ShowLegends = true;
             this.linearRange1.ShowEndSpacing = false;
-            this.linearRange1.Type = Terminal.Gui.Views.LinearRangeType.Single;
             this.linearRange1.Data = "linearRange1";
             this.linearRange1.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.linearRange1);
@@ -154,7 +153,6 @@ namespace Showcase {
             this.linearRange2.LegendsOrientation = Terminal.Gui.ViewBase.Orientation.Horizontal;
             this.linearRange2.ShowLegends = true;
             this.linearRange2.ShowEndSpacing = false;
-            this.linearRange2.Type = Terminal.Gui.Views.LinearRangeType.Single;
             this.linearRange2.Data = "linearRange2";
             this.linearRange2.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.linearRange2);
@@ -176,7 +174,6 @@ namespace Showcase {
             this.linearRange5.LegendsOrientation = Terminal.Gui.ViewBase.Orientation.Horizontal;
             this.linearRange5.ShowLegends = true;
             this.linearRange5.ShowEndSpacing = false;
-            this.linearRange5.Type = Terminal.Gui.Views.LinearRangeType.Single;
             this.linearRange5.Data = "linearRange5";
             this.linearRange5.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.linearRange5);
@@ -228,7 +225,6 @@ namespace Showcase {
             this.linearRange3.LegendsOrientation = Terminal.Gui.ViewBase.Orientation.Horizontal;
             this.linearRange3.ShowLegends = true;
             this.linearRange3.ShowEndSpacing = false;
-            this.linearRange3.Type = Terminal.Gui.Views.LinearRangeType.Single;
             this.linearRange3.Data = "linearRange3";
             this.linearRange3.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.linearRange3);
@@ -261,7 +257,6 @@ namespace Showcase {
             this.linearRange4.LegendsOrientation = Terminal.Gui.ViewBase.Orientation.Horizontal;
             this.linearRange4.ShowLegends = true;
             this.linearRange4.ShowEndSpacing = false;
-            this.linearRange4.Type = Terminal.Gui.Views.LinearRangeType.Single;
             this.linearRange4.Data = "linearRange4";
             this.linearRange4.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.linearRange4);
@@ -305,7 +300,6 @@ namespace Showcase {
             this.linearRange6.LegendsOrientation = Terminal.Gui.ViewBase.Orientation.Horizontal;
             this.linearRange6.ShowLegends = true;
             this.linearRange6.ShowEndSpacing = false;
-            this.linearRange6.Type = Terminal.Gui.Views.LinearRangeType.Single;
             this.linearRange6.Data = "linearRange6";
             this.linearRange6.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.linearRange6);
@@ -338,7 +332,6 @@ namespace Showcase {
             this.linearRange7.LegendsOrientation = Terminal.Gui.ViewBase.Orientation.Horizontal;
             this.linearRange7.ShowLegends = true;
             this.linearRange7.ShowEndSpacing = false;
-            this.linearRange7.Type = Terminal.Gui.Views.LinearRangeType.Single;
             this.linearRange7.Data = "linearRange7";
             this.linearRange7.TextAlignment = Terminal.Gui.ViewBase.Alignment.Start;
             this.Add(this.linearRange7);
