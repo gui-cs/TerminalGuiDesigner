@@ -99,7 +99,7 @@ public static class ViewExtensions
     /// keyword on this property.
     /// </para>
     /// <para>
-    /// See https://github.com/gui-cs/Terminal.Gui/issues/1619 for more info.
+    /// See https://github.com/tui-cs/Terminal.Gui/issues/1619 for more info.
     /// </para>
     /// </summary>
     /// <param name="view">The <see cref="View"/> whose text you want.</param>

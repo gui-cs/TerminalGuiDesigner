@@ -547,9 +547,9 @@ internal class MenuBarTests : Tests
         Assume.That( OperationManager.Instance.UndoStackSize, Is.Zero );
         Assume.That( OperationManager.Instance.RedoStackSize, Is.Zero );
 
-        Assert.Warn( "MenuTracker.Instance.CurrentlyOpenMenuItem cannot be guaranteed null at this time. See https://github.com/gui-cs/TerminalGuiDesigner/issues/270" );
+        Assert.Warn( "MenuTracker.Instance.CurrentlyOpenMenuItem cannot be guaranteed null at this time. See https://github.com/tui-cs/TerminalGuiDesigner/issues/270" );
         // TODO: Enable this pre-condition once MenuTracker changes are implemented.
-        // See https://github.com/gui-cs/TerminalGuiDesigner/issues/270
+        // See https://github.com/tui-cs/TerminalGuiDesigner/issues/270
         //Assume.That( MenuTracker.Instance.CurrentlyOpenMenuItem, Is.Null );
 
         MenuTracker.Instance.Register( mbOut );
