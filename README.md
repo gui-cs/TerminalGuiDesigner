@@ -33,7 +33,7 @@ Ensure that you match the Terminal.Gui library version you reference to the desi
 
 ## Demo
 
-![long-demo](https://github.com/gui-cs/TerminalGuiDesigner/assets/31306100/5df9f545-8c61-4655-bc0c-1e75d1c149d9)
+![long-demo](https://github.com/tui-cs/TerminalGuiDesigner/assets/31306100/5df9f545-8c61-4655-bc0c-1e75d1c149d9)
 
 ### Building
 ----------------
@@ -204,7 +204,7 @@ italics are experimental and require passing the `-e` flag when starting applica
     - [ ] Copy/Paste preserve menu entries
   - [x] ProgressBar
   - [x] OptionSelector
-  - [ ] [SplitContainer](https://github.com/gui-cs/Terminal.Gui/pull/2258) (Unreleased)
+  - [ ] [SplitContainer](https://github.com/tui-cs/Terminal.Gui/pull/2258) (Unreleased)
     - [ ] Copy/Paste preserve split content panels
   - [x] StatusBar
     - [ ] Copy/Paste preserve menu entries

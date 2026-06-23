@@ -44,7 +44,7 @@ public static class ViewFactory
         typeof( Wizard ),
         typeof( WizardStep ),
 
-        // This is unstable when added directly as a view see https://github.com/gui-cs/Terminal.Gui/issues/3664
+        // This is unstable when added directly as a view see https://github.com/tui-cs/Terminal.Gui/issues/3664
         typeof(Shortcut),
 
         typeof(CharMap),

@@ -974,7 +974,7 @@ public class Editor : Runnable, IErrorReporter
         if (hasPropsItems)
         {
             // Also add to the submenu an 'All' version
-            // Workaround for https://github.com/gui-cs/Terminal.Gui/issues/4876 
+            // Workaround for https://github.com/tui-cs/Terminal.Gui/issues/4876 
             // Previously user could do it by selecting the root 'Properties' expandable
             // menu
             setPropsItems.Insert(0, new MenuItem() { 
@@ -993,7 +993,7 @@ public class Editor : Runnable, IErrorReporter
                 Title = name,
                 SubMenu = new Menu(setPropsItems)
                 /*
-                 * No longer supported, see https://github.com/gui-cs/Terminal.Gui/issues/4876
+                 * No longer supported, see https://github.com/tui-cs/Terminal.Gui/issues/4876
                  * ,Action = () =>
                 {
                     if (selected.Length == 1 || rightClicked != null)
