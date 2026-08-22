@@ -188,6 +188,10 @@ PublishScripts/
 *.nupkg
 # NuGet Symbol Packages
 *.snupkg
+# TEMP: vendored Terminal.Gui 2.5.0 preview built from tui-cs/Terminal.Gui#5416.
+# Remove once 2.5.x is published to nuget.org.
+!local_packages/*.nupkg
+!local_packages/*.snupkg
 # The packages folder can be ignored because of Package Restore
 **/[Pp]ackages/*
 # except build/, which is used as an MSBuild target.
