@@ -172,7 +172,7 @@
 		<PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
 		<!-- TEMP: vendored 2.5.0 preview from tui-cs/Terminal.Gui#5416 (see ./local_packages
 		     and nuget.config). Swap to the public 2.5.x package once it ships on nuget.org. -->
-		<PackageReference Include="Terminal.Gui" Version="2.5.0-tig-remove-cm-followup.1" />
+		<PackageReference Include="Terminal.Gui" Version="2.5.0-tig-remove-cm-followup.2" />
 		<PackageReference Include="nlog" Version="5.3.3" />
 		<PackageReference Include="Basic.Reference.Assemblies.Net100" Version="1.7.7" />
 		<PackageReference Include="System.CodeDom" Version="10.0.0" />

@@ -11,7 +11,7 @@
   <ItemGroup>
     <!-- TEMP: vendored 2.5.0 preview from tui-cs/Terminal.Gui#5416 (see ../local_packages
          and nuget.config). Swap to the public 2.5.x package once it ships on nuget.org. -->
-    <PackageReference Include="Terminal.Gui" Version="2.5.0-tig-remove-cm-followup.1" />
+    <PackageReference Include="Terminal.Gui" Version="2.5.0-tig-remove-cm-followup.2" />
   </ItemGroup>
 
 </Project>
