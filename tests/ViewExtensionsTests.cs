@@ -81,6 +81,22 @@ internal class ViewExtensionsTests : Tests
         ClassicAssert.AreEqual(expectResult, inst.IsBorderlessContainerView());
     }
 
+    // Claude - Fable 5
+    [Test]
+    public void TestGetExplicitScheme_NullUntilExplicitlySet()
+    {
+        var v = Get10By10View().View;
+
+        Assert.That(v.GetExplicitScheme(), Is.Null,
+            "View with no explicitly assigned Scheme should report null explicit scheme");
+
+        var scheme = new Terminal.Gui.Drawing.Scheme();
+        v.SetScheme(scheme);
+
+        Assert.That(v.GetExplicitScheme(), Is.SameAs(scheme),
+            "After SetScheme, GetExplicitScheme should return the assigned Scheme");
+    }
+
     [Test]
     public void TestHitTest_WindowWithFrameView_InBorder()
     {
